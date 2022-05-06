@@ -1,8 +1,8 @@
-uuid: 07fdc07a-e2f4-4c7c-8348-a532f618d78a
+uuid: 82d80be0-5b30-4c78-a001-c2aab456c35c
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_flag_follow_node
+id: upgrade_d7_flag_follow_node_event
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: null
 cck_plugin_method: null
@@ -23,16 +23,21 @@ source:
       - c4m_og_content_highlight
       - subscribe_c4m_follow_group
     excluded_node_types:
+      - article
       - banner
       - book
+      - discussion
+      - document
       - featured
       - feed
       - inthe_picture
+      - news
       - photo
+      - photoalbum
       - project
       - share
       - topic
-      - event
+      - wiki_page
       - event_site
       - group
       - organisation
@@ -42,8 +47,8 @@ process:
       plugin: static_map
       source: flag_type
       map:
-        subscribe_c4m_follow_node: follow_content
-        subscribe_c4m_follow_content: follow_content
+        subscribe_c4m_follow_node: follow_event
+        subscribe_c4m_follow_content: follow_event
   entity_type:
     plugin: default_value
     default_value: node
@@ -52,12 +57,7 @@ process:
       plugin: migration_lookup
       source: entity_id
       migration:
-        - upgrade_d7_node_complete_article
-        - upgrade_d7_node_complete_discussion
-        - upgrade_d7_node_complete_document
-        - upgrade_d7_node_complete_news
-        - upgrade_d7_node_complete_wiki_page
-        - upgrade_d7_node_complete_photoalbum
+        - upgrade_d7_node_complete_event
     -
       plugin: node_complete_node_translation_lookup
     -
@@ -86,10 +86,5 @@ destination:
   plugin: 'entity:flagging'
 migration_dependencies:
   required:
-    - upgrade_d7_node_complete_article
-    - upgrade_d7_node_complete_discussion
-    - upgrade_d7_node_complete_document
-    - upgrade_d7_node_complete_news
-    - upgrade_d7_node_complete_wiki_page
-    - upgrade_d7_node_complete_photoalbum
+    - upgrade_d7_node_complete_event
   optional: {  }

@@ -13,22 +13,36 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: Flags
 source:
-  plugin: eic_d7_flag
+  plugin: eic_d7_flag_exclude_node_types
   track_changes: true
   constants:
     excluded_flags:
-      - subscribe_c4m_follow_node
       - c4m_get_discussions_alerts
       - c4m_og_content_recommend
       - subscribe_c4m_follow_term
       - c4m_og_content_highlight
       - subscribe_c4m_follow_group
+    excluded_node_types:
+      - banner
+      - book
+      - featured
+      - feed
+      - inthe_picture
+      - photo
+      - project
+      - share
+      - topic
+      - event
+      - event_site
+      - group
+      - organisation
 process:
   flag_id:
     -
       plugin: static_map
       source: flag_type
       map:
+        subscribe_c4m_follow_node: follow_content
         subscribe_c4m_follow_content: follow_content
   entity_type:
     plugin: default_value
@@ -43,7 +57,6 @@ process:
         - upgrade_d7_node_complete_document
         - upgrade_d7_node_complete_news
         - upgrade_d7_node_complete_wiki_page
-        - upgrade_d7_node_complete_event
         - upgrade_d7_node_complete_photoalbum
     -
       plugin: node_complete_node_translation_lookup
@@ -57,6 +70,18 @@ process:
       source: uid
       migration:
         - upgrade_d7_user
+  _flag_exists:
+    -
+      plugin: eic_d7_duplicated_flag
+      source:
+        - '@entity_id/0'
+        - '@uid'
+      flag_id: follow_event
+    -
+      plugin: skip_on_value
+      method: row
+      value: TRUE
+      message: 'The Flag has already been migrated. Skip duplicated.'
 destination:
   plugin: 'entity:flagging'
 migration_dependencies:
@@ -66,6 +91,5 @@ migration_dependencies:
     - upgrade_d7_node_complete_document
     - upgrade_d7_node_complete_news
     - upgrade_d7_node_complete_wiki_page
-    - upgrade_d7_node_complete_event
     - upgrade_d7_node_complete_photoalbum
   optional: {  }

@@ -80,9 +80,17 @@ class Flag extends FieldableEntity {
    */
   public function getIds() {
     return [
-      'flagging_id' => [
+      'flag_type' => [
+        'type' => 'string',
+        'alias' => 'ftype',
+      ],
+      'entity_id' => [
         'type' => 'integer',
-        'alias' => 'fgid',
+        'alias' => 'feid',
+      ],
+      'uid' => [
+        'type' => 'integer',
+        'alias' => 'fuid',
       ],
     ];
   }

@@ -48,7 +48,7 @@ class FlagExcludeNodeTypes extends Flag {
     $query->join('node', 'n', 'n.nid = fg.entity_id');
 
     // Exclude certain node types.
-    if (!empty($this->excludedFlags)) {
+    if (!empty($this->excludedNodeTypes)) {
       $query->condition('n.type', $this->excludedNodeTypes, 'NOT IN');
     }
 
