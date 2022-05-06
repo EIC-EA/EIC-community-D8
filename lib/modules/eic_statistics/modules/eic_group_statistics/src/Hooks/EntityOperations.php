@@ -733,11 +733,26 @@ class EntityOperations implements ContainerInjectionInterface {
       // If media is being referenced elsewhere, then we need to make sure it
       // hasn't been referenced in this group before updating the file
       // statistics.
-      if (count($media_usage['node']) > 0 || count($media_usage['paragraph']) > 0) {
+      if (
+        (
+          isset($media_usage['node']) &&
+          count($media_usage['node']) > 0
+        ) ||
+        (
+          isset($media_usage['paragraph']) &&
+          count($media_usage['paragraph']) > 0
+        )
+      ) {
         $source_nodes = [];
         $source_node_ids = [];
 
         foreach ($source_entity_types as $entity_type) {
+
+          // No media usage for the current entity type, so we skip this
+          // iteration.
+          if (!isset($media_usage[$entity_type])) {
+            continue;
+          }
 
           // Because the media usage is saved per revision, we need to make
           // sure the media is presented in the latest revision of every
