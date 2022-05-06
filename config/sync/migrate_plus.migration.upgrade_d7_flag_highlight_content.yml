@@ -16,13 +16,8 @@ source:
   plugin: eic_d7_flag
   track_changes: true
   constants:
-    excluded_flags:
-      - subscribe_c4m_follow_node
-      - c4m_get_discussions_alerts
-      - c4m_og_content_recommend
-      - subscribe_c4m_follow_term
-      - subscribe_c4m_follow_content
-      - subscribe_c4m_follow_group
+    included_flags:
+      - c4m_og_content_highlight
 process:
   flag_id:
     -
@@ -49,6 +44,7 @@ process:
       plugin: skip_on_empty
       method: row
   global: global
+  created: timestamp
   uid:
     -
       plugin: migration_lookup

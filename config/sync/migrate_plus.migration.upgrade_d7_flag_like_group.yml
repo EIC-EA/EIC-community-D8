@@ -13,33 +13,15 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: Flags
 source:
-  plugin: eic_d7_flag_exclude_node_types
+  plugin: eic_d7_flag_include_node_types
   track_changes: true
   constants:
-    excluded_flags:
-      - c4m_og_content_highlight
-      - subscribe_c4m_follow_node
-      - c4m_get_discussions_alerts
-      - subscribe_c4m_follow_content
-      - subscribe_c4m_follow_group
-      - subscribe_c4m_follow_term
-    excluded_node_types:
-      - article
-      - banner
-      - book
-      - discussion
-      - document
-      - event
-      - featured
-      - feed
-      - inthe_picture
-      - news
-      - photo
-      - photoalbum
-      - project
-      - share
-      - topic
-      - wiki_page
+    included_flags:
+      - c4m_og_content_recommend
+    included_node_types:
+      - event_site
+      - group
+      - organisation
 process:
   flag_id:
     -
@@ -64,6 +46,7 @@ process:
       plugin: skip_on_empty
       method: row
   global: global
+  created: timestamp
   uid:
     -
       plugin: migration_lookup

@@ -10,18 +10,18 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * Drupal 7 flag nodes source from database.
  *
  * @MigrateSource(
- *   id = "eic_d7_flag_exclude_node_types",
+ *   id = "eic_d7_flag_include_node_types",
  *   source_module = "flag"
  * )
  */
-class FlagExcludeNodeTypes extends Flag {
+class FlagIncludeNodeTypes extends Flag {
 
   /**
-   * Array of excluded node types from d7.
+   * Array of included node types from d7.
    *
    * @var array
    */
-  protected $excludedNodeTypes = [];
+  protected $includedNodeTypes = [];
 
   /**
    * {@inheritdoc}
@@ -36,7 +36,7 @@ class FlagExcludeNodeTypes extends Flag {
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
 
-    $this->excludedNodeTypes = !empty($configuration['constants']['excluded_node_types']) ? $configuration['constants']['excluded_node_types'] : NULL;
+    $this->includedNodeTypes = !empty($configuration['constants']['included_node_types']) ? $configuration['constants']['included_node_types'] : NULL;
   }
 
   /**
@@ -47,9 +47,9 @@ class FlagExcludeNodeTypes extends Flag {
 
     $query->join('node', 'n', 'n.nid = fg.entity_id');
 
-    // Exclude certain node types.
-    if (!empty($this->excludedNodeTypes)) {
-      $query->condition('n.type', $this->excludedNodeTypes, 'NOT IN');
+    // Include certain node types.
+    if (!empty($this->includedNodeTypes)) {
+      $query->condition('n.type', $this->includedNodeTypes, 'IN');
     }
 
     return $query;

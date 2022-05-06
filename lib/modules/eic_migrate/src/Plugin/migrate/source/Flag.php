@@ -18,11 +18,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 class Flag extends FieldableEntity {
 
   /**
-   * Array of excluded flag types.
+   * Array of included flag types.
    *
    * @var array
    */
-  protected $excludedFlags = [];
+  protected $includedFlags = [];
 
   /**
    * {@inheritdoc}
@@ -37,7 +37,7 @@ class Flag extends FieldableEntity {
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
 
-    $this->excludedFlags = !empty($configuration['constants']['excluded_flags']) ? $configuration['constants']['excluded_flags'] : NULL;
+    $this->includedFlags = !empty($configuration['constants']['included_flags']) ? $configuration['constants']['included_flags'] : NULL;
   }
 
   /**
@@ -51,9 +51,9 @@ class Flag extends FieldableEntity {
     $query->addField('fl', 'name', 'flag_type');
     $query->addField('fl', 'global', 'global');
 
-    // Exclude certain flag types.
-    if (!empty($this->excludedFlags)) {
-      $query->condition('fl.name', $this->excludedFlags, 'NOT IN');
+    // Include only certain flag types.
+    if (!empty($this->includedFlags)) {
+      $query->condition('fl.name', $this->includedFlags, 'IN');
     }
 
     return $query;
@@ -80,6 +80,10 @@ class Flag extends FieldableEntity {
    */
   public function getIds() {
     return [
+      'flagging_id' => [
+        'type' => 'integer',
+        'alias' => 'fid',
+      ],
       'flag_type' => [
         'type' => 'string',
         'alias' => 'ftype',
