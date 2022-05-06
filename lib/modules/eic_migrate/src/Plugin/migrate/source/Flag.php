@@ -84,18 +84,6 @@ class Flag extends FieldableEntity {
         'type' => 'integer',
         'alias' => 'fid',
       ],
-      'flag_type' => [
-        'type' => 'string',
-        'alias' => 'ftype',
-      ],
-      'entity_id' => [
-        'type' => 'integer',
-        'alias' => 'feid',
-      ],
-      'uid' => [
-        'type' => 'integer',
-        'alias' => 'fuid',
-      ],
     ];
   }
 
