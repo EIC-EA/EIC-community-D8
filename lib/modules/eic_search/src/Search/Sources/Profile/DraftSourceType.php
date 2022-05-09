@@ -190,4 +190,11 @@ class DraftSourceType extends SourceType {
     return TRUE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'draft-' . parent::getUniqueId();
+  }
+
 }

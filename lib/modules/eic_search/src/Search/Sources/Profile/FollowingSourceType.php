@@ -119,4 +119,11 @@ class FollowingSourceType extends SourceType {
     return ['ss_type'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'profile-following-' . parent::getUniqueId();
+  }
+
 }

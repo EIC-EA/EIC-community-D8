@@ -132,4 +132,11 @@ class GlobalEventSourceType extends SourceType {
     return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'event-' . parent::getUniqueId();
+  }
+
 }

@@ -11,6 +11,8 @@ use Solarium\QueryType\Update\Query\Document;
  */
 interface DocumentProcessorInterface {
 
+  public const SOLR_MOST_ACTIVE_ID = "its_most_active_total";
+
   /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
