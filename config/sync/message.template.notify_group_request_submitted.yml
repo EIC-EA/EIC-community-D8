@@ -15,10 +15,10 @@ label: 'NOTIFY :: MT01 :: Group request submitted'
 description: ''
 text:
   -
-    value: 'New [message:field_group_ref:entity:type-name] request'
+    value: 'New [message:field_group_ref:entity:type] request'
     format: plain_text
   -
-    value: "<p>Dear Administrator,</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:group_owner:url]\">[message:field_group_ref:entity:group_owner:display-name]</a>&nbsp;requested a new [message:field_group_ref:entity:type-name]:&nbsp;<a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></p>\r\n\r\n<p>To edit the status of this [message:field_group_ref:entity:type-name]:&nbsp;<a href=\"[message:field_group_ref:entity:edit-url]\"><u>manage pending [message:field_group_ref:entity:type-name]</u></a></p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear Administrator,</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:group_owner:url]\"><u>[message:field_group_ref:entity:group_owner:display-name]</u></a>&nbsp;requested a new&nbsp;[message:field_group_ref:entity:type]:&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p>To edit the status of this [message:field_group_ref:entity:type]:&nbsp;<a href=\"[message:field_group_ref:entity:edit-url]\"><u>manage pending [message:field_group_ref:entity:type]</u></a></p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

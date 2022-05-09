@@ -122,9 +122,38 @@ class MigrateToolsOverrideCommands extends MigrateToolsCommands {
     $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, TRUE);
 
     try {
-      parent::import($migration_names, $options);
+      $group_names = $options['group'];
+      $tag_names = $options['tag'];
+      $all = $options['all'];
+      if (!$all && !$group_names && !$migration_names && !$tag_names) {
+        throw new \Exception(
+          dt('You must specify --all, --group, --tag or one or more migration names separated by commas')
+        );
+      }
+
+      $migrations = $this->migrationsList($migration_names, $options);
+      if (empty($migrations)) {
+        $this->logger->error(dt('No migrations found.'));
+      }
+
+      // Take it one group at a time, importing the migrations within each group.
+      foreach ($migrations as $group_id => $migration_list) {
+        if ('eic_smed_taxonomy' === $group_id) {
+          $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, FALSE);
+        }
+        else {
+          $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, TRUE);
+        }
+
+        array_walk(
+          $migration_list,
+          [$this, 'executeMigration'],
+          $options
+        );
+      }
     } catch (\Exception $e) {
       $this->logger()->error($e->getMessage());
+      $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, FALSE);
     }
 
     $this->logger()->notice('Migrations import ended.');
@@ -138,6 +167,15 @@ class MigrateToolsOverrideCommands extends MigrateToolsCommands {
     $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, self::MIGRATION_ID_MESSAGES === $migration_id);
     parent::executeMigration($migration, $migration_id, $options);
     $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, FALSE);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function resetStatus($migration_id = '') {
+    $this->logger()->notice('Reseting status for migration: ' . $migration_id);
+    $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, FALSE);
+    parent::resetStatus($migration_id);
   }
 
 }

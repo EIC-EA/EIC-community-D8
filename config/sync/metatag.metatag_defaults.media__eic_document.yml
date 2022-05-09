@@ -5,6 +5,5 @@ dependencies: {  }
 id: media__eic_document
 label: 'Media: Document'
 tags:
-  og_description: '[media:field_body:value]'
   og_image: '[media:thumbnail:medium:url]'
-  og_title: '[current-page:title]'
+  og_description: '[media:field_body:value]'

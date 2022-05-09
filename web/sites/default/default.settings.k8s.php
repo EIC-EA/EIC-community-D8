@@ -92,9 +92,34 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
 }
 
 /**
+ * EU Login settings.
+ */
+$config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+// Uncomment this line to force EU Login known user accounts to login through EU
+// Login.
+//$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+// Allow self-registered users to login.
+$config['oe_authentication.settings']['assurance_level'] = 'LOW';
+
+$settings['s3fs.use_s3_for_private'] = TRUE;
+$settings['s3fs.use_s3_for_public'] = TRUE;
+
+/**
  * SMED API connection information.
  */
 $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
 $settings['smed_api_taxonomy_password'] = getenv('SMED_API_PASSWORD');
 $settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
 
+/**
+ * Webservices settings (REST endpoints).
+ */
+$config['eic_webservices.settings']['api_key'] = getenv('DRUPAL_WS_API_KEY');
+$config['eic_webservices.settings']['smed_url'] = getenv('DRUPAL_SMED_URL');
+
+// Interval time for the notification reminder to SA/SCM listing all groups pending for approval.
+$settings['cron_interval_pending_approval_time'] = 86400;
+$settings['cron_interval_group_invite_time'] = 86400;
+
+$settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
+$settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');

@@ -54,14 +54,10 @@ stages:
 build_backend:
   stage: build
   image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
-  tags:
-    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
   script:
-    # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
-    # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
     - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
     # Gitlab CI will exclude any directory containing a .git folder from artifacts, remove it temporarily
     - find $CI_PROJECT_DIR/web/modules/contrib -type d -name ".git" -exec rm -rf {} +
@@ -73,8 +69,6 @@ build_backend:
 build_front:
   stage: build
   image: node:14
-  tags:
-    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -90,46 +84,24 @@ build_front:
 security_check:
   stage: test
   image: jakzal/phpqa:php7.4
-  tags:
-    - itr-hrt
   script:
     - local-php-security-checker
   only:
     - develop
     - /^release/.*$/
 
-#code_style_test:
-#  stage: test
-#  image: jakzal/phpqa:php7.4
-#  tags:
-#    - itr-hrt
-#  script:
-#    - ./vendor/bin/grumphp run --tasks=phpcs
-#  allow_failure: true
-#  only:
-#    - develop
-#
-#phpmd_test:
-#  stage: test
-#  image: jakzal/phpqa:php7.4
-#  tags:
-#    - itr-hrt
-#  script:
-#    - ./vendor/bin/grumphp run --tasks=phpmd
-#  allow_failure: true
-#  only:
-#    - develop
-#
-#phpstan_test:
-#  stage: test
-#  image: jakzal/phpqa:php7.4
-#  tags:
-#    - itr-hrt
-#  script:
-#    - phpstan
-#  allow_failure: true
-#  only:
-#    - develop
+sbom_send:
+  image: public.ecr.aws/io-brussels/sbom-collector
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/bom.xml
+    expire_in: 2 hours
+  script:
+    - cd $CI_PROJECT_DIR && composer -n make-bom --output-file=$CI_PROJECT_DIR/bom.xml
+    - cat $CI_PROJECT_DIR/bom.xml | send_bom
+  only:
+    - develop
+    - /^release/.*$/
 
 deploy_develop:
   <<: *deploy_job
@@ -197,8 +169,7 @@ slack_notifier:
 cypress_test_qa:
   stage: cypress
   image: cypress/base:10
-  tags:
-    - itr-hrt
+  allow_failure: true
   artifacts:
     when: always
     untracked: true

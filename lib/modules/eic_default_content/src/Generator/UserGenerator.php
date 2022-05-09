@@ -3,14 +3,45 @@
 namespace Drupal\eic_default_content\Generator;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_topics\Constants\Topics;
+use Drupal\eic_user\ProfileConst;
+use Drupal\profile\Entity\Profile;
 use Drupal\user\Entity\User;
 
 /**
- * Class UserGenerator
+ * Generates default users.
  *
  * @package Drupal\eic_default_content\Generator
  */
 class UserGenerator extends CoreGenerator {
+
+  /**
+   * List of countries/cities.
+   */
+  protected const ADDRESSES = [
+    'FR' => [
+      'Paris',
+      'Strasbourg',
+      'Bordeaux',
+      'Marseille',
+    ],
+    'BE' => [
+      'Brussels',
+      'Gent',
+      'Antwerp',
+      'Namur',
+    ],
+    'NL' => [
+      'Amsterdam',
+      'Eindhoven',
+      'Rotterdam',
+    ],
+    'IT' => [
+      'Roma',
+      'Bologna',
+      'Milan',
+    ],
+  ];
 
   /**
    * {@inheritdoc}
@@ -87,6 +118,7 @@ class UserGenerator extends CoreGenerator {
     }
 
     for ($i = 0; $i <= 10; $i++) {
+      // Create user account.
       $user = User::create($trusted_user_data + [
           'name' => 'trusted_user' . $i,
           'init' => 'email',
@@ -101,7 +133,11 @@ class UserGenerator extends CoreGenerator {
 
       $user->activate();
       $user->save();
+      $this->createUserMemberProfile($user->id());
     }
+
+    // Also create a profile for our beloved admin.
+    $this->createUserMemberProfile(1);
   }
 
   /**
@@ -120,6 +156,35 @@ class UserGenerator extends CoreGenerator {
     }
 
     $user_storage->delete($user_storage->loadMultiple($user_ids));
+  }
+
+  /**
+   * Creates a member profile for the given user.
+   *
+   * @param int $uid
+   *   The user ID.
+   */
+  public function createUserMemberProfile(int $uid) {
+    // Create member profile.
+    $country = array_rand(self::ADDRESSES);
+    $city = self::ADDRESSES[$country][array_rand(self::ADDRESSES[$country])];
+    $profile = Profile::create([
+      'type' => ProfileConst::MEMBER_PROFILE_TYPE_NAME,
+      'uid' => $uid,
+      'field_body' => $this->getFormattedText('filtered_html'),
+      'field_vocab_topic_expertise' => $this->getRandomEntities('taxonomy_term', ['vid' => Topics::TERM_VOCABULARY_TOPICS_ID], 3),
+      'field_vocab_topic_interest' => $this->getRandomEntities('taxonomy_term', ['vid' => Topics::TERM_VOCABULARY_TOPICS_ID], 3),
+      'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 3),
+      'field_vocab_language' => $this->getRandomEntities('taxonomy_term', ['vid' => 'languages'], 4),
+      'field_vocab_job_title' => $this->getRandomEntities('taxonomy_term', ['vid' => 'job_titles'], 2),
+      'field_location_address' => [
+        'country_code' => $country,
+        'locality' => $city,
+      ],
+    ]);
+
+    $profile->setDefault(TRUE);
+    $profile->save();
   }
 
 }

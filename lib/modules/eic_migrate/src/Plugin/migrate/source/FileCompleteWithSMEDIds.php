@@ -48,22 +48,6 @@ class FileCompleteWithSMEDIds extends FileComplete {
   /**
    * {@inheritdoc}
    */
-  public function query() {
-    $query = parent::query();
-
-    if ($this->fileType === 'document') {
-      $query->leftJoin('field_data_c4m_document', 'd', 'f.fid = d.c4m_document_fid AND d.bundle = :bundle', [':bundle' => 'document']);
-      $query->fields('d', ['entity_id']);
-      $query->leftJoin('field_data_c4m_vocab_language', 'l', 'l.entity_id = d.entity_id');
-      $query->addField('l', 'c4m_vocab_language_tid', 'c4m_vocab_language');
-    }
-
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function prepareRow(Row $row) {
     $result = parent::prepareRow($row);
 
@@ -96,55 +80,6 @@ class FileCompleteWithSMEDIds extends FileComplete {
     }
 
     return $fieldValues;
-  }
-
-  /**
-   * Retrieves field values for a single field of a single entity.
-   *
-   * Typically, getFieldValues() is used in the prepareRow method of a source
-   * plugin where the return values are placed on the row source.
-   *
-   * @param string $entity_type
-   *   The entity type.
-   * @param string $field
-   *   The field name.
-   * @param int $entity_id
-   *   The entity ID.
-   * @param int|null $revision_id
-   *   (optional) The entity revision ID.
-   * @param string $language
-   *   (optional) The field language.
-   *
-   * @return array
-   *   The raw field values, keyed and sorted by delta.
-   */
-  protected function getFieldValues($entity_type, $field, $entity_id, $revision_id = NULL, $language = NULL) {
-    $table = (isset($revision_id) ? 'field_revision_' : 'field_data_') . $field;
-    $query = $this->select($table, 't')
-      ->fields('t')
-      ->condition('entity_type', $entity_type)
-      ->condition('entity_id', $entity_id)
-      ->condition('deleted', 0)
-      ->orderBy('delta');
-    if (isset($revision_id)) {
-      $query->condition('revision_id', $revision_id);
-    }
-    // Add 'language' as a query condition if it has been defined by Entity
-    // Translation.
-    if ($language) {
-      $query->condition('language', $language);
-    }
-    $values = [];
-    foreach ($query->execute() as $row) {
-      foreach ($row as $key => $value) {
-        $delta = $row['delta'];
-        if (strpos($key, $field) === 0) {
-          $column = substr($key, strlen($field) + 1);
-          $values[$delta][$column] = $value;
-        }
-      }
-    }
-    return $values;
   }
 
 }

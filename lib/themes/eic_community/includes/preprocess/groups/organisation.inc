@@ -6,16 +6,16 @@
  */
 
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\file\Entity\File;
-use Drupal\oec_group_features\GroupFeatureHelper;
-use Drupal\taxonomy\TermInterface;
-use Drupal\Core\Url;
-use \Drupal\eic_overviews\GlobalOverviewPages;
-use Drupal\paragraphs\ParagraphInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\oec_group_features\GroupFeatureHelper;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_group__TYPE().
@@ -437,7 +437,7 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   $file = $media_picture ? File::load(
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
-  $file_url = $file ? file_url_transform_relative(
+  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
     file_create_url($file->get('uri')->value)
   ) : NULL;
   $last_activity_ago = eic_community_get_teaser_time_display(
@@ -497,7 +497,7 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
   $file = $media_picture ? File::load(
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
-  $file_url = $file ? file_url_transform_relative(
+  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
     file_create_url($file->get('uri')->value)
   ) : NULL;
 

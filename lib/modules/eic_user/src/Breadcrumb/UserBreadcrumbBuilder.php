@@ -9,6 +9,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_user\UserHelper;
+use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -26,20 +28,25 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $currentUser;
 
   /**
-   * Constructs a new ContentBreadcrumbBuilder object.
-   *
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user service.
+   * @var \Drupal\eic_user\UserHelper
    */
-  public function __construct(AccountProxyInterface $current_user) {
+  protected $userHelper;
+
+  /**
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\eic_user\UserHelper $user_helper
+   */
+  public function __construct(AccountProxyInterface $current_user, UserHelper $user_helper) {
     $this->currentUser = $current_user;
+    $this->userHelper = $user_helper;
   }
 
   /**
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    return strpos($route_match->getRouteName(), 'eic_user.user.') !== FALSE;
+    $route_name = $route_match->getRouteName();
+    return strpos($route_name, 'eic_user.user.') !== FALSE || $route_name === 'entity.profile.edit_form';
   }
 
   /**
@@ -47,17 +54,24 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
+    $route_name = $route_match->getRouteName();
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     $user = $route_match->getParameter('user');
+    if (!$user instanceof UserInterface && $route_match->getParameter('profile')) {
+      $profile = $route_match->getParameter('profile');
+      if ($profile instanceof ProfileInterface) {
+        $user = $profile->getOwner();
+      }
+    }
 
     if ($user instanceof UserInterface) {
       $links[] = Link::fromTextAndUrl(
-        $this->t('My profile', [], ['context' => 'eic_user']),
+        $this->userHelper->getFullName($user),
         $user->toUrl()
       );
     }
 
-    if ('eic_user.user.activity' !== $route_match->getRouteName()) {
+    if (strpos($route_name, 'eic_user.user.') && 'eic_user.user.activity' !== $route_name) {
       $links[] = Link::fromTextAndUrl(
         $this->t('My activity feed', [], ['context' => 'eic_user']),
         Url::fromRoute(

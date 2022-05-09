@@ -23,15 +23,19 @@ function eic_community_preprocess_overview_page(array &$variables) {
   if (!empty($operations)) {
     if (count($operations) > 1) {
       $items = [];
-      foreach($operations as $operation) {
+      foreach ($operations as $operation) {
         $items[] = [
-          'link' => $operation
+          'link' => $operation,
         ];
       }
 
       $variables['overview_page_actions'][] = [
         'label' => t('Create Content'),
-        'items' => $items
+        'items' => $items,
+        'icon' => [
+          'name' => 'plus',
+          'type' => 'ui',
+        ],
       ];
     }
     else {

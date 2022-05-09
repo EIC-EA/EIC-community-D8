@@ -45,7 +45,7 @@ reactions:
         sort_options:
           ss_drupal_changed_timestamp: ss_drupal_changed_timestamp
           timestamp: 0
-          tm_global_title: 0
+          ss_global_title: 0
           ss_group_user_fullname: 0
           its_last_flagged_like_content: 0
           score: 0

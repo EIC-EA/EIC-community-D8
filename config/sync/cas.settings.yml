@@ -6,7 +6,7 @@ login_success_message: 'You have been logged in.'
 server:
   version: '3.0'
   protocol: https
-  hostname: 'eulogin:Js3xnPL5m95jDmrK@dev-euloginmock-c236bcf48b92.deltablue.io'
+  hostname: ''
   port: 443
   path: /cas
   verify: 2
@@ -24,7 +24,7 @@ forced_login:
     negate: false
     pages: /user/login
 user_accounts:
-  prevent_normal_login: true
+  prevent_normal_login: false
   auto_register: true
   email_assignment_strategy: 1
   email_hostname: localhost

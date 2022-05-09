@@ -14,7 +14,7 @@ label: 'NOTIFY :: MT45 :: Archived content instead of deleted content'
 description: 'Notification sent to the request/author when a delete request is denied but content archived'
 text:
   -
-    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:field_request_moderator:entity:url]\">[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value] [message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]</a> has not deleted <a href=\"[message:field_referenced_flag:entity:target_entity:url]\">[message:field_referenced_flag:entity:target_entity:title]</a> but has archived the content instead.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</u></a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:field_request_moderator:entity:url]\"><u>[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value] [message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]</u></a> has not deleted <a href=\"[message:field_referenced_flag:entity:target_entity:url]\"><u>[message:field_referenced_flag:entity:target_entity:title]</u></a> but has archived the content instead.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

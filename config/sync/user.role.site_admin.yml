@@ -143,6 +143,7 @@ permissions:
   - 'delete own book content'
   - 'delete own member profile'
   - 'delete own news content'
+  - 'delete own page content'
   - 'delete own story content'
   - 'delete page revisions'
   - 'delete story revisions'

@@ -14,7 +14,8 @@ define('INCLUDES_FOLDER', 'includes');
  * Implements hook_theme().
  */
 function eic_community_theme() {
-  $theme_path = drupal_get_path('theme', 'eic_community');
+  $theme_path = \Drupal::service('extension.path.resolver')
+    ->getPath('theme', 'eic_community');
 
   return [
     'eic_community_extended_list' => [
@@ -86,7 +87,8 @@ function eic_community_theme() {
  *   Path relative to $theme.
  */
 function eic_community_include($theme, $path) {
-  $theme_path = drupal_get_path('theme', $theme);
+  $theme_path = \Drupal::service('extension.path.resolver')
+    ->getPath('theme', $theme);
   if ($theme_path && ($file = DRUPAL_ROOT . '/' . $theme_path . '/' . $path) && file_exists($file) && pathinfo($file, PATHINFO_EXTENSION) === 'inc') {
     include_once $file;
   }

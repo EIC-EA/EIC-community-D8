@@ -6,18 +6,24 @@
  */
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_user\NotificationFrequencies;
-use Drupal\user\EntityOwnerInterface;
-use Drupal\eic_user\Hooks\FieldWidgetOperations;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_user\Hooks\FieldWidgetOperations;
+use Drupal\eic_user\NotificationFrequencies;
 use Drupal\group\Entity\GroupContentInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Implements hook_theme.
  */
 function eic_user_theme() {
   return [
+    'account_header_block' => [
+      'variables' => [
+        'login' => [],
+        'user' => []
+      ],
+    ],
     'user_header_block' => [
       'variables' => [
         'title' => '',
@@ -156,7 +162,9 @@ function eic_user_profile_update(EntityInterface $entity) {
 function eic_user_profile_delete(EntityInterface $entity) {
   if ($entity instanceof EntityOwnerInterface) {
     $account = $entity->getOwner();
-    _eic_user_refresh_user_data([$account]);
+    if ($account) {
+      _eic_user_refresh_user_data([$account]);
+    }
   }
 }
 
@@ -176,7 +184,7 @@ function _eic_user_refresh_user_data(array $accounts) {
     if (!$account instanceof \Drupal\Core\Session\AccountInterface) {
       continue;
     }
-    
+
     // Invalidate user cache tags after creating the profile entity.
     Cache::invalidateTags($account->getCacheTagsToInvalidate());
   }

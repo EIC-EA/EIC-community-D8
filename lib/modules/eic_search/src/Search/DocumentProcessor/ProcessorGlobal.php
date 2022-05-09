@@ -47,7 +47,7 @@ class ProcessorGlobal extends DocumentProcessor {
 
   /**
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
-   * @param FileUrlGeneratorInterface $urlGenerator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $urlGenerator
    * @param EntityTypeManager $em
    */
   public function __construct(
@@ -221,8 +221,8 @@ class ProcessorGlobal extends DocumentProcessor {
         return json_encode([
           'id' => $slide->id(),
           'size' => $file->getSize(),
-          'uri' => file_url_transform_relative(file_create_url($destination_uri)),
-          'uri_160' => file_url_transform_relative(file_create_url($destination_uri_160)),
+          'uri' => $this->urlGenerator->transformRelative(file_create_url($destination_uri)),
+          'uri_160' => $this->urlGenerator->transformRelative(file_create_url($destination_uri_160)),
           'legend' => $slide->get('field_gallery_slide_legend')->value,
         ]);
       }, $slides_id);
@@ -232,6 +232,7 @@ class ProcessorGlobal extends DocumentProcessor {
 
     //We need to use only one field key for the global search on the FE side
     $document->addField('tm_global_title', $title);
+    $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField(
       'ss_global_content_type_label',

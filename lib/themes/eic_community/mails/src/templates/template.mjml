@@ -16,6 +16,7 @@
           font-weight: bold;
           color: #265D9E;
           font-size: 16px;
+          white-space: nowrap;
         }
         .light {
           font-weight: lighter;
@@ -26,14 +27,14 @@
         .pre-footer, .pre-footer > div {
           text-align: left !important;
         }
-        .divider {
-
-        }
       </mj-style>
 
       <mj-raw>
         <!-- generic styling start (do not copy) -->
         <style type="text/css">
+          .logo {
+            min-width: 120px;
+          }
           @media screen and (max-device-width: 599px),
           screen and (max-width: 599px) {
             .btn{

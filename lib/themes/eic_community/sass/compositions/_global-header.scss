@@ -16,7 +16,8 @@
     display: flex;
     align-items: flex-end;
     color: map-get($ecl-colors, 'blue');
-    @include ecl-media-breakpoint-down('lg') {
+    white-space: nowrap;
+    @include ecl-media-breakpoint-down('md') {
       flex-wrap: wrap;
       margin-bottom: .5em;
     }

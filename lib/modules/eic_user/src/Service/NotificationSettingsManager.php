@@ -31,6 +31,7 @@ class NotificationSettingsManager {
    */
   private static array $flags = [
     NotificationTypes::GROUPS_NOTIFICATION_TYPE => ['follow_group'],
+    NotificationTypes::ORGANISATION_NOTIFICATION_TYPE => ['follow_group'],
     NotificationTypes::EVENTS_NOTIFICATION_TYPE => ['follow_group', 'follow_event'],
   ];
 
@@ -94,6 +95,7 @@ class NotificationSettingsManager {
     switch ($notification_type) {
       case NotificationTypes::GROUPS_NOTIFICATION_TYPE:
       case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
+      case NotificationTypes::ORGANISATION_NOTIFICATION_TYPE:
         $new_value = $this->updateFollowFlag($flagging, $user, $value);
         break;
       case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:

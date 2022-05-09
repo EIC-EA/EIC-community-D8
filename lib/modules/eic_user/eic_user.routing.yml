@@ -71,7 +71,7 @@ eic_user.toggle_follow_flag:
     _controller: '\Drupal\eic_user\Controller\MySettingsController::setFollowFlagValue'
     _title: 'Toggle settings'
   requirements:
-    notification_type: 'groups|events'
+    notification_type: 'groups|events|organisations'
     _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
     flagging: \d+
   options:
@@ -85,7 +85,7 @@ eic_user.unsubscribe_follow_flag:
   defaults:
     _controller: '\Drupal\eic_user\Controller\MySettingsController::unsubscribe'
   requirements:
-    notification_type: 'groups|events'
+    notification_type: 'groups|events|organisations'
     _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
     flagging: \d+
   options:
@@ -100,5 +100,5 @@ eic_user.get_notification_settings:
     _controller: '\Drupal\eic_user\Controller\MySettingsController::getFollowFlags'
     _title: 'Get Notification settings'
   requirements:
-    notification_type: 'groups|events'
+    notification_type: 'groups|events|organisations'
     _user_is_logged_in: 'TRUE'

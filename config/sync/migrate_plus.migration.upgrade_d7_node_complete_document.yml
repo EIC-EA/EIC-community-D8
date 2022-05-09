@@ -81,6 +81,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_document_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_document_type:
     -
       plugin: sub_process
@@ -124,7 +127,8 @@ process:
       source: c4m_vocab_geo
       process:
         target_id:
-          - plugin: migration_lookup
+          -
+            plugin: migration_lookup
             source: smed_id
             no_stub: true
             migration:
@@ -135,8 +139,8 @@ process:
       plugin: static_map
       source: status
       map:
-        0: draft
-        1: published
+        - draft
+        - published
 destination:
   plugin: 'entity_complete:node'
   translations: true

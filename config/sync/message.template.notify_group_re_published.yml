@@ -17,7 +17,7 @@ text:
     value: "<p>[message:field_group_ref:entity:title] was published once again</p>\r\n"
     format: full_html
   -
-    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a> was published once again.</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] updated the status of this [message:field_group_ref:entity:type-name] to Published.</p>\r\n\r\n<p>You can consult <a href=\"[site:url]\">this help section</a> to find out more about [message:field_group_ref:entity:type-name] statuses and what they imply.</p>\r\n\r\n<p>The European Innovation Council team</p>\r\n"
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a> was published once again.</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] updated the status of this [message:field_group_ref:entity:type] to Published.</p>\r\n\r\n<p>You can consult <a href=\"[site:url]\"><u>this help section</u></a> to find out more about [message:field_group_ref:entity:type] statuses and what they imply.</p>\r\n\r\n<p>The European Innovation Council team</p>\r\n"
     format: full_html
 settings:
   'token options':

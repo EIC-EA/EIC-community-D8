@@ -7,6 +7,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -15,7 +16,6 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
-use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
@@ -54,13 +54,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $groupPermissionChecker;
 
   /**
-   * The flag service.
-   *
-   * @var \Drupal\flag\FlagService
-   */
-  private $flagService;
-
-  /**
    * The database connection service.
    *
    * @var \Drupal\Core\Database\Connection
@@ -82,6 +75,11 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $request;
 
   /**
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  private $fileUrlGenerator;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -96,10 +94,10 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $plugin_definition,
       $container->get('eic_groups.helper'),
       $container->get('oec_group_comments.group_permission_checker'),
-      $container->get('flag'),
       $container->get('database'),
       $container->get('current_route_match'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -119,14 +117,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The EIC groups helper service.
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    *   The group permission checker.
-   * @param \Drupal\flag\FlagService $flag_service
-   *   The flag service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
    * @param RouteMatchInterface $route_match
    *   The route match service.
    * @param \Drupal\Core\Http\RequestStack $request
    *   The current request.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    */
   public function __construct(
     array $configuration,
@@ -134,18 +131,18 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     GroupPermissionChecker $group_permission_checker,
-    FlagService $flag_service,
     Connection $database,
     RouteMatchInterface $route_match,
-    RequestStack $request
+    RequestStack $request,
+    FileUrlGeneratorInterface $file_url_generator
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->groupPermissionChecker = $group_permission_checker;
-    $this->flagService = $flag_service;
     $this->database = $database;
     $this->routeMatch = $route_match;
     $this->request = $request;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -159,6 +156,29 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     if (!$node instanceof NodeInterface) {
       return [];
+    }
+
+    $cache_context = [
+      'url.path',
+      'url.query_args',
+      'user.group_permissions',
+      'session',
+      'route',
+    ];
+
+    $routes_to_ignore = [
+      'entity.node.delete_form',
+      'entity.node.edit_form',
+      'entity.node.new_request'
+    ];
+
+    // Do not show comments block in delete/edit/request content.
+    if (in_array($this->routeMatch->getRouteName(), $routes_to_ignore)) {
+      return [
+        '#cache' => [
+          'contexts' => $cache_context,
+        ],
+      ];
     }
 
     // We need to highlight the top level.
@@ -193,6 +213,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
     $user_group_roles = [];
     $account = \Drupal::currentUser();
+    $current_user = User::load(\Drupal::currentUser()->id());
 
     if ($current_group_route) {
       $membership = $current_group_route->getMember($account);
@@ -204,58 +225,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $account->getRoles(TRUE)
     );
 
-    $contributors_data = [];
-    $current_user = User::load(\Drupal::currentUser()->id());
-
-    if ('story' === $node->getType()) {
-      $contributors = $node->get('field_story_paragraphs')->referencedEntities();
-    }
-    else {
-      $contributors = $node->hasField('field_related_contributors') ?
-        $node->get('field_related_contributors')->referencedEntities() :
-        [];
-    }
-
-    $contributors = array_filter(
-      $contributors,
-      function (ParagraphInterface $paragraph) {
-        return !empty($paragraph->get('field_user_ref')->referencedEntities());
-      }
-    );
-
-    $users = array_map(function (ParagraphInterface $paragraph) {
-      return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
-    }, $contributors);
-
-    // Grab users who commented the node to the list of contributors.
-    if ($comment_contributorIds = $this->getNodeCommentContributorIds($node)) {
-      foreach ($comment_contributorIds as $comment_contributorId) {
-        if (!in_array($comment_contributorId['uid'], $users)) {
-          $users[] = intval($comment_contributorId['uid']);
-        }
-      }
-    }
-
-    $users = array_unique(array_values($users), SORT_NUMERIC);
-
-    $contributors_data['items'] = [];
-
-    if (
-      $node->getOwner() instanceof UserInterface &&
-      (int) $node->getOwnerId() !== 0 &&
-      !in_array($node->getOwnerId(), $users)
-    ) {
-      $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $node->getOwner()
-      );
-    }
-
-    $users = User::loadMultiple($users);
-
-    foreach ($users as $user) {
-      $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $user
-      );
+    $contributors_data = [];;
+    if ($node->bundle() !== 'news') {
+      $contributors_data = $this->getContributors($node);
     }
 
     $group_contents = GroupContent::loadByEntity($node);
@@ -266,7 +238,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $file = $media_picture ? File::load(
       $media_picture[0]->get('oe_media_image')->target_id
     ) : NULL;
-    $file_url = $file ? file_url_transform_relative(
+    $file_url = $file ? $this->fileUrlGenerator->transformRelative(
       file_create_url($file->get('uri')->value)
     ) : NULL;
 
@@ -403,13 +375,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
 
-    $cache_context = [
-      'url.path',
-      'url.query_args',
-      'user.group_permissions',
-      'session',
-    ];
-
     if ($group_id) {
       $cache_context[] = "user.is_group_member:$group_id";
     }
@@ -439,6 +404,68 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#is_anonymous' => $current_user->isAnonymous(),
         '#can_view_comments' => $can_view_comments,
       ];
+  }
+
+  /**
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return array
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  private function getContributors(NodeInterface $node): array {
+    $contributors_data = [];
+    if ('story' === $node->getType()) {
+      $contributors = $node->get('field_story_paragraphs')->referencedEntities();
+    }
+    else {
+      $contributors = $node->hasField('field_related_contributors') ?
+        $node->get('field_related_contributors')->referencedEntities() :
+        [];
+    }
+
+    $contributors = array_filter(
+      $contributors,
+      function (ParagraphInterface $paragraph) {
+        return !empty($paragraph->get('field_user_ref')->referencedEntities());
+      }
+    );
+
+    $users = array_map(function (ParagraphInterface $paragraph) {
+      return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
+    }, $contributors);
+
+    // Grab users who commented the node to the list of contributors.
+    if ($comment_contributorIds = $this->getNodeCommentContributorIds($node)) {
+      foreach ($comment_contributorIds as $comment_contributorId) {
+        if (!in_array($comment_contributorId['uid'], $users)) {
+          $users[] = intval($comment_contributorId['uid']);
+        }
+      }
+    }
+
+    $users = array_unique(array_values($users), SORT_NUMERIC);
+    $contributors_data['items'] = [];
+
+    if (
+      $node->getOwner() instanceof UserInterface &&
+      (int) $node->getOwnerId() !== 0 &&
+      !in_array($node->getOwnerId(), $users)
+    ) {
+      $contributors_data['items'][] = eic_community_get_teaser_user_display(
+        $node->getOwner()
+      );
+    }
+
+    $users = User::loadMultiple($users);
+
+    foreach ($users as $user) {
+      $contributors_data['items'][] = eic_community_get_teaser_user_display(
+        $user
+      );
+    }
+
+    return $contributors_data;
   }
 
   /**
