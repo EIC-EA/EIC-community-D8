@@ -19,10 +19,16 @@ process:
       source: nid
       entity_type: node
     - plugin: migration_lookup
-      migration: upgrade_d7_node_complete_group
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
       no_stub: true
     - plugin: skip_on_empty
       method: row
+    - plugin: extract
+      index:
+        - 0
     - plugin: eic_d7_node_share_group_content_type
   entity_id:
     - plugin: migration_lookup
@@ -49,7 +55,10 @@ process:
       source: nid
       entity_type: node
     - plugin: migration_lookup
-      migration: upgrade_d7_node_complete_group
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
       no_stub: true
   created: created
   changed: changed
@@ -63,10 +72,6 @@ process:
 #        - upgrade_d7_file_image_to_media
 #        - upgrade_d7_file_undefined_to_media
 #        - upgrade_d7_file_video_to_media
-  # TODO: Check if this is needed.
-#  og_vocabulary:
-#    - plugin: get
-#      source: og_vocabulary
 destination:
   plugin: 'entity:group_content'
 migration_dependencies:
@@ -81,7 +86,6 @@ migration_dependencies:
     - upgrade_d7_node_complete_book
     - upgrade_d7_node_photo_to_media
     - upgrade_d7_node_complete_photoalbum
-    # TODO: Add missing migrations once available.
-#    - upgrade_d7_node_complete_organisation
-#    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
   optional: { }
