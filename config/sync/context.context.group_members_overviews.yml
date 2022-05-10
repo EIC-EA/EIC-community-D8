@@ -23,8 +23,8 @@ reactions:
     id: blocks
     uuid: 52968c87-7333-4284-a1e0-68f19e8ed28d
     blocks:
-      d239a2c9-513f-4bdc-bc58-a97580ef989c:
-        uuid: d239a2c9-513f-4bdc-bc58-a97580ef989c
+      82dcfd61-3687-45ef-8699-ed3e395d2bcc:
+        uuid: 82dcfd61-3687-45ef-8699-ed3e395d2bcc
         id: eic_search_overview
         label: ''
         provider: eic_search
@@ -46,6 +46,7 @@ reactions:
           sm_user_profile_job_string: 0
           sm_user_profile_role_array: 0
         sort_options:
+          its_activity_score: its_activity_score
           ds_user_access: ds_user_access
           score: score
           ss_user_first_name: 0
