@@ -349,7 +349,9 @@ class ShareManager {
    *   The type to be used for the group_content entity.
    */
   public function defineGroupContentType(GroupInterface $target_group) {
-    return $target_group->getGroupType()->id() . '-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID;
+    return $target_group->getGroupType()
+      ->getContentPlugin(self::GROUP_CONTENT_SHARED_PLUGIN_ID)
+      ->getContentTypeConfigId();
   }
 
 }

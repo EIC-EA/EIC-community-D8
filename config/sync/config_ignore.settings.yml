@@ -29,4 +29,4 @@ ignored_config_entities:
   - 's3fs.settings:bucket'
   - 's3fs.settings:region'
   - 's3fs.settings:root_folder'
-  - 'cas.settings:server'
+  - 'cas.settings:server.*'
