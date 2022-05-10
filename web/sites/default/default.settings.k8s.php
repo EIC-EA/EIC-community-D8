@@ -91,8 +91,8 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
   ];
 }
 
-if ($solrHost = getenv('SOLR_HOST')) {
-  $config['search_api.server.global']['backend_config']['connector_config']['host'] = $solrHost;
+if ($solr_host = getenv('SOLR_HOST')) {
+  $config['search_api.server.global']['backend_config']['connector_config']['host'] = $solr_host;
 }
 
 /**
