@@ -91,6 +91,16 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
   ];
 }
 
+/**
+ * EU Login settings.
+ */
+$config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+// Uncomment this line to force EU Login known user accounts to login through EU
+// Login.
+//$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+// Allow self-registered users to login.
+$config['oe_authentication.settings']['assurance_level'] = 'LOW';
+
 $settings['s3fs.use_s3_for_private'] = TRUE;
 $settings['s3fs.use_s3_for_public'] = TRUE;
 
@@ -113,5 +123,3 @@ $settings['cron_interval_group_invite_time'] = 86400;
 
 $settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
 $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
-
-$config['oe_authentication.settings']['assurance_level'] ='LOW';

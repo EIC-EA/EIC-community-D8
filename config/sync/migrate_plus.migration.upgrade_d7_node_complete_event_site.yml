@@ -142,6 +142,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_header_visual:
     -
       plugin: sub_process
@@ -153,6 +156,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_document_agenda:
     -
       plugin: multiple_values

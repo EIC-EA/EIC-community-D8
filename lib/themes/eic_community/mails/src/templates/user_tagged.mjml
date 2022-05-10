@@ -111,7 +111,7 @@
 
               <!--CONTENT-->
               <mj-column width="60px" css-class="message-image" padding="0" padding-right="12px" vertical-align="middle">
-                <mj-image src="images/Joannes.jpg" border-radius="70px" padding="0"  />
+                <mj-image width="60px" src="images/Joannes.jpg" border-radius="70px" padding="0"  />
               </mj-column>
               <mj-column width="400px" css-class="message-content" vertical-align="middle">
                 <mj-text color="#707070" padding="0" font-size="14px">

@@ -19,8 +19,11 @@
               <img class="ecl-global-header__logo-image" src="{{ logo.src_desktop }}" />
             {% endif %}
           {% else %}
-            <img class="ecl-global-header__logo-image ecl-global-header__logo-image--desktop" src="{{ logo.src_desktop }}" />
-            <img class="ecl-global-header__logo-image ecl-global-header__logo-mobile" src="{{ logo.src_mobile }}" />
+            <picture>
+              <source media="(max-width: 767px)" srcset="{{ logo.src_mobile }}">
+              <source media="(min-width: 768px)" srcset="{{ logo.src_desktop }}">
+              <img class="ecl-global-header__logo-image" src="{{ logo.src_desktop }}" alt="European Commission">
+            </picture>
           {% endif %}
           <span class="ecl-global-header__logo-title"></span>
           {% if logo.href %}
@@ -38,7 +41,9 @@
         </div>
       {% endif %}
 
-        {{ account_block }}
+
+     {{ account_block }}
+
     </div>
   </div>
 </header>

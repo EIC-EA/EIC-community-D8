@@ -22,6 +22,16 @@ class RequestEventSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
+   * Lis of routes that should not be redirected.
+   *
+   * @var array
+   */
+  const ALLOWED_ROUTES = [
+    ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME,
+    'user.logout',
+  ];
+
+  /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\TempStore\PrivateTempStore
@@ -82,8 +92,8 @@ class RequestEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // We skip the member profile page.
-    if ($event->getRequest()->get('_route') == ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME) {
+    // We skip allowed routes.
+    if ($this->isAllowedRoute($event->getRequest()->get('_route'))) {
       return;
     }
 
@@ -102,6 +112,23 @@ class RequestEventSubscriber implements EventSubscriberInterface {
       $message = $this->t("Don't forget to complete your profile - Your profile says a lot about who you are and helps other community members recognize your expertise.", [], ['context' => 'eic_user_login']);
       $this->messenger()->addWarning($message);
     }
+  }
+
+  /**
+   * Defines if the given route is allowed.
+   *
+   * @param string $route_name
+   *   The route name.
+   *
+   * @return bool
+   *   TRUE if route is allowed, FALSE otherwise.
+   */
+  protected function isAllowedRoute(string $route_name): bool {
+    if (in_array($route_name, self::ALLOWED_ROUTES)) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
 }

@@ -13,7 +13,7 @@ services:
 
   eic_user.breadcrumb:
     class: Drupal\eic_user\Breadcrumb\UserBreadcrumbBuilder
-    arguments: ['@current_user']
+    arguments: [ '@current_user', '@eic_user.helper' ]
     tags:
       - { name: breadcrumb_builder, priority: 999 }
 
@@ -26,3 +26,8 @@ services:
     arguments: [ '@current_route_match' ]
     tags:
       - { name: access_check, applies_to: _route_current_user_access }
+
+  eic_user.route_subscriber:
+    class: Drupal\eic_user\Routing\UserRouteSubscriber
+    tags:
+      - { name: event_subscriber }

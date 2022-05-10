@@ -75,6 +75,8 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          - plugin: skip_on_empty
+            method: process
   field_date_establishement:
     - plugin: format_date
       from_format: 'Y-m-d H:i:s'
@@ -125,6 +127,8 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          - plugin: skip_on_empty
+            method: process
   field_vocab_topics:
     - plugin: sub_process
       source: c4m_vocab_topic

@@ -164,6 +164,11 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'group-group_node-event':
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
+        if ('group-group_node-event' === $entity->bundle()) {
+          $event_count = $this->groupStatisticsStorage->calculateGroupEventsStatistics($group);
+          $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_EVENTS, $event_count);
+        }
+
         if (!$this->canUpdateGroupStatistics($entity, self::GROUP_FILE_STATISTICS_CREATE_OPERATION)) {
           return;
         }
@@ -249,7 +254,11 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'event':
       case 'gallery':
       case 'wiki_page':
-        $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_DELETE_OPERATION);
+        $re_index = $this->updateGroupFileStatistics(
+          $entity,
+          $group_content,
+          self::GROUP_FILE_STATISTICS_DELETE_OPERATION
+        );
         break;
 
       default:
@@ -307,7 +316,11 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'event':
       case 'gallery':
       case 'wiki_page':
-        $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_UPDATE_OPERATION);
+        $re_index = $this->updateGroupFileStatistics(
+          $entity,
+          $group_content,
+          self::GROUP_FILE_STATISTICS_UPDATE_OPERATION
+        );
         break;
 
       default:
@@ -720,11 +733,26 @@ class EntityOperations implements ContainerInjectionInterface {
       // If media is being referenced elsewhere, then we need to make sure it
       // hasn't been referenced in this group before updating the file
       // statistics.
-      if (count($media_usage['node']) > 0 || count($media_usage['paragraph']) > 0) {
+      if (
+        (
+          isset($media_usage['node']) &&
+          count($media_usage['node']) > 0
+        ) ||
+        (
+          isset($media_usage['paragraph']) &&
+          count($media_usage['paragraph']) > 0
+        )
+      ) {
         $source_nodes = [];
         $source_node_ids = [];
 
         foreach ($source_entity_types as $entity_type) {
+
+          // No media usage for the current entity type, so we skip this
+          // iteration.
+          if (!isset($media_usage[$entity_type])) {
+            continue;
+          }
 
           // Because the media usage is saved per revision, we need to make
           // sure the media is presented in the latest revision of every
