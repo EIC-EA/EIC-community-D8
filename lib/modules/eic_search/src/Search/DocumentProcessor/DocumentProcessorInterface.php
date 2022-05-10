@@ -11,7 +11,7 @@ use Solarium\QueryType\Update\Query\Document;
  */
 interface DocumentProcessorInterface {
 
-  public const SOLR_MOST_ACTIVE_ID = "its_most_active_total";
+  public const SOLR_MOST_ACTIVE_ID = "its_activity_score";
 
   /**
    * @param \Solarium\QueryType\Update\Query\Document $document

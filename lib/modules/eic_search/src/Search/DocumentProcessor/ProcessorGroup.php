@@ -60,8 +60,7 @@ class ProcessorGroup extends DocumentProcessor {
 
     $group = Group::load($group_id);
 
-    if (!$group instanceof GroupInterface)
-    {
+    if (!$group instanceof GroupInterface) {
       return;
     }
 
