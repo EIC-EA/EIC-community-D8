@@ -98,4 +98,11 @@ class UserListSourceType extends SourceType {
     return ['itm_user__group_content__uid_gid'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'user-list-' . parent::getUniqueId();
+  }
+
 }

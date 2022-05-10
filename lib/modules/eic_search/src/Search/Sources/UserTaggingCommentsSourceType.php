@@ -62,4 +62,11 @@ class UserTaggingCommentsSourceType extends SourceType {
     return TRUE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'user-tagging-comments-' . parent::getUniqueId();
+  }
+
 }

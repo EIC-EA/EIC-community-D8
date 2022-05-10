@@ -112,4 +112,11 @@ class UserGallerySourceType extends SourceType {
     return TRUE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'user-gallery-' . parent::getUniqueId();
+  }
+
 }

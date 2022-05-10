@@ -111,4 +111,11 @@ class ContributionSourceType extends SourceType {
     return 'its_uid';
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'profile-contribution-' . parent::getUniqueId();
+  }
+
 }

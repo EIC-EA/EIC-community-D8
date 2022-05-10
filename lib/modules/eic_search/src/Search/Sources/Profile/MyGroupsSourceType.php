@@ -136,4 +136,11 @@ class MyGroupsSourceType extends SourceType {
     return ['ss_drupal_changed_timestamp', 'DESC'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'profile-' . parent::getUniqueId();
+  }
+
 }
