@@ -18,9 +18,124 @@ dependencies:
   module:
     - content_moderation
     - eic_content
+    - field_group
     - media_library
     - path
     - text
+third_party_settings:
+  field_group:
+    group_group_details:
+      children:
+        - group_details
+        - group_features
+        - group_related_groups
+        - group_related_stories
+        - group_topics_countries_tags
+        - group_settings
+      label: 'Group details'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: tabs
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        direction: horizontal
+        width_breakpoint: 640
+    group_details:
+      children:
+        - field_welcome_message
+        - field_hero
+      label: Details
+      region: content
+      parent_name: group_group_details
+      weight: 20
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: open
+        description: ''
+        required_fields: true
+    group_features:
+      children:
+        - features
+      label: Features
+      region: content
+      parent_name: group_group_details
+      weight: 21
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_related_groups:
+      children:
+        - field_related_groups
+      label: 'Related groups'
+      region: content
+      parent_name: group_group_details
+      weight: 22
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_related_stories:
+      children:
+        - field_related_news_stories
+      label: 'Related stories'
+      region: content
+      parent_name: group_group_details
+      weight: 23
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_topics_countries_tags:
+      children:
+        - field_vocab_topics
+        - field_vocab_geo
+      label: 'Topics, countries & tags'
+      region: content
+      parent_name: group_group_details
+      weight: 24
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_settings:
+      children:
+        - field_message_to_site_admin
+        - field_group_invite_members
+      label: Settings
+      region: content
+      parent_name: group_group_details
+      weight: 25
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
 id: group.group.default
 targetEntityType: group
 bundle: group
@@ -28,7 +143,7 @@ mode: default
 content:
   features:
     type: options_buttons
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -42,37 +157,27 @@ content:
     third_party_settings: {  }
   field_group_invite_members:
     type: boolean_checkbox
-    weight: 12
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_hero:
     type: media_library_widget
-    weight: 8
+    weight: 5
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_message_to_site_admin:
     type: text_textarea
-    weight: 9
+    weight: 10
     region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
   field_related_groups:
-    type: entity_reference_autocomplete
-    weight: 10
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_related_news_stories:
     type: entity_reference_autocomplete
     weight: 11
     region: content
@@ -82,16 +187,26 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_related_news_stories:
+    type: entity_reference_autocomplete
+    weight: 24
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_thumbnail:
     type: media_library_widget
-    weight: 7
+    weight: 1
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_vocab_geo:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS
@@ -101,7 +216,7 @@ content:
     third_party_settings: {  }
   field_vocab_topics:
     type: entity_tree
-    weight: 4
+    weight: 6
     region: content
     settings:
       match_top_level_limit: '0'
@@ -119,7 +234,7 @@ content:
     third_party_settings: {  }
   field_welcome_message:
     type: text_textarea
-    weight: 1
+    weight: 4
     region: content
     settings:
       rows: 5
@@ -140,26 +255,26 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 6
+    weight: 8
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 3
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 15
+    weight: 16
     region: content
     settings:
       display_label: true
