@@ -91,10 +91,15 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
   ];
 }
 
+if ($solrHost = getenv('SOLR_HOST')) {
+  $config['search_api.server.global']['backend_config']['connector_config']['host'] = $solrHost;
+}
+
 /**
  * EU Login settings.
  */
 $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+
 // Uncomment this line to force EU Login known user accounts to login through EU
 // Login.
 //$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
