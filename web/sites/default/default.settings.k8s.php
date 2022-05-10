@@ -91,6 +91,9 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
   ];
 }
 
+$settings['s3fs.use_s3_for_private'] = TRUE;
+$settings['s3fs.use_s3_for_public'] = TRUE;
+
 /**
  * EU Login settings.
  */
