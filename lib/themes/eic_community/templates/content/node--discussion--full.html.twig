@@ -45,11 +45,7 @@
           <h2>{{ 'Documents'|t }}</h2>
           {{ content.field_related_documents }}
         {% endif %}
-        {# {% if video_download %}
-          {% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
-        {% else %} #}
         {{ content.field_related_downloads }}
-        {# {% endif %} #}
       {% endblock %}
       {% block sidebar %}
         {{ eic_local_tasks }}

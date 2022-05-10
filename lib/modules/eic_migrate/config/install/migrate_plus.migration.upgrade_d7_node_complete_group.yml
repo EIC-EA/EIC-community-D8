@@ -70,6 +70,8 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          - plugin: skip_on_empty
+            method: process
 #        target_id: fid
 #        alt: alt
 #        title: title
@@ -86,6 +88,8 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          - plugin: skip_on_empty
+            method: process
 #        target_id: fid
 #        alt: alt
 #        title: title

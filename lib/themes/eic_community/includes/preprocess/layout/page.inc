@@ -11,7 +11,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess_page().
@@ -30,75 +29,15 @@ function eic_community_preprocess_page(array &$variables): void {
   $variables['site_header'] = [
     'icon_file_path' => $variables['eic_icon_path'],
     'site_name' => \Drupal::config('system.site')->get('name'),
+    'account_block' => _eic_get_account_header_block(),
     'logo' => [
       'title' => t('European Commission'),
       'alt' => t('European Commission logo'),
       'href' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
       'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
+      'src_mobile' => $variables['eic_logo_path'] . '/logo--mute.svg'
     ],
   ];
-
-  if ($variables['user']->isAnonymous()) {
-    $variables['site_header']['login']['link'] = [
-      'label' => t('Log in'),
-      'path' => Url::fromRoute(
-        'user.login',
-        [
-          'destination' => \Drupal::request()->getRequestUri(),
-        ]
-      ),
-    ];
-  }
-  else {
-    $account = User::load($variables['user']->id());
-    $user = eic_community_get_teaser_user_display($account);
-    unset($user['path']);
-
-    $user['actions'] = [
-      [
-        'link' => [
-          'label' => t('My profile'),
-          'path' => $account->toUrl()->toString(),
-        ],
-      ],
-      [
-        'link' => [
-          'label' => t('My settings'),
-          'path' => Url::fromRoute('eic_user.my_settings', ['user' => $account->id()])->toString(),
-        ],
-      ],
-      [
-        'link' => [
-          'label' => t('My activity'),
-          'path' => Url::fromRoute('eic_user.user.activity', ['user' => $account->id()])->toString(),
-        ],
-      ],
-    ];
-
-    // Adds unmasquerade link if the user is masquerading.
-    if (\Drupal::service('masquerade')->isMasquerading()) {
-      $user['actions'][] = [
-        'link' => [
-          'label' => t('Unmasquerade'),
-          'path' => Url::fromRoute('masquerade.unmasquerade')->toString(),
-        ],
-      ];
-    }
-
-    // Adds logout link to the end of the dropdown.
-    $user['actions'][] = [
-      'link' => [
-        'label' => t('Log out'),
-        'path' => Url::fromRoute('user.logout'),
-      ],
-    ];
-
-    $variables['site_header']['user'] = $user;
-    // We need to add the session cache context otherwise the header doesn't
-    // update when log in with another account with the same permissions.
-    // @todo In the future we should consider creating a block a load it here.
-    $variables['#cache']['contexts'][] = 'session';
-  }
 
   $footer_sections = [];
 
@@ -323,4 +262,20 @@ function _preprocess_page_not_found(&$variables) {
     // Adds URL to the frontpage.
     $variables['front_url'] = Url::fromRoute('<front>')->toString();
   }
+}
+
+/**
+ * @return array
+ */
+function _eic_get_account_header_block(): array {
+  $config = [];
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $plugin_block = $block_manager->createInstance('eic_account_header_block', $config);
+
+  $access_result = $plugin_block->access(\Drupal::currentUser());
+  if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
+    return [];
+  }
+
+  return $plugin_block->build();
 }

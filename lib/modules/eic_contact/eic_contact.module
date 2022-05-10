@@ -39,6 +39,12 @@ function eic_contact_form_alter(&$form, FormStateInterface &$form_state) {
   }
 
   $form['copy']['#default_value'] = TRUE;
+  $form['self_copy'] = [
+    '#type' => 'checkbox',
+    '#default_value' => TRUE,
+  ];
+  $form['self_copy'] = $form['copy'] + ['#weight' => 5];
+  unset($form['copy']);
   $form['actions']['submit']['#submit'][] = '_eic_contact_alter_submit';
 }
 
@@ -74,7 +80,7 @@ function eic_contact_field_widget_form_alter(&$element, \Drupal\Core\Form\FormSt
     return;
   }
 
-
+  $element['#allowed_formats'] = ['basic_text'];
 }
 
 /**
@@ -138,14 +144,14 @@ function _eic_contact_alter_submit(
     $bus->dispatch([
       'template' => 'notify_mt_contact_global',
       'field_sender' => ['target_id' => $current_user->id()],
-      'field_body' => $form_state->getValue('field_contact_message')[0]['value'],
+      'field_body' => $form_state->getValue('field_contact_message')[0],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'field_contact_category' => ['target_id' => $category_id],
       'uid' => $uid
     ]);
   }
 
-  $send_copy = $form_state->getValue('copy');
+  $send_copy = $form_state->getValue('self_copy');
 
   if ($send_copy) {
     // Send a copy of the contact form to the current user.
@@ -153,7 +159,7 @@ function _eic_contact_alter_submit(
       'template' => 'notify_contact_global_copy',
       'field_sender' => ['target_id' => $current_user->id()],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
-      'field_body' => $form_state->getValue('field_contact_message')[0]['value'],
+      'field_body' => $form_state->getValue('field_contact_message')[0],
       'uid' => ['target_id' => $current_user->id()]
     ]);
   } else {
@@ -170,7 +176,7 @@ function _eic_contact_alter_submit(
   $mail_manager = Drupal::service('plugin.manager.mail');
   $mail_manager->mail(
     'contact',
-    'page' . '_mail',
+    'page_mail',
     $email,
     Drupal::languageManager()->getDefaultLanguage()->getId(),
     $params,

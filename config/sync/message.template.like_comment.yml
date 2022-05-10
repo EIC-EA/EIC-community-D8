@@ -14,8 +14,8 @@ label: 'Like Comment'
 description: ''
 text:
   -
-    value: "Dear [message:field_referenced_node:entity:author:field_first_name:value] [message:field_referenced_node:entity:author:field_last_name:value],\r\n\r\n\r\n<br>\r\n\r\n<p>\r\nA new activity concerning your comment on the [message:field_referenced_node:entity:content-type:name] [message:field_referenced_node:entity:title], has been reported:\r\n</p>\r\n\r\n[site_event_related_system_message]\r\n\r\n<br>\r\n\r\n<p>\r\n  Kind regards,<br>\r\nThe [site:name] team.\r\n</p>\r\n<br>\r\n\r\n<p>\r\n<em>You receive this e-mail because you have enabled notifications for likes on the [site:name]. \r\n</p>\r\n\r\n<p>\r\n<em>\r\nYou can also manage your by clicking <a href=\"[site:url]\">here</a></em>.\r\n</p>"
-    format: plain_text
+    value: "Dear [message:field_referenced_node:entity:author:field_first_name:value] [message:field_referenced_node:entity:author:field_last_name:value],\r\n\r\n\r\n<br>\r\n\r\n<p>\r\nA new activity concerning your comment on the [message:field_referenced_node:entity:content-type:name] [message:field_referenced_node:entity:title], has been reported:\r\n</p>\r\n\r\n[site_event_related_system_message]\r\n\r\n<br>\r\n\r\n<p>\r\n  Kind regards,<br>\r\nThe [site:name] team.\r\n</p>\r\n<br>\r\n\r\n<p>\r\n<em>You receive this e-mail because you have enabled notifications for likes on the [site:name]. \r\n</p>\r\n\r\n<p>\r\n<em>\r\nYou can also manage your by clicking <a href=\"[site:url]\"><u>here</u></a></em>.\r\n</p>"
+    format: full_html
 settings:
   'token options':
     clear: false

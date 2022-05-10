@@ -170,6 +170,7 @@ module:
   path: 0
   path_alias: 0
   profile: 0
+  raven: 0
   realname: 0
   redirect: 0
   redis: 0

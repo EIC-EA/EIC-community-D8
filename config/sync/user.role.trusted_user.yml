@@ -10,6 +10,7 @@ dependencies:
     - media.type.remote_video
     - media.type.video
     - node.type.news
+    - node.type.page
     - node.type.story
     - node.type.video
     - node.type.wiki_page
@@ -52,11 +53,13 @@ permissions:
   - 'create story content'
   - 'create video media'
   - 'delete own news content'
+  - 'delete own page content'
   - 'delete own story content'
   - 'edit own comments'
   - 'edit own eic_document media'
   - 'edit own image media'
   - 'edit own news content'
+  - 'edit own page content'
   - 'edit own story content'
   - 'edit own video content'
   - 'edit own wiki_page content'

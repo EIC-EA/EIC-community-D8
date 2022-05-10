@@ -19,6 +19,7 @@ settings:
             - Bold
             - Italic
             - Underline
+            - Blockquote
             - Superscript
             - Subscript
         -

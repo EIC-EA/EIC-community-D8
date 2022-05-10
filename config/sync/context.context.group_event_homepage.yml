@@ -38,7 +38,7 @@ reactions:
         label: 'EIC Group Overview Messages'
         provider: eic_groups
         label_display: '0'
-        region: content
+        region: content_before
         weight: '0'
         custom_id: eic_group_overview_message
         theme: eic_community

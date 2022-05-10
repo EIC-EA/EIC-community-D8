@@ -32,6 +32,9 @@
     </mj-style>
       <mj-raw>
         <style type="text/css">
+          .logo {
+            min-width: 120px;
+          }
           @media screen and (max-device-width: 599px),
           screen and (max-width: 599px) {
             .pre-footer, .pre-footer > div {

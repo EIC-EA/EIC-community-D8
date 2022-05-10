@@ -7,114 +7,114 @@
  */
 #}
 {% if page.sidebar is not empty %}
-  {% set output_sidebar = page.sidebar %}
+	{% set output_sidebar = page.sidebar %}
 {% elseif block('sidebar') is defined %}
-  {% set output_sidebar = block('sidebar') %}
+	{% set output_sidebar = block('sidebar') %}
 {% endif %}
 
 {% if page.content_before is not empty %}
-  {% set output_content_before = page.content_before %}
+	{% set output_content_before = page.content_before %}
 {% elseif block('content_before') is defined %}
-  {% set output_content_before = block('content_before') %}
+	{% set output_content_before = block('content_before') %}
 {% endif %}
 
 {% if page.content_after is not empty %}
-  {% set output_content_after = page.content_after %}
+	{% set output_content_after = page.content_after %}
 {% elseif block('content_after') is defined %}
-  {% set output_content_after = block('content_after') %}
+	{% set output_content_after = block('content_after') %}
 {% endif %}
 
 {% if block('modal') is defined %}
-  {% set modal_content = block('modal')|trim %}
+	{% set modal_content = block('modal')|trim %}
 {% endif %}
 
 <div class="ecl-viewport">
-  <div class="ecl-viewport__top">
-    {% block site_top_bar %}
-      {{ page.site_top_bar }}
-    {% endblock %}
+	<div class="ecl-viewport__top">
+		{% block site_top_bar %}
+			{{ page.site_top_bar }}
+		{% endblock %}
 
-    {% block site_header %}
-      {% if top_menu %}
-        {% include "@theme/patterns/compositions/top-menu.html.twig" with top_menu|default({}) only %}
-      {% endif %}
+		{% block site_header %}
+			{% if top_menu %}
+				{% include "@theme/patterns/compositions/top-menu.html.twig" with top_menu|default({}) only %}
+			{% endif %}
 
-      {% if site_header %}
-        {% include "@theme/patterns/compositions/global-header.html.twig" with site_header only %}
-      {% endif %}
+			{% if site_header %}
+				{% include "@theme/patterns/compositions/global-header.html.twig" with site_header only %}
+			{% endif %}
 
-      {% if mainmenu %}
-        {% include "@theme/patterns/compositions/mainmenu.html.twig" with {
+			{% if mainmenu %}
+				{% include "@theme/patterns/compositions/mainmenu.html.twig" with {
           label: mainmenu_label,
           mainmenu: mainmenu|default({}),
           searchform: searchform|default({}),
           icon_path: mainmenu.icon_path
         } only %}
-      {% endif %}
-    {% endblock %}
+			{% endif %}
+		{% endblock %}
 
-    {% block navigation %}
-      {{ page.navigation }}
-    {% endblock %}
+		{% block navigation %}
+			{{ page.navigation }}
+		{% endblock %}
 
-    {% block breadcrumbs %}
-      {{ page.breadcrumbs }}
-    {% endblock %}
-  </div>
+		{% block breadcrumbs %}
+			{{ page.breadcrumbs }}
+		{% endblock %}
+	</div>
 
-  <div class="ecl-viewport__middle">
-    {% block page_header %}
-      {{ page.page_header }}
-    {% endblock %}
+	<div class="ecl-viewport__middle">
+		{% block page_header %}
+			{{ page.page_header }}
+		{% endblock %}
 
-    <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }} {{ layout ? layout.extra_classes }}">
-      {% if output_content_before %}
-        <div class="ecl-base-layout__content-before">
-          {{ output_content_before }}
-        </div>
-      {% endif %}
+		<div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }} {{ layout ? layout.extra_classes }}">
+			{% if output_content_before %}
+				<div class="ecl-base-layout__content-before">
+					{{ output_content_before }}
+				</div>
+			{% endif %}
 
-      <div class="ecl-base-layout__content">
-        <div class="ecl-base-layout__main">
-          <main{{ main_attributes }}>
-            {% block content %}
-              {{ page.content }}
-            {% endblock %}
-          </main>
-        </div>
+			<div class="ecl-base-layout__content">
+				<div class="ecl-base-layout__main">
+					<main{{main_attributes}}>
+						{% block content %}
+							{{ page.content }}
+						{% endblock %}
+					</main>
+				</div>
 
-        {% if output_sidebar %}
-          <div class="ecl-base-layout__aside">
-            {{ output_sidebar }}
-          </div>
-        {% endif %}
-      </div>
+				{% if output_sidebar %}
+					<div class="ecl-base-layout__aside">
+						{{ output_sidebar }}
+					</div>
+				{% endif %}
+			</div>
 
-      {% set content_after %}
-        <div class="ecl-base-layout__content-after">
-          {{ output_content_after }}
-        </div>
-      {% endset %}
+			{% set content_after %}
+			<div class="ecl-base-layout__content-after">
+				{{ output_content_after }}
+			</div>
+			{% endset %}
 
-      {% if content_after|striptags|trim is not empty %}
-        {{ content_after }}
-      {% endif %}
-    </div>
-  </div>
+			{% if content_after|striptags|trim is not empty %}
+				{{ content_after }}
+			{% endif %}
+		</div>
+	</div>
 
-  <div class="ecl-viewport__bottom">
-    {% block footer %}
-      {% if site_footer %}
-        {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
-      {% endif %}
-    {% endblock %}
-  </div>
+	<div class="ecl-viewport__bottom">
+		{% block footer %}
+			{% if site_footer %}
+				{% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
+			{% endif %}
+		{% endblock %}
+	</div>
 
-  {% if modal_content is not empty %}
-    <div class="ecl-viewport__modal">
-      <div class="ecl-viewport__modal__content">
-        {{ modal_content }}
-      </div>
-    </div>
-  {% endif %}
+	{% if modal_content is not empty %}
+		<div class="ecl-viewport__modal">
+			<div class="ecl-viewport__modal__content">
+				{{ modal_content }}
+			</div>
+		</div>
+	{% endif %}
 </div>

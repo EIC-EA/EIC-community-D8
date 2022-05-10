@@ -3,8 +3,8 @@ langcode: en
 status: true
 dependencies:
   module:
-    - ctools
     - eic_groups
+    - node
 label: Comments
 name: comments
 group: Global
@@ -32,7 +32,7 @@ reactions:
         label: 'EIC comments from discussion'
         provider: eic_groups
         label_display: '0'
-        region: content_after
+        region: content
         weight: '0'
         custom_id: eic_groups_comments_from_discussion
         theme: eic_community

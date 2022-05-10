@@ -198,6 +198,16 @@ $config['config_split.config_split.development']['status'] = TRUE;
 $settings['file_private_path'] = '/app/private_files';
 
 /**
+ * EU Login settings.
+ */
+$config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+// Uncomment this line to force EU Login known user accounts to login through EU
+// Login.
+//$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+// Allow self-registered users to login.
+$config['oe_authentication.settings']['assurance_level'] = 'LOW';
+
+/**
  * SMED API connection information.
  */
 $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');

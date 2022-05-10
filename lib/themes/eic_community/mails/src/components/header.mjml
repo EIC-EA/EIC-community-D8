@@ -1,19 +1,20 @@
-
-  <mj-section text-align="left" padding="0">
-    <mj-column width="220px" vertical-align="bottom" css-class="align-left">
-      <mj-image align="left" src="images/EC-logo.png"/>
+<mj-section text-align="left" padding="0">
+  <mj-group width="600px">
+    <mj-column width='120px' css-class="logo" vertical-align="bottom" css-class="align-left">
+      <mj-image fluid-on-mobile="false" align="left" src="images/logo--mute.svg"/>
     </mj-column>
     <mj-column vertical-align="middle">
-      <mj-text font-size="12px" padding="0 25px 5px 25px" css-class="header-title" color="#265D9E">
+      <mj-text font-size="11px" padding="0 25px 5px 0px" css-class="header-title" color="#265D9E">
         European Innovation Council
         <br>
         <span class="light">Community</span>
       </mj-text>
     </mj-column>
-  </mj-section>
+  </mj-group>
+</mj-section>
 
-  <mj-section padding="0">
-    <mj-column>
-      <mj-divider border-width="1px" border-style="solid"  />
-    </mj-column>
-  </mj-section>
+<mj-section padding="0">
+  <mj-column>
+    <mj-divider border-width="1px" border-style="solid"  />
+  </mj-column>
+</mj-section>

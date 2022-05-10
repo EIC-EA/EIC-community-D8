@@ -139,8 +139,8 @@ process:
       plugin: static_map
       source: status
       map:
-        0: draft
-        1: published
+        - draft
+        - published
 destination:
   plugin: 'entity_complete:node'
   translations: true

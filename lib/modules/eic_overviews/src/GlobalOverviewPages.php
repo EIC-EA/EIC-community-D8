@@ -170,7 +170,7 @@ class GlobalOverviewPages {
           : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle]);
 
         $operations[] = [
-          'label' => $this->t("Create a new $bundle"),
+          'label' => $this->t("Add $bundle"),
           'path' => $url->toString(),
         ];
       }

@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies: {  }
 id: upgrade_d7_content_membership
-#class: Drupal\user\Plugin\migrate\User
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags:
@@ -23,7 +22,7 @@ process:
       migration:
         - upgrade_d7_node_complete_group
         - upgrade_d7_node_complete_organisation
-        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_event_site
     - plugin: skip_on_empty
       method: row
       message: 'Group not found'
@@ -56,16 +55,16 @@ process:
       - constants/node_membership_plugin_id
       - '@_target_node_type'
     delimiter: '-'
-#  uid:
-#    -
-#      plugin: migration_lookup
-#      source: etid
-#      migration: upgrade_d7_user
-#      no_stub: true
-#    -
-#      plugin: skip_on_empty
-#      method: row
-#      message: 'User not found'
+  #  uid:
+  #    -
+  #      plugin: migration_lookup
+  #      source: etid
+  #      migration: upgrade_d7_user
+  #      no_stub: true
+  #    -
+  #      plugin: skip_on_empty
+  #      method: row
+  #      message: 'User not found'
   gid:
     -
       plugin: migration_lookup
@@ -73,7 +72,7 @@ process:
       migration:
         - upgrade_d7_node_complete_group
         - upgrade_d7_node_complete_organisation
-        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_event_site
       no_stub: true
     -
       plugin: skip_on_empty
@@ -88,14 +87,21 @@ process:
         - upgrade_d7_node_complete_book
         - upgrade_d7_node_complete_discussion
         - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_event
         - upgrade_d7_node_complete_news
         - upgrade_d7_node_complete_photoalbum
-        - upgrade_d7_node_complete_pwiki_page
+        - upgrade_d7_node_complete_wiki_page
       no_stub: true
     -
       plugin: skip_on_empty
       method: row
       message: 'Node not found'
+    -
+      plugin: callback
+      callable: array_filter
+    -
+      plugin: skip_on_empty
+      method: row
   created: created
   changed: created
 
@@ -104,7 +110,15 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    # TODO: Add the remaining node migration once available.
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_book
     - upgrade_d7_node_complete_discussion
     - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_photoalbum
+    - upgrade_d7_node_complete_wiki_page
   optional: { }

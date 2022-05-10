@@ -7,9 +7,9 @@ use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -29,18 +29,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group", required = FALSE, label = @Translation("Group")),
- *     "taxonomy_term" = @ContextDefinition("entity:taxonomy_term", required = FALSE, label = @Translation("Taxonomy term"))
+ *     "taxonomy_term" = @ContextDefinition("entity:taxonomy_term", required = FALSE, label = @Translation("Taxonomy
+ *   term"))
  *   }
  * )
  */
 class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * The EIC groups helper
-   *
-   * @var \Drupal\eic_groups\EICGroupsHelper
-   */
-  private $groupsHelper;
 
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -63,9 +57,9 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
   private $currentUser;
 
   /**
-   * @var \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  private $routeMatch;
+  private $fileUrlGenerator;
 
   /**
    * LastGroupMembersBlock constructor.
@@ -79,8 +73,6 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param EICGroupsHelper $groups_helper
-   *   The Form builder service.
    * @param EntityTypeManagerInterface $entity_type_manager
    *   The Form builder service.
    * @param ActivityStreamSourceType $activity_stream_source_type
@@ -89,27 +81,24 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The Date formatter
    * @param AccountInterface $current_user
    *   The Date formatter
-   * @param \Drupal\Core\Routing\RouteMatch $route_match
-   *   The route match service
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EICGroupsHelper $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
     ActivityStreamSourceType $activity_stream_source_type,
     DateFormatter $date_formatter,
     AccountInterface $current_user,
-    RouteMatchInterface $route_match
+    FileUrlGeneratorInterface $file_url_generator
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->activityStreamSourceType = $activity_stream_source_type;
     $this->dateFormatter = $date_formatter;
     $this->currentUser = $current_user;
-    $this->routeMatch = $route_match;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -125,12 +114,11 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('eic_groups.helper'),
       $container->get('entity_type.manager'),
       $container->get('eic_search.activity_stream_library'),
       $container->get('date.formatter'),
       $container->get('current_user'),
-      $container->get('current_route_match')
+      $container->get('file_url_generator')
     );
   }
 
@@ -138,7 +126,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function access(AccountInterface $account, $return_as_object = FALSE) {
-    return AccessResult::allowedIfHasPermission($account, 'access topics activity stream');
+    return AccessResult::allowed();
   }
 
   /**
@@ -211,7 +199,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'block_title' => $this->t('Latest activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
         'delete_modal_title' => $this->t('Delete activity from activity stream', [], ['context' => 'eic_group']),
-        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.', [], ['context' => 'eic_group']),
+        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.',
+          [], ['context' => 'eic_group']),
         'delete_modal_confirm' => $this->t('Yes, delete activity', [], ['context' => 'eic_group']),
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
@@ -274,7 +263,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $media_picture = $user->get('field_media')->referencedEntities();
       /** @var File|NULL $file */
       $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
-      $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
+      $file_url = $file ? $this->fileUrlGenerator->transformRelative(file_create_url($file->get('uri')->value)) : NULL;
 
       return [
         'joined_date' => $this->dateFormatter->format($groupContent->getCreatedTime(), 'eu_short_date'),

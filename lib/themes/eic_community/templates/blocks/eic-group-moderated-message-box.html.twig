@@ -16,6 +16,7 @@
  */
 #}
 {% set moderation_state = group.moderation_state.value %}
+{% set bundle = group.bundle %}
 <div class="ecl-container">
 {% if moderation_state == 'pending' %}
   {% embed "@theme/patterns/compositions/state-banner.html.twig" with {
@@ -24,22 +25,22 @@
     "title": "Awaiting approval"|t
   } %}
     {% block description %}
-      <p>{{ 'This group is pending approval from our community team. We will endeavour to approve the group within 3 days.'|t }}</p>
-      <p>{{ 'You can still <a href="@edit_link">manage</a> or <a href="@delete_link">delete</a> your group'|t({'@delete_link': delete_link, '@edit_link': edit_link}) }}</p>
+      <p>{{ 'This @entity_type is pending approval from our community team. We will endeavour to approve the @entity_type within 3 days.'|t({'@entity_type': bundle}) }}</p>
+      <p>{{ 'You can still <a href="@edit_link">manage</a> or <a href="@delete_link">delete</a> your @entity_type'|t({'@delete_link': delete_link, '@edit_link': edit_link, '@entity_type': bundle}) }}</p>
     {% endblock %}
   {% endembed %}
 {% elseif moderation_state == 'draft' %}
   {% embed "@theme/patterns/compositions/state-banner.html.twig" with {
     "icon": {"name": "success", "type": "notifications"},
     "icon_file_path": eic_icon_path,
-    "title": "Congratulations! Group approved"|t
+    "title": "Congratulations! @entity_type approved"|t({'@entity_type': bundle|capitalize})
   } %}
     {% block description %}
-      <p>{{ 'We advise these steps to make your group ready:' }}</p>
+      <p>{{ 'We advise these steps to make your @entity_type ready:'|t({'@entity_type': bundle}) }}</p>
       <ul>
-        <li>{{ 'Configure your group: configure a welcome message for your GM\'s, configure the content section'|t }}</li>
-        <li>{{ 'Create content in the group'|t }}</li>
-        <li>{{ 'Publish your group'|t }}</li>
+        <li>{{ 'Configure your @entity_type: configure a welcome message for your GM\'s, configure the content section'|t({'@entity_type': bundle}) }}</li>
+        <li>{{ 'Create content in the @entity_type'|t({'@entity_type': bundle}) }}</li>
+        <li>{{ 'Publish your @entity_type'|t({'@entity_type': bundle}) }}</li>
       </ul>
       <p>{{ '<a href="@help_link">Click here</a> if you need additional help'|t({'@help_link': help_link}) }}</p>
     {% endblock %}
@@ -48,11 +49,11 @@
   {% embed "@theme/patterns/compositions/state-banner.html.twig" with {
   "icon": {"name": "success", "type": "notifications"},
   "icon_file_path": eic_icon_path,
-  "title": "Great! Your group is published. Now invite people to the group"|t
+  "title": "Great! Your @entity_type is published. Now invite people to the @entity_type"|t({'@entity_type': bundle})
   } %}
     {% block description %}
-      <p>{{ '<a href="@invite_link">Invite users</a> so they can contribute and engage with your group.'|t({'@invite_link': invite_link}) }}</p>
-      <p>{{ '<a href="@edit_link">Click here</a> if you want to make any changes to the settings of your group.'|t({'@edit_link': edit_link}) }}</p>
+      <p>{{ '<a href="@invite_link">Invite users</a> so they can contribute and engage with your @entity_type.'|t({'@invite_link': invite_link, '@entity_type': bundle}) }}</p>
+      <p>{{ '<a href="@edit_link">Click here</a> if you want to make any changes to the settings of your @entity_type.'|t({'@edit_link': edit_link, '@entity_type': bundle}) }}</p>
     {% endblock %}
   {% endembed %}
 {% endif %}

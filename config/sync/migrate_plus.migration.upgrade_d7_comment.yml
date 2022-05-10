@@ -59,11 +59,10 @@ process:
   field_name: constants/field_name
   subject: subject
   uid:
-    -
-      plugin: migration_lookup
-      source: uid
-      migration:
-        - upgrade_d7_user
+    plugin: migration_lookup
+    source: uid
+    migration:
+      - upgrade_d7_user
   name: name
   mail: mail
   homepage: homepage
@@ -72,17 +71,10 @@ process:
   changed: changed
   status: status
   thread: thread
-  'comment_body/value':
-    -
-      plugin: extract
-      source: comment_body
-      index:
-        - 0
-        - value
-  'comment_body/format':
-    -
-      plugin: default_value
-      default_value: 'basic_text'
+  comment_body/value: comment_body/0/value
+  comment_body/format:
+    plugin: default_value
+    default_value: basic_text
 destination:
   plugin: 'entity:comment'
 migration_dependencies:
