@@ -390,7 +390,7 @@
 
     & .description {
       opacity: 0.7;
-      margin-top: $ecl-spacing-m;
+      margin: $ecl-spacing-m 0;
     }
 
     & .js-media-library-item {
@@ -405,6 +405,11 @@
   }
 
   .field-multiple-table {
+
+    & + .description {
+      margin-bottom: $ecl-spacing-m;
+    }
+
     & .ecl-table__row {
       border: none;
     }
@@ -427,7 +432,7 @@
     & .ecl-table__body {
       & .ecl-table__row {
         background-color: $ecl-color-grey-5;
-        border-bottom: $ecl-spacing-m solid #fff;
+        // border-bottom: $ecl-spacing-m solid #fff;
       }
     }
   }
