@@ -226,4 +226,11 @@ interface SourceTypeInterface {
    * @return bool
    */
   public function ignorePublishedState(): bool;
+
+  /**
+   * Return a unique string id.
+   *
+   * @return string
+   */
+  public function getUniqueId(): string;
 }

@@ -321,7 +321,7 @@ class UserHelper {
    * @return int
    *   The number of followers.
    */
-  public function getUserFollowers(UserInterface $user) {
+  public function getUserFollowers(UserInterface $user): int {
     $user_flag_counters = $this->flagCount->getEntityFlagCounts($user);
 
     // No one is following the user, therefore we return 0.
