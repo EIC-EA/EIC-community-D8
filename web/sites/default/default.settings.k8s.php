@@ -106,9 +106,12 @@ $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
 // Allow self-registered users to login.
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
 
-$settings['s3fs.use_s3_for_private'] = TRUE;
-$settings['s3fs.use_s3_for_public'] = TRUE;
-$settings['s3fs.upload_as_private'] = TRUE;
+if ($bucket = getenv('AWS_S3_BUCKET')) {
+  $config['s3fs.settings']['bucket'] = $bucket;
+  $settings['s3fs.use_s3_for_private'] = TRUE;
+  $settings['s3fs.use_s3_for_public'] = TRUE;
+  $settings['s3fs.upload_as_private'] = TRUE;
+}
 
 /**
  * SMED API connection information.
