@@ -1,5 +1,6 @@
 .horizontal-tabs .horizontal-tab-button {
   display: flex;
+  flex-wrap: wrap;
   align-self: stretch;
   align-items: center;
   min-height: 45px;
