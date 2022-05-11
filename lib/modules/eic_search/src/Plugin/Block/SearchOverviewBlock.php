@@ -464,7 +464,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    parent::blockSubmit($form, $form_state);
     $values = $form_state->getValues();
 
     if (!array_key_exists('search', $values)) {
@@ -494,6 +493,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
   }
+
 
   /**
    * Extracting filters values from the URL.
