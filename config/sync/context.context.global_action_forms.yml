@@ -1,0 +1,41 @@
+uuid: 53b1c0ac-f522-4321-80e9-f5c925edae0d
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_admin
+label: 'Global - Action forms'
+name: global_action_forms
+group: Global
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  eic_admin_action_forms:
+    id: eic_admin_action_forms
+    negate: false
+    uuid: 77e8221e-c075-44b8-b177-3890c2dbeab5
+    context_mapping: {  }
+reactions:
+  blocks:
+    id: blocks
+    uuid: a3fe0a55-8165-4df4-ad77-4289f354787b
+    blocks:
+      43b8e7b3-0b81-41b1-9f1a-f2e4dbd689ba:
+        uuid: 43b8e7b3-0b81-41b1-9f1a-f2e4dbd689ba
+        id: eic_admin_action_forms_description
+        label: 'EIC Admin - Action forms description'
+        provider: eic_admin
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: eic_admin_action_forms_description
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_action_forms
+        context_mapping: {  }
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0
