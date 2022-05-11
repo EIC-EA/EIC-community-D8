@@ -94,6 +94,17 @@
     & > div {
       width: 100%;
     }
+
+    &[data-drupal-selector="edit-custom-restricted"]  {
+      margin-top: 0;
+    }
+
+    &[data-drupal-selector="edit-oec-group-visibility-option-container"] {
+      & .ecl-form-group {
+        margin: 0;
+      }
+    }
+
     &:not(fieldset) {
       display: flex;
       flex-direction: column;
