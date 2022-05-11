@@ -5,6 +5,7 @@ namespace Drupal\eic_admin\Plugin\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\eic_admin\Service\ActionFormsManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,6 +28,13 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
   protected $actionFormsManager;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * Creates a new ActionForms instance.
    *
    * @param array $configuration
@@ -40,10 +48,19 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
    *   The plugin implementation definition.
    * @param \Drupal\eic_admin\Service\ActionFormsManager $action_forms_manager
    *   The action forms manager service.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ActionFormsManager $action_forms_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ActionFormsManager $action_forms_manager,
+    RouteMatchInterface $route_match
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->actionFormsManager = $action_forms_manager;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -54,7 +71,8 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('eic_admin.action_forms_manager')
+      $container->get('eic_admin.action_forms_manager'),
+      $container->get('current_route_match')
     );
   }
 
@@ -73,7 +91,7 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
       '#theme' => 'item_list',
       '#list_type' => 'ul',
       '#title' => 'Routes',
-      '#items' => $this->getActionFormRoutes(),
+      '#items' => $this->actionFormsManager->getActionFormRoutes(),
     ];
 
     return parent::buildConfigurationForm($form, $form_state);
@@ -90,24 +108,10 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function evaluate() {
-    if ($this->isNegated()) {
-      return in_array($this->actionFormsManager->routeMatch->getRouteName(), $this->getActionFormRoutes());
-    }
-    return !in_array($this->actionFormsManager->routeMatch->getRouteName(), $this->getActionFormRoutes());
-  }
-
-  /**
-   * Returns all the existing action form routes.
-   *
-   * @return string[]
-   *   A list of route names.
-   */
-  protected function getActionFormRoutes() {
-    $routes = [];
-    foreach ($this->actionFormsManager->getAllRouteConfigs() as $config) {
-      $routes[] = $config->get('route');
-    }
-    return $routes;
+    return in_array(
+      $this->routeMatch->getRouteName(),
+      $this->actionFormsManager->getActionFormRoutes()
+    );
   }
 
 }
