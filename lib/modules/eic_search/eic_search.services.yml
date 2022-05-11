@@ -116,6 +116,7 @@ services:
       - { name: eic_search.document_processor, priority: 16 }
   eic_search.document_processor_discussion:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorDiscussion
+    arguments: ['@eic_statistics.helper']
     tags:
       - { name: eic_search.document_processor, priority: 18 }
   eic_search.document_processor_visibility:
