@@ -154,4 +154,11 @@ class ActionFormDescriptionBlock extends BlockBase implements ContainerFactoryPl
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return 0;
+  }
+
 }
