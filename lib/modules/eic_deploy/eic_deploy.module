@@ -31,9 +31,14 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
     $group_visibility = $group_visibility_storage->load($group->id());
 
     if (
-      !in_array($group->getGroupType()->id(), ['group', 'event']) ||
-      empty($permissions) ||
-      !in_array($group_visibility->getType(), $group_visibilities)
+      $group->getGroupType()->id() === 'organisation' &&
+      empty($permissions)
+    ) {
+      continue;
+    }
+    elseif (
+      in_array($group->getGroupType()->id(), ['group', 'event']) &&
+      (empty($permissions) || !in_array($group_visibility->getType(), $group_visibilities))
     ) {
       continue;
     }
@@ -56,7 +61,7 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
     $group_permission->setNewRevision();
     $group_permission->setRevisionUserId(1);
     $group_permission->setRevisionCreationTime(time());
-    $group_permission->setRevisionLogMessage(t('Set default permissions for outsiders.'));
+    $group_permission->setRevisionLogMessage(t('Update group permissions.'));
 
     if (count($group_permission->validate()) > 0) {
       continue;
