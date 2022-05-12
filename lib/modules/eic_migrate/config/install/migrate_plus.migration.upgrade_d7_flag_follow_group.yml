@@ -11,7 +11,7 @@ migration_tags:
   - Content
   - Flags
 migration_group: migrate_drupal_7
-label: Flags
+label: 'Flag follow group'
 source:
   plugin: eic_d7_flag
   track_changes: true
