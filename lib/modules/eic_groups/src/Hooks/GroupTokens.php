@@ -5,12 +5,14 @@ namespace Drupal\eic_groups\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Token;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_seo\AliasCleaner;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -59,6 +61,13 @@ class GroupTokens implements ContainerInjectionInterface {
   protected $eicGroupsHelper;
 
   /**
+   * Array of group types to use in tokens.
+   *
+   * @var \Drupal\group\Entity\GroupTypeInterface[]
+   */
+  protected $groupTypes = [];
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -84,6 +93,9 @@ class GroupTokens implements ContainerInjectionInterface {
     $this->eicAliasCleaner = $alias_cleaner;
     $this->requestStack = $request_stack;
     $this->eicGroupsHelper = $eic_groups_helper;
+
+    $this->groupTypes = $entity_type_manager->getStorage('group_type')
+      ->loadMultiple();
   }
 
   /**
@@ -121,13 +133,28 @@ class GroupTokens implements ContainerInjectionInterface {
         'description' => $this->t('The user entity which is the owner of the group.'),
       ],
     ];
+
+    // Create tokens to grab list of groups a user belongs to, per group type.
+    foreach ($this->groupTypes as $group_type) {
+      $info['tokens']['user']["group-{$group_type->id()}-entities"] = [
+        'name' => $this->t('User group @group_type entities.', ['@group_type' => $group_type->id()]),
+        'description' => $this->t('List of group @group_type entities the user belongs to.', ['@group_type' => $group_type->id()]),
+      ];
+    }
+
     return $info;
   }
 
   /**
    * Implements hook_tokens().
    */
-  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  public function tokens(
+    $type,
+    $tokens,
+    array $data,
+    array $options,
+    BubbleableMetadata $bubbleable_metadata
+  ) {
     $replacements = [];
 
     switch ($type) {
@@ -144,6 +171,14 @@ class GroupTokens implements ContainerInjectionInterface {
           $replacements = $this->groupTokens($tokens, $data, $options, $bubbleable_metadata);
         }
         break;
+
+      case 'user':
+        // User tokens.
+        if (!empty($data['user']) && $data['user'] instanceof UserInterface) {
+          $replacements = $this->userTokens($tokens, $data, $options, $bubbleable_metadata);
+        }
+        break;
+
     }
 
     return $replacements;
@@ -272,6 +307,61 @@ class GroupTokens implements ContainerInjectionInterface {
 
         }
       }
+    }
+
+    return $replacements;
+  }
+
+  /**
+   * Replace user tokens.
+   *
+   * @param mixed $tokens
+   *   An array of tokens to be replaced.
+   * @param array $data
+   *   An associative array of data objects to be used when generating
+   *   replacement values.
+   * @param array $options
+   *   An associative array of options for token replacement.
+   * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
+   *   The bubbleable metadata.
+   *
+   * @return array
+   *   An associative array of replacement values.
+   */
+  private function userTokens(
+    $tokens,
+    array $data,
+    array $options,
+    BubbleableMetadata $bubbleable_metadata
+  ) {
+    $replacements = [];
+
+    // Replace list of user group entities token as links.
+    foreach ($this->groupTypes as $group_type) {
+      $find_token_name = "group-{$group_type->id()}-entities";
+
+      if (!isset($tokens[$find_token_name])) {
+        continue;
+      }
+
+      /** @var \Drupal\group\Entity\GroupContentInterface[] $user_memberships */
+      $user_memberships = $this->entityTypeManager->getStorage('group_content')
+        ->loadByProperties([
+          'type' => "{$group_type->id()}-group_membership",
+          'entity_id' => $data['user']->id(),
+        ]);
+
+      if (empty($user_memberships)) {
+        continue;
+      }
+
+      $user_groups = array_map(function ($user_membership) {
+        return $user_membership->getGroup()
+          ->toLink()
+          ->toString();
+      }, $user_memberships);
+
+      $replacements[$tokens[$find_token_name]] = Markup::create(implode(', ', $user_groups));
     }
 
     return $replacements;
