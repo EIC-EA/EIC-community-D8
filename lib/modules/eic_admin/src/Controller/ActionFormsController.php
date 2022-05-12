@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Custom implementation to alter action forms.
  */
-class ActionForms extends ControllerBase {
+class ActionFormsController extends ControllerBase {
 
   /**
    * The action forms manager service.
@@ -28,7 +28,7 @@ class ActionForms extends ControllerBase {
   protected $tokenService;
 
   /**
-   * ActionForms constructor.
+   * ActionFormsController constructor.
    *
    * @param \Drupal\eic_admin\Service\ActionFormsManager $action_forms_manager
    *   The action forms manager service.
