@@ -88,7 +88,7 @@
     margin: map-get($ecl-spacing, 'l') 0;
   }
 
-  .ecl-form-group {
+  & .field-group-tab > .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
 
     & > div {
