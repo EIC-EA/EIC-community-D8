@@ -19,19 +19,19 @@ use Solarium\QueryType\Update\Query\Document;
 class ProcessorGroup extends DocumentProcessor {
 
   /**
-   * @var \Drupal\eic_search\Service\SolrSearchManager
+   * @var \Drupal\eic_search\Service\SolrSearchManager|NULL
    */
-  private SolrSearchManager $solrSearchManager;
+  private ?SolrSearchManager $solrSearchManager;
 
   /**
-   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper|NULL
    */
-  private GroupStatisticsHelper $groupStatisticsHelper;
+  private ?GroupStatisticsHelper $groupStatisticsHelper;
 
   /**
-   * @var \Drupal\flag\FlagCountManagerInterface
+   * @var \Drupal\flag\FlagCountManagerInterface|NULL
    */
-  private FlagCountManagerInterface $flagCountManager;
+  private ?FlagCountManagerInterface $flagCountManager;
 
   /**
    * @param \Drupal\eic_search\Service\SolrSearchManager $solr_search_manager
