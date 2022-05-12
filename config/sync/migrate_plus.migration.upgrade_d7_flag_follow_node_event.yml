@@ -53,6 +53,11 @@ process:
   created: timestamp
   _flag_exists:
     -
+      plugin: skip_on_empty
+      method: row
+      source: '@entity_id/0'
+      message: 'The entity_id cannot be NULL.'
+    -
       plugin: eic_d7_duplicated_flag
       source:
         - '@entity_id/0'
@@ -61,7 +66,7 @@ process:
     -
       plugin: skip_on_value
       method: row
-      value: TRUE
+      value: true
       message: 'The Flag has already been migrated. Skip duplicated.'
 destination:
   plugin: 'entity:flagging'
