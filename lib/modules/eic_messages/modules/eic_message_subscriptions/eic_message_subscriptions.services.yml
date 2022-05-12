@@ -14,7 +14,7 @@ services:
 
   eic_message_subscriptions.flag_event_subscriber:
     class: Drupal\eic_message_subscriptions\EventSubscriber\FlagEventSubscriber
-    arguments: [ '@event_dispatcher' ]
+    arguments: [ '@event_dispatcher', '@state' ]
     tags:
       - { name: event_subscriber }
 
