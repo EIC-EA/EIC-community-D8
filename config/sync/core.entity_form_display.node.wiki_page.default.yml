@@ -15,12 +15,81 @@ dependencies:
   module:
     - content_moderation
     - eic_content
+    - field_group
     - media_library
     - path
     - publication_date
     - scheduler
     - scheduler_content_moderation_integration
     - text
+third_party_settings:
+  field_group:
+    group_wiki_page_details:
+      children:
+        - group_details
+        - group_topics_countries_tags
+        - group_settings
+      label: 'Wiki page details'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: tabs
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        direction: horizontal
+        width_breakpoint: 640
+    group_details:
+      children:
+        - field_related_media
+        - field_related_downloads
+        - field_language
+      label: Details
+      region: content
+      parent_name: group_wiki_page_details
+      weight: 20
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: open
+        description: ''
+        required_fields: true
+    group_topics_countries_tags:
+      children:
+        - field_vocab_topics
+        - field_vocab_geo
+        - field_tags
+      label: 'Topics, countries & tags'
+      region: content
+      parent_name: group_wiki_page_details
+      weight: 21
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_settings:
+      children:
+        - private
+        - member_content_edit_access
+      label: Settings
+      region: content
+      parent_name: group_wiki_page_details
+      weight: 23
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
 id: node.wiki_page.default
 targetEntityType: node
 bundle: wiki_page
@@ -28,55 +97,51 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 9
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_body:
     type: text_textarea
-    weight: 2
+    weight: 1
     region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
   field_language:
-    type: entity_reference_autocomplete
-    weight: 5
+    type: options_select
+    weight: 10
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_post_activity:
-    weight: 22
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_related_downloads:
     type: media_library_widget
-    weight: 8
+    weight: 9
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_related_media:
     type: media_library_widget
-    weight: 7
+    weight: 8
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_send_notification:
-    weight: 23
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   field_tags:
     type: entity_tree
-    weight: 25
+    weight: 24
     region: content
     settings:
       match_top_level_limit: '0'
@@ -93,48 +158,64 @@ content:
       is_required: false
     third_party_settings: {  }
   field_vocab_geo:
-    type: entity_reference_autocomplete
-    weight: 4
+    type: entity_tree
+    weight: 23
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected regions and countries'
+      search_label: 'Select a region or country'
+      search_placeholder: Search
+      auto_select_parents: '1'
+      disable_top_choices: 0
+      load_all: 0
+      can_create_tag: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_vocab_topics:
-    type: entity_reference_autocomplete
-    weight: 3
+    type: entity_tree
+    weight: 22
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected topics'
+      search_label: 'Select a topic'
+      search_placeholder: Search
+      load_all: 0
+      can_create_tag: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 6
+    weight: 5
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   member_content_edit_access:
     type: boolean_checkbox
-    weight: 21
+    weight: 2
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 20
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 13
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -147,39 +228,39 @@ content:
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 11
+    weight: 8
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 16
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   publish_state:
     type: scheduler_moderation
-    weight: 18
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
-    weight: 15
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 14
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 12
+    weight: 9
     region: content
     settings:
       display_label: true
@@ -194,7 +275,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS
@@ -204,18 +285,18 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 19
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   unpublish_state:
     type: scheduler_moderation
-    weight: 17
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 24
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }

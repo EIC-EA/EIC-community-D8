@@ -19,7 +19,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $actionFormsManager;
 
   /**
-   * ActionForms constructor.
+   * RouteSubscriber constructor.
    *
    * @param \Drupal\eic_admin\Service\ActionFormsManager $action_forms_manager
    *   The action forms manager service.
@@ -41,7 +41,7 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         if (!empty($title)) {
           $route->setDefault('_title', '');
-          $route->setDefault('_title_callback', '\Drupal\eic_admin\Controller\ActionForms::pageTitle');
+          $route->setDefault('_title_callback', '\Drupal\eic_admin\Controller\ActionFormsController::pageTitle');
         }
         // Store the parameters in a custom variable for later use.
         $entity_types = [];

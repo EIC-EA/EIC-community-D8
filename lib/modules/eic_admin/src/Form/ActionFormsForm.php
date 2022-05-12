@@ -119,7 +119,6 @@ class ActionFormsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    /** @var \Drupal\Core\Config\Config $config */
     foreach ($this->actionFormsManager->getAllRouteConfigs() as $config) {
       $config_values = $form_state->getValue($this->getConfigMachineName($config));
       if (empty($config_values)) {

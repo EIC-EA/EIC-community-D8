@@ -136,7 +136,7 @@
               <mj-column>
                 <mj-group width="200px" align="left">
                   <mj-column css-class="meta-image" width="20px" padding="0" vertical-align="middle">
-                    <mj-image src="images/time.png" padding="0" padding-right="2px"/>
+                    <mj-image height="48px" src="images/time.png" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle">
                     <mj-text text-align="left" padding="0" color="#707070" font-size="12px">

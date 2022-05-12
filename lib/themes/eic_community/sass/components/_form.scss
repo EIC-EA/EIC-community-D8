@@ -88,12 +88,23 @@
     margin: map-get($ecl-spacing, 'l') 0;
   }
 
-  .ecl-form-group {
+  & .field-group-tab > .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
 
     & > div {
       width: 100%;
     }
+
+    &[data-drupal-selector="edit-custom-restricted"]  {
+      margin-top: 0;
+    }
+
+    &[data-drupal-selector="edit-oec-group-visibility-option-container"] {
+      & .ecl-form-group {
+        margin: 0;
+      }
+    }
+
     &:not(fieldset) {
       display: flex;
       flex-direction: column;
@@ -390,7 +401,7 @@
 
     & .description {
       opacity: 0.7;
-      margin-top: $ecl-spacing-m;
+      margin: $ecl-spacing-m 0;
     }
 
     & .js-media-library-item {
@@ -405,6 +416,11 @@
   }
 
   .field-multiple-table {
+
+    & + .description {
+      margin-bottom: $ecl-spacing-m;
+    }
+
     & .ecl-table__row {
       border: none;
     }
@@ -427,7 +443,7 @@
     & .ecl-table__body {
       & .ecl-table__row {
         background-color: $ecl-color-grey-5;
-        border-bottom: $ecl-spacing-m solid #fff;
+        // border-bottom: $ecl-spacing-m solid #fff;
       }
     }
   }
