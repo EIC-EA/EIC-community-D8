@@ -53,6 +53,10 @@ class FormAlter {
       'page' => 1
     ])->toString();
 
+    $options = [
+      'selected_terms_label' => $this->t('Select existing platform users to invite', [], ['context' => 'eic_user']),
+    ];
+
     $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
       [],
       'user',
@@ -60,7 +64,8 @@ class FormAlter {
       50,
       $url_search,
       $url_search,
-      $url_search
+      $url_search,
+      $options
     );
     $form['existing_users']['#weight'] = -2;
 
