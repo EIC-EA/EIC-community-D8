@@ -4,6 +4,36 @@
   margin-left: auto;
   margin-right: auto;
 
+  &.has-sidebar {
+    max-width: initial;
+
+    & .layout-region-node-main {
+      & .form-wrapper > .ecl-form-group {
+        margin-top: 0 !important;
+      }
+      & > .ecl-form-group:first-of-type {
+        margin-top: 0 !important;
+      }
+    }
+
+    & .layout-region-node-secondary {
+      position: sticky;
+      top: 10px;
+      padding: $ecl-spacing-xs;
+      background-color: $ecl-color-grey-5;
+
+      & .ecl-form-group > div {
+        margin-top: 0 !important;
+      }
+      & .ecl-form-group > div:last-child {
+        margin-bottom: 0 !important;
+      }
+      & .form-actions {
+        margin-top: 0;
+      }
+    }
+  }
+
   & .hidden {
     visibility: hidden;
     position: absolute;
