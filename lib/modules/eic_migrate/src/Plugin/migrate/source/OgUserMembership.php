@@ -20,6 +20,8 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  *     Defaults to false.
  *   include_user_data: (optional) true if you want include user's data from
  *     users table. Defaults to false.
+ *   include_user_data: (optional) true if you want include user's data from
+ *     users table. Defaults to false.
  * @endcode
  *
  * 'state' option can be:

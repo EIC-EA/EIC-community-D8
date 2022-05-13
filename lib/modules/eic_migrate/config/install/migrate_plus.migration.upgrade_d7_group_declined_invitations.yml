@@ -1,0 +1,75 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_group_declined_invitations
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Group declined invitations'
+source:
+  plugin: eic_d7_og_user_membership
+  type: og_membership_type_default
+  state: 3
+  include_user_data: true
+  track_changes: true
+  constants:
+    group_invitation_plugin_id: group_invitation
+process:
+  type:
+    plugin: concat
+    source:
+      - node_type
+      - constants/group_invitation_plugin_id
+    delimiter: '-'
+  uid:
+    -
+      plugin: migration_lookup
+      source: etid
+      migration: upgrade_d7_user
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'User not found'
+  gid:
+    -
+      plugin: migration_lookup
+      source: gid
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Group not found'
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: etid
+      migration: upgrade_d7_user
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'User not found'
+  invitee_mail: mail
+  invitation_status:
+    - plugin: default_value
+      default_value: 2
+  created: created
+  changed: created
+
+destination:
+  plugin: 'entity:group_content'
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event
+  optional: { }
