@@ -75,6 +75,7 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    # TODO: Add the remaining group migration once available.
     - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event
   optional: { }

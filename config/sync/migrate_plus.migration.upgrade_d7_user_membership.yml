@@ -77,4 +77,6 @@ migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event
   optional: {  }
