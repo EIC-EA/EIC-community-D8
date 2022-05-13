@@ -22,7 +22,6 @@ function eic_community_preprocess_block(array &$variables) {
   // Add class to blocks to have them centered.
   switch ($variables['elements']['#id']) {
     case 'eic_admin_action_forms_description':
-      $variables['attributes']['class'][] = 'ecl-container';
       $variables['attributes']['class'][] = 'ecl-form';
       break;
   }
