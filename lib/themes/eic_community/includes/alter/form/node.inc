@@ -23,4 +23,6 @@ function eic_community_form_node_form_alter(&$form, FormStateInterface $form_sta
 
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
+
+  $form['#attributes']['class'][] = 'has-sidebar';
 }

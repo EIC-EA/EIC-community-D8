@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme override for a node edit form.
+ *
+ * Two column template for the node add/edit form.
+ *
+ * This template will be used when a node edit form specifies 'node_edit_form'
+ * as its #theme callback.  Otherwise, by default, node add/edit forms will be
+ * themed by form.html.twig.
+ *
+ * Available variables:
+ * - form: The node add/edit form.
+ *
+ * @see eic_community_form_group_form_alter()
+ */
+#}
+<div class="layout-group-form has-sidebar clearfix">
+  <div class="layout-region layout-region-group-main">
+    {{ form|without('advanced', 'footer', 'actions') }}
+  </div>
+  <div class="layout-region layout-region-group-secondary">
+    {{ form.advanced }}
+  </div>
+  <div class="layout-region layout-region-group-footer">
+    <div class="layout-region-group-footer__content">
+      {{ form.footer }}
+      {{ form.actions }}
+    </div>
+  </div>
+</div>
