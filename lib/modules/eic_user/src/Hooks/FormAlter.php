@@ -26,6 +26,7 @@ class FormAlter {
    * @param $form_id
    */
   public function alterBulkGroupInvitation(&$form, FormStateInterface $form_state, $form_id) {
+    $maximum_users = 50;
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = \Drupal::routeMatch()->getParameter('group');
 
@@ -57,21 +58,44 @@ class FormAlter {
       'selected_terms_label' => $this->t('Select existing platform users to invite', [], ['context' => 'eic_user']),
     ];
 
+    // Existing users field.
     $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
       [],
       'user',
       '',
-      50,
+      $maximum_users,
       $url_search,
       $url_search,
       $url_search,
       $options
     );
     $form['existing_users']['#weight'] = -2;
+    $form['existing_users']['#description'] = $this->t('You can select up to <strong>@count</strong> existing platform users.',
+      ['@count' => $maximum_users],
+      ['context' => 'eic_user']
+    );
+
+    // Input divider.
+    $form['input_divider'] = [
+      '#markup' => $this->t('You can also', [], ['context' => 'eic_user']),
+      '#prefix' => '<div id="input-divider">',
+      '#suffix' => '</div>',
+      '#weight' => $form['existing_users']['#weight'] + 1,
+    ];
+
+    // Tweak email_address field.
+    $form['email_address']['#title'] = $this->t('Select new users to invite to the platform',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#attributes']['placeholder'] = $this->t('Recipients email addresses here',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#required'] = FALSE;
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
 
-    $form['email_address']['#required'] = FALSE;
     $form['#submit'][] = [$this, 'submitBulkInviteUsers'];
     // Remove the default validation.
     $form['#validate'] = [
