@@ -3,22 +3,51 @@
 namespace Drupal\eic_user\Hooks;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
+use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class FormAlter
  *
  * @package Drupal\eic_user\Hooks
  */
-class FormAlter {
+class FormAlter implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The EIC Content entity tree manager service.
+   *
+   * @var \Drupal\eic_content\Services\EntityTreeManager
+   */
+  private $treeManager;
+
+  /**
+   * Constructs a new EntityOperations object.
+   *
+   * @param \Drupal\eic_content\Services\EntityTreeManager $entity_tree_manager
+   *   The EIC Content entity tree manager service.
+   */
+  public function __construct(EntityTreeManager $entity_tree_manager) {
+    $this->treeManager = $entity_tree_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('eic_content.entity_tree_manager')
+    );
+  }
 
   /**
    * @param $form
@@ -40,11 +69,7 @@ class FormAlter {
 
     foreach ($existing_users as $existing_user) {
       if ($user = User::load($existing_user['target_id'])) {
-        $default_values[] = [
-          'name' => realname_load($user),
-          'tid' => $user->id(),
-          'parent' => -1,
-        ];
+        $default_values[] = $user;
       }
     }
 
@@ -62,7 +87,7 @@ class FormAlter {
     $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
       [],
       'user',
-      '',
+      $this->treeManager->getTreeWidgetProperty('user')->formatPreselection($default_values),
       $maximum_users,
       $url_search,
       $url_search,
