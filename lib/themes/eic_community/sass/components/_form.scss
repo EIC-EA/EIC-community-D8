@@ -3,24 +3,30 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-
   &.has-sidebar {
     max-width: initial;
+  }
 
-    & .layout-region-node-main {
-      & .form-wrapper > .ecl-form-group {
-        margin-top: 0 !important;
-      }
-      & > .ecl-form-group:first-of-type {
-        margin-top: 0 !important;
-      }
+  & .has-sidebar {
+    max-width: initial;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    @include ecl-media-breakpoint-up('lg') {
+      flex-direction: row;
     }
 
-    & .layout-region-node-secondary {
-      position: sticky;
-      top: 10px;
-      padding: $ecl-spacing-xs;
-      background-color: $ecl-color-grey-5;
+    & .ecl-form__sidebar {
+      width: 100%;
+      @include ecl-media-breakpoint-up('lg') {
+        width: 30%;
+        margin-left: $ecl-spacing-m;
+        background-color: $ecl-color-grey-5;
+        padding: $ecl-spacing-xs;
+        position: sticky;
+        top: 10px;
+      }
 
       & .ecl-form-group > div {
         margin-top: 0 !important;
@@ -119,7 +125,13 @@
   }
 
   .ecl-form-group {
-    margin: map-get($ecl-spacing, 'l') 0;
+    margin-top: 0 !important;
+    &.form-wrapper {
+      margin-bottom: map-get($ecl-spacing, 'l');
+    }
+    & & {
+      margin: 0 !important;
+    }
 
     & > div {
       width: 100%;
@@ -137,6 +149,7 @@
 
     &.form-actions {
       flex-direction: row;
+      flex-wrap: wrap;
     }
 
     &:first-child {

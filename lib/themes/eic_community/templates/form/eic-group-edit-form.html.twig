@@ -17,15 +17,10 @@
 #}
 <div class="layout-group-form has-sidebar clearfix">
   <div class="layout-region layout-region-group-main">
-    {{ form|without('advanced', 'footer', 'actions') }}
+    {{ form|without('advanced', 'actions') }}
   </div>
-  <div class="layout-region layout-region-group-secondary">
+  <div class="layout-region layout-region-group-secondary ecl-form__sidebar">
     {{ form.advanced }}
-  </div>
-  <div class="layout-region layout-region-group-footer">
-    <div class="layout-region-group-footer__content">
-      {{ form.footer }}
-      {{ form.actions }}
-    </div>
+    {{ form.actions }}
   </div>
 </div>

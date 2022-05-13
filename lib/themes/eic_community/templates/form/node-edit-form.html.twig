@@ -15,17 +15,12 @@
  * @see seven_form_node_form_alter()
  */
 #}
-<div class="layout-node-form clearfix">
-  <div class="layout-region layout-region-node-main">
-    {{ form|without('advanced', 'footer', 'actions') }}
+<div class="layout-group-form has-sidebar clearfix">
+  <div class="layout-region layout-region-group-main">
+    {{ form|without('advanced', 'actions') }}
   </div>
-  <div class="layout-region layout-region-node-secondary">
+  <div class="layout-region layout-region-group-secondary ecl-form__sidebar">
     {{ form.advanced }}
     {{ form.actions }}
-  </div>
-  <div class="layout-region layout-region-node-footer">
-    <div class="layout-region-node-footer__content">
-      {{ form.footer }}
-    </div>
   </div>
 </div>
