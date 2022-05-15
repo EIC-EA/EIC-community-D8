@@ -24,6 +24,7 @@ use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\message\MessageInterface;
+use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -428,12 +429,32 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       return AccessResult::forbidden();
     }
 
+    // Check if node is part of a group content and check its moderation state.
+    if ($entity instanceof NodeInterface) {
+      $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
+
+      if (!empty($group_contents)) {
+        /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+        $group_content = reset($group_contents);
+        $group = $group_content->getGroup();
+
+        if (
+          $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
+          $this->getType() !== 'delete' &&
+          !UserHelper::isPowerUser($account)
+        ) {
+          return AccessResult::forbidden();
+        }
+      }
+    }
+
     // For groups, the user must be GO/GA or SA/SCM.
     if ($entity instanceof GroupInterface) {
       // If the group is archived, do not authorize any request types except the delete one.
       if (
         $entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
-        $this->getType() !== 'delete'
+        $this->getType() !== 'delete' &&
+        !UserHelper::isPowerUser($account)
       ) {
         return AccessResult::forbidden();
       }

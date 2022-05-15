@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountProxy;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Class ArchivedRouteAccessCheck
@@ -25,6 +26,19 @@ class ArchivedRouteAccessCheck implements AccessInterface {
    */
   public function access(RouteMatchInterface $route_match, AccountProxy $account) {
     $group = $route_match->getParameter('group');
+    $node = $route_match->getParameter('node');
+
+    if ($node instanceof NodeInterface) {
+      $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($node);
+
+      if (empty($group_contents)) {
+        return AccessResult::allowed()->addCacheableDependency($node);
+      }
+
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+    }
 
     if (UserHelper::isPowerUser($account)) {
       return AccessResult::allowed()->addCacheableDependency($group);

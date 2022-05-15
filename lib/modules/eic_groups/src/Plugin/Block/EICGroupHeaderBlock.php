@@ -375,10 +375,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   A renderable array of flag links.
    */
   private function getGroupFlagLinks(GroupInterface $group) {
-    if ($group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
-      return [];
-    }
-
     $group_flags = [];
 
     $group_flag_ids = self::getGroupHeaderFlagsIds();
