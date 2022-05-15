@@ -259,14 +259,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       !UserHelper::isPowerUser($account) &&
       $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
 
-    if ($is_group_archived && !UserHelper::isPowerUser($account)) {
-      return [
-        '#cache' => [
-          'tags' => $node->getCacheTags(),
-        ],
-      ];
-    }
-
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -293,7 +285,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'users_url' => $user_url,
       'users_url_search' => $user_url,
       'permissions' => [
-        'post_comment' => $this->hasGroupOrGlobalPermission(
+        'post_comment' => !$is_group_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'post comments'

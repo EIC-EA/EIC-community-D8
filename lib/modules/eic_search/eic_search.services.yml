@@ -106,7 +106,9 @@ services:
       - { name: eic_search.document_processor, priority: 14 }
   eic_search.document_processor_group:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroup
-    arguments: ['@eic_search.solr_search_manager', '@eic_group_statistics.helper', '@flag.count']
+    arguments: ['@eic_search.solr_search_manager', '@flag.count']
+    calls:
+      - [ setGroupStatistics, [ '@?eic_group_statistics.helper' ] ]
     tags:
       - { name: eic_search.document_processor, priority: 15 }
   eic_search.document_processor_news_story:
