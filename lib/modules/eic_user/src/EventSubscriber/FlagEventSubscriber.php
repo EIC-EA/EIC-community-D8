@@ -204,7 +204,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
           'field_referenced_node' => $entity->id(),
         ]);
 
-        $this->solrDocumentProcessor->reIndexEntities($messages);
+        $this->solrDocumentProcessor->lateReIndexEntities($messages);
         break;
       case 'follow_user':
         if (!$entity instanceof UserInterface) {
@@ -215,7 +215,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
           'uid' => $entity->id(),
         ]);
 
-        $this->solrDocumentProcessor->reIndexEntities($messages);
+        $this->solrDocumentProcessor->lateReIndexEntities($messages);
         break;
       case 'follow_group':
         if (!$entity instanceof GroupInterface) {
@@ -226,7 +226,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
           'field_group_ref' => $entity->id(),
         ]);
 
-        $this->solrDocumentProcessor->reIndexEntities($messages);
+        $this->solrDocumentProcessor->lateReIndexEntities($messages);
         break;
       case 'follow_taxonomy_term':
         if (!$entity instanceof TermInterface) {
@@ -244,7 +244,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
             }, $groups),
           ]);
 
-          $this->solrDocumentProcessor->reIndexEntities($message_groups);
+          $this->solrDocumentProcessor->lateReIndexEntities($message_groups);
         }
 
         $nodes = $this->em->getStorage('node')->loadByProperties([
@@ -258,7 +258,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
             }, $nodes),
           ]);
 
-          $this->solrDocumentProcessor->reIndexEntities($message_nodes);
+          $this->solrDocumentProcessor->lateReIndexEntities($message_nodes);
         }
         break;
     }
