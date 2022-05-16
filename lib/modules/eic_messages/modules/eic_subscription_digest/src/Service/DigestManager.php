@@ -32,6 +32,11 @@ class DigestManager {
    */
   private $userHelper;
 
+  /**
+   * @param \Drupal\Core\State\StateInterface $state
+   * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
+   * @param \Drupal\eic_user\UserHelper $user_helper
+   */
   public function __construct(StateInterface $state, AccountProxyInterface $account_proxy, UserHelper $user_helper) {
     $this->state = $state;
     $this->currentUser = $account_proxy;
@@ -39,12 +44,39 @@ class DigestManager {
   }
 
   /**
-   * @param string $digest_type
+   * @param string $type
+   *
+   * @return bool
+   * @throws \Exception
+   */
+  public function shouldSend(string $type): bool {
+    $now = new \DateTime('now');
+    $last_run = $this->state->get('eic_subscription_digest_' . $type . '_time');
+    if (!$last_run) {
+      return TRUE;
+    }
+
+    $last_run = \DateTime::createFromFormat('U', $last_run);
+    $last_run->add(DigestTypes::getInterval($type));
+    if ($now >= $last_run) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * @param string $type
    *
    * @return bool
    */
-  public function shouldSend(string $digest_type): bool {
+  public function sendDigest(string $type): bool {
+    // Process digest
 
+    // Save the new run time
+    $this->state->set('eic_subscription_digest_' . $type . '_time', (new \DateTime('now'))->getTimestamp());
+
+    return TRUE;
   }
 
   /**

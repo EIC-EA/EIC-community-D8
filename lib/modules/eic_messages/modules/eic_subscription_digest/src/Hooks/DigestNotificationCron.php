@@ -3,7 +3,8 @@
 namespace Drupal\eic_subscription_digest\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\State\StateInterface;
+use Drupal\eic_subscription_digest\Constants\DigestTypes;
+use Drupal\eic_subscription_digest\Service\DigestManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -14,31 +15,37 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DigestNotificationCron implements ContainerInjectionInterface {
 
   /**
-   * @var \Drupal\Core\State\StateInterface
+   * @var \Drupal\eic_subscription_digest\Service\DigestManager
    */
-  private $state;
+  private $manager;
 
   /**
-   * @param \Drupal\Core\State\StateInterface $state
+   * @param \Drupal\eic_subscription_digest\Service\DigestManager $manager
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(DigestManager $manager) {
+    $this->manager = $manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static('state');
+    return new static($container->get('eic_subscription_digest.manager'));
   }
 
   /**
-   * @param string $digest_type
-   *
    * @return void
+   * @throws \Exception
    */
-  public function sendNotifications(string $digest_type): bool {
+  public function sendNotifications(): void {
+    $types = DigestTypes::getAll();
+    foreach ($types as $type) {
+      if (!$this->manager->shouldSend($type)) {
+        continue;
+      }
 
+      $this->manager->sendDigest($type);
+    }
   }
 
 }
