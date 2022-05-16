@@ -270,7 +270,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'full_name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
         'email' => $user->getEmail(),
         'picture' => $file_url,
-        'url' => $profile->toUrl()->toString(),
+        'url' => $user->toUrl()->toString(),
       ];
     }, $members);
   }
