@@ -6,6 +6,8 @@ dependencies:
     - field.field.profile.member.field_body
     - field.field.profile.member.field_comments_notifications
     - field.field.profile.member.field_cv_link
+    - field.field.profile.member.field_digest_frequency
+    - field.field.profile.member.field_digest_status
     - field.field.profile.member.field_interest_notifications
     - field.field.profile.member.field_location_address
     - field.field.profile.member.field_social_links
@@ -19,6 +21,7 @@ dependencies:
   module:
     - address
     - link
+    - options
     - social_link_field
     - text
 id: profile.member.default
@@ -54,6 +57,23 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_digest_frequency:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  field_digest_status:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 19
     region: content
   field_interest_notifications:
     type: boolean

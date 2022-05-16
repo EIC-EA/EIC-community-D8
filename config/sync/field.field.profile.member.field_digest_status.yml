@@ -1,0 +1,23 @@
+uuid: 13064d6a-ec43-47e0-8938-f9fdf29d0c61
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_digest_status
+    - profile.type.member
+id: profile.member.field_digest_status
+field_name: field_digest_status
+entity_type: profile
+bundle: member
+label: 'Digest Status'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Enabled
+  off_label: Disabled
+field_type: boolean

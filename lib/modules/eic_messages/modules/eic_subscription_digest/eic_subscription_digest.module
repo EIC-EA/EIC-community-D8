@@ -1,0 +1,20 @@
+<?php
+
+use Drupal\eic_subscription_digest\Constants\DigestTypes;
+
+
+/**
+ * Implements hook_cron().
+ */
+function eic_subscription_digest_cron() {
+
+}
+
+/**
+ * @return array
+ */
+function eic_subscription_digest_get_digest_frequencies(): array {
+  $types = DigestTypes::getAll();
+
+  return array_combine($types, array_map('ucfirst', $types));
+}

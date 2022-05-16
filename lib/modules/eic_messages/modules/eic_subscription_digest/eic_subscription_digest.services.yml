@@ -1,0 +1,4 @@
+services:
+  eic_subscription_digest.manager:
+    class: Drupal\eic_subscription_digest\Service\DigestManager
+    arguments: [ '@state', '@current_user', '@eic_user.helper' ]
