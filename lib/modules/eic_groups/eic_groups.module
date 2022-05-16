@@ -200,6 +200,24 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert_group_content_node');
   }
 
+  $bundle_resync_group = [
+    'discussion',
+    'document',
+    'event',
+    'gallery',
+    'video'
+  ];
+
+  if (
+    $entity instanceof \Drupal\group\Entity\GroupContentInterface &&
+    in_array($entity->getEntity()->bundle(), $bundle_resync_group)
+  ) {
+    /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
+    $solr_helper = \Drupal::service('eic_search.solr_document_processor');
+    // Reindex group parent to have correct most active score.
+    $solr_helper->reIndexEntities([$entity->getGroup()]);
+  }
+
   switch ($entity->bundle()) {
     case 'wiki_page':
       // We need to clear the wiki parent book cache in order to redirect the
