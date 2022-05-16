@@ -5,6 +5,7 @@
   text-align: center;
   display: flex;
   flex-direction: column;
+  margin-bottom: map-get($ecl-spacing, 'm');
 
   @include ecl-media-breakpoint-up('md') {
     padding-top: map-get($ecl-spacing, 'xl');
@@ -30,6 +31,10 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+
+    @include ecl-media-breakpoint-up('md') {
+      max-width: 80%;
+    }
   }
 
   &__description {
