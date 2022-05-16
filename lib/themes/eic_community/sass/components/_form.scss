@@ -3,6 +3,42 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  &.has-sidebar {
+    max-width: initial;
+  }
+
+  & .has-sidebar {
+    max-width: initial;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    @include ecl-media-breakpoint-up('lg') {
+      flex-direction: row;
+    }
+
+    & .ecl-form__sidebar {
+      width: 100%;
+      @include ecl-media-breakpoint-up('lg') {
+        width: 30%;
+        margin-left: $ecl-spacing-m;
+        background-color: $ecl-color-grey-5;
+        padding: $ecl-spacing-xs;
+        position: sticky;
+        top: 10px;
+      }
+
+      & .ecl-form-group > div {
+        margin-top: 0 !important;
+      }
+      & .ecl-form-group > div:last-child {
+        margin-bottom: 0 !important;
+      }
+      & .form-actions {
+        margin-top: 0;
+      }
+    }
+  }
 
   & .hidden {
     visibility: hidden;
@@ -12,6 +48,10 @@
 
   & .form-item {
     max-width: 100%;
+  }
+
+  & textarea {
+    width: 100%;
   }
 
   & ul {
@@ -88,12 +128,31 @@
     margin: map-get($ecl-spacing, 'l') 0;
   }
 
-  .ecl-form-group {
+  & .field-group-tab > .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
+    margin-top: 0 !important;
+    &.form-wrapper {
+      margin-bottom: map-get($ecl-spacing, 'l');
+    }
+    & & {
+      margin: 0 !important;
+    }
+
 
     & > div {
       width: 100%;
     }
+
+    &[data-drupal-selector="edit-custom-restricted"]  {
+      margin-top: 0;
+    }
+
+    &[data-drupal-selector="edit-oec-group-visibility-option-container"] {
+      & .ecl-form-group {
+        margin: 0;
+      }
+    }
+
     &:not(fieldset) {
       display: flex;
       flex-direction: column;
@@ -107,6 +166,7 @@
 
     &.form-actions {
       flex-direction: row;
+      flex-wrap: wrap;
     }
 
     &:first-child {
@@ -390,7 +450,7 @@
 
     & .description {
       opacity: 0.7;
-      margin-top: $ecl-spacing-m;
+      margin: $ecl-spacing-m 0;
     }
 
     & .js-media-library-item {
@@ -405,6 +465,11 @@
   }
 
   .field-multiple-table {
+
+    & + .description {
+      margin-bottom: $ecl-spacing-m;
+    }
+
     & .ecl-table__row {
       border: none;
     }
@@ -427,7 +492,7 @@
     & .ecl-table__body {
       & .ecl-table__row {
         background-color: $ecl-color-grey-5;
-        border-bottom: $ecl-spacing-m solid #fff;
+        // border-bottom: $ecl-spacing-m solid #fff;
       }
     }
   }

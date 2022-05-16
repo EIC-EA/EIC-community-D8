@@ -72,7 +72,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
       // Get the flagged entity to be updated.
       $parent_entity = $flagging->getFlaggable();
       Cache::invalidateTags($parent_entity->getCacheTags());
-      $this->solrDocumentProcessor->reIndexEntities([$parent_entity]);
+      $this->solrDocumentProcessor->lateReIndexEntities([$parent_entity]);
     }
   }
 

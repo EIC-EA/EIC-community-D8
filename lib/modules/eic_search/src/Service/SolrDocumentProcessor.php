@@ -4,12 +4,9 @@ namespace Drupal\eic_search\Service;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManager;
 use Drupal\Core\Queue\SuspendQueueException;
-use Drupal\eic_comments\CommentsHelper;
-use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\search_api\Entity\Index;
@@ -112,6 +109,16 @@ class SolrDocumentProcessor {
 
     // Request reindexing for the given items.
     $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
+  }
+
+  /**
+   * Re-index entities after a time interval handled in hook_cron.
+   *
+   * @param array $items
+   */
+  public function lateReIndexEntities(array $items) {
+    $queue = $this->queueFactory->get('eic_groups_reindex_content');
+    $queue->createItem($items);
   }
 
   /**
