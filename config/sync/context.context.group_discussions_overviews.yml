@@ -5,7 +5,6 @@ dependencies:
   module:
     - eic_search
     - route_condition
-    - system
 label: 'Group - Discussions - Overviews'
 name: group_discussions_overviews
 group: Groups
@@ -24,8 +23,8 @@ reactions:
     id: blocks
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
     blocks:
-      a625a334-816d-4015-a47a-196b68443e72:
-        uuid: a625a334-816d-4015-a47a-196b68443e72
+      a24ae5bf-53ca-4c70-8fbb-d6d578a89eb8:
+        uuid: a24ae5bf-53ca-4c70-8fbb-d6d578a89eb8
         id: eic_search_overview
         label: ''
         provider: eic_search
@@ -43,6 +42,7 @@ reactions:
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
         sort_options:
+          its_activity_score: its_activity_score
           its_flag_highlight_content: its_flag_highlight_content
           dm_aggregated_changed: dm_aggregated_changed
           its_last_comment_timestamp: its_last_comment_timestamp
@@ -55,6 +55,7 @@ reactions:
         enable_search: 1
         page_options: normal
         prefilter_group: 1
+        enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
         third_party_settings: {  }

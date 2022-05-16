@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 
 /**
  * Class SourceType
@@ -213,6 +214,13 @@ abstract class SourceType implements SourceTypeInterface {
    */
   public function ignorePublishedState(): bool {
     return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return $this->getEntityBundle();
   }
 
 }

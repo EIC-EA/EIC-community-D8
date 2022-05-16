@@ -125,4 +125,11 @@ class ActivityStreamSourceType extends SourceType {
     return $this->t('Only my groups', [], ['context' => 'eic_search']);
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'profile-' . parent::getUniqueId();
+  }
+
 }

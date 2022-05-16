@@ -16,6 +16,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
@@ -74,6 +75,11 @@ class DiscussionController extends ControllerBase {
   private $fileUrlGenerator;
 
   /**
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor|NULL
+   */
+  private ?SolrDocumentProcessor $solrDocumentProcessor;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -81,19 +87,22 @@ class DiscussionController extends ControllerBase {
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     GroupPermissionChecker $group_permission_checker,
     DateFormatter $date_formatter,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
+    SolrDocumentProcessor $solr_document_processor
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->solrDocumentProcessor = $solr_document_processor;
   }
 
   /**
@@ -105,7 +114,8 @@ class DiscussionController extends ControllerBase {
       $container->get('flag'),
       $container->get('oec_group_comments.group_permission_checker'),
       $container->get('date.formatter'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('eic_search.solr_document_processor')
     );
   }
 
@@ -115,6 +125,7 @@ class DiscussionController extends ControllerBase {
    *
    * @return \Drupal\Core\Access\AccessResultForbidden|\Symfony\Component\HttpFoundation\JsonResponse
    * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function addComment(Request $request, $discussion_id) {
     if (!$this->hasPermission($discussion_id, 'post comments')) {
@@ -151,6 +162,15 @@ class DiscussionController extends ControllerBase {
     ]);
 
     $comment->save();
+
+    $resynced_entities = [$user];
+
+    if ($node) {
+      $resynced_entities[] = $node;
+    }
+
+    // Reindex entities to update their data like most_active_score.
+    $this->solrDocumentProcessor->reIndexEntities($resynced_entities);
 
     return new JsonResponse([]);
   }

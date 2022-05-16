@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CssCommand;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -126,6 +127,18 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     foreach ($sources_collected as $source) {
       $sources[get_class($source)] = $source->getLabel();
     }
+
+    $form['label_display'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display title'),
+      '#default_value' => FALSE,
+      '#return_value' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      '#attributes' => [
+        'class' => [
+          'hidden',
+        ],
+      ],
+    ];
 
     $form['search'] = [
       '#type' => 'details',
@@ -433,13 +446,13 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources_collected = $this->sourcesCollector->getSources();
     foreach ($sources_collected as $source) {
       $response->addCommand(
-        new CssCommand('.source-' . $source->getEntityBundle(), $css)
+        new CssCommand('.source-' . $source->getUniqueId(), $css)
       );
     }
 
     $response->addCommand(
       new CssCommand(
-        '.source-' . $current_source->getEntityBundle(),
+        '.source-' . $current_source->getUniqueId(),
         ['display' => 'inline-block']
       )
     );
@@ -451,7 +464,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    parent::blockSubmit($form, $form_state);
     $values = $form_state->getValues();
 
     if (!array_key_exists('search', $values)) {
@@ -463,12 +475,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->configuration['sort_options'] = [];
 
     $current_source = $this->getCurrentSource($values['search']['source_type']);
-    $current_bundle = $current_source->getEntityBundle();
 
     $this->setConfiguration([
       'source_type' => $values['search']['source_type'],
-      'facets' => $values['search']['configuration']['filter'][$current_bundle]['facets'],
-      'sort_options' => $values['search']['configuration']['sorts'][$current_bundle]['sort_options'],
+      'facets' => $values['search']['configuration']['filter'][$current_source->getUniqueId()]['facets'],
+      'sort_options' => $values['search']['configuration']['sorts'][$current_source->getUniqueId()]['sort_options'],
       'enable_search' => $values['search']['configuration']['enable_search'],
       'page_options' => $values['search']['configuration']['pagination']['page_options'],
       'prefilter_group' => $values['search']['configuration']['prefilter_group'],
@@ -482,6 +493,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
   }
+
 
   /**
    * Extracting filters values from the URL.
@@ -578,7 +590,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     /** @var SourceTypeInterface $source */
     foreach ($this->sourcesCollector->getSources() as $source) {
-      $form['search']['configuration']['filter'][$source->getEntityBundle()]['facets'] = [
+      $form['search']['configuration']['filter'][$source->getUniqueId()]['facets'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t(
           'Facets for @label',
@@ -594,13 +606,13 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'source-type',
-            'source-' . $source->getEntityBundle(),
+            'source-' . $source->getUniqueId(),
             $current_source === $source ?: 'hidden',
           ],
         ],
       ];
 
-      $form['search']['configuration']['sorts'][$source->getEntityBundle()]['sort_options'] = [
+      $form['search']['configuration']['sorts'][$source->getUniqueId()]['sort_options'] = [
         '#type' => 'checkboxes',
         '#default_value' => $this->configuration['sort_options'],
         '#title' => $this->t(
@@ -616,7 +628,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'source-type',
-            'source-' . $source->getEntityBundle(),
+            'source-' . $source->getUniqueId(),
             $current_source === $source ?: 'hidden',
           ],
         ],

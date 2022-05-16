@@ -91,18 +91,27 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
   ];
 }
 
+if ($solr_host = getenv('SOLR_HOST')) {
+  $config['search_api.server.global']['backend_config']['connector_config']['host'] = $solr_host;
+}
+
 /**
  * EU Login settings.
  */
 $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+
 // Uncomment this line to force EU Login known user accounts to login through EU
 // Login.
 //$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
 // Allow self-registered users to login.
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
 
-$settings['s3fs.use_s3_for_private'] = TRUE;
-$settings['s3fs.use_s3_for_public'] = TRUE;
+if ($bucket = getenv('AWS_S3_BUCKET')) {
+  $config['s3fs.settings']['bucket'] = $bucket;
+  $settings['s3fs.use_s3_for_private'] = TRUE;
+  $settings['s3fs.use_s3_for_public'] = TRUE;
+  $settings['s3fs.upload_as_private'] = TRUE;
+}
 
 /**
  * SMED API connection information.

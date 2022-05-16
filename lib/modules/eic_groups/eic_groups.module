@@ -88,6 +88,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'is_anonymous' => TRUE,
         'can_view_comments' => FALSE,
         'highlighted_comment' => 0,
+        'ckeditor_js_settings' => [],
       ],
     ],
     'eic_group_edit_form' => [

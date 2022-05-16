@@ -27,4 +27,6 @@ final class FlagType {
 
   const RECOMMEND = 'recommend';
 
+  const RECOMMEND_GROUP = 'recommend_group';
+
 }

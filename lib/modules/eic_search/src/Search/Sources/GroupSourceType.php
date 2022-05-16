@@ -4,6 +4,7 @@ namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
@@ -51,6 +52,10 @@ class GroupSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => [
+        'label' => $this->t('Most active', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
+      ],
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
@@ -75,6 +80,13 @@ class GroupSourceType extends SourceType {
         'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
       ],
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return [DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID, 'DESC'];
   }
 
   /**
@@ -112,6 +124,13 @@ class GroupSourceType extends SourceType {
    */
   public function getPrefilteredGroupFieldId(): array {
     return ['its_group_id_integer'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'group-' . parent::getUniqueId();
   }
 
 }

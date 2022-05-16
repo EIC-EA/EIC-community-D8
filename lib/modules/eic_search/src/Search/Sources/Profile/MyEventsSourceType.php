@@ -162,4 +162,11 @@ class MyEventsSourceType extends SourceType {
     return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'profile-' . parent::getUniqueId();
+  }
+
 }

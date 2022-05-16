@@ -4,8 +4,12 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_statistics\StatisticsHelper;
 use Drupal\file\Entity\File;
 use Drupal\media\MediaInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
@@ -15,6 +19,18 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\DocumentProcessor
  */
 class ProcessorDiscussion extends DocumentProcessor {
+
+  /**
+   * @var \Drupal\eic_statistics\StatisticsHelper
+   */
+  private StatisticsHelper $statisticsHelper;
+
+  /**
+   * @param \Drupal\eic_statistics\StatisticsHelper $statistics_helper
+   */
+  public function __construct(StatisticsHelper $statistics_helper) {
+    $this->statisticsHelper = $statistics_helper;
+  }
 
   /**
    * @inheritDoc
@@ -43,6 +59,20 @@ class ProcessorDiscussion extends DocumentProcessor {
       ->count()
       ->execute();
 
+    $discussion = Node::load($nid);
+    $likes = 0;
+    $follows = 0;
+
+    if ($discussion instanceof NodeInterface) {
+      $statistics = $this->statisticsHelper->getEntityStatistics($discussion);
+
+      $likes = $statistics[FlagType::LIKE_CONTENT];
+      $follows = $statistics[FlagType::FOLLOW_CONTENT];
+    }
+
+    $most_active_total = 3 * (int) $total_comments + 2 * (int) $follows + (int) $likes;
+
+    $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID, $fields, $most_active_total);
     $document->addField('its_discussion_total_comments', $total_comments);
 
     if (!$results) {
