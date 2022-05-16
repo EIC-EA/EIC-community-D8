@@ -170,7 +170,7 @@ class DiscussionController extends ControllerBase {
     }
 
     // Reindex entities to update their data like most_active_score.
-    $this->solrDocumentProcessor->reIndexEntities($resynced_entities);
+    $this->solrDocumentProcessor->lateReIndexEntities($resynced_entities);
 
     return new JsonResponse([]);
   }

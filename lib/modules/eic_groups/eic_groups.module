@@ -88,7 +88,11 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'is_anonymous' => TRUE,
         'can_view_comments' => FALSE,
         'highlighted_comment' => 0,
+        'ckeditor_js_settings' => [],
       ],
+    ],
+    'eic_group_edit_form' => [
+      'render element' => 'form',
     ],
   ];
 }
@@ -298,8 +302,8 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
 
     $moderation_state = $entity->get('moderation_state')->value;
 
-    //If we are in pending state and we just want to update the current group,
-    //change the transition label from "Create group" to "Update group"
+    // If we are in pending state and we just want to update the current group,
+    // change the transition label from "Create group" to "Update group".
     if (
       !$entity->isNew() &&
       isset($form['moderation_state']['widget'][0]['#options'][GroupsModerationHelper::GROUP_PENDING_STATE])

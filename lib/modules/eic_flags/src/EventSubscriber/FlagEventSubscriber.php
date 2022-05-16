@@ -122,7 +122,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
       $extra_resync[] = $parent_entity;
     }
 
-    $this->solrDocumentProcessor->reIndexEntities($extra_resync);
+    $this->solrDocumentProcessor->lateReIndexEntities($extra_resync);
   }
 
   /**

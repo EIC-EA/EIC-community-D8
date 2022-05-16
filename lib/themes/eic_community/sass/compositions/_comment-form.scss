@@ -41,7 +41,9 @@
       width: #{map-get($ecl-media, '6xs') / 2};
       height: #{map-get($ecl-media, '6xs') / 2};
       transform: rotate(135deg);
-      background-color: map-get($ecl-colors, 'grey-10');
+      background-color: #ffffff;
+      border-left: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
       border-bottom-left-radius: ecl-box-model('border-radius');
 
       @include ecl-media-breakpoint-up('sm') {
