@@ -12,6 +12,8 @@ use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\editor\Entity\Editor;
+use Drupal\editor\Plugin\EditorManager;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\Entity\Group;
@@ -83,6 +85,11 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $fileUrlGenerator;
 
   /**
+   * @var \Drupal\editor\Plugin\EditorManager
+   */
+  private EditorManager $editorManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -100,7 +107,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $container->get('database'),
       $container->get('current_route_match'),
       $container->get('request_stack'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('plugin.manager.editor')
     );
   }
 
@@ -127,6 +135,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    * @param \Drupal\Core\Http\RequestStack $request
    *   The current request.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file url generator service.
+   * @param \Drupal\editor\Plugin\EditorManager $editor_manager
+   *   The editor manager service.
    */
   public function __construct(
     array $configuration,
@@ -137,7 +148,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     Connection $database,
     RouteMatchInterface $route_match,
     RequestStack $request,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
+    EditorManager $editor_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
@@ -146,6 +158,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $this->routeMatch = $route_match;
     $this->request = $request;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->editorManager = $editor_manager;
   }
 
   /**
@@ -156,6 +169,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $node = $this->routeMatch->getParameter('node');
     $highlighted_comment = $this->request->getCurrentRequest()->query->get('highlighted-comment', 0);
     $highlighted_comment = Comment::load($highlighted_comment);
+    $editor = Editor::load('filtered_html');
+    $ckeditor_js_settings = $this->editorManager->createInstance('ckeditor')->getJSSettings($editor);
 
     if (!$node instanceof NodeInterface) {
       return [];
@@ -412,6 +427,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#contributors' => $contributors_data,
         '#is_anonymous' => $current_user->isAnonymous(),
         '#can_view_comments' => $can_view_comments,
+        '#ckeditor_js_settings' => $ckeditor_js_settings,
       ];
   }
 
