@@ -20,8 +20,8 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  *     Defaults to false.
  *   include_user_data: (optional) true if you want include user's data from
  *     users table. Defaults to false.
- *   include_user_data: (optional) true if you want include user's data from
- *     users table. Defaults to false.
+ *   invitations_only: (optional) true if you want to get invitations only.
+ *     Defaults to false.
  * @endcode
  *
  * 'state' option can be:
@@ -64,6 +64,10 @@ class OgUserMembership extends SqlBase {
     if (!empty($this->configuration['include_user_data'])) {
       $query->leftJoin('users', 'u', 'ogm.etid = u.uid');
       $query->fields('u');
+    }
+    if (!empty($this->configuration['invitations_only'])) {
+      $query->innerJoin('field_data_og_membership_invitation', 'omi', 'omi.entity_id = ogm.id');
+      $query->condition('omi.og_membership_invitation_value', 1);
     }
 
     return $query;

@@ -9,6 +9,7 @@ cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
+  - Invitations
 migration_group: migrate_drupal_7
 label: 'Group pending visitor invitations'
 source:
