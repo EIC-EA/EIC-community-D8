@@ -161,7 +161,7 @@ class ShareManager {
     }
 
     // Check if we can share from source group to target group.
-    if (!$this->canShareToGroup($source_group, $target_group)) {
+    if (!$this->canShareToGroup($source_group, $node, $target_group)) {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
@@ -252,6 +252,8 @@ class ShareManager {
    *   The user account for which we build the list.
    * @param \Drupal\group\Entity\GroupInterface $source_group
    *   The source group from which we want to share.
+   * @param \Drupal\node\Entity\NodeInterface $source_node
+   *   The source node from which we want to share.
    * @param array $visibility_types
    *   The target groups visibility types to filter on.
    *   Allowed values are constants provided by GroupVisibilityType.
@@ -264,6 +266,7 @@ class ShareManager {
   public function getShareableTargetGroupsForUser(
     AccountInterface $account,
     GroupInterface $source_group,
+    NodeInterface $source_node,
     array $visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
   ): array {
     $groups = [];
@@ -276,6 +279,15 @@ class ShareManager {
         foreach ($this->groupsHelper->getGroupsByVisibility($visibility_type) as $group) {
           $unfiltered_groups[] = $group;
         }
+
+        // Get all organisations.
+        $organisations = $this->entityTypeManager->getStorage('group')
+          ->loadByProperties([
+            'type' => 'organisation',
+          ]);
+        foreach ($organisations as $organisation) {
+          $unfiltered_groups[] = $organisation;
+        }
       }
     }
     // Otherwise, we get only groups the user is member of.
@@ -287,7 +299,7 @@ class ShareManager {
     }
 
     foreach ($unfiltered_groups as $group) {
-      if ($this->canShareToGroup($source_group, $group, $visibility_types)) {
+      if ($this->canShareToGroup($source_group, $source_node, $group, $visibility_types)) {
         $groups[] = $group;
       }
     }
@@ -300,6 +312,8 @@ class ShareManager {
    *
    * @param \Drupal\group\Entity\GroupInterface $source_group
    *   The source group.
+   * @param \Drupal\node\Entity\NodeInterface $source_node
+   *   The source node from which we want to share.
    * @param \Drupal\group\Entity\GroupInterface $target_group
    *   The target group.
    * @param array $target_group_visibility_types
@@ -313,9 +327,15 @@ class ShareManager {
    */
   public function canShareToGroup(
     GroupInterface $source_group,
+    NodeInterface $source_node,
     GroupInterface $target_group,
     array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
   ) {
+    // Allow only enabled content types.
+    if (!$this->groupsHelper->isGroupTypePluginEnabled($target_group->getGroupType(), 'group_node', $source_node->bundle())) {
+      return FALSE;
+    }
+
     // Allow only selected visibility types.
     if (!in_array($this->groupFlexGroup->getGroupVisibility($target_group), $target_group_visibility_types)) {
       return FALSE;
