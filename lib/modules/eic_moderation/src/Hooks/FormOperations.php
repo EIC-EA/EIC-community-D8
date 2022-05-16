@@ -121,6 +121,10 @@ class FormOperations implements ContainerInjectionInterface {
       // In case of a global content, add our custom validation handler.
       $form['#validate'][] = [$this, 'eicModerationFormNodeFormValidate'];
     }
+
+    if (isset($form['moderation_state']['widget'][0]['#access'])) {
+      $form['moderation_state']['#access'] = $form['moderation_state']['widget'][0]['#access'];
+    }
   }
 
   /**
