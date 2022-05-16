@@ -201,8 +201,8 @@ function eic_community_preprocess_user(array &$variables) {
       $user_item['flagged_events'] = [
         'title' => $current_user->id() === $user->id() ? t('My events') : t('Events'),
         'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_events', [$user->id()])
-          : _eic_community_get_rendered_view('groups', 'block_user_profile_events', [$user->id()])
+          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_events', [$user->id()])
+          : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_events', [$user->id()])
         ),
       ];
 
