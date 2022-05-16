@@ -237,3 +237,4 @@ $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
 // Interval time for the notification reminder to SA/SCM listing all groups pending for approval.
 $settings['cron_interval_pending_approval_time'] = 86400;
 $settings['cron_interval_group_invite_time'] = 86400;
+$settings['cron_interval_late_reindex_entities'] = 3600;
