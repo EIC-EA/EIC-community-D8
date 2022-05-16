@@ -22,6 +22,8 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  *     users table. Defaults to false.
  *   invitations_only: (optional) true if you want to get invitations only.
  *     Defaults to false.
+ *   no_invitations: (optional) true if you want to exclude invitations.
+ *     Defaults to false.
  * @endcode
  *
  * 'state' option can be:
@@ -69,7 +71,10 @@ class OgUserMembership extends SqlBase {
       $query->innerJoin('field_data_og_membership_invitation', 'omi', 'omi.entity_id = ogm.id');
       $query->condition('omi.og_membership_invitation_value', 1);
     }
-
+    if (!empty($this->configuration['no_invitations'])) {
+      $query->leftJoin('field_data_og_membership_invitation', 'omi', 'omi.entity_id = ogm.id');
+      $query->isNull('omi.og_membership_invitation_value');
+    }
     return $query;
   }
 
