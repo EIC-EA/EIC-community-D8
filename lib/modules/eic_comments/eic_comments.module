@@ -116,6 +116,18 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
       continue;
     }
 
+    // Loads all field group info.
+    if ($group_info = field_group_info_groups($entity->getEntityTypeId(), $entity->bundle(), 'form', 'default')) {
+      // Moves the comment settings field to the correct field group.
+      foreach ($group_info as $field_group_name => $field_group_info) {
+        if (in_array($field_definition->getName(), $field_group_info->children)) {
+          $form[$field_definition->getName()]['widget'][0]['#group'] = $field_group_name;
+          $form[$field_definition->getName()]['widget'][0]['#weight'] = $form[$field_definition->getName()]['#weight'];
+          $form[$field_definition->getName()]['widget'][0]['#open'] = TRUE;
+        }
+      }
+    }
+
     // If the node is new, the user can manage comment settings.
     if ($entity->isNew()) {
       $form[$field_definition->getName()]['#access'] = TRUE;
