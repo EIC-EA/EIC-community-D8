@@ -52,11 +52,13 @@ class RouteSubscriber extends RouteSubscriberBase {
         }
         // Store the parameters in a custom variable for later use.
         $entity_types = [];
-        foreach ($route->getOption('parameters') as $param) {
-          if (!empty($param['type'])) {
-            // We split the 'entity:entity_type' value tot get the entity type
-            // only.
-            $entity_types[] = explode(':', $param['type'])[1];
+        if ($route->hasOption('parameters')) {
+          foreach ($route->getOption('parameters') as $param) {
+            if (!empty($param['type'])) {
+              // We split the 'entity:entity_type' value tot get the entity type
+              // only.
+              $entity_types[] = explode(':', $param['type'])[1];
+            }
           }
         }
         $route->setDefault('_entity_types', $entity_types);
