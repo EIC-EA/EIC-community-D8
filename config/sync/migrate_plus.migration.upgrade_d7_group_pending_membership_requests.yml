@@ -1,24 +1,25 @@
+uuid: 3bba9411-30ce-48ac-9bf2-3c956e0f36fb
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_user_membership
-class: Drupal\user\Plugin\migrate\User
+id: upgrade_d7_group_pending_membership_requests
+class: null
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_drupal_7
-label: 'User memberships'
+label: 'Group pending membership requests'
 source:
   plugin: eic_d7_og_user_membership
   type: og_membership_type_default
-  state: 1
-  include_roles: true
-  ignore_owner: true
+  state: 2
+  include_user_data: true
+  no_invitations: true
   track_changes: true
   constants:
-    group_membership_plugin_id: group_membership
+    group_membership_plugin_id: group_membership_request
 process:
   type:
     plugin: concat
@@ -59,17 +60,11 @@ process:
       plugin: skip_on_empty
       method: row
       message: 'User not found'
-  group_roles/target_id:
-    - plugin: static_map
-      source: rid
-      default_value: null
-      map:
-        6: 'group-admin'
-        9: 'event-admin'
-        10: 'organisation-admin'
+  grequest_status:
+    plugin: default_value
+    default_value: pending
   created: created
   changed: created
-
 destination:
   plugin: 'entity:group_content'
 migration_dependencies:
@@ -78,4 +73,4 @@ migration_dependencies:
     - upgrade_d7_node_complete_group
     - upgrade_d7_node_complete_organisation
     - upgrade_d7_node_complete_event
-  optional: { }
+  optional: {  }

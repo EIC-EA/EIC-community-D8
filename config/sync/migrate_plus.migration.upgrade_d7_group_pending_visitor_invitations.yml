@@ -1,35 +1,33 @@
+uuid: 25fac7c0-09b7-4a7c-91d6-b614fffc1e0c
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_user_membership
-class: Drupal\user\Plugin\migrate\User
+id: upgrade_d7_group_pending_visitor_invitations
+class: null
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
+  - Invitations
 migration_group: migrate_drupal_7
-label: 'User memberships'
+label: 'Group pending visitor invitations'
 source:
-  plugin: eic_d7_og_user_membership
-  type: og_membership_type_default
-  state: 1
-  include_roles: true
-  ignore_owner: true
+  plugin: eic_d7_c4m_og_invite_visitors
   track_changes: true
   constants:
-    group_membership_plugin_id: group_membership
+    group_invitation_plugin_id: group_invitation
 process:
   type:
     plugin: concat
     source:
       - node_type
-      - constants/group_membership_plugin_id
+      - constants/group_invitation_plugin_id
     delimiter: '-'
   uid:
     -
       plugin: migration_lookup
-      source: etid
+      source: inv_inviter_id
       migration: upgrade_d7_user
       no_stub: true
     -
@@ -39,7 +37,7 @@ process:
   gid:
     -
       plugin: migration_lookup
-      source: gid
+      source: inv_group_id
       migration:
         - upgrade_d7_node_complete_group
         - upgrade_d7_node_complete_organisation
@@ -51,25 +49,15 @@ process:
       message: 'Group not found'
   entity_id:
     -
-      plugin: migration_lookup
-      source: etid
-      migration: upgrade_d7_user
-      no_stub: true
+      plugin: default_value
+      default_value: 0
+  invitee_mail: inv_email
+  invitation_status:
     -
-      plugin: skip_on_empty
-      method: row
-      message: 'User not found'
-  group_roles/target_id:
-    - plugin: static_map
-      source: rid
-      default_value: null
-      map:
-        6: 'group-admin'
-        9: 'event-admin'
-        10: 'organisation-admin'
-  created: created
-  changed: created
-
+      plugin: default_value
+      default_value: 0
+  created: inv_created
+  changed: inv_updated
 destination:
   plugin: 'entity:group_content'
 migration_dependencies:
@@ -78,4 +66,4 @@ migration_dependencies:
     - upgrade_d7_node_complete_group
     - upgrade_d7_node_complete_organisation
     - upgrade_d7_node_complete_event
-  optional: { }
+  optional: {  }
