@@ -4,6 +4,7 @@ namespace Drupal\eic_subscription_digest\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker;
 use Drupal\eic_subscription_digest\Constants\DigestSubscriptions;
 use Drupal\eic_subscription_digest\Constants\DigestTypes;
 use Drupal\group\Entity\GroupInterface;
@@ -23,10 +24,20 @@ class DigestCollector {
   private $entityTypeManager;
 
   /**
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @var \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  private $messageChecker;
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker $message_checker
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    SubscriptionMessageChecker $message_checker
+  ) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->messageChecker = $message_checker;
   }
 
   /**
@@ -58,6 +69,10 @@ class DigestCollector {
     $messages = $this->entityTypeManager->getStorage('message')->loadMultiple($messages);
     $formatted_list = [];
     foreach ($messages as $message) {
+      if (!$this->messageChecker->shouldSend($user->id(), $message)) {
+        continue;
+      }
+      
       $category = $this->getItemCategory($message);
       if (!$category) {
         continue;
