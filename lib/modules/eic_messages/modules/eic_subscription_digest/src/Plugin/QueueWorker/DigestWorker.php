@@ -52,7 +52,7 @@ class DigestWorker extends QueueWorkerBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function processItem($data) {
-    // TODO: Implement processItem() method.
+    $this->manager->sendUserDigest($data);
   }
 
 }

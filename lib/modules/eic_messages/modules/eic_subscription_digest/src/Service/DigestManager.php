@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_subscription_digest\Service;
 
+use Drupal;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -45,24 +46,40 @@ class DigestManager {
   private $queue;
 
   /**
+   * @var \Drupal\eic_subscription_digest\Service\DigestCollector
+   */
+  private $collector;
+
+  /**
+   * @var \Drupal\Core\Mail\MailManagerInterface
+   */
+  private $mailManager;
+
+  /**
    * @param \Drupal\Core\State\StateInterface $state
    * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
    * @param \Drupal\eic_user\UserHelper $user_helper
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   * @param \Drupal\eic_subscription_digest\Service\DigestCollector $collector
+   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
    */
   public function __construct(
     StateInterface $state,
     AccountProxyInterface $account_proxy,
     UserHelper $user_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    QueueFactory $queue_factory
+    QueueFactory $queue_factory,
+    DigestCollector $collector,
+    Drupal\Core\Mail\MailManagerInterface $mail_manager
   ) {
     $this->state = $state;
     $this->currentUser = $account_proxy;
     $this->userHelper = $user_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->queue = $queue_factory->get('subscription_digest');
+    $this->collector = $collector;
+    $this->mailManager = $mail_manager;
   }
 
   /**
@@ -72,6 +89,7 @@ class DigestManager {
    * @throws \Exception
    */
   public function shouldSend(string $type): bool {
+    return TRUE;
     $now = new \DateTime('now');
     $last_run = $this->state->get('eic_subscription_digest_' . $type . '_time');
     if (!$last_run) {
@@ -116,6 +134,35 @@ class DigestManager {
     $this->state->set('eic_subscription_digest_' . $type . '_time', (new \DateTime('now'))->getTimestamp());
 
     return TRUE;
+  }
+
+  /**
+   * @param array $data
+   *
+   * @return void
+   * @throws \Exception
+   */
+  public function sendUserDigest(array $data): void {
+    if (!isset($data['uid'])
+      || !isset($data['digest_type'])
+      || !in_array($data['digest_type'], DigestTypes::getAll())
+    ) {
+      return;
+    }
+
+    $user = User::load($data['uid']);
+    if (!$user instanceof UserInterface) {
+      return;
+    }
+
+    $digest_items = $this->collector->getList($user, $data['digest_type']);
+    $this->mailManager->mail(
+      'eic_subscription_digest',
+      'digest',
+      $user->getEmail(),
+      $user->getPreferredLangcode(),
+      ['items' => $digest_items, 'digest_type' => $data['digest_type'], 'uid' => $data['uid']]
+    );
   }
 
   /**
