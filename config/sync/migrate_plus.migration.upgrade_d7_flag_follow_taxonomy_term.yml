@@ -20,6 +20,7 @@ source:
       - subscribe_c4m_follow_term
     smed_vocabularies:
       - c4m_vocab_topic
+  batch_size: 100
 process:
   flag_id:
     -

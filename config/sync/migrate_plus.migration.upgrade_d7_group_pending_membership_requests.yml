@@ -20,6 +20,7 @@ source:
   track_changes: true
   constants:
     group_membership_plugin_id: group_membership_request
+  batch_size: 100
 process:
   type:
     plugin: concat

@@ -23,6 +23,7 @@ source:
     FACEBOOK_LINK_TYPE: 'facebook'
     LINKEDIN_LINK_TYPE: 'linkedin'
     TWITTER_LINK_TYPE: 'twitter'
+  batch_size: 100
 process:
   id:
     - plugin: migration_lookup

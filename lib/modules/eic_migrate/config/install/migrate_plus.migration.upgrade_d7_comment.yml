@@ -17,6 +17,7 @@ source:
     entity_type: node
     comment_type: node_comment
     field_name: field_comments
+  batch_size: 100
 process:
   pid:
     -

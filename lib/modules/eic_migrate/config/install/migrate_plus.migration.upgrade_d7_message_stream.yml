@@ -14,6 +14,7 @@ label: 'Drupal 7 stream messages.'
 source:
   plugin: eic_d7_message_stream_source
   track_changes: true
+  batch_size: 100
 process:
   template:
     - plugin: static_map
