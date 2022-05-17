@@ -44,7 +44,7 @@ class DigestNotificationCron implements ContainerInjectionInterface {
         continue;
       }
 
-      $this->manager->sendDigest($type);
+      $this->manager->queueDigest($type);
     }
   }
 

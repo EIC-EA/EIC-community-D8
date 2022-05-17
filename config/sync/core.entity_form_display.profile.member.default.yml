@@ -45,15 +45,9 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_digest_frequency:
-    type: options_select
-    weight: 27
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_digest_status:
     type: boolean_checkbox
-    weight: 26
+    weight: 11
     region: content
     settings:
       display_label: true
@@ -113,6 +107,12 @@ content:
       load_all: 0
       auto_select_parents: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_vocab_topic_interest:
     type: entity_tree
@@ -125,6 +125,12 @@ content:
       load_all: 0
       auto_select_parents: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_vocab_user_type:
     type: entity_reference_autocomplete
@@ -138,5 +144,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_comments_notifications: true
+  field_digest_frequency: true
   field_interest_notifications: true
   is_default: true
