@@ -1,0 +1,7 @@
+{{ 'Your @digest_type digest' | t({'@digest_type': digest_type}) }}
+{% for category, digest_items in items %}
+  <h2>{{ category }}</h2>
+  {% for digest_item in digest_items %}
+    {{ digest_item }}
+  {% endfor %}
+{% endfor %}

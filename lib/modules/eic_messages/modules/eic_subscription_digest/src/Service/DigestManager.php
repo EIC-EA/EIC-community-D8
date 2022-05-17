@@ -121,12 +121,19 @@ class DigestManager {
       ->condition('field_digest_frequency', $type)
       ->execute();
 
+    if (empty($profile_ids)) {
+      return FALSE;
+    }
+
     $message = [
       'digest_type' => $type,
     ];
 
-    foreach ($profile_ids as $id) {
-      $this->queue->createItem($message + ['uid' => $id]);
+    /** @var ProfileInterface[] $profiles */
+    $profiles = $this->entityTypeManager->getStorage('profile')
+      ->loadMultiple($profile_ids);
+    foreach ($profiles as $profile) {
+      $this->queue->createItem($message + ['uid' => $profile->getOwner()->id()]);
     }
 
     // Save the new run time
@@ -155,6 +162,13 @@ class DigestManager {
     }
 
     $digest_items = $this->collector->getList($user, $data['digest_type']);
+    $view_builder = $this->entityTypeManager->getViewBuilder('message');
+    foreach ($digest_items as &$items) {
+      foreach ($items as &$item) {
+        $item = $view_builder->view($item, 'notify_digest');
+      }
+    }
+
     $this->mailManager->mail(
       'eic_subscription_digest',
       'digest',

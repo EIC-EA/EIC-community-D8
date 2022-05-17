@@ -93,7 +93,7 @@ class DigestCollector {
         /** @var \Drupal\comment\CommentInterface $comment */
         $comment = $message->get('field_referenced_comment')->entity;
         $commented_entity = $comment->getCommentedEntity();
-        $category = $commented_entity instanceof GroupInterface ? $commented_entity->bundle() : 'new_stories';
+        $category = $commented_entity instanceof GroupInterface ? $commented_entity->bundle() : 'news_stories';
         break;
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
       case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:

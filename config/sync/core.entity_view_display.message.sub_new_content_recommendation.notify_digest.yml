@@ -12,22 +12,6 @@ targetEntityType: message
 bundle: sub_new_content_recommendation
 mode: notify_digest
 content:
-  field_event_executing_user:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_referenced_node:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 2
-    region: content
   partial_0:
     settings: {  }
     third_party_settings: {  }
@@ -36,12 +20,14 @@ content:
   partial_1:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   partial_2:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 2
     region: content
 hidden:
+  field_event_executing_user: true
+  field_referenced_node: true
   search_api_excerpt: true
