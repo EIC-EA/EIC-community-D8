@@ -19,6 +19,14 @@ function eic_community_preprocess_block(array &$variables) {
   );
   $variables['icon_file_path'] = $variables['eic_icon_path'];
 
+  // Add class to blocks to have them centered.
+  switch ($variables['elements']['#id']) {
+    case 'eic_admin_action_forms_description':
+      $variables['attributes']['class'][] = 'ecl-container';
+      $variables['attributes']['class'][] = 'ecl-form';
+      break;
+  }
+
   if ($variables['base_plugin_id'] == 'block_content') {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $variables['content']['#block_content'];

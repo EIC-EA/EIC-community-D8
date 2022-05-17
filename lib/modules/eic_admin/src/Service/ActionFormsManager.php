@@ -20,7 +20,7 @@ class ActionFormsManager {
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  public $routeMatch;
+  protected $routeMatch;
 
   /**
    * The config factory.
@@ -74,6 +74,20 @@ class ActionFormsManager {
       }
     }
     return $configs;
+  }
+
+  /**
+   * Returns all the existing action form routes.
+   *
+   * @return string[]
+   *   A list of route names.
+   */
+  public function getActionFormRoutes() {
+    $routes = [];
+    foreach ($this->getAllRouteConfigs() as $config) {
+      $routes[] = $config->get('route');
+    }
+    return $routes;
   }
 
 }

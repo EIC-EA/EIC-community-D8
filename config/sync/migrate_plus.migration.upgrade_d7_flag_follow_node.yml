@@ -1,0 +1,91 @@
+uuid: 07fdc07a-e2f4-4c7c-8348-a532f618d78a
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_flag_follow_node
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - Flags
+migration_group: migrate_drupal_7
+label: 'Flag follow node'
+source:
+  plugin: eic_d7_flag_include_node_types
+  track_changes: true
+  constants:
+    included_flags:
+      - subscribe_c4m_follow_node
+      - subscribe_c4m_follow_content
+    included_node_types:
+      - article
+      - discussion
+      - document
+      - news
+      - photoalbum
+      - wiki_page
+process:
+  flag_id:
+    -
+      plugin: static_map
+      source: flag_type
+      map:
+        subscribe_c4m_follow_node: follow_content
+        subscribe_c4m_follow_content: follow_content
+  entity_type:
+    plugin: default_value
+    default_value: node
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: entity_id
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_wiki_page
+        - upgrade_d7_node_complete_photoalbum
+    -
+      plugin: node_complete_node_translation_lookup
+    -
+      plugin: skip_on_empty
+      method: row
+  global: global
+  created: timestamp
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  _flag_exists:
+    -
+      plugin: skip_on_empty
+      method: row
+      source: '@entity_id/0'
+      message: 'The entity_id cannot be NULL.'
+    -
+      plugin: eic_d7_duplicated_flag
+      source:
+        - '@entity_id/0'
+        - '@uid'
+      flag_id: follow_event
+    -
+      plugin: skip_on_value
+      method: row
+      value: true
+      message: 'The Flag has already been migrated. Skip duplicated.'
+destination:
+  plugin: 'entity:flagging'
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_photoalbum
+  optional: {  }

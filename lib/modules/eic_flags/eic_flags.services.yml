@@ -49,6 +49,7 @@ services:
 
   eic_flags.event_subscriber:
     class: Drupal\eic_flags\EventSubscriber\FlagEventSubscriber
+    arguments: ['@eic_groups.helper']
     calls:
       - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:

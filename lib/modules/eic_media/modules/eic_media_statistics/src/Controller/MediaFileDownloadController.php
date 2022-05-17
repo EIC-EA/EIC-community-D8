@@ -99,7 +99,7 @@ class MediaFileDownloadController extends DownloadController {
 
       $data_to_index = array_values($messages);
       $data_to_index[] = $node;
-      $this->solrDocumentProcessor->reIndexEntities($data_to_index);
+      $this->solrDocumentProcessor->lateReIndexEntities($data_to_index);
     }
 
     if ($success) {

@@ -22,6 +22,7 @@ permissions:
   - 'access group search overview'
   - 'access group_node overview'
   - 'access latest activity stream'
+  - 'access members management'
   - 'access members overview'
   - 'access wiki overview'
   - 'administer members'
