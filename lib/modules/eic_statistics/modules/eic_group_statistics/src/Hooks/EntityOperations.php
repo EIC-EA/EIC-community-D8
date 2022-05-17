@@ -150,20 +150,21 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupContentInsert(GroupContentInterface $entity) {
     $group = $entity->getGroup();
+    $group_type = $group->bundle();
 
     $re_index = TRUE;
 
     switch ($entity->bundle()) {
-      case 'group-group_membership':
+      case "$group_type-group_membership":
         // Increments number of members in the group statistics.
         $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_MEMBERS);
         break;
 
-      case 'group-group_node-discussion':
-      case 'group-group_node-document':
-      case 'group-group_node-event':
-      case 'group-group_node-wiki_page':
-      case 'group-group_node-gallery':
+      case "$group_type-group_node-discussion":
+      case "$group_type-group_node-document":
+      case "$group_type-group_node-event":
+      case "$group_type-group_node-gallery":
+      case "$group_type-group_node-wiki_page":
         if ('group-group_node-event' === $entity->bundle()) {
           $event_count = $this->groupStatisticsStorage->calculateGroupEventsStatistics($group);
           $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_EVENTS, $event_count);
@@ -200,11 +201,11 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupContentDelete(GroupContentInterface $entity) {
     $group = $entity->getGroup();
-
+    $group_type = $group->bundle();
     $re_index = TRUE;
 
     switch ($entity->bundle()) {
-      case 'group-group_membership':
+      case "$group_type-group_membership":
         // Decrements number of members in the group statistics.
         $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_MEMBERS);
         break;
