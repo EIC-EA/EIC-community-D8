@@ -4,6 +4,7 @@ namespace Drupal\eic_subscription_digest\Service;
 
 use Drupal;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\State\StateInterface;
@@ -71,7 +72,7 @@ class DigestManager {
     EntityTypeManagerInterface $entity_type_manager,
     QueueFactory $queue_factory,
     DigestCollector $collector,
-    Drupal\Core\Mail\MailManagerInterface $mail_manager
+    MailManagerInterface $mail_manager
   ) {
     $this->state = $state;
     $this->currentUser = $account_proxy;
