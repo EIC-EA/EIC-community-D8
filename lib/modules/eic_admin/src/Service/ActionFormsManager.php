@@ -2,8 +2,10 @@
 
 namespace Drupal\eic_admin\Service;
 
+use Drupal\Core\Config\ConfigBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -24,6 +26,13 @@ class ActionFormsManager {
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $routeMatch;
+
+  /**
+   * The path matcher.
+   *
+   * @var \Drupal\Core\Path\PathMatcherInterface
+   */
+  protected $pathMatcher;
 
   /**
    * The config factory.
@@ -51,6 +60,8 @@ class ActionFormsManager {
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
+   * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
+   *   The path matcher.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -60,11 +71,13 @@ class ActionFormsManager {
    */
   public function __construct(
     RouteMatchInterface $route_match,
+    PathMatcherInterface $path_matcher,
     ConfigFactoryInterface $config_factory,
     RequestStack $request_stack,
     TitleResolverInterface $title_resolver
   ) {
     $this->routeMatch = $route_match;
+    $this->pathMatcher = $path_matcher;
     $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->titleResolver = $title_resolver;
@@ -86,6 +99,48 @@ class ActionFormsManager {
     }
 
     return $this->configFactory->get("eic_admin.action_forms.$route_name") ?? FALSE;
+  }
+
+  /**
+   * Helper function to return the list of configured paths.
+   *
+   * @param \Drupal\Core\Config\ConfigBase $config
+   *   The config object.
+   *
+   * @return string[]
+   *   An array of paths.
+   */
+  public static function getConfigPaths(ConfigBase $config): array {
+    $paths = [];
+    if ($config->get('paths')) {
+      $paths = explode(PHP_EOL, $config->get('paths'));
+    }
+    return $paths;
+  }
+
+  /**
+   * Checks if the config should match the given path.
+   *
+   * If specific paths are defined for this config, we check if one of them
+   * match the given path. Otherwise, if no path is defined, then we consider
+   * all paths are allowed.
+   *
+   * @param \Drupal\Core\Config\ConfigBase $config
+   *   The config object.
+   * @param string $path
+   *   The path to check.
+   *
+   * @return bool
+   *   TRUE if the config is applicable for the given path.
+   */
+  public function matchPath(ConfigBase $config, string $path): bool {
+    $paths = $config->get('paths');
+
+    if (empty($paths)) {
+      return TRUE;
+    }
+
+    return $this->pathMatcher->matchPath($path, $paths);
   }
 
   /**

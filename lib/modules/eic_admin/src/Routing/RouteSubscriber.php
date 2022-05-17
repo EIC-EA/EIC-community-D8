@@ -37,6 +37,13 @@ class RouteSubscriber extends RouteSubscriberBase {
     foreach ($routes as $config) {
       // If title is provided, we override the title callback.
       if ($route = $collection->get($config->get('route'))) {
+
+        // If specific paths are configured, we check if they match the route's
+        // path. If not we skip this route.
+        if (!$this->actionFormsManager->matchPath($config, $route->getPath())) {
+          continue;
+        }
+
         $title = $config->get('title');
 
         if (!empty($title)) {

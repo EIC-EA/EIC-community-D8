@@ -77,6 +77,14 @@ class ActionFormsForm extends ConfigFormBase {
         '#disabled' => TRUE,
         '#tree' => TRUE,
       ];
+      $form[$route_name]['paths'] = [
+        '#type' => 'textarea',
+        '#title' => $this->t('Paths'),
+        '#default_value' => $config->get('paths'),
+        '#description' => $this->t('Restrict to specific paths, one per line. Leave blank to match all paths for this route.'),
+        '#required' => FALSE,
+        '#tree' => TRUE,
+      ];
       $form[$route_name]['label'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Label'),
@@ -124,6 +132,7 @@ class ActionFormsForm extends ConfigFormBase {
       if (empty($config_values)) {
         continue;
       }
+      $config->set('paths', $config_values['paths']);
       $config->set('label', $config_values['label']);
       $config->set('title', $config_values['title']);
       $config->set('description.value', $config_values['description']['value']);

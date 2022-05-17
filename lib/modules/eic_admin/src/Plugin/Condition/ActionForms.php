@@ -4,6 +4,7 @@ namespace Drupal\eic_admin\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -35,6 +36,13 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
   protected $routeMatch;
 
   /**
+   * The current path stack.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
    * Creates a new ActionForms instance.
    *
    * @param array $configuration
@@ -50,17 +58,21 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
    *   The action forms manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path_stack
+   *   The current path stack.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
     ActionFormsManager $action_forms_manager,
-    RouteMatchInterface $route_match
+    RouteMatchInterface $route_match,
+    CurrentPathStack $current_path_stack
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->actionFormsManager = $action_forms_manager;
     $this->routeMatch = $route_match;
+    $this->currentPath = $current_path_stack;
   }
 
   /**
@@ -72,7 +84,8 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
       $plugin_id,
       $plugin_definition,
       $container->get('eic_admin.action_forms_manager'),
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('path.current')
     );
   }
 
@@ -108,10 +121,17 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function evaluate() {
-    return in_array(
-      $this->routeMatch->getRouteName(),
-      $this->actionFormsManager->getActionFormRoutes()
-    );
+    $configs = $this->actionFormsManager->getAllRouteConfigs();
+
+    foreach ($configs as $config) {
+      if ($config->get('route') == $this->routeMatch->getRouteName()) {
+        if ($this->actionFormsManager->matchPath($config, $this->routeMatch->getRouteObject()->getPath())) {
+          return TRUE;
+        }
+      }
+    }
+
+    return FALSE;
   }
 
 }
