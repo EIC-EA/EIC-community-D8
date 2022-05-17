@@ -142,7 +142,11 @@ class FormOperations implements ContainerInjectionInterface {
 
     }
 
-    if ($show_notification_field) {
+    if (
+      $show_notification_field &&
+      $form_state->get('form_display')
+        ->getComponent('field_send_notification')
+    ) {
       // We set the current publish status of the entity.
       $form_state->set('entity_is_published', $entity->isPublished());
       $form_state->set('previous_state', $entity->get('moderation_state')->value);
