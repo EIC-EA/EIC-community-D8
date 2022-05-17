@@ -184,7 +184,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: tag
+        type: search_api_tag
         options: {  }
       empty: {  }
       sorts:
