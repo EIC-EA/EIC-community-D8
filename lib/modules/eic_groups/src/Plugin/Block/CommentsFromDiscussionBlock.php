@@ -274,6 +274,10 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       !UserHelper::isPowerUser($account) &&
       $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
 
+    $is_content_archived =
+      !UserHelper::isPowerUser($account) &&
+      $node->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -300,18 +304,18 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'users_url' => $user_url,
       'users_url_search' => $user_url,
       'permissions' => [
-        'post_comment' => !$is_group_archived && $this->hasGroupOrGlobalPermission(
+        'post_comment' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'post comments'
         ),
-        'edit_all_comments' => !$is_group_archived && $this->hasGroupOrGlobalPermission(
+        'edit_all_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
             $group_contents,
             $current_user,
             'edit all comments'
           ),
-        'delete_all_comments' => !$is_group_archived && UserHelper::isPowerUser($current_user),
-        'edit_own_comments' => !$is_group_archived && $this->hasGroupOrGlobalPermission(
+        'delete_all_comments' => !$is_group_archived && !$is_content_archived && UserHelper::isPowerUser($current_user),
+        'edit_own_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'edit own comments'
