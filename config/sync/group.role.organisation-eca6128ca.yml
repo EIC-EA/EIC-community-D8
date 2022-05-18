@@ -22,6 +22,7 @@ permissions:
   - 'access group content menu overview'
   - 'access group search overview'
   - 'access latest activity stream'
+  - 'access members management'
   - 'access members overview'
   - 'access news overview'
   - 'access wiki overview'

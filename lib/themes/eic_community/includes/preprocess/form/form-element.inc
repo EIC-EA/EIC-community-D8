@@ -15,6 +15,17 @@ function eic_community_preprocess_form_element(array &$variables): void {
   if (in_array($variables['element']['#type'], ['checkbox', 'radio'])) {
     $variables['label_display'] = 'none';
   }
+
+  if (in_array($variables['element']['#type'], ['select'])) {
+    // Remove "container-inline" class from select lists.
+    if (
+      (isset($variables['attributes']['class'])) &&
+      ($key = array_search('container-inline', $variables['attributes']['class'])) !== FALSE
+    ) {
+      unset($variables['attributes']['class'][$key]);
+    }
+  }
+
   $ecl_type_mappings = [
     'textfield' => 'text-input',
     'password' => 'text-input',

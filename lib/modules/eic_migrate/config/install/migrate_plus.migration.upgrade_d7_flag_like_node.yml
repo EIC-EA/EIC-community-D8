@@ -26,6 +26,7 @@ source:
       - photoalbum
       - wiki_page
       - event
+  batch_size: 100
 process:
   flag_id:
     -

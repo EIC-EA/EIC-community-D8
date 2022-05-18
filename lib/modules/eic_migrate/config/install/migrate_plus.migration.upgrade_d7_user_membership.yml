@@ -19,6 +19,7 @@ source:
   track_changes: true
   constants:
     group_membership_plugin_id: group_membership
+  batch_size: 100
 process:
   type:
     plugin: concat
@@ -43,7 +44,7 @@ process:
       migration:
         - upgrade_d7_node_complete_group
         - upgrade_d7_node_complete_organisation
-        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_event_site
       no_stub: true
     -
       plugin: skip_on_empty
@@ -75,6 +76,7 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    # TODO: Add the remaining group migration once available.
     - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
   optional: { }

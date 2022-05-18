@@ -155,6 +155,7 @@ module:
   oe_media: 0
   oe_time_caching: 0
   oe_webtools: 0
+  oe_webtools_analytics: 0
   oe_webtools_cookie_consent: 0
   oe_webtools_social_share: 0
   oec_group_comments: 0

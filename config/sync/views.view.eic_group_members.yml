@@ -423,7 +423,7 @@ display:
       access:
         type: group_permission
         options:
-          group_permission: 'view group_membership content'
+          group_permission: 'access members management'
       cache:
         type: tag
         options: {  }

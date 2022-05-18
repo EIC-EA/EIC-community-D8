@@ -15,6 +15,7 @@ source:
   track_changes: true
   constants:
     entity_type: group
+  batch_size: 100
 process:
   uid:
     - plugin: default_value

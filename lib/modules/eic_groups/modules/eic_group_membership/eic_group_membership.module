@@ -8,10 +8,12 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
+use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\Form\GroupContentForm;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
@@ -136,7 +138,7 @@ function eic_group_membership_update_membership_role_form_submit(
       === $role['target_id'];
   });
 
-  // if user has no role and he's promoted group_admin, send message.
+  // If user has no role and has been promoted to group_admin, send message.
   if (empty($old_roles) && count($is_new_group_admin) > 0) {
     /** @var \Drupal\eic_messages\Service\MessageBus $bus */
     $bus = \Drupal::service('eic_messages.message_bus');
@@ -282,4 +284,54 @@ function eic_group_membership_group_flex_visibility_save(
 
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function eic_group_membership_group_content_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = GroupAccessResult::neutral();
+
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+    return $access;
+  }
+
+  $group = $entity->getGroup();
+  /** @var \Drupal\user\UserInterface $group_content_member */
+  $group_content_member = $entity->getEntity();
+
+  switch ($operation) {
+    case 'delete':
+      $group = $entity->getGroup();
+      /** @var \Drupal\user\UserInterface $group_content_member */
+      $group_content_member = $entity->getEntity();
+      $group_owner = EICGroupsHelper::getGroupOwner($group);
+
+      // Group owners cannot be deleted.
+      if ($group_content_member->id() === $group_owner->id()) {
+        $access = GroupAccessResult::forbidden()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($group);
+        break;
+      }
+
+      $current_member = $group->getMember($account);
+
+      // We deny access if the user is not a power user or doesn't have
+      // permission to administer group members.
+      $access = GroupAccessResult::forbiddenIf(
+          !UserHelper::isPowerUser($account) &&
+          !$current_member->hasPermission('administer members')
+        )
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($current_member)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($group);
+      break;
+
+  }
+
+  return $access;
 }
