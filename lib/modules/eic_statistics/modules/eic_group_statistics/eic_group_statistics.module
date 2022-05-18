@@ -22,15 +22,13 @@ function eic_group_statistics_group_delete(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_group_statistics_group_content_insert(EntityInterface $entity) {
-  $group_type = $entity->getGroup()->bundle();
-
-  switch ($entity->bundle()) {
-    case "$group_type-group_membership":
-    case "$group_type-group_node-discussion":
-    case "$group_type-group_node-document":
-    case "$group_type-group_node-event":
-    case "$group_type-group_node-gallery":
-    case "$group_type-group_node-wiki_page":
+  switch ($entity->getContentPlugin()->getPluginId()) {
+    case "group_membership":
+    case "group_node:discussion":
+    case "group_node:document":
+    case "group_node:event":
+    case "group_node:gallery":
+    case "group_node:wiki_page":
       \Drupal::classResolver(EntityOperations::class)
         ->groupContentInsert($entity);
       break;
@@ -42,10 +40,8 @@ function eic_group_statistics_group_content_insert(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_delete().
  */
 function eic_group_statistics_group_content_delete(EntityInterface $entity) {
-  $group_type = $entity->getGroup()->bundle();
-
-  switch ($entity->bundle()) {
-    case "$group_type-group_membership":
+  switch ($entity->getContentPlugin()->getPluginId()) {
+    case "group_membership":
       \Drupal::classResolver(EntityOperations::class)
         ->groupContentDelete($entity);
       break;
