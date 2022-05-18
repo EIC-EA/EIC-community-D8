@@ -162,11 +162,11 @@ class DigestManager {
       return;
     }
 
-    $digest_items = $this->collector->getList($user, $data['digest_type']);
+    $digest_categories = $this->collector->getList($user, $data['digest_type']);
     $view_builder = $this->entityTypeManager->getViewBuilder('message');
-    foreach ($digest_items as &$items) {
-      foreach ($items as &$item) {
-        $item = $view_builder->view($item, 'notify_digest');
+    foreach ($digest_categories as &$category) {
+      foreach ($category['items'] as &$item) {
+        $item['rendered'] = $view_builder->view($item['message'], 'notify_digest');
       }
     }
 
@@ -175,7 +175,7 @@ class DigestManager {
       'digest',
       $user->getEmail(),
       $user->getPreferredLangcode(),
-      ['items' => $digest_items, 'digest_type' => $data['digest_type'], 'uid' => $data['uid']]
+      ['items' => $digest_categories, 'digest_type' => $data['digest_type'], 'uid' => $data['uid']]
     );
   }
 

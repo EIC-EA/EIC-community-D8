@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_digest
     - field.field.message.sub_site_event_pub_interest.field_event_executing_user
+    - field.field.message.sub_site_event_pub_interest.field_group_ref
     - field.field.message.sub_site_event_pub_interest.field_topic_term
     - message.template.sub_site_event_pub_interest
 id: message.sub_site_event_pub_interest.notify_digest
@@ -44,4 +45,5 @@ content:
     weight: 0
     region: content
 hidden:
+  field_group_ref: true
   search_api_excerpt: true
