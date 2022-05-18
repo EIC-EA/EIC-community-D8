@@ -42,3 +42,17 @@
   flags: group_values.flags,
   social_share: group_values.social_share
 } only %}
+
+{% if group_values.is_archived %}
+    <div class="ecl-container">
+        {% embed "@theme/patterns/compositions/state-banner.html.twig" with {
+            "title": "Group archived"|t,
+            "icon_file_path": eic_icon_path,
+            "icon": {"name": "warning", "type": "notifications"},
+        } %}
+            {% block description %}
+                <p>{{ 'This group has been archived. Interactions with the group are no longer possible at this time. For more information please contact your site admin.'|t }}</p>
+            {% endblock %}
+        {% endembed %}
+    </div>
+{% endif %}
