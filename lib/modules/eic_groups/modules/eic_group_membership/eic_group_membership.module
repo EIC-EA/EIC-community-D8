@@ -16,6 +16,7 @@ use Drupal\eic_user\UserHelper;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\Form\GroupContentForm;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\message\Entity\Message;
 
@@ -323,12 +324,17 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       // permission to administer group members.
       $access = GroupAccessResult::forbiddenIf(
           !UserHelper::isPowerUser($account) &&
+          $current_member instanceof GroupMembership &&
           !$current_member->hasPermission('administer members')
         )
         ->addCacheableDependency($account)
-        ->addCacheableDependency($current_member)
         ->addCacheableDependency($entity)
         ->addCacheableDependency($group);
+
+      // Adds group membership as cacheable dependency.
+      if ($current_member instanceof GroupMembership) {
+        $access->addCacheableDependency($current_member);
+      }
       break;
 
   }
