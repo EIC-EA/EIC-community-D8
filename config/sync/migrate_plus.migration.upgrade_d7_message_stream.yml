@@ -14,6 +14,7 @@ label: 'Drupal 7 stream messages.'
 source:
   plugin: eic_d7_message_stream_source
   track_changes: true
+  batch_size: 100
 process:
   template:
     -
@@ -37,15 +38,13 @@ process:
       migration:
         - upgrade_d7_user
   arguments:
-    -
-      plugin: d7_message_arguments
-      source:
-        - arguments
+    plugin: d7_message_arguments
+    source:
+      - arguments
   langcode:
-    -
-      plugin: default_value
-      source: language
-      default_value: en
+    plugin: default_value
+    source: language
+    default_value: en
   field_group_ref:
     -
       plugin: skip_on_empty
@@ -111,4 +110,5 @@ migration_dependencies:
     - upgrade_d7_node_complete_wiki_page
     - upgrade_d7_node_complete_photoalbum
     - upgrade_d7_node_complete_group
+    - upgrade_d7_comment
   optional: {  }

@@ -19,6 +19,7 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
+  batch_size: 100
 process:
   nid:
     -
@@ -79,20 +80,6 @@ process:
         idea: idea
         question: question
         info: information
-  field_vocab_topics:
-    -
-      plugin: sub_process
-      source: c4m_vocab_topic
-      process:
-        target_id:
-          -
-            plugin: migration_lookup
-            source: smed_id
-            no_stub: true
-            migration:
-              - smed_thematics_topics_lvl1
-              - smed_thematics_topics_lvl2
-              - smed_thematics_topics_lvl3
   field_related_documents:
     -
       plugin: multiple_values
@@ -122,6 +109,20 @@ process:
             migration:
               - smed_regions_countries_lvl1
               - smed_regions_countries_lvl2
+  field_vocab_topics:
+    -
+      plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
   field_language:
     -
       plugin: sub_process

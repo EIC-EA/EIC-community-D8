@@ -19,6 +19,7 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
+  batch_size: 100
 process:
   nid:
     -
@@ -95,6 +96,19 @@ process:
             source: tid
             migration:
               - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+  field_vocab_geo:
+    -
+      plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_language:
     -
       plugin: sub_process
@@ -121,19 +135,6 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
-  field_vocab_geo:
-    -
-      plugin: sub_process
-      source: c4m_vocab_geo
-      process:
-        target_id:
-          -
-            plugin: migration_lookup
-            source: smed_id
-            no_stub: true
-            migration:
-              - smed_regions_countries_lvl1
-              - smed_regions_countries_lvl2
   moderation_state:
     -
       plugin: static_map
