@@ -1,0 +1,6 @@
+route: entity.group_content.new_request
+label: 'Group ownership transfer request'
+title: ''
+description:
+  value: ''
+  format: full_html
