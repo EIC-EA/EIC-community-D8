@@ -17,6 +17,7 @@ source:
   track_changes: true
   constants:
     SOURCE_BASE_PATH: ../backup_files
+  batch_size: 100
 process:
   filename: filename
   # Remove "sites/default/files/" from filepath

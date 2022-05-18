@@ -1,4 +1,4 @@
-uuid: 7d7942ec-2dd0-4fda-a80e-60476b293b5e
+uuid: dabd1681-2a8c-4175-a650-e73460a346fa
 langcode: en
 status: true
 dependencies: {  }
@@ -19,6 +19,7 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
+  batch_size: 100
 process:
   nid:
     -
@@ -49,7 +50,6 @@ process:
     -
       plugin: static_map
       source: status
-      default: published
       map:
         - draft
         - published
@@ -116,6 +116,18 @@ process:
             migration:
               - smed_regions_countries_lvl1
               - smed_regions_countries_lvl2
+  field_language:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
   field_vocab_topics:
     -
       plugin: sub_process
@@ -130,18 +142,6 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
-  field_language:
-    -
-      plugin: sub_process
-      source: c4m_vocab_language
-      process:
-        target_id:
-          -
-            plugin: migration_lookup
-            source: smed_id
-            no_stub: true
-            migration:
-              - smed_spoken_languages
 destination:
   plugin: 'entity_complete:node'
   translations: true

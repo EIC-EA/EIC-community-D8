@@ -113,6 +113,15 @@ if ($bucket = getenv('AWS_S3_BUCKET')) {
   $settings['s3fs.upload_as_private'] = TRUE;
 }
 
+if (getenv('TIKA_HOST')) {
+  $config['search_api_attachments.admin_config']['extraction_method'] = 'tika_server_extractor';
+  $config['search_api_attachments.admin_config']['tika_server_extractor_configuration'] = [
+    'scheme' => getenv('TIKA_SCHEME'),
+    'host' => getenv('TIKA_HOST'),
+    'port' => getenv('TIKA_PORT'),
+  ];
+}
+
 /**
  * SMED API connection information.
  */

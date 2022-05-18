@@ -14,6 +14,7 @@ source:
   plugin: d7_taxonomy_term
   bundle: c4m_vocab_organisation_types
   track_changes: true
+  batch_size: 100
 process:
   # Ignore Term ID. A new one will be generated.
 #  tid:

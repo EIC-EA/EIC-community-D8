@@ -22,6 +22,7 @@ source:
     - c4m_vocab_language
     - c4m_vocab_topic
     - c4m_vocab_job_title
+  batch_size: 100
 process:
   type:
     - plugin: default_value

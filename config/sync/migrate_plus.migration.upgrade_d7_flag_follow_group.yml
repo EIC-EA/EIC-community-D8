@@ -18,6 +18,7 @@ source:
   constants:
     included_flags:
       - subscribe_c4m_follow_group
+  batch_size: 100
 process:
   flag_id:
     -

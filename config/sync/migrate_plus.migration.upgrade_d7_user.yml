@@ -14,6 +14,7 @@ label: 'User accounts'
 source:
   plugin: eic_d7_user_with_smed_ids
   track_changes: true
+  batch_size: 100
 process:
   name: name
   pass: pass

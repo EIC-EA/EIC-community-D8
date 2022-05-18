@@ -21,6 +21,7 @@ source:
       - subscribe_c4m_follow_content
     included_node_types:
       - event
+  batch_size: 100
 process:
   flag_id:
     -

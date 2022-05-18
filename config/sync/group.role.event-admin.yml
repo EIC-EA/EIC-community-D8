@@ -13,6 +13,7 @@ group_type: event
 permissions_ui: true
 permissions:
   - 'access group_node overview'
+  - 'access members management'
   - 'create group_node:discussion entity'
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'

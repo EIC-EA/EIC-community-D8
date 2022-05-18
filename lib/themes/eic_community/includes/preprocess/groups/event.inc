@@ -154,6 +154,7 @@ function eic_community_preprocess_group__event(&$variables) {
             ]
           )) {
             $registration_message = t('Event registration closed');
+            $has_registration_link = FALSE;
           }
 
           $teaser['timestamp']['label'] = $registration_message;
