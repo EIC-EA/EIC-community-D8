@@ -150,6 +150,18 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#data' => [
           'title' => $this->t('Your digest settings'),
           'body' => $this->t('We will send you a summary of the activity on content you follow. You can decide wheater or not you want to receive this notification and manage its periodicity here.'),
+          'digest_action' => [
+            'toggle' => [
+              'update_url' => Url::fromRoute('eic_subscription_digest.update_status')->toString(),
+              'status' => TRUE,
+              'title' => $this->t('Email digest notifications'),
+            ],
+            'select' => [
+              'update_url' => Url::fromRoute('eic_subscription_digest.update_frequency')->toString(),
+              'value' => 'daily',
+              'title' => $this->t('Manage digest periodicity'),
+            ],
+          ],
         ],
       ],
     ];
