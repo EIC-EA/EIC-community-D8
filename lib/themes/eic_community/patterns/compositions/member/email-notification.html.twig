@@ -40,7 +40,7 @@
 
 		{% if global_action %}
 			<section class="ecl-my-notifications__section ecl-my-notifications__tags-list">
-				<h4>{{ global_action.title }}</h4>
+				<h2>{{ global_action.title }}</h2>
 				{% include "@theme/patterns/components/toggle-switch.html.twig" with {
           name: global_action.title,
           state: global_action.state,
@@ -52,6 +52,13 @@
 		{% if table %}
 			<div class="ecl-my-notifications-management" data-title="{{ table.title }}" data-url="{{ table.url }}" data-unsubscribe="{{ table.unsubscribe ?? false }}"></div>
 		{% endif %}
+
+    {{ attach_library('eic_community/react-digest-management') }}
+    <section id="ecl-my-notifications-digest"></section>
+
+    {% if digest_action %}
+
+    {% endif %}
 	</div>
 
 </section>
