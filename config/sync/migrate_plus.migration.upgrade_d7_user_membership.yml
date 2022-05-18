@@ -44,7 +44,7 @@ process:
       migration:
         - upgrade_d7_node_complete_group
         - upgrade_d7_node_complete_organisation
-        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_event_site
       no_stub: true
     -
       plugin: skip_on_empty
@@ -78,5 +78,5 @@ migration_dependencies:
     - upgrade_d7_user
     - upgrade_d7_node_complete_group
     - upgrade_d7_node_complete_organisation
-    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_event_site
   optional: {  }
