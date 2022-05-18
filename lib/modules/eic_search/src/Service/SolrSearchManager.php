@@ -545,6 +545,7 @@ class SolrSearchManager {
       switch ($this->source->getEntityBundle()) {
         case 'library':
         case 'discussion':
+        case 'node_event':
           // Show own content even if it's in draft, archived, ...
           $query_bundle[] = "its_content_uid:$user_id";
           break;
