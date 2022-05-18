@@ -40,7 +40,7 @@
     </div>
   {% else %}
     {% if actions is not empty %}
-      <section class="ecl-editorial-article__header">
+      <section class="ecl-editorial-article__header ecl-editorial-article__header--wiki">
       {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
         items: actions.items ? actions.items|map(i => i|merge({
           extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
