@@ -414,10 +414,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       );
     }
 
+    $cache_tags = $node->getCacheTags();
+
+    if ($group instanceof GroupInterface) {
+      $cache_tags = array_merge($cache_tags, $group->getCacheTags());
+    }
+
     return $build + [
         '#cache' => [
           'contexts' => $cache_context,
-          'tags' => $node->getCacheTags(),
+          'tags' => $cache_tags,
         ],
         '#highlighted_comment' => $highlighted_comment instanceof CommentInterface ?
           $highlighted_comment->id() :
