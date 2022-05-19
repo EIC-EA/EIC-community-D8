@@ -22,10 +22,17 @@ source:
     group_membership_plugin_id: group_membership
   batch_size: 100
 process:
+  _group_type:
+    plugin: static_map
+    source: node_type
+    map:
+      group: group
+      event_site: event
+      organisation: organisation
   type:
     plugin: concat
     source:
-      - node_type
+      - '@_group_type'
       - constants/group_membership_plugin_id
     delimiter: '-'
   uid:
