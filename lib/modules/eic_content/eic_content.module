@@ -52,7 +52,6 @@ function eic_content_node_view(
       break;
 
   }
-
 }
 
 /**
@@ -71,7 +70,6 @@ function eic_content_entity_presave(EntityInterface $entity) {
       break;
 
   }
-
 }
 
 /**
@@ -108,7 +106,7 @@ function eic_content_metatags_attachments_alter(array &$metatag_attachments) {
   }
 
   $default_image_path = \Drupal::service('extension.path.resolver')
-      ->getPath('theme', 'eic_community') . '/screenshot.png';
+      ->getPath('theme', 'eic_community') . '/EIC_community.png';
   // No og_image is provided, add a default one
   $metatag_attachments['#attached']['html_head'][] = [
     [
