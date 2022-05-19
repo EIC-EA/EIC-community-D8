@@ -14,6 +14,7 @@ source:
   plugin: d7_node_complete
   node_type: book
   track_changes: true
+  batch_size: 100
 process:
   nid:
     - plugin: migration_lookup

@@ -19,6 +19,7 @@ source:
     - public
     - private
   track_changes: true
+  batch_size: 100
 process:
   name: filename
   uid:

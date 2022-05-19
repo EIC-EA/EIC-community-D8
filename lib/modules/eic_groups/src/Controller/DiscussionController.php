@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
@@ -24,6 +25,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -323,6 +325,10 @@ class DiscussionController extends ControllerBase {
 
     $comment = Comment::load($comment_id);
 
+    if ($this->isGroupArchived($discussion_id)) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
+
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
@@ -344,11 +350,14 @@ class DiscussionController extends ControllerBase {
         'value' => $text,
         'format' => 'plain_text',
       ]);
-      $comment->set('field_tagged_users', array_map(function ($tagged_user) {
-        return [
-          'target_id' => $tagged_user['tid'],
-        ];
-      }, $tagged_users));
+      $comment->set(
+        'field_tagged_users',
+        array_map(function ($tagged_user) {
+          return [
+            'target_id' => $tagged_user['tid'],
+          ];
+        }, $tagged_users)
+      );
 
       $comment->save();
     } catch (EntityStorageException $e) {
@@ -367,9 +376,15 @@ class DiscussionController extends ControllerBase {
    * @param $comment_id
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $comment = Comment::load($comment_id);
+
+    if ($this->isGroupArchived($discussion_id)) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
@@ -614,6 +629,34 @@ class DiscussionController extends ControllerBase {
         ['context' => 'eic_groups']
       ),
     ];
+  }
+
+  /**
+   * @param int $node_id
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function isGroupArchived(int $node_id): bool {
+    $node = Node::load($node_id);
+
+    if (!$node instanceof NodeInterface) {
+      return FALSE;
+    }
+
+    $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node);
+
+    if (empty($group_contents)) {
+      return FALSE;
+    }
+
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = reset($group_contents);
+    $group = $group_content->getGroup();
+
+    return $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
+      !UserHelper::isPowerUser($this->currentUser());
   }
 
 }

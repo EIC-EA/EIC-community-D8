@@ -12,12 +12,12 @@ migration_group: migrate_drupal_7
 label: 'Public and private audio files to document media'
 source:
   plugin: eic_d7_file_complete
-  batch_size: 100
   file_type: audio
   scheme:
     - public
     - private
   track_changes: true
+  batch_size: 100
 process:
   name: filename
   uid:

@@ -35,17 +35,21 @@ class ProcessorGroup extends DocumentProcessor {
 
   /**
    * @param \Drupal\eic_search\Service\SolrSearchManager $solr_search_manager
-   * @param \Drupal\eic_group_statistics\GroupStatisticsHelper $group_statistics_helper
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
    */
   public function __construct(
     SolrSearchManager $solr_search_manager,
-    GroupStatisticsHelper $group_statistics_helper,
     FlagCountManagerInterface $flag_count_manager
   ) {
     $this->solrSearchManager = $solr_search_manager;
-    $this->groupStatisticsHelper = $group_statistics_helper;
     $this->flagCountManager = $flag_count_manager;
+  }
+
+  /**
+   * @param \Drupal\eic_group_statistics\GroupStatisticsHelper $groupStatisticsHelper
+   */
+  public function setGroupStatistics(GroupStatisticsHelper $groupStatisticsHelper) {
+    $this->groupStatisticsHelper = $groupStatisticsHelper;
   }
 
   /**

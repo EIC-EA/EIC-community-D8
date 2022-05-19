@@ -16,6 +16,7 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
     case 'organisation_content':
       $suggestions[] = 'views_view__organisation_featured_content_collection';
       break;
+
     case 'group_related_news_stories':
     case 'group_discussions':
     case 'group_documents':
@@ -31,6 +32,7 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
         default:
           $suggestions[] = "views_view__featured_content_collection";
           break;
+
       }
       break;
 
@@ -44,6 +46,7 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
       break;
 
     case 'groups':
+    case 'global_index_group_content':
       $suggestions[] = "views_view__teaser_overview_with_wrapper";
       break;
 

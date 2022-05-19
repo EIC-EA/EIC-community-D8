@@ -21,6 +21,7 @@ source:
   track_changes: true
   constants:
     PARAGRAPH_VIEW_MODE: platform_member
+  batch_size: 100
 process:
   paragraph_view_mode: constants/PARAGRAPH_VIEW_MODE
   field_user_ref/target_id:

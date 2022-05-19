@@ -15,6 +15,7 @@ source:
   track_changes: true
   constants:
     node_membership_plugin_id: group_node
+  batch_size: 100
 process:
   _target_group_type:
     - plugin: migration_lookup

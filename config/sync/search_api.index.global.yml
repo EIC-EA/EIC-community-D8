@@ -720,12 +720,32 @@ field_settings:
     dependencies:
       module:
         - group
+  group_content_end_value:
+    label: '[Group content] Parent group » Group » Date » End date value'
+    datasource_id: 'entity:group_content'
+    property_path: 'gid:entity:field_date_range:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_date_range
+      module:
+        - group
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
     property_path: entity_id
     type: integer
     dependencies:
+      module:
+        - group
+  group_content_field_date_range:
+    label: '[Group content] Parent group » Group » Date'
+    datasource_id: 'entity:group_content'
+    property_path: 'gid:entity:field_date_range'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_date_range
       module:
         - group
   group_content_gid:
@@ -741,6 +761,14 @@ field_settings:
     datasource_id: 'entity:group_content'
     property_path: type
     type: string
+    dependencies:
+      module:
+        - group
+  group_content_uid:
+    label: '[Group content] Creator'
+    datasource_id: 'entity:group_content'
+    property_path: uid
+    type: integer
     dependencies:
       module:
         - group

@@ -193,6 +193,13 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['no_container'] = TRUE;
       break;
 
+    case 'global_index_group_content-block_user_profile_events':
+    case 'global_index_group_content-block_user_profile_my_events':
+    case 'groups-block_user_profile_organisations':
+    case 'groups-block_user_profile_my_organisations':
+      $variables['extra_classes'] = 'ecl-teaser-overview--has-compact-layout';
+      break;
+
   }
 
   // Add the read more link if there is one.

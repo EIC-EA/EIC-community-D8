@@ -1,0 +1,15 @@
+<div {{ attributes }}>
+{% block header %}
+  {{ title_prefix }}
+  {{ title_suffix }}
+{% endblock %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/organisation/organisation.teaser.html.twig" with organisation_item|default({})|merge({
+    title: label|default(''),
+    path: url,
+    icon_file_path: eic_icon_path,
+    extra_classes: 'ecl-teaser--grey',
+  }) %}
+{% endblock %}
+</div>

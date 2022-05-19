@@ -16,7 +16,7 @@
   {% block sidebar %}
     {{ eic_local_tasks }}
 
-    {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+    {% include "@theme/patterns/components/flags.html.twig" with editorial_actions|default({}) %}
 
     {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
 

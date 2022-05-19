@@ -14,11 +14,14 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\editor\Plugin\EditorManager;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
@@ -184,7 +187,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $routes_to_ignore = [
       'entity.node.delete_form',
       'entity.node.edit_form',
-      'entity.node.new_request'
+      'entity.node.new_request',
     ];
 
     // Do not show comments block in delete/edit/request content.
@@ -265,6 +268,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'current_group' => $group_id,
     ])->toString();
 
+    $group = Group::load($group_id);
+    $is_group_archived =
+      $group instanceof GroupInterface &&
+      !UserHelper::isPowerUser($account) &&
+      $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
+    $is_content_archived =
+      !UserHelper::isPowerUser($account) &&
+      $node->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -291,18 +304,18 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'users_url' => $user_url,
       'users_url_search' => $user_url,
       'permissions' => [
-        'post_comment' => $this->hasGroupOrGlobalPermission(
+        'post_comment' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'post comments'
         ),
-        'edit_all_comments' => $this->hasGroupOrGlobalPermission(
-          $group_contents,
-          $current_user,
-          'edit all comments'
-        ),
-        'delete_all_comments' => UserHelper::isPowerUser($current_user),
-        'edit_own_comments' => $this->hasGroupOrGlobalPermission(
+        'edit_all_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+            $group_contents,
+            $current_user,
+            'edit all comments'
+          ),
+        'delete_all_comments' => !$is_group_archived && !$is_content_archived && UserHelper::isPowerUser($current_user),
+        'edit_own_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'edit own comments'
@@ -405,10 +418,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       );
     }
 
+    $cache_tags = $node->getCacheTags();
+
+    if ($group instanceof GroupInterface) {
+      $cache_tags = array_merge($cache_tags, $group->getCacheTags());
+    }
+
     return $build + [
         '#cache' => [
           'contexts' => $cache_context,
-          'tags' => $node->getCacheTags(),
+          'tags' => $cache_tags,
         ],
         '#highlighted_comment' => $highlighted_comment instanceof CommentInterface ?
           $highlighted_comment->id() :

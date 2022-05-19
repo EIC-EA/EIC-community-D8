@@ -3,6 +3,7 @@
 namespace Drupal\eic_events\Plugin\search_api\processor;
 
 use Drupal\eic_events\Constants\Event;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
@@ -62,9 +63,18 @@ class EventWeightState extends ProcessorPluginBase {
    */
   public function addFieldValues(ItemInterface $item) {
     $datasourceId = $item->getDatasourceId();
-    if ($datasourceId === 'entity:node' || $datasourceId === 'entity:group') {
-      /** @var \Drupal\node\NodeInterface|\Drupal\group\Entity\GroupInterface $entity */
+    if (
+      $datasourceId === 'entity:node' ||
+      $datasourceId === 'entity:group' ||
+      $datasourceId === 'entity:group_content'
+    ) {
+      /** @var \Drupal\node\NodeInterface|\Drupal\group\Entity\GroupInterface|\Drupal\group\Entity\GroupContentInterface $entity */
       $entity = $item->getOriginalObject()->getValue();
+
+      // We add the event state weight to the event group membership.
+      if (($entity instanceof GroupContentInterface && 'event-group_membership' === $entity->bundle())) {
+        $entity = $entity->getGroup();
+      }
 
       if (
         ($entity instanceof NodeInterface && 'event' === $entity->getType()) ||
@@ -73,9 +83,10 @@ class EventWeightState extends ProcessorPluginBase {
         $start_date = strtotime($entity->get('field_date_range')->value);
         $end_date = strtotime($entity->get('field_date_range')->end_value);
         $now = time();
-        // We set a weight value depending the state of the event: 1.ongoing 2.future 3.past
+        // We set a weight value depending the state of the event:
+        // - 1.ongoing 2.future 3.past
         // so we can sort easily in different overviews.
-        // By default we set it as past event
+        // By default we set it as past event.
         $weight_event_state = Event::WEIGHT_STATE_PAST;
 
         if ($now < $start_date) {

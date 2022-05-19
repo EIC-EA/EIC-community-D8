@@ -18,6 +18,7 @@ source:
   constants:
     included_flags:
       - c4m_og_content_highlight
+  batch_size: 100
 process:
   flag_id:
     -
