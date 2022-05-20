@@ -458,17 +458,23 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * {@inheritdoc}
    */
   public function getGroupBookPage(GroupInterface $group) {
+    if (!$group->getGroupType()->hasContentPlugin('group_node:book')) {
+      return NULL;
+    }
+
     $query = $this->database->select('group_content_field_data', 'gp');
-    $query->condition('gp.type', 'group-group_node-book');
+    $query->condition('gp.type', "{$group->bundle()}-group_node-book");
     $query->condition('gp.gid', $group->id());
     $query->join('book', 'b', 'gp.entity_id = b.nid');
     $query->fields('b', ['bid', 'nid']);
     $query->condition('b.pid', 0);
     $query->orderBy('b.weight');
+
     $results = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
     if (!empty($results)) {
       return $results[0]->nid;
     }
+
     return NULL;
   }
 
