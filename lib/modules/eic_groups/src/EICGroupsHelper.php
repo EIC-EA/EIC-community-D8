@@ -462,8 +462,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       return NULL;
     }
 
+    $group_content_type_id = $group
+      ->getGroupType()
+      ->getContentPlugin('group_node:book')
+      ->getContentTypeConfigId();
+
     $query = $this->database->select('group_content_field_data', 'gp');
-    $query->condition('gp.type', "{$group->bundle()}-group_node-book");
+    $query->condition('gp.type', $group_content_type_id);
     $query->condition('gp.gid', $group->id());
     $query->join('book', 'b', 'gp.entity_id = b.nid');
     $query->fields('b', ['bid', 'nid']);
