@@ -1,5 +1,3 @@
-// import { login, preserveCookie } from "../../helper/login";
-
 context("Group - archive", () => {
   before(() => {
     cy.login();
