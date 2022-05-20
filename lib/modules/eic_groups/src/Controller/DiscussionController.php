@@ -12,6 +12,7 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -136,7 +137,7 @@ class DiscussionController extends ControllerBase {
 
     $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $text = Xss::filter($content['text'], FieldFilteredMarkup::allowedTags());
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
@@ -260,7 +261,7 @@ class DiscussionController extends ControllerBase {
     }
 
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $text = Xss::filter($content['text'], FieldFilteredMarkup::allowedTags());
 
     try {
       if ('like_comment' === $flag) {
@@ -321,7 +322,7 @@ class DiscussionController extends ControllerBase {
    */
   public function editComment(Request $request, int $discussion_id, $comment_id) {
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $text = Xss::filter($content['text'], FieldFilteredMarkup::allowedTags());
 
     $comment = Comment::load($comment_id);
 
