@@ -13,6 +13,7 @@ source:
   plugin: d7_node
   node_type: share
   track_changes: true
+  batch_size: 100
 process:
   type:
     - plugin: eic_d7_og_membership

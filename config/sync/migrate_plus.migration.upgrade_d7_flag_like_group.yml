@@ -1,0 +1,64 @@
+uuid: de75eaab-c113-4e58-9580-3fd3b1852d4c
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_flag_like_group
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - Flags
+migration_group: migrate_drupal_7
+label: 'Flag like group'
+source:
+  plugin: eic_d7_flag_include_node_types
+  track_changes: true
+  constants:
+    included_flags:
+      - c4m_og_content_recommend
+    included_node_types:
+      - event_site
+      - group
+      - organisation
+  batch_size: 100
+process:
+  flag_id:
+    -
+      plugin: static_map
+      source: flag_type
+      map:
+        c4m_og_content_recommend: recommend_group
+  entity_type:
+    plugin: default_value
+    default_value: group
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: entity_id
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_event_site
+        - upgrade_d7_node_complete_organisation
+    -
+      plugin: node_complete_node_translation_lookup
+    -
+      plugin: skip_on_empty
+      method: row
+  global: global
+  created: timestamp
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+destination:
+  plugin: 'entity:flagging'
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_event_site
+    - upgrade_d7_node_complete_organisation
+  optional: {  }

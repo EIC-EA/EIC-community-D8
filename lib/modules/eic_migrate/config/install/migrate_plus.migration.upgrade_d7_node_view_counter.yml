@@ -13,6 +13,7 @@ label: 'Node view counter'
 source:
   plugin: eic_d7_node_view_counter
   track_changes: true
+  batch_size: 100
 process:
   nid:
     - plugin: migration_lookup

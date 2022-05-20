@@ -22,6 +22,7 @@ source:
     - c4m_vocab_language
     - c4m_vocab_topic
     - c4m_vocab_job_title
+  batch_size: 100
 process:
   type:
     - plugin: default_value
@@ -83,18 +84,19 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
-  field_vocab_topic_interest:
-    - plugin: sub_process
-      source: c4m_vocab_topic
-      process:
-        target_id:
-          - plugin: migration_lookup
-            source: smed_id
-            no_stub: true
-            migration:
-              - smed_thematics_topics_lvl1
-              - smed_thematics_topics_lvl2
-              - smed_thematics_topics_lvl3
+  # Topics of interest will be migrated via the flags migration.
+  # field_vocab_topic_interest:
+  #   - plugin: sub_process
+  #     source: c4m_vocab_topic
+  #     process:
+  #       target_id:
+  #         - plugin: migration_lookup
+  #           source: smed_id
+  #           no_stub: true
+  #           migration:
+  #             - smed_thematics_topics_lvl1
+  #             - smed_thematics_topics_lvl2
+  #             - smed_thematics_topics_lvl3
   field_vocab_language:
     - plugin: sub_process
       source: c4m_vocab_language

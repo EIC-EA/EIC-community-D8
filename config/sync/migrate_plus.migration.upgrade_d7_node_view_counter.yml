@@ -10,10 +10,11 @@ migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_drupal_7
-label: 'File download counter'
+label: 'Node view counter'
 source:
   plugin: eic_d7_node_view_counter
   track_changes: true
+  batch_size: 100
 process:
   nid:
     -

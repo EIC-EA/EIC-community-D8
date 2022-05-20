@@ -113,6 +113,15 @@ if ($bucket = getenv('AWS_S3_BUCKET')) {
   $settings['s3fs.upload_as_private'] = TRUE;
 }
 
+if (getenv('TIKA_HOST')) {
+  $config['search_api_attachments.admin_config']['extraction_method'] = 'tika_server_extractor';
+  $config['search_api_attachments.admin_config']['tika_server_extractor_configuration'] = [
+    'scheme' => getenv('TIKA_SCHEME'),
+    'host' => getenv('TIKA_HOST'),
+    'port' => getenv('TIKA_PORT'),
+  ];
+}
+
 /**
  * SMED API connection information.
  */
@@ -129,6 +138,7 @@ $config['eic_webservices.settings']['smed_url'] = getenv('DRUPAL_SMED_URL');
 // Interval time for the notification reminder to SA/SCM listing all groups pending for approval.
 $settings['cron_interval_pending_approval_time'] = 86400;
 $settings['cron_interval_group_invite_time'] = 86400;
+$settings['cron_interval_late_reindex_entities'] = 3600;
 
 $settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
 $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');

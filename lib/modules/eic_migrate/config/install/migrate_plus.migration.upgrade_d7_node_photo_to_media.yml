@@ -13,6 +13,7 @@ source:
   plugin: d7_node
   node_type: photo
   track_changes: true
+  batch_size: 100
 process:
   name: title
   uid:

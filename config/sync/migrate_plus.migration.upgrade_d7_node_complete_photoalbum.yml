@@ -19,6 +19,7 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
+  batch_size: 100
 process:
   nid:
     -
@@ -70,7 +71,6 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-        - upgrade_d7_node_photo_to_media
   field_vocab_geo:
     -
       plugin: sub_process
@@ -136,7 +136,6 @@ migration_dependencies:
     - upgrade_d7_file_image_to_media
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
-    - upgrade_d7_node_photo_to_media
     - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2

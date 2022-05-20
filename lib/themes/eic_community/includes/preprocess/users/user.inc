@@ -198,6 +198,22 @@ function eic_community_preprocess_user(array &$variables) {
         ),
       ];
 
+      $user_item['flagged_events'] = [
+        'title' => $current_user->id() === $user->id() ? t('My events') : t('Events'),
+        'content' => ($current_user->id() === $user->id()
+          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_events', [$user->id()])
+          : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_events', [$user->id()])
+        ),
+      ];
+
+      $user_item['flagged_projects'] = [
+        'title' => $current_user->id() === $user->id() ? t('My organisations') : t('Organisations'),
+        'content' => ($current_user->id() === $user->id()
+          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_organisations', [$user->id()])
+          : _eic_community_get_rendered_view('groups', 'block_user_profile_organisations', [$user->id()])
+        ),
+      ];
+
       $variables['user_item'] = $user_item;
       break;
 

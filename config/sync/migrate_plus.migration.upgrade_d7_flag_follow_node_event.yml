@@ -1,0 +1,77 @@
+uuid: 82d80be0-5b30-4c78-a001-c2aab456c35c
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_flag_follow_node_event
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - Flags
+migration_group: migrate_drupal_7
+label: 'Flag follow node event'
+source:
+  plugin: eic_d7_flag_include_node_types
+  track_changes: true
+  constants:
+    included_flags:
+      - subscribe_c4m_follow_node
+      - subscribe_c4m_follow_content
+    included_node_types:
+      - event
+  batch_size: 100
+process:
+  flag_id:
+    -
+      plugin: static_map
+      source: flag_type
+      map:
+        subscribe_c4m_follow_node: follow_event
+        subscribe_c4m_follow_content: follow_event
+  entity_type:
+    plugin: default_value
+    default_value: node
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: entity_id
+      migration:
+        - upgrade_d7_node_complete_event
+    -
+      plugin: node_complete_node_translation_lookup
+    -
+      plugin: skip_on_empty
+      method: row
+  global: global
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  created: timestamp
+  _flag_exists:
+    -
+      plugin: skip_on_empty
+      method: row
+      source: '@entity_id/0'
+      message: 'The entity_id cannot be NULL.'
+    -
+      plugin: eic_d7_duplicated_flag
+      source:
+        - '@entity_id/0'
+        - '@uid'
+      flag_id: follow_event
+    -
+      plugin: skip_on_value
+      method: row
+      value: true
+      message: 'The Flag has already been migrated. Skip duplicated.'
+destination:
+  plugin: 'entity:flagging'
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_event
+  optional: {  }
