@@ -90,8 +90,8 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
    */
   public function sanitizeFulltextString(string $text) {
     // Remove inline image src attribute (base64 encoded).
-    $text = preg_replace('#(src="data:image/[^;]+;base64,.*")#iU', '', $text);
-    $text = preg_replace('#(src=".*image/[^%3B]+%3Bbase64%2C.*")#iU', '', $text);
+    $text = preg_replace('#(src=".*image/[^;"]+;base64,.*")#iU', '', $text);
+    $text = preg_replace('#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU', '', $text);
     return $text;
   }
 

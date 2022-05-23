@@ -1705,11 +1705,11 @@ processor_settings:
       - group_field_body
       - processed
     regexes:
-      - '#(src="data:image/[^;]+;base64,.*")#iU'
-      - '#(src=".*image/[^%3B]+%3Bbase64%2C.*")#iU'
+      - '#(src=".*image/[^;"]+;base64,.*")#iU'
+      - '#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU'
     replacements:
-      - ''
-      - ''
+      - '""'
+      - '""'
     preserve_original: false
 tracker_settings:
   default:
