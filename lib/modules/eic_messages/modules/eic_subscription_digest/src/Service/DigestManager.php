@@ -8,6 +8,7 @@ use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_subscription_digest\Constants\DigestTypes;
 use Drupal\eic_user\UserHelper;
 use Drupal\profile\Entity\ProfileInterface;
@@ -20,6 +21,8 @@ use Drupal\user\UserInterface;
  * @package Drupal\eic_subscription_digest\Service
  */
 class DigestManager {
+
+  use StringTranslationTrait;
 
   /**
    * @var \Drupal\Core\State\StateInterface
@@ -98,11 +101,8 @@ class DigestManager {
 
     $last_run = \DateTime::createFromFormat('U', $last_run);
     $last_run->add(DigestTypes::getInterval($type));
-    if ($now >= $last_run) {
-      return TRUE;
-    }
 
-    return FALSE;
+    return $now >= $last_run;
   }
 
   /**
@@ -163,6 +163,10 @@ class DigestManager {
     }
 
     $digest_categories = $this->collector->getList($user, $data['digest_type']);
+    if (empty($digest_categories)) {
+      return;
+    }
+
     $view_builder = $this->entityTypeManager->getViewBuilder('message');
     foreach ($digest_categories as &$category) {
       foreach ($category['items'] as &$item) {
@@ -175,7 +179,12 @@ class DigestManager {
       'digest',
       $user->getEmail(),
       $user->getPreferredLangcode(),
-      ['items' => $digest_categories, 'digest_type' => $data['digest_type'], 'uid' => $data['uid']]
+      [
+        'items' => $digest_categories,
+        'digest_type' => $data['digest_type'],
+        'uid' => $data['uid'],
+        'subject' => $this->t('Your @digest_type digest', ['@digest_type' => $data['digest_type']]),
+      ]
     );
   }
 
