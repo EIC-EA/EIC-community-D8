@@ -45,13 +45,6 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_digest_status:
-    type: boolean_checkbox
-    weight: 11
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   field_location_address:
     type: address_default
     weight: 6
@@ -145,5 +138,6 @@ content:
 hidden:
   field_comments_notifications: true
   field_digest_frequency: true
+  field_digest_status: true
   field_interest_notifications: true
   is_default: true
