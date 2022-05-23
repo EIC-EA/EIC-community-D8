@@ -100,7 +100,7 @@ class EntityOperations implements ContainerInjectionInterface {
             // If child book page.
             $build['link_add_current_level_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add page on same level'), $add_book_page_urls['add_current_level_book_page'])->toRenderable();
             $build['link_add_current_level_book_page_renderable']['#suffix'] = '<br>';
-            $build['link_add_child_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page below this page'), $add_book_page_urls['add_child_book_page'])->toRenderable();
+            $build['link_add_child_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add a child page'), $add_book_page_urls['add_child_book_page'])->toRenderable();
           }
         }
         break;

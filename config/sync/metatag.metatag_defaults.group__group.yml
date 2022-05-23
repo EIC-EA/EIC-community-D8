@@ -1,0 +1,10 @@
+uuid: f04716a9-48bc-4a24-96cd-ef67fd768e45
+langcode: en
+status: true
+dependencies: {  }
+id: group__group
+label: 'Group: Group'
+tags:
+  description: '[group:field_body]'
+  og_image: '[group:field_hero:entity:oe_media_image]'
+  og_description: '[group:field_body]'
