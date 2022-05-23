@@ -26,17 +26,26 @@
       .pre-footer, .pre-footer > div {
         text-align: left !important;
       }
-      .divider {
-
-      }
     </mj-style>
       <mj-raw>
         <style type="text/css">
           .logo {
             min-width: 120px;
           }
+          .section_icon{
+            min-width: 23px;
+          }
+          .tag__content {
+            white-space: nowrap;
+          }
+          .tag {
+              width: initial !important;
+            }
           @media screen and (max-device-width: 599px),
           screen and (max-width: 599px) {
+            .tag {
+              width: initial !important;
+            }
             .pre-footer, .pre-footer > div {
               text-align: center !important;
             }
@@ -46,7 +55,8 @@
           }
         </style>
       </mj-raw>
-       <mj-attributes>
+
+      <mj-attributes>
         <mj-text line-height="1.4" />
         <mj-text font-size="16px" />
         <mj-all font-family="Arial" />
@@ -59,6 +69,25 @@
     <mj-include path="../components/header.mjml" />
     <!-- header end -->
 
+    <!-- text start -->
+    <mj-include path="../components/text.mjml" />
+    <!-- text end -->
+
+    <!-- section title start -->
+    <mj-include path="../components/section_title.mjml" />
+    <!-- section title end -->
+
+    <!-- section user start -->
+    <mj-include path="../components/user.mjml" />
+    <!-- section user end -->
+
+    <!-- section organizations start -->
+    <mj-include path="../components/organizations.mjml" />
+    <!-- section organizations end -->
+
+    <!-- section stories start -->
+    <mj-include path="../components/stories.mjml" />
+    <!-- section stories end -->
 
     <!-- footer start -->
     <mj-include path="../components/footer.mjml" />

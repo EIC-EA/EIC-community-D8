@@ -1,0 +1,13 @@
+<mj-column css-class="tag" padding="10px 10px 0 0">
+  <mj-button
+  align="left"
+  padding="0 0 0 0"
+  font-size="12px"
+  inner-padding="7px 15px 7px 15px"
+  border-radius="60px"
+  background-color="#E3E3E3"
+  color="#404040"
+  css-class="tag__content">
+    tag&nbsp;1
+  </mj-button>
+</mj-column>

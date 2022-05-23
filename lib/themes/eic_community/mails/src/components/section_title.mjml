@@ -1,0 +1,22 @@
+<mj-section padding="10px 25px" text-align="left" padding="0">
+  <mj-group  width="600px" vertical-align="middle">
+    <mj-column width="24px" css-class="section_icon" padding="0 0 0 0">
+      <!-- start SECTION LOGO -->
+      <mj-image width="24px" padding="0 0 0 0" height="15px" src="images/group_icon.svg"/>
+      <!-- end SECTION LOGO -->
+    </mj-column>
+    <mj-column width="576px" vertical-align="middle">
+      <mj-text font-size="16px" padding="0 0 0 0" color="#404040" css-class="header-title">
+        <!-- start SECTION NAME -->
+        &nbsp;&nbsp;%section_name%
+        <!-- end SECTION NAME -->
+      </mj-text>
+    </mj-column>
+  </mj-group>
+</mj-section>
+
+<mj-section padding="0">
+  <mj-column>
+    <mj-divider border-width="1px" border-style="solid" border-color="#CFCFCF"  />
+  </mj-column>
+</mj-section>
