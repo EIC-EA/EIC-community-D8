@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_subscription_digest\Service;
 
+use DateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker;
 use Drupal\eic_search\Service\SolrSearchManager;
@@ -53,12 +55,21 @@ class DigestCollector {
   /**
    * @param \Drupal\user\UserInterface $user
    * @param string $digest_type
+   * @param \DateTime|NULL $end_date
    *
    * @return array
-   * @throws \Exception
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getList(UserInterface $user, string $digest_type): array {
-    $end_date = new \DateTime('now');
+  public function getList(
+    UserInterface $user,
+    string $digest_type,
+    DateTime $end_date = NULL
+  ): array {
+    if (!$end_date instanceof DateTimeItemInterface) {
+      $end_date = new \DateTime('now');
+    }
+
     $interval = DigestTypes::getInterval($digest_type);
     $start_date = (new \DateTime('now'))->sub($interval);
 
