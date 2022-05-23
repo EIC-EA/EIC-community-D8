@@ -12,6 +12,7 @@ label: 'User authmap'
 source:
   plugin: authmap
   track_changes: true
+  batch_size: 100
 process:
   uid:
     -

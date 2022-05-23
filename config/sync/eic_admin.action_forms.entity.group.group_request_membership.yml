@@ -1,0 +1,6 @@
+route: entity.group.group_request_membership
+label: 'Group membership request'
+title: 'Request membership for [group:title]'
+description:
+  value: ''
+  format: full_html

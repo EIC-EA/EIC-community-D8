@@ -5,11 +5,12 @@
  * Contains Views preprocess functions.
  */
 
+use Drupal\Core\Url;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 use Drupal\views\Views;
-use Drupal\Core\Url;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -32,12 +33,26 @@ function eic_community_preprocess_views_view_field(&$variables) {
  * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
-
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
   $key = $view->id() . '-' . $view->current_display;
   switch ($key) {
+    case 'group_related_news_stories-block_related_news_stories':
+      $tags = [];
+      foreach ($view->result as $row) {
+        $entity = $row->_entity;
+        if (!$entity instanceof NodeInterface) {
+          continue;
+        }
+
+        $tags[] = 'eic_statistics:node:' . $entity->id();
+      }
+
+      if ($tags) {
+        $variables['#cache']['tags'] = $tags;
+      }
+
     case 'groups-block_user_profile_groups':
       $variables['extra_classes'] = 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-compact-layout';
       break;
@@ -176,6 +191,13 @@ function eic_community_preprocess_views_view(&$variables) {
     case 'taxonomy_related_content-wiki_pages':
       $variables['extra_classes'] = 'ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
       $variables['no_container'] = TRUE;
+      break;
+
+    case 'global_index_group_content-block_user_profile_events':
+    case 'global_index_group_content-block_user_profile_my_events':
+    case 'groups-block_user_profile_organisations':
+    case 'groups-block_user_profile_my_organisations':
+      $variables['extra_classes'] = 'ecl-teaser-overview--has-compact-layout';
       break;
 
   }

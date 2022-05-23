@@ -88,7 +88,11 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'is_anonymous' => TRUE,
         'can_view_comments' => FALSE,
         'highlighted_comment' => 0,
+        'ckeditor_js_settings' => [],
       ],
+    ],
+    'eic_group_edit_form' => [
+      'render element' => 'form',
     ],
   ];
 }
@@ -196,6 +200,24 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert_group_content_node');
   }
 
+  $bundle_resync_group = [
+    'discussion',
+    'document',
+    'event',
+    'gallery',
+    'video'
+  ];
+
+  if (
+    $entity instanceof \Drupal\group\Entity\GroupContentInterface &&
+    in_array($entity->getEntity()->bundle(), $bundle_resync_group)
+  ) {
+    /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
+    $solr_helper = \Drupal::service('eic_search.solr_document_processor');
+    // Reindex group parent to have correct most active score.
+    $solr_helper->lateReIndexEntities([$entity->getGroup()]);
+  }
+
   switch ($entity->bundle()) {
     case 'wiki_page':
       // We need to clear the wiki parent book cache in order to redirect the
@@ -280,8 +302,8 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
 
     $moderation_state = $entity->get('moderation_state')->value;
 
-    //If we are in pending state and we just want to update the current group,
-    //change the transition label from "Create group" to "Update group"
+    // If we are in pending state and we just want to update the current group,
+    // change the transition label from "Create group" to "Update group".
     if (
       !$entity->isNew() &&
       isset($form['moderation_state']['widget'][0]['#options'][GroupsModerationHelper::GROUP_PENDING_STATE])
@@ -771,6 +793,23 @@ function eic_groups_flag_action_access(
       // Entity does not belong to any group, so we do nothing.
       if (empty($group_contents)) {
         break;
+      }
+
+      /** @var EICGroupsHelper $group_helper */
+      $group_helper = \Drupal::service('eic_groups.helper');
+
+      // Check access for these different flags if group is archived.
+      $forbidden_flag_archived = [
+        'request_delete_comment',
+        'request_archive_comment',
+      ];
+
+      if (
+        !UserHelper::isPowerUser($account) &&
+        $group_helper->isGroupArchived($commented_entity) &&
+        in_array($flag->id(), $forbidden_flag_archived)
+      ) {
+        $access = AccessResult::forbidden()->addCacheableDependency($flaggable);
       }
 
       // Load the first group content entity found.

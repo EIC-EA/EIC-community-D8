@@ -1,0 +1,76 @@
+uuid: e082961a-685a-48bc-b8fb-a01ec1507154
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_flag_like_node
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - Flags
+migration_group: migrate_drupal_7
+label: 'Flag like node'
+source:
+  plugin: eic_d7_flag_include_node_types
+  track_changes: true
+  constants:
+    included_flags:
+      - c4m_og_content_recommend
+    included_node_types:
+      - article
+      - discussion
+      - document
+      - news
+      - photoalbum
+      - wiki_page
+      - event
+  batch_size: 100
+process:
+  flag_id:
+    -
+      plugin: static_map
+      source: flag_type
+      map:
+        c4m_og_content_recommend: like_content
+  entity_type:
+    plugin: default_value
+    default_value: node
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: entity_id
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_wiki_page
+        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_photoalbum
+    -
+      plugin: node_complete_node_translation_lookup
+    -
+      plugin: skip_on_empty
+      method: row
+  global: global
+  created: timestamp
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+destination:
+  plugin: 'entity:flagging'
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_photoalbum
+  optional: {  }

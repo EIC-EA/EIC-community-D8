@@ -45,6 +45,16 @@ class CronOperations implements ContainerInjectionInterface {
   const GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE = 'eic_groups_group_content_url_alias_update';
 
   /**
+   * Reindex content search api queue name.
+   */
+  const REINDEX_CONTENT_SEARCH_API_QUEUE = 'eic_groups_reindex_content';
+
+  /**
+   * Reindex content search api queue name.
+   */
+  const LAST_TIME_REINDEX_STATE_ID = 'eic_groups_last_time_reindex';
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -152,6 +162,7 @@ class CronOperations implements ContainerInjectionInterface {
     $this->processGroupContentUrlAliasUpdateQueue();
     $this->processGroupWaitingApprovalReminder();
     $this->processGroupInvitationsReminder();
+    $this->processContentSolrReindex();
   }
 
   /**
@@ -332,6 +343,35 @@ class CronOperations implements ContainerInjectionInterface {
     }
 
     $this->state->set('last_cron_group_invite_time', $now);
+  }
+
+  /**
+   * Re-index entities in queue to solr index.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  private function processContentSolrReindex() {
+    $last_request_time = \Drupal::state()->get(self::LAST_TIME_REINDEX_STATE_ID);
+    $now = time();
+    $interval_time = Settings::get('cron_interval_late_reindex_entities', 3600);
+
+    // Re-sync each day.
+    if (0 >= ($last_request_time + $interval_time) - $now) {
+      $queue = $this->queueFactory->get(self::REINDEX_CONTENT_SEARCH_API_QUEUE);
+      $queue_worker = $this->queueManager->createInstance(self::REINDEX_CONTENT_SEARCH_API_QUEUE);
+
+      while ($item = $queue->claimItem()) {
+        try {
+          $queue_worker->processItem($item->data);
+          $queue->deleteItem($item);
+        } catch (SuspendQueueException $e) {
+          $queue->releaseItem($item);
+          break;
+        }
+      }
+
+      \Drupal::state()->set(self::LAST_TIME_REINDEX_STATE_ID, $now);
+    }
   }
 
 }

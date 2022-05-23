@@ -4,6 +4,7 @@ namespace Drupal\eic_groups;
 
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
+use Drupal\comment\CommentInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
@@ -18,6 +19,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -989,6 +991,70 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       '';
 
     return $location_formatted;
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return \Drupal\group\Entity\GroupInterface|null
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupFromContent(EntityInterface $entity): ?GroupInterface {
+    if ($entity instanceof NodeInterface) {
+      $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
+      if (!empty($group_contents)) {
+        /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+        $group_content = reset($group_contents);
+
+        return $group_content->getGroup();
+      }
+    }
+
+    if ($entity instanceof GroupInterface) {
+      return $entity;
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Return if the group itself or content from group is archived.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function isGroupArchived(?EntityInterface $entity) {
+    if (!$entity instanceof EntityInterface) {
+      return FALSE;
+    }
+
+    if ($entity instanceof CommentInterface) {
+      $entity = $entity->getCommentedEntity();
+    }
+
+    if ($entity instanceof NodeInterface) {
+      $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity);
+
+      if (empty($group_contents)) {
+        return FALSE;
+      }
+
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+
+      return $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+    }
+
+    if ($entity instanceof GroupInterface) {
+      return $entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+    }
+
+    return FALSE;
   }
 
 }

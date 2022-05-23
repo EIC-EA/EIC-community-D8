@@ -155,12 +155,13 @@ class StatisticsHelper {
     // Flags statistics.
     $countable_flags = [
       FlagType::LIKE_CONTENT,
+      FlagType::FOLLOW_CONTENT
     ];
     foreach ($this->flagService->getAllFlags($entity->getEntityTypeId()) as $flag) {
       if (!in_array($flag->id(), $countable_flags)) {
         continue;
       }
-      
+
       $entity_flag_counts = $this->flagCountManager->getEntityFlagCounts($entity);
       $result[$flag->id()] = $entity_flag_counts[$flag->id()] ?? 0;
     }

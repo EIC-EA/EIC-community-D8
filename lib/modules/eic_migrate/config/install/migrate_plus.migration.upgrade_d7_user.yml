@@ -13,6 +13,7 @@ label: 'User accounts'
 source:
   plugin: eic_d7_user_with_smed_ids
   track_changes: true
+  batch_size: 100
 process:
   # Ignore User ID so migration updates can be ran
   # uid:

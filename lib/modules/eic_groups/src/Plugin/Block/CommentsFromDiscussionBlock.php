@@ -12,11 +12,16 @@ use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\editor\Entity\Editor;
+use Drupal\editor\Plugin\EditorManager;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
@@ -80,6 +85,11 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $fileUrlGenerator;
 
   /**
+   * @var \Drupal\editor\Plugin\EditorManager
+   */
+  private EditorManager $editorManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -97,7 +107,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $container->get('database'),
       $container->get('current_route_match'),
       $container->get('request_stack'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('plugin.manager.editor')
     );
   }
 
@@ -124,6 +135,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    * @param \Drupal\Core\Http\RequestStack $request
    *   The current request.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file url generator service.
+   * @param \Drupal\editor\Plugin\EditorManager $editor_manager
+   *   The editor manager service.
    */
   public function __construct(
     array $configuration,
@@ -134,7 +148,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     Connection $database,
     RouteMatchInterface $route_match,
     RequestStack $request,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
+    EditorManager $editor_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
@@ -143,6 +158,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $this->routeMatch = $route_match;
     $this->request = $request;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->editorManager = $editor_manager;
   }
 
   /**
@@ -153,6 +169,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $node = $this->routeMatch->getParameter('node');
     $highlighted_comment = $this->request->getCurrentRequest()->query->get('highlighted-comment', 0);
     $highlighted_comment = Comment::load($highlighted_comment);
+    $editor = Editor::load('filtered_html');
+    $ckeditor_js_settings = $this->editorManager->createInstance('ckeditor')->getJSSettings($editor);
 
     if (!$node instanceof NodeInterface) {
       return [];
@@ -169,7 +187,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $routes_to_ignore = [
       'entity.node.delete_form',
       'entity.node.edit_form',
-      'entity.node.new_request'
+      'entity.node.new_request',
     ];
 
     // Do not show comments block in delete/edit/request content.
@@ -250,6 +268,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'current_group' => $group_id,
     ])->toString();
 
+    $group = Group::load($group_id);
+    $is_group_archived =
+      $group instanceof GroupInterface &&
+      !UserHelper::isPowerUser($account) &&
+      $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
+    $is_content_archived =
+      !UserHelper::isPowerUser($account) &&
+      $node->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -276,18 +304,18 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'users_url' => $user_url,
       'users_url_search' => $user_url,
       'permissions' => [
-        'post_comment' => $this->hasGroupOrGlobalPermission(
+        'post_comment' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'post comments'
         ),
-        'edit_all_comments' => $this->hasGroupOrGlobalPermission(
-          $group_contents,
-          $current_user,
-          'edit all comments'
-        ),
-        'delete_all_comments' => UserHelper::isPowerUser($current_user),
-        'edit_own_comments' => $this->hasGroupOrGlobalPermission(
+        'edit_all_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+            $group_contents,
+            $current_user,
+            'edit all comments'
+          ),
+        'delete_all_comments' => !$is_group_archived && !$is_content_archived && UserHelper::isPowerUser($current_user),
+        'edit_own_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'edit own comments'
@@ -390,10 +418,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       );
     }
 
+    $cache_tags = $node->getCacheTags();
+
+    if ($group instanceof GroupInterface) {
+      $cache_tags = array_merge($cache_tags, $group->getCacheTags());
+    }
+
     return $build + [
         '#cache' => [
           'contexts' => $cache_context,
-          'tags' => $node->getCacheTags(),
+          'tags' => $cache_tags,
         ],
         '#highlighted_comment' => $highlighted_comment instanceof CommentInterface ?
           $highlighted_comment->id() :
@@ -403,6 +437,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#contributors' => $contributors_data,
         '#is_anonymous' => $current_user->isAnonymous(),
         '#can_view_comments' => $can_view_comments,
+        '#ckeditor_js_settings' => $ckeditor_js_settings,
       ];
   }
 

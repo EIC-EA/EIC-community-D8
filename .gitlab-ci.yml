@@ -131,6 +131,7 @@ deploy_uat:
 deploy_migration_env:
   <<: *deploy_job
   stage: deploy_uat
+  when: manual
   variables:
     HOST: $MIGRATION_HOST
   only:

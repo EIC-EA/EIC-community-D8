@@ -18,6 +18,12 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  *     table. Defaults to false.
  *   ignore_owner: (optional) true if you want to ignore the owner membership.
  *     Defaults to false.
+ *   include_user_data: (optional) true if you want include user's data from
+ *     users table. Defaults to false.
+ *   invitations_only: (optional) true if you want to get invitations only.
+ *     Defaults to false.
+ *   no_invitations: (optional) true if you want to exclude invitations.
+ *     Defaults to false.
  * @endcode
  *
  * 'state' option can be:
@@ -44,20 +50,31 @@ class OgUserMembership extends SqlBase {
     $query->addField('n', 'uid', 'group_owner');
     $query->condition('ogm.entity_type', 'user');
 
-    if ($this->configuration['type']) {
+    if (!empty($this->configuration['type'])) {
       $query->condition('ogm.type', $this->configuration['type']);
     }
-    if ($this->configuration['state']) {
+    if (!empty($this->configuration['state'])) {
       $query->condition('ogm.state', $this->configuration['state']);
     }
-    if ($this->configuration['ignore_owner']) {
+    if (!empty($this->configuration['ignore_owner'])) {
       $query->where('n.uid != ogm.etid');
     }
-    if ($this->configuration['include_roles']) {
+    if (!empty($this->configuration['include_roles'])) {
       $query->leftJoin('og_users_roles', 'ogur', 'ogm.etid = ogur.uid AND ogm.gid = ogur.gid');
       $query->addField('ogur', 'rid');
     }
-
+    if (!empty($this->configuration['include_user_data'])) {
+      $query->leftJoin('users', 'u', 'ogm.etid = u.uid');
+      $query->fields('u');
+    }
+    if (!empty($this->configuration['invitations_only'])) {
+      $query->innerJoin('field_data_og_membership_invitation', 'omi', 'omi.entity_id = ogm.id');
+      $query->condition('omi.og_membership_invitation_value', 1);
+    }
+    if (!empty($this->configuration['no_invitations'])) {
+      $query->leftJoin('field_data_og_membership_invitation', 'omi', 'omi.entity_id = ogm.id');
+      $query->isNull('omi.og_membership_invitation_value');
+    }
     return $query;
   }
 

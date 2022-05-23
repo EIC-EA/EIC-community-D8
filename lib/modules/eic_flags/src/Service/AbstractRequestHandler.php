@@ -24,6 +24,7 @@ use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\message\MessageInterface;
+use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -428,16 +429,18 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       return AccessResult::forbidden();
     }
 
+    $is_archived_entity = \Drupal::service('eic_groups.helper')->isGroupArchived($entity);
+
+    if (
+      $is_archived_entity &&
+      $this->getType() !== 'delete' &&
+      !UserHelper::isPowerUser($account)
+    ) {
+      return AccessResult::forbidden();
+    }
+
     // For groups, the user must be GO/GA or SA/SCM.
     if ($entity instanceof GroupInterface) {
-      // If the group is archived, do not authorize any request types except the delete one.
-      if (
-        $entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
-        $this->getType() !== 'delete'
-      ) {
-        return AccessResult::forbidden();
-      }
-
       $author = $entity->getOwner();
       $user_roles = $account->getRoles(TRUE);
       $allowed_global_roles = [

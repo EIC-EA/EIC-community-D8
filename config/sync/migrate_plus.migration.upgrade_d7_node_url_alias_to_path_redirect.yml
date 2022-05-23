@@ -16,6 +16,7 @@ source:
   track_changes: true
   constants:
     entity_type: node
+  batch_size: 100
 process:
   uid:
     -

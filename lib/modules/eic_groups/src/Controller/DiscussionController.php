@@ -15,7 +15,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
@@ -23,6 +25,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -74,6 +77,11 @@ class DiscussionController extends ControllerBase {
   private $fileUrlGenerator;
 
   /**
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor|NULL
+   */
+  private ?SolrDocumentProcessor $solrDocumentProcessor;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -81,19 +89,22 @@ class DiscussionController extends ControllerBase {
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     GroupPermissionChecker $group_permission_checker,
     DateFormatter $date_formatter,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
+    SolrDocumentProcessor $solr_document_processor
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->solrDocumentProcessor = $solr_document_processor;
   }
 
   /**
@@ -105,7 +116,8 @@ class DiscussionController extends ControllerBase {
       $container->get('flag'),
       $container->get('oec_group_comments.group_permission_checker'),
       $container->get('date.formatter'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('eic_search.solr_document_processor')
     );
   }
 
@@ -115,6 +127,7 @@ class DiscussionController extends ControllerBase {
    *
    * @return \Drupal\Core\Access\AccessResultForbidden|\Symfony\Component\HttpFoundation\JsonResponse
    * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function addComment(Request $request, $discussion_id) {
     if (!$this->hasPermission($discussion_id, 'post comments')) {
@@ -139,7 +152,7 @@ class DiscussionController extends ControllerBase {
       'field_name' => 'field_comments',
       'comment_body' => [
         'value' => $text,
-        'format' => 'plain_text',
+        'format' => 'full_html',
       ],
       'field_tagged_users' => array_map(function ($tagged_user) {
         return [
@@ -151,6 +164,15 @@ class DiscussionController extends ControllerBase {
     ]);
 
     $comment->save();
+
+    $resynced_entities = [$user];
+
+    if ($node) {
+      $resynced_entities[] = $node;
+    }
+
+    // Reindex entities to update their data like most_active_score.
+    $this->solrDocumentProcessor->lateReIndexEntities($resynced_entities);
 
     return new JsonResponse([]);
   }
@@ -303,6 +325,10 @@ class DiscussionController extends ControllerBase {
 
     $comment = Comment::load($comment_id);
 
+    if ($this->isGroupArchived($discussion_id)) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
+
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
@@ -324,11 +350,14 @@ class DiscussionController extends ControllerBase {
         'value' => $text,
         'format' => 'plain_text',
       ]);
-      $comment->set('field_tagged_users', array_map(function ($tagged_user) {
-        return [
-          'target_id' => $tagged_user['tid'],
-        ];
-      }, $tagged_users));
+      $comment->set(
+        'field_tagged_users',
+        array_map(function ($tagged_user) {
+          return [
+            'target_id' => $tagged_user['tid'],
+          ];
+        }, $tagged_users)
+      );
 
       $comment->save();
     } catch (EntityStorageException $e) {
@@ -347,9 +376,15 @@ class DiscussionController extends ControllerBase {
    * @param $comment_id
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $comment = Comment::load($comment_id);
+
+    if ($this->isGroupArchived($discussion_id)) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
@@ -594,6 +629,34 @@ class DiscussionController extends ControllerBase {
         ['context' => 'eic_groups']
       ),
     ];
+  }
+
+  /**
+   * @param int $node_id
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function isGroupArchived(int $node_id): bool {
+    $node = Node::load($node_id);
+
+    if (!$node instanceof NodeInterface) {
+      return FALSE;
+    }
+
+    $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node);
+
+    if (empty($group_contents)) {
+      return FALSE;
+    }
+
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = reset($group_contents);
+    $group = $group_content->getGroup();
+
+    return $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
+      !UserHelper::isPowerUser($this->currentUser());
   }
 
 }

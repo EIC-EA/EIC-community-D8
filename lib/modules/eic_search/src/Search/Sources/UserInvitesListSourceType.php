@@ -69,4 +69,11 @@ class UserInvitesListSourceType extends SourceType {
     return TRUE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'user-invitee-list-' . parent::getUniqueId();
+  }
+
 }

@@ -64,6 +64,13 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
   public function access(Route $route, AccountInterface $account, GroupInterface $group, $plugin_id) {
     $access = $this->groupContentCreateEntityAccessCheck->access($route, $account, $group, $plugin_id);
 
+    // If the group content plugin is not installed, we deny access.
+    if (!$group->getGroupType()->hasContentPlugin($plugin_id)) {
+      return AccessResult::forbidden()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($group);
+    }
+
     // Edge case where we make sure that no user (even user 1 or a user with
     // Drupal administrator role) can create new book pages inside groups.
     // There should only be 1 book page per group and it's automatically

@@ -4,6 +4,7 @@ namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
@@ -52,6 +53,10 @@ class DiscussionSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => [
+        'label' => $this->t('Most active', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
+      ],
       'its_flag_highlight_content' => [
         'label' => $this->t('Highlight', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),

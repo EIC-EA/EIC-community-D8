@@ -30,6 +30,11 @@ function eic_community_preprocess_node__news(array &$variables) {
 function _eic_community_preprocess_node_news_story(array &$variables) {
   /** @var \Drupal\Core\Entity\EntityInterface $node */
   $node = $variables['node'];
+  $view_mode = $variables['view_mode'];
+  if ($view_mode === 'teaser') {
+    // We display view stats on teasers, they need additional cache tags.
+    $variables['#cache']['tags'][] = 'eic_statistics:node:' . $node->id();
+  }
 
   $item = [
     'type' => [
@@ -62,7 +67,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     ];
   }
 
-  if ($variables['view_mode'] === 'teaser' && !$node->get('field_image')->isEmpty()) {
+  if ($view_mode === 'teaser' && !$node->get('field_image')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')
       ->getTranslationFromContext(
@@ -198,7 +203,7 @@ function _eic_community_display_contributors(&$variables) {
   if ($node->bundle() !== 'story') {
     return [];
   }
-  
+
   $contributors = [];
 
   $contributors_fields = [
