@@ -24,16 +24,16 @@ function eic_community_preprocess_node__video(array &$variables) {
       _eic_community_display_document_contributors($variables);
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
       if ($group instanceof GroupInterface) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+          $group,
+          $node
+        );
+
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
         if ($visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
           $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
         }
-        
-        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
-          $group,
-          $node
-        );
       }
       break;
 
