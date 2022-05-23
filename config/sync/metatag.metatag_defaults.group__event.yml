@@ -1,0 +1,10 @@
+uuid: 2a5de6c3-d151-44e2-82ae-8e94e2f8bfa6
+langcode: en
+status: true
+dependencies: {  }
+id: group__event
+label: 'Group: Event'
+tags:
+  description: '[group:field_body]'
+  og_image: '[group:field_header_visual:entity:oe_media_image]'
+  og_description: '[group:field_body]'

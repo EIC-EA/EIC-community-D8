@@ -142,3 +142,5 @@ $settings['cron_interval_late_reindex_entities'] = 3600;
 
 $settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
 $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
+
+$settings['cron_interval_late_reindex_entities'] = getenv('CRON_INTERVAL_LATE_REINDEX_ENTITIES_QUEUE');

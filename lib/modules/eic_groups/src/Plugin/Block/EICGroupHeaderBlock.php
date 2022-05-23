@@ -310,6 +310,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'id' => $group->id(),
         'bundle' => $group->bundle(),
         'title' => $group->label(),
+        'is_archived' => DefaultContentModerationStates::ARCHIVED_STATE === $group->get('moderation_state')->value,
         'description' => $this->getTruncatedGroupDescription($group),
         'group_operation_links' => $visible_group_operation_links,
         'operation_links' => array_merge($operation_links, $node_operation_links),
@@ -375,10 +376,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   A renderable array of flag links.
    */
   private function getGroupFlagLinks(GroupInterface $group) {
-    if ($group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
-      return [];
-    }
-
     $group_flags = [];
 
     $group_flag_ids = self::getGroupHeaderFlagsIds();
@@ -432,6 +429,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $key = 'group-leave';
 
     if (!array_key_exists($key, $user_operation_links)) {
+      return;
+    }
+
+    if (!$user_operation_links[$key]['url']->access($this->currentUser)) {
+      unset($user_operation_links[$key]);
       return;
     }
 
