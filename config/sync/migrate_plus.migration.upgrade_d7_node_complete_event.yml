@@ -83,10 +83,42 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  field_document_media:
+  field_document_additional:
     -
       plugin: multiple_values
       source: c4m_related_document
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          -
+            plugin: node_complete_node_lookup
+  field_document_agenda:
+    -
+      plugin: multiple_values
+      source: c4m_document_agenda
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          -
+            plugin: node_complete_node_lookup
+  field_document_presentations:
+    -
+      plugin: multiple_values
+      source: c4m_document_presentation
     -
       plugin: sub_process
       process:
