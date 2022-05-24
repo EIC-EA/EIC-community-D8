@@ -1,13 +1,31 @@
-<mj-column css-class="tag" padding="10px 10px 0 0">
-  <mj-button
-  align="left"
-  padding="0 0 0 0"
-  font-size="12px"
-  inner-padding="7px 15px 7px 15px"
-  border-radius="60px"
-  background-color="#E3E3E3"
-  color="#404040"
-  css-class="tag__content">
-    tag&nbsp;1
-  </mj-button>
+<!-- <mj-column width="100%" css-class="tag" padding="5px 10px 0 0">
+<mj-text padding="0">
+    <span
+    css-class="tag__content"
+    style="display: inline-block; background-color: #E3E3E3; text-align: center; padding: 7px 15px 7px 15px; border-radius:60px; font-size: 12px">
+      tag&nbsp;1
+    </span>
+    <span
+    css-class="tag__content"
+    style="display: inline-block; background-color: #E3E3E3; text-align: center; padding: 7px 15px 7px 15px; border-radius:60px; font-size: 12px">
+      tag&nbsp;1
+    </span>
+    <span
+    css-class="tag__content"
+    style="display: inline-block; background-color: #E3E3E3; text-align: center; padding: 7px 15px 7px 15px; border-radius:60px; font-size: 12px">
+      tag&nbsp;1
+    </span>
+</mj-text>
+</mj-column> -->
+
+<mj-column padding="0">
+       <mj-table padding="5px 0">
+             <tr>
+                <td align="left" style="padding-bottom: 0px !important; margin-bottom: 0px !important;" cellspacing="0" border="0" cellpadding="0">
+                    <span style="padding: 5px 0px; border: 1px solid transparent; border-image: none; color: #000000; line-height: 19px; font-size: 12px; font-weight: 500; border-radius: 60px; display: inline-block; background-color:#E3E3E3">
+&nbsp;&nbsp;&nbsp; tag1 &nbsp;&nbsp;&nbsp;</span>
+                + 2 others
+                </td>
+              </tr>
+       </mj-table>
 </mj-column>

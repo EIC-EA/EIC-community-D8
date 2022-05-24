@@ -43,6 +43,12 @@
             }
           @media screen and (max-device-width: 599px),
           screen and (max-width: 599px) {
+            .user--little {
+              width: 52px !important;
+            }
+            .w100 {
+              width: 80% !important;
+            }
             .tag {
               width: initial !important;
             }
@@ -77,16 +83,12 @@
     <mj-include path="../components/section_title.mjml" />
     <!-- section title end -->
 
-    <!-- section user start -->
-    <mj-include path="../components/user.mjml" />
-    <!-- section user end -->
-
-    <!-- section organizations start -->
-    <mj-include path="../components/organizations.mjml" />
-    <!-- section organizations end -->
+    <mj-include path="../components/common_section.mjml" />
+    <mj-include path="../components/common_section_rounded_img.mjml" />
+    <mj-include path="../components/event_section.mjml" />
 
     <!-- section stories start -->
-    <mj-include path="../components/stories.mjml" />
+    <mj-include path="../components/button.mjml" />
     <!-- section stories end -->
 
     <!-- footer start -->
