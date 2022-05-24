@@ -1,7 +1,9 @@
 {{ 'Your @digest_type digest' | t({'@digest_type': digest_type}) }}
 {% for name, category in items %}
-  <h2>{{ name }}</h2>
-  {% for item in category['items'] %}
-    {{ item['rendered'] }}
-  {% endfor %}
+  {% if category['items'] is not empty %}
+    <h2>{{ name }}</h2>
+    {% for item in category['items'] %}
+      {{ item['rendered'] }}
+    {% endfor %}
+  {% endif %}
 {% endfor %}
