@@ -1068,4 +1068,33 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return FALSE;
   }
 
+  /**
+   * Get user organisations.
+   *
+   * @param AccountInterface $account
+   *   The user account in which we want to retrieve organisations.
+   *
+   * @return \Drupal\group\Entity\GroupInterface[]
+   *   Array of organisation groups the user belongs to.
+   */
+  public function getUserOrganisations(AccountInterface $account) {
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $user_memberships */
+    $user_memberships = $this->entityTypeManager->getStorage('group_content')
+    ->loadByProperties([
+      'type' => "organisation-group_membership",
+      'entity_id' => $account->id(),
+    ]);
+
+    // The user doesn't belong to any organisation, so we return empty results.
+    if (empty($user_memberships)) {
+      return [];
+    }
+
+    $user_groups = array_map(function ($user_membership) {
+      return $user_membership->getGroup();
+    }, $user_memberships);
+
+    return $user_groups;
+  }
+
 }
