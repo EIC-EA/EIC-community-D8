@@ -73,7 +73,7 @@ process:
       map:
         - draft
         - published
-  field_body:
+  body:
     -
       plugin: eic_media_wysiwyg_filter
       source: c4m_body
@@ -146,10 +146,10 @@ process:
         target_id:
           -
             plugin: migration_lookup
-            source: smed_id
+            source: tid
             no_stub: true
             migration:
-              - smed_event_types
+              - upgrade_d7_taxonomy_term_c4m_vocab_event_type
   _social_link_facebook:
     -
       plugin: get
@@ -200,7 +200,7 @@ process:
     -
       plugin: field_link
       uri_scheme: 'https://'
-      source: field_source_link_field
+      source: c4m_link
   field_date_range:
     -
       plugin: sub_process
@@ -230,6 +230,7 @@ migration_dependencies:
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
     - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+    - upgrade_d7_taxonomy_term_c4m_vocab_event_type
     - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
