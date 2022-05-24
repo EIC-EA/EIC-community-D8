@@ -40,12 +40,15 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   _eic_community_display_topics($variables);
   _eic_community_display_flags($variables);
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-  if ($group instanceof GroupInterface && 'node' === $entity_type) {
-    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
-      $group,
-      $entity
-    );
+  if ($group instanceof GroupInterface) {
+    if ('node' === $entity_type) {
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+        $group,
+        $entity
+      );
+    }
 
+    $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
     $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
     if ($visibility instanceof GroupVisibilityRecordInterface
       && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
@@ -88,7 +91,8 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   if ('group' === $entity_type && $signup_link = $entity->get('field_link')->getString()) {
     $action = [
       'title' => t('Sign up to this event', [], ['context' => 'eic_community']),
-      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [], ['context' => 'eic_community']),
+      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [],
+        ['context' => 'eic_community']),
       'action' => [
         'label' => t('Sign up now', [], ['context' => 'eic_community']),
         'url' => $signup_link,

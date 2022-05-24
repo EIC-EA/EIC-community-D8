@@ -137,10 +137,6 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       $icon_name = '';
 
       switch ($action['url']->getRouteName()) {
-        case 'entity.group.request_delete_form':
-          $icon_name = '';
-          break;
-
         case 'entity.group.leave':
           $icon_name = 'leave';
           break;
@@ -240,11 +236,6 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         'label' => $visibility,
         'id' => strtolower($visibility),
       ];
-      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-      if ($visibility instanceof GroupVisibilityRecordInterface
-        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
-        $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
-      }
       break;
     case 'organisation':
       $types = $group->get('field_organisation_type')->referencedEntities();
@@ -315,6 +306,15 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       break;
 
   }
+
+  if (in_array($group->bundle(), ['event', 'group'])) {
+    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+    if ($visibility instanceof GroupVisibilityRecordInterface
+      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+      $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
+    }
+  }
+
   // Adds url to navigate back to the list of groups.
   $back_url = GlobalOverviewPages::getGlobalOverviewPageLink(
     $overview_id

@@ -31,7 +31,8 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           $group,
           $node
         );
-        
+
+        $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
         if ($visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
