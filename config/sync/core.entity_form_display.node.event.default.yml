@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.event.field_date_range
     - field.field.node.event.field_document_additional
     - field.field.node.event.field_document_agenda
+    - field.field.node.event.field_document_media
     - field.field.node.event.field_document_presentations
     - field.field.node.event.field_image
     - field.field.node.event.field_language
@@ -79,10 +80,10 @@ third_party_settings:
         required_fields: true
     group_documents:
       children:
+        - field_document_media
         - field_document_agenda
         - field_document_presentations
         - field_document_additional
-        - field_document_media
       label: Documents
       region: content
       parent_name: group_event_details
@@ -156,7 +157,7 @@ content:
     third_party_settings: {  }
   field_document_additional:
     type: entity_reference_autocomplete
-    weight: 41
+    weight: 45
     region: content
     settings:
       match_operator: CONTAINS
@@ -166,7 +167,7 @@ content:
     third_party_settings: {  }
   field_document_agenda:
     type: entity_reference_autocomplete
-    weight: 39
+    weight: 43
     region: content
     settings:
       match_operator: CONTAINS
@@ -174,9 +175,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_document_media:
+    type: media_library_widget
+    weight: 42
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
   field_document_presentations:
     type: entity_reference_autocomplete
-    weight: 40
+    weight: 44
     region: content
     settings:
       match_operator: CONTAINS
@@ -226,12 +234,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_post_activity:
-    weight: 6
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_send_notification:
-    weight: 5
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
