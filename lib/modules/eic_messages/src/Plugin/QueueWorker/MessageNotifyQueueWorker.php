@@ -100,6 +100,10 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       $message->save();
     }
 
+    if (!filter_var($message->getOwner()->getEmail(), FILTER_VALIDATE_EMAIL)) {
+      return;
+    }
+
     $this->notifier->send(
       $message,
       // Notifier shouldn't care whether the message is saved or not!
