@@ -6,7 +6,9 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.event.body
     - field.field.node.event.field_date_range
-    - field.field.node.event.field_document_media
+    - field.field.node.event.field_document_additional
+    - field.field.node.event.field_document_agenda
+    - field.field.node.event.field_document_presentations
     - field.field.node.event.field_image
     - field.field.node.event.field_language
     - field.field.node.event.field_link
@@ -99,7 +101,9 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_date_range: true
-  field_document_media: true
+  field_document_additional: true
+  field_document_agenda: true
+  field_document_presentations: true
   field_image: true
   field_language: true
   field_link: true
