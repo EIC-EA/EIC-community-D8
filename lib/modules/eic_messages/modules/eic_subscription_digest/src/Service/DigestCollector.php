@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_subscription_digest\Service;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_subscription_digest\Collector\CollectorInterface;
 use Drupal\eic_subscription_digest\Constants\DigestCategories;
@@ -17,6 +18,8 @@ use Drupal\user\UserInterface;
  * @package Drupal\eic_subscription_digest\Service
  */
 class DigestCollector {
+
+  use StringTranslationTrait;
 
   /**
    * @var \Drupal\eic_subscription_digest\Collector\CollectorInterface[]
@@ -37,10 +40,18 @@ class DigestCollector {
     }
 
     $formatted_list = [
-      DigestCategories::GROUP => [],
-      DigestCategories::EVENT => [],
-      DigestCategories::ORGANISATION => [],
-      DigestCategories::NEWS_STORIES => [],
+      DigestCategories::GROUP => [
+        'label' => $this->t('Groups'),
+      ],
+      DigestCategories::EVENT => [
+        'label' => $this->t('Events'),
+      ],
+      DigestCategories::ORGANISATION => [
+        'label' => $this->t('Organisations'),
+      ],
+      DigestCategories::NEWS_STORIES => [
+        'label' => $this->t('News & Stories'),
+      ],
     ];
     foreach ($grouped_messages as $message) {
       $formatted_item = $this->formatItem($message);

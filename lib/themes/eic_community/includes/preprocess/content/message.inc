@@ -3,13 +3,20 @@
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess_message().
  */
 function eic_community_preprocess_message(&$variables) {
+  if ($variables['view_mode'] === 'notify_digest') {
+    _eic_community_preprocess_digest_message($variables);
+  }
+
   if ($variables['view_mode'] !== 'mail_body') {
     return;
   }
@@ -23,7 +30,7 @@ function eic_community_preprocess_message(&$variables) {
       if (!$node instanceof NodeInterface || !$comment instanceof CommentInterface) {
         return [];
       }
-      
+
       return [
         'view_comment' => [
           'label' => t('View comment'),
@@ -49,4 +56,66 @@ function eic_community_preprocess_message(&$variables) {
   }
 
   $variables['additional_links'] = $additional_links;
+}
+
+function eic_community_preprocess_eic_subscription_digest_mail(&$variables) {
+  $user = $variables['user'];
+  $variables['content'] = [
+    'target_user' => [
+      'full_name' => \Drupal::service('eic_user.helper')->getFullName($user),
+    ],
+  ];
+}
+
+/**
+ * Preprocess function for messages displayed in the digest email.
+ *
+ * @param $variables
+ *
+ * @return void
+ */
+function _eic_community_preprocess_digest_message(&$variables) {
+  /** @var MessageInterface $message */
+  $message = $variables['message'];
+  $uid = $message->getOwnerId();
+  $user = User::load($uid);
+
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = NULL;
+  $action = NULL;
+  $template_id = $message->getTemplate()->id();
+  switch ($template_id) {
+    case MessageSubscriptionTypes::NODE_PUBLISHED:
+      $entity = $message->get('field_referenced_node')->entity;
+      $action = 'created';
+      break;
+    case MessageSubscriptionTypes::NEW_COMMENT_REPLY:
+    case MessageSubscriptionTypes::NEW_COMMENT:
+      /** @var \Drupal\comment\CommentInterface $comment */
+      $entity = $message->get('field_referenced_comment')->entity;
+      $action = $template_id === MessageSubscriptionTypes::NEW_COMMENT_REPLY ? 'replied' : 'commented';
+      break;
+    case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
+    case MessageSubscriptionTypes::NEW_EVENT_PUBLISHED:
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $entity = $message->get('field_group_ref')->entity;
+      $action = 'created';
+      break;
+    case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
+      $entity = $message->get('field_group_ref')->entity;
+      $action = 'updated';
+      break;
+  }
+
+  $variables['content'] = [
+    'user' => [
+      'full_name' => \Drupal::service('eic_user.helper')->getFullName($user),
+      'profile_picture' => UserHelper::getUserAvatar($user),
+    ],
+    'action' => t($action),
+    'entity' => $entity,
+    'entity_url' => $entity->toUrl()->toString(),
+    'rendered_entity' => \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())
+      ->view($entity, 'mail_teaser'),
+  ];
 }

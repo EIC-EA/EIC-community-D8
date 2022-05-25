@@ -93,6 +93,7 @@ class DigestManager {
    * @throws \Exception
    */
   public function shouldSend(string $type): bool {
+    return TRUE;
     $now = new \DateTime('now');
     $last_run = $this->state->get('eic_subscription_digest_' . $type . '_time');
     if (!$last_run) {
@@ -172,7 +173,7 @@ class DigestManager {
       if (empty($category['items'])) {
         continue;
       }
-      
+
       foreach ($category['items'] as &$item) {
         $item['rendered'] = $view_builder->view($item['message'], 'notify_digest');
       }
@@ -186,7 +187,7 @@ class DigestManager {
       [
         'items' => $digest_categories,
         'digest_type' => $data['digest_type'],
-        'uid' => $data['uid'],
+        'user' => $user,
         'subject' => $this->t('Your @digest_type digest', ['@digest_type' => $data['digest_type']]),
       ]
     );

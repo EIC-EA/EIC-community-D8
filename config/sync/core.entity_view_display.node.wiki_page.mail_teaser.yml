@@ -1,0 +1,49 @@
+uuid: 1e98b4f6-ae81-4fbf-8af5-0affaca27eef
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.mail_teaser
+    - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_language
+    - field.field.node.wiki_page.field_related_downloads
+    - field.field.node.wiki_page.field_related_media
+    - field.field.node.wiki_page.field_tags
+    - field.field.node.wiki_page.field_vocab_geo
+    - field.field.node.wiki_page.field_vocab_topics
+    - node.type.wiki_page
+  module:
+    - text
+    - user
+id: node.wiki_page.mail_teaser
+targetEntityType: node
+bundle: wiki_page
+mode: mail_teaser
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  content_moderation_control: true
+  extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_language: true
+  field_related_downloads: true
+  field_related_media: true
+  field_tags: true
+  field_vocab_geo: true
+  field_vocab_topics: true
+  flag_follow_content: true
+  langcode: true
+  member_content_edit_access: true
+  private: true
+  published_at: true
+  search_api_excerpt: true
