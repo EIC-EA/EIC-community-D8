@@ -125,10 +125,10 @@ if (getenv('TIKA_HOST')) {
 /**
  * SMED User webservice.
  */
-$config['eic_user_login.settings']['endpoint_url'] = '';
-$config['eic_user_login.settings']['basic_auth_username'] = '';
-$config['eic_user_login.settings']['basic_auth_password'] = '';
-$config['eic_user_login.settings']['api_key'] = '';
+$config['eic_user_login.settings']['endpoint_url'] = getenv('SMED_USERCHECK_URL');
+$config['eic_user_login.settings']['basic_auth_username'] = getenv('SMED_USERCHECK_USERNAME');
+$config['eic_user_login.settings']['basic_auth_password'] = getenv('SMED_USERCHECK_PASSWORD');
+$config['eic_user_login.settings']['api_key'] = getenv('SMED_USERCHECK_API_KEY');
 
 /**
  * SMED API connection information.
