@@ -12,7 +12,7 @@ entity_type: media
 bundle: eic_document
 label: Language
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''

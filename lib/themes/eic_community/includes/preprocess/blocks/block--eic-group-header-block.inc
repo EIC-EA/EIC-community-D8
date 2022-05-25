@@ -7,9 +7,11 @@
 
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_eic_group_header_block().
@@ -135,10 +137,6 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       $icon_name = '';
 
       switch ($action['url']->getRouteName()) {
-        case 'entity.group.request_delete_form':
-          $icon_name = '';
-          break;
-
         case 'entity.group.leave':
           $icon_name = 'leave';
           break;
@@ -187,7 +185,6 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $variables['group_values']['flags'] = $flags;
-  $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
   // Prepare group statistics values to send to the template.
   $stats = [];
   foreach ($variables['group_values']['stats'] as $stat_type => $statistic) {
@@ -309,6 +306,15 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       break;
 
   }
+
+  if (in_array($group->bundle(), ['event', 'group'])) {
+    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+    if ($visibility instanceof GroupVisibilityRecordInterface
+      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+      $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
+    }
+  }
+
   // Adds url to navigate back to the list of groups.
   $back_url = GlobalOverviewPages::getGlobalOverviewPageLink(
     $overview_id

@@ -42,9 +42,6 @@
       @include ecl-media-breakpoint-down('md') {
         margin-bottom: $ecl-spacing-s;
       }
-      @include ecl-media-breakpoint-up('md') {
-        margin: 0;
-      }
     }
   }
 

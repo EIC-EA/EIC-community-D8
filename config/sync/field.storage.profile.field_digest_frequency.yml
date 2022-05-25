@@ -1,0 +1,21 @@
+uuid: 3fae5c3d-448a-43ac-9ced-20400d33f28e
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - profile
+id: profile.field_digest_frequency
+field_name: field_digest_frequency
+entity_type: profile
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: eic_subscription_digest_get_digest_frequencies
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

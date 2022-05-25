@@ -110,6 +110,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         'organisations' => $this->getOrganisationsTab($member_profile),
         'events' => $this->getEventsTab($member_profile),
         'comments' => $this->getCommentsTab($member_profile),
+        'digest' => $this->getDigestTab($member_profile),
       ],
       '#cache' => [
         'contexts' => ['user'],
@@ -130,6 +131,36 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
             'toggle_off' => $this->t('Off'),
             'no_results_title' => $this->t('No results'),
             'no_results_body' => $this->t('Could not find any results.'),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @param \Drupal\profile\Entity\ProfileInterface|null $profile
+   *
+   * @return array
+   */
+  private function getDigestTab(?ProfileInterface $profile): array {
+    return [
+      'title' => $this->t('Your email digest'),
+      'content' => [
+        '#theme' => 'notification_settings',
+        '#data' => [
+          'title' => $this->t('Your digest settings'),
+          'body' => $this->t('We will send you a summary of the activity on content you follow. You can decide wheater or not you want to receive this notification and manage its periodicity here.'),
+          'digest_action' => [
+            'toggle' => [
+              'update_url' => Url::fromRoute('eic_subscription_digest.update_status')->toString(),
+              'status' => (bool) $profile->get('field_digest_status')->value,
+              'title' => $this->t('Email digest notifications'),
+            ],
+            'select' => [
+              'update_url' => Url::fromRoute('eic_subscription_digest.update_frequency')->toString(),
+              'value' => $profile->get('field_digest_frequency')->value,
+              'title' => $this->t('Manage digest periodicity'),
+            ],
           ],
         ],
       ],

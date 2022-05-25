@@ -1,0 +1,10 @@
+uuid: b0e5930d-debf-4594-98aa-7fbff2373805
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.notify_digest
+label: 'Notify - Digest'
+targetEntityType: message
+cache: true
