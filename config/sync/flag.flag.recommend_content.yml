@@ -1,24 +1,25 @@
-uuid: a280aa54-c822-46eb-af40-b7468c70761d
+uuid: 9085fbb4-3c38-4fe4-8d3d-7abfdc692cf8
 langcode: en
 status: true
 dependencies:
   module:
-    - eic_flags
     - node
-id: recommend
+id: recommend_content
 label: 'Recommend (Content)'
 bundles:
   - discussion
   - document
   - event
   - gallery
+  - news
+  - story
   - video
 entity_type: node
 global: false
-flag_short: 'Recommend this item'
+flag_short: 'Flag this item'
 flag_long: ''
 flag_message: ''
-unflag_short: 'Unrecommend this item'
+unflag_short: 'Unflag this item'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
@@ -27,20 +28,12 @@ flood_control_limit: 0
 flood_control_window: 0
 weight: 0
 flag_type: 'entity:node'
-link_type: eic_count_link
+link_type: ajax_link
 flagTypeConfig:
-  show_in_links:
-    full: full
+  show_in_links: {  }
   show_as_field: true
   show_on_form: false
   show_contextual_link: false
   extra_permissions:
     owner: '0'
-linkTypeConfig:
-  flag_confirmation: 'Enter flagging details'
-  unflag_confirmation: 'Unflag this content?'
-  flag_create_button: 'Create flagging'
-  flag_delete_button: 'Delete flagging'
-  form_behavior: default
-  edit_flagging: 'Edit flagging details'
-  flag_update_button: 'Update flagging'
+linkTypeConfig: {  }

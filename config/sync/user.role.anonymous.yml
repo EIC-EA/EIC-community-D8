@@ -42,4 +42,5 @@ permissions:
   - 'view media'
   - 'view overview pages'
   - 'view recommend'
+  - 'view recommend_content'
   - 'view recommend_group'
