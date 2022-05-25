@@ -25,14 +25,6 @@ class EntityOperations implements ContainerInjectionInterface {
   use LoggerChannelTrait;
   use StringTranslationTrait;
 
-
-  /**
-   * The account switcher service.
-   *
-   * @var \Drupal\Core\Session\AccountSwitcherInterface
-   */
-  protected $accountSwitcher;
-
   /**
    * The OEC group feature helper service.
    *
@@ -71,8 +63,6 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Constructs a new GroupFeatures object.
    *
-   * @param \Drupal\Core\Session\AccountSwitcherInterface $account_switcher
-   *   The account switcher service.
    * @param \Drupal\oec_group_features\GroupFeatureHelper $oec_group_features_helper
    *   The OEC group feature helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -85,14 +75,12 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The current route match service.
    */
   public function __construct(
-    AccountSwitcherInterface $account_switcher,
     GroupFeatureHelper $oec_group_features_helper,
     EntityTypeManagerInterface $entity_type_manager,
     GroupPermissionsManagerInterface $group_permissions_manager,
     RouteMatchInterface $route_match,
     GroupFeaturePluginManager $group_feature_plugin_manager
   ) {
-    $this->accountSwitcher = $account_switcher;
     $this->groupFeatureHelper = $oec_group_features_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupPermissionsManager = $group_permissions_manager;
@@ -105,7 +93,6 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('account_switcher'),
       $container->get('oec_group_features.helper'),
       $container->get('entity_type.manager'),
       $container->get('group_permission.group_permissions_manager'),
@@ -123,22 +110,11 @@ class EntityOperations implements ContainerInjectionInterface {
   public function groupInsert(Group $group) {
     $this->manageFeatures($group);
 
-    // If creating the group through drush, we need to switch account to a
-    // privileged user, otherwise we cannot create the group permissions.
-    if ($this->isCli() && $root_user = $this->entityTypeManager->getStorage('user')->load(1)) {
-      $this->accountSwitcher->switchTo($root_user);
-    }
-
     // Make sure group permission entity is created.
     $groupPermission = $this->groupFeatureHelper->getGroupPermissionObject($group);
     if ($groupPermission->isNew()) {
       $groupPermission->setValidationRequired(FALSE);
       $groupPermission->save();
-    }
-
-    // Switch back to previous user.
-    if (isset($root_user) && $this->isCli()) {
-      $this->accountSwitcher->switchBack();
     }
   }
 
