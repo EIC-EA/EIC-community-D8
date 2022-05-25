@@ -13,7 +13,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false upd
   && apt-get -y install apt-transport-https apt-utils build-essential xorg \
     libssl-dev libxrender-dev wget gdebi \
     libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
-    zip unzip libicu-dev g++ git
+    zip unzip libicu-dev g++ git libxml2-dev
 
 # Install extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -24,7 +24,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
   && pecl install -o -f redis \
   && docker-php-ext-enable redis \
   && docker-php-ext-configure intl \
-  && docker-php-ext-install intl
+  && docker-php-ext-install intl \
+  && docker-php-ext-install xml
 
 RUN apt-get update -y; \
     apt-get install mariadb-client -y; \
