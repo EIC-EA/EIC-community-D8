@@ -208,6 +208,14 @@ $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
 
 /**
+ * SMED User webservice.
+ */
+$config['eic_user_login.settings']['endpoint_url'] = '';
+$config['eic_user_login.settings']['basic_auth_username'] = '';
+$config['eic_user_login.settings']['basic_auth_password'] = '';
+$config['eic_user_login.settings']['api_key'] = '';
+
+/**
  * SMED API connection information.
  */
 $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
