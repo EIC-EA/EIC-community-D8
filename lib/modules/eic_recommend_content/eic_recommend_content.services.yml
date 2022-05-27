@@ -1,0 +1,13 @@
+services:
+  eic_recommend_content.access_check.recommend_node:
+    class: Drupal\eic_recommend_content\Access\RecommendNodeAccessCheck
+    tags:
+      - { name: access_check, applies_to: _eic_recommend_content_node }
+  eic_recommend_content.access_check.recommend_group:
+    class: Drupal\eic_recommend_content\Access\RecommendGroupAccessCheck
+    arguments: ['@oec_group_flex.helper']
+    tags:
+      - { name: access_check, applies_to: _eic_recommend_content_group }
+  eic_recommend_content.manager:
+    class: Drupal\eic_recommend_content\Services\RecommendContentManager
+    arguments: ['@entity_type.manager', '@current_user', '@oec_group_flex.helper', '@email.validator', '@flag', '@flag.count']

@@ -104,6 +104,10 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     // Sidebar elements.
     _eic_community_display_flags($variables);
 
+    if (isset($variables['elements']['recommend_content'])) {
+      $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
+    }
+
     if (
       $node->hasField(PrivateContentConst::FIELD_NAME)
       && !$node->get(PrivateContentConst::FIELD_NAME)->value
@@ -191,6 +195,10 @@ function _eic_community_display_flags(&$variables) {
     $variables['editorial_actions']['items'][] = [
       'content' => $flag,
     ];
+  }
+
+  if (isset($variables['elements']['recommend_content'])) {
+    $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
   }
 }
 

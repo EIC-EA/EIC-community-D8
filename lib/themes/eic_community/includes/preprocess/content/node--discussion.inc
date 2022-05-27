@@ -71,6 +71,10 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
     return ['content' => $item];
   }, $flags);
 
+  if (isset($variables['elements']['recommend_content'])) {
+    $flags['recommend_content'] = $variables['elements']['recommend_content'];
+  }
+
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   if ($group instanceof GroupInterface) {
     $flags['share_group_content']['content'] = _eic_community_get_share_group_content_link(
