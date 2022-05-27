@@ -14,7 +14,6 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_user_can_contact
   module:
     - user
 id: user.user.teaser
@@ -68,7 +67,6 @@ hidden:
   field_smed_id: true
   field_updated_profile_by_service: true
   field_updated_profile_by_user: true
-  field_user_can_contact: true
   field_user_status: true
   langcode: true
   member_for: true
