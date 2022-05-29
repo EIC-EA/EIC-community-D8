@@ -1,0 +1,84 @@
+<!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="message-image-outlook" style="vertical-align:top;width:124px;" ><![endif]-->
+{% if image is not empty %}
+  <div class="mj-column-px-124 mj-outlook-group-fix message-image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+    <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+      <tbody>
+      <tr>
+        <td style="vertical-align:top;padding:0;padding-right:12px;">
+          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+            <tbody>
+            <!-- IMAGE -->
+            <tr>
+              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                  <tbody>
+                  <tr>
+                    <td style="width:112px;">
+                      <img alt="{{ image.alt }}" height="112" src="{{ image.src }}" style="border:0;display:block;outline:none;text-decoration:none;height:112px;width:100%;font-size:13px;" width="112">
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <!-- IMAGE -->
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+<!--[if mso | IE]></td><td class="message-content-outlook" style="vertical-align:middle;width:400px;" ><![endif]-->
+<div class="mj-column-px-400 mj-outlook-group-fix message-content" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
+    <tbody>
+    <tr>
+      <td align="left" style="font-size:0px;padding:0 0 5px;word-break:break-word;">
+        <div style="font-family:Arial;font-size:14px;line-height:1.4;text-align:left;color:#707070;">
+          <!-- CONTENT TITLE -->
+          <div style="margin-bottom: 7px">
+            <a class="link" href="{{ path }}" style="font-weight: bold; color: #004494;">{{ label }}</a>
+          </div>
+          <!-- CONTENT TITLE --> {{ description }}
+        </div>
+      </td>
+    </tr>
+    {% if tags %}
+    <!-- TAG -->
+      <tr>
+        <td vertical-align="top" style="font-size:0px;padding:0;word-break:break-word;">
+          <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+              <tbody>
+              <tr>
+                <td style="vertical-align:top;padding:0;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                    <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:5px 0;word-break:break-word;">
+                        <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color:#404040;font-family:Arial;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
+                          <tr>
+                            <td align="left" style="padding-bottom: 0px !important; margin-bottom: 0px !important;" cellspacing="0" border="0" cellpadding="0">
+                              <span style="padding: 5px 0px; border: 1px solid transparent; border-image: none; color: #000000; line-height: 19px; font-size: 12px; font-weight: 500; border-radius: 60px; display: inline-block; background-color:#E3E3E3"> &nbsp;&nbsp;&nbsp; tag1 &nbsp;&nbsp;&nbsp;</span> + 2 others
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+      <!-- TAG -->
+    {% endif %}
+    </tbody>
+  </table>
+</div>
+<!--[if mso | IE]></td></tr></table><![endif]-->

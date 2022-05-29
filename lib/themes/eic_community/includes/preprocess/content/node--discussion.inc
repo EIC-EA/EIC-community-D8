@@ -31,6 +31,7 @@ function eic_community_preprocess_node__discussion(array &$variables) {
       _preprocess_discussion_full($variables, $discussion_type, $node);
       break;
 
+    case 'mail_teaser':
     case 'teaser':
       _preprocess_discussion_teaser($variables, $discussion_type, $node);
       break;

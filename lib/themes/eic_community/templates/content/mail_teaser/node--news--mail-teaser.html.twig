@@ -1,0 +1,6 @@
+{% include "@eic_community/content/mail_teaser/node.mail_teaser.html.twig" with {
+  title: label,
+  path: path,
+  description: node.field_introduction.value|striptags|default(''),
+  image: story_item.image
+} %}

@@ -86,6 +86,7 @@ function _eic_community_preprocess_digest_message(&$variables) {
   $template_id = $message->getTemplate()->id();
   switch ($template_id) {
     case MessageSubscriptionTypes::NODE_PUBLISHED:
+    case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
       $entity = $message->get('field_referenced_node')->entity;
       $action = 'created';
       break;
@@ -95,7 +96,6 @@ function _eic_community_preprocess_digest_message(&$variables) {
       $entity = $message->get('field_referenced_comment')->entity;
       $action = $template_id === MessageSubscriptionTypes::NEW_COMMENT_REPLY ? 'replied' : 'commented';
       break;
-    case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
     case MessageSubscriptionTypes::NEW_EVENT_PUBLISHED:
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $entity = $message->get('field_group_ref')->entity;
@@ -114,6 +114,7 @@ function _eic_community_preprocess_digest_message(&$variables) {
     ],
     'action' => t($action),
     'entity' => $entity,
+    'label' => $entity->label(),
     'entity_url' => $entity->toUrl()->toString(),
     'rendered_entity' => \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())
       ->view($entity, 'mail_teaser'),

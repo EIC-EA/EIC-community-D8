@@ -9,6 +9,7 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * Implements hook_preprocess_node__story() for story node.
@@ -67,24 +68,37 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     ];
   }
 
-  if ($view_mode === 'teaser' && !$node->get('field_image')->isEmpty()) {
-    /** @var \Drupal\media\Entity\Media $media */
+  if ('mail_teaser' === $variables['view_mode']) {
+    /** @var \Drupal\media\MediaInterface $media */
     $media = \Drupal::service('entity.repository')
       ->getTranslationFromContext(
         $node->get('field_image')->entity,
         $node->language()->getId()
       );
-    $image_item = ImageValueObject::fromStyledImageItem(
-      $media->get('oe_media_image')->first(),
-      'large'
-    );
-    $item['image'] = [
-      'src' => $image_item->getSource(),
-      'alt' => $image_item->getAlt(),
+    $uri = $media->get('oe_media_image')->first()->entity->getFileUri();
+    $variables['teaser_image'] = [
+      'src' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($uri),
     ];
   }
 
   if ('teaser' === $variables['view_mode']) {
+    if (!$node->get('field_image')->isEmpty()) {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::service('entity.repository')
+        ->getTranslationFromContext(
+          $node->get('field_image')->entity,
+          $node->language()->getId()
+        );
+      $image_item = ImageValueObject::fromStyledImageItem(
+        $media->get('oe_media_image')->first(),
+        'large'
+      );
+      $item['image'] = [
+        'src' => $image_item->getSource(),
+        'alt' => $image_item->getAlt(),
+      ];
+    }
+
     $stats = _eic_community_get_entity_stats($node);
     // We do not need downloads for news/story stats.
     if (array_key_exists('downloads', $stats)) {
