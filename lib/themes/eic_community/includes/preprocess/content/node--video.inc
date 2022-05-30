@@ -37,7 +37,7 @@ function eic_community_preprocess_node__video(array &$variables) {
         }
       }
       break;
-
+    case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 

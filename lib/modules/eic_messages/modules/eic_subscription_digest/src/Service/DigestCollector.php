@@ -41,16 +41,20 @@ class DigestCollector {
 
     $formatted_list = [
       DigestCategories::GROUP => [
-        'label' => $this->t('Groups'),
+        'label' => $this->t('Your groups'),
+        'icon' => 'groups',
       ],
       DigestCategories::EVENT => [
-        'label' => $this->t('Events'),
+        'label' => $this->t('Your events'),
+        'icon' => 'events',
       ],
       DigestCategories::ORGANISATION => [
-        'label' => $this->t('Organisations'),
+        'label' => $this->t('Your organisations'),
+        'icon' => 'organisations',
       ],
       DigestCategories::NEWS_STORIES => [
-        'label' => $this->t('News & Stories'),
+        'label' => $this->t('News and Stories'),
+        'icon' => 'news_stories',
       ],
     ];
     foreach ($grouped_messages as $message) {
@@ -124,21 +128,13 @@ class DigestCollector {
    * @return array
    */
   private function sortItems(array $list): array {
-    // List of entity types for which the activity score should exist.
-    $activity_score_sorted = [DigestCategories::EVENT, DigestCategories::GROUP, DigestCategories::ORGANISATION];
-    foreach ($list as $key => &$category) {
-      if (!in_array($key, $activity_score_sorted) || empty($category['items'])) {
-        // By default, items are sorted on 'created'.
+    foreach ($list as &$category) {
+      if (empty($category['items'])) {
         continue;
       }
 
-      foreach ($category['items'] as &$item) {
-        // TODO Retrieve the activity score.
-        $item['activity_score'] = 0;
-      }
-
       usort($category['items'], function ($itemA, $itemB) {
-        return $itemA['activity_score'] <=> $itemB['activity_score'];
+        return $itemA['entity']->get('created')->value <=> $itemB['entity']->get('created')->value;
       });
     }
 

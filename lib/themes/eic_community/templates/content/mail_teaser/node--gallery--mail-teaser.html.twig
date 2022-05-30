@@ -1,0 +1,9 @@
+{% set first_image = gallery_item.images is not empty ? gallery_item.images[0] : '' %}
+
+{% include "@eic_community/content/mail_teaser/node.mail_teaser.html.twig" with {
+  title: label,
+  path: url,
+  description: gallery_item.description,
+  image: first_image,
+  tags: gallery_item.tags,
+} %}

@@ -1,6 +1,7 @@
 {% include "@theme/templates/content/mail_teaser/node.mail_teaser.html.twig" with {
   title: label,
-  path: path,
-  description: node.field_introduction.value|striptags|default(''),
-  image: story_item.image
+  path: url,
+  description: story_item.description,
+  image: story_item.image,
+  tags: story_item.tags
 } %}

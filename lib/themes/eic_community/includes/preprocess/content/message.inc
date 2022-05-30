@@ -73,6 +73,7 @@ function eic_community_preprocess_eic_subscription_digest_mail(&$variables) {
  * @param $variables
  *
  * @return void
+ * @throws \Drupal\Core\Entity\EntityMalformedException
  */
 function _eic_community_preprocess_digest_message(&$variables) {
   /** @var MessageInterface $message */
@@ -102,8 +103,8 @@ function _eic_community_preprocess_digest_message(&$variables) {
       $action = 'created';
       break;
     case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
-      $entity = $message->get('field_group_ref')->entity;
-      $action = 'updated';
+      $entity = $message->get('field_referenced_node')->entity;
+      $action = 'edited';
       break;
   }
 
