@@ -13,7 +13,7 @@ entity_type: node
 bundle: document
 label: Body
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

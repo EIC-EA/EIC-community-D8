@@ -2,9 +2,13 @@
 
 namespace Drupal\eic_subscription_digest\Service;
 
+use DateTime;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
-use Drupal\eic_subscription_digest\Collector\CollectorInterface;
+use Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker;
+use Drupal\eic_search\Service\SolrSearchManager;
 use Drupal\eic_subscription_digest\Constants\DigestCategories;
 use Drupal\eic_subscription_digest\Constants\DigestSubscriptions;
 use Drupal\eic_subscription_digest\Constants\DigestTypes;
@@ -27,14 +31,57 @@ class DigestCollector {
   private $collectors;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
+   * @var \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker
+   */
+  private $messageChecker;
+
+  /**
+   * @var \Drupal\eic_search\Service\SolrSearchManager
+   */
+  private $searchManager;
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker $message_checker
+   * @param \Drupal\eic_search\Service\SolrSearchManager $search_manager
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    SubscriptionMessageChecker $message_checker,
+    SolrSearchManager $search_manager
+  ) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->messageChecker = $message_checker;
+    $this->searchManager = $search_manager;
+  }
+
+  /**
    * @param \Drupal\user\UserInterface $user
    * @param string $digest_type
+   * @param \DateTime|NULL $end_date
    *
    * @return array
-   * @throws \Exception
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getList(UserInterface $user, string $digest_type): array {
-    $grouped_messages = $this->collectMessages($user, $digest_type);
+  public function getList(
+    UserInterface $user,
+    string $digest_type,
+    DateTime $end_date = NULL
+  ): array {
+    if (!$end_date instanceof DateTimeItemInterface) {
+      $end_date = new \DateTime('now');
+    }
+
+    $interval = DigestTypes::getInterval($digest_type);
+    $start_date = (new \DateTime('now'))->sub($interval);
+
+    $grouped_messages = $this->collectMessages($user, $digest_type, $start_date, $end_date);
     if (empty($grouped_messages)) {
       return [];
     }
@@ -123,6 +170,23 @@ class DigestCollector {
   }
 
   /**
+   * @param \Drupal\user\UserInterface $user
+   * @param string $digest_type
+   * @param \DateTime $start_date
+   * @param \DateTime $end_date
+   *
+   * @return array
+   */
+  private function collectMessages(UserInterface $user, string $digest_type, DateTime $start_date, DateTime $end_date): array {
+    $collected_messages = [];
+    foreach ($this->collectors as $collector) {
+      $collected_messages = $collected_messages + $collector->getMessages($user, $start_date, $end_date);
+    }
+
+    return $collected_messages;
+  }
+
+  /**
    * @param array $list
    *
    * @return array
@@ -139,33 +203,6 @@ class DigestCollector {
     }
 
     return $list;
-  }
-
-  /**
-   * @param \Drupal\user\UserInterface $user
-   * @param string $digest_type
-   *
-   * @return array
-   * @throws \Exception
-   */
-  private function collectMessages(UserInterface $user, string $digest_type): array {
-    $end_date = new \DateTime('now');
-    $interval = DigestTypes::getInterval($digest_type);
-    $start_date = (new \DateTime('now'))->sub($interval);
-
-    $collected_messages = [];
-    foreach ($this->collectors as $collector) {
-      $collected_messages = $collected_messages + $collector->getMessages($user, $start_date, $end_date);
-    }
-
-    return $collected_messages;
-  }
-
-  /**
-   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
-   */
-  public function addCollector(CollectorInterface $collector) {
-    $this->collectors[] = $collector;
   }
 
 }

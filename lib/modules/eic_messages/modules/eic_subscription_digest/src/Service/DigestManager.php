@@ -163,7 +163,12 @@ class DigestManager {
       return;
     }
 
-    $digest_categories = $this->collector->getList($user, $data['digest_type']);
+    $trigger_date = NULL;
+    if (isset($data['trigger_date'])) {
+      $trigger_date = new \DateTime($data['trigger_date']);
+    }
+
+    $digest_categories = $this->collector->getList($user, $data['digest_type'], $trigger_date);
     if (empty($digest_categories)) {
       return;
     }
