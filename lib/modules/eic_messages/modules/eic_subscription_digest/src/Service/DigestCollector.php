@@ -4,7 +4,6 @@ namespace Drupal\eic_subscription_digest\Service;
 
 use DateTime;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_subscription_digest\Collector\CollectorInterface;
 use Drupal\eic_subscription_digest\Constants\DigestCategories;
@@ -37,12 +36,12 @@ class DigestCollector {
    * @throws \Exception
    */
   public function getList(UserInterface $user, string $digest_type, DateTime $end_date = NULL): array {
-    if (!$end_date instanceof DateTimeItemInterface) {
+    if (!$end_date instanceof \DateTime) {
       $end_date = new \DateTime('now');
     }
 
     $interval = DigestTypes::getInterval($digest_type);
-    $start_date = (new \DateTime('now'))->sub($interval);
+    $start_date = (clone $end_date)->sub($interval);
     $grouped_messages = $this->collectMessages($user, $digest_type, $start_date, $end_date);
     if (empty($grouped_messages)) {
       return [];
