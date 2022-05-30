@@ -27,6 +27,8 @@ final class FlagType {
 
   const RECOMMEND_NODE = 'recommend_content';
 
+  const RECOMMEND_CONTENT_GROUP = 'recommend_content_group';
+
   const RECOMMEND_GROUP = 'recommend_group';
 
 }

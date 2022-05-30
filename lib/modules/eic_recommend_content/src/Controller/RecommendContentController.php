@@ -25,7 +25,7 @@ class RecommendContentController extends ControllerBase {
   /**
    * The Recommend content manager service.
    *
-   * @var \Drupal\eic_recommend_content\RecommendContentManager
+   * @var \Drupal\eic_recommend_content\Services\RecommendContentManager
    */
   protected $recommendContentManager;
 
@@ -102,11 +102,7 @@ class RecommendContentController extends ControllerBase {
     // Working example.
     // @todo Remove after react implementation.
     $content['users'] = [2, 3, 4, 5];
-    $content['external_emails'] = [
-      'user1@example.com',
-      'user2@example.com',
-      'user3@example.com',
-    ];
+    $content['external_emails'] = 'user1@example.com,user2@example.com,user3@example.com';
     $content['message'] = 'Test recommendation for users.';
 
     if (
@@ -143,7 +139,7 @@ class RecommendContentController extends ControllerBase {
 
     $external_emails = [];
     if (
-      isset($content['users']) &&
+      isset($content['external_emails']) &&
       is_string($content['external_emails'])
     ) {
       $external_emails = explode(',', trim(strip_tags($content['external_emails'])));

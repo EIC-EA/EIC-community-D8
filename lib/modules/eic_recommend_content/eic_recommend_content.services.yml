@@ -7,3 +7,8 @@ services:
   eic_recommend_content.manager:
     class: Drupal\eic_recommend_content\Services\RecommendContentManager
     arguments: ['@entity_type.manager', '@current_user', '@oec_group_flex.helper', '@email.validator', '@flag', '@flag.count']
+  eic_message_subscriptions.flag_event_subscriber:
+    class: Drupal\eic_recommend_content\EventSubscriber\FlagEventSubscriber
+    arguments: ['@entity_type.manager', '@renderer', '@message_notify.sender']
+    tags:
+      - { name: event_subscriber }

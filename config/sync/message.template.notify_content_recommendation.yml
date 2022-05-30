@@ -1,0 +1,27 @@
+uuid: 2aff9eb8-ebe8-49b0-bf1d-004439b71a49
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_content_recommendation
+label: 'NOTIFY :: MT :: Content recommendation'
+description: 'Sends a notification about content recommendation.'
+text:
+  -
+    value: "<p>New recommendation from EIC Community Platform</p>\r\n"
+    format: full_html
+  -
+    value: "<p><a href=\"[message:author:url]\">[message:author:display-name]</a>&nbsp;sent you a content you might like on EIC Community Platform:</p>\r\n\r\n<p>[message:field_referenced_flag:entity:field_recommend_message]</p>\r\n\r\n<p>[message:field_rendered_content:value]</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }
