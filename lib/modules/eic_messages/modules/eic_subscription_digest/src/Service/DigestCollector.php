@@ -4,7 +4,6 @@ namespace Drupal\eic_subscription_digest\Service;
 
 use DateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_subscription_digest\Collector\CollectorInterface;
@@ -22,13 +21,6 @@ use Drupal\user\UserInterface;
  */
 class DigestCollector {
 
-  use StringTranslationTrait;
-
-  /**
-   * @var \Drupal\eic_subscription_digest\Collector\CollectorInterface[]
-   */
-  private $collectors;
-
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
@@ -36,19 +28,12 @@ class DigestCollector {
 
   /**
    * @var \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker
-   */
-  private $messageChecker;
-
-  /**
-   * @var \Drupal\eic_search\Service\SolrSearchManager
-   */
-  private $searchManager;
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -74,30 +59,24 @@ class DigestCollector {
     $interval = DigestTypes::getInterval($digest_type);
     $start_date = (new \DateTime('now'))->sub($interval);
 
-    $grouped_messages = $this->collectMessages($user, $digest_type, $start_date, $end_date);
-    if (empty($grouped_messages)) {
+    $messages = $this->entityTypeManager->getStorage('message')
+      ->getQuery()
+      ->condition('template', DigestSubscriptions::SUPPORTED_MESSAGES, 'IN')
+      ->condition('created', [
+        $start_date->getTimestamp(),
+        $end_date->getTimestamp(),
+      ], 'BETWEEN')
+      ->sort('created', 'DESC')
+      ->execute();
+
+    if (empty($messages)) {
       return [];
     }
 
-    $formatted_list = [
-      DigestCategories::GROUP => [
-        'label' => $this->t('Your groups'),
-        'icon' => 'groups',
-      ],
-      DigestCategories::EVENT => [
-        'label' => $this->t('Your events'),
-        'icon' => 'events',
-      ],
-      DigestCategories::ORGANISATION => [
-        'label' => $this->t('Your organisations'),
-        'icon' => 'organisations',
-      ],
-      DigestCategories::NEWS_STORIES => [
-        'label' => $this->t('News and Stories'),
-        'icon' => 'news_stories',
-      ],
-    ];
-    foreach ($grouped_messages as $message) {
+    /** @var \Drupal\message\MessageInterface[] $messages */
+    $messages = $this->entityTypeManager->getStorage('message')->loadMultiple($messages);
+    $formatted_list = [];
+    foreach ($messages as $message) {
       $formatted_item = $this->formatItem($message);
       if (!$formatted_item || !$formatted_item['category'] || !$formatted_item['entity']) {
         continue;
@@ -113,6 +92,13 @@ class DigestCollector {
     }
 
     return $this->sortItems($formatted_list);
+  }
+
+  /**
+   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
+   */
+  public function addCollector(CollectorInterface $collector) {
+    $this->collectors[] = $collector;
   }
 
   /**
@@ -163,45 +149,30 @@ class DigestCollector {
   }
 
   /**
-   * @param \Drupal\user\UserInterface $user
-   * @param string $digest_type
-   * @param \DateTime $start_date
-   * @param \DateTime $end_date
-   *
-   * @return array
-   */
-  private function collectMessages(UserInterface $user, string $digest_type, DateTime $start_date, DateTime $end_date): array {
-    $collected_messages = [];
-    foreach ($this->collectors as $collector) {
-      $collected_messages = $collected_messages + $collector->getMessages($user, $start_date, $end_date);
-    }
-
-    return $collected_messages;
-  }
-
-  /**
    * @param array $list
    *
    * @return array
    */
   private function sortItems(array $list): array {
-    foreach ($list as &$category) {
-      if (empty($category['items'])) {
+    // List of entity types for which the activity score should exist.
+    $activity_score_sorted = [DigestCategories::EVENT, DigestCategories::GROUP, DigestCategories::ORGANISATION];
+    foreach ($list as $key => &$category) {
+      if (!in_array($key, $activity_score_sorted)) {
+        // By default, items are sorted on 'created'.
         continue;
       }
 
+      foreach ($category['items'] as &$item) {
+        // TODO Retrieve the activity score.
+        $item['activity_score'] = 0;
+      }
+
       usort($category['items'], function ($itemA, $itemB) {
-        return $itemA['entity']->get('created')->value <=> $itemB['entity']->get('created')->value;
+        return $itemA['activity_score'] <=> $itemB['activity_score'];
       });
     }
 
     return $list;
   }
 
-  /**
-   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
-   */
-  public function addCollector(CollectorInterface $collector) {
-    $this->collectors[] = $collector;
-  }
 }
