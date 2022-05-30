@@ -3,6 +3,7 @@
 namespace Drupal\eic_recommend_content\Services;
 
 use Drupal\Component\Utility\EmailValidator;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -122,7 +123,17 @@ class RecommendContentManager {
       'source_class' => UserTaggingCommentsSourceType::class,
       'page' => 1,
     ];
-    $endpoint_url = NULL;
+    $endpoint_url = Url::fromRoute(
+      'eic_recommend_content.recommend',
+      [
+        'entity_type' => $entity->getEntityTypeId(),
+        'entity_id' => $entity->id(),
+      ],
+      [
+        'absolute' => TRUE,
+      ]
+    );
+    $can_recommend = TRUE;
     $can_recommend_external_users = TRUE;
 
     $flag_counter = $this->flagCountManager->getEntityFlagCounts($entity);
@@ -140,17 +151,8 @@ class RecommendContentManager {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        $endpoint_url = Url::fromRoute(
-          'eic_recommend_content.recommend_node',
-          [
-            'node' => $entity->id(),
-          ],
-          [
-            'absolute' => TRUE,
-          ]
-        );
         if (!$endpoint_url->access($this->currentUser)) {
-          return NULL;
+          $can_recommend = FALSE;
         }
 
         /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
@@ -167,17 +169,8 @@ class RecommendContentManager {
         break;
 
       case 'group':
-        $endpoint_url = Url::fromRoute(
-          'eic_recommend_content.recommend_group',
-          [
-            'group' => $entity->id(),
-          ],
-          [
-            'absolute' => TRUE,
-          ]
-        );
         if (!$endpoint_url->access($this->currentUser)) {
-          return NULL;
+          $can_recommend = FALSE;
         }
 
         $can_recommend_external_users = $this->canRecommendExternalUsers($entity);
@@ -192,6 +185,7 @@ class RecommendContentManager {
       '#entity_id' => $entity->id(),
       '#get_user_url' => Url::fromRoute('eic_search.solr_search', $get_users_url_parameters)->toString(),
       '#endpoint' => $endpoint_url->toString(),
+      '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
         'link_label' => $link_label,
@@ -286,6 +280,8 @@ class RecommendContentManager {
       'field_recommend_message' => $message,
     ]);
     $flagging->save();
+    // Invalidate entity cache.
+    Cache::invalidateTags($entity->getCacheTagsToInvalidate());
   }
 
   /**
@@ -334,7 +330,10 @@ class RecommendContentManager {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the list of supported entity types followed by the flag machine name.
+   *
+   * @return array
+   *   Array of supported entity types.
    */
   public static function getSupportedEntityTypes() {
     return [

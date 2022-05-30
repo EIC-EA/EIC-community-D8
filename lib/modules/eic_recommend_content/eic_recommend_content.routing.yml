@@ -1,28 +1,11 @@
-eic_recommend_content.recommend_node:
-  path: '/node/{node}/recommend'
-  # path: '/api/recommend/node/{node}'
+eic_recommend_content.recommend:
+  path: '/recommend/{entity_type}/{entity_id}'
+  # path: '/api/recommend/{entity_type}/{entity_id}'
   # methods: [ POST ]
   defaults:
-    _controller: 'Drupal\eic_recommend_content\Controller\RecommendContentController::recommendNode'
-    _title: 'Recommend node'
-  requirements:
-    _eic_recommend_content_node: 'TRUE'
-    node: \d+
-  options:
-    parameters:
-      node:
-        type: entity:node
-eic_recommend_content.recommend_group:
-  path: '/group/{group}/recommend'
-  # path: '/api/recommend/group/{group}'
-  # methods: [ POST ]
-  defaults:
-    _controller: 'Drupal\eic_recommend_content\Controller\RecommendContentController::recommendGroup'
+    _controller: 'Drupal\eic_recommend_content\Controller\RecommendContentController::recommend'
     _title: 'Recommend group'
   requirements:
-    _eic_recommend_content_group: 'TRUE'
-    group: \d+
-  options:
-    parameters:
-      group:
-        type: entity:group
+    _eic_recommend_content_access_check: 'TRUE'
+    entity_type: '[a-z]+'
+    entity_id: \d+

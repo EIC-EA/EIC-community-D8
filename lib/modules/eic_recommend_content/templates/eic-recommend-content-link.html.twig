@@ -1,4 +1,10 @@
 {# {{ attach_library('eic_community/react-block-modal') }} #}
-<div id="react-recommend-content-modal-block" data-entity-type="{{ entity_type }}" data-entity-id="{{ entity_id }}" data-get-users-url="{{ get_users_url }}" data-endpoint="{{ endpoint }}" />
+<div id="react-recommend-content-modal-block"
+  data-entity-type="{{ entity_type }}"
+  data-entity-id="{{ entity_id }}"
+  data-get-users-url="{{ get_users_url }}"
+  data-can-recommend="{{ can_recommend }}"
+  data-can-recommend-external-users="{{ can_recommend_external_users }}"
+  data-endpoint="{{ endpoint }}" />
   {{ translations.link_label }}
 </div>

@@ -5,8 +5,6 @@ namespace Drupal\eic_recommend_content\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_recommend_content\Services\RecommendContentManager;
-use Drupal\group\Entity\GroupInterface;
-use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,6 +65,29 @@ class RecommendContentController extends ControllerBase {
       $container->get('eic_recommend_content.manager'),
       $container->get('request_stack')
     );
+  }
+
+  /**
+   * Recommends a content.
+   *
+   * @param string $entity_type
+   *   The entity type machine name.
+   * @param int $entity_id
+   *   The entity ID.
+   */
+  public function recommend(string $entity_type, int $entity_id) {
+    $entity = $this->entityTypeManager()->getStorage($entity_type)
+      ->load($entity_id);
+
+    $response = $this->recommendEntity($entity);
+
+    // @todo Return JSON response after react implementation.
+    $build['content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('It works!'),
+    ];
+
+    return $build;
   }
 
   /**
@@ -147,42 +168,6 @@ class RecommendContentController extends ControllerBase {
       'status' => TRUE,
       'message' => $this->t('The content has been recommended.'),
     ]);
-  }
-
-  /**
-   * Recommends a node.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node entity.
-   */
-  public function recommendNode(NodeInterface $node) {
-    $response = $this->recommendEntity($node);
-
-    // @todo Return JSON response after react implementation.
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('It works!'),
-    ];
-
-    return $build;
-  }
-
-  /**
-   * Recommends a group.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   */
-  public function recommendGroup(GroupInterface $group) {
-    $response = $this->recommendEntity($group);
-
-    // @todo Return JSON response after react implementation.
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('It works!'),
-    ];
-
-    return $build;
   }
 
 }
