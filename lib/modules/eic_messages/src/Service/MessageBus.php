@@ -52,9 +52,12 @@ class MessageBus implements MessageBusInterface {
   }
 
   /**
-   * @param \Drupal\message\MessageInterface|array $message
+   * {@inheritdoc}
    */
-  public function dispatch($message): void {
+  public function dispatch(
+    $message,
+    array $message_options = []
+  ): void {
     // If we are running migrations, stop saving messages and sending notifications.
     if ($this->state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
       return;
@@ -81,6 +84,7 @@ class MessageBus implements MessageBusInterface {
       $message = [
         'stamps' => $handler->getStamps($message),
         'entity' => $message,
+        'options' => $message_options,
       ];
 
       $handler->handle($message);
