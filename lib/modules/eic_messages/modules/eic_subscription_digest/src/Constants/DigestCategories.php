@@ -17,4 +17,16 @@ final class DigestCategories {
 
   const ORGANISATION = 'organisation';
 
+  /**
+   * @return string[]
+   */
+  public static function getAll(): array {
+    return [
+      self::NEWS_STORIES,
+      self::GROUP,
+      self::EVENT,
+      self::ORGANISATION,
+    ];
+  }
+
 }

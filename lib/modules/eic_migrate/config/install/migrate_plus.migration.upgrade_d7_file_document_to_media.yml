@@ -19,6 +19,7 @@ source:
   track_changes: true
   smed_taxonomy_fields:
     - c4m_vocab_language
+  batch_size: 100
 process:
   name: filename
   uid:

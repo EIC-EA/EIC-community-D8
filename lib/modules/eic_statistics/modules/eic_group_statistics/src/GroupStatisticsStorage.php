@@ -210,9 +210,10 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
   private function calculateGroupCommentsStatistics(GroupInterface $group) {
     $comment_ctypes = [
       "{$group->bundle()}-group_node-discussion",
-      "{$group->bundle()}-group_node-document",
       "{$group->bundle()}-group_node-gallery",
+      "{$group->bundle()}-group_node-news",
       "{$group->bundle()}-group_node-wiki_page",
+      "{$group->bundle()}-group_node-video",
     ];
     // Query to count number of comments.
     $query_comments = $this->connection->select('group_content_field_data', 'gc_fd')

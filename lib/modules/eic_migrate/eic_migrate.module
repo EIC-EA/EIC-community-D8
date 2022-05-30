@@ -1,10 +1,25 @@
 <?php
 
 /**
+ * @file
+ * Contains hooks for eic_migrate module.
+ */
+
+use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
+
+/**
  * Implements hook_entity_type_alter().
- *
- * @param array $entity_types
  */
 function eic_migrate_entity_type_alter(array &$entity_types) {
   $entity_types['node']->addConstraint('migration_running_messages');
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function eic_migrate_mail_alter(&$message) {
+  // If we are running migrations, prevent email sending.
+  if (\Drupal::service('state')->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+    $message['send'] = FALSE;
+  }
 }

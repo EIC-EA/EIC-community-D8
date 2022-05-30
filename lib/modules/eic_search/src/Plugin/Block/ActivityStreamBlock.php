@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -37,29 +38,46 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    */
   private $entityTypeManager;
 
   /**
+   * The Form builder service.
+   *
    * @var ActivityStreamSourceType $activityStreamSourceType
    */
   private $activityStreamSourceType;
 
   /**
+   * The Date formatter.
+   *
    * @var \Drupal\Core\Datetime\DateFormatter $dateFormatter
    */
   private $dateFormatter;
 
   /**
+   * The current user account.
+   *
    * @var AccountInterface $currentUser
    */
   private $currentUser;
 
   /**
+   * The File url generator service.
+   *
    * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
   private $fileUrlGenerator;
+
+  /**
+   * The EIC Groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  private $eicGroupsHelper;
 
   /**
    * LastGroupMembersBlock constructor.
@@ -76,12 +94,15 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param EntityTypeManagerInterface $entity_type_manager
    *   The Form builder service.
    * @param ActivityStreamSourceType $activity_stream_source_type
-   *   The Activity Stream Source type
+   *   The Activity Stream Source type.
    * @param DateFormatter $date_formatter
-   *   The Date formatter
+   *   The Date formatter.
    * @param AccountInterface $current_user
-   *   The Date formatter
+   *   The current user account.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The File url generator service.
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   *   The EIC Groups helper service.
    */
   public function __construct(
     array $configuration,
@@ -91,7 +112,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     ActivityStreamSourceType $activity_stream_source_type,
     DateFormatter $date_formatter,
     AccountInterface $current_user,
-    FileUrlGeneratorInterface $file_url_generator
+    FileUrlGeneratorInterface $file_url_generator,
+    EICGroupsHelper $eic_groups_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
@@ -99,6 +121,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->dateFormatter = $date_formatter;
     $this->currentUser = $current_user;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -118,7 +141,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $container->get('eic_search.activity_stream_library'),
       $container->get('date.formatter'),
       $container->get('current_user'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -229,7 +253,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   protected function getMembersData(GroupInterface $group = NULL, $limit = 5) {
     $query = \Drupal::entityQuery('group_content')
-      ->condition('type', 'group-group_membership')
+      ->condition('type', "{$group->bundle()}-group_membership")
       ->sort('created', 'DESC')
       ->range(0, $limit);
 
@@ -264,13 +288,28 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       /** @var File|NULL $file */
       $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
       $file_url = $file ? $this->fileUrlGenerator->transformRelative(file_create_url($file->get('uri')->value)) : NULL;
+      $user_profile_url = $this->currentUser->hasPermission('access user profiles') ? $user->toUrl()->toString() : NULL;
+
+      // Gets the list of user organisations as Markup.
+      $organisations = [];
+      if ($user_organisations = $this->eicGroupsHelper->getUserOrganisations($user)) {
+        foreach ($user_organisations as $organisation) {
+          if ($this->currentUser->isAnonymous()) {
+            $organisations[] = $organisation->label();
+            continue;
+          }
+          $organisations[] = $organisation->toLink()->toString();
+        }
+        $organisations = Markup::create(implode(', ', $organisations));
+      }
 
       return [
         'joined_date' => $this->dateFormatter->format($groupContent->getCreatedTime(), 'eu_short_date'),
         'full_name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
         'email' => $user->getEmail(),
         'picture' => $file_url,
-        'url' => $profile->toUrl()->toString(),
+        'url' => $user_profile_url,
+        'organisations' => $organisations,
       ];
     }, $members);
   }

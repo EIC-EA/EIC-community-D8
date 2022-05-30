@@ -12,9 +12,11 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
@@ -24,6 +26,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -134,7 +137,8 @@ class DiscussionController extends ControllerBase {
 
     $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    $text = Xss::filter($content['text'], $allowed_tags);
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
@@ -150,7 +154,7 @@ class DiscussionController extends ControllerBase {
       'field_name' => 'field_comments',
       'comment_body' => [
         'value' => $text,
-        'format' => 'plain_text',
+        'format' => 'full_html',
       ],
       'field_tagged_users' => array_map(function ($tagged_user) {
         return [
@@ -258,7 +262,8 @@ class DiscussionController extends ControllerBase {
     }
 
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    $text = Xss::filter($content['text'], $allowed_tags);
 
     try {
       if ('like_comment' === $flag) {
@@ -319,9 +324,14 @@ class DiscussionController extends ControllerBase {
    */
   public function editComment(Request $request, int $discussion_id, $comment_id) {
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    $text = Xss::filter($content['text'], $allowed_tags);
 
     $comment = Comment::load($comment_id);
+
+    if ($this->isGroupArchived($discussion_id)) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
@@ -344,11 +354,14 @@ class DiscussionController extends ControllerBase {
         'value' => $text,
         'format' => 'plain_text',
       ]);
-      $comment->set('field_tagged_users', array_map(function ($tagged_user) {
-        return [
-          'target_id' => $tagged_user['tid'],
-        ];
-      }, $tagged_users));
+      $comment->set(
+        'field_tagged_users',
+        array_map(function ($tagged_user) {
+          return [
+            'target_id' => $tagged_user['tid'],
+          ];
+        }, $tagged_users)
+      );
 
       $comment->save();
     } catch (EntityStorageException $e) {
@@ -367,9 +380,15 @@ class DiscussionController extends ControllerBase {
    * @param $comment_id
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $comment = Comment::load($comment_id);
+
+    if ($this->isGroupArchived($discussion_id)) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
@@ -581,15 +600,15 @@ class DiscussionController extends ControllerBase {
     return [
       'user_image' => $file_url,
       'user_id' => $user->id(),
-      'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
+      'user_fullname' => $user->getDisplayName(),
       'user_url' => $user->toUrl()->toString(),
       'created_timestamp' => $comment->getCreatedTime(),
-      'text' => $comment->get('comment_body')->value,
+      'text' => check_markup($comment->get('comment_body')->value, 'basic_text'),
       'comment_id' => $comment->id(),
       'tagged_users' => array_map(function (UserInterface $user) {
         return [
           'uid' => $user->id(),
-          'name' => realname_load($user),
+          'name' => $user->getDisplayName(),
           'url' => $user->toUrl()->toString(),
         ];
       }, $tagged_users),
@@ -614,6 +633,34 @@ class DiscussionController extends ControllerBase {
         ['context' => 'eic_groups']
       ),
     ];
+  }
+
+  /**
+   * @param int $node_id
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function isGroupArchived(int $node_id): bool {
+    $node = Node::load($node_id);
+
+    if (!$node instanceof NodeInterface) {
+      return FALSE;
+    }
+
+    $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node);
+
+    if (empty($group_contents)) {
+      return FALSE;
+    }
+
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = reset($group_contents);
+    $group = $group_content->getGroup();
+
+    return $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
+      !UserHelper::isPowerUser($this->currentUser());
   }
 
 }

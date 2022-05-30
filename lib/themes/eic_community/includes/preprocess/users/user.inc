@@ -14,7 +14,6 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
-use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
@@ -101,7 +100,7 @@ function eic_community_preprocess_user(array &$variables) {
         // Gets user contact link.
         if (
           ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
-          $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+          \Drupal::service('eic_private_message.helper')->userHasPrivateMessageEnabled($user)
         ) {
           $user_contact_link['icon']['name'] = 'send';
           $user_contact_link['link'] = [
@@ -195,6 +194,22 @@ function eic_community_preprocess_user(array &$variables) {
         'content' => ($current_user->id() === $user->id()
           ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_groups', [$user->id()])
           : _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()])
+        ),
+      ];
+
+      $user_item['flagged_events'] = [
+        'title' => $current_user->id() === $user->id() ? t('My events') : t('Events'),
+        'content' => ($current_user->id() === $user->id()
+          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_events', [$user->id()])
+          : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_events', [$user->id()])
+        ),
+      ];
+
+      $user_item['flagged_projects'] = [
+        'title' => $current_user->id() === $user->id() ? t('My organisations') : t('Organisations'),
+        'content' => ($current_user->id() === $user->id()
+          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_organisations', [$user->id()])
+          : _eic_community_get_rendered_view('groups', 'block_user_profile_organisations', [$user->id()])
         ),
       ];
 

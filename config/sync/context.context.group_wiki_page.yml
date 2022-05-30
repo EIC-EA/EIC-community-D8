@@ -24,6 +24,7 @@ conditions:
   group_type:
     id: group_type
     group_types:
+      event: event
       group: group
     negate: 0
     uuid: 3fc5c7c9-452a-4dbc-be07-3532e63831ff

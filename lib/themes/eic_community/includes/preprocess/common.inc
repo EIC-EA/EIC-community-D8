@@ -82,9 +82,10 @@ function _eic_community_get_share_group_content_link(
 
   return [
     '#theme' => 'eic_share_content_link',
-    '#get_groups_url' => Url::fromRoute('eic_share_content.groups',[
+    '#get_groups_url' => Url::fromRoute('eic_share_content.groups', [
       'user' => $account->id(),
-      'group' => $current_group->id()
+      'group' => $current_group->id(),
+      'node' => $node->id(),
     ])->toString(),
     '#endpoint' => Url::fromRoute('eic_share_content.share', [
       'group' => $current_group->id(),
@@ -317,7 +318,7 @@ function _eic_community_process_term_parents_tree(TermInterface $term, array $te
   if (!$parent) {
     return [];
   }
-  
+
   if (!isset($terms[$parent->id()])) {
     $terms[$parent->id()]['term'] = $parent;
     $terms[$parent->id()]['title'] = $parent->getName();

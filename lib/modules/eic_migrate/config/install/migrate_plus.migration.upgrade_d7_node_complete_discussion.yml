@@ -18,6 +18,7 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
+  batch_size: 100
 process:
   nid:
     - plugin: migration_lookup

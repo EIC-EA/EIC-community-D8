@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.message.notify_digest
     - field.field.message.sub_new_comment_on_content.field_event_executing_user
     - field.field.message.sub_new_comment_on_content.field_referenced_comment
+    - field.field.message.sub_new_comment_on_content.field_referenced_node
     - message.template.sub_new_comment_on_content
 id: message.sub_new_comment_on_content.notify_digest
 targetEntityType: message
@@ -30,4 +31,5 @@ content:
 hidden:
   field_event_executing_user: true
   field_referenced_comment: true
+  field_referenced_node: true
   search_api_excerpt: true

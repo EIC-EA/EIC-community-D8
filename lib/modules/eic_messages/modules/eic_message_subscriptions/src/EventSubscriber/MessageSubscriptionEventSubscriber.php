@@ -189,13 +189,14 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     $entity = $event->getEntity();
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
+    $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
     $message = $this->messageCreator->createTermsOfInterestNodeSubscription(
       $entity,
-      $operation
+      $operation,
+      $node_topics
     );
 
     $context = [];
-    $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
     // Adds each topic to the context so that message_subscribe module can
     // grab all users that are subscribed to each topic.
     foreach ($node_topics as $topic_term) {

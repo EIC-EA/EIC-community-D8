@@ -4,6 +4,7 @@ namespace Drupal\eic_groups;
 
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
+use Drupal\comment\CommentInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
@@ -18,6 +19,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -456,17 +458,28 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * {@inheritdoc}
    */
   public function getGroupBookPage(GroupInterface $group) {
+    if (!$group->getGroupType()->hasContentPlugin('group_node:book')) {
+      return NULL;
+    }
+
+    $group_content_type_id = $group
+      ->getGroupType()
+      ->getContentPlugin('group_node:book')
+      ->getContentTypeConfigId();
+
     $query = $this->database->select('group_content_field_data', 'gp');
-    $query->condition('gp.type', 'group-group_node-book');
+    $query->condition('gp.type', $group_content_type_id);
     $query->condition('gp.gid', $group->id());
     $query->join('book', 'b', 'gp.entity_id = b.nid');
     $query->fields('b', ['bid', 'nid']);
     $query->condition('b.pid', 0);
     $query->orderBy('b.weight');
+
     $results = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
     if (!empty($results)) {
       return $results[0]->nid;
     }
+
     return NULL;
   }
 
@@ -989,6 +1002,99 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       '';
 
     return $location_formatted;
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return \Drupal\group\Entity\GroupInterface|null
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupFromContent(EntityInterface $entity): ?GroupInterface {
+    if ($entity instanceof NodeInterface) {
+      $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
+      if (!empty($group_contents)) {
+        /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+        $group_content = reset($group_contents);
+
+        return $group_content->getGroup();
+      }
+    }
+
+    if ($entity instanceof GroupInterface) {
+      return $entity;
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Return if the group itself or content from group is archived.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function isGroupArchived(?EntityInterface $entity) {
+    if (!$entity instanceof EntityInterface) {
+      return FALSE;
+    }
+
+    if ($entity instanceof CommentInterface) {
+      $entity = $entity->getCommentedEntity();
+    }
+
+    if ($entity instanceof NodeInterface) {
+      $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity);
+
+      if (empty($group_contents)) {
+        return FALSE;
+      }
+
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+
+      return $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+    }
+
+    if ($entity instanceof GroupInterface) {
+      return $entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Get user organisations.
+   *
+   * @param AccountInterface $account
+   *   The user account in which we want to retrieve organisations.
+   *
+   * @return \Drupal\group\Entity\GroupInterface[]
+   *   Array of organisation groups the user belongs to.
+   */
+  public function getUserOrganisations(AccountInterface $account) {
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $user_memberships */
+    $user_memberships = $this->entityTypeManager->getStorage('group_content')
+    ->loadByProperties([
+      'type' => "organisation-group_membership",
+      'entity_id' => $account->id(),
+    ]);
+
+    // The user doesn't belong to any organisation, so we return empty results.
+    if (empty($user_memberships)) {
+      return [];
+    }
+
+    $user_groups = array_map(function ($user_membership) {
+      return $user_membership->getGroup();
+    }, $user_memberships);
+
+    return $user_groups;
   }
 
 }

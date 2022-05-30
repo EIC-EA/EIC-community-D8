@@ -117,12 +117,12 @@ class ShareContentController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function getGroups(GroupInterface $group, UserInterface $user): JsonResponse {
+  public function getGroups(GroupInterface $group, NodeInterface $node, UserInterface $user): JsonResponse {
     if ($user->id() !== $this->currentUser->id()) {
       throw new InvalidArgumentException();
     }
 
-    $groups = $this->shareManager->getShareableTargetGroupsForUser($this->currentUser, $group);
+    $groups = $this->shareManager->getShareableTargetGroupsForUser($this->currentUser, $group, $node);
     $formatted_groups = [];
     foreach ($groups as $group) {
       $formatted_groups[$group->bundle()][] = [
