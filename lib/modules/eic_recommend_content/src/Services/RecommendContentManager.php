@@ -183,7 +183,7 @@ class RecommendContentManager {
       '#theme' => 'eic_recommend_content_link',
       '#entity_type' => $entity->getEntityTypeId(),
       '#entity_id' => $entity->id(),
-      '#get_user_url' => Url::fromRoute('eic_search.solr_search', $get_users_url_parameters)->toString(),
+      '#get_users_url' => Url::fromRoute('eic_search.solr_search', $get_users_url_parameters)->toString(),
       '#endpoint' => $endpoint_url->toString(),
       '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
