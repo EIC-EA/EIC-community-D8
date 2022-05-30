@@ -3,7 +3,6 @@
 namespace Drupal\eic_recommend_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_recommend_content\Services\RecommendContentManager;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -74,29 +73,22 @@ class RecommendContentController extends ControllerBase {
    *   The entity type machine name.
    * @param int $entity_id
    *   The entity ID.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response.
    */
   public function recommend(string $entity_type, int $entity_id) {
     $entity = $this->entityTypeManager()->getStorage($entity_type)
       ->load($entity_id);
 
-    $response = $this->recommendEntity($entity);
+    // If entity doesn't exist, we do nothing.
+    if (!$entity) {
+      return new JsonResponse([
+        'status' => FALSE,
+        'message' => $this->t('The content does not exist or has been deleted. Therefore, it cannot be recommended.'),
+      ]);
+    }
 
-    // @todo Return JSON response after react implementation.
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('It works!'),
-    ];
-
-    return $build;
-  }
-
-  /**
-   * Triggers recommendation on a given entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   */
-  public function recommendEntity(EntityInterface $entity) {
     $content = json_decode($this->currentRequest->getContent(), TRUE);
 
     // Working example.

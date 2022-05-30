@@ -7,12 +7,12 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_messages\Hooks\MessageTokens;
+use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\FlagInterface;
 use Drupal\message\Entity\Message;
-use Drupal\message_notify\Plugin\Notifier\MessageNotifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -51,11 +51,11 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   protected $renderer;
 
   /**
-   * The message notifier service.
+   * The message bus service.
    *
-   * @var \Drupal\message_notify\MessageNotifierInterface
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
    */
-  protected $messageNotifier;
+  protected $messageBus;
 
   /**
    * Constructs a new FlagEventSubscriber object.
@@ -64,17 +64,17 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   The entity type manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\message_notify\MessageNotifierInterface $message_notifier
-   *   The message notifier service.
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The message bus service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     RendererInterface $renderer,
-    MessageNotifierInterface $message_notifier
+    MessageBusInterface $message_bus
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->renderer = $renderer;
-    $this->messageNotifier = $message_notifier;
+    $this->messageBus = $message_bus;
   }
 
   /**
@@ -132,11 +132,9 @@ class FlagEventSubscriber implements EventSubscriberInterface {
 
     // Sends notification to all emails.
     foreach ($emails as $email) {
-      $this->messageNotifier->send(
+      $this->messageBus->dispatch(
         $message,
         [
-          'save on fail' => FALSE,
-          'save on success' => FALSE,
           'mail' => $email,
         ]
       );
