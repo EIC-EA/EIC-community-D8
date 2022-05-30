@@ -104,7 +104,7 @@ class SubscriptionMessageCreator {
     $flag = $flagging->getFlag();
     $message = NULL;
 
-    if ($flag->id() !== FlagType::RECOMMEND) {
+    if ($flag->id() !== FlagType::RECOMMEND_NODE) {
       return $message;
     }
 
