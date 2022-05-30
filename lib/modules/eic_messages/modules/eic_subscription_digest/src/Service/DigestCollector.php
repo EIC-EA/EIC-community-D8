@@ -62,7 +62,7 @@ class DigestCollector {
         'icon' => 'organisations',
       ],
       DigestCategories::NEWS_STORIES => [
-        'label' => $this->t('News and Stories'),
+        'label' => $this->t('News and stories'),
         'icon' => 'news_stories',
       ],
     ];

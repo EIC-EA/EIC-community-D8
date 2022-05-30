@@ -108,6 +108,9 @@ function _eic_community_preprocess_digest_message(&$variables) {
       break;
   }
 
+  $vowels = ['a', 'e', 'i', 'o', 'u'];
+  $suffix = in_array(substr($entity->bundle(), 0, 1), $vowels) ? 'an' : 'a';
+  $action = $action . ' ' . $suffix;
   $variables['content'] = [
     'user' => [
       'full_name' => \Drupal::service('eic_user.helper')->getFullName($user),
@@ -115,6 +118,7 @@ function _eic_community_preprocess_digest_message(&$variables) {
     ],
     'action' => t($action),
     'entity' => $entity,
+    'entity_type' => strtolower($entity->type->entity->label()),
     'label' => $entity->label(),
     'entity_url' => $entity->toUrl()->toString(),
     'rendered_entity' => \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())
