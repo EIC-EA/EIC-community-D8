@@ -107,14 +107,14 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The group entity being created.
    */
   public function groupInsert(Group $group) {
-    $this->manageFeatures($group);
-
     // Make sure group permission entity is created.
     $groupPermission = $this->groupFeatureHelper->getGroupPermissionObject($group);
     if ($groupPermission->isNew()) {
       $groupPermission->setValidationRequired(FALSE);
       $groupPermission->save();
     }
+
+    $this->manageFeatures($group);
   }
 
   /**
