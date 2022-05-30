@@ -4,6 +4,7 @@ services:
     arguments: [ '@state', '@current_user', '@eic_user.helper', '@entity_type.manager', '@queue', '@eic_subscription_digest.collector', '@plugin.manager.mail' ]
   eic_subscription_digest.collector:
     class: Drupal\eic_subscription_digest\Service\DigestCollector
+    arguments: [ '@entity_type.manager']
     tags:
       - { name: service_collector, tag: digest_collector, call: addCollector }
   eic_subscription_digest.collector.group_collector:

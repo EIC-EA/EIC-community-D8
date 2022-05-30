@@ -6,8 +6,7 @@ use DateTime;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
-use Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker;
-use Drupal\eic_search\Service\SolrSearchManager;
+use Drupal\eic_subscription_digest\Collector\CollectorInterface;
 use Drupal\eic_subscription_digest\Constants\DigestCategories;
 use Drupal\eic_subscription_digest\Constants\DigestSubscriptions;
 use Drupal\eic_subscription_digest\Constants\DigestTypes;
@@ -29,27 +28,14 @@ class DigestCollector {
 
   /**
    * @var \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker
-   */
-  private $messageChecker;
-
-  /**
-   * @var \Drupal\eic_search\Service\SolrSearchManager
-   */
-  private $searchManager;
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker $message_checker
-   * @param \Drupal\eic_search\Service\SolrSearchManager $search_manager
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
-    SubscriptionMessageChecker $message_checker,
-    SolrSearchManager $search_manager
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->messageChecker = $message_checker;
-    $this->searchManager = $search_manager;
   }
 
   /**
@@ -106,6 +92,13 @@ class DigestCollector {
     }
 
     return $this->sortItems($formatted_list);
+  }
+
+  /**
+   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
+   */
+  public function addCollector(CollectorInterface $collector) {
+    $this->collectors[] = $collector;
   }
 
   /**
