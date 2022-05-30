@@ -162,17 +162,18 @@ class DigestManager {
       return;
     }
 
-    $digest_categories = $this->collector->getList($user, $data['digest_type']);
+    $trigger_date = NULL;
+    if (isset($data['trigger_date'])) {
+      $trigger_date = new \DateTime($data['trigger_date']);
+    }
+
+    $digest_categories = $this->collector->getList($user, $data['digest_type'], $trigger_date);
     if (empty($digest_categories)) {
       return;
     }
 
     $view_builder = $this->entityTypeManager->getViewBuilder('message');
     foreach ($digest_categories as &$category) {
-      if (empty($category['items'])) {
-        continue;
-      }
-      
       foreach ($category['items'] as &$item) {
         $item['rendered'] = $view_builder->view($item['message'], 'notify_digest');
       }
