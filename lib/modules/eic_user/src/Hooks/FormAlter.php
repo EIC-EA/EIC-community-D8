@@ -3,22 +3,51 @@
 namespace Drupal\eic_user\Hooks;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
+use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class FormAlter
  *
  * @package Drupal\eic_user\Hooks
  */
-class FormAlter {
+class FormAlter implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The EIC Content entity tree manager service.
+   *
+   * @var \Drupal\eic_content\Services\EntityTreeManager
+   */
+  private $treeManager;
+
+  /**
+   * Constructs a new EntityOperations object.
+   *
+   * @param \Drupal\eic_content\Services\EntityTreeManager $entity_tree_manager
+   *   The EIC Content entity tree manager service.
+   */
+  public function __construct(EntityTreeManager $entity_tree_manager) {
+    $this->treeManager = $entity_tree_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('eic_content.entity_tree_manager')
+    );
+  }
 
   /**
    * @param $form
@@ -26,6 +55,7 @@ class FormAlter {
    * @param $form_id
    */
   public function alterBulkGroupInvitation(&$form, FormStateInterface $form_state, $form_id) {
+    $maximum_users = 50;
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = \Drupal::routeMatch()->getParameter('group');
 
@@ -39,11 +69,7 @@ class FormAlter {
 
     foreach ($existing_users as $existing_user) {
       if ($user = User::load($existing_user['target_id'])) {
-        $default_values[] = [
-          'name' => realname_load($user),
-          'tid' => $user->id(),
-          'parent' => -1,
-        ];
+        $default_values[] = $user;
       }
     }
 
@@ -53,20 +79,48 @@ class FormAlter {
       'page' => 1
     ])->toString();
 
+    $options = [
+      'selected_terms_label' => $this->t('Select existing platform users to invite', [], ['context' => 'eic_user']),
+    ];
+
+    // Existing users field.
     $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
       [],
       'user',
-      '',
-      50,
+      $this->treeManager->getTreeWidgetProperty('user')->formatPreselection($default_values),
+      $maximum_users,
       $url_search,
       $url_search,
-      $url_search
+      $url_search,
+      $options
     );
     $form['existing_users']['#weight'] = -2;
+    $form['existing_users']['#description'] = $this->t('You can select up to <strong>@count</strong> existing platform users.',
+      ['@count' => $maximum_users],
+      ['context' => 'eic_user']
+    );
+
+    // Input divider.
+    $form['input_divider'] = [
+      '#markup' => $this->t('You can also', [], ['context' => 'eic_user']),
+      '#prefix' => '<div id="input-divider">',
+      '#suffix' => '</div>',
+      '#weight' => $form['existing_users']['#weight'] + 1,
+    ];
+
+    // Tweak email_address field.
+    $form['email_address']['#title'] = $this->t('Select new users to invite to the platform',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#attributes']['placeholder'] = $this->t('Recipients email addresses here',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#required'] = FALSE;
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
 
-    $form['email_address']['#required'] = FALSE;
     $form['#submit'][] = [$this, 'submitBulkInviteUsers'];
     // Remove the default validation.
     $form['#validate'] = [

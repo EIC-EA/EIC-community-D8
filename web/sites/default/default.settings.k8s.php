@@ -123,6 +123,19 @@ if (getenv('TIKA_HOST')) {
 }
 
 /**
+ * SMTP settings.
+ */
+$config['smtp.settings']['smtp_host'] = '';
+$config['smtp.settings']['smtp_hostbackup'] = '';
+$config['smtp.settings']['smtp_port'] = '';
+$config['smtp.settings']['smtp_protocol'] = '';
+$config['smtp.settings']['smtp_username'] = '';
+$config['smtp.settings']['smtp_password'] = '';
+$config['smtp.settings']['smtp_client_hostname'] = '';
+$config['smtp.settings']['smtp_from'] = '';
+$config['smtp.settings']['smtp_fromname'] = '';
+
+/**
  * SMED User webservice.
  */
 $config['eic_user_login.settings']['endpoint_url'] = getenv('SMED_USERCHECK_URL');
