@@ -1,10 +1,11 @@
-{# {{ attach_library('eic_community/react-block-modal') }} #}
+{{ attach_library('eic_community/react-recommend-content-block') }}
 <div id="react-recommend-content-modal-block"
   data-entity-type="{{ entity_type }}"
   data-entity-id="{{ entity_id }}"
   data-get-users-url="{{ get_users_url }}"
   data-can-recommend="{{ can_recommend }}"
   data-can-recommend-external-users="{{ can_recommend_external_users }}"
-  data-endpoint="{{ endpoint }}" />
+  data-endpoint="{{ endpoint }}"
+  data-label={{translations.link_label}} />
   {{ translations.link_label }}
 </div>
