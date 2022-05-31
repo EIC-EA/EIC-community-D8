@@ -1,0 +1,4 @@
+services:
+  eic_private_message.helper:
+    class: Drupal\eic_private_message\PrivateMessageHelper
+    arguments: ['@user.data', '@config.factory']

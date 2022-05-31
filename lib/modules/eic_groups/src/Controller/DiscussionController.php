@@ -600,15 +600,15 @@ class DiscussionController extends ControllerBase {
     return [
       'user_image' => $file_url,
       'user_id' => $user->id(),
-      'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
+      'user_fullname' => $user->getDisplayName(),
       'user_url' => $user->toUrl()->toString(),
       'created_timestamp' => $comment->getCreatedTime(),
-      'text' => $comment->get('comment_body')->value,
+      'text' => check_markup($comment->get('comment_body')->value, 'basic_text'),
       'comment_id' => $comment->id(),
       'tagged_users' => array_map(function (UserInterface $user) {
         return [
           'uid' => $user->id(),
-          'name' => realname_load($user),
+          'name' => $user->getDisplayName(),
           'url' => $user->toUrl()->toString(),
         ];
       }, $tagged_users),

@@ -1,6 +1,6 @@
 _core:
   default_config_hash: IhwTepsVwtbtbcT5GzQKhCXDCRvbk3MNkWqPiuiZ10s
-theme: current
+theme: eic_community
 defaults:
   sender: SMTPMailSystem
   formatter: mime_mail

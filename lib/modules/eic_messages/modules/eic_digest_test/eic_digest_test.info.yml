@@ -1,0 +1,12 @@
+name: EIC Digest test
+type: module
+description: Provides a testing UI for digest e-mails. Enable on test environments only.
+package: European Innovation Council
+core: 8.x
+hidden: true
+core_version_requirement: ^8 || ^9
+dependencies:
+  - message
+  - eic_user
+  - eic_message_subscriptions
+  - eic_subscription_digest
