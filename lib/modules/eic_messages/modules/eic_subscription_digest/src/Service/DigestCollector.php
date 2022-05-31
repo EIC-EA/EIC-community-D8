@@ -65,9 +65,15 @@ class DigestCollector {
         'icon' => 'news_stories',
       ],
     ];
+    
     foreach ($grouped_messages as $message) {
       $formatted_item = $this->formatItem($message);
       if (!$formatted_item || !$formatted_item['category'] || !$formatted_item['entity']) {
+        continue;
+      }
+
+      $category = $formatted_item['category'];
+      if (isset($formatted_list[$category]['items']) && count($formatted_list[$category]['items']) === 3) {
         continue;
       }
 
@@ -77,7 +83,7 @@ class DigestCollector {
         continue;
       }
 
-      $formatted_list[$formatted_item['category']]['items'][] = $formatted_item;
+      $formatted_list[$category]['items'][] = $formatted_item;
     }
 
     return $this->sortItems($formatted_list);

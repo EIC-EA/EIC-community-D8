@@ -115,6 +115,7 @@ function _eic_community_preprocess_digest_message(&$variables) {
     'user' => [
       'full_name' => \Drupal::service('eic_user.helper')->getFullName($user),
       'profile_picture' => UserHelper::getUserAvatar($user),
+      'url' => $user->toUrl()->toString(),
     ],
     'action' => t($action),
     'entity' => $entity,
