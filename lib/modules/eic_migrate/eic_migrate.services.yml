@@ -1,7 +1,7 @@
 services:
   eic_migrate.post_migration_subscriber:
     class: '\Drupal\eic_migrate\EventSubscriber\PostMigrationSubscriber'
-    arguments: ['@migrate.lookup', '@entity_type.manager', '@group_flex.group_saver']
+    arguments: ['@migrate.lookup', '@entity_type.manager', '@group_flex.group_saver', '@oec_group_features.helper']
     tags:
       - { name: 'event_subscriber' }
   eic_migrate.og_membership_subscriber:
