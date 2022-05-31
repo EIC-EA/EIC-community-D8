@@ -166,7 +166,7 @@ function eic_community_preprocess_node__event(array &$variables) {
           'name' => 'views',
         ],
         'label' => t('Views'),
-        'value' => $stats_views
+        'value' => $stats_views,
       ];
 
       // Remove unwanted items.

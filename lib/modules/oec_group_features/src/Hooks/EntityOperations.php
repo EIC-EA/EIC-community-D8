@@ -9,6 +9,7 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Entity\Group;
+use Drupal\group_permissions\GroupPermissionsManagerInterface;
 use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\oec_group_features\GroupFeaturePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +24,6 @@ class EntityOperations implements ContainerInjectionInterface {
   use LoggerChannelTrait;
   use StringTranslationTrait;
 
-
   /**
    * The OEC group feature helper service.
    *
@@ -37,6 +37,13 @@ class EntityOperations implements ContainerInjectionInterface {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
+  /**
+   * The group permissions manager.
+   *
+   * @var \Drupal\group_permissions\GroupPermissionsManagerInterface
+   */
+  protected $groupPermissionsManager;
 
   /**
    * The current route match service.
@@ -59,6 +66,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The OEC group feature helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\group_permissions\GroupPermissionsManagerInterface $group_permissions_manager
+   *   The group permissions manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
    * @param \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_plugin_manager
@@ -67,11 +76,13 @@ class EntityOperations implements ContainerInjectionInterface {
   public function __construct(
     GroupFeatureHelper $oec_group_features_helper,
     EntityTypeManagerInterface $entity_type_manager,
+    GroupPermissionsManagerInterface $group_permissions_manager,
     RouteMatchInterface $route_match,
     GroupFeaturePluginManager $group_feature_plugin_manager
   ) {
     $this->groupFeatureHelper = $oec_group_features_helper;
     $this->entityTypeManager = $entity_type_manager;
+    $this->groupPermissionsManager = $group_permissions_manager;
     $this->routeMatch = $route_match;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
   }
@@ -83,6 +94,7 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('oec_group_features.helper'),
       $container->get('entity_type.manager'),
+      $container->get('group_permission.group_permissions_manager'),
       $container->get('current_route_match'),
       $container->get('plugin.manager.group_feature')
     );
@@ -95,6 +107,13 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The group entity being created.
    */
   public function groupInsert(Group $group) {
+    // Make sure group permission entity is created.
+    $groupPermission = $this->groupFeatureHelper->getGroupPermissionObject($group);
+    if ($groupPermission->isNew()) {
+      $groupPermission->setValidationRequired(FALSE);
+      $groupPermission->save();
+    }
+
     $this->manageFeatures($group);
   }
 
@@ -149,6 +168,16 @@ class EntityOperations implements ContainerInjectionInterface {
       $available_features[$feature_key]->disable($group);
     }
 
+  }
+
+  /**
+   * Returns whether the current PHP process runs on CLI.
+   *
+   * @return bool
+   *   TRUE if CLI, else FALSE.
+   */
+  protected function isCli(): bool {
+    return PHP_SAPI === 'cli';
   }
 
 }

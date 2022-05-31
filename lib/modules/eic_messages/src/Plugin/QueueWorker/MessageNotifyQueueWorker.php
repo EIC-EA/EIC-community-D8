@@ -7,6 +7,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\eic_messages\Stamps\PersistentMessageStamp;
 use Drupal\message\MessageInterface;
 use Drupal\message_notify\MessageNotifier;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -98,6 +99,11 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       && in_array(PersistentMessageStamp::class, $data['stamps'])
     ) {
       $message->save();
+    }
+
+    $owner = $message->getOwner();
+    if (!$owner instanceof UserInterface || !filter_var($owner->getEmail(), FILTER_VALIDATE_EMAIL)) {
+      return;
     }
 
     $this->notifier->send(

@@ -78,6 +78,15 @@
     color: $ecl-color-grey-50;
   }
 
+  & div#input-divider {
+    padding: map-get($ecl-spacing, 'm') 0;
+    background-color: map-get($ecl-colors, 'blue-5');
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: map-get($ecl-colors, 'blue');
+  }
+
   &,
   &__section {
     margin-top: map-get($ecl-spacing, '2xl');

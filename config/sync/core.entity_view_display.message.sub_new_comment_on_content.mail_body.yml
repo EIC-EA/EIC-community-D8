@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.message.mail_body
     - field.field.message.sub_new_comment_on_content.field_event_executing_user
     - field.field.message.sub_new_comment_on_content.field_referenced_comment
+    - field.field.message.sub_new_comment_on_content.field_referenced_node
     - message.template.sub_new_comment_on_content
 id: message.sub_new_comment_on_content.mail_body
 targetEntityType: message
@@ -25,5 +26,6 @@ content:
 hidden:
   field_event_executing_user: true
   field_referenced_comment: true
+  field_referenced_node: true
   partial_0: true
   search_api_excerpt: true

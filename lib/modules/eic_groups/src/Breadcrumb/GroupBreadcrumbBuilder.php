@@ -113,8 +113,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     switch ($route_match->getRouteName()) {
       case 'entity.group.add_form':
       case 'entity.group.canonical':
+      case 'entity.group_content.group_approve_membership':
+      case 'entity.group_content.group_reject_membership':
+      case 'ginvite.invitation.bulk':
+      case 'ginvite.invitation.bulk.confirm':
         $applies = TRUE;
         break;
+
       case 'entity.node.canonical':
         $node = $route_match->getParameter('node');
 
@@ -122,6 +127,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           $applies = GroupContent::loadByEntity($node) ? TRUE : FALSE;
         }
         break;
+
       case 'entity.group_content.new_request':
       case 'entity.group_content.user_close_request':
         $group_content = $route_match->getParameter('group_content');
@@ -164,7 +170,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
 
     if ($route_match->getParameter('group_type') instanceof GroupTypeInterface) {
-    // This has higher priority because of add group pages where a group doesn't exist yet.
+      // This has higher priority because of add group pages where a group
+      // doesn't exist yet.
       $group_type = $route_match->getParameter('group_type')->id();
     }
 
@@ -279,6 +286,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             $breadcrumb->addCacheableDependency($access);
           }
         }
+        break;
+
+      case 'entity.group_content.group_approve_membership':
+      case 'entity.group_content.group_reject_membership':
+      case 'ginvite.invitation.bulk':
+      case 'ginvite.invitation.bulk.confirm':
+        $links[] = $group->toLink();
         break;
 
       case 'entity.group_content.new_request':

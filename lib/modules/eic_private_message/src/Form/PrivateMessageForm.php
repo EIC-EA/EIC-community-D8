@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_messages\Service\MessageBus;
 use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\eic_private_message\PrivateMessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\user\Entity\User;
@@ -42,13 +43,21 @@ class PrivateMessageForm extends FormBase {
   private $bus;
 
   /**
+   * The private message helper service.
+   *
+   * @var \Drupal\eic_private_message\PrivateMessageHelper
+   */
+  private $privateMessageHelper;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_user.helper'),
       $container->get('config.factory'),
-      $container->get('eic_messages.message_bus')
+      $container->get('eic_messages.message_bus'),
+      $container->get('eic_private_message.helper')
     );
   }
 
@@ -61,15 +70,19 @@ class PrivateMessageForm extends FormBase {
    *   The config factory.
    * @param MessageBus $bus
    *   The message bus service.
+   * @param \Drupal\eic_private_message\PrivateMessageHelper $private_message_helper
+   *   The private message helper service.
    */
   public function __construct(
     UserHelper $user_helper,
     ConfigFactory $config_factory,
-    MessageBus $bus
+    MessageBus $bus,
+    PrivateMessageHelper $private_message_helper
   ) {
     $this->userHelper = $user_helper;
     $this->systemSettings = $config_factory->get('system.site');
     $this->bus = $bus;
+    $this->privateMessageHelper = $private_message_helper;
   }
 
   /**
@@ -100,7 +113,7 @@ class PrivateMessageForm extends FormBase {
         return [];
       }
 
-      if (!$user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value) {
+      if (!$this->privateMessageHelper->userHasPrivateMessageEnabled($user)) {
         $this->messenger()->addError(
           $this->t(
             'The user you are trying to contact has disabled private messages from its profile. The operation you are requesting cannot be completed.',

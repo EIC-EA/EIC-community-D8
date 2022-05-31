@@ -1,0 +1,57 @@
+<?php
+
+use Drupal\eic_subscription_digest\Constants\DigestTypes;
+use Drupal\eic_subscription_digest\Hooks\DigestNotificationCron;
+
+
+/**
+ * Implements hook_cron().
+ */
+function eic_subscription_digest_cron() {
+  \Drupal::classResolver(DigestNotificationCron::class)->sendNotifications();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function eic_subscription_digest_theme($existing, $type, $theme, $path) {
+  return [
+    'eic_subscription_digest_mail' => [
+      'variables' => [
+        'items' => [],
+        'user_data' => [],
+        'digest_type' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_mail().
+ */
+function eic_subscription_digest_mail($key, &$message, $params) {
+  if ($key !== 'digest') {
+    return;
+  }
+
+  $build = [
+    '#theme' => 'eic_subscription_digest_mail',
+    '#items' => $params['items'],
+    '#digest_type' => $params['digest_type'],
+  ];
+
+  /** @var \Drupal\Core\Render\Renderer $renderer */
+  $renderer = \Drupal::service('renderer');
+
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $renderer->render($build);
+}
+
+/**
+ * @return array
+ */
+function eic_subscription_digest_get_digest_frequencies(): array {
+  $types = DigestTypes::getAll();
+
+  return array_combine($types, array_map('ucfirst', $types));
+}

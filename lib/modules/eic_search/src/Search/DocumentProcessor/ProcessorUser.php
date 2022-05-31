@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\eic_comments\Constants\Comments;
 use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\eic_private_message\PrivateMessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
 use Drupal\group\GroupMembershipLoaderInterface;
@@ -45,21 +46,32 @@ class ProcessorUser extends DocumentProcessor {
   private $connection;
 
   /**
+   * The private message helper service.
+   *
+   * @var \Drupal\eic_private_message\PrivateMessageHelper
+   */
+  private $privateMessageHelper;
+
+  /**
    * @param \Drupal\group\GroupMembershipLoaderInterface $groupMembershipLoader
    * @param \Drupal\eic_user\UserHelper $user_helper
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\eic_private_message\PrivateMessageHelper $private_message_helper
+   *   The private message helper service.
    */
   public function __construct(
     GroupMembershipLoaderInterface $groupMembershipLoader,
     UserHelper $user_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    Connection $connection
+    Connection $connection,
+    PrivateMessageHelper $private_message_helper
   ) {
     $this->groupMembershipLoader = $groupMembershipLoader;
     $this->userHelper = $user_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->connection = $connection;
+    $this->privateMessageHelper = $private_message_helper;
   }
 
   /**
@@ -90,7 +102,7 @@ class ProcessorUser extends DocumentProcessor {
       $document,
       'ss_user_allow_contact',
       $fields,
-      $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+      (int) $this->privateMessageHelper->userHasPrivateMessageEnabled($user)
     );
 
     if (array_key_exists('its_user_profile', $fields)) {
