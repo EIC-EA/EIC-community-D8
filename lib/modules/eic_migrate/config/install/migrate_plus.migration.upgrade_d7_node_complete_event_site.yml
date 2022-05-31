@@ -111,7 +111,22 @@ process:
           source: value2
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d\TH:i:s'
-  field_body: c4m_body
+  field_body/0/format:
+    - plugin: callback
+      source: c4m_body/0/format
+      callable:
+        - '\Drupal\eic_migrate\Constants\Misc'
+        - getTextFormat
+  field_body/0/value:
+    - plugin: eic_html_sanitizer
+      source: c4m_body/0/value
+    - plugin: eic_media_wysiwyg_filter
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
   field_welcome_message: c4m_group_welcome_message
   field_location:
     - plugin: addressfield
