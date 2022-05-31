@@ -8,3 +8,4 @@ core_version_requirement: ^8 || ^9
 dependencies:
   - flag:flag
   - eic_groups:eic_groups
+  - eic_search:eic_search
