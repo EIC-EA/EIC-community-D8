@@ -84,6 +84,7 @@ function _eic_community_preprocess_digest_message(&$variables) {
   /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $entity = NULL;
   $action = NULL;
+  $group_suffix = NULL;
   $template_id = $message->getTemplate()->id();
   switch ($template_id) {
     case MessageSubscriptionTypes::NODE_PUBLISHED:
@@ -108,15 +109,30 @@ function _eic_community_preprocess_digest_message(&$variables) {
       break;
   }
 
+  if (in_array(
+    $template_id,
+    [MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED, MessageSubscriptionTypes::GROUP_CONTENT_UPDATED]
+  )) {
+    $group = $message->get('field_group_ref')->entity;
+    $group_suffix = [
+      'label' => $group->label(),
+      'url' => $group->toUrl()->toString(),
+      'type' => strtolower($group->type->entity->label()),
+    ];
+  }
+
   $vowels = ['a', 'e', 'i', 'o', 'u'];
   $suffix = in_array(substr($entity->bundle(), 0, 1), $vowels) ? 'an' : 'a';
   $action = $action . ' ' . $suffix;
+  $default_avatar = $variables['eic_mail_images_path'] . '/user_circle.png';
+
   $variables['content'] = [
     'user' => [
       'full_name' => \Drupal::service('eic_user.helper')->getFullName($user),
-      'profile_picture' => UserHelper::getUserAvatar($user),
+      'profile_picture' => !$user->get('field_media')->isEmpty() ? UserHelper::getUserAvatar($user) : $default_avatar,
       'url' => $user->toUrl()->toString(),
     ],
+    'group_suffix' => $group_suffix,
     'action' => t($action),
     'entity' => $entity,
     'entity_type' => strtolower($entity->type->entity->label()),

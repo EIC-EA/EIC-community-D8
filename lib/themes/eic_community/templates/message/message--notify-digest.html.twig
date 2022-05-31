@@ -58,7 +58,7 @@
                                       <tbody>
                                       <tr>
                                         <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                          <div style="font-family:Arial;font-size:12px;line-height:1.4;text-align:left;color:#707070;"><a class="link" style="color: #004494; font-weight: 400;" href="{{ content.user.url }}">{{ content.user.full_name }}</a> {{ content.action }} <strong>{{ content.entity_type }}</strong> <a class="link" style="color: #004494; font-weight: 400;" href="{{ content.entity_url }}">{{ content.label }}</a>
+                                          <div style="font-family:Arial;font-size:12px;line-height:1.4;text-align:left;color:#707070;"><a class="link" style="color: #004494; font-weight: 400;" href="{{ content.user.url }}">{{ content.user.full_name }}</a> {{ content.action }} <strong>{{ content.entity_type }}</strong> <a class="link" style="color: #004494; font-weight: 400;" href="{{ content.entity_url }}">{{ content.label }}</a> {% if content.group_suffix is not empty %}{{ 'in the @group_type <a href="@group_url">@group_label</a>'|t({'@group_type': content.group_suffix.type, '@group_url': content.group_suffix.url, '@group_label': content.group_suffix.label}) }}{% endif %}
                                           </div>
                                         </td>
                                       </tr>

@@ -54,7 +54,7 @@
     <!-- TAG -->
       <tr>
         <td vertical-align="top" style="font-size:0px;padding:0;word-break:break-word;">
-          <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+          <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
             <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
               <tbody>
               <tr>
@@ -66,7 +66,7 @@
                         <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color:#404040;font-family:Arial;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
                           <tr>
                             <td align="left" style="padding-bottom: 0px !important; margin-bottom: 0px !important;" cellspacing="0" border="0" cellpadding="0">
-                              <span style="padding: 5px 0px; border: 1px solid transparent; border-image: none; color: #000000; line-height: 19px; font-size: 12px; font-weight: 500; border-radius: 60px; display: inline-block; background-color:#E3E3E3"> &nbsp;&nbsp;&nbsp; {{ first_tag.label }} &nbsp;&nbsp;&nbsp;</span> {% if remaining > 0 %}{% trans %} +{{ remaining}} other {% plural remaining %}+{{ remaining}} others{% endtrans %}{% endif %}
+                              <span style="padding: 5px 0px; border: 1px solid transparent; border-image: none; color: #000000; line-height: 19px; font-size: 12px; font-weight: 500; border-radius: 60px; display: inline-block; background-color:#E3E3E3"> &nbsp;&nbsp;&nbsp; {{ first_tag.label }} &nbsp;&nbsp;&nbsp;</span> {% if remaining > 0 %}<span style="white-space: no-wrap">{% trans %}+&nbsp;{{ remaining}}&nbsp;other{% plural remaining %}+&nbsp;{{ remaining}}&nbsp;others{% endtrans %}</span>{% endif %}
                             </td>
                           </tr>
                         </table>
