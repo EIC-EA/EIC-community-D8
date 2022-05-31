@@ -226,6 +226,18 @@ process:
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d\TH:i:s'
   field_organised_by: c4m_organised_by
+  field_tags:
+    -
+      plugin: sub_process
+      source: og_vocabulary
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: target_id
+            no_stub: true
+            migration:
+              - upgrade_d7_taxonomy_term_c4m_vocab_tag
 destination:
   plugin: 'entity_complete:node'
   translations: true
@@ -239,6 +251,7 @@ migration_dependencies:
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
     - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+    - upgrade_d7_taxonomy_term_c4m_vocab_tag
     - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
