@@ -115,6 +115,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       case 'entity.group.canonical':
       case 'entity.group_content.group_approve_membership':
       case 'entity.group_content.group_reject_membership':
+      case 'ginvite.invitation.bulk':
+      case 'ginvite.invitation.bulk.confirm':
         $applies = TRUE;
         break;
 
@@ -288,6 +290,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       case 'entity.group_content.group_approve_membership':
       case 'entity.group_content.group_reject_membership':
+      case 'ginvite.invitation.bulk':
+      case 'ginvite.invitation.bulk.confirm':
         $links[] = $group->toLink();
         break;
 
