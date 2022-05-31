@@ -18,13 +18,13 @@
 </mj-text>
 </mj-column> -->
 
-<mj-column padding="0">
+<mj-column width="100%" padding="0">
        <mj-table padding="5px 0">
              <tr>
                 <td align="left" style="padding-bottom: 0px !important; margin-bottom: 0px !important;" cellspacing="0" border="0" cellpadding="0">
                     <span style="padding: 5px 0px; border: 1px solid transparent; border-image: none; color: #000000; line-height: 19px; font-size: 12px; font-weight: 500; border-radius: 60px; display: inline-block; background-color:#E3E3E3">
-&nbsp;&nbsp;&nbsp; tag1 &nbsp;&nbsp;&nbsp;</span>
-                + 2 others
+&nbsp;&nbsp;&nbsp; blablablablablabal blabla bla &nbsp;&nbsp;&nbsp;</span>
+                    <span style="white-space: no-wrap">+&nbsp;2&nbsp;others</span>
                 </td>
               </tr>
        </mj-table>
