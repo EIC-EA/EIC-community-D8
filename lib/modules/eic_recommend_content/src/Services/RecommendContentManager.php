@@ -105,18 +105,14 @@ class RecommendContentManager {
    *   The renderable array of recommend content link.
    */
   public function getRecommendContentLink(EntityInterface $entity) {
-    $support_entity_types = self::getSupportedEntityTypes();
-    if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
+    if (!$this->isRecommendationEnabled($entity)) {
       return NULL;
     }
 
+    $support_entity_types = self::getSupportedEntityTypes();
     $flag = $this->flagService->getFlagById(
       $support_entity_types[$entity->getEntityTypeId()]
     );
-
-    if (!$flag instanceof Flag) {
-      return NULL;
-    }
 
     $get_users_url_parameters = [
       'datasource' => json_encode(['user']),
@@ -340,6 +336,43 @@ class RecommendContentManager {
       'node' => 'recommend_content',
       'group' => 'recommend_content_group',
     ];
+  }
+
+  /**
+   * Check if a given entity can be recommended.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return bool
+   *   TRUE if entity can be recommended.
+   */
+  public function isRecommendationEnabled(EntityInterface $entity) {
+    $entity_type = $entity->getEntityTypeId();
+
+    $support_entity_types = RecommendContentManager::getSupportedEntityTypes();
+    if (!array_key_exists($entity_type, $support_entity_types)) {
+      return FALSE;
+    }
+
+    $flag = $this->flagService->getFlagById(
+      $support_entity_types[$entity_type]
+    );
+
+    if (!$flag instanceof Flag) {
+      return FALSE;
+    }
+
+    $enabled_bundles = $flag->getBundles();
+    // Check if entity bundle is enabled in the flag.
+    if (
+      !empty($enabled_bundles) &&
+      !in_array($entity->bundle(), $enabled_bundles)
+    ) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

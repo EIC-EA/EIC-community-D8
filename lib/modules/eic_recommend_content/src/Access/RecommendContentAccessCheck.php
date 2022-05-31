@@ -36,20 +36,30 @@ class RecommendContentAccessCheck implements AccessInterface {
   protected $entityTypeManager;
 
   /**
+   * The Entity type manager.
+   *
+   * @var \Drupal\eic_recommend_content\Services\RecommendContentManager
+   */
+  protected $recommendContentManager;
+
+  /**
    * Constructs a new RecommendGroupAccessCheck object.
    *
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The OEC Group flex helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The Entity type manager.
+   * @param \Drupal\eic_recommend_content\Services\RecommendContentManager $recommend_content_manager
+   *   The EIC Recommend content manager.
    */
   public function __construct(
     OECGroupFlexHelper $oec_group_flex_helper,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    RecommendContentManager $recommend_content_manager
   ) {
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->entityTypeManager = $entity_type_manager;
-
+    $this->recommendContentManager = $recommend_content_manager;
   }
 
   /**
@@ -72,7 +82,8 @@ class RecommendContentAccessCheck implements AccessInterface {
       return AccessResult::forbidden();
     }
 
-    if (!array_key_exists($entity_type, RecommendContentManager::getSupportedEntityTypes())) {
+    $support_entity_types = RecommendContentManager::getSupportedEntityTypes();
+    if (!array_key_exists($entity_type, $support_entity_types)) {
       return AccessResult::forbidden();
     }
 
@@ -87,6 +98,10 @@ class RecommendContentAccessCheck implements AccessInterface {
     $access = AccessResult::forbidden()
       ->addCacheableDependency($account)
       ->addCacheableDependency($entity);
+
+    if (!$this->recommendContentManager->isRecommendationEnabled($entity)) {
+      return $access;
+    }
 
     // If entity is a group, we need to check visibility before allowing
     // access.
