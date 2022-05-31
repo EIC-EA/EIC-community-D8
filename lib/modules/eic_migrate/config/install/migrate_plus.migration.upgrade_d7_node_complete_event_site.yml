@@ -218,6 +218,51 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  _c4m_left_column:
+    - plugin: sub_process
+      source: c4m_left_column
+      process:
+        target_id: value
+        target_revision_id: revision_id
+  _c4m_right_column:
+    - plugin: sub_process
+      source: c4m_right_column
+      process:
+        target_id: value
+        target_revision_id: revision_id
+  field_additional_content:
+    - plugin: merge
+      source:
+        - '@_c4m_left_column'
+        - '@_c4m_right_column'
+    - plugin: sub_process
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+              - target_revision_id
+            migration:
+              - upgrade_d7_paragraph_text
+            no_stub: true
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - '0'
+        target_revision_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+              - target_revision_id
+            migration:
+              - upgrade_d7_paragraph_text
+            no_stub: true
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - '1'
   # TODO: Blocked
 #  field_membership_open_request:
 #    - plugin: get
