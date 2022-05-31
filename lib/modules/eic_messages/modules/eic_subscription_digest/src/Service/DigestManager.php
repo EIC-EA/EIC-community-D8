@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_subscription_digest\Service;
 
-use Drupal;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
