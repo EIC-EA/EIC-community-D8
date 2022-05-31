@@ -2,9 +2,12 @@
 
 namespace Drupal\eic_admin\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Config\ConfigFactoryInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class that manages functions for the confirmation forms.
@@ -30,16 +33,41 @@ class ActionFormsManager {
   protected $configFactory;
 
   /**
+   * The request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The title resolver service.
+   *
+   * @var \Drupal\Core\Controller\TitleResolverInterface
+   */
+  protected $titleResolver;
+
+  /**
    * Constructs a new ShareManager object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack service.
+   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   *   The title resolver service.
    */
-  public function __construct(RouteMatchInterface $route_match, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+    RouteMatchInterface $route_match,
+    ConfigFactoryInterface $config_factory,
+    RequestStack $request_stack,
+    TitleResolverInterface $title_resolver
+  ) {
     $this->routeMatch = $route_match;
     $this->configFactory = $config_factory;
+    $this->requestStack = $request_stack;
+    $this->titleResolver = $title_resolver;
   }
 
   /**
@@ -88,6 +116,21 @@ class ActionFormsManager {
       $routes[] = $config->get('route');
     }
     return $routes;
+  }
+
+  /**
+   * Returns the page title for the current request.
+   *
+   * @return string
+   *   The page title.
+   */
+  public function getCurrentRequestPageTitle() {
+    $title = '';
+    $request = $this->requestStack->getCurrentRequest();
+    if ($route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
+      $title = $this->titleResolver->getTitle($request, $route);
+    }
+    return $title;
   }
 
 }
