@@ -11,7 +11,7 @@
             <tbody>
             <tr>
               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                <div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;">{{ 'Dear @full_name, <br><br> Discover the latest updates you’re subscribed to.' | t({'@full_name': content.target_user.full_name}) }}</div>
+                <div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;">{% if content.target_user.full_name is not empty %}{{ 'Dear @full_name,'|t({'@full_name': content.target_user.full_name})}} <br><br> {% endif %}{{ 'Discover the latest updates you’re subscribed to.' | t }}</div>
               </td>
             </tr>
             </tbody>
