@@ -1,0 +1,29 @@
+uuid: aa1f189d-5e66-4975-8efe-6c5b51eec9a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_document_presentations
+    - node.type.document
+    - node.type.event
+id: node.event.field_document_presentations
+field_name: field_document_presentations
+entity_type: node
+bundle: event
+label: Presentations
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

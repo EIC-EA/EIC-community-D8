@@ -81,9 +81,33 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  field_document_media:
+  field_document_additional:
     - plugin: multiple_values
       source: c4m_related_document
+    - plugin: sub_process
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          - plugin: node_complete_node_lookup
+  field_document_agenda:
+    - plugin: multiple_values
+      source: c4m_document_agenda
+    - plugin: sub_process
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          - plugin: node_complete_node_lookup
+  field_document_presentations:
+    - plugin: multiple_values
+      source: c4m_document_presentation
     - plugin: sub_process
       process:
         target_id:
@@ -132,10 +156,10 @@ process:
       process:
         target_id:
           - plugin: migration_lookup
-            source: smed_id
+            source: tid
             no_stub: true
             migration:
-              - smed_event_types
+              - upgrade_d7_taxonomy_term_c4m_vocab_event_type
   _social_link_facebook:
     - plugin: get
       source:
@@ -177,7 +201,7 @@ process:
   field_link:
     - plugin: field_link
       uri_scheme: 'https://'
-      source: field_source_link_field
+      source: c4m_link
   field_date_range:
     - plugin: sub_process
       source: c4m_datetime_end
@@ -193,6 +217,16 @@ process:
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d\TH:i:s'
   field_organised_by: c4m_organised_by
+  field_tags:
+    - plugin: sub_process
+      source: og_vocabulary
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: target_id
+            no_stub: true
+            migration:
+              - upgrade_d7_taxonomy_term_c4m_vocab_tag
 destination:
   plugin: 'entity_complete:node'
   translations: true
@@ -206,6 +240,8 @@ migration_dependencies:
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
     - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+    - upgrade_d7_taxonomy_term_c4m_vocab_event_type
+    - upgrade_d7_taxonomy_term_c4m_vocab_tag
     - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
