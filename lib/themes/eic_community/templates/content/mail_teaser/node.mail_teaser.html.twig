@@ -34,7 +34,6 @@
 <div class="mj-column-px-400 mj-outlook-group-fix message-content" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
     <tbody>
-    {% if description is not empty %}
     <tr>
       <td align="left" style="font-size:0px;padding:0 0 5px;word-break:break-word;">
         <div style="font-family:Arial;font-size:14px;line-height:1.4;text-align:left;color:#707070;">
@@ -42,11 +41,10 @@
           <div style="margin-bottom: 7px">
             <a class="link" href="{{ path }}" style="font-weight: bold; color: #004494;">{{ label }}</a>
           </div>
-          <!-- CONTENT TITLE --> {{ description }}
+          <!-- CONTENT TITLE -->{% if description %} {{ description }}{% endif %}
         </div>
       </td>
     </tr>
-    {% endif %}
 
     {% if tags is not empty %}
       {% set first_tag = tags[0] %}

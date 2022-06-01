@@ -65,7 +65,7 @@ class DigestCollector {
         'icon' => 'news_stories',
       ],
     ];
-    
+
     foreach ($grouped_messages as $message) {
       $formatted_item = $this->formatItem($message);
       if (!$formatted_item || !$formatted_item['category'] || !$formatted_item['entity']) {
@@ -73,10 +73,6 @@ class DigestCollector {
       }
 
       $category = $formatted_item['category'];
-      if (isset($formatted_list[$category]['items']) && count($formatted_list[$category]['items']) === 3) {
-        continue;
-      }
-
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $entity = $formatted_item['entity'];
       if (!$entity->access('view', $user)) {
@@ -86,7 +82,16 @@ class DigestCollector {
       $formatted_list[$category]['items'][] = $formatted_item;
     }
 
-    return $this->sortItems($formatted_list);
+    $formatted_list = $this->sortItems($formatted_list);
+    foreach ($formatted_list as &$list) {
+      if (empty($list['items']) || (isset($list['items']) && count($list['items']) <= 3)) {
+        continue;
+      }
+
+      $list['items'] = array_slice($list['items'], 0, 3);
+    }
+
+    return $formatted_list;
   }
 
   /**
