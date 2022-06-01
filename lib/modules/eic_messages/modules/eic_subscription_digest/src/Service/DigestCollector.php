@@ -97,6 +97,13 @@ class DigestCollector {
 
     return $formatted_list;
   }
+  
+  /**
+   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
+   */
+  public function addCollector(CollectorInterface $collector) {
+    $this->collectors[] = $collector;
+  }
 
   /**
    * @param \Drupal\message\MessageInterface $message
@@ -184,13 +191,6 @@ class DigestCollector {
     }
 
     return $collected_messages;
-  }
-
-  /**
-   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
-   */
-  public function addCollector(CollectorInterface $collector) {
-    $this->collectors[] = $collector;
   }
 
 }
