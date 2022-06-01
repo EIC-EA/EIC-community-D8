@@ -35,7 +35,11 @@ class DigestCollector {
    * @return array
    * @throws \Exception
    */
-  public function getList(UserInterface $user, string $digest_type, DateTime $end_date = NULL): array {
+  public function getList(
+    UserInterface $user,
+    string $digest_type,
+    DateTime $end_date = NULL
+  ): array {
     if (!$end_date instanceof \DateTime) {
       $end_date = new \DateTime('now');
     }
@@ -92,6 +96,13 @@ class DigestCollector {
     }
 
     return $formatted_list;
+  }
+
+  /**
+   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
+   */
+  public function addCollector(CollectorInterface $collector) {
+    $this->collectors[] = $collector;
   }
 
   /**
