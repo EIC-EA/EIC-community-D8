@@ -40,7 +40,7 @@ class RecommendContentController extends ControllerBase {
    *
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The oec_group_flex.helper service.
-   * @param \Drupal\eic_recommend_content\RecommendContentManager $recommend_content_manager
+   * @param \Drupal\eic_recommend_content\Services\RecommendContentManager $recommend_content_manager
    *   The Recommend content manager service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
@@ -94,7 +94,7 @@ class RecommendContentController extends ControllerBase {
     // Working example.
     // @todo Remove after react implementation.
     $content['users'] = [2, 3, 4, 5];
-    $content['external_emails'] = 'user1@example.com,user2@example.com,user3@example.com';
+    $content['external_emails'] = "user1@example.com\r\nuser2@example.com\r\nuser3@example.com";
     $content['message'] = 'Test recommendation for users.';
 
     if (
@@ -134,7 +134,7 @@ class RecommendContentController extends ControllerBase {
       isset($content['external_emails']) &&
       is_string($content['external_emails'])
     ) {
-      $external_emails = explode(',', trim(strip_tags($content['external_emails'])));
+      $external_emails = array_map('trim', array_unique(explode("\r\n", trim($content['external_emails']))));
     }
 
     try {
