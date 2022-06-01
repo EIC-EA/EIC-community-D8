@@ -24,13 +24,13 @@ final class Misc {
   /**
    * Maps old text formats to new ones.
    *
-   * @param string $text_format_id
+   * @param string|null $text_format_id
    *   The old text format.
    *
    * @return false|mixed|string
    *   The new text format or FALSE if not found.
    */
-  public static function getTextFormat(string $text_format_id) {
+  public static function getTextFormat(string $text_format_id = NULL) {
     return self::TEXT_FORMAT_MAPPINGS[$text_format_id] ?? FALSE;
   }
 
