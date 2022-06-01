@@ -1,0 +1,39 @@
+uuid: 5f5d765b-9db9-4905-b48a-3062efa15602
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.mail_teaser
+    - field.field.node.book.field_body
+    - node.type.book
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: UWTnZUj-u-jp8I_S1C1nUCTlM5iIV2QKdxm37ehFjoI
+id: node.book.mail_teaser
+targetEntityType: node
+bundle: book
+mode: mail_teaser
+content:
+  field_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  content_moderation_control: true
+  extra_field_eic_theme_helper_short_title_with_fallback: true
+  flag_follow_content: true
+  langcode: true
+  member_content_edit_access: true
+  private: true
+  published_at: true
+  search_api_excerpt: true

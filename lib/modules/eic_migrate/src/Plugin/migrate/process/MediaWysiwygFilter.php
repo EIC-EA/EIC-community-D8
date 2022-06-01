@@ -154,18 +154,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
   ];
 
   /**
-   * Text format mappings.
-   *
-   * @var string[]
-   */
-  protected const TEXT_FORMAT_MAPPINGS = [
-    'full_html' => 'full_html',
-    'filtered_html' => 'filtered_html',
-    'plain_text' => 'plain_text',
-    'mail' => 'basic_text',
-  ];
-
-  /**
    * The migration entity.
    *
    * @var \Drupal\migrate\Plugin\MigrationInterface
@@ -280,9 +268,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
 
   /**
    * {@inheritdoc}
-   *
-   * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-   * @SuppressWarnings(PHPMD.NPathComplexity)
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     // If Media WYSIWYG wasn't enabled on the source site, we don't have to do
@@ -299,8 +284,6 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
       throw new MigrateException("The embed token's destination filter plugin ID is invalid.");
     }
 
-    // Update format with the one defined in the mappings.
-    $value['format'] = self::TEXT_FORMAT_MAPPINGS[$value['format']];
     $pattern = '/\[\[\s*(?<tag_info>\{.+\})\s*\]\]/sU';
     $decoder = new JsonDecode(TRUE);
     $entity_type_id = explode(':', $this->migration->getDestinationConfiguration()['plugin'])[1];
@@ -310,7 +293,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
     }
     $source_identifier = implode(', ', $source_identifier);
 
-    $value['value'] = preg_replace_callback($pattern, function ($matches) use ($decoder, $entity_type_id, $source_identifier) {
+    $value = preg_replace_callback($pattern, function ($matches) use ($decoder, $entity_type_id, $source_identifier) {
       // Replace line breaks with a single space for valid JSON.
       $matches['tag_info'] = preg_replace('/\s+/', ' ', $matches['tag_info']);
 
@@ -373,13 +356,13 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
       catch (\LogicException $e) {
         return $matches[0];
       }
-    }, $value['value']);
+    }, $value);
 
     // Update fid and token in regex /file/{fid}/download?token={token}.
     if ($this->configuration['file_migrations']) {
       $pattern = '#\/file\/([0-9]*)\/download\?token=([a-zA-Z0-9]*)#';
       $replacement_template = '/file/%s/download?token=%s';
-      $value['value'] = preg_replace_callback($pattern, function ($matches) use ($replacement_template) {
+      $value = preg_replace_callback($pattern, function ($matches) use ($replacement_template) {
         $oldId = $matches[1];
         $newId = $this->findDestId($oldId, $this->configuration['file_migrations']);
         $newToken = '';
@@ -396,7 +379,7 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
         }
 
         return sprintf($replacement_template, $newId, $newToken);
-      }, $value['value']);
+      }, $value);
     }
 
     return $value;

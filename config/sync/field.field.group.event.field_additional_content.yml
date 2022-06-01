@@ -1,0 +1,67 @@
+uuid: 45ae0d96-91b3-434b-a2fb-d2cb79a7a33c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_additional_content
+    - group.type.event
+    - paragraphs.paragraphs_type.full_text_content
+  module:
+    - entity_reference_revisions
+id: group.event.field_additional_content
+field_name: field_additional_content
+entity_type: group
+bundle: event
+label: 'Additional content'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      full_text_content: full_text_content
+    negate: 0
+    target_bundles_drag_drop:
+      announcement:
+        weight: 14
+        enabled: false
+      banner:
+        weight: 15
+        enabled: false
+      contributor:
+        weight: 16
+        enabled: false
+      cta_tile:
+        weight: 17
+        enabled: false
+      full_media_content:
+        weight: 18
+        enabled: false
+      full_text_content:
+        weight: 19
+        enabled: true
+      gallery_slide:
+        weight: 20
+        enabled: false
+      organisation_location:
+        weight: 21
+        enabled: false
+      organisation_member:
+        weight: 22
+        enabled: false
+      organisation_member_external:
+        weight: 23
+        enabled: false
+      quote:
+        weight: 24
+        enabled: false
+      text_and_media_content:
+        weight: 25
+        enabled: false
+      tiles_content:
+        weight: 26
+        enabled: false
+field_type: entity_reference_revisions

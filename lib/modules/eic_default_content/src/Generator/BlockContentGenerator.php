@@ -118,11 +118,7 @@ class BlockContentGenerator extends CoreGenerator {
         'format' => 'full_html',
       ],
       'field_title' => "Didn't find what you were looking for?",
-      'field_cta_button' => [
-        'uri' => Url::fromRoute('contact.site_page')->toString(),
-        'title' => 'Contact us',
-        'link_type' => 'default',
-      ],
+      'field_cta_button' => $this->getLink('internal:/contact', 'Contact us', 'default'),
     ]);
     $block->save();
   }

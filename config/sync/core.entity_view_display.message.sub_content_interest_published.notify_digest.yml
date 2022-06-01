@@ -1,0 +1,37 @@
+uuid: 9e0927ae-1202-49ba-91e9-c57b357d0329
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_digest
+    - field.field.message.sub_content_interest_published.field_event_executing_user
+    - field.field.message.sub_content_interest_published.field_group_ref
+    - field.field.message.sub_content_interest_published.field_referenced_node
+    - field.field.message.sub_content_interest_published.field_topic_term
+    - message.template.sub_content_interest_published
+id: message.sub_content_interest_published.notify_digest
+targetEntityType: message
+bundle: sub_content_interest_published
+mode: notify_digest
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  field_referenced_node: true
+  field_topic_term: true
+  search_api_excerpt: true

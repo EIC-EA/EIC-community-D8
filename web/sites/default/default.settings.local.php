@@ -198,6 +198,19 @@ $config['config_split.config_split.development']['status'] = TRUE;
 $settings['file_private_path'] = '/app/private_files';
 
 /**
+ * SMTP settings.
+ */
+$config['smtp.settings']['smtp_host'] = '';
+$config['smtp.settings']['smtp_hostbackup'] = '';
+$config['smtp.settings']['smtp_port'] = '';
+$config['smtp.settings']['smtp_protocol'] = '';
+$config['smtp.settings']['smtp_username'] = '';
+$config['smtp.settings']['smtp_password'] = '';
+$config['smtp.settings']['smtp_client_hostname'] = '';
+$config['smtp.settings']['smtp_from'] = '';
+$config['smtp.settings']['smtp_fromname'] = '';
+
+/**
  * EU Login settings.
  */
 $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
@@ -206,6 +219,14 @@ $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
 //$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
 // Allow self-registered users to login.
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
+
+/**
+ * SMED User webservice.
+ */
+$config['eic_user_login.settings']['endpoint_url'] = getenv('SMED_USERCHECK_URL');
+$config['eic_user_login.settings']['basic_auth_username'] = getenv('SMED_USERCHECK_USERNAME');
+$config['eic_user_login.settings']['basic_auth_password'] = getenv('SMED_USERCHECK_PASSWORD');
+$config['eic_user_login.settings']['api_key'] = getenv('SMED_USERCHECK_API_KEY');
 
 /**
  * SMED API connection information.
@@ -238,3 +259,5 @@ $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
 $settings['cron_interval_pending_approval_time'] = 86400;
 $settings['cron_interval_group_invite_time'] = 86400;
 $settings['cron_interval_late_reindex_entities'] = 3600;
+
+$settings['cron_interval_late_reindex_entities'] = getenv('CRON_INTERVAL_LATE_REINDEX_ENTITIES_QUEUE');

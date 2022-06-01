@@ -29,7 +29,7 @@
       }
 
       & .ecl-form-group > div {
-        margin-top: 0 !important;
+        margin-top: .5em !important;
       }
       & .ecl-form-group > div:last-child {
         margin-bottom: 0 !important;
@@ -48,6 +48,24 @@
 
   & .form-item {
     max-width: 100%;
+  }
+
+  & .form-wrapper:not(details) {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: map-get($ecl-spacing, '2xl');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    & .fieldset-legend {
+      padding: 0 $ecl-spacing-s;
+    }
+  }
+
+  & .form-wrapper .form-wrapper{
+    margin-bottom: 0;
   }
 
   & textarea {
@@ -133,7 +151,7 @@
     fill: ecl-typography('color', 'title');
   }
 
-  &__checkbox {
+  &__checkbox, & .ecl-checkbox {
     margin: map-get($ecl-spacing, 'l') 0;
   }
 
@@ -141,7 +159,10 @@
     margin: map-get($ecl-spacing, 'l') 0;
     margin-top: 0 !important;
     &.form-wrapper {
-      margin-bottom: map-get($ecl-spacing, 'l');
+      margin-bottom: map-get($ecl-spacing, '2xl');
+    }
+    & .form-wrapper, &.form-wrapper:last-child {
+      margin-bottom: 0;
     }
     & & {
       margin: 0 !important;
@@ -272,7 +293,9 @@
     margin-bottom: 1em;
   }
 
-  .field--type-file, .js-filter-guidelines {display: none !important;}
+  .field--type-file, .js-filter-guidelines {
+    display: none !important;
+  }
 
   .ecl-help-block {
     font-style: italic;
@@ -306,15 +329,6 @@
     padding: 0;
     & div.ecl-form-label {
       display: none;
-    }
-  }
-
-  & .form-wrapper {
-    width: 100%;
-    box-sizing: border-box;
-
-    & .fieldset-legend {
-      padding: 0 $ecl-spacing-s;
     }
   }
 
@@ -393,6 +407,10 @@
   & .ecl-table {
     margin: map-get($ecl-spacing, 'm') 0;
 
+    & .ecl-table__head {
+      display: table-header-group;
+    }
+
     &__cell > div {
       width: 95%;
     }
@@ -403,27 +421,51 @@
   }
 
   & .vertical-tabs {
-    margin: 0;
     max-width: 100%;
+    margin-left: 200px;
 
-    &__menu {
-      float: none;
-      width: auto;
-      margin: 0;
+    @include ecl-media-breakpoint-down('lg') {
       display: flex;
+      flex-direction: column;
+      margin-left: 0;
+    }
+
+    & .vertical-tabs__menu {
       padding-left: 0;
-      border-bottom: 3px solid $ecl-color-grey-5;
+      border: none;
+      @include ecl-media-breakpoint-down('lg') {
+        float: initial;
+        margin: 0;
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+      }
     }
 
     &__menu-item {
       margin-bottom: -3px;
-      border-bottom: 3px solid $ecl-color-grey-5;
-      background: #fff;
-      text-align: center;
+      border: 1px solid $ecl-color-grey-25;
+      @include ecl-media-breakpoint-down('lg') {
+        background: #fff;
+        box-sizing: border-box;
+      }
+
+      & a {
+        min-height: 35px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+      }
     }
 
     & .is-selected {
-      border-bottom: 3px solid $ecl-color-blue;
+      border-right: 3px solid $ecl-color-blue;
+      @include ecl-media-breakpoint-down('lg') {
+        border-right: 1px solid $ecl-color-grey-25;
+        border-bottom: 3px solid $ecl-color-blue;
+        z-index: 100;
+      }
     }
 
     &__pane {
@@ -461,6 +503,11 @@
       padding: $ecl-spacing-m;
     }
 
+    & .field-prefix {
+      margin-bottom: map-get($ecl-spacing, 'l');
+      display: block;
+    }
+
     & .description {
       opacity: 0.7;
       margin: $ecl-spacing-m 0;
@@ -492,20 +539,52 @@
 
       & .ecl-table__header {
         padding: 0;
+        display: flex;
+        align-items: center;
 
         & .label {
           font-weight: 400;
           text-transform: uppercase;
           color: #707070;
-          margin: 0 0 $ecl-spacing-m;
+          margin: 0;
         }
       }
     }
 
     & .ecl-table__body {
+
+      & .ecl-table__body {
+        background: #000;
+      }
       & .ecl-table__row {
         background-color: $ecl-color-grey-5;
-        // border-bottom: $ecl-spacing-m solid #fff;
+        padding: 1em 0;.field--name-field-gallery-slide-legend {
+          margin-top: .5em;
+        }
+        display: flex;
+        align-items: center;
+
+        @include ecl-media-breakpoint-down('lg') {
+          & .ecl-table__cell:nth-child(1) {
+            display: none;
+          }
+        }
+
+        & .ecl-table__cell:nth-child(2) {
+          width: 100%;
+          padding: 0;
+
+          @include ecl-media-breakpoint-down('lg') {
+            padding-left: 1em;
+            &:before {
+              display: none;
+            }
+          }
+
+          & .paragraph-type-top {
+            align-items: center;
+          }
+        }
       }
     }
   }
@@ -517,12 +596,16 @@
   & .horizontal-tabs-panes {
     padding-bottom: 1rem;
   }
+  & .horizontal-tabs-pane {
+    padding: 1rem;
+  }
 
-  & .field-group-details {
+  & .field-group-details,
+  & details .form-wrapper {
     margin-bottom: 1rem;
 
-    & > summary {
-      margin-bottom: 1rem;
+    & > summary + div {
+      margin-top: 1rem;
     }
 
     & .js-form-wrapper {
@@ -578,4 +661,10 @@
   width: 100%;
   display: block;
   box-sizing: border-box;
+}
+
+.paragraphs-subform {
+  & .form-wrapper {
+    margin-bottom: 1em !important;
+  }
 }

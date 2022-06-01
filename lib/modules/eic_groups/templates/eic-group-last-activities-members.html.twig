@@ -34,10 +34,18 @@
                             <div class="ecl-featured-list__item">
                               <div class="ecl-author ecl-author--is-medium  ">
                                 <div class="ecl-author__information">
-                                  <span class="ecl-author__description">ORGANISATION NAME</span>
+                                  {% if member.organisations is not empty %}
+                                    <span class="ecl-author__description">{{ member.organisations }}</span>
+                                  {% endif %}
                                   <span class="ecl-author__label ">
-                    <a href="{{ member.url }}"
-                       class="ecl-link ecl-link--standalone ecl-author__link">{{ member.full_name }}</a>                  </span>
+                                    {% if member.url %}
+                                      <a href="{{ member.url }}"
+                                        class="ecl-link ecl-link--standalone ecl-author__link">{{ member.full_name }}
+                                      </a>
+                                    {% else %}
+                                      {{ member.full_name }}
+                                    {% endif %}
+                                  </span>
                                   <span
                                     class="ecl-author__meta">{{ 'Joined @date' | t({'@date': member.joined_date}, {'context': 'eic_groups'}) }}</span>
                                   <div class="ecl-author__actions">
@@ -53,11 +61,19 @@
                                   </div>
                                 </div>
                                 <div class="ecl-author__aside">
-                                  <a href="{{ member.url }}" class="ecl-author__media-wrapper">
+                                  {% if member.url %}
+                                    <a href="{{ member.url }}" class="ecl-author__media-wrapper">
+                                  {% else %}
+                                    <div class="ecl-author__media-wrapper">
+                                  {% endif %}
                                     <figure class="ecl-media-container ecl-author__media"><img
                                         alt="Avatar image of {{ member.full_name }}" class="ecl-media-container__media"
                                         src="{{ member.picture }}"></figure>
-                                  </a>
+                                  {% if member.url %}
+                                    </a>
+                                  {% else %}
+                                    </div>
+                                  {% endif %}
                                 </div>
                               </div>
                             </div>

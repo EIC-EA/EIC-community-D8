@@ -14,7 +14,6 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
-use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
@@ -101,7 +100,7 @@ function eic_community_preprocess_user(array &$variables) {
         // Gets user contact link.
         if (
           ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
-          $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+          \Drupal::service('eic_private_message.helper')->userHasPrivateMessageEnabled($user)
         ) {
           $user_contact_link['icon']['name'] = 'send';
           $user_contact_link['link'] = [

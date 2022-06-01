@@ -12,6 +12,10 @@ services:
     class: Drupal\eic_default_content\Generator\GroupGenerator
     tags:
       - { name: data_fixtures }
+  eic_default_content.group_type_event_generator:
+    class: Drupal\eic_default_content\Generator\GroupTypeEventGenerator
+    tags:
+      - { name: data_fixtures }
   eic_default_content.organisation_generator:
     class: Drupal\eic_default_content\Generator\OrganisationGenerator
     tags:

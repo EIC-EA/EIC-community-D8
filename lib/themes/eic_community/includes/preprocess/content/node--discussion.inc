@@ -7,7 +7,9 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -29,6 +31,7 @@ function eic_community_preprocess_node__discussion(array &$variables) {
       _preprocess_discussion_full($variables, $discussion_type, $node);
       break;
 
+    case 'mail_teaser':
     case 'teaser':
       _preprocess_discussion_teaser($variables, $discussion_type, $node);
       break;
@@ -75,6 +78,13 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
       $group,
       $node
     );
+
+    $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
+    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+    if ($visibility instanceof GroupVisibilityRecordInterface
+      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+      $flags['social_share']['content'] = _eic_community_get_social_share_block();
+    }
   }
 
   $variables['flags']['items'] = $flags;

@@ -7,10 +7,12 @@
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -38,11 +40,21 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   _eic_community_display_topics($variables);
   _eic_community_display_flags($variables);
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-  if ($group instanceof GroupInterface && 'node' === $entity_type) {
-    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
-      $group,
-      $entity
-    );
+  if ($group instanceof GroupInterface) {
+    if ('node' === $entity_type) {
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+        $group,
+        $entity
+      );
+    }
+
+    $existing_tags = $variables['#cache']['tags'] ?? [];
+    $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
+    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+    if ($visibility instanceof GroupVisibilityRecordInterface
+      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+    }
   }
 
   if ($entity->bundle() !== 'event') {
@@ -80,7 +92,8 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   if ('group' === $entity_type && $signup_link = $entity->get('field_link')->getString()) {
     $action = [
       'title' => t('Sign up to this event', [], ['context' => 'eic_community']),
-      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [], ['context' => 'eic_community']),
+      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [],
+        ['context' => 'eic_community']),
       'action' => [
         'label' => t('Sign up now', [], ['context' => 'eic_community']),
         'url' => $signup_link,
@@ -187,14 +200,8 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
 
   $variables['event_infos'] = $event_infos;
 
-  // Provide the Social Share block.
-  if ($share_block = _eic_community_get_social_share_block()) {
-    $variables['editorial_actions']['items'][]['content'] = $share_block;
-  }
-
   $files = $entity->get($fields_map[$entity_type]['documents'])->referencedEntities();
   $files_list = [];
-
   foreach ($files as $file) {
     $download = File::load($file->field_media_file->getValue()[0]['target_id']);
     $download_url = MediaHelper::formatMediaDownloadLink($file)

@@ -1,0 +1,7 @@
+eic_digest.test_ui:
+  path: '/admin/config/eic/digest'
+  defaults:
+    _title: 'EIC digest - test UI'
+    _form: 'Drupal\eic_digest_test\Form\DigestTestUI'
+  requirements:
+    _permission: 'administer site configuration'

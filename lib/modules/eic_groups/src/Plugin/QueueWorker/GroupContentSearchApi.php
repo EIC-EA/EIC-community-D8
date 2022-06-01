@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @QueueWorker(
  *   id = "eic_groups_group_content_search_api",
  *   title = @Translation("Task worker: Update group content into search_api"),
+ *   cron = {"time" = 60}
  * )
  */
 class GroupContentSearchApi extends QueueWorkerBase implements ContainerFactoryPluginInterface {
@@ -20,7 +21,7 @@ class GroupContentSearchApi extends QueueWorkerBase implements ContainerFactoryP
   /**
    * The SOLR Document Processor service.
    *
-   * @var SolrDocumentProcessor $solrDocumentProcessor
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
    */
   private $solrDocumentProcessor;
 
@@ -36,7 +37,7 @@ class GroupContentSearchApi extends QueueWorkerBase implements ContainerFactoryP
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param SolrDocumentProcessor $solr_document_processor
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
    *   The SOLR Document Processor service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, SolrDocumentProcessor $solr_document_processor) {

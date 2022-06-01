@@ -46,6 +46,13 @@
           }
         </style>
       </mj-raw>
+       <mj-attributes>
+        <mj-text line-height="1.4" />
+        <mj-text font-size="16px" />
+        <mj-all font-family="Arial" />
+        <mj-all color="#404040" />
+        <mj-divider border-color="#CFCFCF" />
+      </mj-attributes>
   </mj-head>
   <mj-body>
     <!-- header start -->

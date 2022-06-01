@@ -74,13 +74,11 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
 
     // Get the message template type.
     $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
-
     if ($message_template_type != MessageTemplateTypes::SUBSCRIPTION) {
       return FALSE;
     }
 
     switch ($message_template->id()) {
-
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
       case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
         $primary_keys = [
@@ -92,6 +90,15 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
     }
 
     return $primary_keys;
+  }
+
+  /**
+   * @param string $type
+   *
+   * @return string|null
+   */
+  public static function getNotificationCategory(string $type): ?string {
+    return self::SUBSCRIPTION_MESSAGE_CATEGORIES[$type] ?? NULL;
   }
 
 }

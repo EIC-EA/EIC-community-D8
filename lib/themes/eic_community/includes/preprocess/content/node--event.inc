@@ -5,7 +5,9 @@
  * Prepares variables for node Event templates.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Locale\CountryManager;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GroupOverviewPages;
@@ -24,9 +26,10 @@ function eic_community_preprocess_node__event(array &$variables) {
       _eic_community_render_event_detail_page($variables, $variables['node']);
       break;
     case 'teaser':
+    case 'mail_teaser':
     case 'small_teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
-
+      $teaser['description'] = Markup::create(Xss::filter($node->get('body')->value));
       // Get the thumbnail.
       /** @var \Drupal\media\MediaInterface $media */
       if (!empty($medias = $node->get('field_image')->referencedEntities())) {
@@ -166,7 +169,7 @@ function eic_community_preprocess_node__event(array &$variables) {
           'name' => 'views',
         ],
         'label' => t('Views'),
-        'value' => $stats_views
+        'value' => $stats_views,
       ];
 
       // Remove unwanted items.

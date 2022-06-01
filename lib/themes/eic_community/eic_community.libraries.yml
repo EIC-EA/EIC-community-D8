@@ -105,3 +105,11 @@ react-toggle:
     dist/react/block/toggle/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
+
+react-digest-management:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/digestmanagement/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal

@@ -44,9 +44,14 @@ class MenuGenerator extends CoreGenerator {
         'weight' => 4,
       ],
       [
-        'title' => 'People',
+        'title' => 'Members',
         'link' => ['uri' => 'internal:/people'],
         'weight' => 5,
+      ],
+      [
+        'title' => 'Organisations',
+        'link' => ['uri' => 'internal:/organisations'],
+        'weight' => 6,
       ],
     ],
   ];

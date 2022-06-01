@@ -1,0 +1,16 @@
+eic_subscription_digest.update_status:
+  path: '/api/profile/digest/status'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_subscription_digest\Controller\DigestController::updateStatus'
+    _title: 'Toggle digest status'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+eic_subscription_digest.update_frequency:
+  path: '/api/profile/digest/frequency'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_subscription_digest\Controller\DigestController::updateFrequency'
+    _title: 'Toggle digest status'
+  requirements:
+    _user_is_logged_in: 'TRUE'

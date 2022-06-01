@@ -1,0 +1,17 @@
+uuid: e3cd504e-2e8d-4769-bef4-ff5f4875e913
+langcode: en
+status: false
+dependencies: {  }
+id: test
+label: Test
+description: 'Modules and configuration exclusive to testing.'
+weight: 0
+folder: ../config/test
+module:
+  eic_digest_test: 0
+theme: {  }
+blacklist:
+  - eic_user_login.settings
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true

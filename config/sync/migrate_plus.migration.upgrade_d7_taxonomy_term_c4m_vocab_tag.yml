@@ -1,0 +1,45 @@
+uuid: a99e2b36-e45f-4e7e-a2bb-76b668b14a25
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_taxonomy_term_c4m_vocab_tag
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Taxonomy terms (All Tags)'
+source:
+  plugin: eic_d7_vocab_tag
+  track_changes: true
+process:
+  name: name
+  description/value: description
+  description/format: format
+  parent_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: parent
+    -
+      plugin: migration_lookup
+      migration:
+        - upgrade_d7_taxonomy_term_c4m_vocab_tag
+  parent:
+    -
+      plugin: default_value
+      default_value: 0
+      source: '@parent_id'
+  changed: timestamp
+  langcode: language
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: tags
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
+  optional: {  }

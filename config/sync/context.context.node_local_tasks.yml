@@ -19,16 +19,6 @@ conditions:
     uuid: 617b7388-6f0c-4dc1-abc0-5e9751ff626c
     context_mapping: {  }
     routes: entity.node.canonical
-  node_type:
-    id: node_type
-    negate: false
-    uuid: 65c2cb9e-9f35-4f74-bbb1-440e9500ebaf
-    context_mapping:
-      node: '@node.node_route_context:node'
-    bundles:
-      book: book
-      page: page
-      wiki_page: wiki_page
   group_type:
     id: group_type
     group_types:
@@ -38,6 +28,14 @@ conditions:
     uuid: 06419a13-1abe-47ba-b1cd-c28e13d21700
     context_mapping:
       group: '@group.group_route_context:group'
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 4857945d-eee0-4c4d-9c20-dc1eeb0a00ed
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      page: page
 reactions:
   blocks:
     id: blocks

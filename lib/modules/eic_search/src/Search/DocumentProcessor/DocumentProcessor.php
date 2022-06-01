@@ -79,4 +79,20 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
     );
   }
 
+  /**
+   * Sanitizes the given string.
+   *
+   * @param string $text
+   *   The text to be sanitized.
+   *
+   * @return string
+   *   The sanitized string.
+   */
+  public function sanitizeFulltextString(string $text) {
+    // Remove inline image src attribute (base64 encoded).
+    $text = preg_replace('#(src=".*image/[^;"]+;base64,.*")#iU', '', $text);
+    $text = preg_replace('#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU', '', $text);
+    return $text;
+  }
+
 }

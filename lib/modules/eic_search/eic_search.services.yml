@@ -128,7 +128,7 @@ services:
       - { name: eic_search.document_processor, priority: 24 }
   eic_search.document_processor_user:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorUser
-    arguments: ['@group.membership_loader', '@eic_user.helper', '@entity_type.manager', '@database']
+    arguments: ['@group.membership_loader', '@eic_user.helper', '@entity_type.manager', '@database', '@eic_private_message.helper']
     tags:
       - { name: eic_search.document_processor, priority: 26 }
   eic_search.document_processor_document:
