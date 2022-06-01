@@ -88,7 +88,7 @@ class DigestCollector {
 
     $formatted_list = $this->sortItems($formatted_list);
     foreach ($formatted_list as &$list) {
-      if (empty($list['items']) || (isset($list['items']) && count($list['items']) <= 3)) {
+      if (empty($list['items']) || count($list['items']) <= 3) {
         continue;
       }
 
@@ -96,6 +96,13 @@ class DigestCollector {
     }
 
     return $formatted_list;
+  }
+  
+  /**
+   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
+   */
+  public function addCollector(CollectorInterface $collector) {
+    $this->collectors[] = $collector;
   }
 
   /**
@@ -184,13 +191,6 @@ class DigestCollector {
     }
 
     return $collected_messages;
-  }
-
-  /**
-   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
-   */
-  public function addCollector(CollectorInterface $collector) {
-    $this->collectors[] = $collector;
   }
 
 }
