@@ -1,0 +1,98 @@
+<mjml>
+  <mj-head>
+
+    <mj-style inline="inline">
+      body{
+        font-size: 16px;
+      }
+      .text {
+        font-size: 16px;
+      }
+      .link{
+        font-weight: bold;
+        color:#004494;
+      }
+      .header-title {
+        font-weight: bold;
+        color: #265D9E;
+        font-size: 16px;
+      }
+      .light {
+        font-weight: lighter;
+      }
+      .align-left{
+        text-align: left;
+      }
+      .pre-footer, .pre-footer > div {
+        text-align: left !important;
+      }
+    </mj-style>
+      <mj-raw>
+        <style type="text/css">
+          .logo {
+            min-width: 120px;
+          }
+          .section_icon{
+            min-width: 23px;
+          }
+          .tag__content {
+            white-space: nowrap;
+          }
+          .tag {
+              width: initial !important;
+            }
+          @media screen and (max-device-width: 599px),
+          screen and (max-width: 599px) {
+            .user--little {
+              width: 52px !important;
+            }
+            .w100 {
+              width: 80% !important;
+            }
+            .tag {
+              width: initial !important;
+            }
+            .pre-footer, .pre-footer > div {
+              text-align: center !important;
+            }
+            .btn{
+              margin: 0 0 10px !important;
+            }
+          }
+        </style>
+      </mj-raw>
+
+      <mj-attributes>
+        <mj-text line-height="1.4" />
+        <mj-text font-size="16px" />
+        <mj-all font-family="Arial" />
+        <mj-all color="#404040" />
+        <mj-divider border-color="#CFCFCF" />
+      </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <!-- header start -->
+    <mj-include path="../components/header.mjml" />
+    <!-- header end -->
+
+    <!-- text start -->
+    <mj-include path="../components/text.mjml" />
+    <!-- text end -->
+
+    <!-- section title start -->
+    <mj-include path="../components/section_title.mjml" />
+    <!-- section title end -->
+
+    <mj-include path="../components/common_section.mjml" />
+    <mj-include path="../components/common_section_rounded_img.mjml" />
+    <mj-include path="../components/event_section.mjml" />
+
+    <!-- section stories start -->
+    <mj-include path="../components/button.mjml" />
+    <!-- section stories end -->
+
+    <!-- footer start -->
+    <mj-include path="../components/footer.mjml" />
+    <!-- footer end -->
+  </mj-body>
+</mjml>

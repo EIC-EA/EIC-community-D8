@@ -1,0 +1,30 @@
+uuid: 5aed611a-1ee3-4e03-8612-cd0baeb0fca7
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_paragraph_text
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Text paragraphs'
+source:
+  plugin: eic_d7_paragraph_item
+  field_name:
+    - c4m_left_column
+    - c4m_right_column
+  bundle: c4m_paragraph_text
+  track_changes: true
+process:
+  field_title: c4m_heading
+  field_body/value: c4m_intro_text/0/value
+  field_body/format: c4m_intro_text/0/format
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: full_text_content
+migration_dependencies:
+  required: {  }
+  optional: {  }

@@ -208,7 +208,7 @@ class UserHelper {
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
 
     return $file ? \Drupal::service('file_url_generator')
-      ->transformRelative(file_create_url($file->get('uri')->value)) : '';;
+      ->transformRelative(file_create_url($file->get('uri')->value)) : '';
   }
 
   /**

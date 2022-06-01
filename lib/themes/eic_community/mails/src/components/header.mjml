@@ -1,7 +1,7 @@
 <mj-section text-align="left" padding="0">
   <mj-group width="600px">
     <mj-column width='120px' css-class="logo" vertical-align="bottom" css-class="align-left">
-      <mj-image fluid-on-mobile="false" align="left" src="images/logo--mute.svg"/>
+      <mj-image fluid-on-mobile="false" align="left" src="images/logo--mute.png"/>
     </mj-column>
     <mj-column vertical-align="middle">
       <mj-text font-size="11px" padding="0 25px 5px 0px" css-class="header-title" color="#265D9E">
@@ -15,6 +15,6 @@
 
 <mj-section padding="0">
   <mj-column>
-    <mj-divider border-width="1px" border-style="solid"  />
+    <mj-divider border-width="1px" border-style="solid" border-color="#CFCFCF" />
   </mj-column>
 </mj-section>

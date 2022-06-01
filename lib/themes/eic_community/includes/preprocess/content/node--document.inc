@@ -19,6 +19,7 @@ function eic_community_preprocess_node__document(array &$variables) {
   $node = $variables['node'];
 
   switch ($variables['view_mode']) {
+    case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 

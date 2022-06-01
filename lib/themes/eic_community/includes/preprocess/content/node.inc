@@ -5,6 +5,8 @@
  * Prepares variables for node document templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\node\NodeInterface;
 
 /**
@@ -81,7 +83,7 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
   return [
     'type' => $node->type->entity->label(),
     'author' => eic_community_get_teaser_user_display($node->getOwner()),
-    'description' => '',
+    'description' => $node->hasField('field_body') ? Markup::create(Xss::filter($node->get('field_body')->value)) : '',
     'tags' => $tags,
     'language' => $language,
     'highlight' => FALSE,
