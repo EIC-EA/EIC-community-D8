@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group.event.field_additional_content
     - field.field.group.event.field_body
     - field.field.group.event.field_date_range
     - field.field.group.event.field_document_additional
@@ -31,6 +32,7 @@ dependencies:
   module:
     - address
     - datetime_range
+    - entity_reference_revisions
     - link
     - options
     - social_link_field
@@ -44,6 +46,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: -20
+    region: content
+  field_additional_content:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 35
     region: content
   field_body:
     type: text_default

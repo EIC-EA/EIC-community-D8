@@ -10,7 +10,7 @@ migration_tags:
   - 'Drupal 7'
   - Content
 migration_group: migrate_drupal_7
-label: 'Node Url Alias to Path Redirect'
+label: 'Node Url Alias to Path Redirect (including group prefix)'
 source:
   plugin: eic_d7_url_alias_to_path_redirect
   track_changes: true
@@ -89,6 +89,13 @@ process:
     -
       plugin: get
       source: status_code
+  _redirect_exists:
+    - plugin: eic_d7_duplicated_redirect
+      source: source_with_group_prefix
+    - plugin: skip_on_value
+      value: true
+      method: row
+      message: 'Duplicated redirect entry.'
 destination:
   plugin: 'entity:redirect'
 migration_dependencies:

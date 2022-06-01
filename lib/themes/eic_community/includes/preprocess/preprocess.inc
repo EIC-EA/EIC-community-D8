@@ -14,6 +14,8 @@ function eic_community_preprocess(&$variables) {
       ->getPath('theme', 'eic_community') . '/dist/images';
   $variables['eic_icon_path'] = $variables['eic_images_path'] . '/sprite/custom/sprites/custom.svg';
   $variables['eic_logo_path'] = $variables['eic_images_path'] . '/logo';
+  $variables['eic_mail_images_path'] = base_path() . \Drupal::service('extension.path.resolver')
+      ->getPath('theme', 'eic_community') . '/mails/mail-dist/images';
   $variables['eic_social_icon_path'] = $variables['eic_images_path'] . '/social-icons/sprites/icons-social.svg';
   $variables['current_language_id'] = \Drupal::languageManager()
     ->getCurrentLanguage()

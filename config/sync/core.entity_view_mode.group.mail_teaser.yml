@@ -1,0 +1,10 @@
+uuid: e60413b8-89b7-4fee-858b-31f2e89f6915
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.mail_teaser
+label: 'Mail teaser'
+targetEntityType: group
+cache: true
