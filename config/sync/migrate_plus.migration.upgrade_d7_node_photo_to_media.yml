@@ -27,7 +27,7 @@ process:
   status: status
   created: created
   changed: timestamp
-  oe_media_image:
+  _media:
     -
       plugin: sub_process
       source: c4m_media
@@ -42,6 +42,8 @@ process:
           -
             plugin: skip_on_empty
             method: row
+  oe_media_image/0/target_id: '@_media/0/target_id'
+  oe_media_image/0/alt: title
 destination:
   plugin: 'entity:media'
   default_bundle: image
