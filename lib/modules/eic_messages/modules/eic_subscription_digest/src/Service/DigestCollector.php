@@ -99,13 +99,6 @@ class DigestCollector {
   }
 
   /**
-   * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
-   */
-  public function addCollector(CollectorInterface $collector) {
-    $this->collectors[] = $collector;
-  }
-
-  /**
    * @param \Drupal\message\MessageInterface $message
    *
    * @return array
