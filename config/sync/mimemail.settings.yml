@@ -5,7 +5,8 @@ mail: no-reply@ec.europa.eu
 simple_address: false
 sitestyle: true
 textonly: false
-linkonly: false
+linkonly: true
+user_plaintext_field: ''
 format: full_html
 preserve_class: false
 advanced:

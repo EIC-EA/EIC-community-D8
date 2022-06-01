@@ -19,7 +19,7 @@ function eic_subscription_digest_theme($existing, $type, $theme, $path) {
     'eic_subscription_digest_mail' => [
       'variables' => [
         'items' => [],
-        'user_data' => [],
+        'user' => [],
         'digest_type' => NULL,
       ],
     ],
@@ -37,6 +37,7 @@ function eic_subscription_digest_mail($key, &$message, $params) {
   $build = [
     '#theme' => 'eic_subscription_digest_mail',
     '#items' => $params['items'],
+    '#user' => $params['user'],
     '#digest_type' => $params['digest_type'],
   ];
 

@@ -61,6 +61,7 @@ class CommentCollector implements CollectorInterface {
         $end_date->getTimestamp(),
       ], 'BETWEEN')
       ->sort('created', 'DESC')
+      ->range(0, 10)
       ->execute();
 
     if (empty($message_ids)) {
