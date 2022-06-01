@@ -88,7 +88,7 @@ class DigestCollector {
 
     $formatted_list = $this->sortItems($formatted_list);
     foreach ($formatted_list as &$list) {
-      if (empty($list['items']) || (isset($list['items']) && count($list['items']) <= 3)) {
+      if (empty($list['items']) || count($list['items']) <= 3) {
         continue;
       }
 
