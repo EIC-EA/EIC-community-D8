@@ -13,7 +13,6 @@ use Drupal\eic_flags\Service\ArchiveRequestHandler;
 use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flagging;
 use Drupal\flag\FlagServiceInterface;
@@ -149,20 +148,6 @@ class NewRequestForm extends ContentEntityDeleteForm {
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
           ],
         );
-        break;
-
-      case RequestTypes::TRANSFER_OWNERSHIP:
-        if ($this->entity->getEntityTypeId() === 'group_content') {
-          $new_owner = $this->entity->getEntity();
-          $previous_owner = EICGroupsHelper::getGroupOwner($this->entity->getGroup());
-          $description = $this->t("<p>Do you want to request the ownership transfer to %new_owner?</p>
-            <p>If the user accepts, the current owner %previous_owner will become a group admin.</p>",
-            [
-              '%new_owner' => $this->eicUserHelper->getFullName($new_owner),
-              '%previous_owner' => $this->eicUserHelper->getFullName($previous_owner),
-            ]
-          );
-        }
         break;
 
       default:
