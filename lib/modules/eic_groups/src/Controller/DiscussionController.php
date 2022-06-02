@@ -358,7 +358,7 @@ class DiscussionController extends ControllerBase {
         'field_tagged_users',
         array_map(function ($tagged_user) {
           return [
-            'target_id' => $tagged_user['tid'],
+            'target_id' => $tagged_user['uid'],
           ];
         }, $tagged_users)
       );
