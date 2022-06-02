@@ -244,13 +244,15 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
 
   /** @var \Drupal\taxonomy\TermInterface $event_type_term */
   $event_type_term = $entity->get('field_vocab_event_type')->entity;
+
   // Try to load translation if exists.
   if (
+    $event_type_term &&
     $event_type_term->language()->getId() !== $entity->language()->getId() &&
     $event_type_term->hasTranslation($entity->language()->getId())
   ) {
     $event_type_term = $event_type_term->getTranslation($entity->language()->getId());
   }
   // Send event type to the theme variables.
-  $variables['event_type'] = $event_type_term->getName();
+  $variables['event_type'] = $event_type_term ? $event_type_term->getName() : NULL;
 }
