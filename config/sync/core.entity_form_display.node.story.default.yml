@@ -225,10 +225,22 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_language:
-    type: options_select
+    type: entity_tree
     weight: 10
     region: content
-    settings: {  }
+    settings:
+      match_top_level_limit: '0'
+      load_all: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected languages'
+      search_label: 'Select a language'
+      search_placeholder: Search
+      disable_top_choices: 0
+      can_create_tag: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_post_activity:
     weight: 5
