@@ -121,16 +121,11 @@ class ActionForms extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function evaluate() {
-    $configs = $this->actionFormsManager->getAllRouteConfigs();
-
-    foreach ($configs as $config) {
-      if ($config->get('route') == $this->routeMatch->getRouteName()) {
-        if ($this->actionFormsManager->matchPath($config, $this->routeMatch->getRouteObject()->getPath())) {
-          return TRUE;
-        }
+    if ($config = $this->actionFormsManager->getRouteConfig()) {
+      if ($this->actionFormsManager->matchPath($config)) {
+        return TRUE;
       }
     }
-
     return FALSE;
   }
 

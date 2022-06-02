@@ -81,7 +81,7 @@ class ActionFormsForm extends ConfigFormBase {
         '#type' => 'textarea',
         '#title' => $this->t('Paths'),
         '#default_value' => $config->get('paths'),
-        '#description' => $this->t('Restrict to specific paths, one per line. Leave blank to match all paths for this route.'),
+        '#description' => $this->t('Restrict to specific paths, one per line. Leave blank to match all paths for this route.<br> You can use wildcards such as <em>/groups/*/content/*/request/transfer_ownership</em>'),
         '#required' => FALSE,
         '#tree' => TRUE,
       ];

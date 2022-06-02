@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -35,6 +36,13 @@ class ActionFormsManager {
   protected $pathMatcher;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -62,6 +70,8 @@ class ActionFormsManager {
    *   The current route match.
    * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
    *   The path matcher.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -72,12 +82,14 @@ class ActionFormsManager {
   public function __construct(
     RouteMatchInterface $route_match,
     PathMatcherInterface $path_matcher,
+    PathValidatorInterface $path_validator,
     ConfigFactoryInterface $config_factory,
     RequestStack $request_stack,
     TitleResolverInterface $title_resolver
   ) {
     $this->routeMatch = $route_match;
     $this->pathMatcher = $path_matcher;
+    $this->pathValidator = $path_validator;
     $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->titleResolver = $title_resolver;
@@ -89,16 +101,29 @@ class ActionFormsManager {
    * @param string|null $route_name
    *   The route name for which we want to retrieve the config. Defaults to
    *   current route.
+   * @param string|null $path
+   *   The path for which we want to retrieve the config. Defaults to current
+   *   path.
    *
    * @return \Drupal\Core\Config\ImmutableConfig|false
    *   The config object or FALSE if not found.
    */
-  public function getRouteConfig(string $route_name = NULL) {
+  public function getRouteConfig(string $route_name = NULL, string $path = NULL) {
     if (empty($route_name)) {
       $route_name = $this->routeMatch->getRouteName();
     }
+    if (empty($path)) {
+      $path = $this->requestStack->getCurrentRequest()->getRequestUri();
+    }
 
-    return $this->configFactory->get("eic_admin.action_forms.$route_name") ?? FALSE;
+    foreach ($this->getAllRouteConfigs() as $config) {
+      // We return the first item we find that both matches route and path.
+      if ($config->get('route') == $route_name && $this->matchPath($config, $path)) {
+        return $config;
+      }
+    }
+
+    return FALSE;
   }
 
   /**
@@ -128,16 +153,19 @@ class ActionFormsManager {
    * @param \Drupal\Core\Config\ConfigBase $config
    *   The config object.
    * @param string $path
-   *   The path to check.
+   *   The path to check. Defaults to the current URI.
    *
    * @return bool
    *   TRUE if the config is applicable for the given path.
    */
-  public function matchPath(ConfigBase $config, string $path): bool {
+  public function matchPath(ConfigBase $config, string $path = NULL): bool {
     $paths = $config->get('paths');
-
     if (empty($paths)) {
       return TRUE;
+    }
+
+    if (empty($path)) {
+      $path = $this->requestStack->getCurrentRequest()->getRequestUri();
     }
 
     return $this->pathMatcher->matchPath($path, $paths);
