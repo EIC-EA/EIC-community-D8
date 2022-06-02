@@ -41,7 +41,7 @@
           <div style="margin-bottom: 7px">
             <a class="link" href="{{ path }}" style="font-weight: bold; color: #004494;">{{ label }}</a>
           </div>
-          <!-- CONTENT TITLE -->{% if description %} {{ description }}{% endif %}
+          <!-- CONTENT TITLE -->{% if description %} {{ description|length > 200 ? description|slice(0, 200) ~ '...' : description }}{% endif %}
         </div>
       </td>
     </tr>
