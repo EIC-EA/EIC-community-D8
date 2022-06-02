@@ -603,7 +603,7 @@ class DiscussionController extends ControllerBase {
       'user_fullname' => $user->getDisplayName(),
       'user_url' => $user->toUrl()->toString(),
       'created_timestamp' => $comment->getCreatedTime(),
-      'text' => check_markup($comment->get('comment_body')->value, 'basic_text'),
+      'text' => check_markup($comment->get('comment_body')->value, 'filtered_html'),
       'comment_id' => $comment->id(),
       'tagged_users' => array_map(function (UserInterface $user) {
         return [
