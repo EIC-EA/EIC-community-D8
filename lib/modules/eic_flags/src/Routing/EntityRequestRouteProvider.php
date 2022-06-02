@@ -173,6 +173,7 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
       ->addDefaults(
         [
           '_title_callback' => FlagRequestController::class . '::getRequestTitle',
+          '_entity_types' => [$entity_type->id()],
         ] + $defaults)
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());

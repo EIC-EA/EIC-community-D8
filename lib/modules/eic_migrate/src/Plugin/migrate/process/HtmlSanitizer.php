@@ -47,7 +47,7 @@ class HtmlSanitizer extends ProcessPluginBase {
   /**
    * Removes the HTML attributes for the given string.
    *
-   * @param string $html
+   * @param string|null $html
    *   The HTML to sanitize.
    * @param array $attributes
    *   Array of attributes to remove.
@@ -55,7 +55,12 @@ class HtmlSanitizer extends ProcessPluginBase {
    * @return string
    *   The sanitized HTML.
    */
-  public function stripAttributes(string $html, array $attributes) {
+  public function stripAttributes(string $html = NULL, array $attributes = []) {
+    // Don't do anything if HTML is empty.
+    if (empty($html)) {
+      return $html;
+    }
+
     // Find all nodes that contain the attribute and remove it.
     $html = '<div>' . $html . '</div>';
     $dom = new \DOMDocument();
