@@ -236,21 +236,8 @@ class RecommendContentManager {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        // Grab external emails.
-        foreach ($external_emails as $external_email) {
-          if (!$this->emailValidator->isValid($external_email)) {
-            continue;
-          }
-          $user_emails[] = $external_email;
-        }
-        break;
-
       case 'group':
-        $visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($entity);
-        $visibility_type = $visibility_settings['plugin_id'];
-
-        // If group visibility is not public, there is nothing else to do.
-        if ($visibility_type !== 'public') {
+        if (!$this->canRecommendExternalUsers($entity)) {
           break;
         }
 
