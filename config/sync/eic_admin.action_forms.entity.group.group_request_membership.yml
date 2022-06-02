@@ -1,4 +1,5 @@
 route: entity.group.group_request_membership
+paths: ''
 label: 'Group membership request'
 title: 'Membership request confirmation'
 description:

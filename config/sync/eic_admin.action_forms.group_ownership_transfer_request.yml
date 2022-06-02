@@ -1,6 +1,7 @@
 route: entity.group_content.new_request
+paths: '/groups/*/content/*/request/transfer_ownership'
 label: 'Group ownership transfer request'
-title: ''
+title: 'Group ownership transfer request'
 description:
-  value: ''
+  value: "<p>You are about to send the ownership of <a href=\"[group_content:group:url]\">[group_content:group:title]</a> to <a href=\"[group_content:user:url]\">[group_content:user:display-name]</a>.</p>\r\n\r\n<p>State the reason for this transfer in the field below then click the request ownership transfer button to complete this action.</p>\r\n\r\n<p>&nbsp;</p>\r\n"
   format: full_html
