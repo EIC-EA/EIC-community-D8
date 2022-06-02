@@ -341,12 +341,12 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
       $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       // Populate the node values.
-      $node_values[$parent_migrated_row['destid1']][] = $migrated_row['destid1'];
+      $node_values[$parent_migrated_row['destid2']][] = $migrated_row['destid1'];
     }
 
     // Set the values for each row.
     foreach ($node_values as $parent_nid => $items) {
-      if ($node = $this->entityTypeManager->getStorage('node')->load($parent_nid)) {
+      if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_nid)) {
         $this->updateEntityReferenceValue($node, 'field_related_stories', $items);
       }
     }
