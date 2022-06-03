@@ -1,7 +1,7 @@
 route: entity.group_content.group_reject_membership
 paths: ''
 label: 'Reject membership request'
-title: ''
+title: 'Reject membership request'
 description:
   value: ''
   format: full_html

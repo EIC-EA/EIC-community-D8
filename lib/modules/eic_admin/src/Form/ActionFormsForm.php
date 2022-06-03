@@ -97,7 +97,8 @@ class ActionFormsForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => $this->t('Title'),
         '#default_value' => $config->get('title'),
-        '#description' => $this->t('Override page title. Leave blank to keep original title.'),
+        '#description' => $this->t('Set the page title'),
+        '#required' => TRUE,
         '#tree' => TRUE,
       ];
       $form[$route_name]['description'] = [
