@@ -83,26 +83,22 @@ process:
       from_format: 'Y-m-d H:i:s'
       to_format: 'Y'
       source: c4m_date_est/0/value
-  field_body:
+  field_body/0/format:
+    - plugin: callback
+      source: field_c4m_about_us/0/format
+      callable:
+        - '\Drupal\eic_migrate\Constants\Misc'
+        - getTextFormat
+  field_body/0/value:
+    - plugin: eic_html_sanitizer
+      source: field_c4m_about_us/0/value
     - plugin: eic_media_wysiwyg_filter
-      source: field_c4m_about_us
       media_migrations:
         - upgrade_d7_file_audio_to_media
         - upgrade_d7_file_document_to_media
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-        - upgrade_d7_file_youtube_video_to_media
-  field_body/0/format:
-    - plugin: static_map
-      source: field_c4m_about_us/0/format
-      bypass: true
-      map:
-        full_html: full_html
-        filtered_html: filtered_html
-        plain_text: plain_text
-    - plugin: default_value
-      default_value: filtered_html
   field_email: c4m_email
   field_organisation_link: c4m_link
   #field_vocab_services_products:

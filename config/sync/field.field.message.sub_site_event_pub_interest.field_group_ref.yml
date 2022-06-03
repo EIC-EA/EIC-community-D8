@@ -1,0 +1,29 @@
+uuid: d34b1e15-2d46-413f-8ac0-0417d5b080df
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.event
+    - message.template.sub_site_event_pub_interest
+id: message.sub_site_event_pub_interest.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: sub_site_event_pub_interest
+label: Event
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -13,7 +13,6 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_user_can_contact
   module:
     - eic_content
     - media_library
@@ -116,12 +115,6 @@ content:
   field_updated_profile_by_service:
     type: datetime_timestamp
     weight: 15
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_user_can_contact:
-    type: options_buttons
-    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }

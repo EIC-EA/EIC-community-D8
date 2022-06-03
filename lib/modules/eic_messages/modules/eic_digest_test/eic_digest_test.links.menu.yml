@@ -1,0 +1,6 @@
+eic_digest.test_ui:
+  title: EIC digest test UI
+  description: Test UI for the digest e-mails.
+  route_name: eic_digest.test_ui
+  parent: eic_admin.settings
+  weight: 10

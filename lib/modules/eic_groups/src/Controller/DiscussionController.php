@@ -12,6 +12,7 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -136,7 +137,8 @@ class DiscussionController extends ControllerBase {
 
     $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    $text = Xss::filter($content['text'], $allowed_tags);
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
@@ -260,7 +262,8 @@ class DiscussionController extends ControllerBase {
     }
 
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    $text = Xss::filter($content['text'], $allowed_tags);
 
     try {
       if ('like_comment' === $flag) {
@@ -321,7 +324,8 @@ class DiscussionController extends ControllerBase {
    */
   public function editComment(Request $request, int $discussion_id, $comment_id) {
     $content = json_decode($request->getContent(), TRUE);
-    $text = Xss::filter($content['text']);
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    $text = Xss::filter($content['text'], $allowed_tags);
 
     $comment = Comment::load($comment_id);
 
@@ -354,7 +358,7 @@ class DiscussionController extends ControllerBase {
         'field_tagged_users',
         array_map(function ($tagged_user) {
           return [
-            'target_id' => $tagged_user['tid'],
+            'target_id' => $tagged_user['uid'],
           ];
         }, $tagged_users)
       );
@@ -596,15 +600,15 @@ class DiscussionController extends ControllerBase {
     return [
       'user_image' => $file_url,
       'user_id' => $user->id(),
-      'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
+      'user_fullname' => $user->getDisplayName(),
       'user_url' => $user->toUrl()->toString(),
       'created_timestamp' => $comment->getCreatedTime(),
-      'text' => $comment->get('comment_body')->value,
+      'text' => check_markup($comment->get('comment_body')->value, 'filtered_html'),
       'comment_id' => $comment->id(),
       'tagged_users' => array_map(function (UserInterface $user) {
         return [
           'uid' => $user->id(),
-          'name' => realname_load($user),
+          'name' => $user->getDisplayName(),
           'url' => $user->toUrl()->toString(),
         ];
       }, $tagged_users),

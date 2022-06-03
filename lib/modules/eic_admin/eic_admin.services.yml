@@ -1,7 +1,7 @@
 services:
   eic_admin.action_forms_manager:
     class: Drupal\eic_admin\Service\ActionFormsManager
-    arguments: ['@current_route_match', '@config.factory']
+    arguments: ['@current_route_match', '@config.factory', '@request_stack', '@title_resolver']
   eic_admin.route_subscriber:
     class: Drupal\eic_admin\Routing\RouteSubscriber
     arguments: ['@eic_admin.action_forms_manager']

@@ -68,10 +68,19 @@ process:
   revision_timestamp: timestamp
   content_translation_source: source_langcode
   node_comment/0/status: comment
-  field_body:
+  field_body/0/format:
+    -
+      plugin: callback
+      source: c4m_body/0/format
+      callable:
+        - \Drupal\eic_migrate\Constants\Misc
+        - getTextFormat
+  field_body/0/value:
+    -
+      plugin: eic_html_sanitizer
+      source: c4m_body/0/value
     -
       plugin: eic_media_wysiwyg_filter
-      source: c4m_body
       media_migrations:
         - upgrade_d7_file_audio_to_media
         - upgrade_d7_file_document_to_media
@@ -142,6 +151,18 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  field_tags:
+    -
+      plugin: sub_process
+      source: og_vocabulary
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: target_id
+            no_stub: true
+            migration:
+              - upgrade_d7_taxonomy_term_c4m_vocab_tag
 destination:
   plugin: 'entity_complete:node'
   translations: true
@@ -154,6 +175,7 @@ migration_dependencies:
     - upgrade_d7_file_image_to_media
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
+    - upgrade_d7_taxonomy_term_c4m_vocab_tag
     - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2

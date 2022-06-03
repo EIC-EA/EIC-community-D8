@@ -73,9 +73,16 @@ process:
 #        title: title
 #        width: width
 #        height: height
-  field_body:
+  field_body/0/format:
+    - plugin: callback
+      source: c4m_body/0/format
+      callable:
+        - '\Drupal\eic_migrate\Constants\Misc'
+        - getTextFormat
+  field_body/0/value:
+    - plugin: eic_html_sanitizer
+      source: c4m_body/0/value
     - plugin: eic_media_wysiwyg_filter
-      source: c4m_body
       media_migrations:
         - upgrade_d7_file_audio_to_media
         - upgrade_d7_file_document_to_media

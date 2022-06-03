@@ -3,6 +3,10 @@
 namespace Drupal\oec_group_features;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\GroupTypeInterface;
+use Drupal\group_permissions\Entity\GroupPermission;
+use Drupal\group_permissions\GroupPermissionsManagerInterface;
 
 /**
  * GroupFeatureHelper service that provides helper functions for Group features.
@@ -31,19 +35,30 @@ class GroupFeatureHelper {
   protected $groupFeaturePluginManager;
 
   /**
+   * The group permissions manager.
+   *
+   * @var \Drupal\group_permissions\GroupPermissionsManagerInterface
+   */
+  protected $groupPermissionsManager;
+
+  /**
    * Constructs a new GroupFeatureHelper.
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The configuration factory service.
    * @param \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_plugin_manager
-   *   The configuration factory service.
+   *   The Group feature plugin manager.
+   * @param \Drupal\group_permissions\GroupPermissionsManagerInterface $group_permissions_manager
+   *   The group permissions manager.
    */
   public function __construct(
     ConfigFactory $config_factory,
-    GroupFeaturePluginManager $group_feature_plugin_manager
+    GroupFeaturePluginManager $group_feature_plugin_manager,
+    GroupPermissionsManagerInterface $group_permissions_manager
   ) {
     $this->configFactory = $config_factory;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
+    $this->groupPermissionsManager = $group_permissions_manager;
   }
 
   /**
@@ -87,6 +102,59 @@ class GroupFeatureHelper {
     }
 
     return $available_features;
+  }
+
+  /**
+   * Get the groupPermission object, will create a new one if needed.
+   *
+   * This is a verbatim copy of
+   * Drupal\group_flex\GroupFlexGroupSaver::getGroupPermissionObject().
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group to get the group permission object for.
+   *
+   * @return \Drupal\group_permissions\Entity\GroupPermission|null
+   *   The (new) group permission object, returns NULL if something went wrong.
+   */
+  public function getGroupPermissionObject(GroupInterface $group): ?GroupPermission {
+    /** @var \Drupal\group_permissions\Entity\GroupPermission $groupPermission */
+    $groupPermission = $this->groupPermissionsManager->getGroupPermission($group);
+
+    if ($groupPermission === NULL) {
+      // Create the entity.
+      $groupPermission = GroupPermission::create([
+        'gid' => $group->id(),
+        'permissions' => $this->getDefaultGroupTypePermissions($group->getGroupType()),
+        'status' => 1,
+      ]);
+    }
+    else {
+      $groupPermission->setNewRevision(TRUE);
+    }
+
+    return $groupPermission;
+  }
+
+  /**
+   * Get the default permissions for the given group type.
+   *
+   * This is a verbatim copy of
+   * Drupal\group_flex\GroupFlexGroupSaver::getDefaultGroupTypePermissions().
+   *
+   * @param \Drupal\group\Entity\GroupTypeInterface $groupType
+   *   The group type to return the permissions for.
+   *
+   * @return array
+   *   An array of permissions keyed by role.
+   */
+  public function getDefaultGroupTypePermissions(GroupTypeInterface $groupType): array {
+    $permissions = [];
+
+    foreach ($groupType->getRoles() as $groupRoleId => $groupRole) {
+      $permissions[$groupRoleId] = $groupRole->getPermissions();
+    }
+
+    return $permissions;
   }
 
 }

@@ -39,12 +39,14 @@ class SubscriptionMessageCreator {
    *   The entity object.
    * @param string $operation
    *   The type of the operations. See SubscriptionOperationTypes.
+   * @param \Drupal\taxonomy\TermInterface[] $topics
    *
    * @return \Drupal\message\MessageInterface
    */
   public function createTermsOfInterestNodeSubscription(
     ContentEntityInterface $entity,
-    string $operation
+    string $operation,
+    array $topics
   ) {
     $message = NULL;
 
@@ -62,6 +64,7 @@ class SubscriptionMessageCreator {
         $message = Message::create([
           'template' => $message_type,
           'field_referenced_node' => $entity,
+          'field_topic_term' => $topics,
         ]);
 
         $group_contents = GroupContent::loadByEntity($entity);
@@ -163,6 +166,14 @@ class SubscriptionMessageCreator {
     // Adds the reference to the user who created/updated the entity.
     if ($message->hasField('field_event_executing_user')) {
       $message->set('field_event_executing_user', $executing_user_id);
+    }
+
+    // Adds the reference to the commented entity.
+    if ($message->hasField('field_referenced_node')) {
+      $commented_entity = $entity->getCommentedEntity();
+      if ($commented_entity instanceof ContentEntityInterface) {
+        $message->set('field_referenced_node', $commented_entity->id());
+      }
     }
 
     return $message;
