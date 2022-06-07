@@ -243,8 +243,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $account->getRoles(TRUE)
     );
 
-    $contributors_data = [];;
-    if ($node->bundle() !== 'news') {
+    $disable_contributor_nodes = ['news', 'wiki_page'];
+    $contributors_data = [];
+    if (!in_array($node->bundle(), $disable_contributor_nodes)) {
       $contributors_data = $this->getContributors($node);
     }
 
@@ -424,6 +425,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $cache_tags = array_merge($cache_tags, $group->getCacheTags());
     }
 
+    $no_container_nodes = ['wiki_page'];
     return $build + [
         '#cache' => [
           'contexts' => $cache_context,
@@ -437,6 +439,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#contributors' => $contributors_data,
         '#is_anonymous' => $current_user->isAnonymous(),
         '#can_view_comments' => $can_view_comments,
+        '#no_container' => in_array($node->bundle(), $no_container_nodes) ? TRUE : FALSE,
         '#ckeditor_js_settings' => $ckeditor_js_settings,
       ];
   }
