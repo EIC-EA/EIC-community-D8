@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_admin\Service;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
@@ -152,23 +153,39 @@ class ActionFormsManager {
    *
    * @param \Drupal\Core\Config\ConfigBase $config
    *   The config object.
-   * @param string $path
+   * @param string $target_path
    *   The path to check. Defaults to the current URI.
    *
    * @return bool
    *   TRUE if the config is applicable for the given path.
    */
-  public function matchPath(ConfigBase $config, string $path = NULL): bool {
-    $paths = $config->get('paths');
+  public function matchPath(ConfigBase $config, string $target_path = NULL): bool {
+    $paths = explode(PHP_EOL, $config->get('paths'));
+
     if (empty($paths)) {
       return TRUE;
     }
 
-    if (empty($path)) {
-      $path = $this->requestStack->getCurrentRequest()->getRequestUri();
+    if (empty($target_path)) {
+      $target_path = $this->requestStack->getCurrentRequest()->getRequestUri();
     }
 
-    return $this->pathMatcher->matchPath($path, $paths);
+    $match_path = FALSE;
+    foreach ($paths as $path) {
+      // We need to remove unrelated query params in order to match the path.
+      // E.g. remove Drupal's 'destination' query param.
+      $parts = UrlHelper::parse($path);
+      $clean_target_path = $target_path;
+      $query_params = $parts['query'];
+      $clean_target_path = $this->stripOutUnwantedQueryParams($clean_target_path, array_keys($query_params));
+
+      if ($this->pathMatcher->matchPath($clean_target_path, $path)) {
+        $match_path = TRUE;
+        break;
+      }
+    }
+
+    return $match_path;
   }
 
   /**
@@ -214,6 +231,37 @@ class ActionFormsManager {
       $title = $this->titleResolver->getTitle($request, $route);
     }
     return $title;
+  }
+
+  /**
+   * Removes unwanted query params from a URL string.
+   *
+   * @param string $path
+   *   The URL.
+   * @param array $allowed_params
+   *   A list of params that are allowed.
+   *
+   * @return string
+   *   The cleaned URL.
+   */
+  protected function stripOutUnwantedQueryParams(string $path, array $allowed_params) {
+    $parts = UrlHelper::parse($path);
+    // If the are no params, we return the URL.
+    if (!$parts['query']) {
+      return $path;
+    }
+
+    $query_params = $parts['query'];
+    foreach ($query_params as $query_param => $value) {
+      if (!in_array($query_param, $allowed_params)) {
+        unset($query_params[$query_param]);
+      }
+    }
+
+    // Rebuild the query string.
+    $parts['query'] = UrlHelper::buildQuery($query_params);
+
+    return http_build_url($parts);
   }
 
 }
