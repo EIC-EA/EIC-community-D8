@@ -3,5 +3,5 @@ paths: '/groups/*/content/*/request/transfer_ownership/close?response=denied'
 label: 'Group ownership transfer request - Deny'
 title: 'Cancel group ownership transfer request'
 description:
-  value: "<p>You are about to cancel the ownership of <a href=\"[group_content:group:url]\">[group_content:group:title]</a> to <a href=\"[group_content:user:url]\">[group_content:user:display-name]</a>.</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+  value: "<p>You are about to cancel the ownership of <a href=\"[group_content:group:url]\">[group_content:group:title]</a> to <a href=\"[group_content:user:url]\">[group_content:user:display-name]</a>.</p>\r\n\r\n<p>State the reason for this cancellation in the field below then click the confirm cancellation button to complete this action.</p>\r\n"
   format: full_html
