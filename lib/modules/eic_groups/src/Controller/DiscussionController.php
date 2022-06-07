@@ -16,6 +16,7 @@ use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
@@ -137,8 +138,7 @@ class DiscussionController extends ControllerBase {
 
     $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
-    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
-    $text = Xss::filter($content['text'], $allowed_tags);
+    $text = CommentsHelper::formatHtmlComment($content['text']);
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
@@ -262,8 +262,7 @@ class DiscussionController extends ControllerBase {
     }
 
     $content = json_decode($request->getContent(), TRUE);
-    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
-    $text = Xss::filter($content['text'], $allowed_tags);
+    $text = CommentsHelper::formatHtmlComment($content['text']);
 
     try {
       if ('like_comment' === $flag) {
@@ -324,8 +323,7 @@ class DiscussionController extends ControllerBase {
    */
   public function editComment(Request $request, int $discussion_id, $comment_id) {
     $content = json_decode($request->getContent(), TRUE);
-    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
-    $text = Xss::filter($content['text'], $allowed_tags);
+    $text = CommentsHelper::formatHtmlComment($content['text']);
 
     $comment = Comment::load($comment_id);
 
