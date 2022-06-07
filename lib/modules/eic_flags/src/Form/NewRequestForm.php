@@ -220,7 +220,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
     switch ($this->requestHandler->getType()) {
       case RequestTypes::BLOCK:
         $form_field_description = $this->t(
-          'Please explain why this @entity_type should be @action',
+          'State the reason why this @entity_type should be @action',
           [
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
             '@action' => $this->t('blocked'),
@@ -234,7 +234,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
 
       default:
         $form_field_description = $this->t(
-          'Please explain why this @entity_type should be @action',
+          'State the reason why this @entity_type should be @action',
           [
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
             '@action' => $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted',
