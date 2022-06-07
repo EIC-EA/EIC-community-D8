@@ -160,7 +160,10 @@ class ActionFormsManager {
    *   TRUE if the config is applicable for the given path.
    */
   public function matchPath(ConfigBase $config, string $target_path = NULL): bool {
-    $paths = explode(PHP_EOL, $config->get('paths'));
+    $paths = [];
+    if (strlen($config->get('paths')) > 0) {
+      $paths = explode(PHP_EOL, $config->get('paths'));
+    }
 
     if (empty($paths)) {
       return TRUE;
