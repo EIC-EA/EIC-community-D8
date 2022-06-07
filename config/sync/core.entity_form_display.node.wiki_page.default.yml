@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_language
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - field.field.node.wiki_page.field_tags
@@ -108,12 +107,6 @@ content:
     settings:
       rows: 5
       placeholder: ''
-    third_party_settings: {  }
-  field_language:
-    type: options_select
-    weight: 10
-    region: content
-    settings: {  }
     third_party_settings: {  }
   field_post_activity:
     weight: 4

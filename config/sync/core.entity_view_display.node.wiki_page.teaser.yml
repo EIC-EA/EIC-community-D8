@@ -5,7 +5,6 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_language
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - field.field.node.wiki_page.field_tags
@@ -57,7 +56,6 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_body: true
-  field_language: true
   field_related_downloads: true
   field_related_media: true
   field_tags: true

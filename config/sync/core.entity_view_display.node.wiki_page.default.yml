@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_language
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - field.field.node.wiki_page.field_tags
@@ -30,14 +29,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 2
-    region: content
-  field_language:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 12
     region: content
   field_related_downloads:
     type: entity_reference_entity_view
