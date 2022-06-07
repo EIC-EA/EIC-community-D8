@@ -54,7 +54,15 @@ class ActionFormsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $configs = $this->configFactory->loadMultiple($this->configFactory->listAll('eic_admin.action_forms.'));
+    $configs = [];
+    $i = 0;
+    foreach ($this->configFactory->loadMultiple($this->configFactory->listAll('eic_admin.action_forms.')) as $config) {
+      $label = empty($config->get('label')) ? "undefined_$i" : $config->get('label');
+      $configs[$label] = $config;
+      $i++;
+    }
+    // Sort configs alphabetically based on the label.
+    ksort($configs);
 
     $form['routes'] = [
       '#type' => 'vertical_tabs',
