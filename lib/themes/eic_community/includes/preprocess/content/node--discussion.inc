@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
@@ -81,8 +82,11 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
 
     $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
     $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if ($visibility instanceof GroupVisibilityRecordInterface
-      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+    if (in_array($group->bundle(), ['event', 'group'])
+      && !GroupsModerationHelper::isBlocked($group)
+      && $visibility instanceof GroupVisibilityRecordInterface
+      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+    ) {
       $flags['social_share']['content'] = _eic_community_get_social_share_block();
     }
   }
