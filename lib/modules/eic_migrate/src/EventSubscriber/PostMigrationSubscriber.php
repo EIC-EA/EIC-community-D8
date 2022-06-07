@@ -295,12 +295,12 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
       $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       // Populate the node values.
-      $node_values[$parent_migrated_row['destid1']][] = $migrated_row['destid1'];
+      $node_values[$parent_migrated_row['destid2']][] = $migrated_row['destid1'];
     }
 
     // Set the values for each row.
     foreach ($node_values as $parent_id => $items) {
-      if ($group = $this->entityTypeManager->getStorage('group')->load($parent_id)) {
+      if ($group = $this->entityTypeManager->getStorage('group')->loadRevision($parent_id)) {
         $this->updateEntityReferenceValue($group, 'field_related_groups', $items);
       }
     }
