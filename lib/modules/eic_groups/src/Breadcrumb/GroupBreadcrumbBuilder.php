@@ -128,6 +128,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       case 'entity.group_content.group_reject_membership':
       case 'ginvite.invitation.bulk':
       case 'ginvite.invitation.bulk.confirm':
+      case 'ginvite.invitation.accept':
         $applies = TRUE;
         break;
 
@@ -308,6 +309,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       case 'entity.group_content.new_request':
       case 'entity.group_content.user_close_request':
+      case 'ginvite.invitation.accept':
         /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
         $group_content = $route_match->getParameter('group_content');
 
