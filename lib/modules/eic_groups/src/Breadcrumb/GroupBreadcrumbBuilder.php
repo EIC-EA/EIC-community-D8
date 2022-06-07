@@ -9,7 +9,6 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -309,29 +308,6 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
         $group = $group_content->getGroup();
         $links[] = $group->toLink();
-
-        $request_handler = $this->requestHandlerCollector->getHandlerByType(
-          $this->requestStack->getCurrentRequest()->get('request_type')
-        );
-
-        if (!$request_handler) {
-          break;
-        }
-
-        if ($request_handler->getType() === RequestTypes::TRANSFER_OWNERSHIP) {
-          $group_members_url = Url::fromRoute(
-            'view.eic_group_members.page_group_members',
-            ['group' => $group->id()]
-          );
-          $links[] = Link::fromTextAndUrl(
-            $this->t('Members'),
-            $group_members_url
-          );
-          $user_full_name = $this->eicUserHelper->getFullName(
-            $group_content->getEntity()
-          );
-          $links[] = $group_content->getEntity()->toLink($user_full_name);
-        }
         break;
 
     }
@@ -345,6 +321,26 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb->addCacheContexts(['url.path']);
 
     return $breadcrumb;
+  }
+
+  /**
+   * Returns the request handler type of the current request.
+   *
+   * @see \Drupal\eic_flags\RequestTypes
+   *
+   * @return false|string
+   *   The handler type or FALSE if not found.
+   */
+  protected function getRequestHandlerType() {
+    $request_handler = $this->requestHandlerCollector->getHandlerByType(
+      $this->requestStack->getCurrentRequest()->get('request_type')
+    );
+
+    if (!$request_handler) {
+      return FALSE;
+    }
+
+    return $request_handler->getType();
   }
 
 }
