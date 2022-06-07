@@ -38,7 +38,13 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   $entity_type = $entity->getEntityTypeId();
 
   _eic_community_display_topics($variables);
-  _eic_community_display_flags($variables);
+
+  // We show flags only for node, group already have it in the group header.
+  if (!$entity instanceof GroupInterface)
+  {
+    _eic_community_display_flags($variables);
+  }
+
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   if ($group instanceof GroupInterface) {
     if ('node' === $entity_type) {
