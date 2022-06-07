@@ -49,9 +49,15 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $media = $file->get('field_gallery_slide_media')->referencedEntities()[0];
         $download = File::load($media->oe_media_image->getValue()[0]['target_id']);
         $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+        $explode_file_name = explode('/', $download->getFileUri());
+        // We grab the filename based on the file URI.
+        $file_name = end($explode_file_name);
+        // We use the filename based on the file URI if it has the same name as
+        // the media entity.
+        $file_name = $media->getName() === $file_name ? $file_name : $download->getFilename();
 
         $files_list[] = [
-          'name' => $download->getFileName(),
+          'name' => $file_name,
           'type' => t('Image', [], ['context' => 'eic_community']),
           'stats' => [
             [
@@ -73,12 +79,12 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'path' => $download_url,
           'image' => [
             'src' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($download->getFileUri()),
-            'alt' => $download->getFileName(),
+            'alt' => $file_name,
           ],
         ];
 
         $slide = [
-          'name' => $download->getFileName(),
+          'name' => $file_name,
           'stats' => [
             [
               'hide_label' => TRUE,
@@ -99,11 +105,11 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'path' => $download_url,
           'image' => [
             'src' => ImageStyle::load('oe_theme_small_2x_no_crop')->buildUrl($download->getFileUri()),
-            'alt' => $download->getFileName(),
+            'alt' => $file_name,
           ],
           'thumb' => [
             'src' => ImageStyle::load('media_library')->buildUrl($download->getFileUri()),
-            'alt' => $download->getFileName(),
+            'alt' => $file_name,
           ],
         ];
 

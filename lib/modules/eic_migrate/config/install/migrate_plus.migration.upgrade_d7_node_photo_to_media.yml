@@ -15,7 +15,6 @@ source:
   track_changes: true
   batch_size: 100
 process:
-  name: '@_media_title'
   uid:
     - plugin: migration_lookup
       source: node_uid
@@ -49,8 +48,28 @@ process:
           -
             plugin: skip_on_empty
             method: row
+  _media_title:
+    -
+      plugin: entity_value
+      source: '@_media/0/target_id'
+      entity_type: file
+      field_name: uri
+    -
+      plugin: extract
+      index:
+        - 0
+    -
+      plugin: extract
+      index:
+        - value
+    -
+      plugin: explode
+      delimiter: '/'
+    -
+      plugin: array_pop
+  name: '@_media_title'
   oe_media_image/0/target_id: '@_media/0/target_id'
-  oe_media_image/0/alt: title
+  oe_media_image/0/alt: '@_media_title'
 #        title: title
 #        width: width
 #        height: height
