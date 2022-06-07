@@ -310,7 +310,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   }
 
-  if (in_array($group->bundle(), ['event', 'group'])) {
+  if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group)) {
     $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
     if ($visibility instanceof GroupVisibilityRecordInterface
       && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
