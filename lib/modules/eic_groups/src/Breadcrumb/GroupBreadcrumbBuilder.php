@@ -9,6 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_admin\Service\ActionFormsManager;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -72,6 +73,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $eicGroupsHelper;
 
   /**
+   * The action forms manager service.
+   *
+   * @var \Drupal\eic_admin\Service\ActionFormsManager
+   */
+  protected $actionFormsManager;
+
+  /**
    * Constructs the GroupBreadcrumbBuilder.
    *
    * @param \Drupal\book\BookBreadcrumbBuilder $book_breadcrumb_builder
@@ -86,6 +94,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The request stack service.
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The groups helper service.
+   * @param \Drupal\eic_admin\Service\ActionFormsManager $action_forms_manager
+   *   The action forms manager service.
    */
   public function __construct(
     BookBreadcrumbBuilder $book_breadcrumb_builder,
@@ -93,7 +103,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     UserHelper $eic_user_helper,
     RequestHandlerCollector $request_handler_collector,
     RequestStack $request_stack,
-    EICGroupsHelper $eic_groups_helper
+    EICGroupsHelper $eic_groups_helper,
+    ActionFormsManager $action_forms_manager
   ) {
     $this->bookBreadcrumbBuilder = $book_breadcrumb_builder;
     $this->account = $account;
@@ -101,6 +112,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->requestStack = $request_stack;
     $this->eicUserHelper = $eic_user_helper;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->actionFormsManager = $action_forms_manager;
   }
 
   /**
@@ -301,6 +313,12 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
         if (!$group_content instanceof GroupContentInterface) {
           break;
+        }
+
+        // Since we have multiple configs for the same route, we add the related
+        // config as a dependency.
+        if ($action_config = $this->actionFormsManager->getRouteConfig()) {
+          $breadcrumb->addCacheableDependency($action_config);
         }
 
         // We add the group content object as cacheable dependency.
