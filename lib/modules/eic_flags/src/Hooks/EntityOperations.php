@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
@@ -16,6 +17,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -91,6 +93,13 @@ class EntityOperations implements ContainerInjectionInterface {
   private $flagHelper;
 
   /**
+   * The state cache.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  private $state;
+
+  /**
    * EntityOperations constructor.
    *
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
@@ -109,6 +118,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The Flag service.
    * @param \Drupal\eic_flags\FlagHelper $eic_flag_helper
    *   The EIC Flag helper service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state cache.
    */
   public function __construct(
     RequestHandlerCollector $collector,
@@ -118,7 +129,8 @@ class EntityOperations implements ContainerInjectionInterface {
     AccountProxyInterface $account,
     FlagCountManagerInterface $flag_count_manager,
     FlagServiceInterface $flag_service,
-    FlagHelper $eic_flag_helper
+    FlagHelper $eic_flag_helper,
+    StateInterface $state
   ) {
     $this->collector = $collector;
     $this->moderationInformation = $moderation_information;
@@ -128,6 +140,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->flagCountManager = $flag_count_manager;
     $this->flagService = $flag_service;
     $this->flagHelper = $eic_flag_helper;
+    $this->state = $state;
   }
 
   /**
@@ -142,7 +155,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('current_user'),
       $container->get('flag.count'),
       $container->get('flag'),
-      $container->get('eic_flags.helper')
+      $container->get('eic_flags.helper'),
+      $container->get('state')
     );
   }
 
@@ -386,6 +400,11 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The entity object.
    */
   public function followEntityOnCreation(EntityInterface $entity) {
+    // If we are running migrations, stop flagging entities.
+    if ($this->state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+      return;
+    }
+
     $flag_entity = FALSE;
     $flag_type = FALSE;
 
@@ -448,6 +467,11 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The profile object.
    */
   public function followTopicsOnUserProfileUpdate(ProfileInterface $profile) {
+    // If we are running migrations, stop flagging entities.
+    if ($this->state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+      return;
+    }
+
     if ($profile->bundle() !== 'member') {
       return;
     }
