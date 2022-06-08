@@ -43,10 +43,9 @@ class SubscriptionMessageCreator {
       'template' => MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
       'field_group_ref' => $event->id(),
       'field_topic_term' => $event->get('field_vocab_topics')->referencedEntities(),
-      'field_event_executing_user' => $event->getOwnerId(),
-      'uid' => $event->getOwnerId(),
     ]);
-    $message->save();
+    $message->set('field_event_executing_user', $event->getOwnerId());
+    $message->setOwnerId($event->getOwnerId());
 
     return $message;
   }

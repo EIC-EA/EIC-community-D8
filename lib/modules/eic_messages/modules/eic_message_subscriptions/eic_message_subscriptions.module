@@ -12,7 +12,7 @@ use Drupal\eic_message_subscriptions\Hooks\CronOperations;
 use Drupal\eic_message_subscriptions\Hooks\EntityOperations;
 use Drupal\eic_message_subscriptions\Hooks\FormOperations;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
-use Drupal\group\Entity\GroupType;
+use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\message\MessageInterface;
 use Drupal\node\Entity\NodeType;
 
@@ -75,7 +75,7 @@ function eic_message_subscriptions_form_node_edit_form_alter(&$form, FormStateIn
 function eic_message_subscriptions_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $route_match = \Drupal::routeMatch();
   if ($route_match->getRouteName() !== 'entity.group.add_form'
-    ||$route_match->getParameter('group_type') instanceof GroupType
+    || !$route_match->getParameter('group_type') instanceof GroupTypeInterface
     || $route_match->getParameter('group_type')->id() !== 'event') {
     return;
   }
@@ -84,6 +84,13 @@ function eic_message_subscriptions_form_group_form_alter(&$form, FormStateInterf
     \Drupal::classResolver(FormOperations::class)
       ->groupFormAlter($form, $form_state, $form_id);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_message_subscriptions_group_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)->eventUpdate($entity);
 }
 
 /**
