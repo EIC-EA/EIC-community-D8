@@ -6,9 +6,13 @@
  */
 
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_node__story() for story node.
@@ -122,14 +126,22 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     // Sidebar elements.
     _eic_community_display_flags($variables);
 
-    if (
-      $node->hasField(PrivateContentConst::FIELD_NAME)
-      && !$node->get(PrivateContentConst::FIELD_NAME)->value
-    ) {
-      if ($share_block = _eic_community_get_social_share_block()) {
-        $variables['editorial_actions']['items'][]['content'] = $share_block;
+    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+    if (!$group && $node->hasField(PrivateContentConst::FIELD_NAME)
+      && !$node->get(PrivateContentConst::FIELD_NAME)->value) {
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+    }
+    elseif ($group instanceof GroupInterface) {
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+      if (in_array($group->bundle(), ['event', 'group'])
+        && !GroupsModerationHelper::isBlocked($group)
+        && $visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      ) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
       }
     }
+
 
     _eic_community_display_contributors($variables);
     _eic_community_display_topics($variables);

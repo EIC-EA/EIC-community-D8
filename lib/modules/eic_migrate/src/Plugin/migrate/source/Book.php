@@ -158,7 +158,7 @@ class Book extends BookBase {
     $migrate_connection = Database::getConnection('default', 'default');
 
     $query = $migrate_connection->select('group_content_field_data', 'gp');
-    $query->condition('gp.type', 'group-group_node-book');
+    $query->condition('gp.type', '%group_node-book', 'LIKE');
     $query->condition('gp.gid', $group_id);
     $query->join('book', 'b', 'gp.entity_id = b.nid');
     $query->fields('b', ['bid', 'nid']);

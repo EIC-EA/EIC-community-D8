@@ -5,11 +5,11 @@
  * Prepares variables for node discussion templates.
  */
 
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Render\Markup;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Drupal\eic_comments\CommentsHelper;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -81,8 +81,11 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
 
     $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
     $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if ($visibility instanceof GroupVisibilityRecordInterface
-      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+    if (in_array($group->bundle(), ['event', 'group'])
+      && !GroupsModerationHelper::isBlocked($group)
+      && $visibility instanceof GroupVisibilityRecordInterface
+      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+    ) {
       $flags['social_share']['content'] = _eic_community_get_social_share_block();
     }
   }
@@ -103,7 +106,7 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
  */
 function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   $teaser = _eic_community_prepare_node_teaser_array($node);
-  $teaser['description'] = Markup::create(Xss::filter($node->get('field_body')->value));
+  $teaser['description'] = CommentsHelper::formatHtmlComment($node->get('field_body')->value);
   $teaser['type'] = $discussion_type;
 
   // Remove unwanted items.
@@ -117,7 +120,7 @@ function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   // Add last comment if there is one.
   if ($last_comment = _eic_community_get_entity_last_comment($node)) {
     $teaser['featured'] = [
-      'comment' => $last_comment->get('comment_body')->value,
+      'comment' => CommentsHelper::formatHtmlComment($last_comment->get('comment_body')->value),
       'comment_id' => $last_comment->id(),
       'author' => eic_community_get_teaser_user_display($last_comment->getOwner()),
       'timestamp' => eic_community_get_teaser_time_display($last_comment->getCreatedTime()),
