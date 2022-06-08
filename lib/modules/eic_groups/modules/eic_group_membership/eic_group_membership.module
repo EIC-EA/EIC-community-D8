@@ -99,15 +99,29 @@ function eic_group_membership_form_alter(
 
   switch ($form_id) {
     case "group_content_{$group_type}-group_membership_add_form":
+      // Remove the owner role.
       if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
         unset($form['group_roles']['widget']['#options'][$owner_role]);
+      }
+      // Rename the options.
+      foreach ($form['group_roles']['widget']['#options'] as $role_id => $role_name) {
+        $form['group_roles']['widget']['#options'][$role_id] = t('Set as %role_name', [
+          '%role_name' => $role_name,
+        ]);
       }
       break;
 
     case "group_content_{$group_type}-group_membership_edit_form":
+      // Remove the owner role.
       if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
         unset($form['group_roles']['widget']['#options'][$owner_role]);
         array_unshift($form['actions']['submit']['#submit'], 'eic_group_membership_update_membership_role_form_submit');
+      }
+      // Rename the options.
+      foreach ($form['group_roles']['widget']['#options'] as $role_id => $role_name) {
+        $form['group_roles']['widget']['#options'][$role_id] = t('Set as %role_name', [
+          '%role_name' => $role_name,
+        ]);
       }
       break;
   }
@@ -134,8 +148,7 @@ function eic_group_membership_update_membership_role_form_submit(
   $group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
 
   $is_new_group_admin = array_filter($new_roles, function (array $role) use ($entity) {
-    return
-      $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
+    return $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
       === $role['target_id'];
   });
 
