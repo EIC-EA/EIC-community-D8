@@ -126,6 +126,7 @@ function _eic_community_preprocess_digest_message(&$variables) {
       'label' => $group->label(),
       'url' => $group->toUrl()->toString(),
       'type' => strtolower($group->type->entity->label()),
+      'prefix' => $template_id === MessageSubscriptionTypes::GROUP_CONTENT_SHARED ? t('to') : t('in'),
     ];
   }
 
