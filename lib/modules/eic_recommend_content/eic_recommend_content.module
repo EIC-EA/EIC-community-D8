@@ -26,6 +26,8 @@ function eic_recommend_content_theme() {
         'can_recommend' => NULL,
         'can_recommend_external_users' => NULL,
         'translations' => NULL,
+        'tree_settings' => [],
+        'tree_translations' => [],
       ],
     ],
   ];

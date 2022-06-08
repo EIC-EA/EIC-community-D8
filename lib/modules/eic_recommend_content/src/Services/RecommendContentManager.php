@@ -9,6 +9,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Services\EntityTreeManager;
+use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -114,11 +116,6 @@ class RecommendContentManager {
       $support_entity_types[$entity->getEntityTypeId()]
     );
 
-    $get_users_url_parameters = [
-      'datasource' => json_encode(['user']),
-      'source_class' => UserTaggingCommentsSourceType::class,
-      'page' => 1,
-    ];
     $endpoint_url = Url::fromRoute(
       'eic_recommend_content.recommend',
       [
@@ -145,6 +142,17 @@ class RecommendContentManager {
       ]
     );
 
+    $user_url = Url::fromRoute('eic_search.solr_search', [
+      'datasource' => json_encode(['user']),
+      'source_class' => UserTaggingCommentsSourceType::class,
+      'page' => 1,
+    ])->toString();
+
+    $get_users_url_parameters = [
+      'endpoint' => $user_url,
+      'target_entity' => 'user',
+    ];
+
     switch ($entity->getEntityTypeId()) {
       case 'node':
         if (!$endpoint_url->access($this->currentUser)) {
@@ -154,7 +162,7 @@ class RecommendContentManager {
         /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
         $group_contents = $this->entityTypeManager->getStorage('group_content')
           ->loadByEntity($entity);
-        $group = NULL;
+
         if (!empty($group_contents)) {
           $group_content = reset($group_contents);
           $group = $group_content->getGroup();
@@ -179,13 +187,14 @@ class RecommendContentManager {
       '#theme' => 'eic_recommend_content_link',
       '#entity_type' => $entity->getEntityTypeId(),
       '#entity_id' => $entity->id(),
-      '#get_users_url' => Url::fromRoute('eic_search.solr_search', $get_users_url_parameters)->toString(),
       '#endpoint' => $endpoint_url->toString(),
       '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
         'link_label' => $link_label,
       ],
+      '#tree_settings' => $get_users_url_parameters,
+      '#tree_translations' => EntityTreeManager::getTranslationsWidget(),
     ] : NULL;
   }
 
