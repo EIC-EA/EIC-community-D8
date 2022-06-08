@@ -43,6 +43,13 @@ class GroupOverviewsController extends ControllerBase {
   public function access(RouteMatchInterface $route_match, GroupInterface $group, AccountInterface $account) {
     $overview_perm = NULL;
 
+    // First check if user has access to the group itself.
+    if (!$group->toUrl()->access($account)) {
+      return AccessResult::forbidden()
+        ->addCacheableDependency($group)
+        ->addCacheableDependency($account);
+    }
+
     // Check if the group is in a blocked state.
     if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_BLOCKED_STATE
       && !UserHelper::isPowerUser($account)) {
