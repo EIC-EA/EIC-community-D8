@@ -6,9 +6,13 @@
  */
 
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_node__story() for story node.
@@ -67,8 +71,9 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     ];
   }
 
-  if ($view_mode === 'teaser' && !$node->get('field_image')->isEmpty()) {
-    /** @var \Drupal\media\Entity\Media $media */
+  if ('mail_teaser' === $view_mode) {
+    $item = _eic_community_prepare_node_teaser_array($node);
+    /** @var \Drupal\media\MediaInterface $media */
     $media = \Drupal::service('entity.repository')
       ->getTranslationFromContext(
         $node->get('field_image')->entity,
@@ -76,13 +81,31 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'large'
+      'oe_theme_ratio_3_2_medium'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),
     ];
   }
+
+  if ('teaser' === $view_mode) {
+    if (!$node->get('field_image')->isEmpty()) {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::service('entity.repository')
+        ->getTranslationFromContext(
+          $node->get('field_image')->entity,
+          $node->language()->getId()
+        );
+      $image_item = ImageValueObject::fromStyledImageItem(
+        $media->get('oe_media_image')->first(),
+        'large'
+      );
+      $item['image'] = [
+        'src' => $image_item->getSource(),
+        'alt' => $image_item->getAlt(),
+      ];
+    }
 
   if ('teaser' === $variables['view_mode']) {
     $stats = _eic_community_get_entity_stats($node);
@@ -108,12 +131,19 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
     }
 
-    if (
-      $node->hasField(PrivateContentConst::FIELD_NAME)
-      && !$node->get(PrivateContentConst::FIELD_NAME)->value
-    ) {
-      if ($share_block = _eic_community_get_social_share_block()) {
-        $variables['editorial_actions']['items'][]['content'] = $share_block;
+    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+    if (!$group && $node->hasField(PrivateContentConst::FIELD_NAME)
+      && !$node->get(PrivateContentConst::FIELD_NAME)->value) {
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+    }
+    elseif ($group instanceof GroupInterface) {
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+      if (in_array($group->bundle(), ['event', 'group'])
+        && !GroupsModerationHelper::isBlocked($group)
+        && $visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      ) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
       }
     }
 

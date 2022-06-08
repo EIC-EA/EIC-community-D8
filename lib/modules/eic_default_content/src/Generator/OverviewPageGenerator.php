@@ -26,9 +26,9 @@ class OverviewPageGenerator extends CoreGenerator {
     $this->createOverview([
       'enable_search' => TRUE,
       'facets' => [
-        'ss_global_content_type_label',
-        'sm_content_field_vocab_topics_string',
-        'sm_content_field_vocab_geo_string',
+        'ss_global_content_type_label' => 'ss_global_content_type_label',
+        'sm_content_field_vocab_topics_string' => 'sm_content_field_vocab_topics_string',
+        'sm_content_field_vocab_geo_string' => 'sm_content_field_vocab_geo_string',
       ],
       'source_type' => GlobalSourceType::class,
     ], 'Global search', '/search',
@@ -38,7 +38,7 @@ class OverviewPageGenerator extends CoreGenerator {
     $this->createOverview([
       'enable_search' => TRUE,
       'facets' => [
-        'ss_group_topic_name',
+        'sm_group_topic_name' => 'sm_group_topic_name',
       ],
       'source_type' => GroupSourceType::class,
     ], 'Groups', '/groups',
@@ -47,6 +47,13 @@ class OverviewPageGenerator extends CoreGenerator {
 
     $this->createOverview([
       'enable_search' => TRUE,
+      'facets' => [
+        'sm_user_profile_topic_expertise_string' => 'sm_user_profile_topic_expertise_string',
+        'sm_user_profile_job_string' => 'sm_user_profile_job_string',
+        'sm_user_profile_field_vocab_topic_interest_array' => 'sm_user_profile_field_vocab_topic_interest_array',
+        'ss_user_profile_field_location_address_country_code' => 'ss_user_profile_field_location_address_country_code',
+        'sm_user_profile_field_vocab_language_array' => 'sm_user_profile_field_vocab_language_array'
+      ],
       'source_type' => UserGallerySourceType::class,
     ], 'Members', '/people',
       GlobalOverviewPages::MEMBERS
@@ -55,9 +62,9 @@ class OverviewPageGenerator extends CoreGenerator {
     $this->createOverview([
       'enable_search' => TRUE,
       'facets' => [
-        'ss_content_type',
-        'sm_content_field_vocab_topics_string',
-        'sm_content_field_vocab_geo_string',
+        'ss_content_type' => 'ss_content_type',
+        'sm_content_field_vocab_topics_string' => 'sm_content_field_vocab_topics_string',
+        'sm_content_field_vocab_geo_string' => 'sm_content_field_vocab_geo_string',
       ],
       'source_type' => NewsStorySourceType::class,
     ], 'News & Stories', '/articles',
@@ -67,10 +74,10 @@ class OverviewPageGenerator extends CoreGenerator {
     $this->createOverview([
       'enable_search' => TRUE,
       'facets' => [
-        'ss_group_topic_name',
-        'sm_group_field_location_type',
-        Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
-        'ss_group_event_country',
+        'sm_group_topic_name' => 'sm_group_topic_name',
+        'sm_group_field_location_type' => 'sm_group_field_location_type',
+        Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
+        'ss_group_event_country' => 'ss_group_event_country',
       ],
       'source_type' => GlobalEventSourceType::class,
     ], 'Events', '/events',
@@ -80,9 +87,9 @@ class OverviewPageGenerator extends CoreGenerator {
     $this->createOverview([
       'enable_search' => TRUE,
       'facets' => [
-        'sm_group_organisation_type_string',
-        'ss_group_topic_name',
-        'sm_group_field_locations_string',
+        'sm_group_organisation_type_string' => 'sm_group_organisation_type_string',
+        'sm_group_topic_name' => 'sm_group_topic_name',
+        'sm_group_field_locations_string' => 'sm_group_field_locations_string',
       ],
       'source_type' => OrganisationSourceType::class,
     ], 'Organisations', '/organisations',
@@ -113,7 +120,10 @@ class OverviewPageGenerator extends CoreGenerator {
       'title' => $title,
       'path' => $path_alias,
       'field_overview_block' => $block_field,
-      'banner_image' => $this->getRandomImage(),
+      'banner_image' => [
+        'target_id' => $this->getRandomImage()->id(),
+        'alt' => $title,
+      ],
       'field_overview_id' => $page_id,
     ]);
 
@@ -130,13 +140,14 @@ class OverviewPageGenerator extends CoreGenerator {
         'id' => 'eic_search_overview',
         'label' => NULL,
         'label_display' => FALSE,
-        'provider' => NULL,
+        'provider' => 'eic_search',
         'facets' => [],
         'page_options' => 'normal',
         'prefilter_group' => FALSE,
         'add_facet_interests' => TRUE,
         'add_facet_my_groups' => TRUE,
         'sort_options' => [],
+        'enable_date_filter' => FALSE,
       ];
     }
 

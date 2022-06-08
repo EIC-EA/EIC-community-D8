@@ -198,6 +198,19 @@ $config['config_split.config_split.development']['status'] = TRUE;
 $settings['file_private_path'] = '/app/private_files';
 
 /**
+ * SMTP settings.
+ */
+$config['smtp.settings']['smtp_host'] = '';
+$config['smtp.settings']['smtp_hostbackup'] = '';
+$config['smtp.settings']['smtp_port'] = '';
+$config['smtp.settings']['smtp_protocol'] = '';
+$config['smtp.settings']['smtp_username'] = '';
+$config['smtp.settings']['smtp_password'] = '';
+$config['smtp.settings']['smtp_client_hostname'] = '';
+$config['smtp.settings']['smtp_from'] = '';
+$config['smtp.settings']['smtp_fromname'] = '';
+
+/**
  * EU Login settings.
  */
 $config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');

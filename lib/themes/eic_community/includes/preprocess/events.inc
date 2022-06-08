@@ -9,6 +9,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
@@ -48,9 +49,10 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
       );
     }
 
-    $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
+    $existing_tags = $variables['#cache']['tags'] ?? [];
+    $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
     $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if ($visibility instanceof GroupVisibilityRecordInterface
+    if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
       && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
       $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
     }
@@ -243,13 +245,15 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
 
   /** @var \Drupal\taxonomy\TermInterface $event_type_term */
   $event_type_term = $entity->get('field_vocab_event_type')->entity;
+
   // Try to load translation if exists.
   if (
+    $event_type_term &&
     $event_type_term->language()->getId() !== $entity->language()->getId() &&
     $event_type_term->hasTranslation($entity->language()->getId())
   ) {
     $event_type_term = $event_type_term->getTranslation($entity->language()->getId());
   }
   // Send event type to the theme variables.
-  $variables['event_type'] = $event_type_term->getName();
+  $variables['event_type'] = $event_type_term ? $event_type_term->getName() : NULL;
 }

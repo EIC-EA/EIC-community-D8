@@ -1,0 +1,50 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_taxonomy_term_c4m_vocab_event_type
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Taxonomy terms (Type of Event)'
+source:
+  plugin: d7_taxonomy_term
+  bundle: c4m_vocab_event_type
+  track_changes: true
+  batch_size: 100
+process:
+  # Ignore Term ID. A new one will be generated.
+#  tid:
+#    - plugin: get
+#      source: tid
+  # Ignore Vocabulary ID. It will be automatically filled by the default_bundle on the destination.
+#  vid:
+#    - plugin: migration_lookup
+#      migration: upgrade_d7_taxonomy_vocabulary
+#      source: vid
+  name: name
+  description/value: description
+  description/format: format
+  weight: weight
+  parent_id:
+    - plugin: skip_on_empty
+      method: process
+      source: parent
+    - plugin: migration_lookup
+      migration:
+        - upgrade_d7_taxonomy_term_c4m_vocab_event_type
+  parent:
+    - plugin: default_value
+      default_value: 0
+      source: '@parent_id'
+  changed: timestamp
+  langcode: language
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: event_type
+migration_dependencies:
+  required: { }
+  optional: { }

@@ -1,0 +1,35 @@
+uuid: d2c1a381-2961-4806-a5b8-936cda9b91dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group_content.group-group_membership_request.grequest_status
+    - field.field.group_content.group-group_membership_request.grequest_updated_by
+    - group.content_type.group-group_membership_request
+id: group_content.group-group_membership_request.default
+targetEntityType: group_content
+bundle: group-group_membership_request
+mode: default
+content:
+  entity_id:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 0
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden:
+  grequest_status: true
+  grequest_updated_by: true
+  path: true
+  uid: true

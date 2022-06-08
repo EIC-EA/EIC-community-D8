@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: upgrade_d7_comment
-class: Drupal\comment\Plugin\migrate\D7Comment
+class: Drupal\eic_migrate\Plugin\migrate\D7Comment
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags:
@@ -72,10 +72,21 @@ process:
   changed: changed
   status: status
   thread: thread
-  comment_body/value: comment_body/0/value
+  comment_body/value:
+    -
+      plugin: eic_html_sanitizer
+      source: comment_body/0/value
+    -
+      plugin: eic_media_wysiwyg_filter
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
   comment_body/format:
     plugin: default_value
-    default_value: basic_text
+    default_value: filtered_html
 destination:
   plugin: 'entity:comment'
 migration_dependencies:

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_comments
     - field.field.node.wiki_page.field_language
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
@@ -22,14 +23,14 @@ content:
   content_moderation_control:
     settings: {  }
     third_party_settings: {  }
-    weight: -20
+    weight: 0
     region: content
   field_body:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 4
     region: content
   field_language:
     type: entity_reference_label
@@ -37,7 +38,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 12
+    weight: 9
     region: content
   field_related_downloads:
     type: entity_reference_entity_view
@@ -46,7 +47,7 @@ content:
       view_mode: download
       link: false
     third_party_settings: {  }
-    weight: 4
+    weight: 6
     region: content
   field_related_media:
     type: entity_reference_entity_view
@@ -55,7 +56,7 @@ content:
       view_mode: oe_theme_main_content
       link: false
     third_party_settings: {  }
-    weight: 3
+    weight: 5
     region: content
   field_tags:
     type: entity_reference_label
@@ -63,17 +64,17 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 11
+    weight: 8
     region: content
   flag_follow_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 7
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   member_content_edit_access:
     type: boolean
@@ -83,7 +84,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   private:
     type: boolean
@@ -93,10 +94,11 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 3
     region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_comments: true
   field_vocab_geo: true
   field_vocab_topics: true
   langcode: true

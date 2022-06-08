@@ -1,9 +1,10 @@
 name: OEC Group Features
 type: module
-description: The description.
+description: Provides a mechanism to enable custom defined features for groups.
 package: Open Europa Communities
 core: 8.x
 core_version_requirement: ^8 || ^9
 php: 7.3
 dependencies:
   - group:group
+  - group_permissions:group_permissions

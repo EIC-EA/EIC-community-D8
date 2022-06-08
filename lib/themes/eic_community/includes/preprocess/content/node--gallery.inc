@@ -5,8 +5,11 @@
  * Prepares variables for node gallery templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
@@ -34,7 +37,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
 
         $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-        if ($visibility instanceof GroupVisibilityRecordInterface
+        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
           $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
         }
@@ -130,7 +133,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         'download' => t('Download'),
       ];
       break;
-
+    case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
@@ -158,6 +161,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $variables['#attached']['library'][] = 'flag/flag.link_ajax';
       }
 
+      $teaser['description'] = Markup::create(Xss::filter($node->get('field_body')->value));
       $variables['gallery_item'] = $teaser;
       break;
   }

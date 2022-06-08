@@ -111,7 +111,22 @@ process:
           source: value2
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d\TH:i:s'
-  field_body: c4m_body
+  field_body/0/format:
+    - plugin: callback
+      source: c4m_body/0/format
+      callable:
+        - '\Drupal\eic_migrate\Constants\Misc'
+        - getTextFormat
+  field_body/0/value:
+    - plugin: eic_html_sanitizer
+      source: c4m_body/0/value
+    - plugin: eic_media_wysiwyg_filter
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
   field_welcome_message: c4m_group_welcome_message
   field_location:
     - plugin: addressfield
@@ -218,6 +233,51 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  _c4m_left_column:
+    - plugin: sub_process
+      source: c4m_left_column
+      process:
+        target_id: value
+        target_revision_id: revision_id
+  _c4m_right_column:
+    - plugin: sub_process
+      source: c4m_right_column
+      process:
+        target_id: value
+        target_revision_id: revision_id
+  field_additional_content:
+    - plugin: merge
+      source:
+        - '@_c4m_left_column'
+        - '@_c4m_right_column'
+    - plugin: sub_process
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+              - target_revision_id
+            migration:
+              - upgrade_d7_paragraph_text
+            no_stub: true
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - '0'
+        target_revision_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+              - target_revision_id
+            migration:
+              - upgrade_d7_paragraph_text
+            no_stub: true
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - '1'
   # TODO: Blocked
 #  field_membership_open_request:
 #    - plugin: get
@@ -230,9 +290,9 @@ process:
   field_smed_id: c4m_event_dashboard_id
   field_message_to_site_admin: field_message_to_site_admin
   field_tag_line: c4m_project_tag_line
-  features:
-    - plugin: eic_group_features
-      group_bundle: event
+  # features:
+  #   - plugin: eic_group_features
+  #     group_bundle: event
 # No source for following fields.
 #  field_documents:
 #  field_event_registration_date:

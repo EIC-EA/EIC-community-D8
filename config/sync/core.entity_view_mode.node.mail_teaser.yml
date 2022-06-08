@@ -1,0 +1,10 @@
+uuid: d718dd87-2b9e-4bb7-aa58-e4e526dec298
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.mail_teaser
+label: 'Mail teaser'
+targetEntityType: node
+cache: true

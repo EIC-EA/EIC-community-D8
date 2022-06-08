@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_subscription_digest\Service;
 
-use Drupal;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -162,7 +161,12 @@ class DigestManager {
       return;
     }
 
-    $digest_categories = $this->collector->getList($user, $data['digest_type']);
+    $trigger_date = NULL;
+    if (isset($data['trigger_date'])) {
+      $trigger_date = new \DateTime($data['trigger_date']);
+    }
+
+    $digest_categories = $this->collector->getList($user, $data['digest_type'], $trigger_date);
     if (empty($digest_categories)) {
       return;
     }
@@ -172,7 +176,7 @@ class DigestManager {
       if (empty($category['items'])) {
         continue;
       }
-      
+
       foreach ($category['items'] as &$item) {
         $item['rendered'] = $view_builder->view($item['message'], 'notify_digest');
       }
@@ -186,7 +190,7 @@ class DigestManager {
       [
         'items' => $digest_categories,
         'digest_type' => $data['digest_type'],
-        'uid' => $data['uid'],
+        'user' => $user,
         'subject' => $this->t('Your @digest_type digest', ['@digest_type' => $data['digest_type']]),
       ]
     );
