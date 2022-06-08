@@ -138,6 +138,7 @@ class DigestCollector {
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
       case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
       case MessageSubscriptionTypes::NEW_EVENT_PUBLISHED:
+      case MessageSubscriptionTypes::GROUP_CONTENT_SHARED:
         /** @var \Drupal\group\Entity\GroupInterface $group */
         $group = $message->get('field_group_ref')->entity;
         $formatted_item = [

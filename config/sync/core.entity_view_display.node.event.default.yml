@@ -236,6 +236,7 @@ content:
     region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_document_media: true
   flag_recommend: true
   langcode: true
   published_at: true

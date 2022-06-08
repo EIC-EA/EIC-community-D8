@@ -107,11 +107,19 @@ function _eic_community_preprocess_digest_message(&$variables) {
       $entity = $message->get('field_referenced_node')->entity;
       $action = 'edited';
       break;
+    case MessageSubscriptionTypes::GROUP_CONTENT_SHARED:
+      $entity = $message->get('field_referenced_node')->entity;
+      $action = 'shared';
+      break;
   }
 
   if (in_array(
     $template_id,
-    [MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED, MessageSubscriptionTypes::GROUP_CONTENT_UPDATED]
+    [
+      MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED,
+      MessageSubscriptionTypes::GROUP_CONTENT_UPDATED,
+      MessageSubscriptionTypes::GROUP_CONTENT_SHARED,
+    ]
   )) {
     $group = $message->get('field_group_ref')->entity;
     $group_suffix = [

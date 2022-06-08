@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
@@ -17,6 +18,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembershipLoader;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\group_flex\GroupFlexGroup;
+use Drupal\message\Entity\Message;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
@@ -148,6 +150,7 @@ class ShareManager {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   public function share(
     GroupInterface $source_group,
@@ -170,25 +173,8 @@ class ShareManager {
       throw new \InvalidArgumentException('This content is already shared with this group');
     }
 
-    // Create the group content entity.
-    $shared_group_content = GroupContent::create([
-      'type' => $this->defineGroupContentType($target_group),
-      'gid' => $target_group->id(),
-      'entity_id' => $node->id(),
-    ]);
-    $shared_group_content->save();
-
-    // Dispatch the message.
-    $this->messageBus->dispatch([
-      'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
-      'uid' => $node->getOwnerId(),
-      'field_operation_type' => ActivityStreamOperationTypes::SHARED_ENTITY,
-      'field_referenced_node' => $node->id(),
-      'field_entity_type' => $node->bundle(),
-      'field_source_group' => $source_group,
-      'field_group_ref' => $target_group,
-      'field_share_message' => $message,
-    ]);
+    $this->createActivityStreamMessage($source_group, $target_group, $node, $message);
+    $this->createSubscription($source_group, $target_group, $node, $message);
 
     // Reindex the node immediately.
     // There seem to be multiple implementation of reindexing logics.
@@ -252,7 +238,7 @@ class ShareManager {
    *   The user account for which we build the list.
    * @param \Drupal\group\Entity\GroupInterface $source_group
    *   The source group from which we want to share.
-   * @param \Drupal\node\Entity\NodeInterface $source_node
+   * @param \Drupal\node\NodeInterface $source_node
    *   The source node from which we want to share.
    * @param array $visibility_types
    *   The target groups visibility types to filter on.
@@ -261,6 +247,8 @@ class ShareManager {
    * @return \Drupal\group\Entity\GroupInterface[]
    *   A list of group entities.
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   public function getShareableTargetGroupsForUser(
@@ -312,7 +300,7 @@ class ShareManager {
    *
    * @param \Drupal\group\Entity\GroupInterface $source_group
    *   The source group.
-   * @param \Drupal\node\Entity\NodeInterface $source_node
+   * @param \Drupal\node\NodeInterface $source_node
    *   The source node from which we want to share.
    * @param \Drupal\group\Entity\GroupInterface $target_group
    *   The target group.
@@ -332,7 +320,8 @@ class ShareManager {
     array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
   ) {
     // Allow only enabled content types.
-    if (!$this->groupsHelper->isGroupTypePluginEnabled($target_group->getGroupType(), 'group_node', $source_node->bundle())) {
+    if (!$this->groupsHelper->isGroupTypePluginEnabled($target_group->getGroupType(), 'group_node',
+      $source_node->bundle())) {
       return FALSE;
     }
 
@@ -346,8 +335,8 @@ class ShareManager {
       return FALSE;
     }
 
-    // Exclude archived groups.
-    if (GroupsModerationHelper::isArchived($target_group)) {
+    // Exclude archived and blocked groups.
+    if (GroupsModerationHelper::isArchived($target_group) || GroupsModerationHelper::isBlocked($target_group)) {
       return FALSE;
     }
 
@@ -372,6 +361,69 @@ class ShareManager {
     return $target_group->getGroupType()
       ->getContentPlugin(self::GROUP_CONTENT_SHARED_PLUGIN_ID)
       ->getContentTypeConfigId();
+  }
+
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   * @param \Drupal\node\NodeInterface $node
+   * @param string|null $message
+   *
+   * @return void
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function createActivityStreamMessage(
+    GroupInterface $source_group,
+    GroupInterface $target_group,
+    NodeInterface $node,
+    ?string $message
+  ) {
+    // Create the group content entity.
+    $shared_group_content = GroupContent::create([
+      'type' => $this->defineGroupContentType($target_group),
+      'gid' => $target_group->id(),
+      'entity_id' => $node->id(),
+    ]);
+    $shared_group_content->save();
+
+    // Dispatch the message.
+    $this->messageBus->dispatch([
+      'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
+      'uid' => $node->getOwnerId(),
+      'field_operation_type' => ActivityStreamOperationTypes::SHARED_ENTITY,
+      'field_referenced_node' => $node->id(),
+      'field_entity_type' => $node->bundle(),
+      'field_source_group' => $source_group,
+      'field_group_ref' => $target_group,
+      'field_share_message' => $message,
+    ]);
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   * @param \Drupal\node\NodeInterface $node
+   * @param string|null $message
+   *
+   * @return void
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function createSubscription(
+    GroupInterface $source_group,
+    GroupInterface $target_group,
+    NodeInterface $node,
+    ?string $message
+  ) {
+    $subscription = Message::create([
+      'template' => MessageSubscriptionTypes::GROUP_CONTENT_SHARED,
+      'field_group_ref' => $target_group,
+      'field_source_group' => $source_group,
+      'field_referenced_node' => $node,
+      'field_event_executing_user' => $node->getOwnerId(),
+      'field_share_message' => $message,
+    ]);
+    $subscription->save();
   }
 
 }
