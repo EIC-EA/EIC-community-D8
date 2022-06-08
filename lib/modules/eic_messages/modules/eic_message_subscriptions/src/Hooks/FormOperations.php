@@ -100,6 +100,31 @@ class FormOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * @param $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param $form_id
+   *
+   * @return void
+   */
+  public function groupFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    $form['actions']['submit']['#submit'][] = [
+      $this,
+      'handleNewGlobalEvent',
+    ];
+  }
+
+  public function handleNewGlobalEvent(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $form_state->getFormObject()->getEntity();
+    if (!$entity->isPublished()) {
+      return;
+    }
+
+    $event = new MessageSubscriptionEvent($entity);
+    $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GLOBAL_EVENT_INSERT);
+  }
+
+  /**
    * Handles the field_post_activity.
    *
    * @param array $form
