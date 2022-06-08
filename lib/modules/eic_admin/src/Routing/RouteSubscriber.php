@@ -3,6 +3,7 @@
 namespace Drupal\eic_admin\Routing;
 
 use Drupal\Core\Routing\RouteSubscriberBase;
+use Drupal\Core\Routing\RoutingEvents;
 use Drupal\eic_admin\Service\ActionFormsManager;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -31,9 +32,18 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection) {
-    $routes = $this->actionFormsManager->getAllRouteConfigs();
+  public static function getSubscribedEvents() {
+    // Make sure our implementation runs after other modules.
+    $events[RoutingEvents::ALTER] = ['onAlterRoutes', -100];
+    return $events;
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function alterRoutes(RouteCollection $collection) {
+    // Alter action forms routes.
+    $routes = $this->actionFormsManager->getAllRouteConfigs();
     foreach ($routes as $config) {
       // If title is provided, we override the title callback.
       if ($route = $collection->get($config->get('route'))) {

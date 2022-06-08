@@ -4,3 +4,8 @@ services:
     arguments: [ '@eic_messages.message_bus' ]
     tags:
       - { name: event_subscriber }
+  eic_group_membership.route_subscriber:
+    class: Drupal\eic_group_membership\Routing\RouteSubscriber
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: event_subscriber }
