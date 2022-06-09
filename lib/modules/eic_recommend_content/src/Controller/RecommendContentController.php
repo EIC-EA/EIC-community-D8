@@ -91,12 +91,6 @@ class RecommendContentController extends ControllerBase {
 
     $content = json_decode($this->currentRequest->getContent(), TRUE);
 
-    // Working example.
-    // @todo Remove after react implementation.
-    $content['users'] = [2, 3, 4, 5];
-    $content['external_emails'] = "user1@example.com\r\nuser2@example.com\r\nuser3@example.com";
-    $content['message'] = 'Test recommendation for users.';
-
     if (
       !isset($content['users']) &&
       !isset($content['external_emails'])
