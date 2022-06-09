@@ -213,7 +213,7 @@ $config['smtp.settings']['smtp_fromname'] = '';
 /**
  * EU Login settings.
  */
-$config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+$config['cas.settings']['server']['hostname'] = getenv('EULOGIN_URL');
 // Uncomment this line to force EU Login known user accounts to login through EU
 // Login.
 //$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;

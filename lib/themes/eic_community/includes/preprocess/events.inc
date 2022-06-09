@@ -39,7 +39,13 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   $entity_type = $entity->getEntityTypeId();
 
   _eic_community_display_topics($variables);
-  _eic_community_display_flags($variables);
+
+  // We show flags only for node, group already have it in the group header.
+  if (!$entity instanceof GroupInterface)
+  {
+    _eic_community_display_flags($variables);
+  }
+
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   if ($group instanceof GroupInterface) {
     if ('node' === $entity_type) {
@@ -47,15 +53,18 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
         $group,
         $entity
       );
+
+      $existing_tags = $variables['#cache']['tags'] ?? [];
+      $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+      if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+      }
     }
 
     $existing_tags = $variables['#cache']['tags'] ?? [];
     $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
-    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
-      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
-      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
-    }
   }
 
   if ($entity->bundle() !== 'event') {

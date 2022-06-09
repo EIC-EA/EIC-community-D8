@@ -98,7 +98,7 @@ if ($solr_host = getenv('SOLR_HOST')) {
 /**
  * EU Login settings.
  */
-$config['cas.settings']['server.hostname'] = getenv('EULOGIN_URL');
+$config['cas.settings']['server']['hostname'] = getenv('EULOGIN_URL');
 
 // Uncomment this line to force EU Login known user accounts to login through EU
 // Login.
