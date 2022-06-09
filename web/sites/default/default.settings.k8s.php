@@ -125,15 +125,22 @@ if (getenv('TIKA_HOST')) {
 /**
  * SMTP settings.
  */
-$config['smtp.settings']['smtp_host'] = '';
-$config['smtp.settings']['smtp_hostbackup'] = '';
-$config['smtp.settings']['smtp_port'] = '';
-$config['smtp.settings']['smtp_protocol'] = '';
-$config['smtp.settings']['smtp_username'] = '';
-$config['smtp.settings']['smtp_password'] = '';
-$config['smtp.settings']['smtp_client_hostname'] = '';
-$config['smtp.settings']['smtp_from'] = '';
-$config['smtp.settings']['smtp_fromname'] = '';
+if (!empty(getenv('SMTP_SERVER')) && !empty(getenv('SMTP_PASSWORD'))) {
+  $config['smtp.settings']['smtp_host'] = getenv('SMTP_SERVER');
+  $config['smtp.settings']['smtp_hostbackup'] = '';
+  $config['smtp.settings']['smtp_port'] = getenv('SMTP_PORT');
+  $config['smtp.settings']['smtp_protocol'] = getenv('SMTP_PROTOCOL');
+  $config['smtp.settings']['smtp_username'] = getenv('SMTP_USERNAME');
+  $config['smtp.settings']['smtp_password'] = getenv('SMTP_PASSWORD');
+  $config['smtp.settings']['smtp_client_hostname'] = '';
+}
+
+if ($from_mail = getenv('NOREPLY_MAIL')) {
+  $config['smtp.settings']['smtp_from'] = $from_mail;
+  $config['mimemail.settings']['mail'] = $from_mail;
+  $config['smtp.settings']['smtp_fromname'] = getenv('SMTP_FROM_NAME') ?: '';
+  $config['mimemail.settings']['name'] = getenv('SMTP_FROM_NAME') ?: '';
+}
 
 /**
  * SMED User webservice.
