@@ -133,24 +133,14 @@ if (!empty(getenv('SMTP_SERVER')) && !empty(getenv('SMTP_PASSWORD'))) {
   $config['smtp.settings']['smtp_username'] = getenv('SMTP_USERNAME');
   $config['smtp.settings']['smtp_password'] = getenv('SMTP_PASSWORD');
   $config['smtp.settings']['smtp_client_hostname'] = '';
-  $config['smtp.settings']['smtp_from'] = '';
-  $config['smtp.settings']['smtp_fromname'] = '';
 }
-else {
-  $config['smtp.settings']['smtp_host'] = 'mailhog';
-  $config['smtp.settings']['smtp_hostbackup'] = '';
-  $config['smtp.settings']['smtp_port'] = '1025';
-  $config['smtp.settings']['smtp_protocol'] = 'standard';
-  $config['smtp.settings']['smtp_username'] = '';
-  $config['smtp.settings']['smtp_password'] = '';
-  $config['smtp.settings']['smtp_client_hostname'] = '';
-  $config['smtp.settings']['smtp_from'] = '';
-  $config['smtp.settings']['smtp_fromname'] = '';
+
+if ($from_mail = getenv('NOREPLY_MAIL')) {
+  $config['smtp.settings']['smtp_from'] = $from_mail;
+  $config['mimemail.settings']['mail'] = $from_mail;
+  $config['smtp.settings']['smtp_fromname'] = getenv('SMTP_FROM_NAME') ?: '';
+  $config['mimemail.settings']['name'] = getenv('SMTP_FROM_NAME') ?: '';
 }
-/**
- * MIMEMAIL settings.
- */
-$config['mimemail.settings']['mail']=getenv('NOREPLY_MAIL');
 
 /**
  * SMED User webservice.
