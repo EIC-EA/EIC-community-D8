@@ -1,0 +1,33 @@
+uuid: 062e1373-3e4f-4121-9706-c6494944359b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_source_group
+    - group.type.event
+    - group.type.group
+    - group.type.organisation
+    - message.template.sub_group_content_shared
+id: message.sub_group_content_shared.field_source_group
+field_name: field_source_group
+entity_type: message
+bundle: sub_group_content_shared
+label: 'Source Group'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+      group: group
+      organisation: organisation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: event
+field_type: entity_reference

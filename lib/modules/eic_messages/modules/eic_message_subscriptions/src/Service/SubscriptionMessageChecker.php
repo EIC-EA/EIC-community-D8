@@ -145,6 +145,10 @@ class SubscriptionMessageChecker {
         break;
 
     }
+    
+    if ($message->bundle() === MessageSubscriptionTypes::NEW_EVENT_PUBLISHED) {
+      $field = 'field_group_ref';
+    }
 
     if (!$message->hasField($field)) {
       $this->messenger->addError(

@@ -2,14 +2,19 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Drupal\eic_message_subscriptions\MessageSubscriptionHelper;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -53,6 +58,21 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $eventDispatcher;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * @var \Drupal\content_moderation\ModerationInformationInterface
+   */
+  protected $moderationInformation;
+
+  /**
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $dispatcher;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\eic_message_subscriptions\MessageSubscriptionHelper $message_subscription_helper
@@ -68,12 +88,18 @@ class EntityOperations implements ContainerInjectionInterface {
     MessageSubscriptionHelper $message_subscription_helper,
     QueueFactory $queue_factory,
     StateInterface $state,
-    EventDispatcherInterface $event_dispatcher
+    EventDispatcherInterface $event_dispatcher,
+    EntityTypeManagerInterface $entity_type_manager,
+    ModerationInformationInterface $moderation_information,
+    EventDispatcherInterface $dispatcher
   ) {
     $this->messageSubscriptionHelper = $message_subscription_helper;
     $this->queueFactory = $queue_factory;
     $this->state = $state;
     $this->eventDispatcher = $event_dispatcher;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->moderationInformation = $moderation_information;
+    $this->dispatcher = $dispatcher;
   }
 
   /**
@@ -84,8 +110,54 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('eic_message_subscriptions.helper'),
       $container->get('queue'),
       $container->get('state'),
+      $container->get('event_dispatcher'),
+      $container->get('entity_type.manager'),
+      $container->get('content_moderation.moderation_information'),
       $container->get('event_dispatcher')
     );
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $event
+   *
+   * @return void
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function eventUpdate(GroupInterface $event) {
+    if (!$this->moderationInformation->isModeratedEntity($event)) {
+      return;
+    }
+
+    $original = $event->original;
+    if (!$original || !$event->isPublished()) {
+      return;
+    }
+
+    $original_state = $original->get('moderation_state')->value;
+    $new_state = $event->get('moderation_state')->value;
+    if (
+      !$event->isPublished()
+      || $original_state === $new_state
+      || $original_state !== GroupsModerationHelper::GROUP_DRAFT_STATE
+      || $new_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE
+    ) {
+      return;
+    }
+
+    $message_ids = $this->entityTypeManager->getStorage('message')
+      ->getQuery()
+      ->condition('template', MessageSubscriptionTypes::NEW_EVENT_PUBLISHED)
+      ->condition('field_group_ref', $event->id())
+      ->execute();
+    if (!empty($message_ids)) {
+      return;
+    }
+
+    // Means the group is transitioned to published and we don't have a message sent.
+    $dispatched_event = new MessageSubscriptionEvent($event);
+    $this->dispatcher->dispatch($dispatched_event, MessageSubscriptionEvents::GLOBAL_EVENT_INSERT);
   }
 
   /**

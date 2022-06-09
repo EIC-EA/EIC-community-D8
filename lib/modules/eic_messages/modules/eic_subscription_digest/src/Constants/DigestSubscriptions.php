@@ -19,6 +19,7 @@ final class DigestSubscriptions {
     MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
     MessageSubscriptionTypes::NEW_COMMENT_REPLY,
     MessageSubscriptionTypes::NEW_COMMENT,
+    MessageSubscriptionTypes::GROUP_CONTENT_SHARED
   ];
 
 }

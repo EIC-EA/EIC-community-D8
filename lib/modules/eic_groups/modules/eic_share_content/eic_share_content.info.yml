@@ -9,3 +9,4 @@ dependencies:
   - eic_groups
   - eic_search
   - eic_messages
+  - eic_message_subscriptions
