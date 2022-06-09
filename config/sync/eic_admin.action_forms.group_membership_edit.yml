@@ -1,0 +1,7 @@
+route: eic_group_membership.group_membership.edit_form
+paths: ''
+label: 'Group membership edit'
+title: 'Group membership edit'
+description:
+  value: "<p>You are about to request to delete <a href=\"[group:url]\">[group:title]</a>.</p>\r\n\r\n<p>State the reason for this request in the field below then click the request deletion button to complete this action. An administrator of the platform will process your request and you will receive an email notification once processed alongside the status of your request.</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+  format: full_html
