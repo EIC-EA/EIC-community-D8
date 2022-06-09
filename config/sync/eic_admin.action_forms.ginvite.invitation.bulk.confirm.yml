@@ -1,6 +1,6 @@
 route: ginvite.invitation.bulk.confirm
 paths: ''
-label: 'Invite members to group - Confirm'
+label: 'Invite members to group - Step 2/2'
 title: 'Invite users to the group (2 of 2)'
 description:
   value: ''
