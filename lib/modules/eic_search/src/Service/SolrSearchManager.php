@@ -20,6 +20,7 @@ use Drupal\search_api\Entity\Index;
 use Drupal\search_api_solr\SolrConnectorInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Solarium\Component\ComponentAwareQueryInterface;
 use Solarium\QueryType\Select\Query\Query;
 
@@ -433,7 +434,9 @@ class SolrSearchManager {
         return $member->getUser()->id() === $this->currentUser->id();
       });
 
-      $is_admin_group = $group_owner->id() === $this->currentUser->id() || !empty($filtered_admins);
+      $is_admin_group =
+        ($group_owner instanceof UserInterface && $group_owner->id() === $this->currentUser->id()) ||
+        !empty($filtered_admins);
     }
 
     if (
