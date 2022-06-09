@@ -9,6 +9,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
@@ -42,6 +43,23 @@ function eic_group_membership_entity_operation_alter(
       case 'accept_request_transfer_ownership':
       case 'deny_request_transfer_ownership':
       case 'cancel_request_transfer_ownership':
+        break;
+
+      case 'edit':
+      case 'delete':
+        // We replace the URL with our custom route, but keep the exact same
+        // options and route parameters.
+        $new_route_names = [
+          'edit' => 'eic_group_membership.group_membership.edit_form',
+          'delete' => 'eic_group_membership.group_membership.delete_form',
+        ];
+        /** @var \Drupal\Core\Url $old_url */
+        $old_url = $operations[$key]['url'];
+        $new_url = Url::fromRoute($new_route_names[$key]);
+        $new_url->setOptions($old_url->getOptions());
+        $new_url->setRouteParameters($old_url->getRouteParameters());
+        $operations[$key]['url'] = $new_url;
+        $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
         break;
 
       default:
