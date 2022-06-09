@@ -44,7 +44,7 @@ class GroupOverviewsController extends ControllerBase {
     $overview_perm = NULL;
 
     // First check if user has access to the group itself.
-    if (!$group->toUrl()->access('view', $account)) {
+    if (!$group->access('view', $account)) {
       return AccessResult::forbidden()
         ->addCacheableDependency($group)
         ->addCacheableDependency($account);
