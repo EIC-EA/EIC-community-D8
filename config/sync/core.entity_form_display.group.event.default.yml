@@ -214,34 +214,25 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_document_additional:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 23
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_document_agenda:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 20
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_document_presentations:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 21
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_documents:
     type: media_library_widget

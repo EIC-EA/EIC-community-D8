@@ -243,6 +243,10 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
     ];
   }
 
+  $variables['agenda_files'] = _eic_groups_get_formatted_attachments($entity, 'field_document_agenda', $variables);
+  $variables['presentation_files'] = _eic_groups_get_formatted_attachments($entity, 'field_document_presentations', $variables);
+  $variables['additional_files'] = _eic_groups_get_formatted_attachments($entity, 'field_document_additional', $variables);
+
   /** @var \Drupal\taxonomy\TermInterface $event_type_term */
   $event_type_term = $entity->get('field_vocab_event_type')->entity;
 
