@@ -1,6 +1,6 @@
 eic_recommend_content.recommend:
   path: '/api/recommend/{entity_type}/{entity_id}'
-  # methods: [ POST ]
+  methods: [ POST ]
   defaults:
     _controller: 'Drupal\eic_recommend_content\Controller\RecommendContentController::recommend'
     _title: 'Recommend group'
