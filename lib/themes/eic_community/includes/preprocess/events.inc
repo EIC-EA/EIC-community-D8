@@ -52,15 +52,16 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
         $group,
         $entity
       );
+
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+      if ($visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+      }
     }
 
     $existing_tags = $variables['#cache']['tags'] ?? [];
     $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
-    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if ($visibility instanceof GroupVisibilityRecordInterface
-      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
-      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
-    }
   }
 
   if ($entity->bundle() !== 'event') {
