@@ -17,7 +17,6 @@ source:
   track_changes: true
   batch_size: 100
 process:
-  name: title
   uid:
     -
       plugin: migration_lookup
@@ -27,7 +26,7 @@ process:
   status: status
   created: created
   changed: timestamp
-  oe_media_image:
+  _media:
     -
       plugin: sub_process
       source: c4m_media
@@ -42,6 +41,28 @@ process:
           -
             plugin: skip_on_empty
             method: row
+  _media_title:
+    -
+      plugin: entity_value
+      source: '@_media/0/target_id'
+      entity_type: file
+      field_name: uri
+    -
+      plugin: extract
+      index:
+        - 0
+    -
+      plugin: extract
+      index:
+        - value
+    -
+      plugin: explode
+      delimiter: '/'
+    -
+      plugin: array_pop
+  name: '@_media_title'
+  oe_media_image/0/target_id: '@_media/0/target_id'
+  oe_media_image/0/alt: '@_media_title'
 destination:
   plugin: 'entity:media'
   default_bundle: image

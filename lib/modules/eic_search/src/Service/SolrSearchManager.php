@@ -5,6 +5,7 @@ namespace Drupal\eic_search\Service;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
@@ -75,6 +76,11 @@ class SolrSearchManager {
   private Index $index;
 
   /**
+   * @var string|null
+   */
+  private ?string $currentGroup;
+
+  /**
    * @var \Drupal\search_api_solr\SolrConnectorInterface
    */
   private SolrConnectorInterface $connector;
@@ -128,6 +134,7 @@ class SolrSearchManager {
     $index_storage = $this->em
       ->getStorage('search_api_index');
     $this->index = $index_storage->load('global');
+    $this->currentGroup = NULL;
 
     /** @var \Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend $backend */
     $backend = $this->index->getServerInstance()->getBackend();
@@ -312,6 +319,8 @@ class SolrSearchManager {
       return;
     }
 
+    $this->currentGroup = $current_group;
+
     if (
       !$this->source->excludingCurrentGroup() &&
       $group_id_fields = $this->source->getPrefilteredGroupFieldId()
@@ -414,7 +423,21 @@ class SolrSearchManager {
     $this->solrQuery->addParam('q', $this->rawQuery);
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
 
+    $is_admin_group = FALSE;
+
+    if ($this->currentGroup && $current_group_entity = Group::load($this->currentGroup)) {
+      $group_owner = EICGroupsHelper::getGroupOwner($current_group_entity);
+      $group_admins = EICGroupsHelper::getGroupAdmins($current_group_entity);
+
+      $filtered_admins = array_filter($group_admins, function (GroupMembership $member) {
+        return $member->getUser()->id() === $this->currentUser->id();
+      });
+
+      $is_admin_group = $group_owner->id() === $this->currentUser->id() || !empty($filtered_admins);
+    }
+
     if (
+      !$is_admin_group &&
       $this->index->isValidProcessor('group_content_access') &&
       GroupAccessContent::supportsIndex($this->index)
     ) {
@@ -761,7 +784,7 @@ class SolrSearchManager {
     // Solr cannot handle negate OR in parentheses, so we need to do the reverse condition by negate it.
     $query = '-(!its_global_group_parent_id:("-1") OR (ss_global_content_type:book))';
 
-    $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
+    $this->rawFieldQuery .= empty($this->rawFieldQuery) ?
       "$query" :
       " AND $query";
   }
@@ -777,7 +800,7 @@ class SolrSearchManager {
     // Do not include organisation news as anonymous.
     $query = '(ss_global_group_parent_type:("" OR event OR group))';
 
-    $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
+    $this->rawFieldQuery .= empty($this->rawFieldQuery) ?
       "$query" :
       " AND $query";
   }
