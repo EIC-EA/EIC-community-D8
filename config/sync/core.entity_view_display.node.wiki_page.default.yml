@@ -32,14 +32,6 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
-  field_language:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 9
-    region: content
   field_related_downloads:
     type: entity_reference_entity_view
     label: hidden
@@ -99,6 +91,7 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
+  field_language: true
   field_vocab_geo: true
   field_vocab_topics: true
   langcode: true
