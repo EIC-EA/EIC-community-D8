@@ -68,6 +68,29 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
       $collection->add('eic_group_membership.group_membership.edit_form', $new_route);
     }
+    // Clone the 'entity.group_content.delete_form' route for group memberships.
+    // This will allow us to customise the group membership delete form without
+    // changing the generic group_content delete form.
+    if ($route = $collection->get('entity.group_content.delete_form')) {
+      $new_route = clone $route;
+      $new_route->setPath('/group/{group}/members/{group_content}/delete');
+      $parameters = $new_route->getOption('parameters');
+      foreach ($parameters as $key => $param) {
+        if ($key == 'group_content') {
+          $parameters[$key]['bundle'] = $this->getGroupMembershipBundles();
+        }
+        $new_route->setOption('parameters', $parameters);
+      }
+      $new_route->setOption('_admin_route', FALSE);
+      // We need to remove the '_group_operation_route' option to prevent this
+      // page to be rendered in the admin theme.
+      if ($route->hasOption('_group_operation_route')) {
+        $options = $route->getOptions();
+        unset($options['_group_operation_route']);
+        $route->setOptions($options);
+      }
+      $collection->add('eic_group_membership.group_membership.delete_form', $new_route);
+    }
   }
 
   /**
