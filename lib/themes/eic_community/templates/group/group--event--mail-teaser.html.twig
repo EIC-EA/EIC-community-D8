@@ -1,0 +1,7 @@
+{% include "@eic_community/content/mail_teaser/event.mail_teaser.html.twig" with event_item|merge({
+  title: label,
+  path: url,
+  description: event_item.description,
+  tags: event_item.tags,
+  date: event_item.date.start,
+}) %}
