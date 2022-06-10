@@ -192,8 +192,8 @@ function eic_community_preprocess_user(array &$variables) {
       $user_item['flagged_groups'] = [
         'title' => $current_user->id() === $user->id() ? t('My groups') : t('Groups'),
         'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_groups', [$user->id()])
-          : _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()])
+          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_groups', [$user->id()])
+          : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_groups', [$user->id()])
         ),
       ];
 
