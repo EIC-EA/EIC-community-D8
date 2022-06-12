@@ -106,7 +106,7 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
  */
 function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   $teaser = _eic_community_prepare_node_teaser_array($node);
-  $teaser['description'] = CommentsHelper::formatHtmlComment($node->get('field_body')->value);
+  $teaser['description'] = \Drupal\Component\Utility\Xss::filter($node->get('field_body')->value);
   $teaser['type'] = $discussion_type;
 
   // Remove unwanted items.
