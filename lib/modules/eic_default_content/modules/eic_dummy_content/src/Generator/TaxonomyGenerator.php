@@ -1,13 +1,14 @@
 <?php
 
-namespace Drupal\eic_default_content\Generator;
+namespace Drupal\eic_dummy_content\Generator;
 
+use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\taxonomy\Entity\Term;
 
 /**
  * Generates default content for taxonomy.
  *
- * @package Drupal\eic_default_content\Generator
+ * @package Drupal\eic_dummy_content\Generator
  */
 class TaxonomyGenerator extends CoreGenerator {
 

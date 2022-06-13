@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\eic_default_content\Generator;
+namespace Drupal\eic_dummy_content\Generator;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\ProfileConst;
 use Drupal\profile\Entity\Profile;
@@ -11,7 +12,7 @@ use Drupal\user\Entity\User;
 /**
  * Generates default users.
  *
- * @package Drupal\eic_default_content\Generator
+ * @package Drupal\eic_dummy_content\Generator
  */
 class UserGenerator extends CoreGenerator {
 

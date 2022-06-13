@@ -1,14 +1,15 @@
 <?php
 
-namespace Drupal\eic_default_content\Generator;
+namespace Drupal\eic_dummy_content\Generator;
 
 use Drupal\eic_moderation\Constants\EICContentModeration;
+use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\node\Entity\Node;
 
 /**
  * Class StoryGenerator
  *
- * @package Drupal\eic_default_content\Generator
+ * @package Drupal\eic_dummy_content\Generator
  */
 class StoryGenerator extends CoreGenerator {
 
