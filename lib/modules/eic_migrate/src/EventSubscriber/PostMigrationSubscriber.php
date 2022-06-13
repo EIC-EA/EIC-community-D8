@@ -456,10 +456,10 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $changed = $entity->getChangedTime();
     $entity->set($field_name, array_unique(array_merge($entity->get($field_name)->getValue(), $values)));
     $entity->setNewRevision(FALSE);
-    $entity->save();
-
     // Preserve the changed timestamp.
     $entity->setChangedTime($changed);
+    // We enable syncing to avoid creating new revisions.
+    $entity->setSyncing(TRUE);
     $entity->save();
   }
 

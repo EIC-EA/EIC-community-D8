@@ -6,7 +6,9 @@
       "2918537 - Cannot save unpublished versions of published content for users without manage book privileges": "https://www.drupal.org/files/issues/2021-11-16/2918537-68.patch",
       "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch",
       "2766369 - Add skip-method option to file_copy and download process plugins": "https://www.drupal.org/files/issues/2022-03-31/2766369-30.patch",
-      "2760983 - array_flip(): Can only flip STRING and INTEGER values! EntityStorageBase.php:227": "https://www.drupal.org/files/issues/2020-02-06/2760983-8.patch"
+      "2760983 - array_flip(): Can only flip STRING and INTEGER values! EntityStorageBase.php:227": "https://www.drupal.org/files/issues/2020-02-06/2760983-8.patch",
+      "2329253 - Allow the ChangedItem to skip updating the entity's \"changed\" timestamp when synchronizing (f.e. when migrating)": "https://www.drupal.org/files/issues/2022-05-30/2329253-90.patch",
+      "3052115 - Mark an entity as 'syncing' during a migration update": "https://www.drupal.org/files/issues/2022-05-12/3052115-47.patch"
     },
     "drupal/address": {
       "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch"
