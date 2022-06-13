@@ -90,7 +90,7 @@
         {% endif %}
       </{{ title_element }}>
       {% if description %}
-        <p class="ecl-discussion-thread__description">{{ description }}</p>
+        <p class="ecl-discussion-thread__description">{{ description | raw}}</p>
       {% endif %}
     </div>
   </div>

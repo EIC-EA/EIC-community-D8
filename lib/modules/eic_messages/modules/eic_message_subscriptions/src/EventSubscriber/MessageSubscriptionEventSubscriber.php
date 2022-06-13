@@ -64,7 +64,29 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       MessageSubscriptionEvents::GROUP_CONTENT_UPDATE => ['groupContentUpdated'],
       MessageSubscriptionEvents::NODE_INSERT => ['nodeCreated'],
       MessageSubscriptionEvents::CONTENT_RECOMMENDED => ['contentRecommended'],
+      MessageSubscriptionEvents::GLOBAL_EVENT_INSERT => ['globalEventCreated'],
     ];
+  }
+
+  /**
+   * @param \Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent $event
+   *
+   * @return void
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function globalEventCreated(MessageSubscriptionEvent $event) {
+    /** @var \Drupal\group\Entity\GroupInterface $entity */
+    $entity = $event->getEntity();
+    $message = $this->messageCreator->createGlobalEventSubscription($entity);
+    $topics = $entity->get('field_vocab_topics')->referencedEntities();
+
+    $context = [];
+    foreach ($topics as $topic_term) {
+      $context['taxonomy_term'][] = $topic_term->id();
+    }
+
+    // Send message notifications.
+    $this->messageSubscribersService->sendMessage($entity, $message, [], [], $context);
   }
 
   /**

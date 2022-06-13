@@ -6,6 +6,9 @@ dependencies:
     - core.entity_view_mode.message.notify_digest
     - field.field.message.sub_group_content_shared.field_event_executing_user
     - field.field.message.sub_group_content_shared.field_group_ref
+    - field.field.message.sub_group_content_shared.field_referenced_node
+    - field.field.message.sub_group_content_shared.field_share_message
+    - field.field.message.sub_group_content_shared.field_source_group
     - message.template.sub_group_content_shared
 id: message.sub_group_content_shared.notify_digest
 targetEntityType: message
@@ -44,4 +47,7 @@ content:
     weight: 0
     region: content
 hidden:
+  field_referenced_node: true
+  field_share_message: true
+  field_source_group: true
   search_api_excerpt: true

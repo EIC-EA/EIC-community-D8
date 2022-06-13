@@ -6,6 +6,9 @@ dependencies:
     - core.entity_view_mode.message.mail_subject
     - field.field.message.sub_group_content_shared.field_event_executing_user
     - field.field.message.sub_group_content_shared.field_group_ref
+    - field.field.message.sub_group_content_shared.field_referenced_node
+    - field.field.message.sub_group_content_shared.field_share_message
+    - field.field.message.sub_group_content_shared.field_source_group
     - message.template.sub_group_content_shared
 id: message.sub_group_content_shared.mail_subject
 targetEntityType: message
@@ -20,6 +23,9 @@ content:
 hidden:
   field_event_executing_user: true
   field_group_ref: true
+  field_referenced_node: true
+  field_share_message: true
+  field_source_group: true
   partial_1: true
   partial_2: true
   search_api_excerpt: true

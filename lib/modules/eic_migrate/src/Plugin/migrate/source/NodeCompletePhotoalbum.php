@@ -37,7 +37,7 @@ class NodeCompletePhotoalbum extends NodeCompleteWithSMEDIds {
    * Get node gallery relationships.
    *
    * @param int $ngid
-   *   Node gallery ID
+   *   Node gallery ID.
    *
    * @return array
    *   Array of ngid and nid.
@@ -45,7 +45,9 @@ class NodeCompletePhotoalbum extends NodeCompleteWithSMEDIds {
   protected function getNodeGalleryRelationships(int $ngid) {
     $nodeGalleryRelationshipsQuery = $this->select('node_gallery_relationship', 'ngr')
       ->fields('ngr', ['ngid', 'nid'])
-      ->where('ngr.ngid = :ngid', [':ngid' => $ngid]);
+      ->where('ngr.ngid = :ngid', [':ngid' => $ngid])
+      ->orderBy('ngr.weight')
+      ->orderBy('ngr.nid');
     $nodeGalleryRelationships = $nodeGalleryRelationshipsQuery->execute()->fetchAll();
 
     return $nodeGalleryRelationships;

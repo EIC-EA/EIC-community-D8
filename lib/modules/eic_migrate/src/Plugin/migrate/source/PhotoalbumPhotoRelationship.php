@@ -26,7 +26,9 @@ class PhotoalbumPhotoRelationship extends SqlBase {
    */
   public function query() {
     $query = $this->select('node_gallery_relationship', 'ngr')
-      ->fields('ngr');
+      ->fields('ngr')
+      ->orderBy('ngr.weight')
+      ->orderBy('ngr.nid');
     return $query;
   }
 

@@ -177,11 +177,14 @@ function eic_community_preprocess_group__event(&$variables) {
         ];
       }
 
-      $teaser['date']['start'] = _eic_community_preprocess_ecl_date_block(
+      $start_date = _eic_community_preprocess_ecl_date_block(
         $event_start_date,
         NULL,
         DateTimeHelper::DATE_FORMAT_SHORT
       );
+
+      $teaser['date'] = $start_date;
+      $teaser['date']['start'] = $start_date;
       $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block(
         $event_end_date,
         NULL,

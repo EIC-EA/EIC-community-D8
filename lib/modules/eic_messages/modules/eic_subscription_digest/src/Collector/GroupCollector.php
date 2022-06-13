@@ -35,6 +35,7 @@ class GroupCollector implements CollectorInterface {
       MessageSubscriptionTypes::GROUP_CONTENT_UPDATED,
       MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED,
       MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
+      MessageSubscriptionTypes::GROUP_CONTENT_SHARED,
     ];
 
     $flag_ids = $this->entityTypeManager->getStorage('flagging')
