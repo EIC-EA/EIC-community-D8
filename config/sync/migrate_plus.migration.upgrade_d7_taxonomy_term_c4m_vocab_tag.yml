@@ -38,8 +38,5 @@ destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: tags
 migration_dependencies:
-  required:
-    - upgrade_d7_node_complete_group
-    - upgrade_d7_node_complete_organisation
-    - upgrade_d7_node_complete_event_site
+  required: {  }
   optional: {  }
