@@ -128,7 +128,7 @@ class RecommendContentController extends ControllerBase {
       isset($content['external_emails']) &&
       is_string($content['external_emails'])
     ) {
-      $external_emails = array_map('trim', array_unique(explode("\r\n", trim($content['external_emails']))));
+      $external_emails = array_map('trim', array_unique(explode(PHP_EOL, trim($content['external_emails']))));
     }
 
     try {

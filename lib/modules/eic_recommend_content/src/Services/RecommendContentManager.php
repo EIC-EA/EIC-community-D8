@@ -3,9 +3,11 @@
 namespace Drupal\eic_recommend_content\Services;
 
 use Drupal\Component\Utility\EmailValidator;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -269,7 +271,10 @@ class RecommendContentManager {
       'entity_type' => $entity->getEntityTypeId(),
       'global' => $flag->isGlobal(),
       'field_recommend_emails' => implode(',', $user_emails),
-      'field_recommend_message' => $message,
+      'field_recommend_message' => [
+        'value' => Markup::create(Xss::filter($message)),
+        'format' => 'basic_text',
+      ],
     ]);
     $flagging->save();
     // Invalidate entity cache.
