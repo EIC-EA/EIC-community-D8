@@ -386,6 +386,11 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The entity object.
    */
   public function followEntityOnCreation(EntityInterface $entity) {
+    // If we are running migrations, stop flagging entities.
+    if (eic_migrate_is_migration_messages_running()) {
+      return;
+    }
+
     $flag_entity = FALSE;
     $flag_type = FALSE;
 
@@ -448,6 +453,11 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The profile object.
    */
   public function followTopicsOnUserProfileUpdate(ProfileInterface $profile) {
+    // If we are running migrations, stop flagging entities.
+    if (eic_migrate_is_migration_messages_running()) {
+      return;
+    }
+
     if ($profile->bundle() !== 'member') {
       return;
     }

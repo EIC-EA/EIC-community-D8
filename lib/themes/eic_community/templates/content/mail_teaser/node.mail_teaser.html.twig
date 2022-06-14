@@ -41,7 +41,8 @@
           <div style="margin-bottom: 7px">
             <a class="link" href="{{ path }}" style="font-weight: bold; color: #004494;">{{ label }}</a>
           </div>
-          <!-- CONTENT TITLE -->{% if description %} {{ description }}{% endif %}
+          {% set formatted_description = description|striptags|trim %}
+          <!-- CONTENT TITLE -->{% if formatted_description %} {{ formatted_description|length > 200 ? formatted_description|slice(0, 200)|raw ~ '...' : formatted_description|raw }}{% endif %}
         </div>
       </td>
     </tr>

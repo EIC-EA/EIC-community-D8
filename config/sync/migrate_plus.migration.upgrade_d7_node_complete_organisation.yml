@@ -68,10 +68,6 @@ process:
         - upgrade_d7_user
   revision_log_message: log
   revision_created: revision_timestamp
-  features:
-    -
-      plugin: eic_group_features
-      group_bundle: organisation
   field_address:
     -
       plugin: addressfield

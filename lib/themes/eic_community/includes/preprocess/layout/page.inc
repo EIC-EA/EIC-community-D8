@@ -35,7 +35,7 @@ function eic_community_preprocess_page(array &$variables): void {
       'alt' => t('European Commission logo'),
       'href' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
       'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
-      'src_mobile' => $variables['eic_logo_path'] . '/logo--mute.svg'
+      'src_mobile' => $variables['eic_logo_path'] . '/logo--mute.svg',
     ],
   ];
 
@@ -119,11 +119,17 @@ function _preprocess_node_page(&$variables) {
     switch ($variables['node']->getType()) {
       case 'story':
       case 'news':
-        /** @var \Drupal\media\Entity\Media $media */
-        $media = \Drupal::service('entity.repository')
-          ->getTranslationFromContext($node->get('field_header_visual')->entity,
-            $node->language()->getId());
-        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        if (!$node->get('field_header_visual')->isEmpty()) {
+          /** @var \Drupal\media\Entity\Media $media */
+          $media = \Drupal::service('entity.repository')
+            ->getTranslationFromContext($node->get('field_header_visual')->entity,
+              $node->language()->getId());
+        }
+
+        $image_item = isset($media) ?
+          ImageValueObject::fromImageItem($media->get('oe_media_image')->first()) :
+          NULL;
+
         $author = eic_community_get_teaser_user_display($node->getOwner());
         $author_theme = [
           '#theme' => 'eic_community_author',
@@ -141,7 +147,7 @@ function _preprocess_node_page(&$variables) {
         $is_restricted = $node->private->value === '1';
         $tag = [
           'type' => 'display',
-          'label' =>  $is_restricted ? t('Restricted') : t('Public'),
+          'label' => $is_restricted ? t('Restricted') : t('Public'),
         ];
         $variables['editorial_header'] = [
           'tags' => [
@@ -171,8 +177,8 @@ function _preprocess_node_page(&$variables) {
 
         $variables['hero'] = [
           'image' => [
-            'src' => $image_item->getSource(),
-            'alt' => $image_item->getAlt(),
+            'src' => $image_item ? $image_item->getSource() : NULL,
+            'alt' => $image_item ? $image_item->getAlt() : NULL,
           ],
           'items' => [
             ['content' => $author_theme],
@@ -265,7 +271,10 @@ function _preprocess_page_not_found(&$variables) {
 }
 
 /**
+ * Get account header block.
+ *
  * @return array
+ *   The block renderable array.
  */
 function _eic_get_account_header_block(): array {
   $config = [];

@@ -3,8 +3,10 @@
 namespace Drupal\eic_comments;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldFilteredMarkup;
 
 /**
  * Service that provides helper functions for comments.
@@ -55,6 +57,16 @@ class CommentsHelper {
     $query->count();
     $results = $query->execute();
     return (int) $results;
+  }
+
+  /**
+   * @param string $body
+   *
+   * @return string
+   */
+  public static function formatHtmlComment(string $body): string {
+    $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
+    return Xss::filter($body, $allowed_tags);
   }
 
 }

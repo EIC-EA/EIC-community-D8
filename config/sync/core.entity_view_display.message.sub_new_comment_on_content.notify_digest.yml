@@ -13,15 +13,10 @@ targetEntityType: message
 bundle: sub_new_comment_on_content
 mode: notify_digest
 content:
-  partial_0:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
   partial_1:
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 0
     region: content
   partial_2:
     settings: {  }
@@ -32,4 +27,5 @@ hidden:
   field_event_executing_user: true
   field_referenced_comment: true
   field_referenced_node: true
+  partial_0: true
   search_api_excerpt: true

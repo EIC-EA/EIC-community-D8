@@ -97,7 +97,7 @@ class DigestCollector {
 
     return $formatted_list;
   }
-  
+
   /**
    * @param \Drupal\eic_subscription_digest\Collector\CollectorInterface $collector
    */
@@ -138,6 +138,7 @@ class DigestCollector {
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
       case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
       case MessageSubscriptionTypes::NEW_EVENT_PUBLISHED:
+      case MessageSubscriptionTypes::GROUP_CONTENT_SHARED:
         /** @var \Drupal\group\Entity\GroupInterface $group */
         $group = $message->get('field_group_ref')->entity;
         $formatted_item = [
@@ -164,7 +165,11 @@ class DigestCollector {
       }
 
       usort($category['items'], function ($itemA, $itemB) {
-        return $itemA['entity']->get('created')->value <=> $itemB['entity']->get('created')->value;
+        if ($itemA['message']->hasField('field_referenced_node') && $itemB['message']->hasField('field_referenced_node')) {
+          return $itemB['message']->get('field_referenced_node')->entity->getCreatedTime() <=> $itemA['message']->get('field_referenced_node')->entity->getCreatedTime();
+        }
+
+        return $itemB['message']->getCreatedTime() <=> $itemA['message']->getCreatedTime();
       });
     }
 

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_comments
     - field.field.node.wiki_page.field_language
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
@@ -13,6 +14,7 @@ dependencies:
     - node.type.wiki_page
     - workflows.workflow.default
   module:
+    - comment
     - content_moderation
     - eic_content
     - field_group
@@ -78,6 +80,7 @@ third_party_settings:
       children:
         - private
         - member_content_edit_access
+        - field_comments
       label: Settings
       region: content
       parent_name: group_wiki_page_details
@@ -109,11 +112,29 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_language:
-    type: options_select
-    weight: 10
+  field_comments:
+    type: comment_default
+    weight: 3
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_language:
+    type: entity_tree
+    weight: 10
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      load_all: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected languages'
+      search_label: 'Select a language'
+      search_placeholder: Search
+      disable_top_choices: 0
+      can_create_tag: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_post_activity:
     weight: 4

@@ -156,24 +156,18 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_document_additional:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 45
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_document_agenda:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 43
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_document_media:
     type: media_library_widget
@@ -183,14 +177,11 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_document_presentations:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 44
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_image:
     type: media_library_widget
@@ -200,10 +191,22 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_language:
-    type: options_select
+    type: entity_tree
     weight: 44
     region: content
-    settings: {  }
+    settings:
+      match_top_level_limit: '0'
+      load_all: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected languages'
+      search_label: 'Select a language'
+      search_placeholder: Search
+      disable_top_choices: 0
+      can_create_tag: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_link:
     type: link_default

@@ -10,12 +10,11 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'Node (Photo) to Media'
 source:
-  plugin: d7_node
+  plugin: eic_d7_node_complete_photo
   node_type: photo
   track_changes: true
   batch_size: 100
 process:
-  name: title
   uid:
     - plugin: migration_lookup
       source: node_uid
@@ -34,19 +33,57 @@ process:
 #        - upgrade_d7_file_image_to_media
 #        - upgrade_d7_file_undefined_to_media
 #        - upgrade_d7_file_video_to_media
-  oe_media_image:
-    - plugin: sub_process
+  _media:
+    -
+      plugin: sub_process
       source: c4m_media
       process:
         target_id:
-          - plugin: migration_lookup
+          -
+            plugin: migration_lookup
             source: fid
             migration:
               - upgrade_d7_file
               - upgrade_d7_file_private
-          - plugin: skip_on_empty
+          -
+            plugin: skip_on_empty
             method: row
-#        alt: alt
+  _media_title:
+    -
+      plugin: entity_value
+      source: '@_media/0/target_id'
+      entity_type: file
+      field_name: uri
+    -
+      plugin: extract
+      index:
+        - 0
+    -
+      plugin: extract
+      index:
+        - value
+    -
+      plugin: explode
+      delimiter: '/'
+    -
+      plugin: array_pop
+  name: '@_media_title'
+  oe_media_image/0/target_id: '@_media/0/target_id'
+  oe_media_image/0/alt:
+    -
+      plugin: callback
+      source:
+        - '@_media_title'
+        - field_file_image_alt_text_value
+      callable:
+        - \Drupal\eic_migrate\Constants\Misc
+        - getImageAltText
+  oe_media_image/0/title:
+    -
+      plugin: default_value
+      source: field_file_image_title_text_value
+      strict: true
+      default_value: ''
 #        title: title
 #        width: width
 #        height: height

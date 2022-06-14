@@ -13,27 +13,6 @@ targetEntityType: message
 bundle: sub_site_event_pub_interest
 mode: mail_body
 content:
-  field_event_executing_user:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_topic_term:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  partial_0:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
   partial_1:
     settings: {  }
     third_party_settings: {  }
@@ -45,5 +24,8 @@ content:
     weight: 0
     region: content
 hidden:
+  field_event_executing_user: true
   field_group_ref: true
+  field_topic_term: true
+  partial_0: true
   search_api_excerpt: true

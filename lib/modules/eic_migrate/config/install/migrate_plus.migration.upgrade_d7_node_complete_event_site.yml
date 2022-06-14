@@ -290,9 +290,9 @@ process:
   field_smed_id: c4m_event_dashboard_id
   field_message_to_site_admin: field_message_to_site_admin
   field_tag_line: c4m_project_tag_line
-  features:
-    - plugin: eic_group_features
-      group_bundle: event
+  # features:
+  #   - plugin: eic_group_features
+  #     group_bundle: event
 # No source for following fields.
 #  field_documents:
 #  field_event_registration_date:

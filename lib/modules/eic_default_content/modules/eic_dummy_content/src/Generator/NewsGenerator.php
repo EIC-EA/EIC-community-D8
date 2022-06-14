@@ -1,7 +1,8 @@
 <?php
 
-namespace Drupal\eic_default_content\Generator;
+namespace Drupal\eic_dummy_content\Generator;
 
+use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\node\Entity\Node;
@@ -9,7 +10,7 @@ use Drupal\node\Entity\Node;
 /**
  * Class to generate news using fixtures.
  *
- * @package Drupal\eic_default_content\Generator
+ * @package Drupal\eic_dummy_content\Generator
  */
 class NewsGenerator extends CoreGenerator {
 

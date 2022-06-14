@@ -19,7 +19,33 @@ function eic_migrate_entity_type_alter(array &$entity_types) {
  */
 function eic_migrate_mail_alter(&$message) {
   // If we are running migrations, prevent email sending.
-  if (\Drupal::service('state')->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+  if (eic_migrate_is_migration_running()) {
     $message['send'] = FALSE;
   }
+}
+
+/**
+ * Determines if we are running the D7 migration.
+ *
+ * @return bool
+ *   TRUE if migration is running, FALSE otherwise.
+ */
+function eic_migrate_is_migration_running() {
+  if (\Drupal::service('state')->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Determines if we are running the D7 message migration.
+ *
+ * @return bool
+ *   TRUE if migration is running, FALSE otherwise.
+ */
+function eic_migrate_is_migration_messages_running() {
+  if (\Drupal::service('state')->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_MESSAGES_IS_RUNNING)) {
+    return TRUE;
+  }
+  return FALSE;
 }

@@ -5,6 +5,18 @@
         body: group.field_body.value|raw
       } %}
       {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+
+      {% if agenda_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Agenda and information', files: agenda_files} %}
+      {% endif %}
+
+      {% if presentation_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Presentation', files: presentation_files} %}
+      {% endif %}
+
+      {% if additional_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Additional', files: additional_files} %}
+      {% endif %}
     {% endblock %}
 
     {% block sidebar %}

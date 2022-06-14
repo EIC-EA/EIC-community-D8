@@ -27,11 +27,14 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       $group->get($hero_field_id)->entity,
       $group->language()->getId()
     );
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-    $variables['group_values']['image'] = [
-      'src' => $image_item->getSource(),
-      'alt' => $image_item->getAlt(),
-    ];
+
+    if (!$media->get('oe_media_image')->isEmpty()) {
+      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $variables['group_values']['image'] = [
+        'src' => $image_item->getSource(),
+        'alt' => $image_item->getAlt(),
+      ];
+    }
   }
 
   // Adds membership links to the group operation links dropdown.
@@ -307,7 +310,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   }
 
-  if (in_array($group->bundle(), ['event', 'group'])) {
+  if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group)) {
     $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
     if ($visibility instanceof GroupVisibilityRecordInterface
       && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {

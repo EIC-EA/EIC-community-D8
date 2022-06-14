@@ -49,4 +49,5 @@ migration_dependencies:
     - upgrade_d7_node_complete_book
     - upgrade_d7_node_complete_wiki_page
     - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_event_site
   optional: {  }

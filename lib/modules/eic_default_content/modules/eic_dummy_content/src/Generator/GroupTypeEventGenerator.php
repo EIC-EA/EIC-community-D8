@@ -1,8 +1,10 @@
 <?php
 
-namespace Drupal\eic_default_content\Generator;
+namespace Drupal\eic_dummy_content\Generator;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
@@ -10,11 +12,11 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
 
 /**
- * Class to generate groups using fixtures.
+ * Class to generate global events using fixtures.
  *
- * @package Drupal\eic_default_content\Generator
+ * @package Drupal\eic_dummy_content\Generator
  */
-class GroupGenerator extends CoreGenerator {
+class GroupTypeEventGenerator extends CoreGenerator {
 
   /**
    * Group flex saver service.
@@ -64,21 +66,73 @@ class GroupGenerator extends CoreGenerator {
     for ($i = 0; $i < 5; $i++) {
       $visibility = $i % 2 ? 'public' : 'private';
       $group_number = $i + 1;
+
+      switch ($this->faker->randomNumber(1, TRUE)) {
+        case 1:
+          // On going event.
+          $start_date = new DrupalDateTime('-2 days');
+          $end_date = new DrupalDateTime('+2 days');
+          break;
+
+        case 2:
+          // Future event.
+          $start_date = new DrupalDateTime('+2 days');
+          $end_date = new DrupalDateTime('+4 days');
+          break;
+
+        default:
+          // Past event.
+          $start_date = new DrupalDateTime('-4 days');
+          $end_date = new DrupalDateTime('-2 days');
+          break;
+
+      }
+
       $values = [
-        'label' => "Group #$group_number",
-        'type' => 'group',
+        'label' => "Global Event #$group_number",
+        'type' => 'event',
         'field_body' => $this->getFormattedText('full_html'),
+        'field_tag_line' => 'EIC event',
         'field_welcome_message' => $this->getFormattedText('full_html'),
         'status' => TRUE,
         'moderation_state' => GroupsModerationHelper::GROUP_PUBLISHED_STATE,
-        'field_hero' => $this->createMedia([
+        'field_header_visual' => $this->createMedia([
           'oe_media_image' => $this->getRandomImage(),
         ], 'image'),
-        'field_thumbnail' => $this->createMedia([
+        'field_image' => $this->createMedia([
           'oe_media_image' => $this->getRandomImage(),
         ], 'image'),
+        'field_documents' => [
+          $this->createMedia([
+            'field_body' => $this->getFormattedText('full_html'),
+            'field_media_file' => $this->getRandomImage(),
+            'field_language' => $this->getRandomEntities('taxonomy_term', ['vid' => 'languages'], 1),
+          ], 'eic_document'),
+        ],
+        'field_date_range' => [
+          'value'=> $start_date->format('Y-m-d\TH:i:s'),
+          'end_value' => $end_date->format('Y-m-d\TH:i:s'),
+        ],
+        'field_event_registration_date' => [
+          'value'=> $start_date->format('Y-m-d\TH:i:s'),
+          'end_value' => $end_date->format('Y-m-d\TH:i:s'),
+        ],
+        'field_organised_by' => 'EIC Admin',
+        'field_link' => 'https://myevent.site',
+        'field_website_url' => 'https://myevent.site',
+        'field_location_type' => $i % 2 ? 'on_site' : 'remote',
+        'field_location' => [
+          'country_code' => 'BE',
+          'address_line1' => 'Grand Place',
+          'locality' => 'Bruxelles',
+          'postal_code' => '1000',
+        ],
+        'field_vocab_event_type' => $this->getRandomEntities('group', ['type' => 'group'], 2),
+        'field_vocab_event_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'event_type'], 1),
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
+        'field_vocab_language' => $this->getRandomEntities('taxonomy_term', ['vid' => 'languages'], 1),
+        'field_funding_source' => $this->getRandomEntities('taxonomy_term', ['vid' => 'funding_source'], 1),
         'features' => $available_features,
         'uid' => 1,
       ];
@@ -93,13 +147,12 @@ class GroupGenerator extends CoreGenerator {
       $book->save();
 
       $this->createDiscussions($group);
-      $this->createGroupEvents($group);
       $this->createWikiPages($group);
     }
   }
 
   /**
-   * Creates a single discussion for the given group.
+   * Creates a single discussion for the given group event.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
@@ -136,54 +189,7 @@ class GroupGenerator extends CoreGenerator {
   }
 
   /**
-   * Creates a single group event (node) for the given group.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  private function createGroupEvents(GroupInterface $group) {
-    $content_type_id = $group
-      ->getGroupType()
-      ->getContentPlugin('group_node:event')
-      ->getContentTypeConfigId();
-
-    $node = Node::create([
-      'field_body' => $this->getFormattedText('full_html'),
-      'type' => 'event',
-      'title' => 'Event in ' . $group->label(),
-      'field_link' => 'https://myevent.site',
-      'field_organised_by' => 'Someone',
-      'field_vocab_event_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'event_type'], 1),
-      'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 3),
-      'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
-      'status' => TRUE,
-      'uid' => 1,
-      'moderation_state' => DefaultContentModerationStates::PUBLISHED_STATE,
-    ]);
-
-    $node->save();
-    $group_content = GroupContent::create([
-      'type' => $content_type_id,
-      'gid' => $group->id(),
-      'entity_id' => $node->id(),
-    ]);
-    $group_content->save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function unLoad() {
-    $this->unloadEntities('group_permission');
-    $this->unloadEntities('group');
-  }
-
-  /**
-   * Creates multiple wiki pages for the given group.
+   * Creates multiple wiki pages for the given group event.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
@@ -228,6 +234,15 @@ class GroupGenerator extends CoreGenerator {
       ]);
       $group_content->save();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unLoad() {
+    $this->unloadEntities('group_permission');
+    $this->unloadEntities('group');
+    return;
   }
 
 }

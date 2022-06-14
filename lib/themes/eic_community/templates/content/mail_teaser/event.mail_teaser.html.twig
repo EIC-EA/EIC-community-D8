@@ -1,3 +1,4 @@
+{{ dump(event_item) }}
 <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:124px;" ><![endif]-->
 <div class="mj-column-px-124 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
   <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
@@ -35,7 +36,7 @@
             <div style="margin-bottom: 7px">
               <a class="link" href="{{ path }}" style="font-weight: bold; color: #004494;">{{ label }}</a>
             </div>
-            <!-- CONTENT TITLE -->{% if description %} {{ description }}{% endif %}
+            <!-- CONTENT TITLE -->{% if description %} {{ description|length > 200 ? description|slice(0, 200) ~ '...' : description }}{% endif %}
           </div>
         </td>
       </tr>
