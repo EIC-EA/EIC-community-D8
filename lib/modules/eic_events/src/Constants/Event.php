@@ -47,7 +47,17 @@ final class Event {
   const GROUP_EVENT_TYPE_VOCABULARY_NAME = 'global_event_type';
 
   /**
+   * The legacy paragraphs field name.
+   *
+   * @var string
+   */
+  const LEGACY_PARAGRAPHS_FIELD = 'field_additional_content';
+
+  /**
+   * Returns the label for the event state.
+   *
    * @return array
+   *   An array with state as key with translated label as value.
    */
   public static function getStateLabelsMapping(): array {
     return [
