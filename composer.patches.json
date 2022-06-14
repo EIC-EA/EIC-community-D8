@@ -36,7 +36,7 @@
       "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-05-17/incorrect-access-check-on-media-library-3071489-27.patch",
       "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
       "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch",
-      "3281392 - Provide token support for GroupContent owner": "https://www.drupal.org/files/issues/2022-05-19/3281392-group-group_content_owner_tokens-3.patch"
+      "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch"
     },
     "drupal/group_content_menu": {
       "3209011 - Active trail is cached incorrectly": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch"
@@ -76,9 +76,6 @@
     },
     "drupal/realname": {
       "#3059311 - Autocomplete suggestions should respect the entity reference View": "patches/realname/autocomplete-condition-fix-3059311-5.patch"
-    },
-    "drupal/scheduler_content_moderation_integration": {
-      "#3124287 - Warning on accessing publish_on value on a non-node moderated entity": "https://www.drupal.org/files/issues/2021-04-19/3124287-7.accessing-publish-on-for-non-node-moderated-entity.patch"
     },
     "drupal/social_link_field": {
       "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
