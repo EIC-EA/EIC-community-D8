@@ -225,7 +225,9 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $members = $this->getMembersData($group);
       $cache['tags'] = [];
       foreach ($members as $member) {
-        $cache['tags'] = Cache::mergeTags($member['cache_tags'], $member['cache_tags']);
+        $cache['tags'] = !empty($member['cache_tags']) ?
+          Cache::mergeTags($cache['cache_tags'], $member['cache_tags']) :
+          $cache['tags'];
       }
     }
 
