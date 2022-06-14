@@ -73,14 +73,14 @@ process:
       map:
         - draft
         - published
-  field_body/0/format:
+  body/0/format:
     -
       plugin: callback
       source: c4m_body/0/format
       callable:
         - \Drupal\eic_migrate\Constants\Misc
         - getTextFormat
-  field_body/0/value:
+  body/0/value:
     -
       plugin: eic_html_sanitizer
       source: c4m_body/0/value
