@@ -1,6 +1,7 @@
 route: entity.group_content.group_approve_membership
-label: 'Approve membership request'
-title: ''
+paths: ''
+label: 'Group membership request - Approve'
+title: 'Approve membership request'
 description:
   value: ''
   format: full_html

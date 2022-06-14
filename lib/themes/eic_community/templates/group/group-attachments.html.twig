@@ -1,0 +1,9 @@
+<article class="ecl-filelist">
+  <header class="ecl-filelist__header">
+    <h2 class="ecl-filelist__title">{{ title }}</h2>
+  </header>
+
+  {% for file in files %}
+    {% include "@theme/patterns/components/attachment.html.twig" with file only %}
+  {% endfor %}
+</article>

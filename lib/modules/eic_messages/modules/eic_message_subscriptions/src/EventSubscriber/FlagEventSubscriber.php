@@ -2,11 +2,9 @@
 
 namespace Drupal\eic_message_subscriptions\EventSubscriber;
 
-use Drupal\Core\State\StateInterface;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
-use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\FlagInterface;
@@ -26,26 +24,15 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   protected $eventDispatcher;
 
   /**
-   * The state cache.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * FlagEventSubscriber constructor.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state cache.
    */
   public function __construct(
-    EventDispatcherInterface $event_dispatcher,
-    StateInterface $state
+    EventDispatcherInterface $event_dispatcher
   ) {
     $this->eventDispatcher = $event_dispatcher;
-    $this->state = $state;
   }
 
   /**
@@ -112,7 +99,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   TRUE if the flag can trigger message subscriptions.
    */
   public function isApplicable(FlagInterface $flag) {
-    if ($this->state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+    if (eic_migrate_is_migration_messages_running()) {
       FALSE;
     }
 

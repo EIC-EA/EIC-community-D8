@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\eic_default_content\Generator;
+namespace Drupal\eic_dummy_content\Generator;
 
 use Drupal\Core\Url;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\group\Entity\Group;
@@ -14,7 +15,7 @@ use Drupal\node\Entity\Node;
 /**
  * Class to generate organisations using fixtures.
  *
- * @package Drupal\eic_default_content\Generator
+ * @package Drupal\eic_dummy_content\Generator
  */
 class OrganisationGenerator extends CoreGenerator {
 

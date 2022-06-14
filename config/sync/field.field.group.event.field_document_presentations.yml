@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.group.field_document_presentations
     - group.type.event
-    - node.type.document
+    - media.type.eic_document
 id: group.event.field_document_presentations
 field_name: field_document_presentations
 entity_type: group
@@ -17,10 +17,10 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: 'default:media'
   handler_settings:
     target_bundles:
-      document: document
+      eic_document: eic_document
     sort:
       field: _none
       direction: ASC

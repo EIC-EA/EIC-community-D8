@@ -1,0 +1,7 @@
+route: eic_group_membership.group_membership.edit_form
+paths: ''
+label: 'Group membership - Edit'
+title: 'Edit [group_content:user:display-name]'
+description:
+  value: "<p>You are about to edit the group member <a href=\"[group_content:user:url]\">[group_content:user:display-name]</a> in <a href=\"[group:url]\">[group:title]</a>.</p>\r\n\r\n<p>Click the save button to complete this action.</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+  format: full_html
