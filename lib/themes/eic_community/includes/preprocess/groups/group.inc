@@ -5,11 +5,11 @@
  * Prepares variables for group templates.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\TermInterface;
 
@@ -358,12 +358,12 @@ function _eic_community_get_group_custom_restricted_options_item_list(string $re
   ];
 }
 
-function _eic_groups_get_formatted_attachments(GroupInterface $group, string $field_name, $variables) {
-  if (!$group->hasField($field_name)) {
+function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, string $field_name, $variables) {
+  if (!$entity->hasField($field_name)) {
     return [];
   }
 
-  $medias = $group->get($field_name)->referencedEntities();
+  $medias = $entity->get($field_name)->referencedEntities();
 
   $list = [];
   foreach ($medias as $media) {
