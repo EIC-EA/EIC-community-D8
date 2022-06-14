@@ -9,7 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
+use Drupal\eic_admin\Service\ActionFormsManager;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -73,6 +73,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $eicGroupsHelper;
 
   /**
+   * The action forms manager service.
+   *
+   * @var \Drupal\eic_admin\Service\ActionFormsManager
+   */
+  protected $actionFormsManager;
+
+  /**
    * Constructs the GroupBreadcrumbBuilder.
    *
    * @param \Drupal\book\BookBreadcrumbBuilder $book_breadcrumb_builder
@@ -87,6 +94,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The request stack service.
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The groups helper service.
+   * @param \Drupal\eic_admin\Service\ActionFormsManager $action_forms_manager
+   *   The action forms manager service.
    */
   public function __construct(
     BookBreadcrumbBuilder $book_breadcrumb_builder,
@@ -94,7 +103,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     UserHelper $eic_user_helper,
     RequestHandlerCollector $request_handler_collector,
     RequestStack $request_stack,
-    EICGroupsHelper $eic_groups_helper
+    EICGroupsHelper $eic_groups_helper,
+    ActionFormsManager $action_forms_manager
   ) {
     $this->bookBreadcrumbBuilder = $book_breadcrumb_builder;
     $this->account = $account;
@@ -102,6 +112,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->requestStack = $request_stack;
     $this->eicUserHelper = $eic_user_helper;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->actionFormsManager = $action_forms_manager;
   }
 
   /**
@@ -117,6 +128,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       case 'entity.group_content.group_reject_membership':
       case 'ginvite.invitation.bulk':
       case 'ginvite.invitation.bulk.confirm':
+      case 'ginvite.invitation.accept':
         $applies = TRUE;
         break;
 
@@ -297,6 +309,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       case 'entity.group_content.new_request':
       case 'entity.group_content.user_close_request':
+      case 'ginvite.invitation.accept':
         /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
         $group_content = $route_match->getParameter('group_content');
 
@@ -304,34 +317,17 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           break;
         }
 
+        // Since we have multiple configs for the same route, we add the related
+        // config as a dependency.
+        if ($action_config = $this->actionFormsManager->getRouteConfig()) {
+          $breadcrumb->addCacheableDependency($action_config);
+        }
+
         // We add the group content object as cacheable dependency.
         $breadcrumb->addCacheableDependency($group_content);
 
         $group = $group_content->getGroup();
         $links[] = $group->toLink();
-
-        $request_handler = $this->requestHandlerCollector->getHandlerByType(
-          $this->requestStack->getCurrentRequest()->get('request_type')
-        );
-
-        if (!$request_handler) {
-          break;
-        }
-
-        if ($request_handler->getType() === RequestTypes::TRANSFER_OWNERSHIP) {
-          $group_members_url = Url::fromRoute(
-            'view.eic_group_members.page_group_members',
-            ['group' => $group->id()]
-          );
-          $links[] = Link::fromTextAndUrl(
-            $this->t('Members'),
-            $group_members_url
-          );
-          $user_full_name = $this->eicUserHelper->getFullName(
-            $group_content->getEntity()
-          );
-          $links[] = $group_content->getEntity()->toLink($user_full_name);
-        }
         break;
 
     }
@@ -345,6 +341,26 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb->addCacheContexts(['url.path']);
 
     return $breadcrumb;
+  }
+
+  /**
+   * Returns the request handler type of the current request.
+   *
+   * @see \Drupal\eic_flags\RequestTypes
+   *
+   * @return false|string
+   *   The handler type or FALSE if not found.
+   */
+  protected function getRequestHandlerType() {
+    $request_handler = $this->requestHandlerCollector->getHandlerByType(
+      $this->requestStack->getCurrentRequest()->get('request_type')
+    );
+
+    if (!$request_handler) {
+      return FALSE;
+    }
+
+    return $request_handler->getType();
   }
 
 }

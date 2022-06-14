@@ -4,6 +4,9 @@ eic_admin.action_forms.*:
     route:
       type: string
       label: 'Route name'
+    paths:
+      type: string
+      label: 'Paths'
     label:
       type: string
       label: 'Label'
