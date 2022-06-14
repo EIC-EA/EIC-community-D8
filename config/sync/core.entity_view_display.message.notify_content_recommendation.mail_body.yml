@@ -17,6 +17,11 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_referenced_flag: true
   field_rendered_content: true
