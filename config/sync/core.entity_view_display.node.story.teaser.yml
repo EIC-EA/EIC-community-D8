@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.story.field_image_caption
     - field.field.node.story.field_introduction
     - field.field.node.story.field_language
+    - field.field.node.story.field_related_groups
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_tags
@@ -95,6 +96,7 @@ hidden:
   field_image_caption: true
   field_introduction: true
   field_language: true
+  field_related_groups: true
   field_related_stories: true
   field_story_paragraphs: true
   field_tags: true
