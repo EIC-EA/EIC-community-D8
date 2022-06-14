@@ -7,8 +7,11 @@
 
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\EICGroupsHelper;
-use Drupal\taxonomy\TermInterface;
+use Drupal\eic_media\MediaHelper;
+use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_group__group().
@@ -149,7 +152,7 @@ function _group_about_group_tab($variables, &$sections) {
 
     return [
       'title' => realname_load($user),
-      'path' => $user->toUrl()
+      'path' => $user->toUrl(),
     ];
   }, $owners);
 
@@ -166,7 +169,7 @@ function _group_about_group_tab($variables, &$sections) {
 
       return [
         'title' => realname_load($user),
-        'path' => $user->toUrl()
+        'path' => $user->toUrl(),
       ];
     }, $admins);
 
@@ -353,4 +356,35 @@ function _eic_community_get_group_custom_restricted_options_item_list(string $re
       '#items' => $items,
     ],
   ];
+}
+
+function _eic_groups_get_formatted_attachments(GroupInterface $group, string $field_name, $variables) {
+  if (!$group->hasField($field_name)) {
+    return [];
+  }
+
+  $medias = $group->get($field_name)->referencedEntities();
+
+  $list = [];
+  foreach ($medias as $media) {
+    $file = File::load($media->field_media_file->target_id);
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+    $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
+    $list[] = [
+      'title' => $media->getName(),
+      'language' => $media->language()->getName(),
+      'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
+      'filesize' => format_size($file->get('filesize')->getString()),
+      'highlight' => FALSE,
+      'path' => $download_url,
+      'icon_file_path' => $variables['eic_icon_path'],
+      'icon' => [
+        'type' => $file_type === 'video' ? 'general' : 'custom',
+        'name' => $file_type === 'video' ? $file_type : substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+      ],
+    ];
+  }
+
+  return $list;
 }

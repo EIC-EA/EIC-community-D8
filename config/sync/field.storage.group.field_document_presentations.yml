@@ -4,13 +4,13 @@ status: true
 dependencies:
   module:
     - group
-    - node
+    - media
 id: group.field_document_presentations
 field_name: field_document_presentations
 entity_type: group
 type: entity_reference
 settings:
-  target_type: node
+  target_type: media
 module: core
 locked: false
 cardinality: -1
