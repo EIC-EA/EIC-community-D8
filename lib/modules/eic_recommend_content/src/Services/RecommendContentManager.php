@@ -194,6 +194,13 @@ class RecommendContentManager {
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
         'link_label' => $link_label,
+        'modal_title' => $this->t('Recommend this content'),
+        'modal_description' => $this->t('Select exisiting members or people outside of the platform you wish to recommend this content to. Those will be presented to you as long as they have the permission to view the content you want to share.'),
+        'modal_success_title' => $this->t('Recommendation sent!'),
+        'modal_success_description' => $this->t("
+          <p>The content you've recommended was successfully sent to the users you've selected. They will receive an email notification informing the of this action.</p>
+          <p>You can always recommend this content again at a lated stage.</p>"
+        ),
       ],
       '#tree_settings' => $get_users_url_parameters,
       '#tree_translations' => EntityTreeManager::getTranslationsWidget(),
