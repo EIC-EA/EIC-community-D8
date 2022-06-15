@@ -7,9 +7,9 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\eic_comments\Constants\Comments;
-use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_private_message\PrivateMessageHelper;
 use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\GroupRole;
 use Drupal\group\GroupMembership;
 use Drupal\group\GroupMembershipLoaderInterface;
 use Drupal\profile\Entity\Profile;
@@ -144,9 +144,6 @@ class ProcessorUser extends DocumentProcessor {
   private function calculateMostActive(UserInterface $user, Document $document, array $fields) {
     $total_groups = 0;
     $total_events = 0;
-    $total_followers = 0;
-    $total_comments = 0;
-    $total_content = 0;
 
     $comment_storage = $this->entityTypeManager->getStorage('comment');
     $query = $comment_storage->getQuery();
@@ -154,19 +151,6 @@ class ProcessorUser extends DocumentProcessor {
     $query->condition('status', CommentInterface::PUBLISHED);
     $query->condition('uid', $user->id());
     $total_comments = (int) $query->count()->execute();
-
-    foreach ($this->groupMembershipLoader->loadByUser($user) as $membership) {
-      $group = $membership->getGroup();
-
-      switch ($group->bundle()) {
-        case 'event':
-          $total_events += 1;
-          break;
-        case 'group':
-          $total_groups += 1;
-          break;
-      }
-    }
 
     $total_followers = $this->userHelper->getUserFollowers($user);
 
@@ -178,8 +162,36 @@ class ProcessorUser extends DocumentProcessor {
     $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
     $total_content = (int) $query_members->execute()->fetchAssoc()['count'];
 
-    $most_active_total = 3 * $total_followers + 2 * $total_content + 2 * $total_comments + $total_groups + $total_events;
+    foreach ($this->groupMembershipLoader->loadByUser($user) as $membership) {
+      $group = $membership->getGroup();
 
+      $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
+        ->fields('gc_fd', ['uid'])
+        ->condition('gc_fd.uid', $user->id())
+        ->condition('gc_fd.gid', $group->id())
+        ->condition('gc_fd.type', '%group_node%', 'LIKE');
+      $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
+      $total_group_content = (int) $query_members->execute()->fetchAssoc()['count'];
+
+      $most_active_total = 3 * $total_followers + 2 * $total_group_content + 2 * $total_comments + $total_groups + $total_events;
+      $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID_GROUP . $group->id(), $fields, $most_active_total);
+      $roles = array_map(function(GroupRole $group_role) {
+        return $group_role->label();
+      }, $membership->getRoles());
+
+      $this->addOrUpdateDocumentField($document, self::SOLR_GROUP_ROLES . $group->id(), $fields, array_values($roles));
+
+      switch ($group->bundle()) {
+        case 'event':
+          $total_events += 1;
+          break;
+        case 'group':
+          $total_groups += 1;
+          break;
+      }
+    }
+
+    $most_active_total = 3 * $total_followers + 2 * $total_content + 2 * $total_comments + $total_groups + $total_events;
     $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID, $fields, $most_active_total);
   }
 
