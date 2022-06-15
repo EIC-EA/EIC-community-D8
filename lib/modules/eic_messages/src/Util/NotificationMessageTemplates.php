@@ -32,6 +32,11 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
   const GROUP_DELETE = 'notify_group_deleted';
 
   /**
+   * Message template for notifying contentn recommendations.
+   */
+  const CONTENT_RECOMMENDATION = 'notify_content_recommendation';
+
+  /**
    * {@inheritdoc}
    */
   public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {

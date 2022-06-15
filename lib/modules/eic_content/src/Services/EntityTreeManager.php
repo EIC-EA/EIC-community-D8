@@ -139,6 +139,92 @@ class EntityTreeManager {
   }
 
   /**
+   * Return all required translation keys for the Entity Tree Widget.
+   *
+   * @return array
+   */
+  public static function getTranslationsWidget(): array {
+    return [
+      'title' => t('Replies', [], ['context' => 'eic_groups'])->render(),
+      'no_results_title' => t(
+        "We haven't found any comments",
+        [],
+        ['context' => 'eic_group']
+      )->render(),
+      'no_results_body' => t(
+        'Please try again with another keyword',
+        [],
+        ['context' => 'eic_group']
+      )->render(),
+      'load_more' => t('Load more', [], ['context' => 'eic_groups'])->render(),
+      'edit' => t('Edit', [], ['context' => 'eic_groups'])->render(),
+      'options' => t('Options', [], ['context' => 'eic_groups'])->render(),
+      'reply_to' => t('Reply', [], ['context' => 'eic_groups'])->render(),
+      'in_reply_to' => t('in reply to', [], ['context' => 'eic_groups']
+      )->render(),
+      'reply' => t('Reply', [], ['context' => 'eic_groups'])->render(),
+      'submit' => t('Submit', [], ['context' => 'eic_groups'])->render(),
+      'reason' => t('Reason', [], ['context' => 'eic_groups'])->render(),
+      'comment_placeholder' => t(
+        'Type your message here...',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_edit_comment' => t(
+        'Edit comment',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_delete_comment' => t(
+        'Delete comment',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_request_delete' => t(
+        'Request deletion',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_request_archival' => t(
+        'Request archival',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'select_value' => t(
+        'Select a value',
+        [],
+        ['context' => 'eic_search']
+      )->render(),
+      'match_limit' => t(
+        'You can select only <b>@match_limit</b> top-level items.',
+        ['@match_limit' => 0],
+        ['context' => 'eic_search']
+      )->render(),
+      'search' => t('Search', [], ['context' => 'eic_search'])->render(),
+      'your_values' => t(
+        'Your selected values',
+        [],
+        ['context' => 'eic_search']
+      )->render(),
+      'required_field' => t(
+        'This field is required',
+        [],
+        ['context' => 'eic_content']
+      )->render(),
+      'select_users' => t(
+        'Select users',
+        [],
+        ['context' => 'eic_content']
+      )->render(),
+      'modal_invite_users_title' => t(
+        'Invite user(s)',
+        [],
+        ['context' => 'eic_content']
+      )->render(),
+    ];
+  }
+
+  /**
    * @param $tree
    * @param $object
    * @param $vocabulary

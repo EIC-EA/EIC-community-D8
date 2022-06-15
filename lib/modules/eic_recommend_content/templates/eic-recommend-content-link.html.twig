@@ -1,0 +1,18 @@
+{{ attach_library('eic_community/react-recommend-content-block') }}
+<div class="react-recommend-content-modal-block"
+  data-entity-type="{{ entity_type }}"
+  data-entity-id="{{ entity_id }}"
+  data-get-users-url="{{ get_users_url }}"
+  data-can-recommend="{{ can_recommend }}"
+  data-can-recommend-external-users="{{ can_recommend_external_users }}"
+  data-endpoint="{{ endpoint }}"
+  data-label={{translations.link_label}}
+  data-tree-widget-settings="{{ tree_settings | json_encode }}"
+  data-tree-widget-translations="{{ tree_translations | json_encode }}"
+  data-modal-title="{{ translations.modal_title }}"
+  data-modal-description="{{ translations.modal_description }}"
+  data-modal-success-title="{{ translations.modal_success_title }}"
+  data-modal-success-description="{{ translations.modal_success_description }}"
+/>
+  {{ translations.link_label }}
+</div>
