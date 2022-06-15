@@ -8,6 +8,7 @@ use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_topics\Constants\Topics;
@@ -131,7 +132,7 @@ class SolrSearchManager {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\search_api\SearchApiException
    */
-  public function init(string $source_class, ?array $facets_fields): self {
+  public function init(string $source_class): self {
     $index_storage = $this->em
       ->getStorage('search_api_index');
     $this->index = $index_storage->load('global');
@@ -144,7 +145,6 @@ class SolrSearchManager {
     /** @var \Drupal\search_api_solr\Plugin\SolrConnector\BasicAuthSolrConnector $connector */
     $this->connector = $backend->getSolrConnector();
     $this->solrQuery = $this->connector->getSelectQuery();
-    $this->solrQuery->addParam('facet.field', $facets_fields);
     $this->rawQuery = '';
 
     $sources = $this->sourcesCollector->getSources();
@@ -208,6 +208,15 @@ class SolrSearchManager {
 
       //Normally sort key have this structure 'FIELD__ASC' but add double check
       if (2 === count($sorts)) {
+        // Check if sort needs a group injection before sending to solr.
+        $sort_fields_group_context = [
+          DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP,
+          DocumentProcessorInterface::SOLR_GROUP_ROLES,
+        ];
+
+        if (in_array($sorts[0], $sort_fields_group_context)) {
+          $sorts[0] = $sorts[0] . $this->currentGroup;
+        }
         $this->solrQuery->addSort($sorts[0], $sorts[1]);
       }
     }
@@ -246,6 +255,10 @@ class SolrSearchManager {
         $query_values = count($values) > 1 ?
           '(' . implode(' AND ', $values) . ')' :
           implode(' AND ', $values);
+
+        if (in_array($key, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
+          $key = $key . $this->currentGroup;
+        }
 
         $facets_query .= ' AND ' . $key . ':' . $query_values;
       }
@@ -308,6 +321,23 @@ class SolrSearchManager {
         "$date_query" :
         " AND $date_query";
     }
+  }
+
+  /**
+   * Set all facets to our SOLR request.
+   *
+   * @param array|null $facets_fields
+   */
+  public function buildFacets(?array $facets_fields) {
+    $facets_fields = array_map(function($facet) {
+      if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
+        return $facet;
+      }
+
+      return $facet . $this->currentGroup;
+    }, $facets_fields);
+
+    $this->solrQuery->addParam('facet.field', $facets_fields);
   }
 
   /**

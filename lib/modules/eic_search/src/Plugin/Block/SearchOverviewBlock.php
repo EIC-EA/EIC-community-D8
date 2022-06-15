@@ -202,6 +202,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       return $sort;
     });
 
+    $facets = array_keys($facets);
+    $sorts = array_keys($sorts);
+
     $source_type = $this->configuration['source_type'];
     $sources = $this->sourcesCollector->getSources();
 
@@ -286,8 +289,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#theme' => 'search_overview_block',
         '#cache' => ['contexts' => ['url.path', 'url.query_args']],
         '#manager_roles' => $group_admins,
-        '#facets' => array_keys($facets),
-        '#sorts' => array_keys($sorts),
+        '#facets' => $facets,
+        '#sorts' => $sorts,
         '#prefilters' => $this->extractFilterFromUrl(),
         '#prefilter_my_interests' => $source instanceof ActivityStreamSourceType,
         '#search_string' => $search_value,

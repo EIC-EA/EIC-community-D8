@@ -13,6 +13,15 @@ interface DocumentProcessorInterface {
 
   public const SOLR_MOST_ACTIVE_ID = "its_activity_score";
 
+  public const SOLR_MOST_ACTIVE_ID_GROUP = "its_activity_score_group";
+
+  public const SOLR_GROUP_ROLES = "sm_roles_group";
+
+  public const SOLR_FIELD_NEED_GROUP_INJECT = [
+    self::SOLR_GROUP_ROLES,
+    self::SOLR_MOST_ACTIVE_ID_GROUP,
+  ];
+
   /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
@@ -29,4 +38,5 @@ interface DocumentProcessorInterface {
    * @return bool
    */
   public function supports(array $fields): bool;
+
 }
