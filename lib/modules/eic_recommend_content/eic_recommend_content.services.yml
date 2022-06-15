@@ -6,8 +6,8 @@ services:
       - { name: access_check, applies_to: _eic_recommend_content_access_check }
   eic_recommend_content.manager:
     class: Drupal\eic_recommend_content\Services\RecommendContentManager
-    arguments: ['@entity_type.manager', '@current_user', '@oec_group_flex.helper', '@email.validator', '@flag', '@flag.count']
-  eic_message_subscriptions.flag_event_subscriber:
+    arguments: ['@entity_type.manager', '@current_user', '@oec_group_flex.helper', '@email.validator', '@flag', '@flag.count', '@eic_groups.helper']
+  eic_recommend_content.flag_event_subscriber:
     class: Drupal\eic_recommend_content\EventSubscriber\FlagEventSubscriber
     arguments: ['@entity_type.manager', '@renderer', '@eic_messages.message_bus']
     tags:

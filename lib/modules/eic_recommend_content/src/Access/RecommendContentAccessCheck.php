@@ -78,7 +78,7 @@ class RecommendContentAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(Route $route, AccountInterface $account, string $entity_type = NULL, int $entity_id = NULL) {
-    if (!$entity_type || !$entity_id) {
+    if (!$entity_type || !$entity_id || $account->isAnonymous()) {
       return AccessResult::forbidden();
     }
 
@@ -122,11 +122,6 @@ class RecommendContentAccessCheck implements AccessInterface {
 
     switch ($moderation_state) {
       case DefaultContentModerationStates::PUBLISHED_STATE:
-        // Anonymous users cannot recommend content.
-        if ($account->isAnonymous()) {
-          return $access;
-        }
-
         // Power users can always recommend published content.
         if (UserHelper::isPowerUser($account)) {
           $access = AccessResult::allowed()

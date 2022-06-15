@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Services\EntityTreeManager;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagCountManagerInterface;
@@ -68,6 +69,13 @@ class RecommendContentManager {
   protected $flagCountManager;
 
   /**
+   * The EIC Groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  protected $eicGroupsHelper;
+
+  /**
    * Constructs a RecommendContentManager object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -82,6 +90,8 @@ class RecommendContentManager {
    *   The flag service.
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
    *   The flag count manager service.
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   *   The EIC Groups helper service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -89,7 +99,8 @@ class RecommendContentManager {
     OECGroupFlexHelper $oec_group_flex_helper,
     EmailValidator $email_validator,
     FlagServiceInterface $flag_service,
-    FlagCountManagerInterface $flag_count_manager
+    FlagCountManagerInterface $flag_count_manager,
+    EICGroupsHelper $eic_groups_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
@@ -97,6 +108,7 @@ class RecommendContentManager {
     $this->emailValidator = $email_validator;
     $this->flagService = $flag_service;
     $this->flagCountManager = $flag_count_manager;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -161,13 +173,7 @@ class RecommendContentManager {
           $can_recommend = FALSE;
         }
 
-        /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
-        $group_contents = $this->entityTypeManager->getStorage('group_content')
-          ->loadByEntity($entity);
-
-        if (!empty($group_contents)) {
-          $group_content = reset($group_contents);
-          $group = $group_content->getGroup();
+        if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
           $get_users_url_parameters['current_group'] = $group->id();
           $can_recommend_external_users = $this->canRecommendExternalUsers($group);
         }
@@ -198,8 +204,8 @@ class RecommendContentManager {
         'modal_description' => $this->t('Select exisiting members or people outside of the platform you wish to recommend this content to. Those will be presented to you as long as they have the permission to view the content you want to share.'),
         'modal_success_title' => $this->t('Recommendation sent!'),
         'modal_success_description' => $this->t("
-          <p>The content you've recommended was successfully sent to the users you've selected. They will receive an email notification informing the of this action.</p>
-          <p>You can always recommend this content again at a lated stage.</p>"
+          <p>The content you've recommended was successfully sent to the users you've selected. They will receive an email notification informing them of this action.</p>
+          <p>You can always recommend this content again at a later stage.</p>"
         ),
       ],
       '#tree_settings' => $get_users_url_parameters,
@@ -305,16 +311,13 @@ class RecommendContentManager {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
-        $group_contents = $this->entityTypeManager->getStorage('group_content')
-          ->loadByEntity($entity);
+        /** @var \Drupal\group\Entity\GroupInterface $group */
+        $group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity);
 
-        if (empty($group_contents)) {
+        if (empty($group)) {
           break;
         }
 
-        $group_content = reset($group_contents);
-        $group = $group_content->getGroup();
         $visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
         if (!in_array($visibility_settings['plugin_id'], $allowed_group_visibilities)) {
           $can_recommend = FALSE;
