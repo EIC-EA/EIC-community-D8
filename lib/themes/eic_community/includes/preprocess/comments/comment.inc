@@ -124,11 +124,11 @@ function eic_community_preprocess_comment(&$variables) {
 
   switch ($view_mode) {
     case 'notification_teaser':
+      // We cannot see avatar pictures unless we are logged in. And therefore,
+      // we only show the default one in email notifications.
       $default_avatar = $variables['eic_images_path'] . '/sprite/custom/svg/custom/user_circle.svg';
-      $author_avatar = \Drupal\eic_user\UserHelper::getUserAvatar($author);
-
       $variables['comment']['author']['image'] = [
-        'src' => !empty($author_avatar) ? $author_avatar : $default_avatar,
+        'src' => $default_avatar,
         'alt' => $author->getDisplayName(),
       ];
       // Removes unneeded variables from notification teaser.
