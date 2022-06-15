@@ -145,7 +145,7 @@ class UpdateAllGroupPermissionsForm extends FormBase {
       $container->get('group_role.synchronizer'),
       $container->get('oec_group_features.helper'),
       $container->get('plugin.manager.group_feature'),
-      $container->get('group_flex.group_saver')
+      $container->get('group_flex.group_type')
     );
   }
 
