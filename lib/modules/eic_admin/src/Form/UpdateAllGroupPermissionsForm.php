@@ -16,6 +16,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupType;
 use Drupal\group\GroupRoleSynchronizer;
 use Drupal\group_flex\GroupFlexGroupSaver;
+use Drupal\group_flex\GroupFlexGroupType;
 use Drupal\group_permissions\GroupPermissionsManagerInterface;
 use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\oec_group_features\GroupFeaturePluginManager;
@@ -81,6 +82,13 @@ class UpdateAllGroupPermissionsForm extends FormBase {
   protected $groupFeaturePluginManager;
 
   /**
+   * The group type flex service.
+   *
+   * @var \Drupal\group_flex\GroupFlexGroupType
+   */
+  protected $groupTypeFlex;
+
+  /**
    * UpdateAllGroupPermissionsForm constructor.
    *
    * @param EntityTypeManagerInterface $em
@@ -99,6 +107,8 @@ class UpdateAllGroupPermissionsForm extends FormBase {
    *   The OEC group feature helper service.
    * @param \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_plugin_manager
    *   The Group feature plugin manager.
+   * @param \Drupal\group_flex\GroupFlexGroupType $group_type_flex
+   *   The group type flex service.
    */
   public function __construct(
     EntityTypeManagerInterface $em,
@@ -108,7 +118,8 @@ class UpdateAllGroupPermissionsForm extends FormBase {
     OECGroupFlexHelper $oec_group_flex_helper,
     GroupRoleSynchronizer $group_role_synchronizer,
     GroupFeatureHelper $oec_group_features_helper,
-    GroupFeaturePluginManager $group_feature_plugin_manager
+    GroupFeaturePluginManager $group_feature_plugin_manager,
+    GroupFlexGroupType $group_type_flex
   ) {
     $this->em = $em;
     $this->permissionsManager = $permissions_manager;
@@ -118,6 +129,7 @@ class UpdateAllGroupPermissionsForm extends FormBase {
     $this->groupRoleSynchronizer = $group_role_synchronizer;
     $this->groupFeatureHelper = $oec_group_features_helper;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
+    $this->groupTypeFlex = $group_type_flex;
   }
 
   /**
@@ -132,7 +144,8 @@ class UpdateAllGroupPermissionsForm extends FormBase {
       $container->get('oec_group_flex.helper'),
       $container->get('group_role.synchronizer'),
       $container->get('oec_group_features.helper'),
-      $container->get('plugin.manager.group_feature')
+      $container->get('plugin.manager.group_feature'),
+      $container->get('group_flex.group_saver')
     );
   }
 
@@ -274,23 +287,27 @@ class UpdateAllGroupPermissionsForm extends FormBase {
       $groupPermissions->setRevisionLogMessage('Group features enabled/disabled.');
       $groupPermissions->save();
 
-      $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
-      // Saves group visibility.
-      $this->groupFlexSaver->saveGroupVisibility(
-        $group,
-        $group_visibility['plugin_id'],
-        !empty($group_visibility['settings']) ? $group_visibility['settings'] : []
-      );
+      // Saves group visibilit + joining methods if flex feature is enabled for
+      // the group.
+      if ($this->groupTypeFlex->hasFlexEnabled($group_type)) {
+        $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+        // Saves group visibility.
+        $this->groupFlexSaver->saveGroupVisibility(
+          $group,
+          $group_visibility['plugin_id'],
+          !empty($group_visibility['settings']) ? $group_visibility['settings'] : []
+        );
 
-      // Saves group joining methods.
-      $this->groupFlexSaver->saveGroupJoiningMethods(
-        $group,
-        $group_joining_method
-      );
+        // Saves group joining methods.
+        $this->groupFlexSaver->saveGroupJoiningMethods(
+          $group,
+          $group_joining_method
+        );
+      }
 
       // Get all available features for this group type.
       $available_features = [];
-      foreach ($this->groupFeatureHelper->getGroupTypeAvailableFeatures($group->getGroupType()->id()) as $plugin_id => $label) {
+      foreach ($this->groupFeatureHelper->getGroupTypeAvailableFeatures($group_type->id()) as $plugin_id => $label) {
         try {
           $available_features[$plugin_id] = $this->groupFeaturePluginManager->createInstance($plugin_id);
         }
