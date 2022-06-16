@@ -228,6 +228,12 @@ class SolrSearchManager {
       $this->solrQuery->addSort($default_sort[0], $default_sort[1]);
     }
 
+    $default_sort = $this->source->getDefaultSort();
+
+    if ($this->currentGroup && DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP . $this->currentGroup;
+    }
+
     // If there are no current sorts check if source has a default sort.
     if (
       !$sort_value &&
