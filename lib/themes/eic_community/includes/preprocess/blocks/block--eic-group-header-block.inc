@@ -132,8 +132,17 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $variables['group_values']['actions'] = $actions;
 
   $flags = [];
+
+  // Adds recommend link.
+  if ($recommend_link = \Drupal::service('eic_recommend_content.manager')->getRecommendContentLink($group)) {
+    $variables['group_values']['membership_links']['recommend_content'] = $recommend_link;
+  }
+
   foreach ($variables['group_values']['membership_links'] as $name => $action) {
-    if (isset($action['#lazy_builder'])) {
+    if (
+      isset($action['#lazy_builder']) ||
+      $name === 'recommend_content'
+    ) {
       $flag = ['content' => $action];
     }
     else {

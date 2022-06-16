@@ -1,0 +1,15 @@
+uuid: 48303916-ba8f-4fbf-b1a0-4d7a095c5625
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.recommend_content_group
+  module:
+    - flag
+id: flag_action.recommend_content_group_flag
+label: 'Flag this item'
+type: group
+plugin: 'flag_action:recommend_content_group_flag'
+configuration:
+  flag_id: recommend_content_group
+  flag_action: flag

@@ -5,8 +5,12 @@
  * Primary module hooks for EIC Events module.
  */
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_events\Constants\Event;
+use Drupal\eic_events\Hooks\EntityOperations;
 use Drupal\eic_events\Hooks\FormOperations;
 
 /**
@@ -34,4 +38,17 @@ function eic_events_cron() {
 function eic_events_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::classResolver(FormOperations::class)
     ->formGroupFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function eic_events_entity_field_access(
+  $operation,
+  FieldDefinitionInterface $field_definition,
+  AccountInterface $account,
+  FieldItemListInterface $items = NULL
+) {
+  return \Drupal::classResolver(EntityOperations::class)
+    ->entityFieldAccess($operation, $field_definition, $account, $items);
 }

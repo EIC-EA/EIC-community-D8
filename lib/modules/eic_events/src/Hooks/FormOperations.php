@@ -49,6 +49,7 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public function formGroupFormAlter(&$form, FormStateInterface $form_state, $form_id) {
     $this->handleEventTypeField($form, $form_state, $form_id);
+    $this->handleLegacyParagraphs($form, $form_state, $form_id);
   }
 
   /**
@@ -89,6 +90,30 @@ class FormOperations implements ContainerInjectionInterface {
           && !in_array($term->id(), $form['field_vocab_event_type']['widget']['#default_value'])) {
         unset($form['field_vocab_event_type']['widget']['#options'][$term->id()]);
       }
+    }
+  }
+
+  /**
+   * Handles the field_vocab_event_type of the form.
+   *
+   * @param array $form
+   *   The form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state object.
+   * @param string $form_id
+   *   The form ID.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function handleLegacyParagraphs(array &$form, FormStateInterface $form_state, string $form_id) {
+    if (!isset($form[Event::LEGACY_PARAGRAPHS_FIELD])) {
+      return;
+    }
+
+    // We don't want users to create new paragraphs.
+    if (isset($form[Event::LEGACY_PARAGRAPHS_FIELD]['widget']['add_more'])) {
+      unset($form[Event::LEGACY_PARAGRAPHS_FIELD]['widget']['add_more']);
     }
   }
 

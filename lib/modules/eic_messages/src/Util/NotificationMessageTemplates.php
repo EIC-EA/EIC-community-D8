@@ -37,6 +37,11 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
   const CONTENT_UPDATE_BY_ADMIN = 'notify_own_group_content_updated';
 
   /**
+   * Message template for notifying content recommendations.
+   */
+  const CONTENT_RECOMMENDATION = 'notify_content_recommendation';
+
+  /**
    * {@inheritdoc}
    */
   public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {

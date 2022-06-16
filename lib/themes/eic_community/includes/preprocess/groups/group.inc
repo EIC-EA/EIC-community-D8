@@ -5,13 +5,16 @@
  * Prepares variables for group templates.
  */
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media\MediaHelper;
-use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\file\Entity\File;
 use Drupal\taxonomy\TermInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Implements hook_preprocess_group__group().
@@ -49,7 +52,10 @@ function eic_community_preprocess_group__group(array &$variables) {
       }
       break;
 
+    case 'mail_teaser':
     case 'teaser':
+      // Get group description.
+      $item['description'] = $group->hasField('field_body') ? Markup::create(Xss::filter($group->get('field_body')->value)) : '';
       // Get group thumbnail.
       if ($group->hasField('field_thumbnail') && !$group->get('field_thumbnail')->isEmpty()) {
         /** @var \Drupal\media\Entity\Media $media */
@@ -72,6 +78,9 @@ function eic_community_preprocess_group__group(array &$variables) {
         $item['type']['label'] = $group_visibility_label;
         $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
       }
+
+      // Get group tags.
+      $item['tags'] = _preprocess_group_tags($group);
 
       // Get group last activity.
       // @todo Get the real last activity.
@@ -387,4 +396,24 @@ function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, s
   }
 
   return $list;
+}
+
+/**
+ * Preprocesses group topic tags.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $group
+ *   The group entity.
+ *
+ * @return array
+ *   Array of ecl tags.
+ */
+function _preprocess_group_tags(GroupInterface $group) {
+  // Get the topics.
+  $tags = [];
+  if ($group->hasField('field_vocab_topics') && !$group->get('field_vocab_topics')->isEmpty()) {
+    foreach ($group->get('field_vocab_topics')->referencedEntities() as $term) {
+      $tags[] = _eic_community_preprocess_ecl_tag($term)['tag'];
+    }
+  }
+  return $tags;
 }
