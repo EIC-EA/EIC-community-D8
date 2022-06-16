@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
@@ -111,6 +112,10 @@ function _eic_community_preprocess_digest_message(&$variables) {
       $entity = $message->get('field_referenced_node')->entity;
       $action = 'shared';
       break;
+  }
+
+  if (!$entity instanceof EntityInterface) {
+    return;
   }
 
   if (in_array(
