@@ -1,0 +1,43 @@
+uuid: 6274dca3-da2a-4d11-82ee-f159d56e8de1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_own_group_content_updated.field_event_executing_user
+    - field.field.message.notify_own_group_content_updated.field_group_ref
+    - field.field.message.notify_own_group_content_updated.field_referenced_node
+    - message.template.notify_own_group_content_updated
+id: message.notify_own_group_content_updated.default
+targetEntityType: message
+bundle: notify_own_group_content_updated
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_referenced_node: true
+  search_api_excerpt: true

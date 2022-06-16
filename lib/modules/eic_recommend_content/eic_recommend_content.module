@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Recommend Content module.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function eic_recommend_content_theme() {
+  return [
+    'eic_recommend_content_link' => [
+      'variables' => [
+        'endpoint' => NULL,
+        'entity_type' => NULL,
+        'entity_id' => NULL,
+        'get_users_url' => NULL,
+        'can_recommend' => NULL,
+        'can_recommend_external_users' => NULL,
+        'translations' => NULL,
+        'tree_settings' => [],
+        'tree_translations' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function eic_recommend_content_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  switch ($build['#view_mode']) {
+    case 'full':
+      if ($recommend_link = \Drupal::service('eic_recommend_content.manager')->getRecommendContentLink($entity)) {
+        $build['recommend_content']['content'] = $recommend_link;
+      }
+      break;
+
+  }
+}

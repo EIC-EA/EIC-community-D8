@@ -1,0 +1,19 @@
+uuid: 4e859c0f-e039-4758-b27c-eb507d3c6b57
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+    - text
+id: flagging.field_recommend_message
+field_name: field_recommend_message
+entity_type: flagging
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

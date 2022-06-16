@@ -1,0 +1,15 @@
+uuid: b713e9d4-e2a0-42e3-bce4-f34e552a1217
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.recommend_content
+  module:
+    - flag
+id: flag_action.recommend_content_unflag
+label: 'Unflag this item'
+type: node
+plugin: 'flag_action:recommend_content_unflag'
+configuration:
+  flag_id: recommend_content
+  flag_action: unflag

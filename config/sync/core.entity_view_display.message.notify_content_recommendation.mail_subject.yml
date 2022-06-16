@@ -1,0 +1,25 @@
+uuid: 5ccec28c-d8e0-4130-b982-dc32ec567885
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_content_recommendation.field_referenced_flag
+    - field.field.message.notify_content_recommendation.field_rendered_content
+    - message.template.notify_content_recommendation
+id: message.notify_content_recommendation.mail_subject
+targetEntityType: message
+bundle: notify_content_recommendation
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_referenced_flag: true
+  field_rendered_content: true
+  partial_1: true
+  partial_2: true
+  search_api_excerpt: true
