@@ -283,7 +283,7 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   }
   // Send event type to the theme variables.
   $variables['event_type'] = $event_type_term ? $event_type_term->getName() : NULL;
-  if (!$entity->get('field_related_groups')->isEmpty()) {
+  if ($entity->hasField('field_related_groups') && !$entity->get('field_related_groups')->isEmpty()) {
     $related_groups = $entity->get('field_related_groups')->referencedEntities();
     $view_builder = Drupal::entityTypeManager()->getViewBuilder('group');
     $variables['related_groups'] = [
