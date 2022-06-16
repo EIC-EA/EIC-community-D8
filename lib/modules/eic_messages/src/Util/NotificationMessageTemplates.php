@@ -32,7 +32,12 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
   const GROUP_DELETE = 'notify_group_deleted';
 
   /**
-   * Message template for notifying contentn recommendations.
+   * Message template for notifying an author of an admin update.
+   */
+  const CONTENT_UPDATE_BY_ADMIN = 'notify_own_group_content_updated';
+
+  /**
+   * Message template for notifying content recommendations.
    */
   const CONTENT_RECOMMENDATION = 'notify_content_recommendation';
 

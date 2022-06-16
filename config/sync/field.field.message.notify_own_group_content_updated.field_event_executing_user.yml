@@ -1,28 +1,26 @@
-uuid: e52dc780-a195-4af1-802a-5dfbdc084069
+uuid: 6b393bc3-a558-40b9-b651-673ffcf58d05
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.message.field_event_executing_user
-    - message.template.sub_own_group_content_updated
-id: message.sub_own_group_content_updated.field_event_executing_user
+    - message.template.notify_own_group_content_updated
+id: message.notify_own_group_content_updated.field_event_executing_user
 field_name: field_event_executing_user
 entity_type: message
-bundle: sub_own_group_content_updated
+bundle: notify_own_group_content_updated
 label: 'Event executing user'
 description: ''
-required: false
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:user'
+  handler: 'default:group_membership'
   handler_settings:
     target_bundles: null
     sort:
       field: _none
+      direction: ASC
     auto_create: false
-    filter:
-      type: _none
-    include_anonymous: false
 field_type: entity_reference
