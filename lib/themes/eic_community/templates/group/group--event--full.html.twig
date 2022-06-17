@@ -2,7 +2,7 @@
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
       {% include "@theme/patterns/components/event.html.twig" with {
-        body: group.field_body.value|raw
+        body: full_body
       } %}
       {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
     {% endblock %}
