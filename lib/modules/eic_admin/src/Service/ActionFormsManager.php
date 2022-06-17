@@ -114,7 +114,7 @@ class ActionFormsManager {
       $route_name = $this->routeMatch->getRouteName();
     }
     if (empty($path)) {
-      $path = $this->requestStack->getCurrentRequest()->getRequestUri();
+      $path = $this->stripOutBasePath($this->requestStack->getCurrentRequest()->getRequestUri());
     }
 
     foreach ($this->getAllRouteConfigs() as $config) {
@@ -170,7 +170,7 @@ class ActionFormsManager {
     }
 
     if (empty($target_path)) {
-      $target_path = $this->requestStack->getCurrentRequest()->getRequestUri();
+      $target_path = $this->stripOutBasePath($this->requestStack->getCurrentRequest()->getRequestUri());
     }
 
     $match_path = FALSE;
@@ -265,6 +265,24 @@ class ActionFormsManager {
     $parts['query'] = UrlHelper::buildQuery($query_params);
 
     return http_build_url($parts);
+  }
+
+  /**
+   * Removes the base path of the given path.
+   *
+   * @param string $path
+   *   The path.
+   *
+   * @return string
+   *   The path without the base path.
+   */
+  protected function stripOutBasePath(string $path): string {
+    if (!empty($base_path = $this->requestStack->getCurrentRequest()->getBasePath())) {
+      if (strpos($path, $base_path) === 0) {
+        $path = substr($path, strlen($base_path));
+      }
+    }
+    return $path;
   }
 
 }
