@@ -59,6 +59,10 @@ services:
     class: Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_user_recommend:
+    class: Drupal\eic_search\Search\Sources\UserRecommendSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_my_profile_activity_stream:
     class: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
     tags:

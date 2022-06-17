@@ -109,6 +109,7 @@ class RecommendContentAccessCheck implements AccessInterface {
       $visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($entity);
       $allowed_group_visibilities = [
         'public',
+        'private',
         'custom_restricted',
         'restricted_community_members',
       ];

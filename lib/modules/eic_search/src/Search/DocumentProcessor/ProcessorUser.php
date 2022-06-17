@@ -162,7 +162,14 @@ class ProcessorUser extends DocumentProcessor {
     $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
     $total_content = (int) $query_members->execute()->fetchAssoc()['count'];
 
-    foreach ($this->groupMembershipLoader->loadByUser($user) as $membership) {
+    $memberships = $this->groupMembershipLoader->loadByUser($user);
+    $group_ids = array_unique(array_map(function(GroupMembership $membership) {
+      return $membership->getGroup()->id();
+    }, $memberships));
+
+    $this->addOrUpdateDocumentField($document, 'itm_user_group_ids', $fields, $group_ids);
+
+    foreach ($memberships as $membership) {
       $group = $membership->getGroup();
 
       $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
