@@ -1,0 +1,31 @@
+uuid: a3b2f13f-d638-44b7-9c84-58d48e5f1164
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_flag
+    - flag.flag.recommend_content
+    - flag.flag.recommend_content_group
+    - message.template.notify_content_recommendation
+id: message.notify_content_recommendation.field_referenced_flag
+field_name: field_referenced_flag
+entity_type: message
+bundle: notify_content_recommendation
+label: 'Referenced Flag'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:flagging'
+  handler_settings:
+    target_bundles:
+      recommend_content: recommend_content
+      recommend_content_group: recommend_content_group
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: recommend_content
+field_type: entity_reference

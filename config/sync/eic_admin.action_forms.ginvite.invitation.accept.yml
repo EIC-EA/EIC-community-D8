@@ -1,0 +1,7 @@
+route: ginvite.invitation.accept
+paths: ''
+label: 'Group invitations - Accept'
+title: 'Your invitation to [group_content:group:title]'
+description:
+  value: "<p>You are about to accept your invitation to <a href=\"[group_content:group:url]\">[group_content:group:title]</a>.<br />\r\n&nbsp;</p>\r\n\r\n<p>Click the confirm button to complete this action.</p>\r\n"
+  format: full_html

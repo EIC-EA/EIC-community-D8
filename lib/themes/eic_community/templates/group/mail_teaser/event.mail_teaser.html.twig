@@ -1,0 +1,81 @@
+<!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:124px;" ><![endif]-->
+<div class="mj-column-px-124 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+  <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+    <tbody>
+    <tr>
+      <td style="vertical-align:top;padding:0 0 5px;padding-right:12px;">
+        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+          <tbody>
+          <!-- DATE EVENT -->
+          <tr>
+            <td align="center" style="background:#004494;font-size:0px;padding:9px;word-break:break-word;">
+              <div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:center;color:#ffffff;"><strong>{{ event_item.date.day }}</strong><br><span style="text-transform: uppercase">{{ event_item.date.month }}</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="background:#ffffff;font-size:0px;padding:7px;word-break:break-word;"><div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:center;color:#404040;">{{ event_item.date.year }}</div></td>
+          </tr>
+          <!-- DATE EVENT -->
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<!--[if mso | IE]></td><td class="message-content-outlook" style="vertical-align:middle;width:400px;" ><![endif]-->
+<div class="mj-column-px-400 mj-outlook-group-fix message-content" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
+    <tbody>
+      <tr>
+        <td align="left" style="font-size:0px;padding:0 0 5px;word-break:break-word;">
+          <div style="font-family:Arial;font-size:14px;line-height:1.4;text-align:left;color:#707070;">
+            <!-- CONTENT TITLE -->
+            <div style="margin-bottom: 7px">
+              <a class="link" href="{{ path }}" style="font-weight: bold; color: #004494;">{{ label }}</a>
+            </div>
+            <!-- CONTENT TITLE -->{% if description %} {{ description|length > 200 ? description|slice(0, 200) ~ '...' : description }}{% endif %}
+          </div>
+        </td>
+      </tr>
+
+    {% if tags is not empty %}
+      {% set first_tag = tags[0] %}
+      {% set remaining = tags|length - 1 %}
+      <!-- TAG -->
+      <tr>
+        <td vertical-align="top" style="font-size:0px;padding:0;word-break:break-word;">
+          <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+              <tbody>
+              <tr>
+                <td style="vertical-align:top;padding:0;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                    <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:5px 0;word-break:break-word;">
+                        <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color:#404040;font-family:Arial;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
+                          <tr>
+                            <td align="left" style="padding-bottom: 0px !important; margin-bottom: 0px !important;" cellspacing="0" border="0" cellpadding="0">
+                              <span style="padding: 5px 0px; border: 1px solid transparent; border-image: none; color: #000000; line-height: 19px; font-size: 12px; font-weight: 500; border-radius: 60px; display: inline-block; background-color:#E3E3E3"> &nbsp;&nbsp;&nbsp; {{ first_tag.label }} &nbsp;&nbsp;&nbsp;</span> {% if remaining > 0 %}<span style="white-space: no-wrap">{% trans %}+&nbsp;{{ remaining}}&nbsp;other{% plural remaining %}+&nbsp;{{ remaining}}&nbsp;others{% endtrans %}</span>{% endif %}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+      <!-- TAG -->
+    {% endif %}
+    </tbody>
+  </table>
+</div>
+<!--[if mso | IE]></td></tr></table><![endif]-->

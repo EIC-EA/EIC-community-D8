@@ -75,7 +75,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     $message_subscription_event = FALSE;
 
     switch ($flag->id()) {
-      case FlagType::RECOMMEND:
+      case FlagType::RECOMMEND_NODE:
         // Sets message subscription event name.
         $message_subscription_event = MessageSubscriptionEvents::CONTENT_RECOMMENDED;
         break;
@@ -115,7 +115,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    */
   public static function getAllowedMessageSubscriptionFlagTypes() {
     return [
-      FlagType::RECOMMEND,
+      FlagType::RECOMMEND_NODE,
     ];
   }
 

@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
@@ -202,6 +203,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       return $sort;
     });
 
+    $facets = array_keys($facets);
+    $sorts = array_keys($sorts);
+
     $source_type = $this->configuration['source_type'];
     $sources = $this->sourcesCollector->getSources();
 
@@ -253,6 +257,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'eic_statistics.get_node_statistics'
     )->toString();
 
+    $default_sort = $source->getDefaultSort();
+
+    if (
+      $current_group_route instanceof GroupInterface &&
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]
+    ) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP;
+    }
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -268,7 +281,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $account
         ),
       'source_bundle_id' => $source->getEntityBundle(),
-      'default_sorting_option' => $source->getDefaultSort(),
+      'default_sorting_option' => $default_sort,
       'filter_label' => [
         'ss_global_content_type' => [
           'news' => t('News article', [], ['context' => 'eic_search']),
@@ -286,8 +299,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#theme' => 'search_overview_block',
         '#cache' => ['contexts' => ['url.path', 'url.query_args']],
         '#manager_roles' => $group_admins,
-        '#facets' => array_keys($facets),
-        '#sorts' => array_keys($sorts),
+        '#facets' => $facets,
+        '#sorts' => $sorts,
         '#prefilters' => $this->extractFilterFromUrl(),
         '#prefilter_my_interests' => $source instanceof ActivityStreamSourceType,
         '#search_string' => $search_value,

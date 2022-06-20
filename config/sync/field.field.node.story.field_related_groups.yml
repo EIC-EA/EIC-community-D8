@@ -1,0 +1,29 @@
+uuid: 025d0a95-1373-468c-b281-9dd35a41c6fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_groups
+    - group.type.group
+    - node.type.story
+id: node.story.field_related_groups
+field_name: field_related_groups
+entity_type: node
+bundle: story
+label: 'Related groups'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      group: group
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: group
+field_type: entity_reference

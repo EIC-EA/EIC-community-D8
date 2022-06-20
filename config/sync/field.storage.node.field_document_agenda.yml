@@ -3,13 +3,14 @@ langcode: en
 status: true
 dependencies:
   module:
+    - media
     - node
 id: node.field_document_agenda
 field_name: field_document_agenda
 entity_type: node
 type: entity_reference
 settings:
-  target_type: node
+  target_type: media
 module: core
 locked: false
 cardinality: -1
