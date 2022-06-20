@@ -1,0 +1,21 @@
+uuid: 7791672b-c4a1-4a4b-86f5-78fd12736897
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.notify_content_recommendation
+  module:
+    - text
+id: message.notify_content_recommendation.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: notify_content_recommendation
+label: 'Rendered content'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

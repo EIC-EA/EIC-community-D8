@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.small_teaser
-    - flag.flag.recommend
+    - flag.flag.recommend_content
     - node.type.document
   module:
     - flag
@@ -277,7 +277,7 @@ display:
           entity_type: node
           plugin_id: flag_relationship
           required: false
-          flag: recommend
+          flag: recommend_content
           user_scope: any
         group_content:
           id: group_content

@@ -150,6 +150,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     switch ($event->getMigration()->getBaseId()) {
       case 'upgrade_d7_node_complete_group':
         $this->completeRelatedGroups($event);
+        $this->completeStoriesRelatedGroups($event);
         break;
 
       case 'upgrade_d7_node_complete_article':
@@ -435,12 +436,12 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
       $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       // Populate the node values.
-      $node_values[$parent_migrated_row['destid1']][] = $migrated_row['destid1'];
+      $node_values[$parent_migrated_row['destid2']][] = $migrated_row['destid1'];
     }
 
     // Set the values for each row.
     foreach ($node_values as $parent_id => $items) {
-      if ($group = $this->entityTypeManager->getStorage('group')->load($parent_id)) {
+      if ($group = $this->entityTypeManager->getStorage('group')->loadRevision($parent_id)) {
         $this->updateEntityReferenceValue($group, 'field_related_groups', $items);
       }
     }
@@ -482,15 +483,96 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
       $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       // Populate the node values.
-      $node_values[$parent_migrated_row['destid1']][] = $migrated_row['destid1'];
+      $node_values[$parent_migrated_row['destid2']][] = $migrated_row['destid1'];
     }
 
     // Set the values for each row.
     foreach ($node_values as $parent_nid => $items) {
-      if ($node = $this->entityTypeManager->getStorage('node')->load($parent_nid)) {
+      if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_nid)) {
         $this->updateEntityReferenceValue($node, 'field_related_stories', $items);
       }
     }
+  }
+
+  /**
+   * Sets the correct entity references for field_related_groups field.
+   *
+   * @param \Drupal\migrate\Event\MigrateImportEvent $event
+   *   The import event object.
+   */
+  protected function completeStoriesRelatedGroups(MigrateImportEvent $event) {
+    $migration = $event->getMigration();
+
+    // Get the original nodes for which we have related groups.
+    $d7_query = $this->connection->select('field_data_c4m_related_group', 'rg');
+    $d7_query->innerJoin('node', 'n', 'n.nid = rg.c4m_related_group_target_id');
+    $d7_query->fields('n', ['nid', 'vid', 'language']);
+    $d7_query->fields('rg', ['c4m_related_group_target_id', 'entity_id']);
+    $d7_query->addField('rg', 'revision_id', 'parent_vid');
+    $d7_query->addField('rg', 'language', 'parent_language');
+    $d7_query->condition('rg.entity_type', 'node')
+      ->condition('rg.bundle', 'article');
+
+    // Gather all items for each row.
+    // Since we are using the node_complete migration, we assume that source ID
+    // is always:
+    // - destid1: nid.
+    // - destid2: vid.
+    // - destid3: langcode.
+    $node_values = [];
+    foreach ($d7_query->execute()->fetchAll(\PDO::FETCH_ASSOC) as $result) {
+      $source_ids = [$result['nid'], $result['vid'], $result['language']];
+      $parent_source_ids = [
+        $result['entity_id'],
+        $result['parent_vid'],
+        $result['parent_language'],
+      ];
+      $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
+      $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
+      $parent_migrated_row = $this->migrateLookup->lookup(
+        [
+          'upgrade_d7_node_complete_article',
+        ],
+        [
+          $result['entity_id'],
+          $result['parent_vid'],
+          $result['parent_language'],
+        ]
+      );
+
+      if (empty($migrated_row) || empty($parent_migrated_row)) {
+        continue;
+      }
+      // Populate the node values.
+      $node_values[$parent_migrated_row[0]['vid']][] = $migrated_row['destid1'];
+    }
+
+    $related_story_node_ids = [];
+    // Set the values for each row.
+    foreach ($node_values as $parent_id => $items) {
+      if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_id)) {
+        $this->updateEntityReferenceValue($node, 'field_related_groups', $items);
+      }
+      $related_story_node_ids[$node->id()] = $node->id();
+    }
+
+    // @todo We need to check if it's necessary to migrate the related stories
+    // into the group or if we can just keep the related groups in stories.
+    // $group_related_stories = [];
+    // foreach ($related_story_node_ids as $node_id) {
+    //   if ($node = $this->entityTypeManager->getStorage('node')->load($node_id)) {
+    //     if ($related_groups = $node->field_related_groups->referencedEntities()) {
+    //       foreach ($related_groups as $group) {
+    //         $group_related_stories[$group->id()][] = $node_id;
+    //       }
+    //     }
+    //   }
+    // }
+    // foreach ($group_related_stories as $group_id => $node_ids) {
+    //   if ($group = $this->entityTypeManager->getStorage('group')->load($group_id)) {
+    //     $this->updateEntityReferenceValue($group, 'field_related_news_stories', $node_ids);
+    //   }
+    // }
   }
 
   /**
@@ -515,10 +597,10 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $changed = $entity->getChangedTime();
     $entity->set($field_name, array_unique(array_merge($entity->get($field_name)->getValue(), $values)));
     $entity->setNewRevision(FALSE);
-    $entity->save();
-
     // Preserve the changed timestamp.
     $entity->setChangedTime($changed);
+    // We enable syncing to avoid creating new revisions.
+    $entity->setSyncing(TRUE);
     $entity->save();
   }
 

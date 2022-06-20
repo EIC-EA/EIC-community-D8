@@ -115,6 +115,14 @@ class ProcessorGlobal extends DocumentProcessor {
         }
         $node = Node::load($fields['its_content_nid']);
         if ($node instanceof NodeInterface) {
+          if (
+            $node->hasField('field_language') &&
+            !$node->get('field_language')->isEmpty() &&
+            $language_entity = $node->get('field_language')->first()->entity
+          ) {
+            $language = $language_entity->label();
+          }
+
           $last_moderation_state = $this->getLastRevisionModerationState($node);
         }
         break;
@@ -309,7 +317,8 @@ class ProcessorGlobal extends DocumentProcessor {
     $entity_type = $entity->getEntityTypeId();
     if ('group' === $entity_type) {
       $last_revision_id = $entity->getRevisionId();
-    } else {
+    }
+    else {
       $revision_ids = $this->em->getStorage($entity_type)->revisionIds($entity);
       $last_revision_id = end($revision_ids);
     }

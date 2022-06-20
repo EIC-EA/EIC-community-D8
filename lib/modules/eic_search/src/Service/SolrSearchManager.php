@@ -8,8 +8,10 @@ use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\Search\Sources\UserRecommendSourceType;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
@@ -131,7 +133,7 @@ class SolrSearchManager {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\search_api\SearchApiException
    */
-  public function init(string $source_class, ?array $facets_fields): self {
+  public function init(string $source_class): self {
     $index_storage = $this->em
       ->getStorage('search_api_index');
     $this->index = $index_storage->load('global');
@@ -144,7 +146,6 @@ class SolrSearchManager {
     /** @var \Drupal\search_api_solr\Plugin\SolrConnector\BasicAuthSolrConnector $connector */
     $this->connector = $backend->getSolrConnector();
     $this->solrQuery = $this->connector->getSelectQuery();
-    $this->solrQuery->addParam('facet.field', $facets_fields);
     $this->rawQuery = '';
 
     $sources = $this->sourcesCollector->getSources();
@@ -208,6 +209,15 @@ class SolrSearchManager {
 
       //Normally sort key have this structure 'FIELD__ASC' but add double check
       if (2 === count($sorts)) {
+        // Check if sort needs a group injection before sending to solr.
+        $sort_fields_group_context = [
+          DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP,
+          DocumentProcessorInterface::SOLR_GROUP_ROLES,
+        ];
+
+        if (in_array($sorts[0], $sort_fields_group_context)) {
+          $sorts[0] = $sorts[0] . $this->currentGroup;
+        }
         $this->solrQuery->addSort($sorts[0], $sorts[1]);
       }
     }
@@ -217,6 +227,12 @@ class SolrSearchManager {
     // Add second sort.
     if (!empty($default_sort) && 2 === count($default_sort)) {
       $this->solrQuery->addSort($default_sort[0], $default_sort[1]);
+    }
+
+    $default_sort = $this->source->getDefaultSort();
+
+    if ($this->currentGroup && DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP . $this->currentGroup;
     }
 
     // If there are no current sorts check if source has a default sort.
@@ -246,6 +262,10 @@ class SolrSearchManager {
         $query_values = count($values) > 1 ?
           '(' . implode(' AND ', $values) . ')' :
           implode(' AND ', $values);
+
+        if (in_array($key, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
+          $key = $key . $this->currentGroup;
+        }
 
         $facets_query .= ' AND ' . $key . ':' . $query_values;
       }
@@ -311,6 +331,23 @@ class SolrSearchManager {
   }
 
   /**
+   * Set all facets to our SOLR request.
+   *
+   * @param array|null $facets_fields
+   */
+  public function buildFacets(?array $facets_fields) {
+    $facets_fields = array_map(function ($facet) {
+      if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
+        return $facet;
+      }
+
+      return $facet . $this->currentGroup;
+    }, $facets_fields);
+
+    $this->solrQuery->addParam('facet.field', $facets_fields);
+  }
+
+  /**
    * Build group query.
    *
    * @param string|NULL $current_group
@@ -340,7 +377,10 @@ class SolrSearchManager {
       $this->source instanceof SourceTypeInterface &&
       $this->source->prefilterByGroupVisibility()
     ) {
-      $this->generateUsersQueryVisibilityGroup($current_group);
+      $this->generateUsersQueryVisibilityGroup(
+        $current_group,
+        $this->source instanceof UserRecommendSourceType
+      );
     }
 
     if (
@@ -597,9 +637,12 @@ class SolrSearchManager {
   /**
    * Prefilter users by the current group visibility.
    *
-   * @param $group_id
+   * @param string $group_id
+   *   The group id.
+   * @param bool $strict_private
+   *   If TRUE, it will filter only member of private group and NOT people that are allowed to be invited.
    */
-  private function generateUsersQueryVisibilityGroup($group_id) {
+  private function generateUsersQueryVisibilityGroup($group_id, bool $strict_private = FALSE) {
     $query = '';
     $group = Group::load($group_id);
 
@@ -611,7 +654,12 @@ class SolrSearchManager {
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        if ($strict_private) {
+          $query = '(itm_user_group_ids:(' . $group_id . '))';
+        }
+        else {
+          $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        }
         break;
 
       // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...

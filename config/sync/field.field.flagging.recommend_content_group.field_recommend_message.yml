@@ -1,0 +1,21 @@
+uuid: 612c4e66-5e72-4d01-a803-ba92ab6e3bef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_recommend_message
+    - flag.flag.recommend_content_group
+  module:
+    - text
+id: flagging.recommend_content_group.field_recommend_message
+field_name: field_recommend_message
+entity_type: flagging
+bundle: recommend_content_group
+label: Message
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

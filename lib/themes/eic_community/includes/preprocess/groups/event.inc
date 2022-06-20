@@ -5,6 +5,8 @@
  * Prepares variables for group type event templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
@@ -26,6 +28,9 @@ function eic_community_preprocess_group__event(&$variables) {
     case 'teaser':
     case 'small_teaser':
     case 'mail_teaser':
+      // Get event description.
+      $teaser['description'] = $group->hasField('field_body') ? Markup::create(Xss::filter($group->get('field_body')->value)) : '';
+
       $teaser = [
         'owner' => eic_community_get_teaser_user_display($group->getOwner()),
         'stats' => [],
@@ -177,7 +182,7 @@ function eic_community_preprocess_group__event(&$variables) {
         NULL,
         DateTimeHelper::DATE_FORMAT_SHORT
       );
-      
+
       $teaser['date'] = $start_date;
       $teaser['date']['start'] = $start_date;
       $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block(

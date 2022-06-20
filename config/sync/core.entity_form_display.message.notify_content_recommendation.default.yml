@@ -1,0 +1,34 @@
+uuid: a841e961-51e8-4d70-9876-296be2de7c87
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_recommendation.field_referenced_flag
+    - field.field.message.notify_content_recommendation.field_rendered_content
+    - message.template.notify_content_recommendation
+  module:
+    - text
+id: message.notify_content_recommendation.default
+targetEntityType: message
+bundle: notify_content_recommendation
+mode: default
+content:
+  field_referenced_flag:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_rendered_content:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

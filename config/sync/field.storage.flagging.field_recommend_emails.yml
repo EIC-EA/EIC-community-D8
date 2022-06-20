@@ -1,0 +1,19 @@
+uuid: 24c81a8b-1466-47b8-a1ee-7b2181fc53cf
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_recommend_emails
+field_name: field_recommend_emails
+entity_type: flagging
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
