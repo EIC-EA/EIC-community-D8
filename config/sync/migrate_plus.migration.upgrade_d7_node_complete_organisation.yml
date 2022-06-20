@@ -113,7 +113,11 @@ process:
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
   field_email: c4m_email
-  field_organisation_link: c4m_link
+  field_organisation_link:
+    -
+      plugin: field_link
+      uri_scheme: 'https://'
+      source: c4m_link
   field_smed_id: c4m_organisation_dashboard_id
   field_vocab_target_markets:
     -
