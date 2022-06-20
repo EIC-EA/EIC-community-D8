@@ -1,5 +1,6 @@
 route: ginvite.invitation.bulk
-label: 'Invite members to group'
+paths: ''
+label: 'Invite members to group - Step 1/2'
 title: 'Invite users to the group (1 of 2)'
 description:
   value: "<p>You are about to invite users to <a href=\"[group:url]\">[group:title]</a>.<br />\r\n&nbsp;<br />\r\nIn order to complete the invitations process, please confirm the list of users below matches the users you wish to invite to the group. Click the confirm invitations button to complete this action.</p>\r\n"

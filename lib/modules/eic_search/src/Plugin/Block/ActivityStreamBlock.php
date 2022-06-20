@@ -5,6 +5,7 @@ namespace Drupal\eic_search\Plugin\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -211,10 +212,29 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       'node_statistics_url' => Url::fromRoute('eic_statistics.get_node_statistics')->toString(),
     ];
 
+    $cache = [
+      'contexts' => [
+        'url.path',
+        'url.query_args',
+      ],
+    ];
+
+    // Send members data and cache tags.
+    $members = [];
+    if ($show_members) {
+      $members = $this->getMembersData($group);
+      $cache['tags'] = [];
+      foreach ($members as $member) {
+        $cache['tags'] = !empty($member['cache_tags']) ?
+          Cache::mergeTags($cache['tags'], $member['cache_tags']) :
+          $cache['tags'];
+      }
+    }
+
     return $build += [
       '#theme' => 'eic_group_last_activities_members',
-      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
-      '#members' => $show_members ? $this->getMembersData($group) : [],
+      '#cache' => $cache,
+      '#members' => $members,
       '#url' => Url::fromRoute('eic_search.solr_search', [], $url_options)->toString(),
       '#translations' => [
         'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
@@ -310,6 +330,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'picture' => $file_url,
         'url' => $user_profile_url,
         'organisations' => $organisations,
+        'uid' => $user->id(),
+        'cache_tags' => $user->getCacheTags(),
       ];
     }, $members);
   }

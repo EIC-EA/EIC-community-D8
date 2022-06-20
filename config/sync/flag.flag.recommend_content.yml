@@ -1,0 +1,39 @@
+uuid: 9085fbb4-3c38-4fe4-8d3d-7abfdc692cf8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: recommend_content
+label: 'Recommend (Content)'
+bundles:
+  - discussion
+  - document
+  - event
+  - gallery
+  - news
+  - story
+  - video
+entity_type: node
+global: false
+flag_short: 'Flag this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unflag this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flood_control_active: false
+flood_control_limit: 0
+flood_control_window: 0
+weight: 0
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: false
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

@@ -13,7 +13,6 @@ use Drupal\eic_flags\Service\ArchiveRequestHandler;
 use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flagging;
 use Drupal\flag\FlagServiceInterface;
@@ -142,6 +141,10 @@ class NewRequestForm extends ContentEntityDeleteForm {
     $description = NULL;
 
     switch ($this->requestHandler->getType()) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        $description = NULL;
+        break;
+
       case RequestTypes::BLOCK:
         $description = $this->t(
           "You're about to block this @entity_type. Are you sure?",
@@ -149,20 +152,6 @@ class NewRequestForm extends ContentEntityDeleteForm {
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
           ],
         );
-        break;
-
-      case RequestTypes::TRANSFER_OWNERSHIP:
-        if ($this->entity->getEntityTypeId() === 'group_content') {
-          $new_owner = $this->entity->getEntity();
-          $previous_owner = EICGroupsHelper::getGroupOwner($this->entity->getGroup());
-          $description = $this->t("<p>Do you want to request the ownership transfer to %new_owner?</p>
-            <p>If the user accepts, the current owner %previous_owner will become a group admin.</p>",
-            [
-              '%new_owner' => $this->eicUserHelper->getFullName($new_owner),
-              '%previous_owner' => $this->eicUserHelper->getFullName($previous_owner),
-            ]
-          );
-        }
         break;
 
       default:
@@ -231,7 +220,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
     switch ($this->requestHandler->getType()) {
       case RequestTypes::BLOCK:
         $form_field_description = $this->t(
-          'Please explain why this @entity_type should be @action',
+          'State the reason why this @entity_type should be @action',
           [
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
             '@action' => $this->t('blocked'),
@@ -240,17 +229,12 @@ class NewRequestForm extends ContentEntityDeleteForm {
         break;
 
       case RequestTypes::TRANSFER_OWNERSHIP:
-        $form_field_description = $this->t(
-          'Please explain why you want to @action',
-          [
-            '@action' => $this->t('transfer ownership'),
-          ],
-        );
+        $form_field_description = $this->t('State the reason to transfer the ownership for this group');
         break;
 
       default:
         $form_field_description = $this->t(
-          'Please explain why this @entity_type should be @action',
+          'State the reason why this @entity_type should be @action',
           [
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
             '@action' => $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted',
@@ -262,6 +246,9 @@ class NewRequestForm extends ContentEntityDeleteForm {
     $form['reason'] = [
       '#type' => 'textarea',
       '#title' => $form_field_description,
+      '#attributes' => [
+        'placeholder' => $this->t('Your reason here'),
+      ],
       '#required' => TRUE,
     ];
 
@@ -269,6 +256,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
       $form['timeout'] = [
         '#type' => 'select',
         '#title' => $this->t('How many days should this request remain open?'),
+        '#description' => $this->t('The request will remain valid to the recipient during the period you are defining in this field.
+         After that period, the request will be automatically cancelled and you will be able to execute this action again.'),
         '#options' => RequestTypes::getRequestTimeoutExpirationOptions(),
         '#default_value' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getDefaultValueLiteral()[0]['value'],
         '#required' => TRUE,

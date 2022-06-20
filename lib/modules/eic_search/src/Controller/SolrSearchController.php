@@ -62,10 +62,11 @@ class SolrSearchController extends ControllerBase {
     $page = $request->query->get('page');
     $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
 
-    $search = $this->searchManager->init($source_class, $facets_options);
+    $search = $this->searchManager->init($source_class);
+    $search->buildGroupQuery($current_group);
+    $search->buildFacets($facets_options);
     $search->buildSortFacets($facets_value, $sort_value);
     $search->buildDateQuery($from_date, $end_date);
-    $search->buildGroupQuery($current_group);
     $search->buildPrefilterTopic($topic_term_id);
     $search->buildQueryPager($page, $offset);
     $search->buildSearchQuery($search_value);

@@ -206,7 +206,8 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     'document',
     'event',
     'gallery',
-    'video'
+    'video',
+    'news',
   ];
 
   if (
@@ -216,7 +217,7 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
     $solr_helper = \Drupal::service('eic_search.solr_document_processor');
     // Reindex group parent to have correct most active score.
-    $solr_helper->lateReIndexEntities([$entity->getGroup(), $entity->getOwner()]);
+    $solr_helper->reIndexEntities([$entity->getGroup(), $entity->getOwner()]);
   }
 
   switch ($entity->bundle()) {

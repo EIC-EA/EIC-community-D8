@@ -113,9 +113,9 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // Gets the entity type label to use in the message notification.
-    $entity_type_label = $entity->type->entity->label();
+    $entity_type_label = $entity->getEntityType()->getLabel();
 
-    // By default notification is not skipped.
+    // By default, notification is not skipped.
     $skip_notification = FALSE;
     // Default message fields.
     $message = [

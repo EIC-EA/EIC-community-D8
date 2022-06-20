@@ -1,6 +1,6 @@
 uuid: 82e92d36-95a2-4837-8f74-e2cefb2fa796
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.message.mail_body
@@ -15,6 +15,8 @@ bundle: notify_user_tagged_on_comment
 mode: mail_body
 content:
   partial_1:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
 hidden:

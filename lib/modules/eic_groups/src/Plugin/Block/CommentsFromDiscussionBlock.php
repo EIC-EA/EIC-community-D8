@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\editor\Entity\Editor;
 use Drupal\editor\Plugin\EditorManager;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
@@ -322,84 +323,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           'edit own comments'
         ),
       ],
-      'translations' => [
-        'title' => $this->t('Replies', [], ['context' => 'eic_groups']),
-        'no_results_title' => $this->t(
-          "We haven't found any comments",
-          [],
-          ['context' => 'eic_group']
-        ),
-        'no_results_body' => $this->t(
-          'Please try again with another keyword',
-          [],
-          ['context' => 'eic_group']
-        ),
-        'load_more' => $this->t('Load more', [], ['context' => 'eic_groups']),
-        'edit' => $this->t('Edit', [], ['context' => 'eic_groups']),
-        'options' => $this->t('Options', [], ['context' => 'eic_groups']),
-        'reply_to' => $this->t('Reply', [], ['context' => 'eic_groups']),
-        'in_reply_to' => $this->t('in reply to', [], ['context' => 'eic_groups']
-        ),
-        'reply' => $this->t('Reply', [], ['context' => 'eic_groups']),
-        'submit' => $this->t('Submit', [], ['context' => 'eic_groups']),
-        'reason' => $this->t('Reason', [], ['context' => 'eic_groups']),
-        'comment_placeholder' => $this->t(
-          'Type your message here...',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_edit_comment' => $this->t(
-          'Edit comment',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_delete_comment' => $this->t(
-          'Delete comment',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_request_delete' => $this->t(
-          'Request deletion',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_request_archival' => $this->t(
-          'Request archival',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'select_value' => $this->t(
-          'Select a value',
-          [],
-          ['context' => 'eic_search']
-        ),
-        'match_limit' => $this->t(
-          'You can select only <b>@match_limit</b> top-level items.',
-          ['@match_limit' => 0],
-          ['context' => 'eic_search']
-        ),
-        'search' => $this->t('Search', [], ['context' => 'eic_search']),
-        'your_values' => $this->t(
-          'Your selected values',
-          [],
-          ['context' => 'eic_search']
-        ),
-        'required_field' => $this->t(
-          'This field is required',
-          [],
-          ['context' => 'eic_content']
-        ),
-        'select_users' => $this->t(
-          'Select users',
-          [],
-          ['context' => 'eic_content']
-        ),
-        'modal_invite_users_title' => $this->t(
-          'Invite user(s)',
-          [],
-          ['context' => 'eic_content']
-        ),
-      ],
+      'translations' => EntityTreeManager::getTranslationsWidget(),
     ];
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;

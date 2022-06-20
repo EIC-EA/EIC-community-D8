@@ -1,0 +1,31 @@
+uuid: edfcf9b7-eb3e-47f8-82c1-bf5a40010b8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.recommend_content_group.field_recommend_emails
+    - field.field.flagging.recommend_content_group.field_recommend_message
+    - flag.flag.recommend_content_group
+  module:
+    - text
+id: flagging.recommend_content_group.default
+targetEntityType: flagging
+bundle: recommend_content_group
+mode: default
+content:
+  field_recommend_emails:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_recommend_message:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

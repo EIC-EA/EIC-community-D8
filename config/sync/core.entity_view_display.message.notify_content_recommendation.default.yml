@@ -1,0 +1,42 @@
+uuid: 67dd405f-2abf-426f-8620-d2a0b5b0a8b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_recommendation.field_referenced_flag
+    - field.field.message.notify_content_recommendation.field_rendered_content
+    - message.template.notify_content_recommendation
+  module:
+    - text
+id: message.notify_content_recommendation.default
+targetEntityType: message
+bundle: notify_content_recommendation
+mode: default
+content:
+  field_referenced_flag:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_rendered_content:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true
