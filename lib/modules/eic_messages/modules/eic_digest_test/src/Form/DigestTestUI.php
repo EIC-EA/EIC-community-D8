@@ -2,8 +2,11 @@
 
 namespace Drupal\eic_digest_test\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\eic_subscription_digest\Constants\DigestTypes;
 use Drupal\eic_subscription_digest\Service\DigestManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,17 +24,27 @@ class DigestTestUI extends FormBase {
   private $manager;
 
   /**
-   * @param \Drupal\eic_subscription_digest\Service\DigestManager $manager
+   * @var \Drupal\Core\State\StateInterface
    */
-  public function __construct(DigestManager $manager) {
+  private $state;
+
+  /**
+   * @param \Drupal\eic_subscription_digest\Service\DigestManager $manager
+   * @param \Drupal\Core\State\StateInterface $state
+   */
+  public function __construct(DigestManager $manager, StateInterface $state) {
     $this->manager = $manager;
+    $this->state = $state;
   }
 
   /**
    * {@inheritdoc}
    **/
   public static function create(ContainerInterface $container) {
-    return new static($container->get('eic_subscription_digest.manager'));
+    return new static(
+      $container->get('eic_subscription_digest.manager'),
+      $container->get('state')
+    );
   }
 
   /**
@@ -70,6 +83,16 @@ class DigestTestUI extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Trigger digest'),
     ];
+    $form['reset_states'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Reset digest sent times'),
+      '#attributes' => [
+        'title' => t("Allows you to re-trigger digests for users by resetting saved values for the last trigger."),
+      ],
+      '#ajax' => [
+        'callback' => [$this, 'resetDigestStates'],
+      ],
+    ];
 
     return $form;
   }
@@ -95,6 +118,24 @@ class DigestTestUI extends FormBase {
       'uid' => $form_state->getValue('user'),
       'trigger_date' => $form_state->getValue('digest_trigger_date'),
     ]);
+  }
+
+  /**
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   */
+  public function resetDigestStates(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    foreach (DigestTypes::getAll() as $digest_type) {
+      $this->state->delete('eic_subscription_digest_' . $digest_type . '_time');
+    }
+
+    $response->addCommand(
+      new MessageCommand($this->t('Digest states have been reset'))
+    );
+    return $response;
   }
 
 }

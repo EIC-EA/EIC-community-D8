@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_groups\EICGroupsHelper;
-use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
+use Drupal\eic_search\Search\Sources\UserRecommendSourceType;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -158,7 +158,7 @@ class RecommendContentManager {
 
     $user_url = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
-      'source_class' => UserTaggingCommentsSourceType::class,
+      'source_class' => UserRecommendSourceType::class,
       'page' => 1,
     ])->toString();
 

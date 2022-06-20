@@ -11,6 +11,7 @@ use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\Search\Sources\UserRecommendSourceType;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
@@ -228,6 +229,12 @@ class SolrSearchManager {
       $this->solrQuery->addSort($default_sort[0], $default_sort[1]);
     }
 
+    $default_sort = $this->source->getDefaultSort();
+
+    if ($this->currentGroup && DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP . $this->currentGroup;
+    }
+
     // If there are no current sorts check if source has a default sort.
     if (
       !$sort_value &&
@@ -329,7 +336,7 @@ class SolrSearchManager {
    * @param array|null $facets_fields
    */
   public function buildFacets(?array $facets_fields) {
-    $facets_fields = array_map(function($facet) {
+    $facets_fields = array_map(function ($facet) {
       if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
         return $facet;
       }
@@ -370,7 +377,10 @@ class SolrSearchManager {
       $this->source instanceof SourceTypeInterface &&
       $this->source->prefilterByGroupVisibility()
     ) {
-      $this->generateUsersQueryVisibilityGroup($current_group);
+      $this->generateUsersQueryVisibilityGroup(
+        $current_group,
+        $this->source instanceof UserRecommendSourceType
+      );
     }
 
     if (
@@ -627,9 +637,12 @@ class SolrSearchManager {
   /**
    * Prefilter users by the current group visibility.
    *
-   * @param $group_id
+   * @param string $group_id
+   *   The group id.
+   * @param bool $strict_private
+   *   If TRUE, it will filter only member of private group and NOT people that are allowed to be invited.
    */
-  private function generateUsersQueryVisibilityGroup($group_id) {
+  private function generateUsersQueryVisibilityGroup($group_id, bool $strict_private = FALSE) {
     $query = '';
     $group = Group::load($group_id);
 
@@ -641,7 +654,12 @@ class SolrSearchManager {
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        if ($strict_private) {
+          $query = '(itm_user_group_ids:(' . $group_id . '))';
+        }
+        else {
+          $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        }
         break;
 
       // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
