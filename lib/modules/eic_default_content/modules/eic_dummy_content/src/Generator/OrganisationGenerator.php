@@ -11,6 +11,7 @@ use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
+use Drupal\oec_group_features\GroupFeatureHelper;
 
 /**
  * Class to generate organisations using fixtures.
@@ -28,10 +29,15 @@ class OrganisationGenerator extends CoreGenerator {
       'Blue4You',
       'Foreach',
     ];
-    /** @var \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_manager */
-    $group_feature_manager = \Drupal::service('plugin.manager.group_feature');
 
-    $available_features = array_keys($group_feature_manager->getDefinitions());
+    /** @var \Drupal\oec_group_features\GroupFeatureHelper $group_feature_helper */
+    $group_feature_helper = \Drupal::service('oec_group_features.helper');
+
+    // Get all available features for this group type.
+    $available_features = [];
+    foreach ($group_feature_helper->getGroupTypeAvailableFeatures('organisation') as $plugin_id => $label) {
+      $available_features[] = $plugin_id;
+    }
 
     foreach ($organisations_sample as $organisation_sample) {
       $values = [
@@ -122,10 +128,14 @@ class OrganisationGenerator extends CoreGenerator {
             'field_user_ref' => $this->getRandomEntities('user', [], 2)[1],
           ]),
         ],
-        'features' => $available_features,
+        'features' => [],
       ];
 
       $group = Group::create($values);
+      $group->save();
+
+      // Save group features.
+      $group->set(GroupFeatureHelper::FEATURES_FIELD_NAME, $available_features);
       $group->save();
 
       $this->createOrganisationEvents($group);

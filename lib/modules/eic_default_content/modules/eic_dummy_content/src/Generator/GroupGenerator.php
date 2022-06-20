@@ -9,6 +9,7 @@ use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
+use Drupal\oec_group_features\GroupFeatureHelper;
 
 /**
  * Class to generate groups using fixtures.
@@ -60,7 +61,14 @@ class GroupGenerator extends CoreGenerator {
    * {@inheritdoc}
    */
   public function load() {
-    $available_features = array_keys($this->groupFeatureManager->getDefinitions());
+    /** @var \Drupal\oec_group_features\GroupFeatureHelper $group_feature_helper */
+    $group_feature_helper = \Drupal::service('oec_group_features.helper');
+
+    // Get all available features for this group type.
+    $available_features = [];
+    foreach ($group_feature_helper->getGroupTypeAvailableFeatures('group') as $plugin_id => $label) {
+      $available_features[] = $plugin_id;
+    }
 
     for ($i = 0; $i < 5; $i++) {
       $visibility = $i % 2 ? 'public' : 'private';
@@ -80,13 +88,17 @@ class GroupGenerator extends CoreGenerator {
         ], 'image'),
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
-        'features' => $available_features,
+        'features' => [],
         'uid' => 1,
       ];
 
       $group = Group::create($values);
       $group->save();
       $this->groupFlexSaver->saveGroupVisibility($group, $visibility);
+
+      // Save group features.
+      $group->set(GroupFeatureHelper::FEATURES_FIELD_NAME, $available_features);
+      $group->save();
 
       // Update moderation state of group book page.
       $book = Node::load($this->eicGroupsHelper->getGroupBookPage($group));

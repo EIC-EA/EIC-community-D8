@@ -10,6 +10,7 @@ use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
+use Drupal\oec_group_features\GroupFeatureHelper;
 
 /**
  * Class to generate global events using fixtures.
@@ -61,7 +62,14 @@ class GroupTypeEventGenerator extends CoreGenerator {
    * {@inheritdoc}
    */
   public function load() {
-    $available_features = array_keys($this->groupFeatureManager->getDefinitions());
+    /** @var \Drupal\oec_group_features\GroupFeatureHelper $group_feature_helper */
+    $group_feature_helper = \Drupal::service('oec_group_features.helper');
+
+    // Get all available features for this group type.
+    $available_features = [];
+    foreach ($group_feature_helper->getGroupTypeAvailableFeatures('event') as $plugin_id => $label) {
+      $available_features[] = $plugin_id;
+    }
 
     for ($i = 0; $i < 5; $i++) {
       $visibility = $i % 2 ? 'public' : 'private';
@@ -133,13 +141,17 @@ class GroupTypeEventGenerator extends CoreGenerator {
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
         'field_vocab_language' => $this->getRandomEntities('taxonomy_term', ['vid' => 'languages'], 1),
         'field_funding_source' => $this->getRandomEntities('taxonomy_term', ['vid' => 'funding_source'], 1),
-        'features' => $available_features,
+        'features' => [],
         'uid' => 1,
       ];
 
       $group = Group::create($values);
       $group->save();
       $this->groupFlexSaver->saveGroupVisibility($group, $visibility);
+
+      // Save group features.
+      $group->set(GroupFeatureHelper::FEATURES_FIELD_NAME, $available_features);
+      $group->save();
 
       // Update moderation state of group book page.
       $book = Node::load($this->eicGroupsHelper->getGroupBookPage($group));
