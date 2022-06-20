@@ -165,6 +165,14 @@ class ProcessorUser extends DocumentProcessor {
     foreach ($this->groupMembershipLoader->loadByUser($user) as $membership) {
       $group = $membership->getGroup();
 
+      //@TODO
+      $comment_storage = $this->entityTypeManager->getStorage('comment');
+      $query = $comment_storage->getQuery();
+      $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
+      $query->condition('status', CommentInterface::PUBLISHED);
+      $query->condition('uid', $user->id());
+      $total_comments = (int) $query->count()->execute();
+
       $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
         ->fields('gc_fd', ['uid'])
         ->condition('gc_fd.uid', $user->id())
