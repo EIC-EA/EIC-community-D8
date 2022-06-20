@@ -1,0 +1,19 @@
+uuid: 8cb96d26-08d7-486b-a226-087200bed304
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_new_discussion_published
+label: 'NOTIFY :: MT26 :: New discussion published without notification'
+description: ''
+text: {  }
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

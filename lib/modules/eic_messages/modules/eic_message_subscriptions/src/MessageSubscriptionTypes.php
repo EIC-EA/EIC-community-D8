@@ -30,8 +30,6 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
 
   const CONTENT_RECOMMENDED = 'sub_new_content_recommendation';
 
-  const NEW_DISCUSSION_WITHOUT_NOTIFICATION = 'sub_new_discussion_published';
-
   /**
    * Categorises each subscription message using notification types defined in eic_user.
    * These messages are supposed to be "unsubscribable/deniable". Meaning that the user can
@@ -46,7 +44,6 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
     self::CONTENT_RECOMMENDED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
     self::NEW_EVENT_PUBLISHED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
     self::GROUP_CONTENT_SHARED => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
-    self::NEW_DISCUSSION_WITHOUT_NOTIFICATION => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
   ];
 
   /**

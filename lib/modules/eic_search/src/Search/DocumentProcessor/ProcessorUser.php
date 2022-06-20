@@ -155,33 +155,39 @@ class ProcessorUser extends DocumentProcessor {
     $total_followers = $this->userHelper->getUserFollowers($user);
 
     // Query to count number of members.
-    $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
+    $query_content = $this->connection->select('group_content_field_data', 'gc_fd')
       ->fields('gc_fd', ['uid'])
       ->condition('gc_fd.uid', $user->id())
       ->condition('gc_fd.type', '%group_node%', 'LIKE');
-    $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
-    $total_content = (int) $query_members->execute()->fetchAssoc()['count'];
+    $query_content->addExpression('COUNT(gc_fd.entity_id)', 'count');
+    $total_content = (int) $query_content->execute()->fetchAssoc()['count'];
 
-    foreach ($this->groupMembershipLoader->loadByUser($user) as $membership) {
+    $memberships = $this->groupMembershipLoader->loadByUser($user);
+    $group_ids = array_unique(array_map(function(GroupMembership $membership) {
+      return $membership->getGroup()->id();
+    }, $memberships));
+
+    $this->addOrUpdateDocumentField($document, 'itm_user_group_ids', $fields, $group_ids);
+
+    foreach ($memberships as $membership) {
       $group = $membership->getGroup();
 
-      //@TODO
-      $comment_storage = $this->entityTypeManager->getStorage('comment');
-      $query = $comment_storage->getQuery();
-      $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
-      $query->condition('status', CommentInterface::PUBLISHED);
-      $query->condition('uid', $user->id());
-      $total_comments = (int) $query->count()->execute();
-
-      $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
+      $query_content = $this->connection->select('group_content_field_data', 'gc_fd')
         ->fields('gc_fd', ['uid'])
         ->condition('gc_fd.uid', $user->id())
         ->condition('gc_fd.gid', $group->id())
         ->condition('gc_fd.type', '%group_node%', 'LIKE');
-      $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
-      $total_group_content = (int) $query_members->execute()->fetchAssoc()['count'];
+      $query_content->addExpression('COUNT(gc_fd.entity_id)', 'count');
+      $total_group_content = (int) $query_content->execute()->fetchAssoc()['count'];
 
-      $most_active_total = 3 * $total_followers + 2 * $total_group_content + 2 * $total_comments + $total_groups + $total_events;
+      $query_comments = $this->connection->select('comment_field_data', 'cfd')
+        ->fields('gcfd', ['entity_id'])
+        ->condition('gcfd.type', '%group_node%', 'LIKE')
+        ->condition('gcfd.gid', $group->id());
+      $query_comments->join('group_content_field_data', 'gcfd', 'cfd.pid = gcfd.entity_id');
+      $total_group_comments = (int) $query_comments->countQuery()->execute()->fetchAssoc()['expression'];
+
+      $most_active_total = 3 * $total_followers + 2 * $total_group_content + 2 * $total_group_comments + $total_groups + $total_events;
       $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID_GROUP . $group->id(), $fields, $most_active_total);
       $roles = array_map(function(GroupRole $group_role) {
         return $group_role->label();

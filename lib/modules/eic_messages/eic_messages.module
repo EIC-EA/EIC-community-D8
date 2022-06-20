@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
+use Drupal\eic_messages\Hooks\EntityAdminUpdateNotifier;
 use Drupal\eic_messages\Hooks\EntityOperations;
 use Drupal\eic_messages\Hooks\FormOperations;
 use Drupal\eic_messages\Hooks\LogMessageRenderer;
@@ -91,6 +92,15 @@ function eic_messages_entity_update(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Hooks\EntityOperations $class */
   $class = \Drupal::classResolver(EntityOperations::class);
   $class->entityUpdate($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_messages_node_update(EntityInterface $entity) {
+  /** @var \Drupal\eic_messages\Hooks\EntityAdminUpdateNotifier $class */
+  $class = \Drupal::classResolver(EntityAdminUpdateNotifier::class);
+  $class($entity);
 }
 
 /**
