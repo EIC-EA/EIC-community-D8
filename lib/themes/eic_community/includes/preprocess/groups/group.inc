@@ -376,6 +376,11 @@ function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, s
   $list = [];
   foreach ($medias as $media) {
     $file = File::load($media->field_media_file->target_id);
+
+    if (!$file instanceof \Drupal\file\FileInterface) {
+      continue;
+    }
+
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
     $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
     $list[] = [
