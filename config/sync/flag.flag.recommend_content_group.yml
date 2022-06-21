@@ -6,9 +6,7 @@ dependencies:
     - group
 id: recommend_content_group
 label: 'Recommend (Group)'
-bundles:
-  - event
-  - group
+bundles: {  }
 entity_type: group
 global: false
 flag_short: 'Flag this item'
