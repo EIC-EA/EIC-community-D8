@@ -397,7 +397,10 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // If entity is moderated, we need to check the moderation state before
     // update the file statistics.
-    if ($this->contentModerationInfo->isModeratedEntity($entity)) {
+    if (
+      $this->contentModerationInfo instanceof ModerationInformation &&
+      $this->contentModerationInfo->isModeratedEntity($entity)
+    ) {
       switch ($entity->get('moderation_state')->value) {
         case DefaultContentModerationStates::PUBLISHED_STATE:
           // Entity is published, therefore we can update file statistics.
@@ -454,7 +457,10 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // If entity is moderated, we need to check the moderation state before
     // update the file statistics.
-    if ($this->contentModerationInfo->isModeratedEntity($entity)) {
+    if (
+      $this->contentModerationInfo instanceof ModerationInformation &&
+      $this->contentModerationInfo->isModeratedEntity($entity)
+    ) {
       switch ($entity->get('moderation_state')->value) {
         case DefaultContentModerationStates::PUBLISHED_STATE:
           // Entity is published, therefore we can update file statistics.
