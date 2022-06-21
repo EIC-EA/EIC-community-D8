@@ -184,7 +184,7 @@ class ProcessorUser extends DocumentProcessor {
         ->fields('gcfd', ['entity_id'])
         ->condition('gcfd.type', '%group_node%', 'LIKE')
         ->condition('gcfd.gid', $group->id());
-      $query_comments->join('group_content_field_data', 'gcfd', 'cfd.pid = gcfd.entity_id');
+      $query_comments->join('group_content_field_data', 'gcfd', 'cfd.entity_id = gcfd.entity_id');
       $total_group_comments = (int) $query_comments->countQuery()->execute()->fetchAssoc()['expression'];
 
       $most_active_total = 3 * $total_followers + 2 * $total_group_content + 2 * $total_group_comments + $total_groups + $total_events;
