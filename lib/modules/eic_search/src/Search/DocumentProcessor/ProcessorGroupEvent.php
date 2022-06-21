@@ -40,7 +40,7 @@ class ProcessorGroupEvent extends DocumentProcessor {
     $teaser_relative = '';
 
     if ($fid) {
-      $image_style = ImageStyle::load('large');
+      $image_style = ImageStyle::load('gallery_teaser_crop_160x160');
       $file = File::load($fid);
       $image_uri = $file->getFileUri();
 
