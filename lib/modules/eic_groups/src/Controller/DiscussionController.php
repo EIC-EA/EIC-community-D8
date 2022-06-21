@@ -153,7 +153,7 @@ class DiscussionController extends ControllerBase {
       'entity_id' => $discussion_id,
       'field_name' => 'field_comments',
       'comment_body' => [
-        'value' => $text,
+        'value' => $text !== NULL ? $text : '',
         'format' => 'full_html',
       ],
       'field_tagged_users' => array_map(function ($tagged_user) {
