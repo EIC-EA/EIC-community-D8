@@ -8,12 +8,14 @@ description: 'Modules and configuration exclusive to development.'
 weight: 0
 folder: ../config/development
 module:
+  data_fixtures: 0
   devel: 0
   devel_generate: 0
-  data_fixtures: 0
   eic_default_content: 0
+  eic_digest_test: 0
 theme: {  }
-blacklist: {  }
+blacklist:
+  - eic_user_login.settings
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true

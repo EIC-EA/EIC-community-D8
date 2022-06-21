@@ -56,12 +56,15 @@ function eic_community_preprocess_field__field_related_downloads(array &$variabl
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
+      'entity' => $media,
       'highlight' => FALSE,
       'path' => $download_url,
       'icon_file_path' => $variables['eic_icon_path'],
       'icon' => [
-        'type' => $file_type === 'video' ? 'general' : 'custom',
-        'name' => $file_type === 'video' ? $file_type : substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+        'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
+        'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
+          pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+        ),
       ],
     ];
 

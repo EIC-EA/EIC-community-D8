@@ -7,6 +7,7 @@
     align-items: stretch;
     height: 100%;
     box-sizing: border-box;
+    align-content: flex-start;
   }
 
   @include ecl-media-breakpoint-up('sm') {
@@ -53,8 +54,14 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
+  .ecl-featured-content-collection
+    .ecl-featured-content-collection__item:nth-child(odd)
+    &--grey#{$node}--alternating-grey {
+    background: map-get($ecl-colors, 'white');
+  }
+
   &--grey,
-  &--is-card{
+  &--is-card {
     padding: ecl-box-model('padding');
   }
 
@@ -63,7 +70,8 @@
       padding: ecl-box-model('padding');
     }
 
-    &:not(.ecl-teaser--event):not(.ecl-teaser--group).ecl-teaser--as-card .ecl-teaser__main-wrapper {
+    &:not(.ecl-teaser--event):not(.ecl-teaser--group).ecl-teaser--as-card
+      .ecl-teaser__main-wrapper {
       padding: 0 ecl-box-model('padding') ecl-box-model('padding');
     }
 
@@ -76,6 +84,16 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
+  &-overview--is-loading {
+    position: relative;
+  }
+
+  &-overview__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &--member {
     display: flex;
     flex-wrap: wrap;
@@ -86,7 +104,7 @@
       box-sizing: border-box;
     }
 
-    & .ecl-teaser__link{
+    & .ecl-teaser__link {
       margin-right: 0;
     }
 
@@ -95,9 +113,21 @@
       align-items: flex-start;
       flex-direction: row;
     }
+
+    #{$node}-overview--has-columns &__main-wrapper {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
   }
-  &--organisation-member{
+  &--organisation-member {
     flex-wrap: wrap;
+    flex-direction: column;
+
+    & .ecl-teaser__main-wrapper {
+      display: flex;
+      flex-direction: row;
+    }
 
     & #{$node}__title {
       color: $ecl-color-grey;
@@ -110,15 +140,20 @@
     }
 
     & .ecl-teaser__stat-value {
-      font-size: .875em;
+      font-size: 0.875em;
     }
   }
-  &--organisation-member &__status{
+  &--organisation-member &__status,
+  &--member &__status {
     width: 100%;
     margin-bottom: $ecl-spacing-s;
+    max-height: 1.25rem;
+    font-size: 0.875rem;
+    padding-top: $ecl-spacing-m;
+    padding-left: $ecl-spacing-m;
   }
 
-  &--organisation-member &__meta-footer{
+  &--organisation-member &__meta-footer {
     position: relative;
     width: 100%;
     margin-top: $ecl-spacing-s;
@@ -135,19 +170,21 @@
     height: 80px;
     object-fit: cover;
     border-radius: 50%;
+    overflow: hidden;
+    margin-right: map-get($ecl-spacing, 'l');
   }
 
-  &--organisation#{$node}--as-card-white &__main-wrapper{
+  &--organisation#{$node}--as-card-white &__main-wrapper {
     padding-top: 0;
     padding-bottom: 0;
     padding-right: 0;
   }
   &--organisation#{$node}--as-card-white &__main-wrapper,
-  &--organisation &__main-wrapper{
+  &--organisation &__main-wrapper {
     padding-bottom: $ecl-spacing-xl;
   }
 
-  &--organisation &__meta-footer{
+  &--organisation &__meta-footer {
     position: absolute;
     justify-content: flex-start;
     left: ecl-box-model('padding');
@@ -172,7 +209,7 @@
       top: 0;
       left: 0;
       bottom: 0;
-      content: " ";
+      content: ' ';
     }
   }
 
@@ -187,14 +224,13 @@
     @include ecl-media-breakpoint-down('xs') {
       &::before {
         padding-top: calc(100% / 16 * 9);
-        content: " ";
+        content: ' ';
         display: block;
       }
     }
 
     @include ecl-media-breakpoint-up('sm') {
       width: map-get($ecl-media, 'l');
-      height: map-get($ecl-media, 'm');
       margin: 0 ecl-box-model('padding') 0 0;
     }
 
@@ -208,6 +244,12 @@
       color: #ffffff;
     }
 
+    #{$node}--story & {
+      @include ecl-media-breakpoint-up('sm') {
+        height: map-get($ecl-media, 'm');
+      }
+    }
+
     #{$node}--as-card & {
       width: 100%;
       box-sizing: border-box;
@@ -215,13 +257,13 @@
 
       &::before {
         padding-top: calc(100% / 16 * 9);
-        content: " ";
+        content: ' ';
         display: block;
       }
     }
 
     // Enables layout adjustments for cards with a color.
-    [class*="ecl-teaser--as-card-"] & {
+    [class*='ecl-teaser--as-card-'] & {
       margin: 0;
     }
 
@@ -248,7 +290,7 @@
 
       &::before {
         padding-top: 100%;
-        content: " ";
+        content: ' ';
         display: block;
       }
     }
@@ -279,7 +321,7 @@
     }
 
     #{$node}--gallery &:before {
-      display:none;
+      display: none;
     }
 
     &--empty {
@@ -304,6 +346,10 @@
     height: 100%;
     box-sizing: border-box;
     object-fit: cover;
+
+    #{$node}-overview #{$node}-overview__item--organisation & {
+      object-fit: contain;
+    }
 
     @include ecl-media-breakpoint-down('xs') {
       position: absolute;
@@ -350,18 +396,19 @@
       box-sizing: border-box;
     }
 
-
     // Enables layout adjustments for cards with a color.
-    [class*="ecl-teaser--as-card-"] & {
+    [class*='ecl-teaser--as-card-'] & {
       padding: ecl-box-model('padding');
     }
 
-    #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
+    #{$node}--as-card[class*='ecl-teaser--as-card-'] & {
       padding: ecl-box-model('padding');
     }
 
-    #{$node}--filelist &, #{$node}--video &, #{$node}--gallery & {
-      position:relative;
+    #{$node}--filelist &,
+    #{$node}--video &,
+    #{$node}--gallery & {
+      position: relative;
     }
 
     @include ecl-media-breakpoint-up('sm') {
@@ -375,7 +422,7 @@
     color: $ecl-color-grey;
     &--members {
       justify-content: center;
-      font-size: .85em;
+      font-size: 0.85em;
       color: $ecl-color-grey-75;
     }
     & svg {
@@ -412,12 +459,14 @@
     }
 
     #{$node}--as-card &--is-hidden {
-      display: flex;
       visibility: hidden;
     }
 
-    #{$node}--organisation &, #{$node}--filelist &, #{$node}--video &, #{$node}--gallery & {
-      margin-bottom:map-get($ecl-spacing, 'xs');
+    #{$node}--organisation &,
+    #{$node}--filelist &,
+    #{$node}--video &,
+    #{$node}--gallery & {
+      margin-bottom: map-get($ecl-spacing, 'xs');
     }
 
     #{$node}--is-highlightable & {
@@ -437,10 +486,6 @@
 
     #{$node}--story & {
       justify-content: space-between;
-
-      @include ecl-media-breakpoint-up('sm') {
-        justify-content: inherit;
-      }
     }
 
     #{$node}--story#{$node}--has-compact-layout & {
@@ -450,7 +495,6 @@
     #{$node}--as-card#{$node}--story & {
       justify-content: space-between;
     }
-
 
     #{$node}--as-card#{$node}--event & {
       display: none;
@@ -480,7 +524,9 @@
       margin-top: ecl-box-model('margin', 'controls');
     }
 
-    #{$node}--filelist &, #{$node}--video &, #{$node}--gallery & {
+    #{$node}--filelist &,
+    #{$node}--video &,
+    #{$node}--gallery & {
       width: 100%;
       border-top: ecl-border();
       margin-top: ecl-layout('gutter', 'controls');
@@ -542,12 +588,6 @@
         margin-bottom: map-get($ecl-spacing, 's');
       }
     }
-
-    //@include ecl-media-breakpoint-up('md') {
-    //  .ecl-teaser-overview--has-columns & {
-    //    display: block;
-    //  }
-    //}
   }
 
   &__content {
@@ -641,14 +681,14 @@
   &__title-before {
     &::after {
       display: inline;
-      content: "\00A0";
+      content: '\00A0';
     }
   }
 
   &__title-after {
     &::before {
       display: inline;
-      content: "\00A0";
+      content: '\00A0';
     }
   }
 
@@ -657,15 +697,17 @@
       @include ecl-media-breakpoint-up('md') {
         flex: 1;
         min-width: 0;
-        max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
       > span {
-        white-space: nowrap;
+        min-height: 2.5em;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
     }
   }
@@ -735,13 +777,17 @@
     @include ecl-media-breakpoint-up('md') {
       #{$node}--event & {
         width: auto;
-        margin-left: map-get($ecl-spacing, 's');
+        margin-left: 0;
         margin-top: 0;
       }
     }
 
     #{$node}--story & {
       margin: 0;
+
+      & .ecl-tag {
+        margin: 0 auto 0 0;
+      }
 
       @include ecl-media-breakpoint-up('sm') {
         width: 50%;
@@ -751,8 +797,10 @@
         }
       }
     }
-    #{$node}--filelist &, #{$node}--video &, #{$node}--gallery & {
-        margin-top:0;
+    #{$node}--filelist &,
+    #{$node}--video &,
+    #{$node}--gallery & {
+      margin-top: 0;
     }
 
     #{$node}--story#{$node}--has-compact-layout & {
@@ -792,7 +840,7 @@
       }
     }
 
-    #{$node}--event#{$node}--as-card #{$node}__main-wrapper>#{$node}__meta-footer & {
+    #{$node}--event#{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
       & + #{$node}__meta-column {
         padding-top: ecl-box-model('margin', 'controls');
       }
@@ -886,7 +934,10 @@
       @include ecl-responsive-font('label');
     }
 
-    #{$node}--story  &, #{$node}--filelist  &, #{$node}--video  &, #{$node}--gallery  & {
+    #{$node}--story &,
+    #{$node}--filelist &,
+    #{$node}--video &,
+    #{$node}--gallery & {
       text-transform: uppercase;
     }
 
@@ -1063,7 +1114,7 @@
   }
 
   &__stat-icon {
-    color: ecl-typography('color', 'label');
+    color: ecl-typography('color', 'meta');
     margin-right: 4px;
     display: flex;
     align-items: center;
@@ -1071,7 +1122,6 @@
   }
 
   &--search {
-
     & .ecl-teaser__title {
       font-size: 1.25rem;
     }
@@ -1086,7 +1136,9 @@
   }
 
   /* file list teaser */
-  &--filelist, &--video, &--gallery {
+  &--filelist,
+  &--video,
+  &--gallery {
     padding: map-get($ecl-spacing, 's');
     @include ecl-media-breakpoint-up('sm') {
       flex-wrap: wrap;
@@ -1141,7 +1193,9 @@
   }
 
   .ecl-highlight {
-    position:absolute; right:0; top:0;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   &__like {
@@ -1171,7 +1225,7 @@
         display: block;
         width: map-get($ecl-media, 'l');
         height: map-get($ecl-media, 'l');
-        object-fit: cover ;
+        object-fit: cover;
         @include ecl-media-breakpoint-down('md') {
           width: 100%;
           height: 100%;
@@ -1181,7 +1235,7 @@
       @include ecl-media-breakpoint-down('xs') {
         &::before {
           padding-top: calc(100% / 16 * 9);
-          content: " ";
+          content: ' ';
           display: block;
         }
       }
@@ -1190,7 +1244,7 @@
     &-other {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(3,1fr);
+      grid-template-columns: repeat(3, 1fr);
       grid-template-areas: 'one two three';
       grid-gap: map-get($ecl-spacing, '2xs');
       margin-top: map-get($ecl-spacing, '2xs');
@@ -1200,7 +1254,7 @@
       position: relative;
       overflow: hidden;
       &:before {
-        content: "";
+        content: '';
         display: block;
         padding-top: 72%;
       }

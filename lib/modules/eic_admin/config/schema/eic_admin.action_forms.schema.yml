@@ -1,0 +1,21 @@
+eic_admin.action_forms.*:
+  type: config_object
+  mapping:
+    route:
+      type: string
+      label: 'Route name'
+    paths:
+      type: string
+      label: 'Paths'
+    label:
+      type: string
+      label: 'Label'
+    title:
+      type: string
+      label: 'Title'
+    description.value:
+      type: string
+      label: 'Description value'
+    description.format:
+      type: string
+      label: 'Description format'

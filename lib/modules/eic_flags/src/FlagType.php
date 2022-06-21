@@ -13,6 +13,8 @@ final class FlagType {
 
   const FOLLOW_GROUP = 'follow_group';
 
+  const FOLLOW_EVENT = 'follow_event';
+
   const FOLLOW_CONTENT = 'follow_content';
 
   const FOLLOW_TAXONOMY_TERM = 'follow_taxonomy_term';
@@ -23,6 +25,10 @@ final class FlagType {
 
   const LIKE_CONTENT = 'like_content';
 
-  const RECOMMEND = 'recommend';
+  const RECOMMEND_NODE = 'recommend_content';
+
+  const RECOMMEND_CONTENT_GROUP = 'recommend_content_group';
+
+  const RECOMMEND_GROUP = 'recommend_group';
 
 }

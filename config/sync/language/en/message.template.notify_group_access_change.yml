@@ -1,7 +1,7 @@
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    value: 'Visibility settings of [message:field_group_ref:entity:title] has been modified to [message:field_group_visibility:value]'
     format: plain_text
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>Dear member,<br />\r\n<br />\r\nThe [message:field_group_ref:entity:type] visibility settings have been updated to [message:field_group_visibility:value].<br />\r\n<br />\r\nPlease consult the [message:field_group_ref:entity:type] <a href=\"[message:field_group_ref:entity:url]/about#featured-content-section-admin\"><u>about page</u></a>&nbsp;for further details.<br />\r\n<br />\r\nPlease contact the [message:field_group_ref:entity:type] owner: <a href=\"[message:field_group_ref:entity:group_owner:url]\">[message:field_group_ref:entity:group_owner:display-name]</a> in case of questions.<br />\r\n<br />\r\n<a href=\"[message:field_group_ref:entity:group_owner:url]\">[message:field_group_ref:entity:group_owner:display-name]</a>,<br />\r\n<em>[message:field_group_ref:entity:type-name] Administrator - <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></em>.</p>\r\n"
+    format: full_html

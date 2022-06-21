@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.group.small_teaser
+    - field.field.group.event.field_additional_content
     - field.field.group.event.field_body
     - field.field.group.event.field_date_range
     - field.field.group.event.field_document_additional
@@ -11,6 +12,7 @@ dependencies:
     - field.field.group.event.field_document_presentations
     - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
+    - field.field.group.event.field_funding_source
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
@@ -263,6 +265,8 @@ content:
 hidden:
   changed: true
   created: true
+  field_additional_content: true
+  field_funding_source: true
   langcode: true
   search_api_excerpt: true
   uid: true

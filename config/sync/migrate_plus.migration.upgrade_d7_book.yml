@@ -1,0 +1,52 @@
+uuid: 9a6a47af-4dc8-4731-903d-b0478c8d7c09
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_book
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: Books
+source:
+  plugin: eic_d7_book
+  track_changes: true
+  batch_size: 100
+process:
+  nid:
+    -
+      plugin: get
+      source: nid/0/nid
+    -
+      plugin: skip_on_empty
+      method: row
+  book/bid:
+    -
+      plugin: get
+      source: bid/0/nid
+    -
+      plugin: skip_on_empty
+      method: process
+  book/weight:
+    -
+      plugin: get
+      source: weight
+  book/pid:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: plid
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_book
+destination:
+  plugin: eic_book
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_book
+    - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_group
+  optional: {  }

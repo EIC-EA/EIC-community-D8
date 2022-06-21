@@ -33,18 +33,38 @@ class SubscriptionMessageCreator {
   }
 
   /**
+   * @param \Drupal\group\Entity\GroupInterface $event
+   *
+   * @return \Drupal\message\MessageInterface
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createGlobalEventSubscription(GroupInterface $event) {
+    $message = Message::create([
+      'template' => MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
+      'field_group_ref' => $event->id(),
+      'field_topic_term' => $event->get('field_vocab_topics')->referencedEntities(),
+    ]);
+    $message->set('field_event_executing_user', $event->getOwnerId());
+    $message->setOwnerId($event->getOwnerId());
+
+    return $message;
+  }
+
+  /**
    * Creates a subscription message for a node with terms of interest.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity object.
    * @param string $operation
    *   The type of the operations. See SubscriptionOperationTypes.
+   * @param \Drupal\taxonomy\TermInterface[] $topics
    *
    * @return \Drupal\message\MessageInterface
    */
   public function createTermsOfInterestNodeSubscription(
     ContentEntityInterface $entity,
-    string $operation
+    string $operation,
+    array $topics
   ) {
     $message = NULL;
 
@@ -61,7 +81,8 @@ class SubscriptionMessageCreator {
 
         $message = Message::create([
           'template' => $message_type,
-          'field_node_ref' => $entity,
+          'field_referenced_node' => $entity,
+          'field_topic_term' => $topics,
         ]);
 
         $group_contents = GroupContent::loadByEntity($entity);
@@ -101,7 +122,7 @@ class SubscriptionMessageCreator {
     $flag = $flagging->getFlag();
     $message = NULL;
 
-    if ($flag->id() !== FlagType::RECOMMEND) {
+    if ($flag->id() !== FlagType::RECOMMEND_NODE) {
       return $message;
     }
 
@@ -120,7 +141,7 @@ class SubscriptionMessageCreator {
 
     return $message;
   }
-  
+
   /**
    * Creates a subscription message for a comment.
    *
@@ -165,6 +186,14 @@ class SubscriptionMessageCreator {
       $message->set('field_event_executing_user', $executing_user_id);
     }
 
+    // Adds the reference to the commented entity.
+    if ($message->hasField('field_referenced_node')) {
+      $commented_entity = $entity->getCommentedEntity();
+      if ($commented_entity instanceof ContentEntityInterface) {
+        $message->set('field_referenced_node', $commented_entity->id());
+      }
+    }
+
     return $message;
   }
 
@@ -197,6 +226,7 @@ class SubscriptionMessageCreator {
         $message = Message::create([
           'template' => $message_type,
           'field_referenced_node' => $entity,
+          'field_group_ref' => $group,
         ]);
 
         // Set the owner of the message to the current user.
@@ -214,4 +244,5 @@ class SubscriptionMessageCreator {
 
     return $message;
   }
+
 }

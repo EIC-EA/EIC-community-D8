@@ -1,0 +1,8 @@
+uuid: ecc2b11d-220b-4bd6-b8fc-22cd582b9c64
+langcode: en
+status: true
+dependencies: {  }
+name: 'Global Event type'
+vid: global_event_type
+description: 'This taxonomy is synced from SMED'
+weight: 0

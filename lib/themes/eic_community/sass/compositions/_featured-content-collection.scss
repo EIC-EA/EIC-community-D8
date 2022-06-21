@@ -51,49 +51,50 @@
 
   &__items {
     display: flex;
+    gap: ecl-layout('gutter');
     flex-wrap: wrap;
     margin-top: map-get($ecl-spacing, 'xl');
-    margin-left: #{0 - ecl-layout('gutter')};
-    margin-bottom: #{0 - map-get($ecl-spacing, 'l')};
 
     &:first-child {
       margin-top: 0;
     }
 
-    @include ecl-media-breakpoint-up('md') {
-      margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
-    }
-
     #{$node}--has-overview-layout & {
-      align-items: flex-start;
+      align-items: stretch;
     }
   }
 
   &__item {
     display: flex;
-    padding-left: ecl-layout('gutter');
-    margin-bottom: map-get($ecl-spacing, 'l');
     width: 100%;
     box-sizing: border-box;
+	  align-self: stretch;
 
     #{$node}--is-ready[aria-collapsed="true"] &:nth-child(1n+3) {
       @include visually-hidden();
     }
 
+    #{$node}--has-separator & + & {
+      border-top: 1px solid #D9D9D9;
+      padding-top: ecl-layout('gutter') + 0.5rem;
+    }
+
     @include ecl-media-breakpoint-up('md') {
-      width: calc(100% / 2);
-      margin-bottom: map-get($ecl-spacing, 'xl');
+      width: calc(50% - #{ecl-layout('gutter') / 2});
+      #{$node}--has-list-layout & {
+        width: 100%;
+      }
     }
 
     @include ecl-media-breakpoint-up('lg') {
-      width: calc(100% / 4);
+      width: calc(25% - #{(ecl-layout('gutter') * 3) / 4});
 
       #{$node}--has-compact-layout & {
-        width: calc(100% / 3);
+        width: calc((100% / 3) - #{(ecl-layout('gutter') * 2) / 3});
       }
 
       #{$node}--has-overview-layout & {
-        width: calc(100% / 2);
+        width: calc(50% - #{ecl-layout('gutter') / 2});
       }
 
       #{$node}--has-list-layout & {

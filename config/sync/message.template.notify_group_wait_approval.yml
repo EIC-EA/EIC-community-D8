@@ -1,0 +1,28 @@
+uuid: c63cbf33-8730-4de1-84e3-595d85057c4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_text
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_group_wait_approval
+label: 'NOTIFY :: MT :: Group wait approval'
+description: 'Sends a reminder periodically to SAs and SCMs about the pending approval of a newly created group.'
+text:
+  -
+    value: "<p>New [message:field_group_ref:entity:title] request (REMINDER)</p>\r\n"
+    format: basic_text
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>This is an automated reminder.</strong></p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:group_owner:url]\"><u>[message:field_group_ref:entity:group_owner:display-name]</u></a> requested a new [message:field_group_ref:entity:type]:&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a>.</p>\r\n\r\n<p><strong>Reason for requesting this new [message:field_group_ref:entity:type]:</strong></p>\r\n\r\n<blockquote>\r\n<p>[message:field_group_ref:entity:field_message_to_site_admin]</p>\r\n</blockquote>\r\n\r\n<p>To edit the status of this [message:field_group_ref:entity:type]:&nbsp;<a href=\"[message:field_group_ref:entity:edit-url]\"><u>manage pending [message:field_group_ref:entity:type]</u></a>.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

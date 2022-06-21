@@ -29,7 +29,9 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    */
-  public function __construct(EventDispatcherInterface $event_dispatcher) {
+  public function __construct(
+    EventDispatcherInterface $event_dispatcher
+  ) {
     $this->eventDispatcher = $event_dispatcher;
   }
 
@@ -73,7 +75,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     $message_subscription_event = FALSE;
 
     switch ($flag->id()) {
-      case FlagType::RECOMMEND:
+      case FlagType::RECOMMEND_NODE:
         // Sets message subscription event name.
         $message_subscription_event = MessageSubscriptionEvents::CONTENT_RECOMMENDED;
         break;
@@ -97,6 +99,10 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   TRUE if the flag can trigger message subscriptions.
    */
   public function isApplicable(FlagInterface $flag) {
+    if (eic_migrate_is_migration_messages_running()) {
+      FALSE;
+    }
+
     $allowed_flag_types = self::getAllowedMessageSubscriptionFlagTypes();
     return in_array($flag->id(), $allowed_flag_types);
   }
@@ -109,7 +115,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    */
   public static function getAllowedMessageSubscriptionFlagTypes() {
     return [
-      FlagType::RECOMMEND,
+      FlagType::RECOMMEND_NODE,
     ];
   }
 

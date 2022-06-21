@@ -101,7 +101,7 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $data = file_get_contents('https://picsum.photos/1280/964.jpg');
+    $data = file_get_contents('https://picsum.photos/1200/900.jpg');
     if (!$data) {
       return NULL;
     }
@@ -110,7 +110,7 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
     $basename = pathinfo($file_system->tempnam($destination, 'eic_'), PATHINFO_BASENAME) . '.jpg';
     $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
 
-    $file = file_save_data($data, $destination . $basename, FileSystemInterface::EXISTS_REPLACE);
+    $file = \Drupal::service('file.repository')->writeData($data, $destination . $basename, FileSystemInterface::EXISTS_REPLACE);
     $images[] = $file;
 
     return $file;

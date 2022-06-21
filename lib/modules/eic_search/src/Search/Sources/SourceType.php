@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 
 /**
  * Class SourceType
@@ -113,6 +114,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getLoadMoreBatchItems(): int {
+    return SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function supportDateFilter(): bool {
     return FALSE;
   }
@@ -127,6 +135,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getRegistrationDateIntervalField(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function prefilterByGroupVisibility(): bool {
     return FALSE;
   }
@@ -135,6 +150,13 @@ abstract class SourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function ignoreContentFromCurrentUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByCurrentUser(): bool {
     return FALSE;
   }
 
@@ -157,6 +179,48 @@ abstract class SourceType implements SourceTypeInterface {
    */
   public function prefilterByGroupsMembership(): bool {
     return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('My groups & content only', [], ['context' => 'eic_search']);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function extraPrefilter(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignorePublishedState(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return $this->getEntityBundle();
   }
 
 }

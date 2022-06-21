@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.gallery.field_gallery_slides
     - field.field.node.gallery.field_language
     - field.field.node.gallery.field_related_contributors
+    - field.field.node.gallery.field_tags
     - field.field.node.gallery.field_vocab_geo
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
@@ -21,6 +22,11 @@ targetEntityType: node
 bundle: gallery
 mode: default
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_body:
     type: text_default
     label: hidden
@@ -61,6 +67,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 15
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 16
     region: content
   field_vocab_geo:
     type: entity_reference_label
@@ -150,5 +164,4 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
-  flag_recommend: true
   search_api_excerpt: true

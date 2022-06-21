@@ -1,0 +1,33 @@
+uuid: 3cc73315-4032-4422-9bb2-f357c133a045
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.event
+    - group.type.group
+    - group.type.organisation
+    - message.template.notify_group_invitation_reminder
+id: message.notify_group_invitation_reminder.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: notify_group_invitation_reminder
+label: Group
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+      group: group
+      organisation: organisation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: group
+field_type: entity_reference

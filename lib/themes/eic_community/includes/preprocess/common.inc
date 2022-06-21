@@ -7,6 +7,7 @@
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
@@ -47,16 +48,27 @@ function _eic_community_get_social_share_block() {
 }
 
 /**
- * @param \Drupal\group\Entity\GroupInterface $group
+ * Returns the build for the content share feature.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $current_group
+ *   The group entity we're sharing from.
  * @param \Drupal\node\NodeInterface $node
+ *   The content entity we want to share.
  *
  * @return array
+ *   The build array.
  */
 function _eic_community_get_share_group_content_link(
   GroupInterface $current_group,
   NodeInterface $node
 ) {
-  static $formatted_groups;
+  $account = \Drupal::currentUser();
+
+  // Check if user has permission to share.
+  if (!$current_group->hasPermission('share content between groups', $account)) {
+    return [];
+  }
+
   /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
   $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
   $group_visibility_entity = $group_visibility_storage->load($current_group->id());
@@ -68,32 +80,13 @@ function _eic_community_get_share_group_content_link(
     return [];
   }
 
-  if (empty($formatted_groups)) {
-    /** @var \Drupal\group\Entity\GroupInterface[] $groups */
-    $groups = \Drupal::service('eic_groups.helper')
-      ->getGroupsByVisibility(GroupVisibilityType::GROUP_VISIBILITY_PUBLIC);
-    foreach ($groups as $group) {
-      if ($group->id() === $current_group->id()) {
-        continue;
-      }
-
-      if (!isset($formatted_groups[$group->bundle()])) {
-        $formatted_groups[$group->bundle()] = [
-          'label' => $group->type->entity->label(),
-          'entities' => [],
-        ];
-      }
-
-      $formatted_groups[$group->bundle()]['entities'][] = [
-        'id' => $group->id(),
-        'label' => $group->label(),
-      ];
-    }
-  }
-
   return [
     '#theme' => 'eic_share_content_link',
-    '#groups' => $formatted_groups,
+    '#get_groups_url' => Url::fromRoute('eic_share_content.groups', [
+      'user' => $account->id(),
+      'group' => $current_group->id(),
+      'node' => $node->id(),
+    ])->toString(),
     '#endpoint' => Url::fromRoute('eic_share_content.share', [
       'group' => $current_group->id(),
       'node' => $node->id(),
@@ -227,8 +220,21 @@ function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_ty
     }
 
     $item['icon']['type'] = 'custom';
-    $item['value'] = $value;
+    $item['value'] = $value ?: 0;
     $stats[$stat] = $item;
+  }
+
+  // If comment system is not open on the entity, do not show comments stats.
+  if (
+    array_key_exists('comments', $stats) &&
+    $entity->hasField('field_comments')
+  ) {
+    $field_comments = $entity->get('field_comments')->first()->getValue();
+    $status = intval($field_comments['status']);
+
+    if ($status !== CommentItemInterface::OPEN) {
+      unset($stats['comments']);
+    }
   }
 
   return $stats;
@@ -247,7 +253,11 @@ function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_ty
  * @return \Drupal\comment\CommentInterface|null
  *   The comment object of NULL if not found.
  */
-function _eic_community_get_entity_last_comment(EntityInterface $entity, $first_level_only = TRUE, $published_only = TRUE) {
+function _eic_community_get_entity_last_comment(
+  EntityInterface $entity,
+  $first_level_only = TRUE,
+  $published_only = TRUE
+) {
   $query = \Drupal::entityQuery('comment')
     ->condition('entity_id', $entity->id())
     ->condition('entity_type', $entity->getEntityTypeId());
@@ -305,6 +315,10 @@ function _eic_community_get_term_parents(TermInterface $term, array $loaded_pare
  */
 function _eic_community_process_term_parents_tree(TermInterface $term, array $terms, array $loaded_parents) {
   $parent = array_shift($loaded_parents);
+  if (!$parent) {
+    return [];
+  }
+
   if (!isset($terms[$parent->id()])) {
     $terms[$parent->id()]['term'] = $parent;
     $terms[$parent->id()]['title'] = $parent->getName();
@@ -312,7 +326,11 @@ function _eic_community_process_term_parents_tree(TermInterface $term, array $te
   }
 
   if (!empty($loaded_parents)) {
-    $terms[$parent->id()]['items'] = _eic_community_process_term_parents_tree($term, $terms[$parent->id()]['items'], $loaded_parents);
+    $terms[$parent->id()]['items'] = _eic_community_process_term_parents_tree(
+      $term,
+      $terms[$parent->id()]['items'],
+      $loaded_parents
+    );
   }
   else {
     $terms[$parent->id()]['items'][$term->id()]['term'] = $term;

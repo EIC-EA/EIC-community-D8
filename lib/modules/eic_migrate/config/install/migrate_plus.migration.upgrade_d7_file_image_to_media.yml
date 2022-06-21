@@ -12,13 +12,13 @@ migration_group: migrate_drupal_7
 label: 'Public and private image files to media'
 source:
   plugin: eic_d7_file_complete
-  # batch_size: 100
   file_type: image
   exclude_photos: true
   scheme:
     - public
     - private
   track_changes: true
+  batch_size: 100
 process:
   name: filename
   uid:
@@ -34,6 +34,8 @@ process:
       migration:
         - upgrade_d7_file
         - upgrade_d7_file_private
+    - plugin: skip_on_empty
+      method: row
   oe_media_image/alt:
     - plugin: get
       source: field_file_image_alt_text_value

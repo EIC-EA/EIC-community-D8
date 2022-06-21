@@ -49,6 +49,7 @@ services:
 
   eic_flags.event_subscriber:
     class: Drupal\eic_flags\EventSubscriber\FlagEventSubscriber
+    arguments: ['@?eic_groups.helper']
     calls:
       - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
@@ -58,4 +59,4 @@ services:
     class: Drupal\eic_flags\FlagHelper
     calls:
       - [ setGroupsHelper, [ '@?eic_groups.helper' ] ]
-    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@current_user', '@?eic_groups.helper' ]
+    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@current_user', '@database', '@?eic_groups.helper' ]

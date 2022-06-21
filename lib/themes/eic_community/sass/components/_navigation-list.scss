@@ -35,7 +35,7 @@
     }
   }
 
-  &--is-ready[aria-collapsed="true"] {
+  &--is-ready[aria-collapsed='true'] {
     display: inline-block;
     padding: map-get($ecl-spacing, '2xs');
   }
@@ -61,7 +61,7 @@
       margin-left: ecl-layout('box-model');
     }
 
-    #{$node}--is-ready #{$node}__item:not([aria-active="true"]) >  & {
+    #{$node}--is-ready #{$node}__item:not([aria-active='true']) > & {
       @include visually-hidden();
     }
   }
@@ -71,15 +71,15 @@
       & > #{$node}__link {
         background-color: map-get($ecl-colors, 'grey-5');
         border-color: ecl-typography('color', 'title');
-        color: ecl-typography('color');
-      }
-
-      #{$node}__item--current > #{$node}__link {
-        border-color: transparent;
+        color: map-get($ecl-colors, 'grey');
+        & a {
+          color: currentColor;
+          font-weight: bold;
+        }
       }
     }
 
-    &[aria-active="true"] > #{$node}__link #{$node}__link-controls #{$node}__item-icon {
+    &[aria-active='true'] > #{$node}__link #{$node}__link-controls #{$node}__item-icon {
       transform: none;
       color: ecl-typography('color', 'title');
     }
@@ -90,7 +90,6 @@
     transform: rotate(180deg);
     color: map-get($ecl-colors, 'grey-75');
   }
-
 
   &__link {
     display: flex;
@@ -115,8 +114,7 @@
     flex-direction: row-reverse;
     margin-bottom: ecl-box-model('padding');
 
-
-    #{$node}--is-ready[aria-collapsed="true"] & {
+    #{$node}--is-ready[aria-collapsed='true'] & {
       margin-bottom: 0;
       margin-left: ecl-box-model('padding');
     }
@@ -135,7 +133,7 @@
   }
 
   &__main {
-    #{$node}--is-ready[aria-collapsed="true"] & {
+    #{$node}--is-ready[aria-collapsed='true'] & {
       @include visually-hidden();
     }
   }
@@ -148,7 +146,7 @@
         transform: rotate(90deg);
       }
 
-      #{$node}--is-ready[aria-collapsed="true"] & {
+      #{$node}--is-ready[aria-collapsed='true'] & {
         transform: rotate(0deg);
         @include ecl-media-breakpoint-up('sm') {
           transform: rotate(270deg);

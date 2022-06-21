@@ -2,9 +2,12 @@ uuid: 630db977-ce97-4326-acce-055be7048748
 langcode: en
 status: true
 dependencies:
+  config:
+    - filter.format.basic_text
   module:
     - contact
     - eic_overviews
+    - filter
     - flag
     - fragments
     - media
@@ -28,8 +31,8 @@ permissions:
   - 'unflag like_content'
   - 'unflag like_media'
   - 'unflag recommend_group'
+  - 'use text format basic_text'
   - 'view banner fragments'
-  - 'view bookmark_content'
   - 'view bookmark_media'
   - 'view disclaimer fragments'
   - 'view fact_figure fragments'
@@ -39,4 +42,6 @@ permissions:
   - 'view media'
   - 'view overview pages'
   - 'view recommend'
+  - 'view recommend_content'
+  - 'view recommend_content_group'
   - 'view recommend_group'

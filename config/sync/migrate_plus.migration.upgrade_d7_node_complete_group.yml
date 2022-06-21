@@ -18,14 +18,20 @@ source:
   smed_taxonomy_fields:
     - c4m_vocab_geo
     - c4m_vocab_topic
+  batch_size: 100
 process:
-  langcode:
+  id:
     -
-      plugin: static_map
-      source: language
-      bypass: true
-      map:
-        und: en
+      plugin: migration_lookup
+      migration: upgrade_d7_node_complete_group
+      source: tnid
+    -
+      plugin: node_complete_node_lookup
+  revision_id:
+    -
+      plugin: get
+      source: vid
+  langcode:
     -
       plugin: default_value
       default_value: en
@@ -37,6 +43,16 @@ process:
       migration:
         - upgrade_d7_user
   status: status
+  moderation_state:
+    -
+      plugin: static_map
+      source: c4m_og_status
+      map:
+        pending: pending
+        draft: draft
+        published: published
+        archived: archived
+        deleted: archived
   created: created
   changed: timestamp
   revision_user:
@@ -58,6 +74,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_body: c4m_body
   field_welcome_message: c4m_group_welcome_message
   field_thumbnail:
@@ -71,6 +90,22 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
+  field_vocab_geo:
+    -
+      plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_vocab_topics:
     -
       plugin: sub_process
@@ -89,10 +124,14 @@ process:
 destination:
   plugin: 'entity_complete:group'
   default_bundle: group
+  translations: true
 migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_file_image_to_media
+    - upgrade_d7_node_complete_organisation
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3

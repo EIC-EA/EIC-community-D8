@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
@@ -99,6 +100,31 @@ class FormOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * @param $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param $form_id
+   *
+   * @return void
+   */
+  public function groupFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    $form['actions']['submit']['#submit'][] = [
+      $this,
+      'handleNewGlobalEvent',
+    ];
+  }
+
+  public function handleNewGlobalEvent(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $form_state->getFormObject()->getEntity();
+    if (!$entity->isPublished()) {
+      return;
+    }
+
+    $event = new MessageSubscriptionEvent($entity);
+    $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GLOBAL_EVENT_INSERT);
+  }
+
+  /**
    * Handles the field_post_activity.
    *
    * @param array $form
@@ -120,20 +146,35 @@ class FormOperations implements ContainerInjectionInterface {
       'gallery',
     ];
 
+    // All content type which have the notification field hidden.
+    $disable_content_types = [
+      'book',
+    ];
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     $show_notification_field = FALSE;
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
+        // If node doesn't have notification we don't need to show the field.
+        if (in_array($entity->bundle(), $disable_content_types)) {
+          break;
+        }
+
         $show_notification_field = TRUE;
         break;
 
     }
 
-    if ($show_notification_field) {
+    if (
+      $show_notification_field &&
+      $form_state->get('form_display')
+        ->getComponent('field_send_notification')
+    ) {
       // We set the current publish status of the entity.
       $form_state->set('entity_is_published', $entity->isPublished());
+      $form_state->set('previous_state', $entity->get('moderation_state')->value);
 
       $form['field_send_notification'] = [
         '#title' => $this->t('Send notification'),
@@ -169,14 +210,33 @@ class FormOperations implements ContainerInjectionInterface {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        $group_contents = $this->eicContentHelper->getGroupContentByEntity($entity);
+        // We don't create message subscription if node is in DRAFT or ARCHIVED
+        // state.
+        if (
+          in_array(
+            $entity->get('moderation_state')->value,
+            [
+              DefaultContentModerationStates::DRAFT_STATE,
+              DefaultContentModerationStates::ARCHIVED_STATE,
+            ]
+          )
+        ) {
+          break;
+        }
 
+        // Node is not published and therefore we don't send any notification.
+        if (!$entity->isPublished()) {
+          break;
+        }
+
+        $group_contents = $this->eicContentHelper->getGroupContentByEntity($entity);
         if (empty($group_contents)) {
           // If we are creating a new group content, we handle the notification
           // at a later stage because at this point we don't have the group
           // content ID that is associated with this node.
           if ($form_id === "node_{$entity->bundle()}_form") {
 
+            // We make sure we are on the group content create form route.
             if ($route_name === 'entity.group_content.create_form') {
               // State cache ID that represents a new group content
               // creation.
@@ -187,33 +247,29 @@ class FormOperations implements ContainerInjectionInterface {
               $this->state->set($state_key, TRUE);
               break;
             }
-
-            if (!$entity->isPublished()) {
-              break;
-            }
           }
-          else {
-            // Gets the previous publish status.
-            $is_published = $form_state->get('entity_is_published');
-
-            // If the entity is already published we don't need to send
-            // notification.
-            if ($is_published) {
-              break;
-            }
-          }
-
-          // Instantiate MessageSubscriptionEvent.
-          $event = new MessageSubscriptionEvent($entity);
-          // Dispatch the event to trigger message subscription notifications.
-          $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
-          break;
         }
 
         // Instantiate MessageSubscriptionEvent.
         $event = new MessageSubscriptionEvent($entity);
-        // Dispatch the event to trigger message subscription notifications.
-        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_UPDATE);
+
+        // Dispatch the event to trigger message subscription notification
+        // about new content published.
+        if ($entity->isPublished() && empty($group_contents)) {
+          // Node is not part of a group content so we dispatch the message
+          // subscription event for node creation.
+          $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
+          break;
+        }
+
+        // Dispatch the event to trigger message subscription notification
+        // about group content updated.
+        $this->eventDispatcher->dispatch(
+          $event,
+          $form_state->get('previous_state') === DefaultContentModerationStates::DRAFT_STATE
+            ? MessageSubscriptionEvents::GROUP_CONTENT_INSERT
+            : MessageSubscriptionEvents::GROUP_CONTENT_UPDATE
+        );
         break;
 
     }

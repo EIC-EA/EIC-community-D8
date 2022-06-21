@@ -1,0 +1,10 @@
+uuid: 7d72e86e-5cd3-4295-adb6-67ced8ce232b
+langcode: en
+status: true
+dependencies: {  }
+id: group__organisation
+label: 'Group: Organisation'
+tags:
+  description: '[group:field_body]'
+  og_image: '[group:field_header_visual:entity:oe_media_image]'
+  og_description: '[group:field_body]'

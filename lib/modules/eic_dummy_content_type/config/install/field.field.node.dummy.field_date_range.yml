@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_date_range
+    - node.type.dummy
+  module:
+    - datetime_range
+id: node.dummy.field_date_range
+field_name: field_date_range
+entity_type: node
+bundle: dummy
+label: Date
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

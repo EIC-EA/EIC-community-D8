@@ -64,6 +64,13 @@ function eic_wiki_book_navigation_format_item(array $items, array $trail_urls = 
     foreach ($trail_urls as $key => $trail_url) {
       if ($trail_url->toString() === $link_item['url']->toString()) {
         $item['is_active'] = TRUE;
+
+        // Last key of the active trail which means this is the last item in
+        // the active trail.
+        if ($key === array_key_last($trail_urls)) {
+          $item['is_current'] = TRUE;
+        }
+
         unset($trail_urls[$key]);
         break;
       }

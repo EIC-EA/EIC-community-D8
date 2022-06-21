@@ -3,22 +3,51 @@
 namespace Drupal\eic_user\Hooks;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
+use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class FormAlter
  *
  * @package Drupal\eic_user\Hooks
  */
-class FormAlter {
+class FormAlter implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The EIC Content entity tree manager service.
+   *
+   * @var \Drupal\eic_content\Services\EntityTreeManager
+   */
+  private $treeManager;
+
+  /**
+   * Constructs a new EntityOperations object.
+   *
+   * @param \Drupal\eic_content\Services\EntityTreeManager $entity_tree_manager
+   *   The EIC Content entity tree manager service.
+   */
+  public function __construct(EntityTreeManager $entity_tree_manager) {
+    $this->treeManager = $entity_tree_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('eic_content.entity_tree_manager')
+    );
+  }
 
   /**
    * @param $form
@@ -26,8 +55,7 @@ class FormAlter {
    * @param $form_id
    */
   public function alterBulkGroupInvitation(&$form, FormStateInterface $form_state, $form_id) {
-    $match_limit = 50;
-
+    $maximum_users = 50;
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = \Drupal::routeMatch()->getParameter('group');
 
@@ -40,58 +68,59 @@ class FormAlter {
     $default_values = [];
 
     foreach ($existing_users as $existing_user) {
-      $user = User::load($existing_user['target_id']);
-      $default_values[] = [
-        'name' => realname_load($user),
-        'tid' => $user->id(),
-        'parent' => -1,
-      ];
+      if ($user = User::load($existing_user['target_id'])) {
+        $default_values[] = $user;
+      }
     }
 
     $url_search = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserInvitesListSourceType::class,
+      'page' => 1
     ])->toString();
 
-    $form['existing_users'] =
-      [
-        '#type' => 'entity_autocomplete',
-        '#tags' => TRUE,
-        '#target_type' => 'user',
-        '#maxlength' => 5000,
-        '#weight' => -2,
-        '#attributes' => [
-          'class' => ['hidden', 'entity-tree-reference-widget'],
-          'data-selected-terms' => json_encode($default_values),
-          'data-translations' => json_encode([
-            'select_value' => t('Select a value', [], ['context' => 'eic_search']),
-            'match_limit' => t(
-              'You can select only <b>@match_limit</b> top-level items.',
-              ['@match_limit' => $match_limit],
-              ['context' => 'eic_search']
-            ),
-            'search' => t('Search', [], ['context' => 'eic_search']),
-            'your_values' => t('Your selected values', [], ['context' => 'eic_search']),
-            'required_field' => t('This field is required', [], ['context' => 'eic_content']),
-          ]),
-          'data-terms-url' => $url_search,
-          'data-terms-url-search' => $url_search,
-          'data-terms-url-children' => $url_search,
-          'data-match-limit' => $match_limit,
-          'data-items-to-load' => 50,
-          'data-disable-top' => 0,
-          'data-load-all' => 1,
-          'data-ignore-current-user' => 1,
-          'data-search-specific-users' => 1,
-          'data-target-entity' => 'user',
-          'data-is-required' => FALSE,
-          'data-group-id' => $group->id(),
-        ],
-      ];
+    $options = [
+      'selected_terms_label' => $this->t('Select existing platform users to invite', [], ['context' => 'eic_user']),
+    ];
+
+    // Existing users field.
+    $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
+      [],
+      'user',
+      $this->treeManager->getTreeWidgetProperty('user')->formatPreselection($default_values),
+      $maximum_users,
+      $url_search,
+      $url_search,
+      $url_search,
+      $options
+    );
+    $form['existing_users']['#weight'] = -2;
+    $form['existing_users']['#description'] = $this->t('You can select up to <strong>@count</strong> existing platform users.',
+      ['@count' => $maximum_users],
+      ['context' => 'eic_user']
+    );
+
+    // Input divider.
+    $form['input_divider'] = [
+      '#markup' => $this->t('You can also', [], ['context' => 'eic_user']),
+      '#prefix' => '<div id="input-divider">',
+      '#suffix' => '</div>',
+      '#weight' => $form['existing_users']['#weight'] + 1,
+    ];
+
+    // Tweak email_address field.
+    $form['email_address']['#title'] = $this->t('Select new users to invite to the platform',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#attributes']['placeholder'] = $this->t('Recipients email addresses here',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#required'] = FALSE;
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
 
-    $form['email_address']['#required'] = FALSE;
     $form['#submit'][] = [$this, 'submitBulkInviteUsers'];
     // Remove the default validation.
     $form['#validate'] = [
@@ -160,12 +189,30 @@ class FormAlter {
           $this->t(
             'User with id @user_id does not exists in the platform.',
             ['@user_id' => $existing_user['target_id']],
-            ['context' => 'eic_user'],
+            ['context' => 'eic_user']
           )
         );
+
+        return;
       }
 
-      $emails[] = $user->getEmail();
+      $email = $user->getEmail();
+
+      // If user does not have an e-mail field.
+      if (!$email) {
+        $form_state->setErrorByName(
+          'existing_users',
+          $this->t(
+            'User with id @user_id does not have an email.',
+            ['@user_id' => $user->id()],
+            ['context' => 'eic_user']
+          )
+        );
+
+        return;
+      }
+
+      $emails[] = $email;
     }
 
     $emails = array_merge($emails, $unexisting_users);
@@ -190,14 +237,22 @@ class FormAlter {
         if (!empty($membership)) {
           $invalid_emails[] = $email;
 
-          $error_message .= "<li>Invitation to $email already a member of this group.</li>";
+          $error_message .= "<li>" . $this->t(
+              'User @email is already member of the group.',
+              ['@email' => $email],
+              ['context' => 'eic_user']
+            ) . "</li>";
         }
       }
 
       if ($invitation_loader->loadByGroup($group, NULL, $email)) {
         $invalid_emails[] = $email;
 
-        $error_message .= "<li>User with $email already received an invitation.</li>";
+        $error_message .= "<li>" . $this->t(
+            'User @email already received an invitation.',
+            ['@email' => $email],
+            ['context' => 'eic_user']
+          ) . "</li>";
       }
     }
 
@@ -220,14 +275,20 @@ class FormAlter {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  private function displayErrorMessage(array $invalid_emails, $message_singular, $message_plural, FormStateInterface $form_state) {
+  private function displayErrorMessage(
+    array $invalid_emails,
+    $message_singular,
+    $message_plural,
+    FormStateInterface $form_state
+  ) {
     if (($count = count($invalid_emails)) > 1) {
       $error_message = '<ul>';
       foreach ($invalid_emails as $line => $invalid_email) {
         $error_message .= "<li>{$invalid_email} on line {$line}</li>";
       }
       $error_message .= '</ul>';
-      $form_state->setErrorByName('email_address',
+      $form_state->setErrorByName(
+        'email_address',
         $this->formatPlural(
           $count,
           $message_singular,
@@ -240,7 +301,8 @@ class FormAlter {
     }
     elseif ($count == 1) {
       $error_message = reset($invalid_emails);
-      $form_state->setErrorByName('email_address',
+      $form_state->setErrorByName(
+        'email_address',
         $this->formatPlural(
           $count,
           $message_singular,

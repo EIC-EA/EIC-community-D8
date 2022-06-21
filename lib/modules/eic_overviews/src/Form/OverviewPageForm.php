@@ -14,13 +14,12 @@ class OverviewPageForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-
     $entity = $this->getEntity();
     $result = $entity->save();
     $link = $entity->toLink($this->t('View'))->toRenderable();
 
     $message_arguments = ['%label' => $this->entity->label()];
-    $logger_arguments = $message_arguments + ['link' => render($link)];
+    $logger_arguments = $message_arguments + ['link' => \Drupal::service('renderer')->render($link)];
 
     if ($result == SAVED_NEW) {
       $this->messenger()->addStatus($this->t('New overview page %label has been created.', $message_arguments));

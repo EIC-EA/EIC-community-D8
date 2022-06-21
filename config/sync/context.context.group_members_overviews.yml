@@ -17,20 +17,19 @@ conditions:
     negate: false
     uuid: f43d7d69-4d35-4f45-adc7-347224f302b5
     context_mapping: {  }
-    routes: eic_overviews.groups.overview_page.members
+    routes: "eic_overviews.groups.overview_page.members\r\neic_overviews.groups.overview_page.team"
 reactions:
   blocks:
     id: blocks
     uuid: 52968c87-7333-4284-a1e0-68f19e8ed28d
     blocks:
-      55c33d30-96b0-45e1-8d57-734991c89db8:
-        uuid: 55c33d30-96b0-45e1-8d57-734991c89db8
+      6b8e8018-5a77-4a11-a3cc-3df82e28a314:
+        uuid: 6b8e8018-5a77-4a11-a3cc-3df82e28a314
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
-        weight: '0'
         custom_id: eic_search_overview_group_members
         theme: eic_community
         css_class: ''
@@ -43,16 +42,19 @@ reactions:
           sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array
           sm_user_profile_geo_string: sm_user_profile_geo_string
           ss_user_profile_field_location_address_country_code: ss_user_profile_field_location_address_country_code
+          sm_user_profile_field_vocab_language_array: sm_user_profile_field_vocab_language_array
+          sm_roles_group: sm_roles_group
           sm_user_profile_job_string: 0
-          sm_user_profile_field_vocab_language_array: 0
-          sm_user_profile_role_array: 0
         sort_options:
+          its_activity_score_group: its_activity_score_group
           ds_user_access: ds_user_access
           score: score
+          its_activity_score: 0
           ss_user_first_name: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
+        enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
         third_party_settings: {  }

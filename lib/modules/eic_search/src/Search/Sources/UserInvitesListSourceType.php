@@ -38,7 +38,7 @@ class UserInvitesListSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSearchFieldsId(): array {
-    return ['ss_global_fullname', 'ss_user_mail'];
+    return ['tm_global_fullname', 'tm_user_mail'];
   }
 
   /**
@@ -53,6 +53,27 @@ class UserInvitesListSourceType extends SourceType {
    */
   public function excludingCurrentGroup(): bool {
     return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return 'its_user_id';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'user-invitee-list-' . parent::getUniqueId();
   }
 
 }

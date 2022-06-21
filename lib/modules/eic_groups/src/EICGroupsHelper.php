@@ -4,21 +4,22 @@ namespace Drupal\eic_groups;
 
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
+use Drupal\comment\CommentInterface;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Locale\CountryManager;
-use Drupal\message\MessageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -33,6 +34,7 @@ use Drupal\group\GroupMembership;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
+use Drupal\message\MessageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
@@ -363,7 +365,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       }
     }
     if ($entity) {
-      return $this->getGroupByEntity($entity);
+      return $this->getOwnerGroupByEntity($entity);
     }
     return FALSE;
   }
@@ -371,7 +373,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupByEntity(EntityInterface $entity) {
+  public function getOwnerGroupByEntity(EntityInterface $entity) {
     $group = FALSE;
     if ($entity instanceof GroupInterface) {
       return $entity;
@@ -389,9 +391,16 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     if ($entity instanceof NodeInterface) {
       // Load all the group content for this entity.
-      $group_content = GroupContent::loadByEntity($entity);
-      // Assuming that the content can be related only to 1 group.
-      $group_content = reset($group_content);
+      $group_contents = GroupContent::loadByEntity($entity);
+
+      // We look for the first group_node group_content entity.
+      foreach ($group_contents as $group_content_item) {
+        if (strpos($group_content_item->getGroupContentType()->getContentPluginId(), 'group_node:') === 0) {
+          $group = $group_content_item->getGroup();
+          break;
+        }
+      }
+
       if (!empty($group_content)) {
         $group = $group_content->getGroup();
       }
@@ -408,7 +417,6 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     CacheableMetadata $cacheable_metadata = NULL
   ) {
     $operation_links = [];
-
     foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
       /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
       if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
@@ -450,17 +458,28 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * {@inheritdoc}
    */
   public function getGroupBookPage(GroupInterface $group) {
+    if (!$group->getGroupType()->hasContentPlugin('group_node:book')) {
+      return NULL;
+    }
+
+    $group_content_type_id = $group
+      ->getGroupType()
+      ->getContentPlugin('group_node:book')
+      ->getContentTypeConfigId();
+
     $query = $this->database->select('group_content_field_data', 'gp');
-    $query->condition('gp.type', 'group-group_node-book');
+    $query->condition('gp.type', $group_content_type_id);
     $query->condition('gp.gid', $group->id());
     $query->join('book', 'b', 'gp.entity_id = b.nid');
     $query->fields('b', ['bid', 'nid']);
     $query->condition('b.pid', 0);
     $query->orderBy('b.weight');
+
     $results = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
     if (!empty($results)) {
       return $results[0]->nid;
     }
+
     return NULL;
   }
 
@@ -473,31 +492,33 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   - joining_method: the GroupJoiningMethod plugin type.
    * @param string $plugin_id
    *   The plugin ID.
+   * @param string $group_type
+   *   (optional) The group type.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id, string $group_type = 'group') {
     $key = "$plugin_type-$plugin_id";
 
     switch ($key) {
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t("This group is visible to everyone visiting the group. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+        return $this->t("This @group-type is visible to everyone visiting the @group-type. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.", ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t("This group is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+        return $this->t("This @group-type is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.", ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
+        return $this->t('This @group-type is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this @group-type because the organisation you work for is allowed to see this content or the @group-type owners and administrators have chosen to specifically grant you access to this @group-type. If you want to participate, please become a group member.', ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('A private group is only visible to people who received an invitation via email and accepted it. No one else can see this group.');
+        return $this->t('A private @group-type is only visible to people who received an invitation via email and accepted it. No one else can see this @group-type.', ['@group-type' => $group_type]);
 
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('This means that EIC Community members can join this group immediately by clicking "join group".');
+        return $this->t('This means that EIC Community members can join this @group-type immediately by clicking "join group".', ['@group-type' => $group_type]);
 
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
+        return $this->t('This means that EIC Community members can request to join this @group-type. This request needs to be validated by the @group-type owner or administrator.', ['@group-type' => $group_type]);
 
       default:
         return '';
@@ -538,16 +559,23 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param string $format
    *   The format of the label. Can be 'default' or 'short'. Defaults to
    *   'default'.
+   * @param string $group_type
+   *   The group type. Defaults to 'group'.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id, string $format = 'default') {
+  public function getGroupFlexPluginTitle(
+    string $plugin_type,
+    string $plugin_id,
+    string $format = 'default',
+    string $group_type = 'group'
+  ) {
     $key = "$plugin_type-$plugin_id";
 
     $labels = [
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC => [
-        'default' => $this->t('Public group'),
+        'default' => $this->t('Public @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Public'),
       ],
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY => [
@@ -555,11 +583,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         'short' => $this->t('Community members'),
       ],
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED => [
-        'default' => $this->t('Restricted group'),
+        'default' => $this->t('Restricted @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Restricted'),
       ],
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
-        'default' => $this->t('Private group'),
+        'default' => $this->t('Private @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Private'),
       ],
       'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
@@ -665,7 +693,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param array $filters
    *   Filters to apply to the query. See GroupInterface::getContent().
    *
-   * @return array
+   * @return \Drupal\node\NodeInterface[]
    *   An array of node entities.
    */
   public function getGroupNodes(GroupInterface $group, array $filters = []) {
@@ -851,11 +879,16 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     switch ($route_name) {
       case 'entity.group.canonical':
+      case 'entity.group.edit_form':
       case 'eic_groups.about_page':
+      case 'view.eic_group_members.page_group_members':
+      case 'view.admin_blocked_entities.page_admin_group_blocked_history':
       case GroupOverviewPages::DISCUSSIONS:
       case GroupOverviewPages::FILES:
       case GroupOverviewPages::MEMBERS:
       case GroupOverviewPages::SEARCH:
+      case GroupOverviewPages::LATEST_ACTIVITY:
+      case GroupOverviewPages::EVENTS:
         if (is_numeric($route_parameters['group'])) {
           $group = Group::load($route_parameters['group']);
         }
@@ -881,7 +914,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
           break;
         }
 
-        $group = $this->getGroupByEntity($node);
+        $group = $this->getOwnerGroupByEntity($node);
 
         if (!$group) {
           break;
@@ -947,15 +980,17 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * Format array of a field address to string.
    *
-   * @param $address
+   * @param mixed $address
+   *   The address field array.
    *
    * @return string
+   *   The formatted address.
    */
   public static function formatAddress($address) {
     $countries_map = CountryManager::getStandardList();
     $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
       . ' ' .
-      $address[$address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
+      $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)] . '<br />';
     $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
       . ' ' .
       $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
@@ -967,6 +1002,99 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       '';
 
     return $location_formatted;
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return \Drupal\group\Entity\GroupInterface|null
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupFromContent(EntityInterface $entity): ?GroupInterface {
+    if ($entity instanceof NodeInterface) {
+      $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
+      if (!empty($group_contents)) {
+        /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+        $group_content = reset($group_contents);
+
+        return $group_content->getGroup();
+      }
+    }
+
+    if ($entity instanceof GroupInterface) {
+      return $entity;
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Return if the group itself or content from group is archived.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function isGroupArchived(?EntityInterface $entity) {
+    if (!$entity instanceof EntityInterface) {
+      return FALSE;
+    }
+
+    if ($entity instanceof CommentInterface) {
+      $entity = $entity->getCommentedEntity();
+    }
+
+    if ($entity instanceof NodeInterface) {
+      $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity);
+
+      if (empty($group_contents)) {
+        return FALSE;
+      }
+
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+
+      return $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+    }
+
+    if ($entity instanceof GroupInterface) {
+      return $entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Get user organisations.
+   *
+   * @param AccountInterface $account
+   *   The user account in which we want to retrieve organisations.
+   *
+   * @return \Drupal\group\Entity\GroupInterface[]
+   *   Array of organisation groups the user belongs to.
+   */
+  public function getUserOrganisations(AccountInterface $account) {
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $user_memberships */
+    $user_memberships = $this->entityTypeManager->getStorage('group_content')
+    ->loadByProperties([
+      'type' => "organisation-group_membership",
+      'entity_id' => $account->id(),
+    ]);
+
+    // The user doesn't belong to any organisation, so we return empty results.
+    if (empty($user_memberships)) {
+      return [];
+    }
+
+    $user_groups = array_map(function ($user_membership) {
+      return $user_membership->getGroup();
+    }, $user_memberships);
+
+    return $user_groups;
   }
 
 }

@@ -1,5 +1,6 @@
 .ecl-filelist {
   $node: &;
+  margin-bottom: 3em;
   &__title {
     //@include ecl-responsive-font('title');
     color: $ecl-color-blue;
@@ -34,6 +35,9 @@
       flex-grow: 1;
       display: flex;
       flex-direction: column;
+      @include ecl-media-breakpoint-up('sm') {
+        flex-basis: calc(100% - 140px - 1.25rem);
+      }
     }
 
     &-image-wrapper {
@@ -74,7 +78,7 @@
     &-type {
       order: -1;
       text-transform: uppercase;
-      color: ecl-typography('color', 'meta');
+      color: map-get($ecl-colors, 'grey-75');
     }
 
     &-footer {
@@ -103,7 +107,7 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      color: ecl-typography('color', 'meta');
+      color: map-get($ecl-colors, 'grey-75');
       margin-bottom: 0;
       margin-top: auto;
 

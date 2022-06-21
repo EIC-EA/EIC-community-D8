@@ -7,16 +7,16 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
-use Drupal\file\Entity\File;
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManagerInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\taxonomy\TermInterface;
 
 /**
  * UserHelper service that provides helper functions for users.
@@ -115,6 +115,16 @@ class UserHelper {
   }
 
   /**
+   * Returns the current user account.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The account for the current user.
+   */
+  public function getCurrentUser() {
+    return $this->currentUser;
+  }
+
+  /**
    * Provides a link to the given account with display name.
    *
    * If the current user doesn't have 'access user profiles' permission, the it
@@ -178,7 +188,7 @@ class UserHelper {
         case static::ROLE_DRUPAL_ADMINISTRATOR:
         case static::ROLE_SITE_ADMINISTRATOR:
         case static::ROLE_CONTENT_ADMINISTRATOR:
-          // User is power user if has one of the administation roles.
+          // User is power user if has one of the administration roles.
           return TRUE;
 
       }
@@ -196,9 +206,9 @@ class UserHelper {
     $media_picture = $user->get('field_media')->referencedEntities();
     /** @var File|NULL $file */
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : '';
 
-    return $file_url;
+    return $file ? \Drupal::service('file_url_generator')
+      ->transformRelative(file_create_url($file->get('uri')->value)) : '';
   }
 
   /**
@@ -230,6 +240,29 @@ class UserHelper {
    */
   public function getUserMemberProfile(UserInterface $user) {
     return $this->entityTypeManager->getStorage('profile')->loadByUser($user, ProfileConst::MEMBER_PROFILE_TYPE_NAME);
+  }
+
+  /**
+   * Checks if a user has completed their profile.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The user entity.
+   *
+   * @return bool
+   *   TRUE if profile is completed, FALSE otherwise.
+   */
+  public function isUserProfileCompleted(UserInterface $account) {
+    /** @var \Drupal\profile\Entity\ProfileInterface $profile */
+    if (!$profile = $this->getUserMemberProfile($account)) {
+      return FALSE;
+    }
+
+    $violations = $profile->validate();
+    if ($violations->count() > 0) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**
@@ -288,7 +321,7 @@ class UserHelper {
    * @return int
    *   The number of followers.
    */
-  public function getUserFollowers(UserInterface $user) {
+  public function getUserFollowers(UserInterface $user): int {
     $user_flag_counters = $this->flagCount->getEntityFlagCounts($user);
 
     // No one is following the user, therefore we return 0.

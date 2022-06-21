@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 
 /**
  * Class UserListSourceType
@@ -45,7 +46,7 @@ class UserListSourceType extends SourceType {
       'sm_user_profile_geo_string' => $this->t('Geo interest', [], ['context' => 'eic_search']),
       'ss_user_profile_field_location_address_country_code' => $this->t('Country', [], ['context' => 'eic_search']),
       'sm_user_profile_field_vocab_language_array' => $this->t('Language', [], ['context' => 'eic_search']),
-      'sm_user_profile_role_array' => $this->t('Roles', [], ['context' => 'eic_search']),
+      DocumentProcessorInterface::SOLR_GROUP_ROLES => $this->t('Roles', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -54,6 +55,14 @@ class UserListSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => [
+        'label' => $this->t('Most active', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
+      ],
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP => [
+        'label' => $this->t('Most active (in group)', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
+      ],
       'ss_user_first_name' => [
         'label' => $this->t('First name', [], ['context' => 'eic_search']),
         'ASC' => $this->t('First name A-Z', [], ['context' => 'eic_search']),
@@ -68,6 +77,13 @@ class UserListSourceType extends SourceType {
         'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
       ],
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return [DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID, 'DESC'];
   }
 
   /**
@@ -96,6 +112,13 @@ class UserListSourceType extends SourceType {
    */
   public function getPrefilteredGroupFieldId(): array {
     return ['itm_user__group_content__uid_gid'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'user-list-' . parent::getUniqueId();
   }
 
 }

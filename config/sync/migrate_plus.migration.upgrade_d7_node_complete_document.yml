@@ -19,6 +19,7 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
+  batch_size: 100
 process:
   nid:
     -
@@ -60,10 +61,19 @@ process:
   revision_timestamp: timestamp
   content_translation_source: source_langcode
   node_comment/0/status: comment
-  field_body:
+  field_body/0/format:
+    -
+      plugin: callback
+      source: c4m_body/0/format
+      callable:
+        - \Drupal\eic_migrate\Constants\Misc
+        - getTextFormat
+  field_body/0/value:
+    -
+      plugin: eic_html_sanitizer
+      source: c4m_body/0/value
     -
       plugin: eic_media_wysiwyg_filter
-      source: c4m_body
       media_migrations:
         - upgrade_d7_file_audio_to_media
         - upgrade_d7_file_document_to_media
@@ -81,6 +91,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_document_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_document_type:
     -
       plugin: sub_process
@@ -92,6 +105,19 @@ process:
             source: tid
             migration:
               - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+  field_vocab_geo:
+    -
+      plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_language:
     -
       plugin: sub_process
@@ -118,6 +144,25 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  moderation_state:
+    -
+      plugin: static_map
+      source: status
+      map:
+        - draft
+        - published
+  field_tags:
+    -
+      plugin: sub_process
+      source: og_vocabulary
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: target_id
+            no_stub: true
+            migration:
+              - upgrade_d7_taxonomy_term_c4m_vocab_tag
 destination:
   plugin: 'entity_complete:node'
   translations: true
@@ -131,8 +176,11 @@ migration_dependencies:
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
     - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+    - upgrade_d7_taxonomy_term_c4m_vocab_tag
     - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
   optional: {  }

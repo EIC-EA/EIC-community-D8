@@ -7,6 +7,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\eic_messages\Stamps\PersistentMessageStamp;
 use Drupal\message\MessageInterface;
 use Drupal\message_notify\MessageNotifier;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -100,10 +101,22 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       $message->save();
     }
 
+    $owner = $message->getOwner();
+    if (!$owner instanceof UserInterface || !filter_var($owner->getEmail(), FILTER_VALIDATE_EMAIL)) {
+      return;
+    }
+
+    $options = [];
+    if (isset($data['options'])) {
+      $options = $data['options'];
+    }
+    // Notifier shouldn't care whether the message is saved or not!
+    $options['save on fail'] = FALSE;
+    $options['save on success'] = FALSE;
+
     $this->notifier->send(
       $message,
-      // Notifier shouldn't care whether the message is saved or not!
-      ['save on success' => FALSE]
+      $options
     );
   }
 

@@ -5,7 +5,9 @@ dependencies:
   config:
     - field.field.node.event.body
     - field.field.node.event.field_date_range
-    - field.field.node.event.field_document_media
+    - field.field.node.event.field_document_additional
+    - field.field.node.event.field_document_agenda
+    - field.field.node.event.field_document_presentations
     - field.field.node.event.field_image
     - field.field.node.event.field_language
     - field.field.node.event.field_link
@@ -13,6 +15,7 @@ dependencies:
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
     - field.field.node.event.field_social_links
+    - field.field.node.event.field_tags
     - field.field.node.event.field_vocab_event_type
     - field.field.node.event.field_vocab_geo
     - field.field.node.event.field_vocab_topics
@@ -38,6 +41,11 @@ content:
     third_party_settings: {  }
     weight: 7
     region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_date_range:
     type: daterange_default
     label: above
@@ -48,13 +56,29 @@ content:
     third_party_settings: {  }
     weight: 15
     region: content
-  field_document_media:
+  field_document_additional:
     type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 8
+    weight: 23
+    region: content
+  field_document_agenda:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 22
+    region: content
+  field_document_presentations:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_image:
     type: entity_reference_label
@@ -116,6 +140,14 @@ content:
     third_party_settings: {  }
     weight: 14
     region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 21
+    region: content
   field_vocab_event_type:
     type: entity_reference_label
     label: above
@@ -162,6 +194,11 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
+  flag_follow_event:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
   flag_highlight_content:
     settings: {  }
     third_party_settings: {  }
@@ -199,6 +236,7 @@ content:
     region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_document_media: true
   flag_recommend: true
   langcode: true
   published_at: true

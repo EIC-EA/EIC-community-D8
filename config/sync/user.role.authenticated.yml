@@ -2,9 +2,12 @@ uuid: ea50bc89-134d-49b5-96a0-8480a347f7e2
 langcode: en
 status: true
 dependencies:
+  config:
+    - filter.format.basic_text
   module:
     - contact
     - eic_overviews
+    - filter
     - flag
     - fragments
     - media
@@ -24,6 +27,7 @@ permissions:
   - 'flag bookmark_content'
   - 'flag bookmark_media'
   - 'flag follow_content'
+  - 'flag follow_event'
   - 'flag follow_group'
   - 'flag follow_group_content'
   - 'flag follow_taxonomy'
@@ -34,10 +38,13 @@ permissions:
   - 'flag like_content'
   - 'flag like_media'
   - 'flag recommend'
+  - 'flag recommend_content'
+  - 'flag recommend_content_group'
   - 'flag recommend_group'
   - 'unflag bookmark_content'
   - 'unflag bookmark_media'
   - 'unflag follow_content'
+  - 'unflag follow_event'
   - 'unflag follow_group'
   - 'unflag follow_group_content'
   - 'unflag follow_taxonomy'
@@ -49,8 +56,11 @@ permissions:
   - 'unflag like_content'
   - 'unflag like_media'
   - 'unflag recommend'
+  - 'unflag recommend_content'
+  - 'unflag recommend_content_group'
   - 'unflag recommend_group'
   - 'update own member profile'
+  - 'use text format basic_text'
   - 'view banner fragments'
   - 'view bookmark_content'
   - 'view bookmark_media'
@@ -71,4 +81,6 @@ permissions:
   - 'view overview pages'
   - 'view own member profile'
   - 'view recommend'
+  - 'view recommend_content'
+  - 'view recommend_content_group'
   - 'view recommend_group'

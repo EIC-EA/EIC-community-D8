@@ -53,6 +53,15 @@ final class MessageSubscriptionEvents {
   const CONTENT_RECOMMENDED = 'eic_message_subscriptions.content_recommended';
 
   /**
+   * Event ID for when a new global event is created.
+   *
+   * @Event
+   *
+   * @var string
+   */
+  const GLOBAL_EVENT_INSERT = 'eic_message_subscriptions.global_event_insert';
+
+  /**
    * Get message subscriptions events as array.
    *
    * @return array
@@ -65,6 +74,7 @@ final class MessageSubscriptionEvents {
       self::COMMENT_INSERT,
       self::NODE_INSERT,
       self::CONTENT_RECOMMENDED,
+      self::GLOBAL_EVENT_INSERT,
     ];
   }
 

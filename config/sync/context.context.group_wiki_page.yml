@@ -24,6 +24,7 @@ conditions:
   group_type:
     id: group_type
     group_types:
+      event: event
       group: group
     negate: 0
     uuid: 3fc5c7c9-452a-4dbc-be07-3532e63831ff
@@ -49,6 +50,21 @@ reactions:
         context_id: group_wiki_page
         context_mapping: {  }
         block_mode: null
+      aeb58613-6ab3-4d25-9c7f-c227ed46f54f:
+        uuid: aeb58613-6ab3-4d25-9c7f-c227ed46f54f
+        id: eic_groups_comments_from_discussion
+        label: 'EIC comments from discussion'
+        provider: eic_groups
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: eic_groups_comments_from_discussion
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_page
+        context_mapping: {  }
+        third_party_settings: {  }
     include_default_blocks: 0
     saved: false
 weight: 0

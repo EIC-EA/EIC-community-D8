@@ -94,8 +94,11 @@ class ProcessorFlags extends DocumentProcessor {
           FlagType::LIKE_CONTENT,
         ];
 
-        $node = Node::load($entity_id);
+        if (!$entity_id) {
+          break;
+        }
 
+        $node = Node::load($entity_id);
         if (!$node instanceof NodeInterface) {
           break;
         }

@@ -1,0 +1,64 @@
+uuid: 7188ad95-50bb-47b2-aa13-0a846721d3ca
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_flag_follow_taxonomy_term
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - Flags
+migration_group: migrate_drupal_7
+label: 'Flag follow taxonomy term'
+source:
+  plugin: eic_d7_flag_taxonomy_term_with_smed_ids
+  track_changes: true
+  constants:
+    included_flags:
+      - subscribe_c4m_follow_term
+    smed_vocabularies:
+      - c4m_vocab_topic
+  batch_size: 100
+process:
+  flag_id:
+    -
+      plugin: static_map
+      source: flag_type
+      map:
+        subscribe_c4m_follow_term: follow_taxonomy_term
+  entity_type:
+    plugin: default_value
+    default_value: taxonomy_term
+  entity_id:
+    -
+      plugin: skip_on_empty
+      method: row
+      source: smed_id
+    -
+      plugin: migration_lookup
+      no_stub: true
+      migration:
+        - smed_thematics_topics_lvl1
+        - smed_thematics_topics_lvl2
+        - smed_thematics_topics_lvl3
+    -
+      plugin: skip_on_empty
+      method: row
+  global: global
+  created: timestamp
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+destination:
+  plugin: 'entity:flagging'
+migration_dependencies:
+  required:
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3
+  optional: {  }

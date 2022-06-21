@@ -16,6 +16,7 @@ final class Event {
   const WEIGHT_STATE_PAST = 3;
 
   const SOLR_FIELD_ID_WEIGHT_STATE = 'its_event_weight_state';
+  const SEARCH_API_FIELD_ID_WEIGHT_STATE = 'event_weight_state';
 
   const SOLR_FIELD_ID_WEIGHT_STATE_LABEL = 'ss_event_weight_state_label';
 
@@ -39,7 +40,24 @@ final class Event {
   const GROUP_MEMBER_ROLE = 'event-member';
 
   /**
+   * The Group event type vocabulary machine name.
+   *
+   * @var string
+   */
+  const GROUP_EVENT_TYPE_VOCABULARY_NAME = 'global_event_type';
+
+  /**
+   * The legacy paragraphs field name.
+   *
+   * @var string
+   */
+  const LEGACY_PARAGRAPHS_FIELD = 'field_additional_content';
+
+  /**
+   * Returns the label for the event state.
+   *
    * @return array
+   *   An array with state as key with translated label as value.
    */
   public static function getStateLabelsMapping(): array {
     return [

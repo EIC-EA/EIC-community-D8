@@ -3,12 +3,11 @@ langcode: en
 status: true
 dependencies:
   module:
-    - eic_search
     - eic_user
     - route_condition
 label: 'My profile'
 name: my_profile
-group: 'My profile'
+group: User
 description: ''
 requireAllConditions: false
 disabled: false
@@ -18,50 +17,42 @@ conditions:
     negate: false
     uuid: fdf0386a-7ba0-4fe6-ab65-a834868de23b
     context_mapping: {  }
-    routes: eic_user.my_profile_activity
+    routes: 'eic_user.user.*'
 reactions:
   blocks:
     id: blocks
     uuid: 76d3c136-5881-43f9-8ec7-14cf619fae69
     blocks:
-      e3691609-5b36-4830-ade4-d352dab2daf9:
-        uuid: e3691609-5b36-4830-ade4-d352dab2daf9
-        id: eic_user_my_profile_header
-        label: 'EIC my profile header'
+      1497de88-1932-495e-9b7c-3ab99d7fa334:
+        uuid: 1497de88-1932-495e-9b7c-3ab99d7fa334
+        id: eic_user_header
+        label: 'EIC User Header'
+        provider: eic_user
+        label_display: '0'
+        region: content_before
+        weight: '-1'
+        custom_id: eic_user_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_profile
+        context_mapping: {  }
+        title: 'My activity feed'
+        third_party_settings: {  }
+      8527debb-4d1a-45d9-a495-967d0918f5bf:
+        uuid: 8527debb-4d1a-45d9-a495-967d0918f5bf
+        id: eic_user_activity_subnavigation_block
+        label: 'EIC User Activity Subnavigation'
         provider: eic_user
         label_display: '0'
         region: content_before
         weight: '0'
-        custom_id: eic_user_my_profile_header
+        custom_id: eic_user_activity_subnavigation_block
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: my_profile
         context_mapping: {  }
-      6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d:
-        uuid: 6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d
-        id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        region: content
-        custom_id: eic_search_overview
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: my_profile
-        context_mapping: {  }
-        source_type: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
-        facets:
-          ss_global_content_type: ss_global_content_type
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-        sort_options: {  }
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 0
-        enable_date_filter: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 0
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false

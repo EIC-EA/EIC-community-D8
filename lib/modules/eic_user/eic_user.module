@@ -6,24 +6,61 @@
  */
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\EntityOwnerInterface;
-use Drupal\eic_user\Hooks\FieldWidgetOperations;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_user\Hooks\FieldWidgetOperations;
+use Drupal\eic_user\NotificationFrequencies;
 use Drupal\group\Entity\GroupContentInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Implements hook_theme.
  */
 function eic_user_theme() {
   return [
-    'my_profile_header_block' => [
+    'account_header_block' => [
+      'variables' => [
+        'login' => [],
+        'user' => []
+      ],
+    ],
+    'user_header_block' => [
       'variables' => [
         'title' => '',
         'actions' => [],
       ],
-    ]
+    ],
+    'user_activity_subnavigation_block' => [
+      'variables' => [
+        'menu_items' => [],
+      ],
+    ],
+    'user_notifications_settings' => [
+      'variables' => [
+        'menu_items' => [],
+        'items' => NULL,
+      ],
+    ],
+    'notification_settings' => [
+      'variables' => [
+        'data' => [],
+      ],
+    ],
   ];
+}
+
+/**
+ * List allowed values for field 'field_notification_frequency'.
+ *
+ * @return array
+ */
+function eic_user_notification_frequency_allowed_values() {
+  $allowed_values = [
+    NotificationFrequencies::OFF,
+    NotificationFrequencies::ON,
+  ];
+
+  return array_combine($allowed_values, array_map('ucfirst', $allowed_values));
 }
 
 /**
@@ -125,7 +162,9 @@ function eic_user_profile_update(EntityInterface $entity) {
 function eic_user_profile_delete(EntityInterface $entity) {
   if ($entity instanceof EntityOwnerInterface) {
     $account = $entity->getOwner();
-    _eic_user_refresh_user_data([$account]);
+    if ($account) {
+      _eic_user_refresh_user_data([$account]);
+    }
   }
 }
 
@@ -142,6 +181,10 @@ function _eic_user_refresh_user_data(array $accounts) {
   $solr_helper->reIndexEntities($accounts);
 
   foreach ($accounts as $account) {
+    if (!$account instanceof \Drupal\Core\Session\AccountInterface) {
+      continue;
+    }
+
     // Invalidate user cache tags after creating the profile entity.
     Cache::invalidateTags($account->getCacheTagsToInvalidate());
   }

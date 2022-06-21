@@ -4,7 +4,11 @@
       "3007424 - Multiple usages of FieldPluginBase::getEntity do not check for NULL, leading to WSOD": "https://www.drupal.org/files/issues/2021-01-06/3007424-108.patch",
       "2973863 - ValidReferenceConstraintValidator should not try to enforce data integrity on pre-existing references": "https://www.drupal.org/files/issues/2018-11-04/2973863-24.patch",
       "2918537 - Cannot save unpublished versions of published content for users without manage book privileges": "https://www.drupal.org/files/issues/2021-11-16/2918537-68.patch",
-      "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch"
+      "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch",
+      "2766369 - Add skip-method option to file_copy and download process plugins": "https://www.drupal.org/files/issues/2022-03-31/2766369-30.patch",
+      "2760983 - array_flip(): Can only flip STRING and INTEGER values! EntityStorageBase.php:227": "https://www.drupal.org/files/issues/2020-02-06/2760983-8.patch",
+      "2329253 - Allow the ChangedItem to skip updating the entity's \"changed\" timestamp when synchronizing (f.e. when migrating)": "https://www.drupal.org/files/issues/2022-05-30/2329253-90.patch",
+      "3052115 - Mark an entity as 'syncing' during a migration update": "https://www.drupal.org/files/issues/2022-05-12/3052115-47.patch"
     },
     "drupal/address": {
       "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch"
@@ -12,19 +16,29 @@
     "drupal/block_content_permissions": {
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
+    "drupal/cas": {
+      "Dispatch EVENT_PRE_LOGIN before active check": "patches/cas/cas-dispatch_EVENT_PRE_LOGIN_before_active_check.patch"
+    },
+    "drupal/ckeditor_selectall": {
+      "3226489 - Make this module compatible with Drupal 9": "https://www.drupal.org/files/issues/2021-08-09/3226489-3.patch"
+    },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
     },
     "drupal/entity_usage": {
       "3168418 - Batch update error when there are no entities to load": "https://www.drupal.org/files/issues/2021-12-07/batch-update-error-3168418-16.patch"
     },
+    "drupal/ginvite": {
+      "3209902 - More graceful handling of missing plugin": "https://www.drupal.org/files/issues/2022-03-30/ginvite-fix__invite_route_permission-3209902-5.patch"
+    },
     "drupal/group": {
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
       "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
       "2815971 - More contexts needed": "https://www.drupal.org/files/issues/2021-02-19/2815971-28.patch",
-      "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-01-11/incorrect-access-check-on-media-library-3071489-25.patch",
+      "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-05-17/incorrect-access-check-on-media-library-3071489-27.patch",
       "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
-      "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch"
+      "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch",
+      "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch"
     },
     "drupal/group_content_menu": {
       "3209011 - Active trail is cached incorrectly": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch"
@@ -43,6 +57,9 @@
     "drupal/masquerade": {
       "3181882 - \"Masquerade as ROLE\" permission not granting access": "https://www.drupal.org/files/issues/2020-11-11/masquerade_permission_per_role-3181882-2.patch"
     },
+    "drupal/message": {
+      "3183734 - Unable to use inline styles when tokens are used in a message (patch provided)": "https://www.drupal.org/files/issues/2020-11-20/update-process-token-function-to-avoid-issue-with-html-filtering-3183734-2.patch"
+    },
     "drupal/menu_trail_by_path": {
       "2914746 - Fatal error after installing the module": "https://www.drupal.org/files/issues/2020-01-10/menu_trail_by_path-fatal_error_on_menu_active_trail_service_override-2914746-18.patch"
     },
@@ -50,7 +67,11 @@
       "3251270 - Error when trying to send a message to a deleted owner": "https://www.drupal.org/files/issues/2021-11-25/message_notify-check_owner_account-3251270-2.patch"
     },
     "drupal/message_subscribe": {
-      "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch"
+      "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch",
+      "3190511 - Trying to access array offset on value of type bool in Drupal\\message_subscribe\\Subscribers->sendMessage()": "https://www.drupal.org/files/issues/2020-12-31/message_subscribe-Wrong_End_Time_Option-3190511-2-9.x.patch"
+    },
+    "drupal/migrate_tools": {
+      "3134245 - Run drush imports as user=1" : "https://www.drupal.org/files/issues/2020-05-06/3134245.patch"
     },
     "drupal/migrate_plus": {
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
@@ -59,7 +80,7 @@
       "#3059311 - Autocomplete suggestions should respect the entity reference View": "patches/realname/autocomplete-condition-fix-3059311-5.patch"
     },
     "drupal/scheduler_content_moderation_integration": {
-      "#3124287 - Warning on accessing publish_on value on a non-node moderated entity": "https://www.drupal.org/files/issues/2021-04-19/3124287-7.accessing-publish-on-for-non-node-moderated-entity.patch"
+      "3285808 - Scheduler breaks ajax requests when content moderation is enabled": "https://www.drupal.org/files/issues/2022-06-15/scheduler-content-moderation-state-values-breaks-node-form-3285808-2.patch"
     },
     "drupal/social_link_field": {
       "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
@@ -69,7 +90,8 @@
       "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
     },
     "drupal/views_data_export": {
-      "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch"
+      "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",
+      "3241213 - Add S3 bucket support": "https://www.drupal.org/files/issues/2021-10-07/s3-bucket-support--3241213.patch"
     },
     "openeuropa/ecl-twig-loader": {
       "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",

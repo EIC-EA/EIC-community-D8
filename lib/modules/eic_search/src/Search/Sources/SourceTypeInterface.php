@@ -130,11 +130,18 @@ interface SourceTypeInterface {
   public function allowPagination(): bool;
 
   /**
-   * Check if Source allow to have a date filter.
+   * Get the number of items to load by batch.
    *
-   * @return bool
+   * @return int
    */
-  public function supportDateFilter(): bool;
+  public function getLoadMoreBatchItems(): int;
+
+  /**
+   * Return the solr fields id for "from" and "to" date field.
+   *
+   * @return array
+   */
+  public function getRegistrationDateIntervalField(): array;
 
   /**
    * Return the solr fields id for "from" and "to" date field.
@@ -158,6 +165,13 @@ interface SourceTypeInterface {
   public function ignoreContentFromCurrentUser(): bool;
 
   /**
+   * Prefilter content by current user ID (field will be taken from the getAuthorFieldId).
+   *
+   * @return bool
+   */
+  public function prefilterByCurrentUser(): bool;
+
+  /**
    * Get the SOLR field for the user_id (author).
    *
    * @return string
@@ -178,4 +192,45 @@ interface SourceTypeInterface {
    */
   public function prefilterByGroupsMembership(): bool;
 
+  /**
+   * Get the label for the filter "my groups".
+   *
+   * @return string
+   */
+  public function getLabelFilterMyGroups(): string;
+
+  /**
+   * Get fields to prefilter empty values.
+   *
+   * @return array
+   */
+  public function getFieldsToFilterEmptyValue(): array;
+
+  /**
+   * Ignore user field (from method: getAuthorFieldId) = 0.
+   *
+   * @return bool
+   */
+  public function ignoreAnonymousUser(): bool;
+
+  /**
+   * Return an array of key as the field and the value of it.
+   *
+   * @return array
+   */
+  public function extraPrefilter(): array;
+
+  /**
+   * Ignoring the publish state prefilter.
+   *
+   * @return bool
+   */
+  public function ignorePublishedState(): bool;
+
+  /**
+   * Return a unique string id.
+   *
+   * @return string
+   */
+  public function getUniqueId(): string;
 }

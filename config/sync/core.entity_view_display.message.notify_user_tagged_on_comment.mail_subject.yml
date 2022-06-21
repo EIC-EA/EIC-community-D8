@@ -1,0 +1,26 @@
+uuid: 47d2ec9e-93a2-4ea5-b5cd-91b420aa4ddb
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_user_tagged_on_comment.field_event_executing_user
+    - field.field.message.notify_user_tagged_on_comment.field_referenced_comment
+    - field.field.message.notify_user_tagged_on_comment.field_referenced_node
+    - field.field.message.notify_user_tagged_on_comment.field_rendered_content
+    - message.template.notify_user_tagged_on_comment
+id: message.notify_user_tagged_on_comment.mail_subject
+targetEntityType: message
+bundle: notify_user_tagged_on_comment
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_referenced_comment: true
+  field_referenced_node: true
+  field_rendered_content: true
+  partial_1: true
+  search_api_excerpt: true

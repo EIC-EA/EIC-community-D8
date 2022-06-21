@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
-    - filter.format.plain_text
   module:
     - eic_messages
 third_party_settings:
@@ -12,11 +11,11 @@ third_party_settings:
     message_template_type: log
 template: log_group_state_change
 label: 'LOG :: MT37 :: Group state change'
-description: ''
+description: 'Log message about group state change'
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>The group <a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a> changed from [message:field_previous_moderation_state:value] to [message:field_moderation_state:value] state by <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>.</p>\r\n"
+    format: full_html
   -
     value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
     format: full_html

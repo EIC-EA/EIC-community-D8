@@ -5,6 +5,7 @@ namespace Drupal\eic_messages\Hooks;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Service\MessageBusInterface;
@@ -50,19 +51,30 @@ class EntityOperations implements ContainerInjectionInterface {
   private $messageBus;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  private $currentUser;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
    *   The content moderation information service.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    *   The message bus service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    */
   public function __construct(
     ModerationInformationInterface $moderationInformation,
-    MessageBusInterface $message_bus
+    MessageBusInterface $message_bus,
+    AccountProxyInterface $current_user
   ) {
     $this->moderationInformation = $moderationInformation;
     $this->messageBus = $message_bus;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -71,7 +83,8 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('content_moderation.moderation_information'),
-      $container->get('eic_messages.message_bus')
+      $container->get('eic_messages.message_bus'),
+      $container->get('current_user')
     );
   }
 
@@ -100,9 +113,9 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // Gets the entity type label to use in the message notification.
-    $entity_type_label = strtolower($entity->type->entity->label());
+    $entity_type_label = $entity->getEntityType()->getLabel();
 
-    // By default notification is not skipped.
+    // By default, notification is not skipped.
     $skip_notification = FALSE;
     // Default message fields.
     $message = [
@@ -120,18 +133,20 @@ class EntityOperations implements ContainerInjectionInterface {
 
     switch ($previous_state) {
       case self::MODERATION_STATE_ARCHIVED:
-        $message['field_message_subject'] = $this->t(
-          'Your @entity_type "@entity_label" has been published again',
-          [
-            '@entity_type' => $entity_type_label,
-            '@entity_label' => $entity->label(),
-          ]
-        );
-        break;
-
       case self::MODERATION_STATE_BLOCKED:
+        // For group entities we use a different message template.
+        if ($entity->getEntityTypeId() === 'group') {
+          $message = [
+            'template' => 'notify_group_re_published',
+            'uid' => $message_uid,
+            'field_group_ref' => ['target_id' => $entity->id()],
+            'field_event_executing_user' => ['target_id' => $this->currentUser->id()],
+          ];
+          break;
+        }
+
         $message['field_message_subject'] = $this->t(
-          'Your @entity_type "@entity_label" has been unblocked',
+          '@entity_label was published once again',
           [
             '@entity_type' => $entity_type_label,
             '@entity_label' => $entity->label(),

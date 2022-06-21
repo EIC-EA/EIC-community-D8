@@ -1,0 +1,27 @@
+uuid: da7f3077-bfd9-4dbe-b8a8-278df1067904
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: log
+template: log_masquerade_user
+label: 'LOG :: Masquerade user'
+description: 'Log message when user masquerades as another user'
+text:
+  -
+    value: "<p>User <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a> masqueraded as <a href=\"[message:field_related_user:entity:url]\"><u>[message:field_related_user:entity:display-name]</u></a> on&nbsp;[message:created:eu_short_date_hour].</p>\r\n"
+    format: full_html
+  -
+    value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

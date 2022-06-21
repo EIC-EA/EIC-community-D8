@@ -20,6 +20,7 @@ dependencies:
     - field.field.group.organisation.field_social_links
     - field.field.group.organisation.field_team_members
     - field.field.group.organisation.field_thumbnail
+    - field.field.group.organisation.field_vocab_geo_selling
     - field.field.group.organisation.field_vocab_services_products
     - field.field.group.organisation.field_vocab_target_markets
     - field.field.group.organisation.field_vocab_topics
@@ -41,15 +42,17 @@ third_party_settings:
     group_organisation:
       children:
         - group_main
+        - group_features
         - group_announcements
         - group_taxonomies
         - group_contact
         - group_team
-        - group_features
+        - group_topics_countries_tags
+        - group_settings
       label: Organisation
       region: content
       parent_name: ''
-      weight: 1
+      weight: 3
       format_type: tabs
       format_settings:
         classes: ''
@@ -60,13 +63,11 @@ third_party_settings:
     group_main:
       children:
         - field_header_visual
-        - field_thumbnail
-        - field_body
         - field_organisation_employees
         - field_organisation_turnover
         - field_date_establishement
         - field_organisation_type
-      label: Main
+      label: Details
       region: content
       parent_name: group_organisation
       weight: 2
@@ -85,7 +86,7 @@ third_party_settings:
       label: Announcements
       region: content
       parent_name: group_organisation
-      weight: 3
+      weight: 4
       format_type: tab
       format_settings:
         classes: ''
@@ -98,11 +99,10 @@ third_party_settings:
       children:
         - field_vocab_services_products
         - field_vocab_target_markets
-        - field_vocab_topics
       label: Taxonomies
       region: content
       parent_name: group_organisation
-      weight: 4
+      weight: 5
       format_type: tab
       format_settings:
         classes: ''
@@ -117,12 +117,12 @@ third_party_settings:
         - field_email
         - field_organisation_link
         - field_address
-        - field_locations
         - field_social_links
+        - field_locations
       label: Contact
       region: content
       parent_name: group_organisation
-      weight: 5
+      weight: 6
       format_type: tab
       format_settings:
         classes: ''
@@ -137,7 +137,7 @@ third_party_settings:
       label: Features
       region: content
       parent_name: group_organisation
-      weight: 7
+      weight: 3
       format_type: tab
       format_settings:
         classes: ''
@@ -152,7 +152,38 @@ third_party_settings:
       label: Team
       region: content
       parent_name: group_organisation
-      weight: 6
+      weight: 7
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_settings:
+      children:
+        - field_smed_id
+      label: Settings
+      region: content
+      parent_name: group_organisation
+      weight: 9
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_topics_countries_tags:
+      children:
+        - field_vocab_topics
+        - field_vocab_geo_selling
+      label: 'Topics, regions & countries'
+      region: content
+      parent_name: group_organisation
+      weight: 8
       format_type: tab
       format_settings:
         classes: ''
@@ -180,7 +211,7 @@ content:
     third_party_settings: {  }
   field_body:
     type: text_textarea
-    weight: 5
+    weight: 2
     region: content
     settings:
       rows: 5
@@ -217,14 +248,16 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_locations:
-    type: entity_reference_autocomplete
-    weight: 26
+    type: entity_reference_paragraphs
+    weight: 27
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
   field_needs:
     type: entity_reference_paragraphs
@@ -281,7 +314,7 @@ content:
     third_party_settings: {  }
   field_smed_id:
     type: string_textfield
-    weight: 28
+    weight: 8
     region: content
     settings:
       size: 60
@@ -289,7 +322,7 @@ content:
     third_party_settings: {  }
   field_social_links:
     type: social_links
-    weight: 27
+    weight: 26
     region: content
     settings:
       select_social: false
@@ -309,10 +342,28 @@ content:
     third_party_settings: {  }
   field_thumbnail:
     type: media_library_widget
-    weight: 4
+    weight: 1
     region: content
     settings:
       media_types: {  }
+    third_party_settings: {  }
+  field_vocab_geo_selling:
+    type: entity_tree
+    weight: 8
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      load_all: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected values'
+      search_label: 'Select a value'
+      search_placeholder: Search
+      auto_select_parents: '1'
+      disable_top_choices: 0
+      can_create_tag: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_vocab_services_products:
     type: entity_tree
@@ -325,6 +376,12 @@ content:
       load_all: 0
       auto_select_parents: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_vocab_target_markets:
     type: entity_tree
@@ -337,6 +394,12 @@ content:
       load_all: 0
       auto_select_parents: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_vocab_topics:
     type: entity_tree
@@ -349,6 +412,12 @@ content:
       load_all: 0
       auto_select_parents: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   label:
     type: string_textfield
@@ -360,26 +429,26 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 15
+    weight: 4
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 18
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 19
+    weight: 7
     region: content
     settings:
       display_label: true

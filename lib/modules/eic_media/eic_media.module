@@ -13,6 +13,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_user\UserHelper;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_ENTITY_TYPE_access().
@@ -23,7 +25,7 @@ function eic_media_media_access(EntityInterface $entity, $operation, AccountInte
   // If the route name is not the system files route, it means the user is not
   // accessing the file download route, so we don't need extra conditions to
   // check if the user has access to any entity that this media is attached to.
-  if ($route_name !== 'system.files') {
+  if (!in_array($route_name, ['system.files', 'image.style_private'])) {
     return AccessResult::neutral();
   }
 
@@ -61,4 +63,27 @@ function eic_media_media_access(EntityInterface $entity, $operation, AccountInte
   // At this point, it means the user has no access to any entity this media is
   // attached to and therefore, we deny access.
   return AccessResult::forbidden();
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function eic_media_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  $key = $view->id() . '-' . $view->current_display;
+
+  switch ($key) {
+    case 'media_library-widget':
+    case 'media_library-widget_table':
+      // We need to filter on the current logged-in user. This is known issue,
+      // we need this code until the issue is solved.
+      // @see https://www.drupal.org/project/drupal/issues/3142777
+      $query->where[0]['conditions'][] = [
+        'field' => 'media_field_data.uid',
+        'value' => [
+          ':media_field_data_uid' => \Drupal::currentUser()->id(),
+        ],
+        'operator' => '=',
+      ];
+      break;
+  }
 }

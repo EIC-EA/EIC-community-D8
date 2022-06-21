@@ -6,17 +6,34 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
-        "composer/composer": "1.10.23 as 2.0.13",
+        "ckeditor/colorbutton": "^4.18",
+        "ckeditor/div": "^4.18",
+        "ckeditor/fakeobjects": "^4.18",
+        "ckeditor/font": "^4.18",
+        "ckeditor/iframe": "^4.18",
+        "ckeditor/link": "^4.18",
+        "ckeditor/pagebreak": "^4.18",
+        "ckeditor/panelbutton": "^4.18",
+        "ckeditor/selectall": "^4.18",
         "composer/installers": "^1.9",
         "composer/semver": "1.7.2 as 3.2.4",
         "cweagans/composer-patches": "^1.7",
         "drupal/address": "^1.9",
         "drupal/admin_toolbar": "^3.0",
+        "drupal/anchor_link": "^2.5",
         "drupal/antibot": "^1.5",
         "drupal/block_content_permissions": "^1.10",
         "drupal/block_field": "^1.0@RC",
+        "drupal/cas_mock_server": "^1.3",
+        "drupal/ckeditor_div_manager": "^2.0",
+        "drupal/ckeditor_find": "^1.0@beta",
+        "drupal/ckeditor_font": "^1.2",
+        "drupal/ckeditor_iframe": "^2.1",
+        "drupal/ckeditor_oembed": "^1.3",
+        "drupal/ckeditor_selectall": "^1.0",
+        "drupal/colorbutton": "^1.3",
         "drupal/components": "^2.2",
         "drupal/config_ignore": "^2.3",
         "drupal/config_split": "^1.7",
@@ -28,7 +45,7 @@
         "drupal/default_content": "^2.0@alpha",
         "drupal/entity_usage": "^2.0@beta",
         "drupal/extra_field": "^2.0",
-        "drupal/facets": "^1.7",
+        "drupal/facets": "^2.0",
         "drupal/field_group": "^3.2",
         "drupal/flag": "^4.0@beta",
         "drupal/flag_search_api": "1.x-dev#3ffb747090f79e32943ebcc6a1b5fa01976e29c2",
@@ -54,11 +71,13 @@
         "drupal/node_read_time": "^1.3",
         "drupal/openapi": "^2.0@RC",
         "drupal/openapi_rest": "^2.0@RC",
+        "drupal/pagebreak": "^2.0",
         "drupal/paragraph_view_mode": "^2.0",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.8",
         "drupal/profile": "^1.2",
         "drupal/publication_date": "^2.0@beta",
+        "drupal/raven": "^3.2",
         "drupal/realname": "^2.0-@beta",
         "drupal/redirect": "^1.6",
         "drupal/redis": "^1.5",
@@ -70,7 +89,7 @@
         "drupal/search_api_attachments": "^1.0@beta",
         "drupal/search_api_solr": "^4.1",
         "drupal/search_api_sorts": "^1.0",
-        "drupal/search_api_spellcheck": "^3.0@beta",
+        "drupal/search_api_spellcheck": "^4.0",
         "drupal/smart_trim": "^1.3",
         "drupal/smtp": "^1.0",
         "drupal/social_link_field": "^1.1@alpha",
@@ -82,20 +101,22 @@
         "drupal/views_bulk_operations": "^3.10",
         "drupal/views_data_export": "^1.0",
         "drupal/views_data_export_phpspreadsheet": "^1.2",
+        "drupal/workflow_buttons": "^1.0@beta",
         "drush/drush": "^10.3",
         "ethosce/group_purl": "2.x-dev",
         "lramarojaona/purl": "^1.0@alpha",
         "openeuropa/ecl-twig-loader": "^2.12",
+        "openeuropa/oe_authentication": "^1.5",
         "openeuropa/oe_media": "^1.13",
         "openeuropa/oe_time_caching": "^1.1",
         "openeuropa/oe_webtools": "^1.13",
         "softcreatr/jsonpath": "^0.7.5",
-        "twig/twig": "2.14.3 as 1.44.2",
+        "twig/twig": "2.14.11 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
-        "webmozart/path-util": "^2.3"
+        "webmozart/path-util": "^2.3",
+        "wikimedia/composer-merge-plugin": "^2.0"
     },
     "require-dev": {
-        "drupal/core-dev": "^9.1",
         "drupal/data_fixtures": "^1.7",
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
@@ -119,6 +140,18 @@
         }
     },
     "extra": {
+        "merge-plugin": {
+            "require": [
+                "composer.libraries.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": true,
+            "merge-extra-deep": true,
+            "merge-scripts": true
+        },
         "artifacts": {
             "openeuropa/oe_theme": {
                 "dist": {
@@ -142,6 +175,9 @@
             "web/libraries/{$name}": [
                 "type:drupal-library"
             ],
+            "web/libraries/ckeditor/plugins/{$name}" : [
+                "type:ckeditor-plugin"
+            ],
             "web/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
@@ -164,7 +200,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.3.21"
+            "php": "7.4"
         }
     }
 }

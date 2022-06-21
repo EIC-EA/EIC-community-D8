@@ -5,18 +5,22 @@
  * Prepares variables for node document templates.
  */
 
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_node() for document node.
  */
 function eic_community_preprocess_node__document(array &$variables) {
-  /** @var \Drupal\Core\Entity\EntityInterface $node */
+  /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
 
   switch ($variables['view_mode']) {
+    case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
@@ -30,7 +34,10 @@ function eic_community_preprocess_node__document(array &$variables) {
 
       // Remove unwanted items.
       if (!empty($teaser['flags'])) {
-        $teaser['flags'] = [];
+        $supported_flags = ['like_content'];
+        $teaser['flags'] = array_filter($teaser['flags'], function ($key) use ($supported_flags) {
+          return in_array($key, $supported_flags);
+        }, ARRAY_FILTER_USE_KEY);
       }
 
       // If we have flags, attach the js library.
@@ -73,7 +80,8 @@ function eic_community_preprocess_node__document(array &$variables) {
 
       if (isset($lang_term)) {
         if ($lang_term->hasTranslation($node->language()->getId())) {
-          $translated_lang_term = \Drupal::service('entity.repository')->getTranslationFromContext($lang_term, $language);
+          $translated_lang_term = \Drupal::service('entity.repository')
+            ->getTranslationFromContext($lang_term, $language);
           $language = $translated_lang_term->getName();
         }
         else {
@@ -81,14 +89,19 @@ function eic_community_preprocess_node__document(array &$variables) {
         }
       }
 
+      $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
       $document = [
         'language' => $language,
         'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),
         'filesize' => format_size($file->get('filesize')->getString()),
         'highlight' => FALSE,
         'icon' => [
-          'type' => 'custom',
-          'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+          'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
+          'name' => in_array($file_type,
+            ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
+              pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+            ),
         ],
       ];
 
@@ -123,7 +136,9 @@ function eic_community_preprocess_node__document(array &$variables) {
               'value' => format_size($download->get('filesize')->getString()),
             ],
           ],
-          'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
+          'mime_type' => _eic_community_get_file_type_icon_name(
+            pathinfo($download->getFilename(), PATHINFO_EXTENSION)
+          ),
           'path' => $download_url,
         ];
       }
@@ -145,19 +160,32 @@ function eic_community_preprocess_node__document(array &$variables) {
         return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
       }, ARRAY_FILTER_USE_KEY);
 
-    foreach ($flags as $flag) {
-      $variables['editorial_actions']['items'][] = [
-        'content' => $flag,
-      ];
-    }
-    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
-    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-    if ($group instanceof GroupInterface) {
-      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
-        $group,
-        $node
-      );
-    }
-    _eic_community_display_topics($variables);
+      foreach ($flags as $flag) {
+        $variables['editorial_actions']['items'][] = [
+          'content' => $flag,
+        ];
+      }
+
+      if (isset($variables['elements']['recommend_content'])) {
+        $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
+      }
+
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof GroupInterface) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+          $group,
+          $node
+        );
+
+        $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
+        $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
+          && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+          $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+        }
+      }
+      _eic_community_display_topics($variables);
+      break;
+
   }
 }

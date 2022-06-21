@@ -2,7 +2,7 @@
 {% set started_by_label = started_by_label|default('Started by') %}
 {% set title_element = title_element|default('h3') %}
 
-<div class="ecl-discussion-thread {{ highlight.is_active ? 'ecl-discussion-thread--is-highlighted' }} {{ extra_classes|default('') }}">
+<div class="ecl-discussion-thread {{ author.image is empty ? 'ecl-discussion-thread--as-no-image' }} {{ highlight.is_active ? 'ecl-discussion-thread--is-highlighted' }} {{ extra_classes|default('') }}">
   <div class="ecl-discussion-thread__main">
     {% if author.image %}
       <div class="ecl-discussion-thread__image-wrapper">
@@ -90,7 +90,7 @@
         {% endif %}
       </{{ title_element }}>
       {% if description %}
-        <p class="ecl-discussion-thread__description">{{ description }}</p>
+        <p class="ecl-discussion-thread__description">{{ description | raw}}</p>
       {% endif %}
     </div>
   </div>
@@ -98,17 +98,18 @@
     <div class="ecl-discussion-thread__footer">
       <div class="ecl-discussion-thread__meta">
         {% if author.name %}
-          <span class="ecl-discussion-thread__started-by-label">
-            {{ started_by_label }}
-          </span>
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-            link: {
-              label: author.name,
-              path: author.path,
-              type: 'standalone',
-            },
-            extra_classes: 'ecl-discussion-thread__author'
-          } only %}
+          <div class="ecl-discussion-thread__author">
+            <span class="ecl-discussion-thread__started-by-label">
+              {{ started_by_label }}
+            </span>
+            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+              link: {
+                label: author.name,
+                path: author.path,
+                type: 'standalone',
+              },
+              extra_classes: 'ecl-discussion-thread__author'
+            } only %}</div>
         {% endif %}
 
         {% if timestamp %}

@@ -1,5 +1,7 @@
 .ecl-pagination {
 
+  border-top: 0;
+
   &__list {
     padding: ecl-layout('gutter') 0;
     border-top: 2px solid $ecl-color-grey;
@@ -12,6 +14,10 @@
       color: $ecl-color-black;
       pointer-events: none;
       cursor: default;
+    }
+
+    &--page--constant {
+      display: flex;
     }
 
     button {

@@ -10,11 +10,25 @@
     align-items: center;
   }
 
-  &__logo {
-    width: map-get($ecl-media, 'l');
+  &__logo-wrapper {
+    // width: map-get($ecl-media, 'l');
     margin-right: auto;
+    display: flex;
+    align-items: flex-end;
+    color: map-get($ecl-colors, 'blue');
+    white-space: nowrap;
+    @include ecl-media-breakpoint-down('md') {
+      flex-wrap: wrap;
+      margin-bottom: .5em;
+    }
+  }
+
+  &__logo {
     flex-shrink: 0;
-    padding-right: ecl-box-model('padding');
+    @include ecl-media-breakpoint-down('md') {
+      max-width: 65px;
+      margin-right: .5em;
+    }
 
     @include ecl-media-breakpoint-up('md') {
       width: 100%;
@@ -25,6 +39,7 @@
   &__logo-image {
     width: 100%;
     height: auto;
+    display: block;
   }
 
   &__logo-link {
@@ -35,15 +50,25 @@
     @include visually-hidden();
   }
 
+  &__logo-baseline {
+    @include ecl-media-breakpoint-down('sm') {
+      font-size: 11px;
+      margin-bottom: -3px;
+    }
+  }
+
   &__login-link {
     padding: map-get($ecl-spacing, 's');
+    @include ecl-media-breakpoint-down('md') {
+      padding: map-get($ecl-spacing, 'xs');
+    }
   }
 
   &__language-selector-wrapper,
   &__auth-wrapper {
     flex-shrink: 0;
     @include ecl-media-breakpoint-down('md') {
-      font-size: .85em;
+      font-size: .75em;
     }
   }
 

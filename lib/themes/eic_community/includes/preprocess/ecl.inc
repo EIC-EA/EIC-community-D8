@@ -126,3 +126,42 @@ function _eic_community_get_ecl_date_block_variant(EntityInterface $entity, stri
 
   }
 }
+
+/**
+ * Returns the file type icon name from mime type.
+ *
+ * @param string $mime_type
+ *   The mime type.
+ *
+ * @return string
+ *   The file icon name.
+ */
+function _eic_community_get_file_type_icon_name(string $mime_type) {
+  switch ($mime_type) {
+    case 'docx':
+      $mime_type = 'doc';
+      break;
+
+    case 'xlsx':
+      $mime_type = 'xls';
+      break;
+
+    case 'ppsx':
+      $mime_type = 'pps';
+      break;
+
+    case 'pptx':
+      $mime_type = 'ppt';
+      break;
+
+    case 'pdtx':
+      $mime_type = 'pdt';
+      break;
+
+    case 'vsdx':
+      $mime_type = 'vsd';
+      break;
+
+  }
+  return $mime_type;
+}

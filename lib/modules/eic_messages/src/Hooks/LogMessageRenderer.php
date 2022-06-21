@@ -79,7 +79,10 @@ class LogMessageRenderer implements ContainerInjectionInterface {
       return $field === MessageTokens::RENDERED_CONTENT_FIELD;
     }, ARRAY_FILTER_USE_KEY);
 
-    if (empty($supported_field)) {
+    if (
+      empty($supported_field) ||
+      !$entity->hasField(MessageTokens::RENDERED_CONTENT_FIELD)
+    ) {
       return;
     }
 

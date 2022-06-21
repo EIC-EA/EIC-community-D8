@@ -46,7 +46,7 @@ class GlobalSourceType extends SourceType {
     return [
       'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
       'ss_content_language_string' => $this->t('Languages', [], ['context' => 'eic_search']),
     ];
@@ -62,7 +62,7 @@ class GlobalSourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
@@ -148,7 +148,7 @@ class GlobalSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['ss_global_group_parent_id', 'its_group_id_integer'];
+    return ['its_global_group_parent_id', 'its_group_id_integer'];
   }
 
   /**

@@ -3,11 +3,14 @@ stages:
   - test
   - notify
   - deploy
+  - cypress
   - deploy_uat
 
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
   stage: deploy
+  tags:
+    - aws
   before_script:
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
@@ -26,18 +29,35 @@ stages:
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cr &&
       ./vendor/bin/drush cim -y &&
-      ./vendor/bin/drush pmu basic_auth -y &&
+      ./vendor/bin/drush cr"
+
+.rollback_trigger_updb: &rollback_trigger_updb
+  image: intractosre/deploy:1
+  stage: deploy
+  when: manual
+  tags:
+    - aws
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -t rsa -p $SSH_PORT $HOST >> ~/.ssh/known_hosts
+  script:
+    - >
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ./vendor/bin/drush php-eval \"echo drupal_set_installed_schema_version('eic_deploy', $UPDB_VERSION);\" &&
+      ./vendor/bin/drush updb -y &&
+      ./vendor/bin/drush cim -y &&
       ./vendor/bin/drush cr"
 
 build_backend:
   stage: build
-  image: intractosre/php:7.3
+  image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
   artifacts:
     untracked: true
     expire_in: '2 hour'
   script:
-    # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
-    # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
     - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
     # Gitlab CI will exclude any directory containing a .git folder from artifacts, remove it temporarily
     - find $CI_PROJECT_DIR/web/modules/contrib -type d -name ".git" -exec rm -rf {} +
@@ -63,39 +83,25 @@ build_front:
 
 security_check:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
   script:
     - local-php-security-checker
   only:
     - develop
     - /^release/.*$/
 
-code_style_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
+sbom_send:
+  image: public.ecr.aws/io-brussels/sbom-collector
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/bom.xml
+    expire_in: 2 hours
   script:
-    - ./vendor/bin/grumphp run --tasks=phpcs
-  allow_failure: true
+    - cd $CI_PROJECT_DIR && composer -n make-bom --output-file=$CI_PROJECT_DIR/bom.xml
+    - cat $CI_PROJECT_DIR/bom.xml | send_bom
   only:
     - develop
-
-phpmd_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpmd
-  allow_failure: true
-  only:
-    - develop
-
-phpstan_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - phpstan
-  allow_failure: true
-  only:
-    - develop
+    - /^release/.*$/
 
 deploy_develop:
   <<: *deploy_job
@@ -131,11 +137,47 @@ deploy_migration_env:
   only:
     - /^release/.*$/
 
+rollback_trigger_updb_develop:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
+rollback_trigger_updb_qa:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $QA_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_uat:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $UAT_HOST
+  only:
+    - /^release/.*$/
+
 slack_notifier:
   stage: notify
   image: curlimages/curl:latest
   script:
     - |
       curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
+  only:
+    - /^release/.*$/
+
+cypress_test_qa:
+  stage: cypress
+  image: cypress/base:10
+  allow_failure: true
+  artifacts:
+    when: always
+    untracked: true
+    expire_in: '2 hour'
+  script:
+    - cd e2e
+    - npm install
+    - npx cypress run
   only:
     - /^release/.*$/

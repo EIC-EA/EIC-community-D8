@@ -5,11 +5,12 @@
  * Contains Views preprocess functions.
  */
 
+use Drupal\Core\Url;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 use Drupal\views\Views;
-use Drupal\Core\Url;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -37,6 +38,21 @@ function eic_community_preprocess_views_view(&$variables) {
 
   $key = $view->id() . '-' . $view->current_display;
   switch ($key) {
+    case 'group_related_news_stories-block_related_news_stories':
+      $tags = [];
+      foreach ($view->result as $row) {
+        $entity = $row->_entity;
+        if (!$entity instanceof NodeInterface) {
+          continue;
+        }
+
+        $tags[] = 'eic_statistics:node:' . $entity->id();
+      }
+
+      if ($tags) {
+        $variables['#cache']['tags'] = $tags;
+      }
+
     case 'groups-block_user_profile_groups':
       $variables['extra_classes'] = 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-compact-layout';
       break;
@@ -120,6 +136,8 @@ function eic_community_preprocess_views_view(&$variables) {
             'label' => t('Add news'),
             'path' => $url_add_news->toString(),
           ],
+          'extra_classes' => 'ecl-link ecl-link--cta',
+          'type' => 'cta',
         ];
       }
       break;
@@ -151,6 +169,8 @@ function eic_community_preprocess_views_view(&$variables) {
             'label' => t('Add event'),
             'path' => $url_add_event->toString(),
           ],
+          'extra_classes' => 'ecl-link ecl-link--cta',
+          'type' => 'cta',
         ];
       }
       break;
@@ -173,14 +193,25 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['no_container'] = TRUE;
       break;
 
+    case 'global_index_group_content-block_user_profile_events':
+    case 'global_index_group_content-block_user_profile_my_events':
+    case 'groups-block_user_profile_organisations':
+    case 'groups-block_user_profile_my_organisations':
+      $variables['extra_classes'] = 'ecl-teaser-overview--has-compact-layout';
+      break;
+
   }
 
   // Add the read more link if there is one.
-  if ($view->display_handler->getOption('use_more') == TRUE) {
+  if (
+    $view->display_handler->getOption('use_more') == TRUE &&
+    !empty($variables['more'])
+  ) {
+    // $link_display = $view->display_handler->
     $variables['call_to_action'] = [
       'link' => [
-        'label' => $view->display_handler->getOption('use_more_text'),
-        'path' => $view->display_handler->getOption('link_url'),
+        'label' => $variables['more']['#title'],
+        'path' => $variables['more']['#url']->toString(),
       ],
     ];
   }

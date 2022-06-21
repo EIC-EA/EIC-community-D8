@@ -20,6 +20,8 @@ class SmedTaxonomyHelper {
    * @var string[]
    */
   protected const SMED_VOCABULARIES = [
+    'global_event_type',
+    'target_markets',
     'job_titles',
     'languages',
     'topics',

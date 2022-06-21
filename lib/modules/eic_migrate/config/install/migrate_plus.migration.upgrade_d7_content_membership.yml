@@ -1,0 +1,125 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_content_membership
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Content memberships'
+source:
+  plugin: eic_d7_og_content_membership
+  type: og_membership_type_default
+  track_changes: true
+  constants:
+    node_membership_plugin_id: group_node
+  batch_size: 100
+process:
+  _target_group_type:
+    - plugin: migration_lookup
+      source: gid
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
+    - plugin: skip_on_empty
+      method: row
+      message: 'Group not found'
+    - plugin: extract
+      index:
+        - 0
+    - plugin: entity_value
+      entity_type: group
+      field_name: type
+    - plugin: skip_on_empty
+      method: row
+      message: 'Group type not found'
+    - plugin: extract
+      index:
+        - 0
+        - target_id
+  _target_node_type:
+    - plugin: callback
+      callable:
+        - '\Drupal\eic_migrate\Constants\Groups'
+        - getDestinationNodeType
+      source: node_type
+    - plugin: skip_on_empty
+      method: row
+      message: 'Node type not found'
+  type:
+    plugin: concat
+    source:
+      - '@_target_group_type'
+      - constants/node_membership_plugin_id
+      - '@_target_node_type'
+    delimiter: '-'
+  #  uid:
+  #    -
+  #      plugin: migration_lookup
+  #      source: etid
+  #      migration: upgrade_d7_user
+  #      no_stub: true
+  #    -
+  #      plugin: skip_on_empty
+  #      method: row
+  #      message: 'User not found'
+  gid:
+    -
+      plugin: migration_lookup
+      source: gid
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Group not found'
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: etid
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_book
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_photoalbum
+        - upgrade_d7_node_complete_wiki_page
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Node not found'
+    -
+      plugin: callback
+      callable: array_filter
+    -
+      plugin: skip_on_empty
+      method: row
+  created: created
+  changed: created
+
+destination:
+  plugin: 'entity:group_content'
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_book
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_photoalbum
+    - upgrade_d7_node_complete_wiki_page
+  optional: { }

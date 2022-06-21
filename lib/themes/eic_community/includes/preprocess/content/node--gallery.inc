@@ -5,10 +5,16 @@
  * Prepares variables for node gallery templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_node__bundle() for gallery node.
@@ -22,13 +28,19 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       _eic_community_display_flags($variables);
       _eic_community_display_topics($variables);
       _eic_community_display_document_contributors($variables);
-      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
       if ($group instanceof GroupInterface) {
         $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
           $group,
           $node
         );
+
+        $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
+        $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
+          && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+          $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+        }
       }
 
       $node = $variables['node'];
@@ -40,9 +52,15 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $media = $file->get('field_gallery_slide_media')->referencedEntities()[0];
         $download = File::load($media->oe_media_image->getValue()[0]['target_id']);
         $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+        $explode_file_name = explode('/', $download->getFileUri());
+        // We grab the filename based on the file URI.
+        $file_name = end($explode_file_name);
+        // We use the filename based on the file URI if it has the same name as
+        // the media entity.
+        $file_name = $media->getName() === $file_name ? $file_name : $download->getFilename();
 
         $files_list[] = [
-          'name' => $download->getFileName(),
+          'name' => $file_name,
           'type' => t('Image', [], ['context' => 'eic_community']),
           'stats' => [
             [
@@ -63,13 +81,13 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download_url,
           'image' => [
-            'src' => $download->createFileUrl(),
-            'alt' => $download->getFileName(),
+            'src' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($download->getFileUri()),
+            'alt' => $file_name,
           ],
         ];
 
         $slide = [
-          'name' => $download->getFileName(),
+          'name' => $file_name,
           'stats' => [
             [
               'hide_label' => TRUE,
@@ -89,8 +107,12 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download_url,
           'image' => [
-            'src' => $download->createFileUrl(),
-            'alt' => $download->getFileName(),
+            'src' => ImageStyle::load('oe_theme_small_2x_no_crop')->buildUrl($download->getFileUri()),
+            'alt' => $file_name,
+          ],
+          'thumb' => [
+            'src' => ImageStyle::load('media_library')->buildUrl($download->getFileUri()),
+            'alt' => $file_name,
           ],
         ];
 
@@ -117,7 +139,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         'download' => t('Download'),
       ];
       break;
-
+    case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
@@ -145,6 +167,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $variables['#attached']['library'][] = 'flag/flag.link_ajax';
       }
 
+      $teaser['description'] = Markup::create(Xss::filter($node->get('field_body')->value));
       $variables['gallery_item'] = $teaser;
       break;
   }

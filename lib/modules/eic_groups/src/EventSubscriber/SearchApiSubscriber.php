@@ -6,6 +6,8 @@ use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\search_api\Event\QueryPreExecuteEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Provides an Event Subscriber for Search API events.
@@ -56,6 +58,34 @@ class SearchApiSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Add x-requested-with headers for custom API call so Drupal handle it like Drupal Ajax call.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   *   The request event object.
+   */
+  public function addXRequestWithApi(RequestEvent $event) {
+    if (!$event->isMasterRequest()) {
+      return;
+    }
+
+    $allowed_routes = [
+      'eic_search.solr_search',
+      'eic_content.entity_tree',
+      'eic_content.entity_tree_children',
+      'eic_content.entity_tree_search',
+      'eic_content.entity_tree_create_term',
+    ];
+
+    $current_route = \Drupal::routeMatch()->getRouteName();
+
+    if (!in_array($current_route, $allowed_routes)) {
+      return;
+    }
+
+    $event->getRequest()->headers->set('X-Requested-With', 'XMLHttpRequest');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -68,6 +98,9 @@ class SearchApiSubscriber implements EventSubscriberInterface {
 
     return [
       SearchApiEvents::QUERY_PRE_EXECUTE => 'queryAlter',
+      KernelEvents::REQUEST => [
+        ['addXRequestWithApi'],
+      ],
     ];
   }
 

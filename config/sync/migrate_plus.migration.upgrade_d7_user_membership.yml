@@ -1,0 +1,90 @@
+uuid: 9f0532a7-ea1e-4cec-bd5e-1e7a00712848
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_user_membership
+class: Drupal\user\Plugin\migrate\User
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'User memberships'
+source:
+  plugin: eic_d7_og_user_membership
+  type: og_membership_type_default
+  state: 1
+  include_roles: true
+  ignore_owner: true
+  track_changes: true
+  constants:
+    group_membership_plugin_id: group_membership
+  batch_size: 100
+process:
+  _group_type:
+    plugin: static_map
+    source: node_type
+    map:
+      group: group
+      event_site: event
+      organisation: organisation
+  type:
+    plugin: concat
+    source:
+      - '@_group_type'
+      - constants/group_membership_plugin_id
+    delimiter: '-'
+  uid:
+    -
+      plugin: migration_lookup
+      source: etid
+      migration: upgrade_d7_user
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'User not found'
+  gid:
+    -
+      plugin: migration_lookup
+      source: gid
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Group not found'
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: etid
+      migration: upgrade_d7_user
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'User not found'
+  group_roles/target_id:
+    -
+      plugin: static_map
+      source: rid
+      default_value: null
+      map:
+        6: group-admin
+        9: event-admin
+        10: organisation-admin
+  created: created
+  changed: created
+destination:
+  plugin: 'entity:group_content'
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
+  optional: {  }

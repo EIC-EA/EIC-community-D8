@@ -5,12 +5,14 @@
  * Primary module hooks for EIC Message Notifications module.
  */
 
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_message_subscriptions\Hooks\CronOperations;
 use Drupal\eic_message_subscriptions\Hooks\EntityOperations;
 use Drupal\eic_message_subscriptions\Hooks\FormOperations;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\message\MessageInterface;
 use Drupal\node\Entity\NodeType;
 
@@ -68,6 +70,30 @@ function eic_message_subscriptions_form_node_edit_form_alter(&$form, FormStateIn
 }
 
 /**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_message_subscriptions_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() !== 'entity.group.add_form'
+    || !$route_match->getParameter('group_type') instanceof GroupTypeInterface
+    || $route_match->getParameter('group_type')->id() !== 'event') {
+    return;
+  }
+
+  if ($form_state->getFormObject()->getOperation() === 'add') {
+    \Drupal::classResolver(FormOperations::class)
+      ->groupFormAlter($form, $form_state, $form_id);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_message_subscriptions_group_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)->eventUpdate($entity);
+}
+
+/**
  * Implements hook_cron().
  */
 function eic_message_subscriptions_cron() {
@@ -77,6 +103,8 @@ function eic_message_subscriptions_cron() {
 
 /**
  * Implements hook_message_subscribe_get_subscribers_alter().
+ *
+ * @param \Drupal\message_subscribe\Subscribers\DeliveryCandidateInterface[] $uids
  */
 function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array &$uids, array $values) {
   if (!isset($values['message'])) {
@@ -84,15 +112,17 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
   }
 
   $message = $values['message'];
-
   if (!$message instanceof MessageInterface) {
     return;
   }
 
   $message_subscription_templates = MessageSubscriptionTypes::getMessageSubscriptionTypesAsArray();
-
   if (!in_array($message->getTemplate()->id(), $message_subscription_templates)) {
     return;
+  }
+
+  if ($message->getTemplate()->id() === MessageSubscriptionTypes::NEW_COMMENT_REPLY) {
+    _eic_subscription_filter_comment_reply_subscribers($uids, $message);
   }
 
   // Gets the executing user if exists.
@@ -103,6 +133,32 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
     // Therefore, we remove it from the array of subscribed users.
     if (isset($uids[$executing_user->id()])) {
       unset($uids[$executing_user->id()]);
+    }
+  }
+
+  $subscription_message_checker = \Drupal::service('eic_message_subscriptions.subscription_message_checker');
+  foreach ($uids as $delivery_candidate) {
+    $account_id = $delivery_candidate->getAccountId();
+    if (!$subscription_message_checker->shouldSend($account_id, $message) && isset($uids[$account_id])) {
+      unset($uids[$account_id]);
+    }
+  }
+}
+
+/**
+ * @param \Drupal\message_subscribe\Subscribers\DeliveryCandidateInterface[] $delivery_candidates
+ * @param \Drupal\message\MessageInterface $message
+ */
+function _eic_subscription_filter_comment_reply_subscribers(array &$delivery_candidates, MessageInterface $message) {
+  $comment = $message->get('field_referenced_comment')->entity;
+  if (!$comment instanceof CommentInterface || !$comment->hasParentComment()) {
+    return;
+  }
+
+  $parent_owner_id = (int) $comment->getParentComment()->getOwnerId();
+  foreach ($delivery_candidates as $key => $delivery_candidate) {
+    if ($parent_owner_id !== (int) $delivery_candidate->getAccountId()) {
+      unset($delivery_candidates[$key]);
     }
   }
 }

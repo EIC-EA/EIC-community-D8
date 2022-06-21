@@ -1,0 +1,15 @@
+uuid: 773e1c10-b254-4a2d-be54-906b7cb0d508
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.recommend_content
+  module:
+    - flag
+id: flag_action.recommend_content_flag
+label: 'Flag this item'
+type: node
+plugin: 'flag_action:recommend_content_flag'
+configuration:
+  flag_id: recommend_content
+  flag_action: flag

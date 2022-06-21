@@ -5,8 +5,16 @@
  * Prepares variables for group templates.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_media\MediaHelper;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
+use Drupal\file\Entity\File;
+use Drupal\taxonomy\TermInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Implements hook_preprocess_group__group().
@@ -32,7 +40,10 @@ function eic_community_preprocess_group__group(array &$variables) {
     case 'full':
       if ($group->hasField('field_hero') && !$group->get('field_hero')->isEmpty()) {
         /** @var \Drupal\media\Entity\Media $media */
-        $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_hero')->entity, $group->language()->getId());
+        $media = \Drupal::service('entity.repository')->getTranslationFromContext(
+          $group->get('field_hero')->entity,
+          $group->language()->getId()
+        );
         $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
         $item['image'] = [
           'src' => $image_item->getSource(),
@@ -41,12 +52,21 @@ function eic_community_preprocess_group__group(array &$variables) {
       }
       break;
 
+    case 'mail_teaser':
     case 'teaser':
+      // Get group description.
+      $item['description'] = $group->hasField('field_body') ? Markup::create(Xss::filter($group->get('field_body')->value)) : '';
       // Get group thumbnail.
       if ($group->hasField('field_thumbnail') && !$group->get('field_thumbnail')->isEmpty()) {
         /** @var \Drupal\media\Entity\Media $media */
-        $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_thumbnail')->entity, $group->language()->getId());
-        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), 'oe_theme_list_item_2x');
+        $media = \Drupal::service('entity.repository')->getTranslationFromContext(
+          $group->get('field_thumbnail')->entity,
+          $group->language()->getId()
+        );
+        $image_item = ImageValueObject::fromStyledImageItem(
+          $media->get('oe_media_image')->first(),
+          'oe_theme_list_item_2x'
+        );
         $item['image'] = [
           'src' => $image_item->getSource(),
           'alt' => $image_item->getAlt(),
@@ -58,6 +78,9 @@ function eic_community_preprocess_group__group(array &$variables) {
         $item['type']['label'] = $group_visibility_label;
         $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
       }
+
+      // Get group tags.
+      $item['tags'] = _preprocess_group_tags($group);
 
       // Get group last activity.
       // @todo Get the real last activity.
@@ -128,19 +151,19 @@ function _preprocess_about_page(&$variables) {
  * About group tab.
  */
 function _group_about_group_tab($variables, &$sections) {
-  $owners = array_map(function ($owner) {
-    if ($owner instanceof Markup) {
-      return [
-        'title' => $owner,
-      ];
-    }
-    else {
-      return [
-        'title' => $owner->getText(),
-        'path' => $owner->getUrl(),
-      ];
-    }
-  }, $variables['elements']['owners']);
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $variables['group'];
+  $owners = $group->getMembers($group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE);
+  $admins = $group->getMembers($group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE);
+
+  $owners = array_map(function (GroupMembership $owner) {
+    $user = $owner->getUser();
+
+    return [
+      'title' => realname_load($user),
+      'path' => $user->toUrl(),
+    ];
+  }, $owners);
 
   $about_items = [
     [
@@ -149,20 +172,15 @@ function _group_about_group_tab($variables, &$sections) {
     ],
   ];
 
-  if (count($variables['elements']['admins']) > 0) {
-    $admins = array_map(function ($admin) {
-      if ($admin instanceof Markup) {
-        return [
-          'title' => $admin,
-        ];
-      }
-      else {
-        return [
-          'title' => $admin->getText(),
-          'path' => $admin->getUrl(),
-        ];
-      }
-    }, $variables['elements']['admins']);
+  if (!empty($admins)) {
+    $admins = array_map(function (GroupMembership $admin) {
+      $user = $admin->getUser();
+
+      return [
+        'title' => realname_load($user),
+        'path' => $user->toUrl(),
+      ];
+    }, $admins);
 
     $about_items[] = [
       'title' => t('Administrator'),
@@ -170,16 +188,19 @@ function _group_about_group_tab($variables, &$sections) {
     ];
   }
 
-  if (isset($variables['elements']['field_vocab_topics']['#theme'])) {
-    $render_array_topics = array_filter($variables['elements']['field_vocab_topics'], function ($key) {
-      return is_int($key);
-    }, ARRAY_FILTER_USE_KEY);
+  $topics = $group->hasField('field_vocab_topics') ?
+    $group->get('field_vocab_topics')->referencedEntities() :
+    [];
+  $geos = $group->hasField('field_vocab_geo') ?
+    $group->get('field_vocab_geo')->referencedEntities() :
+    [];
 
-    $topics = array_map(function ($topic) {
+  if (!empty($topics)) {
+    $topics = array_map(function (TermInterface $topic) {
       return [
-        'title' => $topic['#title'],
+        'title' => $topic->label(),
       ];
-    }, $render_array_topics);
+    }, $topics);
 
     $about_items[] = [
       'title' => t('Group topics'),
@@ -187,26 +208,24 @@ function _group_about_group_tab($variables, &$sections) {
     ];
   }
 
-  if (isset($variables['elements']['field_vocab_geo']['#theme'])) {
-    $render_array_geo = array_filter($variables['elements']['field_vocab_geo'], function ($key) {
-      return is_int($key);
-    }, ARRAY_FILTER_USE_KEY);
-
-    $geo = array_map(function ($place) {
+  if (!empty($geos)) {
+    $geos = array_map(function (TermInterface $topic) {
       return [
-        'title' => $place['#title'],
+        'title' => $topic->label(),
       ];
-    }, $render_array_geo);
+    }, $geos);
 
     $about_items[] = [
       'title' => t('Group region and countries'),
-      'items' => $geo,
+      'items' => $geos,
     ];
   }
 
   $about_items[] = [
     'title' => t('Group description'),
-    'content' => $variables['elements']['field_body'] ?? '',
+    'content' => $group->hasField('field_body') ?
+      $group->get('field_body')->value :
+      '',
   ];
 
   $sections[] = [
@@ -232,12 +251,11 @@ function _group_about_permissions_tab($variables, &$sections) {
 
     switch ($visibility_id) {
       case 'custom_restricted':
-        $restrictions = array_map(function ($restriction) {
-          return [
-            'title' => $restriction['label'],
-            'content' => $restriction['options'],
-          ];
-        }, $visibility['settings']);
+        $restrictions = array_map(
+          '_eic_community_get_group_custom_restricted_options_item_list',
+          array_keys($visibility['settings']),
+          $visibility['settings']
+        );
 
         $access_items = $restrictions;
         break;
@@ -285,9 +303,117 @@ function _group_about_permissions_tab($variables, &$sections) {
       'content' => [
         '#theme' => 'eic_community_extended_list',
         '#title' => t('Group Permissions'),
-        '#description' => t("Below is explained to whom this group is visible in order to understand the private or public character of the group's content."),
+        '#description' => t(
+          "Below is explained to whom this group is visible in order to understand the private or public character of the group's content."
+        ),
         '#items' => $admin_items,
       ],
     ];
   }
+}
+
+/**
+ * Returns item list array for a given custom restricted visibility option.
+ *
+ * @param string $restriction_type
+ *   The restriction type.
+ * @param array $restriction
+ *   The restriction options.
+ *
+ * @return array
+ *   The array of restricted options to print in twig template.
+ */
+function _eic_community_get_group_custom_restricted_options_item_list(string $restriction_type, array $restriction) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $items = [];
+  switch ($restriction_type) {
+    case 'restricted_email_domains':
+      $items = explode(',', $restriction['options']);
+      break;
+
+    case 'restricted_users':
+      foreach ($restriction['options'] as $option) {
+        if ($user = $entity_type_manager->getStorage('user')->load($option['target_id'])) {
+          $items[] = $user->getDisplayName();
+        }
+      }
+      break;
+
+    case 'restricted_organisation_types':
+      foreach ($restriction['options'] as $option) {
+        if ($term = $entity_type_manager->getStorage('taxonomy_term')->load($option['target_id'])) {
+          $items[] = $term->label();
+        }
+      }
+      break;
+
+    case 'restricted_organisations':
+      foreach ($restriction['options'] as $option) {
+        if ($group = $entity_type_manager->getStorage('group')->load($option['target_id'])) {
+          $items[] = $group->label();
+        }
+      }
+      break;
+
+  }
+
+  return [
+    'title' => $restriction['label'],
+    'content' => [
+      '#theme' => 'item_list',
+      '#list_type' => 'ul',
+      '#items' => $items,
+    ],
+  ];
+}
+
+function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, string $field_name, $variables) {
+  if (!$entity->hasField($field_name)) {
+    return [];
+  }
+
+  $medias = $entity->get($field_name)->referencedEntities();
+
+  $list = [];
+  foreach ($medias as $media) {
+    $file = File::load($media->field_media_file->target_id);
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+    $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
+    $list[] = [
+      'title' => $media->getName(),
+      'language' => $media->language()->getName(),
+      'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
+      'filesize' => format_size($file->get('filesize')->getString()),
+      'highlight' => FALSE,
+      'path' => $download_url,
+      'icon_file_path' => $variables['eic_icon_path'],
+      'icon' => [
+        'type' => $file_type === 'video' ? 'general' : 'custom',
+        'name' => $file_type === 'video' ? $file_type : substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+      ],
+    ];
+  }
+
+  return $list;
+}
+
+/**
+ * Preprocesses group topic tags.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $group
+ *   The group entity.
+ *
+ * @return array
+ *   Array of ecl tags.
+ */
+function _preprocess_group_tags(GroupInterface $group) {
+  // Get the topics.
+  $tags = [];
+  if ($group->hasField('field_vocab_topics') && !$group->get('field_vocab_topics')->isEmpty()) {
+    foreach ($group->get('field_vocab_topics')->referencedEntities() as $term) {
+      $tags[] = _eic_community_preprocess_ecl_tag($term)['tag'];
+    }
+  }
+  return $tags;
 }

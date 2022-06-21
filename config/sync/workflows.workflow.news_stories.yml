@@ -2,11 +2,8 @@ uuid: ff152506-cc35-4d06-8454-2b0562b2bfcf
 langcode: en
 status: true
 dependencies:
-  config:
-    - node.type.news
-    - node.type.story
   module:
-    - content_moderation
+    - content_moderation_bypass
 id: news_stories
 label: 'News & Stories'
 type: content_moderation
@@ -64,8 +61,5 @@ type_settings:
         - published
       to: unpublished
       weight: 2
-  entity_types:
-    node:
-      - news
-      - story
+  entity_types: {  }
   default_moderation_state: draft

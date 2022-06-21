@@ -1,0 +1,22 @@
+uuid: 8d869d77-c423-4ba6-85da-be1d81a9a65a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_group_membership_pending.field_group_ref
+    - message.template.notify_group_membership_pending
+id: message.notify_group_membership_pending.mail_subject
+targetEntityType: message
+bundle: notify_group_membership_pending
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_group_ref: true
+  partial_1: true
+  search_api_excerpt: true

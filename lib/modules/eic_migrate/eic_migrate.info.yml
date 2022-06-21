@@ -5,3 +5,4 @@ package: European Innovation Council
 core_version_requirement: ^8.9 || ^9
 dependencies:
   - drupal:migrate
+  - drupal:migrate_tools

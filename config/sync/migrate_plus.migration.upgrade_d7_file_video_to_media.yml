@@ -13,12 +13,12 @@ migration_group: migrate_drupal_7
 label: 'Public and private video files to media'
 source:
   plugin: eic_d7_file_complete
-  batch_size: 100
   file_type: video
   scheme:
     - public
     - private
   track_changes: true
+  batch_size: 100
 process:
   name: filename
   uid:
@@ -36,6 +36,9 @@ process:
       migration:
         - upgrade_d7_file
         - upgrade_d7_file_private
+    -
+      plugin: skip_on_empty
+      method: row
 destination:
   plugin: 'entity:media'
   default_bundle: video

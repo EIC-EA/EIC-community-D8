@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_text
     - filter.format.full_html
   module:
     - eic_messages
@@ -14,10 +15,10 @@ label: 'NOTIFY :: MT :: Block request - request accepted'
 description: 'Notification sent to the entity owner when an block request is accepted'
 text:
   -
-    value: "<p>Your [message:field_referenced_flag:entity:target_entity:type] \"[message:field_referenced_flag:entity:target_entity:title]\" has been blocked.</p>\r\n"
-    format: full_html
+    value: "<p>[message:field_referenced_flag:entity:target_entity:title] is blocked</p>\r\n"
+    format: basic_text
   -
-    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:author:url]\">[message:field_referenced_flag:entity:author:field_first_name:value] [message:field_referenced_flag:entity:author:field_last_name:value]</a> has blocked your&nbsp;[message:field_referenced_flag:entity:target_entity:type] <a href=\"[message:field_referenced_flag:entity:target_entity:url]\">[message:field_referenced_flag:entity:target_entity:title]</a>.</p>\r\n\r\n<p>Reason:&nbsp;[message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:target_entity:url]\"><u>[message:field_referenced_flag:entity:target_entity:title]</u></a> was blocked by <a href=\"[message:field_referenced_flag:entity:author:url]\"><u>[message:field_referenced_flag:entity:author:display-name]</u></a>.</p>\r\n\r\n<p>Reason:<br />\r\n[message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"[site:url]contact\"><u>contact us</u></a>.</p>\r\n\r\n<p>The European Innovation Council team</p>\r\n"
     format: full_html
 settings:
   'token options':

@@ -17,6 +17,7 @@ source:
   track_changes: true
   constants:
     SOURCE_BASE_PATH: ../backup_files
+  batch_size: 100
 process:
   filename: filename
   # Remove "sites/default/files/" from filepath
@@ -32,6 +33,7 @@ process:
         - '@_source_path'
   uri:
     - plugin: file_copy
+      skip_process_on_failure: true
       source:
         - '@_source_full_path'
         - uri

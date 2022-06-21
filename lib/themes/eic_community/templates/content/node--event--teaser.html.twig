@@ -17,7 +17,6 @@
     {% include "@theme/patterns/compositions/event/event.teaser.html.twig" with event_item|default({})|merge({
       title: node.label|default(''),
       path: url,
-      extra_classes: 'ecl-teaser--as-card',
     }) %}
   </div>
 {% endblock %}

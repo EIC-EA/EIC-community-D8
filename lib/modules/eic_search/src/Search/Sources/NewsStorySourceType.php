@@ -61,7 +61,7 @@ class NewsStorySourceType extends SourceType {
         'label' => $this->t('Created date', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
@@ -69,12 +69,10 @@ class NewsStorySourceType extends SourceType {
       'its_statistics_view' => [
         'label' => $this->t('Views', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most viewed', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Less viewed', [], ['context' => 'eic_search']),
       ],
       'its_flag_like_content' => [
         'label' => $this->t('Likes', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most liked', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Less liked', [], ['context' => 'eic_search']),
       ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
@@ -83,7 +81,6 @@ class NewsStorySourceType extends SourceType {
       'its_content_comment_count' => [
         'label' => $this->t('Total comment', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most commented', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Less commented', [], ['context' => 'eic_search']),
       ],
       'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
@@ -102,6 +99,10 @@ class NewsStorySourceType extends SourceType {
         'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
       ],
     ];
+  }
+
+  public function getSecondDefaultSort(): array {
+    return ['ss_drupal_timestamp', 'DESC'];
   }
 
   /**

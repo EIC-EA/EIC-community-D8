@@ -9,6 +9,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
+use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagService;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
 
@@ -50,21 +51,28 @@ class StatisticsHelper {
    *
    * @var \Drupal\eic_comments\CommentsHelper
    */
-  protected $commentsHelper;
+  protected CommentsHelper $commentsHelper;
 
   /**
    * The eic_user.helper service.
    *
    * @var \Drupal\eic_user\UserHelper
    */
-  protected $userHelper;
+  protected UserHelper $userHelper;
 
   /**
    * The eic_user.helper service.
    *
    * @var \Drupal\eic_groups\EICGroupsHelper
    */
-  protected $groupsHelper;
+  protected EICGroupsHelper $groupsHelper;
+
+  /**
+   * The flag count manager service.
+   *
+   * @var FlagCountManagerInterface $flagCountManager
+   */
+  protected FlagCountManagerInterface $flagCountManager;
 
   /**
    * @param \Drupal\eic_statistics\StatisticsStorage $statistics_storage
@@ -72,19 +80,22 @@ class StatisticsHelper {
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\eic_comments\CommentsHelper $comments_helper
    * @param \Drupal\eic_user\UserHelper $user_helper
+   * @param FlagCountManagerInterface $flag_count_manager
    */
   public function __construct(
     StatisticsStorage $statistics_storage,
     NodeStatisticsDatabaseStorage $node_statistics_storage,
     FlagService $flag_service,
     CommentsHelper $comments_helper,
-    UserHelper $user_helper
+    UserHelper $user_helper,
+    FlagCountManagerInterface $flag_count_manager
   ) {
     $this->statisticsStorage = $statistics_storage;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_storage;
     $this->flagService = $flag_service;
     $this->commentsHelper = $comments_helper;
     $this->userHelper = $user_helper;
+    $this->flagCountManager = $flag_count_manager;
   }
 
   /**
@@ -144,12 +155,15 @@ class StatisticsHelper {
     // Flags statistics.
     $countable_flags = [
       FlagType::LIKE_CONTENT,
+      FlagType::FOLLOW_CONTENT
     ];
     foreach ($this->flagService->getAllFlags($entity->getEntityTypeId()) as $flag) {
       if (!in_array($flag->id(), $countable_flags)) {
         continue;
       }
-      $result[$flag->id()] = count($this->flagService->getAllEntityFlaggings($entity));
+
+      $entity_flag_counts = $this->flagCountManager->getEntityFlagCounts($entity);
+      $result[$flag->id()] = $entity_flag_counts[$flag->id()] ?? 0;
     }
 
     // Downloads statistics.

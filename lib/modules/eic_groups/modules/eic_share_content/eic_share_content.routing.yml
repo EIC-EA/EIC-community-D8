@@ -14,3 +14,21 @@ eic_share_content.share:
         type: entity:node
       group:
         type: entity:group
+eic_share_content.groups:
+  path: '/share/group/{group}/content/{node}/user/{user}/groups'
+  methods: [ GET ]
+  defaults:
+    _controller: 'Drupal\eic_share_content\Controller\ShareContentController::getGroups'
+    _title: 'Share content'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    user: \d+
+    group: \d+
+  options:
+    parameters:
+      user:
+        type: entity:user
+      node:
+        type: entity:node
+      group:
+        type: entity:group

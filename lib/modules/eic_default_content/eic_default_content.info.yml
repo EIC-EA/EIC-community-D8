@@ -1,9 +1,9 @@
 name: EIC Default Content
 type: module
-description: Provides dummy content to use on local/development environments.
+description: Provides default content to use for all environments.
 package: European Innovation Council
 core: 8.x
 php: 7.3
 core_version_requirement: ^8 || ^9
 dependencies:
-  - data_fixtures
+  - data_fixtures:data_fixtures

@@ -5,9 +5,9 @@ namespace Drupal\eic_private_message\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Mail\MailManager;
+use Drupal\eic_messages\Service\MessageBus;
 use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\eic_private_message\PrivateMessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\user\Entity\User;
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PrivateMessageForm extends FormBase {
 
   /**
-   * The EIC User herlper service.
+   * The EIC User helper service.
    *
    * @var \Drupal\eic_user\UserHelper
    */
@@ -36,18 +36,18 @@ class PrivateMessageForm extends FormBase {
   private $systemSettings;
 
   /**
-   * The mail manager.
+   * The message bus service.
    *
-   * @var \Drupal\Core\Mail\MailManager
+   * @var \Drupal\eic_messages\Service\MessageBus
    */
-  private $mailManager;
+  private $bus;
 
   /**
-   * The language manager.
+   * The private message helper service.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\eic_private_message\PrivateMessageHelper
    */
-  private $languageManager;
+  private $privateMessageHelper;
 
   /**
    * {@inheritdoc}
@@ -56,8 +56,8 @@ class PrivateMessageForm extends FormBase {
     return new static(
       $container->get('eic_user.helper'),
       $container->get('config.factory'),
-      $container->get('plugin.manager.mail'),
-      $container->get('language_manager'),
+      $container->get('eic_messages.message_bus'),
+      $container->get('eic_private_message.helper')
     );
   }
 
@@ -65,24 +65,24 @@ class PrivateMessageForm extends FormBase {
    * PrivateMessageForm constructor.
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
-   *   The EIC User herlper service.
+   *   The EIC User helper service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Mail\MailManager $mail_manager
-   *   The mail manager.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
+   * @param MessageBus $bus
+   *   The message bus service.
+   * @param \Drupal\eic_private_message\PrivateMessageHelper $private_message_helper
+   *   The private message helper service.
    */
   public function __construct(
     UserHelper $user_helper,
     ConfigFactory $config_factory,
-    MailManager $mail_manager,
-    LanguageManager $language_manager
+    MessageBus $bus,
+    PrivateMessageHelper $private_message_helper
   ) {
     $this->userHelper = $user_helper;
     $this->systemSettings = $config_factory->get('system.site');
-    $this->mailManager = $mail_manager;
-    $this->languageManager = $language_manager;
+    $this->bus = $bus;
+    $this->privateMessageHelper = $private_message_helper;
   }
 
   /**
@@ -94,37 +94,43 @@ class PrivateMessageForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_id = $this->getRouteMatch()->getParameter('user');
     $group = $this->getRouteMatch()->getParameter('group');
-
     if ($user_id) {
       $user = User::load($user_id);
 
       if (!$user instanceof UserInterface) {
-        $this->messenger()->addError($this->t(
-          'User not found.',
-          [],
-          ['context' => 'eic_private_message']
-        ));
+        $this->messenger()->addError(
+          $this->t(
+            'User not found.',
+            [],
+            ['context' => 'eic_private_message']
+          )
+        );
 
         return [];
       }
 
-      if (!$user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value) {
-        $this->messenger()->addError($this->t(
-          'The user you are trying to contact has disabled private messages from its profile. The operation you are requesting cannot be completed.',
-          [],
-          ['context' => 'eic_private_message']
-        ));
+      if (!$this->privateMessageHelper->userHasPrivateMessageEnabled($user)) {
+        $this->messenger()->addError(
+          $this->t(
+            'The user you are trying to contact has disabled private messages from its profile. The operation you are requesting cannot be completed.',
+            [],
+            ['context' => 'eic_private_message']
+          )
+        );
 
         return [];
       }
     }
+
+    $form['title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Contact @user', ['@user' => $this->userHelper->getFullName($user)])
+    ];
 
     $form['from'] = [
       '#type' => 'textfield',
@@ -178,6 +184,7 @@ class PrivateMessageForm extends FormBase {
     $form['send_copy'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Send me a copy', [], ['context' => 'eic_private_message']),
+      '#default_value' => TRUE,
     ];
 
     $form['recipients'] = [
@@ -200,8 +207,6 @@ class PrivateMessageForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-    $current_langauge = $this->languageManager->getCurrentLanguage()->getId();
-
     $recipients = $values['recipients'];
 
     if (array_key_exists('to_recipients', $values)) {
@@ -212,42 +217,31 @@ class PrivateMessageForm extends FormBase {
       }, $recipients);
     }
 
-    $recipients = array_map(function (int $id) {
-      $user = User::load($id);
+    foreach ($recipients as $recipient) {
+      $this->bus->dispatch([
+        'template' => 'notify_contact_user',
+        'field_sender' => ['target_id' => $this->currentUser()->id()],
+        'field_body' => $form_state->getValue('body'),
+        'field_subject' => $form_state->getValue('subject'),
+        'uid' => $recipient,
+      ]);
+    }
 
-      return $user instanceof UserInterface ? $user->getEmail() : '';
-    }, $recipients);
-
-    $mail = $this->mailManager->mail(
-      'eic_private_message',
-      PrivateMessage::PRIVATE_MESSAGE_USER_MAIL_KEY,
-      implode($recipients, ','),
-      $current_langauge,
-      $values
-    );
-
-    if ($mail['result']) {
-      $this->messenger()->addMessage($this->t(
+    $this->messenger()->addMessage(
+      $this->t(
         'Your message was successfully sent!',
         [],
         ['context' => 'eic_private_message']
-      ));
-    }
+      )
+    );
 
     if ($values['send_copy']) {
-      $values['subject'] = $this->t(
-        'Self copy: @subject',
-        ['@subject' => $values['subject']],
-        ['eic_private_message']
-      );
-
-      $this->mailManager->mail(
-        'eic_private_message',
-        PrivateMessage::PRIVATE_MESSAGE_USER_MAIL_KEY,
-        $this->currentUser()->getEmail(),
-        $current_langauge,
-        $values
-      );
+      $this->bus->dispatch([
+        'template' => 'notify_contact_user_copy',
+        'field_body' => $form_state->getValue('body'),
+        'field_subject' => $form_state->getValue('subject'),
+        'uid' => $this->currentUser()->id(),
+      ]);
     }
   }
 

@@ -3,13 +3,19 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -35,15 +41,23 @@ class ProcessorGlobal extends DocumentProcessor {
   private $urlGenerator;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  private $em;
+
+  /**
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
-   * @param FileUrlGeneratorInterface $urlGenerator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $urlGenerator
+   * @param EntityTypeManager $em
    */
   public function __construct(
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
-    FileUrlGeneratorInterface $urlGenerator
+    FileUrlGeneratorInterface $urlGenerator,
+    EntityTypeManager $em
   ) {
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
     $this->urlGenerator = $urlGenerator;
+    $this->em = $em;
   }
 
   /**
@@ -62,9 +76,9 @@ class ProcessorGlobal extends DocumentProcessor {
     $datasource = $fields['ss_search_api_datasource'];
     $changed = 0;
     $language = t('English', [], ['context' => 'eic_search'])->render();
-
-    // Set by default parent group to TRUE and method processGroupContentData will update it.
-    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+    $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
+    $last_moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
+    $is_group_parent_published = 1;
 
     switch ($datasource) {
       case 'entity:node':
@@ -77,7 +91,11 @@ class ProcessorGlobal extends DocumentProcessor {
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
-        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
+        $moderation_state = $fields['ss_content_moderation_state'];
+        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists(
+          'ss_content_last_name',
+          $fields
+        ) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
           t('No name', [], ['context' => 'eic_search']);
         $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
@@ -95,30 +113,57 @@ class ProcessorGlobal extends DocumentProcessor {
           $user_url = $user instanceof UserInterface ? $user->toUrl()
             ->toString() : '';
         }
+        $node = Node::load($fields['its_content_nid']);
+        if ($node instanceof NodeInterface) {
+          if (
+            $node->hasField('field_language') &&
+            !$node->get('field_language')->isEmpty() &&
+            $language_entity = $node->get('field_language')->first()->entity
+          ) {
+            $language = $language_entity->label();
+          }
+
+          $last_moderation_state = $this->getLastRevisionModerationState($node);
+        }
         break;
       case 'entity:group':
         if (array_key_exists('ss_group_topic_name', $fields)) {
           $topics = $fields['ss_group_topic_name'];
-        } else if (array_key_exists('sm_group_topic_name', $fields)) {
-          $topics = $fields['sm_group_topic_name'];
+        }
+        else {
+          if (array_key_exists('sm_group_topic_name', $fields)) {
+            $topics = $fields['sm_group_topic_name'];
+          }
         }
 
+        $changed = $fields['ds_aggregated_changed'];
         $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
+        $is_group_parent_published = (int) $status;
         $geo = $fields['ss_group_field_vocab_geo_string'] ?? '';
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
+        $moderation_state = $fields['ss_group_moderation_state'];
         $this->addOrUpdateDocumentField(
           $document,
           'its_group_id_integer',
           $fields,
           $group_id
         );
-        $document->addField('ss_global_group_parent_id', $group_id);
+        $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
+        if ($group instanceof GroupInterface) {
+          $last_moderation_state = $this->getLastRevisionModerationState($group);
+          $this->addOrUpdateDocumentField(
+            $document,
+            'its_content_uid',
+            $fields,
+            $group->getOwnerId()
+          );
+        }
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
           $fullname = realname_load($owner);
 
@@ -128,6 +173,7 @@ class ProcessorGlobal extends DocumentProcessor {
             $fields,
             UserHelper::getUserAvatar($owner)
           );
+          $user_url = $owner->toUrl()->toString();
         }
         break;
       case 'entity:message':
@@ -137,12 +183,24 @@ class ProcessorGlobal extends DocumentProcessor {
           $user_url = $user instanceof UserInterface ? $user->toUrl()
             ->toString() : '';
         }
+        $fullname = $fields['ss_author_first_name'] . ' ' . $fields['ss_author_last_name'];
         $status = TRUE;
         $type = $fields['ss_type'];
+        $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];
+        $date = $fields['ds_created'];
+        $title = $fields['ss_title'];
         break;
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
         $fullname = realname_load($user);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'tm_user_mail',
+          $fields,
+          $fields['ss_user_mail']
+        );
+
         $status = TRUE;
         break;
     }
@@ -171,8 +229,8 @@ class ProcessorGlobal extends DocumentProcessor {
         return json_encode([
           'id' => $slide->id(),
           'size' => $file->getSize(),
-          'uri' => file_url_transform_relative(file_create_url($destination_uri)),
-          'uri_160' => file_url_transform_relative(file_create_url($destination_uri_160)),
+          'uri' => $this->urlGenerator->transformRelative(file_create_url($destination_uri)),
+          'uri_160' => $this->urlGenerator->transformRelative(file_create_url($destination_uri_160)),
           'legend' => $slide->get('field_gallery_slide_legend')->value,
         ]);
       }, $slides_id);
@@ -182,6 +240,7 @@ class ProcessorGlobal extends DocumentProcessor {
 
     //We need to use only one field key for the global search on the FE side
     $document->addField('tm_global_title', $title);
+    $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField(
       'ss_global_content_type_label',
@@ -196,6 +255,21 @@ class ProcessorGlobal extends DocumentProcessor {
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
+    $this->addOrUpdateDocumentField($document, 'ss_global_moderation_state', $fields, $moderation_state);
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_global_last_moderation_state',
+      $fields,
+      $last_moderation_state
+    );
+
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_global_group_parent_published',
+      $fields,
+      $is_group_parent_published
+    );
 
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);
@@ -226,6 +300,34 @@ class ProcessorGlobal extends DocumentProcessor {
         $views ? $views->getTotalCount() : 0
       );
     }
+  }
+
+  /**
+   * Return the last moderation state of an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *  The entity.
+   *
+   * @return string
+   *   The moderation state.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getLastRevisionModerationState(EntityInterface $entity): string {
+    $entity_type = $entity->getEntityTypeId();
+    if ('group' === $entity_type) {
+      $last_revision_id = $entity->getRevisionId();
+    }
+    else {
+      $revision_ids = $this->em->getStorage($entity_type)->revisionIds($entity);
+      $last_revision_id = end($revision_ids);
+    }
+
+    $last_revision = $entity->getRevisionId() !== $last_revision_id ?
+      $this->em->getStorage($entity_type)->loadRevision($last_revision_id) :
+      $this->em->getStorage($entity_type)->loadRevision($entity->getRevisionId());
+
+    return $last_revision->get('moderation_state')->value;
   }
 
 }

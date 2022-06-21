@@ -1,0 +1,43 @@
+uuid: 4b53fb56-3432-40c3-81e1-3cd5ee2019da
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - core.entity_view_mode.comment.notification_teaser
+    - field.field.comment.node_comment.comment_body
+    - field.field.comment.node_comment.field_comment_attachment
+    - field.field.comment.node_comment.field_comment_deletion_date
+    - field.field.comment.node_comment.field_comment_is_soft_deleted
+    - field.field.comment.node_comment.field_tagged_users
+  module:
+    - text
+id: comment.node_comment.notification_teaser
+targetEntityType: comment
+bundle: node_comment
+mode: notification_teaser
+content:
+  comment_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_tagged_users:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_comment_attachment: true
+  field_comment_deletion_date: true
+  field_comment_is_archived: true
+  field_comment_is_soft_deleted: true
+  flag_like_comment: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

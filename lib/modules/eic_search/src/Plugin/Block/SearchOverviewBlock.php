@@ -6,6 +6,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CssCommand;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -13,7 +14,9 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
@@ -126,6 +129,18 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $sources[get_class($source)] = $source->getLabel();
     }
 
+    $form['label_display'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display title'),
+      '#default_value' => FALSE,
+      '#return_value' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      '#attributes' => [
+        'class' => [
+          'hidden',
+        ],
+      ],
+    ];
+
     $form['search'] = [
       '#type' => 'details',
       '#title' => $this->t('Search overview', [], ['context' => 'eic_search']),
@@ -188,6 +203,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       return $sort;
     });
 
+    $facets = array_keys($facets);
+    $sorts = array_keys($sorts);
+
     $source_type = $this->configuration['source_type'];
     $sources = $this->sourcesCollector->getSources();
 
@@ -235,12 +253,26 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         }, $admins),
       ];
     }
+    $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
+      'eic_statistics.get_node_statistics'
+    )->toString();
+
+    $default_sort = $source->getDefaultSort();
+
+    if (
+      $current_group_route instanceof GroupInterface &&
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]
+    ) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP;
+    }
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
         $user_group_roles
       ),
+      'label_my_groups' => $source->getLabelFilterMyGroups(),
+      'open_registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
       'is_group_admin' => array_key_exists(
         EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
         $user_group_roles
@@ -249,7 +281,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $account
         ),
       'source_bundle_id' => $source->getEntityBundle(),
-      'default_sorting_option' => $source->getDefaultSort(),
+      'default_sorting_option' => $default_sort,
       'filter_label' => [
         'ss_global_content_type' => [
           'news' => t('News article', [], ['context' => 'eic_search']),
@@ -267,9 +299,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#theme' => 'search_overview_block',
         '#cache' => ['contexts' => ['url.path', 'url.query_args']],
         '#manager_roles' => $group_admins,
-        '#facets' => array_keys($facets),
-        '#sorts' => array_keys($sorts),
+        '#facets' => $facets,
+        '#sorts' => $sorts,
         '#prefilters' => $this->extractFilterFromUrl(),
+        '#prefilter_my_interests' => $source instanceof ActivityStreamSourceType,
         '#search_string' => $search_value,
         '#source_class' => $source instanceof SourceTypeInterface ? get_class(
           $source
@@ -291,8 +324,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           EICGroupsHelper::GROUP_OWNER_ROLE,
           $user_group_roles
         ),
+        '#enable_registration_filter' =>
+          $source instanceof SourceTypeInterface &&
+          !empty($source->getRegistrationDateIntervalField()),
         '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
-        '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
+        '#load_more_number' => $source->getLoadMoreBatchItems(),
         '#is_route_group_search_results' =>
           (int) ('eic_overviews.groups.overview_page.search' === $route_name),
         '#enable_invite_user_action' =>
@@ -309,9 +345,18 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
           'refine' => $this->t('Refine your search', [], ['context' => 'eic_group']),
           'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
-          'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
+          'search_placeholder' => $this->t('Search here', [], ['context' => 'eic_group']),
+          'search_text' => $this->t(
+            'Search for ' . (new \ReflectionClass($source))->getShortName(),
+            [],
+            ['context' => 'eic_group']
+          ),
+          'date_filter_label' => $this->t('Dates', [], ['context' => 'eic_group']),
+          'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
+            'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
+            'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
           ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
@@ -362,6 +407,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
+          'archived' => $this->t('Archived', [], ['context' => 'eic_group']),
+          'restricted' => $this->t('Restricted', [], ['context' => 'eic_group']),
           'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
           'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
           'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
@@ -371,9 +418,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
-          'collapse' => $this->t('Collapse', [], ['context' => 'eic_group']),
+          'collapse' => $this->t('Show less', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
-          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group'])
+          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group']),
         ],
       ];
   }
@@ -412,13 +459,13 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources_collected = $this->sourcesCollector->getSources();
     foreach ($sources_collected as $source) {
       $response->addCommand(
-        new CssCommand('.source-' . $source->getEntityBundle(), $css)
+        new CssCommand('.source-' . $source->getUniqueId(), $css)
       );
     }
 
     $response->addCommand(
       new CssCommand(
-        '.source-' . $current_source->getEntityBundle(),
+        '.source-' . $current_source->getUniqueId(),
         ['display' => 'inline-block']
       )
     );
@@ -430,7 +477,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    parent::blockSubmit($form, $form_state);
     $values = $form_state->getValues();
 
     if (!array_key_exists('search', $values)) {
@@ -442,12 +488,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->configuration['sort_options'] = [];
 
     $current_source = $this->getCurrentSource($values['search']['source_type']);
-    $current_bundle = $current_source->getEntityBundle();
 
     $this->setConfiguration([
       'source_type' => $values['search']['source_type'],
-      'facets' => $values['search']['configuration']['filter'][$current_bundle]['facets'],
-      'sort_options' => $values['search']['configuration']['sorts'][$current_bundle]['sort_options'],
+      'facets' => $values['search']['configuration']['filter'][$current_source->getUniqueId()]['facets'],
+      'sort_options' => $values['search']['configuration']['sorts'][$current_source->getUniqueId()]['sort_options'],
       'enable_search' => $values['search']['configuration']['enable_search'],
       'page_options' => $values['search']['configuration']['pagination']['page_options'],
       'prefilter_group' => $values['search']['configuration']['prefilter_group'],
@@ -461,6 +506,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
   }
+
 
   /**
    * Extracting filters values from the URL.
@@ -557,7 +603,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     /** @var SourceTypeInterface $source */
     foreach ($this->sourcesCollector->getSources() as $source) {
-      $form['search']['configuration']['filter'][$source->getEntityBundle()]['facets'] = [
+      $form['search']['configuration']['filter'][$source->getUniqueId()]['facets'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t(
           'Facets for @label',
@@ -573,13 +619,13 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'source-type',
-            'source-' . $source->getEntityBundle(),
+            'source-' . $source->getUniqueId(),
             $current_source === $source ?: 'hidden',
           ],
         ],
       ];
 
-      $form['search']['configuration']['sorts'][$source->getEntityBundle()]['sort_options'] = [
+      $form['search']['configuration']['sorts'][$source->getUniqueId()]['sort_options'] = [
         '#type' => 'checkboxes',
         '#default_value' => $this->configuration['sort_options'],
         '#title' => $this->t(
@@ -595,7 +641,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'source-type',
-            'source-' . $source->getEntityBundle(),
+            'source-' . $source->getUniqueId(),
             $current_source === $source ?: 'hidden',
           ],
         ],
@@ -621,7 +667,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $form['search']['configuration']['date']['enable_date_filter'] = [
       '#type' => 'checkbox',
-      '#default_value' => $this->configuration['enable_date_filter'],
+      '#default_value' => $this->configuration['enable_date_filter'] ?? FALSE,
       '#title' => $this->t('Enable date filter', [], ['context' => 'eic_search']
       ),
       '#description' => $this->t(

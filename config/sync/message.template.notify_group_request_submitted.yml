@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - filter.format.plain_text
   module:
     - eic_messages
@@ -14,14 +15,14 @@ label: 'NOTIFY :: MT01 :: Group request submitted'
 description: ''
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    value: 'New [message:field_group_ref:entity:type] request'
     format: plain_text
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>Dear Administrator,</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:group_owner:url]\"><u>[message:field_group_ref:entity:group_owner:display-name]</u></a>&nbsp;requested a new&nbsp;[message:field_group_ref:entity:type]:&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p>To edit the status of this [message:field_group_ref:entity:type]:&nbsp;<a href=\"[message:field_group_ref:entity:edit-url]\"><u>manage pending [message:field_group_ref:entity:type]</u></a></p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
 settings:
   'token options':
-    clear: false
+    clear: true
     'token replace': true
   purge_override: false
   purge_methods: {  }

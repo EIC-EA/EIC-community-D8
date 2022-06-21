@@ -4,6 +4,7 @@ namespace Drupal\eic_message_subscriptions;
 
 use Drupal\eic_messages\MessageIdentifierInterface;
 use Drupal\eic_messages\MessageTemplateTypes;
+use Drupal\eic_user\NotificationTypes;
 use Drupal\message\MessageTemplateInterface;
 
 /**
@@ -21,9 +22,29 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
 
   const GROUP_CONTENT_UPDATED = 'sub_group_content_updated';
 
+  const GROUP_CONTENT_SHARED = 'sub_group_content_shared';
+
+  const NEW_EVENT_PUBLISHED = 'sub_site_event_pub_interest';
+
   const NODE_PUBLISHED = 'sub_content_interest_published';
 
   const CONTENT_RECOMMENDED = 'sub_new_content_recommendation';
+
+  /**
+   * Categorises each subscription message using notification types defined in eic_user.
+   * These messages are supposed to be "unsubscribable/deniable". Meaning that the user can
+   * choose to not receive them.
+   */
+  const SUBSCRIPTION_MESSAGE_CATEGORIES = [
+    self::NEW_COMMENT_REPLY => NotificationTypes::COMMENTS_NOTIFICATION_TYPE,
+    self::NEW_COMMENT => NotificationTypes::COMMENTS_NOTIFICATION_TYPE,
+    self::NEW_GROUP_CONTENT_PUBLISHED => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+    self::GROUP_CONTENT_UPDATED => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+    self::NODE_PUBLISHED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
+    self::CONTENT_RECOMMENDED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
+    self::NEW_EVENT_PUBLISHED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
+    self::GROUP_CONTENT_SHARED => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+  ];
 
   /**
    * Get message subscriptions events as array.
@@ -39,6 +60,7 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
       self::GROUP_CONTENT_UPDATED,
       self::NODE_PUBLISHED,
       self::CONTENT_RECOMMENDED,
+      self::NEW_EVENT_PUBLISHED,
     ];
   }
 
@@ -50,14 +72,13 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
 
     // Get the message template type.
     $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
-
     if ($message_template_type != MessageTemplateTypes::SUBSCRIPTION) {
       return FALSE;
     }
 
     switch ($message_template->id()) {
-
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
+      case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
         $primary_keys = [
           'field_event_executing_user',
           'field_referenced_node',
@@ -67,6 +88,15 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
     }
 
     return $primary_keys;
+  }
+
+  /**
+   * @param string $type
+   *
+   * @return string|null
+   */
+  public static function getNotificationCategory(string $type): ?string {
+    return self::SUBSCRIPTION_MESSAGE_CATEGORIES[$type] ?? NULL;
   }
 
 }

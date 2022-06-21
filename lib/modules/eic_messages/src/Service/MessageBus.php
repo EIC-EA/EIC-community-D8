@@ -35,14 +35,24 @@ class MessageBus implements MessageBusInterface {
   /**
    * @param \Drupal\eic_messages\Util\QueuedMessageChecker $queued_message_checker
    */
-  public function __construct(QueuedMessageChecker $queued_message_checker) {
+  public function __construct(
+    QueuedMessageChecker $queued_message_checker
+  ) {
     $this->queuedMessageChecker = $queued_message_checker;
   }
 
   /**
-   * @param \Drupal\message\MessageInterface|array $message
+   * {@inheritdoc}
    */
-  public function dispatch($message): void {
+  public function dispatch(
+    $message,
+    array $message_options = []
+  ): void {
+    // If we are running migrations, stop saving messages and sending notifications.
+    if (eic_migrate_is_migration_running()) {
+      return;
+    }
+
     if (!$message instanceof MessageInterface) {
       $message = Message::create($message);
     }
@@ -64,6 +74,7 @@ class MessageBus implements MessageBusInterface {
       $message = [
         'stamps' => $handler->getStamps($message),
         'entity' => $message,
+        'options' => $message_options,
       ];
 
       $handler->handle($message);

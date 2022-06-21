@@ -1,0 +1,53 @@
+uuid: 1ee580d2-fec5-4676-9053-2351b55bad27
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group_content.organisation-group_invitation.field_invitation_counter
+    - field.field.group_content.organisation-group_invitation.group_roles
+    - field.field.group_content.organisation-group_invitation.invitation_status
+    - field.field.group_content.organisation-group_invitation.invitee_mail
+    - group.content_type.organisation-group_invitation
+id: group_content.organisation-group_invitation.default
+targetEntityType: group_content
+bundle: organisation-group_invitation
+mode: default
+content:
+  field_invitation_counter:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: -1
+    region: content
+  group_roles:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: -4
+    region: content
+  invitation_status:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: -2
+    region: content
+  invitee_mail:
+    type: email_mailto
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: -3
+    region: content
+hidden:
+  entity_id: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

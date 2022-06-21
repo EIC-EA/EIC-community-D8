@@ -1,11 +1,13 @@
-uuid: 3ac956f6-4ed2-48a2-844b-fefd560eb812
+uuid: 3eaa3cbb-78d5-4595-9d1e-36b80a2396ed
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.group.field_locations
     - group.type.organisation
-    - taxonomy.vocabulary.geo
+    - paragraphs.paragraphs_type.organisation_location
+  module:
+    - entity_reference_revisions
 id: group.organisation.field_locations
 field_name: field_locations
 entity_type: group
@@ -17,13 +19,46 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:taxonomy_term'
+  handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      geo: geo
-    sort:
-      field: name
-      direction: asc
-    auto_create: false
-    auto_create_bundle: ''
-field_type: entity_reference
+      organisation_location: organisation_location
+    negate: 0
+    target_bundles_drag_drop:
+      announcement:
+        weight: 13
+        enabled: false
+      banner:
+        weight: 14
+        enabled: false
+      contributor:
+        weight: 15
+        enabled: false
+      cta_tile:
+        weight: 16
+        enabled: false
+      full_media_content:
+        weight: 17
+        enabled: false
+      full_text_content:
+        weight: 18
+        enabled: false
+      gallery_slide:
+        weight: 19
+        enabled: false
+      organisation_location:
+        weight: 20
+        enabled: true
+      organisation_member:
+        weight: 21
+        enabled: false
+      quote:
+        weight: 22
+        enabled: false
+      text_and_media_content:
+        weight: 23
+        enabled: false
+      tiles_content:
+        weight: 24
+        enabled: false
+field_type: entity_reference_revisions

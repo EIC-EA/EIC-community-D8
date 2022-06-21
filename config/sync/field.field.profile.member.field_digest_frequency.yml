@@ -1,0 +1,23 @@
+uuid: e842231f-11c3-4091-a741-1f35eefb7f66
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_digest_frequency
+    - profile.type.member
+  module:
+    - options
+id: profile.member.field_digest_frequency
+field_name: field_digest_frequency
+entity_type: profile
+bundle: member
+label: 'Digest Frequency'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: weekly
+default_value_callback: ''
+settings: {  }
+field_type: list_string

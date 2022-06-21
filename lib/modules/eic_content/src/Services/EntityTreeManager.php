@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_content\Services;
 
-use Drupal\Core\Database\Database;
+use Drupal\eic_content\TreeWidget\TreeWidgetGroupProperty;
+use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
+use Drupal\eic_content\TreeWidget\TreeWidgetUserProperty;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -76,43 +78,18 @@ class EntityTreeManager {
    */
   public function search($target_entity, $target_bundle, $text, $ignored_values, bool $disable_top_selection = FALSE) {
     //We need to ignore values in suggestions that are already selected by the user
-    $ignored_tids = array_map(function($selected_value) {
+    $ignored_tids = array_map(function ($selected_value) {
       $selected_value = json_decode($selected_value, TRUE);
 
       return $selected_value['tid'];
     }, $ignored_values);
 
-    if ($target_entity === 'user') {
-      $connection = Database::getConnection();
+    $tree_property = $this->getTreeWidgetProperty($target_entity);
 
-      $query = $connection->select('users_field_data', 'fd');
-      $query->join('realname', 'rn', 'fd.uid = rn.uid');
-      $query->fields('rn', ['realname']);
-      $query->fields('fd', ['uid', 'mail']);
-
-      if (!empty($ignored_tids)) {
-        $query->condition('fd.uid', $ignored_tids, 'NOT IN');
-      }
-
-      $query->distinct(TRUE);
-
-      $like_match = '%' . $query->escapeLike($text) . '%';
-
-      $orCondition = $query->orConditionGroup()
-        ->condition('fd.mail',  $like_match, 'LIKE')
-        ->condition('rn.realname', $like_match, 'LIKE');
-
-      $query->condition($orCondition);
-      $entities = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-      return array_map(function ($user) {
-        return [
-          'name' => $user['realname'] . ' ' . '('. $user['mail'] .')',
-          'tid' => $user['uid'],
-          'parent' => 0,
-        ];
-      }, $entities);
-    } else {
+    if ($target_entity !== 'taxonomy_term') {
+      return $tree_property->generateSearchQueryResults($text);
+    }
+    else {
       $query = \Drupal::entityQuery($target_entity)
         ->condition('vid', $target_bundle)
         ->condition('name', $text, 'CONTAINS')
@@ -139,6 +116,112 @@ class EntityTreeManager {
         ];
       }, $entities);
     }
+  }
+
+  /**
+   * @param string $entity_type
+   *   The entity type.
+   *
+   * @return \Drupal\eic_content\TreeWidget\TreeWidgetProperties|null
+   *   Return the class link to the entity type.
+   */
+  public function getTreeWidgetProperty(string $entity_type): ?TreeWidgetProperties {
+    switch ($entity_type) {
+      case 'group':
+        return \Drupal::classResolver(TreeWidgetGroupProperty::class);
+        break;
+      case 'user':
+        return \Drupal::classResolver(TreeWidgetUserProperty::class);
+        break;
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Return all required translation keys for the Entity Tree Widget.
+   *
+   * @return array
+   */
+  public static function getTranslationsWidget(): array {
+    return [
+      'title' => t('Replies', [], ['context' => 'eic_groups'])->render(),
+      'no_results_title' => t(
+        "We haven't found any comments",
+        [],
+        ['context' => 'eic_group']
+      )->render(),
+      'no_results_body' => t(
+        'Please try again with another keyword',
+        [],
+        ['context' => 'eic_group']
+      )->render(),
+      'load_more' => t('Load more', [], ['context' => 'eic_groups'])->render(),
+      'edit' => t('Edit', [], ['context' => 'eic_groups'])->render(),
+      'options' => t('Options', [], ['context' => 'eic_groups'])->render(),
+      'reply_to' => t('Reply', [], ['context' => 'eic_groups'])->render(),
+      'in_reply_to' => t('in reply to', [], ['context' => 'eic_groups']
+      )->render(),
+      'reply' => t('Reply', [], ['context' => 'eic_groups'])->render(),
+      'submit' => t('Submit', [], ['context' => 'eic_groups'])->render(),
+      'reason' => t('Reason', [], ['context' => 'eic_groups'])->render(),
+      'comment_placeholder' => t(
+        'Type your message here...',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_edit_comment' => t(
+        'Edit comment',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_delete_comment' => t(
+        'Delete comment',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_request_delete' => t(
+        'Request deletion',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_request_archival' => t(
+        'Request archival',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'select_value' => t(
+        'Select a value',
+        [],
+        ['context' => 'eic_search']
+      )->render(),
+      'match_limit' => t(
+        'You can select only <b>@match_limit</b> top-level items.',
+        ['@match_limit' => 0],
+        ['context' => 'eic_search']
+      )->render(),
+      'search' => t('Search', [], ['context' => 'eic_search'])->render(),
+      'your_values' => t(
+        'Your selected values',
+        [],
+        ['context' => 'eic_search']
+      )->render(),
+      'required_field' => t(
+        'This field is required',
+        [],
+        ['context' => 'eic_content']
+      )->render(),
+      'select_users' => t(
+        'Select users',
+        [],
+        ['context' => 'eic_content']
+      )->render(),
+      'modal_invite_users_title' => t(
+        'Invite user(s)',
+        [],
+        ['context' => 'eic_content']
+      )->render(),
+    ];
   }
 
   /**
@@ -182,4 +265,5 @@ class EntityTreeManager {
       }
     }
   }
+
 }

@@ -25,3 +25,21 @@ eic_admin.groups:
     _permission: 'access eic_admin dashboard'
   options:
     _admin_route: TRUE
+eic_admin.update_all_group_permissions:
+  path: '/admin/community/groups/rebuild-permissions'
+  defaults:
+    _title: 'Rebuild group permissions'
+    _form: '\Drupal\eic_admin\Form\UpdateAllGroupPermissionsForm'
+  requirements:
+    _permission: 'access eic_admin dashboard'
+  options:
+    _admin_route: TRUE
+eic_admin.actions_config:
+  path: '/admin/config/eic/actions-forms'
+  defaults:
+    _title: 'Action forms configuration'
+    _form: '\Drupal\eic_admin\Form\ActionFormsForm'
+  requirements:
+    _permission: 'access eic_admin dashboard'
+  options:
+    _admin_route: TRUE

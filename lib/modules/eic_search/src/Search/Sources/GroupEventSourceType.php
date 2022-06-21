@@ -137,7 +137,7 @@ class GroupEventSourceType extends SourceType {
    * {@inheritdoc}
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['ss_global_group_parent_id', 'itm_shared_groups'];
+    return ['its_global_group_parent_id', 'itm_shared_groups'];
   }
 
   /**
@@ -162,6 +162,13 @@ class GroupEventSourceType extends SourceType {
    */
   public function getDefaultSort(): array {
     return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'group-node-' . parent::getUniqueId();
   }
 
 }

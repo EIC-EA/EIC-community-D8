@@ -1,0 +1,25 @@
+<div class="ecl-container">
+  <form class="group-content-group-group-membership-group-join-form group-content-form ecl-form"
+    data-drupal-selector="group-content-group-group-membership-group-join-form"
+    action="/groups/group-1/join?destination=/groups/group-1/request-membership"
+    method="post"
+    id="group-content-group-group-membership-group-join-form"
+    accept-charset="UTF-8">
+    <div>
+      <h2>{{title}}</h2>
+      <p>{{description}}</p>
+    </div>
+    <div data-drupal-selector="edit-actions"
+      class="form-actions js-form-wrapper form-wrapper ecl-form-group"
+      id="edit-actions">
+        {% for action in actions %}
+          <input data-drupal-selector="edit-submit"
+          type="submit"
+          id="edit-submit"
+          name="op"
+          value="{{action.label}}"
+          class="button button--{{action.type}} js-form-submit form-submit ecl-button ecl-button--{{action.type}}" />
+        {% endfor %}
+    </div>
+  </form>
+</div>

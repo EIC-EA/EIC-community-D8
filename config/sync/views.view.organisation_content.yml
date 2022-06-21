@@ -81,7 +81,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 4
+          items_per_page: 3
       exposed_form:
         type: basic
         options:
@@ -96,12 +96,8 @@ display:
         type: none
         options: {  }
       cache:
-        type: time
-        options:
-          results_lifespan: 300
-          results_lifespan_custom: 0
-          output_lifespan: 300
-          output_lifespan_custom: 0
+        type: none
+        options: {  }
       empty: {  }
       sorts: {  }
       arguments:
@@ -373,6 +369,33 @@ display:
     position: 3
     display_options:
       title: 'Events attending'
+      sorts:
+        event_weight_state:
+          id: event_weight_state
+          table: search_api_index_global
+          field: event_weight_state
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+        content_field_date_range:
+          id: content_field_date_range
+          table: search_api_index_global
+          field: content_field_date_range
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
       filters:
         content_type:
           id: content_type
@@ -500,6 +523,7 @@ display:
           1: AND
       defaults:
         title: false
+        sorts: false
         filters: false
         filter_groups: false
       display_description: ''
@@ -519,6 +543,22 @@ display:
     display_plugin: block
     position: 1
     display_options:
+      sorts:
+        content_created:
+          id: content_created
+          table: search_api_index_global
+          field: content_created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+      defaults:
+        sorts: false
       display_description: ''
       display_extenders: {  }
     cache_metadata:

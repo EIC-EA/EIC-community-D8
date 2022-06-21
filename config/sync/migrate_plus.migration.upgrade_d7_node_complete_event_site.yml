@@ -1,0 +1,363 @@
+uuid: d26058a3-0918-4d7c-bdf1-c7362b8442e5
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_event_site
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Event site) to Group (Event)'
+source:
+  plugin: eic_d7_node_event_complete_with_smed_ids
+  node_type: event_site
+  track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_topic
+    - c4m_vocab_language
+    - c4m_vocab_event_type
+  constants:
+    FACEBOOK_LINK_TYPE: facebook
+    LINKEDIN_LINK_TYPE: linkedin
+    TWITTER_LINK_TYPE: twitter
+  batch_size: 100
+process:
+  id:
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_node_complete_event_site
+      source: tnid
+    -
+      plugin: node_complete_node_lookup
+  langcode:
+    -
+      plugin: default_value
+      default_value: en
+  label: title
+  uid:
+    -
+      plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status: status
+  created: created
+  changed: timestamp
+  revision_user:
+    -
+      plugin: migration_lookup
+      source: revision_uid
+      migration:
+        - upgrade_d7_user
+  revision_log_message: log
+  revision_created: timestamp
+  moderation_state:
+    -
+      plugin: static_map
+      source: c4m_og_status
+      map:
+        pending: pending
+        draft: draft
+        published: published
+        archived: archived
+        deleted: archived
+  _social_link_facebook:
+    -
+      plugin: get
+      source:
+        - constants/FACEBOOK_LINK_TYPE
+        - c4m_facebook/0/url
+  _social_link_twitter:
+    -
+      plugin: get
+      source:
+        - constants/TWITTER_LINK_TYPE
+        - c4m_twitter/0/url
+  _field_social_links:
+    -
+      plugin: get
+      source:
+        - '@_social_link_facebook'
+        - '@_social_link_twitter'
+  field_social_links:
+    -
+      plugin: sub_process
+      source: '@_field_social_links'
+      process:
+        social:
+          -
+            plugin: get
+            source: '0'
+        link:
+          -
+            plugin: str_replace
+            source: '1'
+            regex: true
+            search: '/^((https?:\/\/)?(www\.)?([a-zA-Z-]+\.)?(facebook|linkedin|kedin|linkediin|twitter)(\.com)?\/)/'
+            replace: ''
+  field_vocab_event_type:
+    -
+      plugin: sub_process
+      source: c4m_vocab_event_type
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_event_types
+  field_date_range:
+    -
+      plugin: sub_process
+      source: c4m_datetime_end
+      process:
+        value:
+          plugin: format_date
+          source: value
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d\TH:i:s'
+        end_value:
+          plugin: format_date
+          source: value2
+          from_format: 'Y-m-d H:i:s'
+          to_format: 'Y-m-d\TH:i:s'
+  field_body/0/format:
+    -
+      plugin: callback
+      source: c4m_body/0/format
+      callable:
+        - \Drupal\eic_migrate\Constants\Misc
+        - getTextFormat
+  field_body/0/value:
+    -
+      plugin: eic_html_sanitizer
+      source: c4m_body/0/value
+    -
+      plugin: eic_media_wysiwyg_filter
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
+  field_welcome_message: c4m_group_welcome_message
+  field_location:
+    -
+      plugin: addressfield
+      source: c4m_location_address
+  field_image:
+    -
+      plugin: sub_process
+      source: c4m_media
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
+  field_header_visual:
+    -
+      plugin: sub_process
+      source: c4m_banner
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
+  field_document_agenda:
+    -
+      plugin: multiple_values
+      source: c4m_document_agenda
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          -
+            plugin: node_complete_node_lookup
+  field_document_presentations:
+    -
+      plugin: multiple_values
+      source: c4m_document_presentation
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          -
+            plugin: node_complete_node_lookup
+  field_document_additional:
+    -
+      plugin: multiple_values
+      source: c4m_related_document
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          -
+            plugin: node_complete_node_lookup
+  field_related_groups:
+    -
+      plugin: sub_process
+      source: c4m_related_group
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_group
+          -
+            plugin: node_complete_node_lookup
+  field_vocab_language:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
+  field_vocab_geo:
+    -
+      plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
+  field_vocab_topics:
+    -
+      plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+  _c4m_left_column:
+    -
+      plugin: sub_process
+      source: c4m_left_column
+      process:
+        target_id: value
+        target_revision_id: revision_id
+  _c4m_right_column:
+    -
+      plugin: sub_process
+      source: c4m_right_column
+      process:
+        target_id: value
+        target_revision_id: revision_id
+  field_additional_content:
+    -
+      plugin: merge
+      source:
+        - '@_c4m_left_column'
+        - '@_c4m_right_column'
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+              - target_revision_id
+            migration:
+              - upgrade_d7_paragraph_text
+            no_stub: true
+          -
+            plugin: skip_on_empty
+            method: process
+          -
+            plugin: extract
+            index:
+              - '0'
+        target_revision_id:
+          -
+            plugin: migration_lookup
+            source:
+              - target_id
+              - target_revision_id
+            migration:
+              - upgrade_d7_paragraph_text
+            no_stub: true
+          -
+            plugin: skip_on_empty
+            method: process
+          -
+            plugin: extract
+            index:
+              - '1'
+  field_link:
+    -
+      plugin: field_link
+      uri_scheme: 'https://'
+      source: c4m_link
+  field_organised_by: c4m_organised_by
+  field_smed_id: c4m_event_dashboard_id
+  field_message_to_site_admin: field_message_to_site_admin
+  field_tag_line: c4m_project_tag_line
+destination:
+  plugin: 'entity_complete:group'
+  default_bundle: event
+  translations: true
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file_image_to_media
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_document
+    - smed_event_types
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+    - smed_spoken_languages
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3
+  optional: {  }

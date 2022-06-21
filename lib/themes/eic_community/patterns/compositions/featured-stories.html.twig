@@ -2,23 +2,23 @@
 {% set item_title_element = title_element|default('h4') %}
 
 <div class="ecl-featured-list ecl-featured-list--stories">
-  {% if title is not empty %}
-    {% if title is not empty %}
-      <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>
-    {% endif %}
-  {% endif %}
+	{% if title is not empty %}
+		{% if title is not empty %}
+			<{{title_element}} class="ecl-featured-list__title  {{ title_extra_classes }}">{{ title }}</{{title_element}}>
+		{% endif %}
+	{% endif %}
 
-  <div class="ecl-featured-list__items">
-    {% for item in items %}
-      <div class="ecl-featured-list__item">
-        <{{ item_title_element }} class="ecl-featured-list__item-title">
-          {% if item.path is not empty %}
-            <a href="{{ item.path }}">{{ item.title }}</a>
-          {% else %}
-            {{ item.title }}
-          {% endif %}
-        </{{ item_title_element }}>
-      </div>
-    {% endfor %}
-  </div>
+	<div class="ecl-featured-list__items">
+		{% for item in items %}
+			<div class="ecl-featured-list__item">
+				<{{item_title_element}} class="ecl-featured-list__item-title">
+					{% if item.path is not empty %}
+						<a href="{{ item.path }}">{{ item.title }}</a>
+					{% else %}
+						{{ item.title }}
+					{% endif %}
+				</{{item_title_element}}>
+			</div>
+		{% endfor %}
+	</div>
 </div>

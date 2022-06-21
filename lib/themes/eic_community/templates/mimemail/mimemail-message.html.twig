@@ -1,0 +1,456 @@
+{#
+/**
+ * @file
+ * Default template to format a HTML email using the Mime Mail module.
+ *
+ * Copy this file in your default theme folder to create a custom themed email.
+ * If you modify this template you MUST be sure to keep the html, body, and
+ * header tags. This template should produce a fully-formed HTML document.
+ * Failure to include these will result in a malformed email and possibly
+ * errors shown to the user when sending email.
+ *
+ * To override this template for all emails sent by a given module,
+ * rename this template to mimemail-messages--[module].html.twig.
+ *
+ * To override this template for a specific email sent by a given module,
+ * rename this template to mimemail-messages--[module]--[key].html.twig.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the body element of the message.
+ * - key: The message identifier.
+ * - module: The machine name of the sending module.
+ * - css: Internal style sheets.
+ * - recipient: The recipient of the message.
+ * - subject: The message subject.
+ * - body: The message body.
+ *
+ * @see template_preprocess_mimemail_message()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = module ? (key ? module ~ '-' ~ key) %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% block title %}
+    <title>{{ 'EASME - Executive Agency for SMEs' | t }}</title>
+    {% endblock %}
+
+    <!--[if mso]>
+    <noscript>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    </noscript>
+    <![endif]-->
+    <style type="text/css">
+        .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+    <style type="text/css">
+        @media only screen and (min-width:480px) {
+            .mj-column-px-600 {
+                width: 600px !important;
+                max-width: 600px;
+            }
+
+            .mj-column-px-120 {
+                width: 120px !important;
+                max-width: 120px;
+            }
+
+            .mj-column-per-50 {
+                width: 50% !important;
+                max-width: 50%;
+            }
+
+            .mj-column-per-100 {
+                width: 100% !important;
+                max-width: 100%;
+            }
+
+            .mj-column-px-24 {
+                width: 24px !important;
+                max-width: 24px;
+            }
+
+            .mj-column-px-576 {
+                width: 576px !important;
+                max-width: 576px;
+            }
+
+            .mj-column-px-52 {
+                width: 52px !important;
+                max-width: 52px;
+            }
+
+            .mj-column-px-450 {
+                width: 450px !important;
+                max-width: 450px;
+            }
+
+            .mj-column-px-124 {
+                width: 124px !important;
+                max-width: 124px;
+            }
+
+            .mj-column-px-400 {
+                width: 400px !important;
+                max-width: 400px;
+            }
+        }
+
+    </style>
+    <style media="screen and (min-width:480px)">
+        .moz-text-html .mj-column-px-600 {
+            width: 600px !important;
+            max-width: 600px;
+        }
+
+        .moz-text-html .mj-column-px-120 {
+            width: 120px !important;
+            max-width: 120px;
+        }
+
+        .moz-text-html .mj-column-per-50 {
+            width: 50% !important;
+            max-width: 50%;
+        }
+
+        .moz-text-html .mj-column-per-100 {
+            width: 100% !important;
+            max-width: 100%;
+        }
+
+        .moz-text-html .mj-column-px-24 {
+            width: 24px !important;
+            max-width: 24px;
+        }
+
+        .moz-text-html .mj-column-px-576 {
+            width: 576px !important;
+            max-width: 576px;
+        }
+
+        .moz-text-html .mj-column-px-52 {
+            width: 52px !important;
+            max-width: 52px;
+        }
+
+        .moz-text-html .mj-column-px-450 {
+            width: 450px !important;
+            max-width: 450px;
+        }
+
+        .moz-text-html .mj-column-px-124 {
+            width: 124px !important;
+            max-width: 124px;
+        }
+
+        .moz-text-html .mj-column-px-400 {
+            width: 400px !important;
+            max-width: 400px;
+        }
+
+    </style>
+    <style type="text/css">
+        @media only screen and (max-width:480px) {
+            table.mj-full-width-mobile {
+                width: 100% !important;
+            }
+
+            td.mj-full-width-mobile {
+                width: auto !important;
+            }
+        }
+
+    </style>
+    <style type="text/css">
+        .logo {
+            min-width: 120px;
+        }
+
+        .section_icon {
+            min-width: 23px;
+        }
+
+        .tag__content {
+            white-space: nowrap;
+        }
+
+        .tag {
+            width: initial !important;
+        }
+
+        @media screen and (max-device-width: 599px),
+        screen and (max-width: 599px) {
+            .user--little {
+                width: 52px !important;
+            }
+
+            .w100 {
+                width: 80% !important;
+            }
+
+            .tag {
+                width: initial !important;
+            }
+
+            .pre-footer,
+            .pre-footer>div {
+                text-align: center !important;
+            }
+
+            .btn {
+                margin: 0 0 10px !important;
+            }
+        }
+
+    <style type="text/css">
+      #outlook a {
+        padding: 0;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      table,
+      td {
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+      }
+
+      p {
+        display: block;
+        margin: 13px 0;
+      }
+
+      a {
+        font-weight: normal;
+        text-decoration: underline;
+        color: #004494
+      }
+
+      .cta__yellow {
+        display: inline-block;
+        width: 170px;
+        text-align: center;
+        background: #FFD617;
+        color: #000000;
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 120%;
+        margin: 0;
+        text-decoration: underline;
+        text-transform: none;
+        padding: 12px 15px;
+        mso-padding-alt: 0px;
+        border-radius: 0;
+      }
+
+      .cta__centered {
+        display: block;
+        margin: 0 auto;
+      }
+
+      .logo {
+          min-width: 120px;
+      }
+    </style>
+
+    {% block styles %}
+    {% endblock %}
+  </head>
+
+  {% block content %}
+  <body id="mimemail-body"{{ attributes.addClass(classes) }} style="font-size: 16px; word-spacing: normal;">
+  <!-- header -->
+  <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+  <div style="margin:0px auto;max-width:600px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+      <tbody>
+      <tr>
+        <td style="direction:ltr;font-size:0px;padding:0;text-align:left;">
+          <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="width:600px;" ><![endif]-->
+          <div class="mj-column-px-600 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;">
+            <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:bottom;width:120px;" ><![endif]-->
+            <div class="mj-column-px-120 mj-outlook-group-fix logo" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:bottom;width:0.2%;">
+              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:bottom;" width="100%">
+                <tbody>
+                <tr>
+                  <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                      <tbody>
+                      <tr>
+                        <td style="width:70px;">
+                          <img height="auto" alt="{{ 'European Innovation Council Community'|t }}" src="{{ base_path ~ eic_logo_path }}/logo--mute.svg" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="70">
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]></td><td style="vertical-align:middle;width:300px;" ><![endif]-->
+            <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:50%;">
+              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
+                <tbody>
+                <tr>
+                  <td align="left" class="header-title" style="font-weight: bold; color: #265D9E; font-size: 0px; padding: 0 25px 5px 0px; word-break: break-word;">
+                    <div style="font-family:Arial;font-size:11px;line-height:1.4;text-align:left;color:#265D9E;">
+                      European Innovation Council <br>
+                      <span class="light" style="font-weight: lighter;">Community</span>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]></td></tr></table><![endif]-->
+          </div>
+          <!--[if mso | IE]></td></tr></table><![endif]-->
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+  <div style="margin:0px auto;max-width:600px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+      <tbody>
+      <tr>
+        <td style="direction:ltr;font-size:0px;padding:0;text-align:center;">
+          <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+          <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+              <tbody>
+              <tr>
+                <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                  <p style="border-top:solid 1px #CFCFCF;font-size:1px;margin:0px auto;width:100%;">
+                  </p>
+                  <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #CFCFCF;font-size:1px;margin:0px auto;width:550px;" role="presentation" width="550px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!--[if mso | IE]></td></tr></table><![endif]-->
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <!--[if mso | IE]></td></tr></table><![endif]-->
+  <!-- end header -->
+
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+        <tr>
+          <td style="direction:ltr;font-size:0px;padding:10px 0px 0px;text-align:center;"><!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+            <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                <tbody>
+                <tr>
+                  <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                    <div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;">
+                      {{ body|raw }}
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]></td></tr></table><![endif]--></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- footer -->
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0;font-size:0;mso-line-height-rule:exactly;"><v:image style="border:0;mso-position-horizontal:center;position:absolute;top:0;width:600px;z-index:-3;" xmlns:v="urn:schemas-microsoft-com:vml" /><![endif]-->
+    <div style="margin:0 auto;max-width:600px;">
+      <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr style="vertical-align:top;">
+            <td style="background:#ffffff;background-position:center center;background-repeat:no-repeat;padding:0px;vertical-align:top;" height="0">
+              <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" style="width:600px;" width="600" ><tr><td style=""><![endif]-->
+              <div class="mj-hero-content" style="margin:0px auto;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;margin:0px;">
+                  <tbody>
+                    <tr>
+                      <td style>
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;margin:0px;">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                <p style="border-top:solid 5px #004494;font-size:1px;margin:0px auto;width:100%;">
+                                </p>
+                                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 5px #004494;font-size:1px;margin:0px auto;width:550px;" role="presentation" width="550px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                        <div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:center;color:#404040;"><a href="#" target="_blank" style="color:#404040; font-size: 14px">Manage notifications</a> &nbsp; | &nbsp; <a href="#" target="_blank" style="color:#404040; font-size: 14px">Unsubscribe</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+    <!-- end footer -->
+  </body>
+  {% endblock %}
+</html>

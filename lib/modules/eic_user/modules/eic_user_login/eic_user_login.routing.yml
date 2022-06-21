@@ -1,0 +1,7 @@
+eic_user_login.settings:
+  path: 'admin/config/eic/smed'
+  defaults:
+    _title: 'EIC SMED settings'
+    _form: 'Drupal\eic_user_login\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

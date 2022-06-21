@@ -75,7 +75,7 @@ class ProcessorVisibility extends DocumentProcessor {
 
     $original_object = $item->getOriginalObject()->getEntity();
 
-    $group = $this->groupsHelper->getGroupByEntity($original_object);
+    $group = $this->groupsHelper->getOwnerGroupByEntity($original_object);
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
@@ -162,8 +162,8 @@ class ProcessorVisibility extends DocumentProcessor {
 
             $term_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_conf'];
             $terms = array_map(function ($term_id) {
-              if (!empty($term_id)) {
-                $term = Term::load($term_id);
+              if (!empty($term_id['target_id'])) {
+                $term = Term::load($term_id['target_id']);
                 if (!$term) {
                   return -1;
                 }

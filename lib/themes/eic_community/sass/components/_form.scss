@@ -3,6 +3,42 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  &.has-sidebar {
+    max-width: initial;
+  }
+
+  & .has-sidebar {
+    max-width: initial;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+    @include ecl-media-breakpoint-up('lg') {
+      flex-direction: row;
+    }
+
+    & .ecl-form__sidebar {
+      width: 100%;
+      @include ecl-media-breakpoint-up('lg') {
+        width: 30%;
+        margin-left: $ecl-spacing-m;
+        background-color: $ecl-color-grey-5;
+        padding: $ecl-spacing-xs;
+        position: sticky;
+        top: 10px;
+      }
+
+      & .ecl-form-group > div {
+        margin-top: .5em !important;
+      }
+      & .ecl-form-group > div:last-child {
+        margin-bottom: 0 !important;
+      }
+      & .form-actions {
+        margin-top: 0;
+      }
+    }
+  }
 
   & .hidden {
     visibility: hidden;
@@ -14,10 +50,41 @@
     max-width: 100%;
   }
 
+  & .form-wrapper:not(details) {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: map-get($ecl-spacing, '2xl');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    & .fieldset-legend {
+      padding: 0 $ecl-spacing-s;
+    }
+  }
+
+  & .form-wrapper .form-wrapper{
+    margin-bottom: 0;
+  }
+
+  & textarea {
+    width: 100%;
+  }
+
   & ul {
-    font-size: .85em;
+    font-size: 0.85em;
     padding-left: 1em;
     color: $ecl-color-grey-50;
+  }
+
+  & div#input-divider {
+    padding: map-get($ecl-spacing, 'm') 0;
+    background-color: map-get($ecl-colors, 'blue-5');
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: map-get($ecl-colors, 'blue');
   }
 
   &,
@@ -84,21 +151,52 @@
     fill: ecl-typography('color', 'title');
   }
 
-  &__checkbox {
+  &__checkbox, & .ecl-checkbox {
     margin: map-get($ecl-spacing, 'l') 0;
   }
 
-  .ecl-form-group {
+  & .field-group-tab > .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
+    margin-top: 0 !important;
+    &.form-wrapper {
+      margin-bottom: map-get($ecl-spacing, '2xl');
+    }
+    & .form-wrapper, &.form-wrapper:last-child {
+      margin-bottom: 0;
+    }
+    & & {
+      margin: 0 !important;
+    }
+
 
     & > div {
       width: 100%;
     }
+
+    &[data-drupal-selector="edit-custom-restricted"]  {
+      margin-top: 0;
+    }
+
+    &[data-drupal-selector="edit-oec-group-visibility-option-container"] {
+      & .ecl-form-group {
+        margin: 0;
+      }
+    }
+
     &:not(fieldset) {
       display: flex;
       flex-direction: column;
       width: 100%;
       max-width: 100%;
+
+      & input {
+        margin: 0;
+      }
+    }
+
+    &.form-actions {
+      flex-direction: row;
+      flex-wrap: wrap;
     }
 
     &:first-child {
@@ -147,6 +245,10 @@
     }
   }
 
+  .filter-help  {
+    display: none;
+  }
+
   .ecl-select__container {
     &--full {
       width: 100%;
@@ -157,26 +259,42 @@
       width: 100%;
     }
   }
+  & .form-required::after {
+    content: '*';
+    color: $ecl-color-red;
+  }
 
-  .ecl-form-label, .fieldset-legend {
+  .ecl-form-label,
+  .fieldset-legend,
+  .field--type-created h4,
+  details summary {
     font-weight: $ecl-font-weight-regular;
     text-transform: uppercase;
     color: ecl-typography('color', 'label');
-
-    &.form-required::after {
-      content: "*";
-      color: $ecl-color-red;
-    }
+    font-size: 1rem;
 
     &__required {
       font-weight: $ecl-font-weight-regular;
 
       &:last-child {
         &::before {
-          content: "\00A0";
+          content: '\00A0';
         }
       }
     }
+  }
+
+  .field--type-created .js-form-item,
+  .field--type-created h4 {
+    margin: 0 !important;
+  }
+
+  .field--type-created > div {
+    margin-bottom: 1em;
+  }
+
+  .field--type-file, .js-filter-guidelines {
+    display: none !important;
   }
 
   .ecl-help-block {
@@ -184,7 +302,8 @@
     color: ecl-typography('color', 'meta');
   }
 
-  .ecl-text-input {
+  .ecl-text-input,
+  .form-url {
     &[disabled],
     &[readonly] {
       border-color: transparent;
@@ -198,6 +317,10 @@
     }
   }
 
+  .form-url {
+    @extend .ecl-text-input;
+  }
+
   .ecl-button {
     text-align: center;
   }
@@ -209,22 +332,12 @@
     }
   }
 
-  & .form-wrapper{
-    width: 100%;
-    box-sizing: border-box;
-
-    & .fieldset-legend {
-      padding: 0 $ecl-spacing-s;
-    }
-  }
-
   & .fieldgroup .fieldset-legend {
-    //visibility: hidden;
     padding: 0;
   }
 
   & .ecl-radio {
-    background: #F5F5F5;
+    background: #f5f5f5;
     padding: 16px;
     display: block;
     width: 100%;
@@ -232,7 +345,7 @@
     & .ecl-radio__label {
       display: flex;
       align-items: flex-start;
-      gap: .75rem;
+      gap: 0.75rem;
     }
 
     & .ecl-radio__box {
@@ -258,7 +371,6 @@
         border-radius: 0 !important;
       }
     }
-
   }
 
   & .ecl-radio-block {
@@ -267,8 +379,8 @@
       grid-template-columns: 1.25rem auto;
       grid-gap: map-get($ecl-spacing, 's');
       grid-template-areas:
-      "box content"
-      ". content"
+        'box content'
+        '. content';
     }
 
     & .ecl-radio__box {
@@ -294,6 +406,14 @@
 
   & .ecl-table {
     margin: map-get($ecl-spacing, 'm') 0;
+
+    & .ecl-table__head {
+      display: table-header-group;
+    }
+
+    &__cell > div {
+      width: 95%;
+    }
   }
 
   & .ecl-table *:not(.handle) {
@@ -301,34 +421,250 @@
   }
 
   & .vertical-tabs {
-    margin: 0;
     max-width: 100%;
+    margin-left: 200px;
 
-    &__menu {
-      float: none;
-      width: auto;
-      margin: 0;
+    @include ecl-media-breakpoint-down('lg') {
       display: flex;
+      flex-direction: column;
+      margin-left: 0;
+    }
+
+    & .vertical-tabs__menu {
+      padding-left: 0;
+      border: none;
+      @include ecl-media-breakpoint-down('lg') {
+        float: initial;
+        margin: 0;
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+    }
+
+    &__menu-item {
+      margin-bottom: -3px;
+      border: 1px solid $ecl-color-grey-25;
+      @include ecl-media-breakpoint-down('lg') {
+        background: #fff;
+        box-sizing: border-box;
+      }
+
+      & a {
+        min-height: 35px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+      }
     }
 
     & .is-selected {
-      border-width: 1px;
+      border-right: 3px solid $ecl-color-blue;
+      @include ecl-media-breakpoint-down('lg') {
+        border-right: 1px solid $ecl-color-grey-25;
+        border-bottom: 3px solid $ecl-color-blue;
+        z-index: 100;
+      }
     }
 
     &__pane {
       box-sizing: border-box;
       padding: map-get($ecl-spacing, 'xs');
     }
+
+    & .form-textarea {
+      width: 100%;
+    }
   }
 
   & &-group.form-actions {
-    //display: flex;
-    //align-items: center;
-    //justify-content: center;
-    //flex-direction: row;
-    margin-top: map-get($ecl-spacing, "2xl");
-    gap: map-get($ecl-spacing, "m");
+    margin-top: map-get($ecl-spacing, '2xl');
+    gap: map-get($ecl-spacing, 'm');
+  }
+
+  .js-media-library-widget,
+  .field--type-daterange .js-form-item,
+  .field--name-field-document-media .js-form-item,
+  .field-group-fieldset {
+    border: none;
+    padding: 0;
+
+    & legend {
+      margin-bottom: $ecl-spacing-m;
+      & .fieldset-legend {
+        padding: 0;
+      }
+    }
+
+    & .fieldset-wrapper,
+    & > .js-form-item {
+      border: 1px solid $ecl-color-grey;
+      padding: $ecl-spacing-m;
+    }
+
+    & .field-prefix {
+      margin-bottom: map-get($ecl-spacing, 'l');
+      display: block;
+    }
+
+    & .description {
+      opacity: 0.7;
+      margin: $ecl-spacing-m 0;
+    }
+
+    & .js-media-library-item {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+
+      & > article {
+        margin-bottom: $ecl-spacing-m;
+      }
+    }
+  }
+
+  .field-multiple-table {
+
+    & + .description {
+      margin-bottom: $ecl-spacing-m;
+    }
+
+    & .ecl-table__row {
+      border: none;
+    }
+
+    & .ecl-table__head {
+      background-color: transparent;
+
+      & .ecl-table__header {
+        padding: 0;
+        display: flex;
+        align-items: center;
+
+        & .label {
+          font-weight: 400;
+          text-transform: uppercase;
+          color: #707070;
+          margin: 0;
+        }
+      }
+    }
+
+    & .ecl-table__body {
+
+      & .ecl-table__body {
+        background: #000;
+      }
+      & .ecl-table__row {
+        background-color: $ecl-color-grey-5;
+        padding: 1em 0;.field--name-field-gallery-slide-legend {
+          margin-top: .5em;
+        }
+        display: flex;
+        align-items: center;
+
+        @include ecl-media-breakpoint-down('lg') {
+          & .ecl-table__cell:nth-child(1) {
+            display: none;
+          }
+        }
+
+        & .ecl-table__cell:nth-child(2) {
+          width: 100%;
+          padding: 0;
+
+          @include ecl-media-breakpoint-down('lg') {
+            padding-left: 1em;
+            &:before {
+              display: none;
+            }
+          }
+
+          & .paragraph-type-top {
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+
+  & .tabledrag-toggle-weight-wrapper {
+    display: none;
+  }
+
+  & .horizontal-tabs-panes {
+    padding-bottom: 1rem;
+  }
+  & .horizontal-tabs-pane {
+    padding: 1rem;
+  }
+
+  & .field-group-details,
+  & details .form-wrapper {
+    margin-bottom: 1rem;
+
+    & > summary + div {
+      margin-top: 1rem;
+    }
+
+    & .js-form-wrapper {
+      margin: 0;
+    }
+  }
+
+  & .js-form-type-number {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-items: center;
+
+    & label,
+    & .field-prefix {
+      width: 100%;
+    }
+
+    & .field-suffix {
+      margin-left: $ecl-spacing-s;
+    }
+
+    & .form-number {
+      width: auto;
+    }
+  }
+
+  & .field--type-daterange,
+  & .field--type-timestamp {
+    & h4 {
+      margin-bottom: 0;
+    }
+
+    & h4 + div .form-item {
+      margin: 0 !important;
+    }
+
+    & h4 + div {
+      margin-bottom: $ecl-spacing-m;
+    }
+  }
+
+  & .form-number,
+  input[type='time'] {
+    @extend .ecl-text-input;
   }
 }
 
+.ecl-text-input {
+  width: 100%;
+}
 
+.ui-autocomplete a {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+.paragraphs-subform {
+  & .form-wrapper {
+    margin-bottom: 1em !important;
+  }
+}

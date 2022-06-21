@@ -32,7 +32,6 @@
 
   &__image-wrapper {
     position: relative;
-    background-color: map-get($ecl-colors, 'grey-10');
     overflow: hidden;
     padding: 0;
     margin: 0;
@@ -252,5 +251,16 @@
   // fixes spacing issue when hero is not present
   & + .ecl-base-layout > .ecl-base-layout__content > .ecl-base-layout__main > main > .ecl-section-wrapper:first-child {
     padding-top: 0;
+  }
+
+  &--story #{$node}__main-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    #{$node}__content {
+      width: 100%;
+      margin-top: $ecl-spacing-s;
+    }
   }
 }

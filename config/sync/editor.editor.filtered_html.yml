@@ -15,9 +15,11 @@ settings:
         -
           name: Formatting
           items:
+            - Format
             - Bold
             - Italic
             - Underline
+            - Blockquote
             - Superscript
             - Subscript
         -
@@ -30,8 +32,17 @@ settings:
         -
           name: Links
           items:
-            - DrupalLink
-            - DrupalUnlink
+            - Link
+            - Unlink
+            - Anchor
+            - Table
+        -
+          name: Media
+          items:
+            - DrupalImage
+            - DrupalMediaLibrary
+            - Twitter_ckeditor_button
+            - Fb_ckeditor_button
         -
           name: Tools
           items:
@@ -40,11 +51,24 @@ settings:
             - RemoveFormat
             - Undo
             - Redo
+            - Maximize
+        -
+          name: Alignment
+          items:
+            - JustifyLeft
+            - JustifyCenter
+            - JustifyRight
+            - JustifyBlock
   plugins:
     stylescombo:
       styles: ''
     language:
       language_list: un
+    font:
+      font_names: ''
+      font_sizes: ''
+    colorbutton:
+      colors: ''
 image_upload:
   status: false
   scheme: public

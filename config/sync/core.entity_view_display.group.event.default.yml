@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group.event.field_additional_content
     - field.field.group.event.field_body
     - field.field.group.event.field_date_range
     - field.field.group.event.field_document_additional
@@ -10,6 +11,7 @@ dependencies:
     - field.field.group.event.field_document_presentations
     - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
+    - field.field.group.event.field_funding_source
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
@@ -30,6 +32,7 @@ dependencies:
   module:
     - address
     - datetime_range
+    - entity_reference_revisions
     - link
     - options
     - social_link_field
@@ -43,6 +46,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: -20
+    region: content
+  field_additional_content:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 35
     region: content
   field_body:
     type: text_default
@@ -103,6 +115,14 @@ content:
       separator: '-'
     third_party_settings: {  }
     weight: 30
+    region: content
+  field_funding_source:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 34
     region: content
   field_header_visual:
     type: entity_reference_entity_view

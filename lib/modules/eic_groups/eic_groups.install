@@ -7,6 +7,8 @@
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
 
 /**
@@ -25,7 +27,12 @@ function eic_groups_install() {
     ->setDisplayConfigurable('view', TRUE);
 
   \Drupal::entityDefinitionUpdateManager()
-    ->installFieldStorageDefinition(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS, 'node', 'node', $field_storage_definition);
+    ->installFieldStorageDefinition(
+      NodeProperty::MEMBER_CONTENT_EDIT_ACCESS,
+      'node',
+      'node',
+      $field_storage_definition
+    );
 }
 
 /**
@@ -124,7 +131,11 @@ function eic_groups_update_9002(&$sandbox) {
     }
 
     foreach ($roles as $role) {
-      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup($group_permission, $role, ['view comments']);
+      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup(
+        $group_permission,
+        $role,
+        ['view comments']
+      );
     }
 
     $group_permission->setNewRevision();
@@ -140,5 +151,130 @@ function eic_groups_update_9002(&$sandbox) {
 
     // Save the group entity to reset the cache tags.
     $group->save();
+  }
+}
+
+/**
+ * Remove old menu link "/members" link from the Organisation.
+ */
+function eic_groups_update_9003(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+  $organisations = $em->getStorage('group')->loadByProperties([
+    'type' => 'organisation',
+  ]);
+  $menu_name = 'group_main_menu';
+
+  foreach ($organisations as $organisation) {
+    foreach (group_content_menu_get_menus_per_group($organisation) as $group_menu) {
+      if (
+        $group_menu->getGroupContentType()->getContentPlugin()->getPluginId() ==
+        "group_content_menu:$menu_name"
+      ) {
+        $items = $em->getStorage('menu_link_content')->loadByProperties([
+          'menu_name' => GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id(),
+          'title' => 'Team',
+        ]);
+
+        if (empty($items)) {
+          continue;
+        }
+
+        /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $menu_item_people */
+        $menu_item_people = reset($items);
+        $menu_item_people->delete();
+      }
+    }
+  }
+}
+
+/**
+ * Add "administer membership requests" permission to group owner role.
+ */
+function eic_groups_update_9004(&$sandbox) {
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $group_permissions = GroupPermission::loadMultiple();
+
+  foreach ($group_permissions as &$group_permission) {
+    $permissions = $group_permission->getPermissions();
+
+    if (empty($permissions)) {
+      continue;
+    }
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_permission->getGroup();
+
+    $joining_methods = \Drupal::service('oec_group_flex.helper')->getGroupJoiningMethod($group);
+
+    if (!$joining_methods) {
+      continue;
+    }
+
+    $isMembershipRequestEnabled = TRUE;
+    foreach ($joining_methods as $joining_method) {
+      if (
+        in_array(
+          $joining_method['plugin_id'],
+          [
+            'open_method',
+            'tu_open_method',
+          ]
+        )
+      ) {
+        $isMembershipRequestEnabled = FALSE;
+        break;
+      }
+    }
+
+    if (!$isMembershipRequestEnabled) {
+      continue;
+    }
+
+    foreach ($joining_methods as $joining_method) {
+      if (
+        in_array(
+          $joining_method['plugin_id'],
+          [
+            'group_membership_request',
+            'tu_group_membership_request',
+          ]
+        )
+      ) {
+        $group_type = $group->getGroupType()->id();
+
+        $ownerGroupRoleId = EICGroupsHelper::getGroupTypeRole($group_type, 'owner');
+        \Drupal::service('eic_groups.helper')->addRolePermissionsToGroup(
+          $group_permission,
+          $ownerGroupRoleId,
+          ['administer membership requests']
+        );
+
+        $adminGroupRoleId = EICGroupsHelper::getGroupTypeRole($group_type, 'admin');
+        \Drupal::service('eic_groups.helper')->addRolePermissionsToGroup(
+          $group_permission,
+          $adminGroupRoleId,
+          ['administer membership requests']
+        );
+
+        $group_permission->setNewRevision();
+        $group_permission->setRevisionUserId(1);
+        $group_permission->setRevisionCreationTime(time());
+        $group_permission->setRevisionLogMessage(t('Add "administer membership requests" permission to group owner and admin roles.'));
+
+        if (count($group_permission->validate()) > 0) {
+          break;
+        }
+
+        $group_permission->save();
+
+        // Save the group entity to reset the cache tags.
+        $group->save();
+        break;
+      }
+    }
   }
 }

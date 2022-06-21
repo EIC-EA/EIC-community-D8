@@ -1,0 +1,29 @@
+uuid: f9ba5b66-9e94-48a2-a6bd-684eddcadb59
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_contact_category
+    - message.template.notify_mt_contact_global
+    - taxonomy.vocabulary.contact_category
+id: message.notify_mt_contact_global.field_contact_category
+field_name: field_contact_category
+entity_type: message
+bundle: notify_mt_contact_global
+label: 'Contact category'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      contact_category: contact_category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

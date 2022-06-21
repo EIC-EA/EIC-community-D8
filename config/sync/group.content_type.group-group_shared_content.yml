@@ -1,0 +1,18 @@
+uuid: b12db388-963a-4058-b3cb-0609eca598a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+  module:
+    - eic_share_content
+    - node
+id: group-group_shared_content
+label: 'Group: Group Shared content'
+description: 'Adds shared content to groups.'
+group_type: group
+content_plugin: group_shared_content
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

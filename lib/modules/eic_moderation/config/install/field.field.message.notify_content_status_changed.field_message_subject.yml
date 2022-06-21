@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_subject
+    - message.template.notify_content_status_changed
+id: message.notify_content_status_changed.field_message_subject
+field_name: field_message_subject
+entity_type: message
+bundle: notify_content_status_changed
+label: Subject
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

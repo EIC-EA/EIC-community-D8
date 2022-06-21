@@ -5,16 +5,21 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
+use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\file\Entity\File;
-use Drupal\oec_group_features\GroupFeatureHelper;
-use Drupal\taxonomy\TermInterface;
-use Drupal\Core\Url;
-use \Drupal\eic_overviews\GlobalOverviewPages;
-use Drupal\paragraphs\ParagraphInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\oec_group_features\GroupFeatureHelper;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_group__TYPE().
@@ -22,7 +27,22 @@ use Drupal\eic_overviews\GroupOverviewPages;
 function eic_community_preprocess_group__organisation(&$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
-  _eic_community_render_organisation_detail_page($variables, $group);
+
+  switch ($variables['view_mode']) {
+    case 'full':
+      _eic_community_render_organisation_detail_page($variables, $group);
+      break;
+
+    case 'teaser':
+      _eic_community_render_organisation_teaser($variables, $group);
+      break;
+
+  }
+
+  // About page preprocessing.
+  if (isset($variables['elements']['owners'])) {
+    _preprocess_about_page($variables);
+  }
 }
 
 /**
@@ -34,9 +54,8 @@ function eic_community_preprocess_group__organisation(&$variables) {
  * @throws \Drupal\Core\Entity\EntityMalformedException
  */
 function _eic_community_render_organisation_detail_page(&$variables, $group) {
-  /** @var \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_helper */
-  $group_helper = Drupal::service('eic_group_statistics.helper');
-  $group_statistics = $group_helper->loadGroupStatistics($group);
+  /** @var TranslationInterface $string_translation */
+  $string_translation = \Drupal::service('string_translation');
 
   $topics = $group->get('field_vocab_topics')->referencedEntities();
   $markets = $group->get('field_vocab_target_markets')->referencedEntities();
@@ -112,31 +131,30 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   if (!empty($locations)) {
     $locations_data = [
       'title' => t('Locations', [], ['context' => 'eic_community']),
-      'collapse_label' => t(
+      'collapse_label' => $string_translation->formatPlural(
+        count($locations),
+        '@count location',
         '@count locations',
         ['@count' => count($locations)],
         ['context' => 'eic_community']
       ),
-      'items' => array_map(function (\Drupal\taxonomy\Entity\Term $location) {
+      'items' => array_map(function (ParagraphInterface $location) {
+        $city = $location->get('field_city')->value;
+        $country = $location->get('field_country')->referencedEntities();
+        $country = reset($country);
         return [
-          'title' => $location->label(),
+          'title' => $country->label() . ' (' . $city . ')',
         ];
       }, $locations),
     ];
   }
 
   $addresses = $group->get('field_address')->getValue();
-  $address_index = 0;
-  $addresses_data = array_map(function ($address) use ($address_index) {
-    $address_index++;
-    $location_formatted = \Drupal\eic_groups\EICGroupsHelper::formatAddress($address);
+  $addresses_data = array_map(function ($address) {
+    $location_formatted = EICGroupsHelper::formatAddress($address);
 
     return [
-      'title' => t(
-        'Address @index',
-        ['@index' => $address_index],
-        ['context' => 'eic_community']
-      ),
+      'title' => !empty($address['organization']) ? $address['organization'] : $address['locality'],
       'description' => $location_formatted,
     ];
   }, $addresses);
@@ -160,7 +178,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
 
     $social_data = [
-      'title' => '',
+      'title' => t('Social media', [], ['context' => 'eic_community']),
       'icon_file_path' => $variables['eic_icon_path'],
       'size' => 's',
     ];
@@ -296,9 +314,9 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       'link' => [
         'label' => t('See all members', [], ['context' => 'eic_community']),
         'path' => Url::fromRoute(
-          GroupOverviewPages::MEMBERS,
+          GroupOverviewPages::ORGANISATIONS_TEAM,
           ['group' => $group instanceof GroupInterface ? $group->id() : 0]
-        ),
+        )->toString(),
       ],
     ],
     'items' => array_map(
@@ -322,7 +340,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ],
           [
             'name' => t('Active members', [], ['context' => 'eic_community']),
-            'value' => $group_statistics->getMembersCount(),
+            'value' => count($group->getMembers()),
           ],
           [
             'name' => t('Annual turnover', [], ['context' => 'eic_community']),
@@ -424,7 +442,6 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   /** @var ParagraphInterface $paragraph */
   $paragraph = $variables['paragraph'];
   /** @var GroupInterface $group */
-  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   $user_ref = $paragraph->get('field_user_ref')->referencedEntities();
   /** @var \Drupal\user\UserInterface $user */
   $user = reset($user_ref);
@@ -434,21 +451,11 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   $file = $media_picture ? File::load(
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
-  $file_url = $file ? file_url_transform_relative(
+  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
     file_create_url($file->get('uri')->value)
   ) : NULL;
   $last_activity_ago = eic_community_get_teaser_time_display(
     $user->get('changed')->value
-  );
-
-  /** @var \Drupal\eic_organisations\OrganisationsHelper $organisations_helper */
-  $organisations_helper = \Drupal::service('eic_organisations.helper');
-  $organisations = $organisations_helper->getUserOrganisations($user);
-  $organisations = array_filter(
-    $organisations,
-    function ($organisation) use ($group) {
-      return $group instanceof GroupInterface && $organisation->id() !== $group->id();
-    }
   );
 
   $variables['member_data'] = [
@@ -466,15 +473,11 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     ],
     'title' => realname_load($user),
     'job_titles' => $paragraph->get('field_job_title')->value,
-    'organisations' => array_map(
-      function (GroupInterface $group) use ($organisations_helper) {
-        return [
-          'label' => $group->label(),
-          'path' => $group->toUrl()->toString(),
-        ];
-      },
-      $organisations
-    ),
+    'organisations' => array_map(function(array $organisation) {
+      return [
+        'label' => $organisation['value'],
+      ];
+    }, $paragraph->get('field_organisations')->getValue()),
     'location' => _eic_community_get_user_location($user),
     'stats' => [
       [
@@ -498,6 +501,46 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
 }
 
 /**
+ * Implement hook_preprocess_paragraph__PARAGRAPH_TYPE.
+ */
+function eic_community_preprocess_paragraph__organisation_member_external(&$variables) {
+  /** @var ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $media_picture = $paragraph->get('field_media')->referencedEntities();
+  $file = $media_picture ? File::load(
+    $media_picture[0]->get('oe_media_image')->target_id
+  ) : NULL;
+  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
+    file_create_url($file->get('uri')->value)
+  ) : NULL;
+
+  $location = $paragraph->get('field_location')->referencedEntities();
+
+  $variables['member_data'] = [
+    'icon_file_path' => $variables['eic_icon_path'],
+    'image' => [
+      'src' => $file_url,
+    ],
+    'title' => $paragraph->get('field_full_name')->value,
+    'job_titles' => $paragraph->get('field_job_title')->value,
+    'status' => [
+      'label' => $paragraph->get('field_role')->value,
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'trophy_circle',
+      ],
+    ],
+    'organisations' => array_map(function($value) {
+      return [
+        'label' => $value['value'],
+      ];
+    }, $paragraph->get('field_organisations')->getValue()),
+    'location' => $location ? ['label' => reset($location)->label()] : '',
+  ];
+}
+
+/**
  * @param string $filter
  * @param string $value
  *
@@ -517,4 +560,120 @@ function _generate_overview_prefilter_url(string $filter, string $value): string
     GlobalOverviewPages::ORGANISATIONS,
     $query_options
   )->getUrl()->toString();
+}
+
+/**
+ * Fill variables for organisation teaser.
+ */
+function _eic_community_render_organisation_teaser(&$variables, GroupInterface $group) {
+  // Get group description.
+  $teaser['description'] = $group->hasField('field_body') ? Markup::create(Xss::filter($group->get('field_body')->value)) : '';
+  // Get organisation thumbnail.
+  if ($group->hasField('field_thumbnail') && !$group->get('field_thumbnail')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext(
+      $group->get('field_thumbnail')->entity,
+      $group->language()->getId()
+    );
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'oe_theme_list_item_2x'
+    );
+    $teaser['image'] = [
+      'src' => $image_item->getSource(),
+      'alt' => $image_item->getAlt(),
+    ];
+  }
+
+  // Add organisation types to the theme variables.
+  if (!$group->get('field_organisation_type')->isEmpty()) {
+    /** @var \Drupal\taxonomy\TermInterface $organisation_types */
+    $organisation_types = $group->get('field_organisation_type')->referencedEntities();
+
+    $teaser['tags'] = [];
+    foreach ($organisation_types as $organisation_type) {
+      // Build solr query parameters for the events overview page to filter
+      // by topic.
+      $params = SearchHelper::buildSolrQueryParams(
+        [
+          'sm_group_organisation_type_string' => $organisation_type ? $organisation_type->label() : '',
+        ]
+      );
+      $tag = [
+        'label' => $organisation_type ? $organisation_type->getName() : '',
+      ];
+
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::ORGANISATIONS)->getUrl();
+
+      if ($url) {
+        $url->setOption('query', $params)
+          ->toString();
+        $tag['path'] = $url;
+      }
+
+      $teaser['tags'][] = $tag;
+    }
+  }
+
+  // Get organisation location
+  $locations = $group->get('field_locations')->referencedEntities();
+  if (!empty($locations)) {
+    $locations_data = [
+      'items' => array_map(function (ParagraphInterface $location) {
+        $city = $location->get('field_city')->value;
+        $country = $location->get('field_country')->referencedEntities();
+        $country = reset($country);
+        return [
+          'label' => "$city, {$country->label()}",
+        ];
+      }, $locations),
+    ];
+    $teaser['location'] = $locations_data['items'][0];
+  }
+
+  // Get organisation size
+  if (!$group->get('field_organisation_employees')->isEmpty()) {
+    $teaser['size'] = [
+      'label' => t('@size employee(s)', ['@size' => $group->get('field_organisation_employees')->value]),
+    ];
+  }
+
+  // Get organisation statistics.
+  $organisation_statistics = \Drupal::service('eic_group_statistics.helper')->loadGroupStatistics($group);
+  $teaser['stats'] = [
+    'members' => [
+      'label' => t('Members'),
+      'value' => $organisation_statistics->getMembersCount(),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'user',
+      ],
+    ],
+    'comments' => [
+      'label' => t('Comments'),
+      'value' => $organisation_statistics->getCommentsCount(),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'comment',
+      ],
+    ],
+    'files' => [
+      'label' => t('Files'),
+      'value' => $organisation_statistics->getFilesCount(),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'documents',
+      ],
+    ],
+    'events' => [
+      'label' => t('Events'),
+      'value' => $organisation_statistics->getEventsCount(),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'calendar',
+      ],
+    ],
+  ];
+
+  $variables['organisation_item'] = $teaser;
 }

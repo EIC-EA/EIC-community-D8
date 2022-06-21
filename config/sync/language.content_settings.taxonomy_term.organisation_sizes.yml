@@ -1,0 +1,11 @@
+uuid: 158bdfbb-981a-4fd4-b293-48d0f05b5080
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.organisation_sizes
+id: taxonomy_term.organisation_sizes
+target_entity_type_id: taxonomy_term
+target_bundle: organisation_sizes
+default_langcode: site_default
+language_alterable: false

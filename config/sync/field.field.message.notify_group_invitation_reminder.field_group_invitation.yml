@@ -1,0 +1,33 @@
+uuid: c525cc36-5c9b-4a53-9c9a-07adee6e8f14
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_invitation
+    - group.content_type.event-group_invitation
+    - group.content_type.group-group_invitation
+    - group.content_type.organisation-group_invitation
+    - message.template.notify_group_invitation_reminder
+id: message.notify_group_invitation_reminder.field_group_invitation
+field_name: field_group_invitation
+entity_type: message
+bundle: notify_group_invitation_reminder
+label: 'Group invitation'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_content'
+  handler_settings:
+    target_bundles:
+      event-group_invitation: event-group_invitation
+      group-group_invitation: group-group_invitation
+      organisation-group_invitation: organisation-group_invitation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: event-group_invitation
+field_type: entity_reference

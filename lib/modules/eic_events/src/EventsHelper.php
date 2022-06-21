@@ -5,7 +5,7 @@ namespace Drupal\eic_events;
 use Drupal\group\Entity\GroupInterface;
 
 /**
- * OrganisationsHelper service that provides helper functions for organisations.
+ * EventsHelper service that provides helper functions for events.
  */
 class EventsHelper {
 

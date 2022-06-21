@@ -13,6 +13,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\flag\Plugin\Flag\EntityFlagType as EntityFlagTypeBase;
 use Drupal\flag\FlagInterface;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -80,9 +81,12 @@ class EntityFlagType extends EntityFlagTypeBase {
       // Get the group from the flaggable, if any.
       $parent_group = NULL;
       if ($flaggable && !$flaggable->isNew()) {
-        $parent_group = $this->groupsHelper->getGroupByEntity($flaggable);
+        $parent_group = $this->groupsHelper->getOwnerGroupByEntity($flaggable);
       }
-      if ($this->flagHelper->canUserHighlight($account, $parent_group)) {
+      if (
+        $parent_group instanceof GroupInterface &&
+        $this->flagHelper->canUserHighlight($account, $parent_group)
+      ) {
         return AccessResult::allowed()->addCacheContexts(['user']);
       }
       else {

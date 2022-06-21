@@ -22,13 +22,13 @@ function eic_group_statistics_group_delete(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_group_statistics_group_content_insert(EntityInterface $entity) {
-  switch ($entity->bundle()) {
-    case 'group-group_membership':
-    case 'group-group_node-discussion':
-    case 'group-group_node-document':
-    case 'group-group_node-event':
-    case 'group-group_node-gallery':
-    case 'group-group_node-wiki_page':
+  switch ($entity->getContentPlugin()->getPluginId()) {
+    case "group_membership":
+    case "group_node:discussion":
+    case "group_node:document":
+    case "group_node:event":
+    case "group_node:gallery":
+    case "group_node:wiki_page":
       \Drupal::classResolver(EntityOperations::class)
         ->groupContentInsert($entity);
       break;
@@ -40,8 +40,8 @@ function eic_group_statistics_group_content_insert(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_delete().
  */
 function eic_group_statistics_group_content_delete(EntityInterface $entity) {
-  switch ($entity->bundle()) {
-    case 'group-group_membership':
+  switch ($entity->getContentPlugin()->getPluginId()) {
+    case "group_membership":
       \Drupal::classResolver(EntityOperations::class)
         ->groupContentDelete($entity);
       break;
@@ -50,9 +50,9 @@ function eic_group_statistics_group_content_delete(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete().
+ * Implements hook_ENTITY_TYPE_predelete().
  */
-function eic_group_statistics_node_delete(EntityInterface $entity) {
+function eic_group_statistics_node_predelete(EntityInterface $entity) {
   switch ($entity->bundle()) {
     case 'discussion':
     case 'document':
@@ -69,7 +69,7 @@ function eic_group_statistics_node_delete(EntityInterface $entity) {
       $group_content = reset($group_contents);
 
       \Drupal::classResolver(EntityOperations::class)
-        ->groupContentNodeDelete($entity, $group_content);
+        ->groupContentNodePreDelete($entity, $group_content);
       break;
 
   }
@@ -146,15 +146,19 @@ function eic_group_statistics_comment_delete(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_ENTITY_TYPE_presave().
  */
-function eic_group_statistics_node_update(EntityInterface $entity) {
+function eic_group_statistics_node_presave(EntityInterface $entity) {
   switch ($entity->bundle()) {
     case 'discussion':
     case 'document':
     case 'event':
     case 'gallery':
     case 'wiki_page':
+      // Only acts on entity update.
+      if ($entity->isNew()) {
+        break;
+      }
       // We need to make sure the node belongs to a group content, otherwise we
       // don't need to update any group statistics.
       // @todo Make sure the group_content entity is the right one.
@@ -167,7 +171,7 @@ function eic_group_statistics_node_update(EntityInterface $entity) {
       $group_content = reset($group_contents);
 
       \Drupal::classResolver(EntityOperations::class)
-        ->groupContentNodeUpdate($entity, $group_content);
+        ->groupContentNodePreSave($entity, $group_content);
       break;
 
   }

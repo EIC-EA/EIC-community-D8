@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_content_status_changed.field_entity_prev_status_label
+    - field.field.message.notify_content_status_changed.field_entity_status_label
+    - field.field.message.notify_content_status_changed.field_entity_url
+    - field.field.message.notify_content_status_changed.field_message_subject
+    - field.field.message.notify_content_status_changed.field_referenced_entity_label
+    - message.template.notify_content_status_changed
+id: message.notify_content_status_changed.mail_body
+targetEntityType: message
+bundle: notify_content_status_changed
+mode: mail_body
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_entity_prev_status_label: true
+  field_entity_status_label: true
+  field_entity_url: true
+  field_message_subject: true
+  field_referenced_entity_label: true
+  search_api_excerpt: true

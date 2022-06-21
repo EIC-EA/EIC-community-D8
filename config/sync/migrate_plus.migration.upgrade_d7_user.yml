@@ -12,8 +12,9 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'User accounts'
 source:
-  plugin: d7_user
+  plugin: eic_d7_user_with_smed_ids
   track_changes: true
+  batch_size: 100
 process:
   name: name
   pass: pass
@@ -39,18 +40,7 @@ process:
       source: language
       fallback_to_site_default: true
   init: init
-  roles:
-    -
-      plugin: static_map
-      source: roles
-      default_value: null
-      map:
-        1: anonymous
-        2: authenticated
-        3: piwik_administrator
-        4: service_authentication
-        5: administrator
-        6: content_administrator
+  roles: roles
   field_first_name: c4m_first_name
   field_is_deleted: c4m_is_deleted
   field_is_deleted_anonymous: c4m_is_deleted_anonymous
@@ -64,6 +54,21 @@ process:
   field_is_organisation_user: c4m_is_organisation_user
   field_is_spammer: c4m_is_spammer
   field_last_name: c4m_last_name
+  field_media:
+    -
+      plugin: sub_process
+      source: c4m_media
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: fid
+            no_stub: true
+            migration:
+              - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_smed_id: c4m_user_dashboard_id
   field_message_from_service: c4m_message_from_service
   field_updated_profile_by_service:

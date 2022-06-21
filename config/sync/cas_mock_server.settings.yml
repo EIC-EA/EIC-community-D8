@@ -1,0 +1,9 @@
+_core:
+  default_config_hash: cFYcUbOBnE1kFTRbcKkoZTKCSN-6sz6pKFH16PZ8gNA
+login_form:
+  title: Login
+  email: E-mail
+  password: Password
+  submit: 'Log in'
+users:
+  expire: 86400

@@ -1,0 +1,22 @@
+{% set _wrap_content = true %}
+
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+	{{ page.page_header }}
+{% endblock %}
+
+{% block content %}
+	<div class="ecl-container ecl-container--4xx" style="padding:2rem 0;">
+		{% include "@theme/patterns/compositions/state-banner.html.twig" with {
+      extra_classes: 'ecl-state-banner--is-blue',
+      title: page.content,
+      icon_file_path: eic_icon_path,
+      icon: {
+        name: 'warning',
+        type: 'notifications'
+      },
+      description: 'Return to the homepage <a href="@front_url">here</a>'|t({'@front_url': path('<front>')})
+    }%}
+	</div>
+{% endblock %}

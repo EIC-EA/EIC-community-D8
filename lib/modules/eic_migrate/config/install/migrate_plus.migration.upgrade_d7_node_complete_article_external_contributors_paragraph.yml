@@ -21,6 +21,7 @@ source:
   track_changes: true
   constants:
     PARAGRAPH_VIEW_MODE: 'external_person'
+  batch_size: 100
 process:
   # TODO: Perhaps needed for creating the paragraphs with revisions instead of a new paragraph for each revision
   #  entity_id:

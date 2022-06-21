@@ -5,6 +5,9 @@ services:
     build:
       context: ./docker/apache
     container_name: ${APP_NAME}_apache
+    depends_on:
+      mysql:
+        condition: service_healthy
     ports:
       - ${APP_PORT}:80
     volumes:
@@ -22,12 +25,16 @@ services:
   php:
     build:
       context: ./docker/php
+    image: eic-php-fpm:7.4
     container_name: ${APP_NAME}_php
     working_dir: /app
     volumes:
       - .:${APP_ROOT}
       - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
       - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
+    depends_on:
+      mysql:
+        condition: service_healthy
     env_file:
       - .env
 
@@ -41,6 +48,39 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "--silent" ]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+
+  e2e:
+    image: cypress
+    build: ./e2e
+    container_name: ${APP_NAME}_cypress
+    tty: true
+    depends_on:
+      - apache
+    volumes:
+      - ./e2e/cypress:/app/cypress
+      - ./e2e/cypress.json:/app/cypress.json
+    # note: inside e2e container, the network allows accessing
+    # "apache" host under name "apache"
+    # so "curl http://apache" would return whatever the webserver
+    # in the "apache" container is cooking
+    # see https://docs.docker.com/compose/networking/
+    environment:
+      - CYPRESS_baseUrl=${CYPRESS_BASE_URL}
+    # mount the host directory e2e/cypress and the file e2e/cypress.json as
+    # volumes within the container
+    # this means that:
+    #  1. anything that Cypress writes to these folders (e.g., screenshots,
+    #     videos) appears also on the Docker host's filesystem
+    #  2. any change that the developer applies to Cypress files on the host
+    #     machine immediately takes effect within the e2e container (no docker
+    #     rebuild required).
+    env_file:
+      - .env
 
   mailhog:
     image: mailhog/mailhog
@@ -61,7 +101,7 @@ services:
     entrypoint:
       - docker-entrypoint.sh
       - solr-precreate
-      - eic
+      - ${SEARCH_INDEX}
 
   tika:
     image: apache/tika:2.1.0

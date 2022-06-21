@@ -11,7 +11,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess_page().
@@ -29,63 +28,16 @@ function eic_community_preprocess_page(array &$variables): void {
 
   $variables['site_header'] = [
     'icon_file_path' => $variables['eic_icon_path'],
+    'site_name' => \Drupal::config('system.site')->get('name'),
+    'account_block' => _eic_get_account_header_block(),
     'logo' => [
       'title' => t('European Commission'),
       'alt' => t('European Commission logo'),
       'href' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
       'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
+      'src_mobile' => $variables['eic_logo_path'] . '/logo--mute.svg',
     ],
   ];
-
-  if ($variables['user']->isAnonymous()) {
-    $variables['site_header']['login']['link'] = [
-      'label' => t('Log in'),
-      'path' => Url::fromRoute(
-        'user.login',
-        [
-          'destination' => \Drupal::request()->getRequestUri(),
-        ]
-      ),
-    ];
-  }
-  else {
-    $account = User::load($variables['user']->id());
-    $user = eic_community_get_teaser_user_display($account);
-    unset($user['path']);
-
-    $user['actions'] = [
-      [
-        'link' => [
-          'label' => t('My profile'),
-          'path' => $account->toUrl()->toString(),
-        ],
-      ],
-    ];
-
-    // Adds unmasquerade link if the user is masquerading.
-    if (\Drupal::service('masquerade')->isMasquerading()) {
-      $user['actions'][] = [
-        'link' => [
-          'label' => t('Unmasquerade'),
-          'path' => Url::fromRoute('masquerade.unmasquerade')->toString(),
-        ],
-      ];
-    }
-
-    // Adds logout link to the end of the dropdown.
-    $user['actions'][] = [
-      'link' => [
-        'label' => t('Log out'),
-        'path' => Url::fromRoute('user.logout'),
-      ],
-    ];
-
-    $variables['site_header']['user'] = $user;
-    // We need to add the session cache context otherwise the header doesn't
-    // update when log in with another account with the same permissions.
-    // @todo In the future we should consider creating a block a load it here.
-    $variables['#cache']['contexts'][] = 'session';
-  }
 
   $footer_sections = [];
 
@@ -153,6 +105,8 @@ function eic_community_preprocess_page(array &$variables): void {
   }
 
   _preprocess_group_page($variables);
+
+  _preprocess_page_not_found($variables);
 }
 
 /**
@@ -165,16 +119,23 @@ function _preprocess_node_page(&$variables) {
     switch ($variables['node']->getType()) {
       case 'story':
       case 'news':
-        /** @var \Drupal\media\Entity\Media $media */
-        $media = \Drupal::service('entity.repository')
-          ->getTranslationFromContext($node->get('field_header_visual')->entity,
-            $node->language()->getId());
-        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        if (!$node->get('field_header_visual')->isEmpty()) {
+          /** @var \Drupal\media\Entity\Media $media */
+          $media = \Drupal::service('entity.repository')
+            ->getTranslationFromContext($node->get('field_header_visual')->entity,
+              $node->language()->getId());
+        }
+
+        $image_item = isset($media) ?
+          ImageValueObject::fromImageItem($media->get('oe_media_image')->first()) :
+          NULL;
+
         $author = eic_community_get_teaser_user_display($node->getOwner());
         $author_theme = [
           '#theme' => 'eic_community_author',
           '#name' => $author['name'],
           '#path' => $author['path'] ?? '',
+          '#image' => $author['image'] ?? NULL,
         ];
 
         if (isset($author['image'])) {
@@ -183,11 +144,17 @@ function _preprocess_node_page(&$variables) {
         /* @todo Missing follow author flag when user is logged in. */
 
         $publish_date_format = $variables['node']->getType() === 'news' ? 'd F' : 'd F Y';
-
+        $is_restricted = $node->private->value === '1';
+        $tag = [
+          'type' => 'display',
+          'label' => $is_restricted ? t('Restricted') : t('Public'),
+        ];
         $variables['editorial_header'] = [
-          // @todo Not the correct display, has to be created in storybook.
-          'type' => [
-            'label' => $node->private->value === '1' ? t('Community members only') : t('Public'),
+          'tags' => [
+            [
+              'extra_classes' => 'ecl-tag--is-' . ($is_restricted ? 'restricted' : 'public'),
+              'tag' => $tag,
+            ],
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
@@ -210,8 +177,8 @@ function _preprocess_node_page(&$variables) {
 
         $variables['hero'] = [
           'image' => [
-            'src' => $image_item->getSource(),
-            'alt' => $image_item->getAlt(),
+            'src' => $image_item ? $image_item->getSource() : NULL,
+            'alt' => $image_item ? $image_item->getAlt() : NULL,
           ],
           'items' => [
             ['content' => $author_theme],
@@ -291,4 +258,33 @@ function _preprocess_group_page(&$variables) {
     // the same message depending on which group the user visited first.
     $variables['#cache']['contexts'][] = 'url.path';
   }
+}
+
+/**
+ * Preprocess page not found.
+ */
+function _preprocess_page_not_found(&$variables) {
+  if (\Drupal::routeMatch()->getRouteName() === 'system.404') {
+    // Adds URL to the frontpage.
+    $variables['front_url'] = Url::fromRoute('<front>')->toString();
+  }
+}
+
+/**
+ * Get account header block.
+ *
+ * @return array
+ *   The block renderable array.
+ */
+function _eic_get_account_header_block(): array {
+  $config = [];
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $plugin_block = $block_manager->createInstance('eic_account_header_block', $config);
+
+  $access_result = $plugin_block->access(\Drupal::currentUser());
+  if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
+    return [];
+  }
+
+  return $plugin_block->build();
 }

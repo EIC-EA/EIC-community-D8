@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - flag.flag.recommend
+    - flag.flag.recommend_content
     - node.type.discussion
   module:
     - flag
@@ -247,7 +247,7 @@ display:
           entity_type: node
           plugin_id: flag_relationship
           required: false
-          flag: recommend
+          flag: recommend_content
           user_scope: any
         group_content:
           id: group_content
@@ -270,7 +270,7 @@ display:
       use_more_always: true
       use_more_text: 'View all'
       link_display: custom_url
-      link_url: '<front>'
+      link_url: 'group/{{ raw_arguments.gid }}/discussions'
       header:
         area:
           id: area

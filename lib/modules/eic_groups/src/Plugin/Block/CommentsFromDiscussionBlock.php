@@ -2,17 +2,27 @@
 
 namespace Drupal\eic_groups\Plugin\Block;
 
+use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\editor\Entity\Editor;
+use Drupal\editor\Plugin\EditorManager;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
-use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
@@ -40,28 +50,45 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *
    * @var \Drupal\eic_groups\EICGroupsHelper
    */
-  protected $groupsHelper;
+  private $groupsHelper;
 
   /**
    * The group permission checker.
    *
    * @var \Drupal\oec_group_comments\GroupPermissionChecker
    */
-  protected $groupPermissionChecker;
-
-  /**
-   * The flag service.
-   *
-   * @var \Drupal\flag\FlagService
-   */
-  protected $flagService;
+  private $groupPermissionChecker;
 
   /**
    * The database connection service.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  private $database;
+
+  /**
+   * The route match service.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  private $routeMatch;
+
+  /**
+   * The current request.
+   *
+   * @var \Drupal\Core\Http\RequestStack
+   */
+  private $request;
+
+  /**
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  private $fileUrlGenerator;
+
+  /**
+   * @var \Drupal\editor\Plugin\EditorManager
+   */
+  private EditorManager $editorManager;
 
   /**
    * {@inheritdoc}
@@ -78,13 +105,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $plugin_definition,
       $container->get('eic_groups.helper'),
       $container->get('oec_group_comments.group_permission_checker'),
-      $container->get('flag'),
-      $container->get('database')
+      $container->get('database'),
+      $container->get('current_route_match'),
+      $container->get('request_stack'),
+      $container->get('file_url_generator'),
+      $container->get('plugin.manager.editor')
     );
   }
 
   /**
-   * LastGroupMembersBlock constructor.
+   * CommentsFromDiscussionBlock constructor.
    *
    * @param array $configuration
    *   The plugin configuration, i.e. an array with configuration values keyed
@@ -99,10 +129,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The EIC groups helper service.
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    *   The group permission checker.
-   * @param \Drupal\flag\FlagService $flag_service
-   *   The flag service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
+   * @param RouteMatchInterface $route_match
+   *   The route match service.
+   * @param \Drupal\Core\Http\RequestStack $request
+   *   The current request.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file url generator service.
+   * @param \Drupal\editor\Plugin\EditorManager $editor_manager
+   *   The editor manager service.
    */
   public function __construct(
     array $configuration,
@@ -110,14 +146,20 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     GroupPermissionChecker $group_permission_checker,
-    FlagService $flag_service,
-    Connection $database
+    Connection $database,
+    RouteMatchInterface $route_match,
+    RequestStack $request,
+    FileUrlGeneratorInterface $file_url_generator,
+    EditorManager $editor_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->groupPermissionChecker = $group_permission_checker;
-    $this->flagService = $flag_service;
     $this->database = $database;
+    $this->routeMatch = $route_match;
+    $this->request = $request;
+    $this->fileUrlGenerator = $file_url_generator;
+    $this->editorManager = $editor_manager;
   }
 
   /**
@@ -125,10 +167,47 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    */
   public function build() {
     /** @var \Drupal\node\NodeInterface|NULL $node */
-    $node = \Drupal::routeMatch()->getParameter('node');
+    $node = $this->routeMatch->getParameter('node');
+    $highlighted_comment = $this->request->getCurrentRequest()->query->get('highlighted-comment', 0);
+    $highlighted_comment = Comment::load($highlighted_comment);
+    $editor = Editor::load('filtered_html');
+    $ckeditor_js_settings = $this->editorManager->createInstance('ckeditor')->getJSSettings($editor);
 
     if (!$node instanceof NodeInterface) {
       return [];
+    }
+
+    $cache_context = [
+      'url.path',
+      'url.query_args',
+      'user.group_permissions',
+      'session',
+      'route',
+    ];
+
+    $routes_to_ignore = [
+      'entity.node.delete_form',
+      'entity.node.edit_form',
+      'entity.node.new_request',
+    ];
+
+    // Do not show comments block in delete/edit/request content.
+    if (in_array($this->routeMatch->getRouteName(), $routes_to_ignore)) {
+      return [
+        '#cache' => [
+          'contexts' => $cache_context,
+        ],
+      ];
+    }
+
+    // We need to highlight the top level.
+    if (
+      $highlighted_comment instanceof CommentInterface &&
+      $highlighted_comment->getCommentedEntityId() === $node->id()
+    ) {
+      while ($highlighted_comment->hasParentComment()) {
+        $highlighted_comment = $highlighted_comment->getParentComment();
+      }
     }
 
     $is_comment_closed = FALSE;
@@ -138,8 +217,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $node->hasField('field_comments') &&
       isset($node->get('field_comments')->getValue()[0])
     ) {
-      $comment_status = (int) $node->get('field_comments')->getValue(
-      )[0]['status'];
+      $comment_status = (int) $node->get('field_comments')->getValue()[0]['status'];
       if (CommentItemInterface::HIDDEN === $comment_status) {
         return [
           '#cache' => [
@@ -154,11 +232,11 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
     $user_group_roles = [];
     $account = \Drupal::currentUser();
+    $current_user = User::load(\Drupal::currentUser()->id());
 
     if ($current_group_route) {
       $membership = $current_group_route->getMember($account);
-      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles(
-      ) : [];
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
     $user_group_roles = array_merge(
@@ -166,12 +244,141 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $account->getRoles(TRUE)
     );
 
+    $disable_contributor_nodes = ['news', 'wiki_page'];
     $contributors_data = [];
-    $current_user = User::load(\Drupal::currentUser()->id());
+    if (!in_array($node->bundle(), $disable_contributor_nodes)) {
+      $contributors_data = $this->getContributors($node);
+    }
 
-    if ('story' === $node->getType()) {
-      $contributors = $node->get('field_story_paragraphs')->referencedEntities(
+    $group_contents = GroupContent::loadByEntity($node);
+
+    /** @var \Drupal\media\MediaInterface|null $media_picture */
+    $media_picture = $current_user->get('field_media')->referencedEntities();
+    /** @var \Drupal\file\Entity\File|NULL $file */
+    $file = $media_picture ? File::load(
+      $media_picture[0]->get('oe_media_image')->target_id
+    ) : NULL;
+    $file_url = $file ? $this->fileUrlGenerator->transformRelative(
+      file_create_url($file->get('uri')->value)
+    ) : NULL;
+
+    $group_id = $current_group_route ? $current_group_route->id() : 0;
+    $user_url = Url::fromRoute('eic_search.solr_search', [
+      'datasource' => json_encode(['user']),
+      'source_class' => UserTaggingCommentsSourceType::class,
+      'page' => 1,
+      'current_group' => $group_id,
+    ])->toString();
+
+    $group = Group::load($group_id);
+    $is_group_archived =
+      $group instanceof GroupInterface &&
+      !UserHelper::isPowerUser($account) &&
+      $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
+    $is_content_archived =
+      !UserHelper::isPowerUser($account) &&
+      $node->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
+
+    $build['#attached']['drupalSettings']['overview'] = [
+      'is_group_owner' => array_key_exists(
+        EICGroupsHelper::GROUP_OWNER_ROLE,
+        $user_group_roles
+      ),
+      'user' => [
+        'avatar' => $file_url,
+        'fullname' => (
+        $current_user instanceof UserInterface ?
+          $current_user->get(
+            'field_first_name'
+          )->value . ' ' . $current_user->get('field_last_name')->value :
+          ''
+        ),
+        'url' => (
+        $current_user instanceof UserInterface ?
+          $current_user->toUrl()->toString() :
+          '#'
+        ),
+      ],
+      'is_comment_closed' => $is_comment_closed,
+      'group_roles' => $user_group_roles,
+      'group_id' => $group_id,
+      'users_url' => $user_url,
+      'users_url_search' => $user_url,
+      'permissions' => [
+        'post_comment' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+          $group_contents,
+          $current_user,
+          'post comments'
+        ),
+        'edit_all_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+            $group_contents,
+            $current_user,
+            'edit all comments'
+          ),
+        'delete_all_comments' => !$is_group_archived && !$is_content_archived && UserHelper::isPowerUser($current_user),
+        'edit_own_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+          $group_contents,
+          $current_user,
+          'edit own comments'
+        ),
+      ],
+      'translations' => EntityTreeManager::getTranslationsWidget(),
+    ];
+
+    $group_id = $current_group_route ? $current_group_route->id() : 0;
+
+    if ($group_id) {
+      $cache_context[] = "user.is_group_member:$group_id";
+    }
+
+    // We get the user access to view comments in the group. Note that power
+    // users can always view comments.
+    $can_view_comments = UserHelper::isPowerUser($account);
+    if (!$can_view_comments) {
+      $can_view_comments = $this->hasGroupOrGlobalPermission(
+        $group_contents,
+        $current_user,
+        $group_id ? 'view comments' : 'access comments'
       );
+    }
+
+    $cache_tags = $node->getCacheTags();
+
+    if ($group instanceof GroupInterface) {
+      $cache_tags = array_merge($cache_tags, $group->getCacheTags());
+    }
+
+    $no_container_nodes = ['wiki_page'];
+    return $build + [
+        '#cache' => [
+          'contexts' => $cache_context,
+          'tags' => $cache_tags,
+        ],
+        '#highlighted_comment' => $highlighted_comment instanceof CommentInterface ?
+          $highlighted_comment->id() :
+          0,
+        '#theme' => 'eic_group_comments_from_discussion',
+        '#discussion_id' => $node->id(),
+        '#contributors' => $contributors_data,
+        '#is_anonymous' => $current_user->isAnonymous(),
+        '#can_view_comments' => $can_view_comments,
+        '#no_container' => in_array($node->bundle(), $no_container_nodes) ? TRUE : FALSE,
+        '#ckeditor_js_settings' => $ckeditor_js_settings,
+      ];
+  }
+
+  /**
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return array
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  private function getContributors(NodeInterface $node): array {
+    $contributors_data = [];
+    if ('story' === $node->getType()) {
+      $contributors = $node->get('field_story_paragraphs')->referencedEntities();
     }
     else {
       $contributors = $node->hasField('field_related_contributors') ?
@@ -200,7 +407,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     }
 
     $users = array_unique(array_values($users), SORT_NUMERIC);
-
     $contributors_data['items'] = [];
 
     if (
@@ -221,184 +427,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       );
     }
 
-    $group_contents = GroupContent::loadByEntity($node);
-
-    /** @var \Drupal\media\MediaInterface|null $media_picture */
-    $media_picture = $current_user->get('field_media')->referencedEntities();
-    /** @var \Drupal\file\Entity\File|NULL $file */
-    $file = $media_picture ? File::load(
-      $media_picture[0]->get('oe_media_image')->target_id
-    ) : NULL;
-    $file_url = $file ? file_url_transform_relative(
-      file_create_url($file->get('uri')->value)
-    ) : NULL;
-
-    $group_id = $current_group_route ? $current_group_route->id() : 0;
-    $user_url = Url::fromRoute('eic_search.solr_search', [
-      'datasource' => json_encode(['user']),
-      'source_class' => UserTaggingCommentsSourceType::class,
-      'page' => 1,
-      'current_group' => $group_id,
-    ])->toString();
-
-    $build['#attached']['drupalSettings']['overview'] = [
-      'is_group_owner' => array_key_exists(
-        EICGroupsHelper::GROUP_OWNER_ROLE,
-        $user_group_roles
-      ),
-      'user' => [
-        'avatar' => $file_url,
-        'fullname' => (
-          $current_user instanceof UserInterface ?
-          $current_user->get(
-            'field_first_name'
-          )->value . ' ' . $current_user->get('field_last_name')->value :
-          ''
-        ),
-        'url' => (
-          $current_user instanceof UserInterface ?
-          $current_user->toUrl()->toString() :
-          '#'
-        ),
-      ],
-      'is_comment_closed' => $is_comment_closed,
-      'group_roles' => $user_group_roles,
-      'group_id' => $group_id,
-      'users_url' => $user_url,
-      'users_url_search' => $user_url,
-      'permissions' => [
-        'post_comment' => $this->hasGroupOrGlobalPermission(
-          $group_contents,
-          $current_user,
-          'post comments'
-        ),
-        'edit_all_comments' => $this->hasGroupOrGlobalPermission(
-          $group_contents,
-          $current_user,
-          'edit all comments'
-        ),
-        'delete_all_comments' => UserHelper::isPowerUser($current_user),
-        'edit_own_comments' => $this->hasGroupOrGlobalPermission(
-          $group_contents,
-          $current_user,
-          'edit own comments'
-        ),
-      ],
-      'translations' => [
-        'title' => $this->t('Replies', [], ['context' => 'eic_groups']),
-        'no_results_title' => $this->t(
-          "We haven't found any comments",
-          [],
-          ['context' => 'eic_group']
-        ),
-        'no_results_body' => $this->t(
-          'Please try again with another keyword',
-          [],
-          ['context' => 'eic_group']
-        ),
-        'load_more' => $this->t('Load more', [], ['context' => 'eic_groups']),
-        'edit' => $this->t('Edit', [], ['context' => 'eic_groups']),
-        'options' => $this->t('Options', [], ['context' => 'eic_groups']),
-        'reply_to' => $this->t('Reply', [], ['context' => 'eic_groups']),
-        'in_reply_to' => $this->t('in reply to', [], ['context' => 'eic_groups']
-        ),
-        'reply' => $this->t('Reply', [], ['context' => 'eic_groups']),
-        'submit' => $this->t('Submit', [], ['context' => 'eic_groups']),
-        'reason' => $this->t('Reason', [], ['context' => 'eic_groups']),
-        'comment_placeholder' => $this->t(
-          'Type your message here...',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_edit_comment' => $this->t(
-          'Edit comment',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_delete_comment' => $this->t(
-          'Delete comment',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_request_delete' => $this->t(
-          'Request deletion',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'action_request_archival' => $this->t(
-          'Request archival',
-          [],
-          ['context' => 'eic_groups']
-        ),
-        'select_value' => $this->t(
-          'Select a value',
-          [],
-          ['context' => 'eic_search']
-        ),
-        'match_limit' => $this->t(
-          'You can select only <b>@match_limit</b> top-level items.',
-          ['@match_limit' => 0],
-          ['context' => 'eic_search']
-        ),
-        'search' => $this->t('Search', [], ['context' => 'eic_search']),
-        'your_values' => $this->t(
-          'Your selected values',
-          [],
-          ['context' => 'eic_search']
-        ),
-        'required_field' => $this->t(
-          'This field is required',
-          [],
-          ['context' => 'eic_content']
-        ),
-        'select_users' => $this->t(
-          'Select users',
-          [],
-          ['context' => 'eic_content']
-        ),
-        'modal_invite_users_title' => $this->t(
-          'Invite user(s)',
-          [],
-          ['context' => 'eic_content']
-        ),
-      ],
-    ];
-
-    $group_id = $current_group_route ? $current_group_route->id() : 0;
-
-    $cache_context = [
-      'url.path',
-      'url.query_args',
-      'user.group_permissions',
-      'session',
-    ];
-
-    if ($group_id) {
-      $cache_context[] = "user.is_group_member:$group_id";
-    }
-
-    // We get the user access to view comments in the group. Note that power
-    // users can always view comments.
-    $can_view_comments = UserHelper::isPowerUser($account);
-    if (!$can_view_comments) {
-      $can_view_comments = $this->hasGroupOrGlobalPermission(
-        $group_contents,
-        $current_user,
-        $group_id ? 'view comments' : 'access comments'
-      );
-    }
-
-    return $build + [
-      '#cache' => [
-        'contexts' => $cache_context,
-        'tags' => $node->getCacheTags(),
-      ],
-      '#theme' => 'eic_group_comments_from_discussion',
-      '#discussion_id' => $node->id(),
-      '#contributors' => $contributors_data,
-      '#is_anonymous' => $current_user->isAnonymous(),
-      '#can_view_comments' => $can_view_comments,
-    ];
+    return $contributors_data;
   }
 
   /**
@@ -422,8 +451,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     // If empty groups, that means we are not in group context.
     if (empty($group_contents)) {
       return $user instanceof UserInterface && $user->hasPermission(
-        $permission
-      );
+          $permission
+        );
     }
 
     return $this->groupPermissionChecker->getPermissionInGroups(

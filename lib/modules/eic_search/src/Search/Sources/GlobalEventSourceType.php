@@ -42,7 +42,8 @@ class GlobalEventSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
+      'sm_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
+      'ss_group_event_type_string' => $this->t('Event type', [], ['context' => 'eic_search']),
       'sm_group_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
       Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => $this->t('Time', [], ['context' => 'eic_search']),
       'ss_group_event_country' => $this->t('Country', [], ['context' => 'eic_search']),
@@ -129,6 +130,13 @@ class GlobalEventSourceType extends SourceType {
    */
   public function getDefaultSort(): array {
     return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'event-' . parent::getUniqueId();
   }
 
 }

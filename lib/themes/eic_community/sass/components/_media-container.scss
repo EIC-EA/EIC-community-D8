@@ -6,4 +6,48 @@
     color: ecl-typography('color');
     @include ecl-responsive-font('label');
   }
+
+  &--is-loading, &--has-error {
+    position: relative;
+  }
+
+  &__loader,  &__error {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: map-get($ecl-colors, 'grey-10');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+
+  &__loader {
+    background: map-get($ecl-colors, 'grey-10');
+  }
+
+  &__error {
+    background: map-get($ecl-colors, 'blue');
+    color: #fff;
+    font-weight: 700;
+    padding: 0 $ecl-spacing-xl;
+
+    & .ecl-icon {
+      margin-right: $ecl-spacing-l;
+    }
+  }
+
+
+
+  &__media .video-js {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+  }
 }

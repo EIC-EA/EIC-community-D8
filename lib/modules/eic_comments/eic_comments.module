@@ -5,11 +5,14 @@
  * Main module file for EIC Comments module.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_comments\Hooks\EntityOperations;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\flag\FlagInterface;
 use Drupal\node\NodeForm;
 use Drupal\node\NodeInterface;
 
@@ -113,6 +116,18 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
       continue;
     }
 
+    // Loads all field group info.
+    if ($group_info = field_group_info_groups($entity->getEntityTypeId(), $entity->bundle(), 'form', 'default')) {
+      // Moves the comment settings field to the correct field group.
+      foreach ($group_info as $field_group_name => $field_group_info) {
+        if (in_array($field_definition->getName(), $field_group_info->children)) {
+          $form[$field_definition->getName()]['widget'][0]['#group'] = $field_group_name;
+          $form[$field_definition->getName()]['widget'][0]['#weight'] = $form[$field_definition->getName()]['#weight'];
+          $form[$field_definition->getName()]['widget'][0]['#open'] = TRUE;
+        }
+      }
+    }
+
     // If the node is new, the user can manage comment settings.
     if ($entity->isNew()) {
       $form[$field_definition->getName()]['#access'] = TRUE;
@@ -127,4 +142,79 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
       $form[$field_definition->getName()]['#access'] = TRUE;
     }
   }
+}
+
+/**
+ * Implements hook_flag_action_access().
+ */
+function eic_comments_flag_action_access($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+  $access = AccessResult::neutral();
+
+  if (!$flaggable) {
+    return $access;
+  }
+
+  switch ($flaggable->getEntityTypeId()) {
+    case 'comment':
+      // Deny access to flag/unflag the comment if the comment has been soft
+      // deleted, archived or if the user doesn't have permission to view
+      // comments.
+      if (
+        (
+          !$flaggable->get('field_comment_is_soft_deleted')->isEmpty() &&
+          $flaggable->get('field_comment_is_soft_deleted')->value
+        ) ||
+        (
+          !$flaggable->get('field_comment_is_archived')->isEmpty() &&
+          $flaggable->get('field_comment_is_archived')->value
+        ) ||
+        !$account->hasPermission('access comments')
+      ) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($flaggable);
+        break;
+      }
+
+      /** @var \Drupal\Core\Entity\EntityInterface $commented_entity */
+      $commented_entity = $flaggable->getCommentedEntity();
+
+      // If node is published, the access to flag/unflag the comment will be
+      // neutral and might be allowed or denied by other modules. Exception for
+      // request flags which also depends on extra permissions.
+      if (
+        $commented_entity->isPublished() &&
+        $commented_entity->access('view')
+      ) {
+
+        // Deny access to create archival or delete requests if the user
+        // doesn't have permission to do so.
+        if (
+          (
+            $flag->id() === 'request_archive_comment' &&
+            $account->hasPermission('make archive request')
+          ) ||
+          (
+            $flag->id() === 'request_delete_comment' &&
+            $account->hasPermission('make delete request')
+          )
+        ) {
+          $access = AccessResult::allowed()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($flaggable)
+            ->addCacheableDependency($commented_entity);
+        }
+        break;
+      }
+
+      // Deny access to flag/unflag the comment if the commented entity is not
+      // published.
+      $access = AccessResult::forbidden()
+        ->addCacheableDependency($flaggable)
+        ->addCacheableDependency($commented_entity);
+
+      break;
+
+  }
+
+  return $access;
 }

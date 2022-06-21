@@ -6,8 +6,8 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  anchor_link: 0
   antibot: 0
-  basic_auth: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -15,7 +15,16 @@ module:
   block_field: 0
   book: 0
   breakpoint: 0
+  cas: 0
+  cas_mock_server: 0
   ckeditor: 0
+  ckeditor_div_manager: 0
+  ckeditor_find: 0
+  ckeditor_font: 0
+  ckeditor_iframe: 0
+  ckeditor_oembed: 0
+  ckeditor_selectall: 0
+  colorbutton: 0
   comment: 0
   components: 0
   config: 0
@@ -67,6 +76,7 @@ module:
   eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
+  eic_moderation: 0
   eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0
@@ -76,14 +86,19 @@ module:
   eic_paragraphs: 0
   eic_private_content: 0
   eic_private_message: 0
+  eic_recommend_content: 0
   eic_search: 0
   eic_seo: 0
   eic_share_content: 0
   eic_statistics: 0
+  eic_subscription_digest: 0
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
+  eic_user_login: 0
+  eic_vod: 0
   eic_webservices: 0
+  eic_wysiwyg: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -92,6 +107,7 @@ module:
   extra_field: 0
   facets: 0
   facets_summary: 0
+  fakeobjects: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -114,6 +130,7 @@ module:
   inline_entity_form: 0
   language: 0
   link: 0
+  locale: 0
   mailsystem: 0
   masquerade: 0
   media: 0
@@ -136,9 +153,11 @@ module:
   mimemail: 0
   node: 0
   node_read_time: 0
+  oe_authentication: 0
   oe_media: 0
   oe_time_caching: 0
   oe_webtools: 0
+  oe_webtools_analytics: 0
   oe_webtools_cookie_consent: 0
   oe_webtools_social_share: 0
   oec_group_comments: 0
@@ -148,10 +167,13 @@ module:
   openapi_rest: 0
   options: 0
   page_cache: 0
+  pagebreak: 0
+  panelbutton: 0
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
   profile: 0
+  raven: 0
   realname: 0
   redirect: 0
   redis: 0
@@ -159,7 +181,6 @@ module:
   rest: 0
   restui: 0
   route_condition: 0
-  s3fs: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
   schemata: 0
@@ -192,8 +213,10 @@ module:
   views_data_export: 0
   views_data_export_phpspreadsheet: 0
   views_ui: 0
+  workflow_buttons: 0
   workflows: 0
   pathauto: 1
+  externalauth: 10
   views: 10
   paragraphs: 11
   publication_date: 99

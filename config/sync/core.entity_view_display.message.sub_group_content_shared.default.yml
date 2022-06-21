@@ -4,6 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.message.sub_group_content_shared.field_event_executing_user
+    - field.field.message.sub_group_content_shared.field_group_ref
+    - field.field.message.sub_group_content_shared.field_referenced_node
+    - field.field.message.sub_group_content_shared.field_share_message
+    - field.field.message.sub_group_content_shared.field_source_group
     - message.template.sub_group_content_shared
 id: message.sub_group_content_shared.default
 targetEntityType: message
@@ -17,6 +21,37 @@ content:
       link: true
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_referenced_node:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_share_message:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_source_group:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
     region: content
   partial_0:
     settings: {  }

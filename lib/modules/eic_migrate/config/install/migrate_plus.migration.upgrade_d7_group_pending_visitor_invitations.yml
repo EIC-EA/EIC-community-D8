@@ -1,0 +1,74 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_group_pending_visitor_invitations
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - Invitations
+migration_group: migrate_drupal_7
+label: 'Group pending visitor invitations'
+source:
+  plugin: eic_d7_c4m_og_invite_visitors
+  track_changes: true
+  constants:
+    group_invitation_plugin_id: group_invitation
+  batch_size: 100
+process:
+  _group_type:
+    plugin: static_map
+    source: node_type
+    map:
+      group: group
+      event_site: event
+      organisation: organisation
+  type:
+    plugin: concat
+    source:
+      - '@_group_type'
+      - constants/group_invitation_plugin_id
+    delimiter: '-'
+  uid:
+    -
+      plugin: migration_lookup
+      source: inv_inviter_id
+      migration: upgrade_d7_user
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'User not found'
+  gid:
+    -
+      plugin: migration_lookup
+      source: inv_group_id
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
+      no_stub: true
+    -
+      plugin: skip_on_empty
+      method: row
+      message: 'Group not found'
+  entity_id:
+    - plugin: default_value
+      default_value: 0
+  invitee_mail: inv_email
+  invitation_status:
+    - plugin: default_value
+      default_value: 0
+  created: inv_created
+  changed: inv_updated
+
+destination:
+  plugin: 'entity:group_content'
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
+  optional: { }

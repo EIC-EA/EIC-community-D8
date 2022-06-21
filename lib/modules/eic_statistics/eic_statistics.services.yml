@@ -14,4 +14,4 @@ services:
     calls:
       - [ setFileDownloadCounter, [ '@?eic_media_statistics.entity_file_download_count' ] ]
       - [ setGroupsHelper, [ '@?eic_groups.helper' ] ]
-    arguments: [ '@eic_statistics.storage', '@statistics.storage.node', '@flag', '@eic_comments.helper', '@eic_user.helper' ]
+    arguments: [ '@eic_statistics.storage', '@statistics.storage.node', '@flag', '@eic_comments.helper', '@eic_user.helper', '@flag.count' ]

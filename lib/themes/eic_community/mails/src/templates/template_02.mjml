@@ -1,0 +1,138 @@
+<mjml>
+    <mj-head>
+
+      <mj-style inline="inline">
+        body{
+          font-size: 16px;
+        }
+        .btn{
+          background: #FFD617;
+          padding: 15px 19px 15px 19px;
+          color: #004494;
+          font-weight: bold;
+          text-decoration: none;
+          display: inline-block;
+        }
+        .btn--primary{
+          background: #004494;
+          color: white;
+        }
+        .link{
+          font-weight: bold;
+          color:#004494;
+        }
+        .header-title {
+          font-weight: bold;
+          color: #265D9E;
+          font-size: 16px;
+        }
+        .light {
+          font-weight: lighter;
+        }
+        .align-left{
+          text-align: left;
+        }
+        ul, ol {
+          margin: 0;
+        }
+      </mj-style>
+
+      <mj-raw>
+        <!-- generic styling start (do not copy) -->
+        <style type="text/css">
+          .logo {
+            min-width: 120px;
+          }
+          @media screen and (max-device-width: 599px),
+          screen and (max-width: 599px) {
+            .btn{
+              margin: 0 0 10px !important;
+            }
+          }
+        </style>
+        <!-- generic styling end -->
+      </mj-raw>
+
+      <mj-attributes>
+        <mj-text line-height="1.4" />
+        <mj-text font-size="16px" />
+        <mj-all font-family="Arial" />
+        <mj-all color="#404040" />
+        <mj-divider border-color="#CFCFCF" />
+      </mj-attributes>
+
+    </mj-head>
+    <mj-body>
+      <mj-section padding="0">
+        <mj-column width="100%">
+          <mj-image src="images/header.png" />
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="10px 0px 0px">
+        <mj-column>
+          <mj-text>
+            Dear John Smith,
+            <br><br>
+            Jane Doe invited you to join the following group at European Innovation Council:
+            <br><br>
+            <span style="font-weight: bold; text-decoration: none; color:#004494">Public group - open membership requests</span>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="0">
+        <mj-column width="85%">
+          <mj-divider border-width="1px" border-style="solid" />
+          <mj-text>
+            <span style="font-weight: bold; text-decoration: none; color:#404040">
+              See their message below:
+            </span>
+            <br><br>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris condimentum commodo nunc in lacinia.
+            Aliquam at hendrerit mauris. Nunc nec scelerisque nisi. Nullam vitae commodo dolor.
+            Nullam id nisi fringilla, varius metus nec, porta libero. Integer id auctor lacus.
+            Nunc id lacinia eros. Curabitur vulputate iaculis faucibus. Nulla finibus velit turpis,
+            vitae imperdiet mi egestas vitae. Duis ut velit euismod, sodales mi at, fermentum tellus.
+            <br><br>
+            This is an example of a bulleted list:
+            <ul>
+              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+              <li>Aliquam at hendrerit mauris. Nunc nec scelerisque nisi. Nullam vitae commodo dolor.</li>
+              <li>Duis ut velit euismod, sodales mi at.</li>
+            </ul>
+            <br>
+            This is an example of a numbered list:
+            <ol>
+              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+              <li>Aliquam at hendrerit mauris. Nunc nec scelerisque nisi. Nullam vitae commodo dolor.</li>
+              <li>Duis ut velit euismod, sodales mi at.</li>
+            </ol>
+          </mj-text>
+          <mj-divider border-width="1px" border-style="solid" />
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="0" css-class="pre-footer">
+        <mj-column>
+          <mj-text css-class="pre-footer">
+            To accept this invitation, click <a class="link" href="#" target="_blank">Join&nbsp;this&nbsp;group</a>.
+            <br><br>
+            To decline this invitation, <a class="link" href="#" target="_blank">click&nbsp;here</a>.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section padding="0" text-align="left" css-class="pre-footer">
+        <mj-column width="230px">
+          <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" text-decoration="underline" background-color="#FFD617" color="#000000" border-radius="0" font-weight="bold" href="#" target="_blank">
+            Accept invitation
+          </mj-button>
+        </mj-column>
+        <mj-column width="230px">
+          <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
+            Decline invitation
+          </mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-body>
+  </mjml>

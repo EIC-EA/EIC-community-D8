@@ -19,6 +19,7 @@ source:
     - public
     - private
   track_changes: true
+  batch_size: 100
 process:
   name: filename
   uid:
@@ -36,6 +37,9 @@ process:
       migration:
         - upgrade_d7_file
         - upgrade_d7_file_private
+    -
+      plugin: skip_on_empty
+      method: row
   oe_media_image/alt:
     -
       plugin: get

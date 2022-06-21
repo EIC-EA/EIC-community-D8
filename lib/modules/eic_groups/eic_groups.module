@@ -23,6 +23,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
@@ -30,10 +31,14 @@ use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
+use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -52,6 +57,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'edit_link' => NULL,
         'delete_link' => NULL,
         'invite_link' => NULL,
+        'help_link' => NULL,
         'actions' => [],
         'has_content' => NULL,
         'has_member' => FALSE,
@@ -81,7 +87,13 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'contributors' => [],
         'is_anonymous' => TRUE,
         'can_view_comments' => FALSE,
+        'highlighted_comment' => 0,
+        'no_container' => FALSE,
+        'ckeditor_js_settings' => [],
       ],
+    ],
+    'eic_group_edit_form' => [
+      'render element' => 'form',
     ],
   ];
 }
@@ -144,7 +156,7 @@ function eic_groups_preprocess_views_view_field(&$vars) {
     if ($group->access('view')) {
       $group_url = $group->toUrl('canonical', ['language' => $group->language()]);
       $group_link = Link::fromTextAndUrl($group->label(), $group_url)->toRenderable();
-      $group_label = render($group_link);
+      $group_label = \Drupal::service('renderer')->render($group_link);
     }
     else {
       $group_label = $group->label();
@@ -172,6 +184,7 @@ function eic_groups_group_insert(EntityInterface $entity) {
 function eic_groups_group_content_insert(EntityInterface $entity) {
   $pathauto_config = \Drupal::config('pathauto.settings');
   $related_entity = $entity->getEntity();
+
   // Re-creates URL alias of the group content related entity if pathauto
   // settings "update_action" setting is set to 0 (UPDATE_ACTION_NO_NEW).
   if (
@@ -185,7 +198,26 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     \Drupal::service('pathauto.alias_storage_helper')->deleteEntityPathAll($related_entity);
     $related_entity->get('path')->first()->get('pathauto')->purge();
     // Re-create entity alias.
-    \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert');
+    \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert_group_content_node');
+  }
+
+  $bundle_resync_group = [
+    'discussion',
+    'document',
+    'event',
+    'gallery',
+    'video',
+    'news',
+  ];
+
+  if (
+    $entity instanceof \Drupal\group\Entity\GroupContentInterface &&
+    in_array($entity->getEntity()->bundle(), $bundle_resync_group)
+  ) {
+    /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
+    $solr_helper = \Drupal::service('eic_search.solr_document_processor');
+    // Reindex group parent to have correct most active score.
+    $solr_helper->reIndexEntities([$entity->getGroup(), $entity->getOwner()]);
   }
 
   switch ($entity->bundle()) {
@@ -227,7 +259,12 @@ function eic_groups_node_update(EntityInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
-function eic_groups_group_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+function eic_groups_group_view(
+  array &$build,
+  EntityInterface $entity,
+  EntityViewDisplayInterface $display,
+  $view_mode
+) {
   \Drupal::classResolver(EntityOperations::class)
     ->groupView($build, $entity, $display, $view_mode);
 }
@@ -266,6 +303,18 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
     $current_user = \Drupal::currentUser();
 
     $moderation_state = $entity->get('moderation_state')->value;
+
+    // If we are in pending state and we just want to update the current group,
+    // change the transition label from "Create group" to "Update group".
+    if (
+      !$entity->isNew() &&
+      isset($form['moderation_state']['widget'][0]['#options'][GroupsModerationHelper::GROUP_PENDING_STATE])
+    ) {
+      $form['moderation_state']['widget'][0]['#options'][GroupsModerationHelper::GROUP_PENDING_STATE] = t(
+        'Update group', [],
+        ['context' => 'eic_groups']
+      );
+    }
 
     // If the group is not yet blocked, we remove the possibility to block it
     // from the group edit form.
@@ -386,7 +435,12 @@ function eic_groups_cron() {
 /**
  * Implements hook_entity_field_access().
  */
-function eic_groups_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function eic_groups_entity_field_access(
+  $operation,
+  FieldDefinitionInterface $field_definition,
+  AccountInterface $account,
+  FieldItemListInterface $items = NULL
+) {
   return \Drupal::classResolver(EntityOperations::class)
     ->entityFieldAccess($operation, $field_definition, $account, $items);
 }
@@ -424,12 +478,13 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
       // We allow access if the user is the group owner or a group admin, and
       // moderation state is set to DRAFT or BLOCKED.
       if (in_array(
-        $entity->get('moderation_state')->value,
-        [
-          GroupsModerationHelper::GROUP_DRAFT_STATE,
-          GroupsModerationHelper::GROUP_PENDING_STATE,
-          GroupsModerationHelper::GROUP_BLOCKED_STATE,
-        ]) && $is_group_admin
+          $entity->get('moderation_state')->value,
+          [
+            GroupsModerationHelper::GROUP_DRAFT_STATE,
+            GroupsModerationHelper::GROUP_PENDING_STATE,
+            GroupsModerationHelper::GROUP_BLOCKED_STATE,
+          ]
+        ) && $is_group_admin
       ) {
         $access = GroupAccessResult::allowed()
           ->addCacheableDependency($account)
@@ -458,7 +513,8 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
         [
           GroupsModerationHelper::GROUP_DRAFT_STATE,
           GroupsModerationHelper::GROUP_BLOCKED_STATE,
-        ])
+        ]
+      )
       ) {
         $access = GroupAccessResult::allowed()
           ->addCacheableDependency($account)
@@ -570,14 +626,8 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
     return;
   }
 
-  $url_options = [
-    'query' => [
-      'destination' => \Drupal::requestStack()->getCurrentRequest()->getRequestUri(),
-    ],
-  ];
-
   // Add publish group operation.
-  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $url_options);
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()]);
   if ($publish_url->access()) {
     $operations['publish'] = [
       'title' => t('Publish'),
@@ -670,6 +720,7 @@ function eic_groups_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_type_alter().
  */
 function eic_groups_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (!isset($entity_types['group']) && !isset($entity_types['group_content'])) {
     return;
   }
@@ -677,6 +728,9 @@ function eic_groups_entity_type_alter(array &$entity_types) {
   // Add custom group membership validation constraint to the group_content
   // entity.
   $entity_types['group_content']->addConstraint('EICGroupMembership');
+
+  // Overrides entity group class.
+  $entity_types['group']->setClass(Group::class);
 }
 
 /**
@@ -714,4 +768,172 @@ function eic_field_location_type_allowed_values() {
     'on_site' => t('On site', [], ['eic_groups']),
     'remote' => t('Remote', [], ['eic_groups']),
   ];
+}
+
+/**
+ * Implements hook_flag_action_access().
+ */
+function eic_groups_flag_action_access(
+  $action,
+  FlagInterface $flag,
+  AccountInterface $account,
+  EntityInterface $flaggable = NULL
+) {
+  $access = AccessResult::neutral();
+
+  if (!$flaggable) {
+    return $access;
+  }
+
+  switch ($flaggable->getEntityTypeId()) {
+    case 'comment':
+      /** @var \Drupal\Core\Entity\EntityInterface $commented_entity */
+      $commented_entity = $flaggable->getCommentedEntity();
+
+      $group_contents = GroupContent::loadByEntity($commented_entity);
+
+      // Entity does not belong to any group, so we do nothing.
+      if (empty($group_contents)) {
+        break;
+      }
+
+      /** @var EICGroupsHelper $group_helper */
+      $group_helper = \Drupal::service('eic_groups.helper');
+
+      // Check access for these different flags if group is archived.
+      $forbidden_flag_archived = [
+        'request_delete_comment',
+        'request_archive_comment',
+      ];
+
+      if (
+        !UserHelper::isPowerUser($account) &&
+        $group_helper->isGroupArchived($commented_entity) &&
+        in_array($flag->id(), $forbidden_flag_archived)
+      ) {
+        $access = AccessResult::forbidden()->addCacheableDependency($flaggable);
+      }
+
+      // Load the first group content entity found.
+      $group_content = reset($group_contents);
+
+      // Load the group.
+      $group = $group_content->getGroup();
+
+      // Deny access to flag if the group is not flaggable or the user doesn't
+      // have permission to view comments in the group.
+      if (
+        !EICGroupsHelper::groupIsFlaggable($group) ||
+        !$group->hasPermission('view comments', $account)
+      ) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($group)
+          ->addCacheableDependency($flaggable);
+      }
+      break;
+
+    case 'group':
+      // Deny access to flag if the group IS in pending or draft state.
+      if (!EICGroupsHelper::groupIsFlaggable($flaggable)) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($flaggable);
+      }
+      break;
+
+    case 'node':
+      if ($flaggable->isNew()) {
+        break;
+      }
+
+      // Get the group content entities related to the node.
+      $group_contents = GroupContent::loadByEntity($flaggable);
+
+      // Node does not belong to any group, so we do nothing.
+      if (empty($group_contents)) {
+        break;
+      }
+
+      // Load the first group content entity found.
+      $group_content = reset($group_contents);
+
+      // Load the group.
+      $group = $group_content->getGroup();
+
+      // Deny access to flag if the group IS in pending or draft state.
+      if (!EICGroupsHelper::groupIsFlaggable($group)) {
+        $access = AccessResult::forbidden();
+      }
+
+      // Add cacheable dependencies.
+      $access->addCacheableDependency($group)
+        ->addCacheableDependency($flaggable);
+      break;
+
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_overview_page_access().
+ */
+function eic_groups_overview_page_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $overview_type_id = $entity->get('field_overview_id')->value;
+  $overview_type_forbidden_anonymous = [
+    GlobalOverviewPages::ORGANISATIONS,
+    GlobalOverviewPages::MEMBERS,
+  ];
+  $access = AccessResult::neutral();
+
+  if ($account->isAnonymous() &&
+    in_array($overview_type_id, $overview_type_forbidden_anonymous)
+  ) {
+    $access = AccessResult::forbidden()
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($entity);
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_group_operations_alter().
+ */
+function eic_groups_entity_operation(EntityInterface $entity) {
+  if (!$entity instanceof GroupInterface) {
+    return [];
+  }
+
+  $current_user = \Drupal::currentUser();
+  if ($entity->hasPermission('view group_membership content', $current_user->getAccount())) {
+    return [
+      'edit-members' => [
+        'title' => t('Edit members'),
+        'url' => Url::fromRoute('view.eic_group_members.page_group_members', ['group' => $entity->id()]),
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function eic_groups_views_pre_render(ViewExecutable $view) {
+  $view_display = "{$view->id()}-{$view->current_display}";
+  switch ($view_display) {
+    case 'group_related_groups-block_related_groups':
+      // @todo Improve logic to hide entities which user doesn't have access
+      // to. The current implementation might be triggering duplicated access
+      // checkers which is not very optimal in terms of performance.
+      foreach ($view->result as $key => $row) {
+        /** @var \Drupal\group\Entity\GroupInterface $group */
+        foreach ($row->_relationship_entities as $group) {
+          if (!$group->access('view')) {
+            unset($view->result[$key]);
+          }
+        }
+      }
+      break;
+
+  }
 }

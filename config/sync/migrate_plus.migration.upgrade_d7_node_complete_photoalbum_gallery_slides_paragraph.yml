@@ -14,6 +14,7 @@ label: 'Node complete (Photoalbum) gallery slides paragraph (node_gallery_relati
 source:
   plugin: eic_d7_photoalbum_photo_relationship
   track_changes: true
+  batch_size: 100
 process:
   field_gallery_slide_media/target_id:
     -
@@ -21,6 +22,9 @@ process:
       source: nid
       migration:
         - upgrade_d7_node_photo_to_media
+    -
+      plugin: skip_on_empty
+      method: row
 destination:
   plugin: 'entity_reference_revisions:paragraph'
   default_bundle: gallery_slide

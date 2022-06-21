@@ -1,0 +1,82 @@
+.ckeditor__content {
+  margin-bottom: $ecl-spacing-l;
+
+  @include ecl-media-breakpoint-down('md') {
+    & div {
+      width: auto!important;
+      overflow-x: scroll;
+      padding-bottom: $ecl-spacing-m;
+
+      &::-webkit-scrollbar-track {
+        background: $ecl-color-grey-5;
+        border-radius: 20px;
+      }
+
+      &::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $ecl-color-blue;
+        border-radius: 20px;
+      }
+
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: $ecl-color-blue-75;
+      }
+    }
+
+  }
+
+  & img, & iframe{
+    width: 100%;
+    height: auto;
+  }
+
+  & iframe {
+    min-height: 400px;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: $ecl-color-blue;
+    font-weight: 400;
+  }
+
+  & blockquote {
+    @extend .ecl-blockquote;
+    & > * {
+      @extend .ecl-blockquote__body
+    }
+  }
+
+  & table {
+    width: 100%!important;
+    border: 0;
+    border-collapse: collapse;
+    & td, & th, & tbody tr td:first-child {
+      border: 0;
+      padding: $ecl-spacing-m $ecl-spacing-xs;
+      @include ecl-media-breakpoint-down('md') {
+        width: 200px;
+      }
+    }
+
+    & th {
+      border: 0;
+      text-align: left;
+      background: $ecl-color-blue;
+      color: #fff;
+      font-weight: normal;
+    }
+
+    & tbody tr td:first-child {
+      background-color: $ecl-color-blue-5;
+    }
+
+    & td {
+      border: 1px solid $ecl-color-grey-5;
+    }
+  }
+}

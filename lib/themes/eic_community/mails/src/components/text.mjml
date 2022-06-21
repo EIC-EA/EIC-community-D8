@@ -1,0 +1,9 @@
+<mj-section padding="10px 0px 0px">
+  <mj-column>
+    <mj-text mj-class="text">
+      Dear %go_full_name%,
+      <br><br>
+      Discover the latest updates you’re subscribed to.
+    </mj-text>
+  </mj-column>
+</mj-section>

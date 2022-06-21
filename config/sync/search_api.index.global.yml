@@ -3,79 +3,81 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.group.field_date_range
-    - field.storage.group.field_location
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
-    - field.storage.group.field_locations
-    - field.storage.group.field_location_type
-    - field.storage.group.field_organisation_type
-    - field.storage.group.field_vocab_geo
-    - field.storage.group.field_image
-    - field.storage.group.field_vocab_services_products
-    - field.storage.group.field_vocab_target_markets
-    - field.storage.group.field_thumbnail
-    - field.storage.group.field_image
-    - field.storage.group.field_vocab_topics
-    - field.storage.group.field_body
-    - field.storage.message.field_entity_type
-    - field.storage.message.field_group_ref
-    - field.storage.message.field_operation_type
-    - field.storage.message.field_referenced_comment
-    - field.storage.message.field_referenced_node
-    - field.storage.node.field_vocab_topics
-    - field.storage.node.field_discussion_type
-    - field.storage.message.field_share_message
-    - field.storage.message.field_source_group
-    - field.storage.node.field_body
     - field.storage.node.field_comments
-    - field.storage.node.field_document_type
-    - field.storage.media.field_media_file
-    - field.storage.node.field_document_media
     - field.storage.node.field_location
+    - field.storage.node.field_document_media
+    - field.storage.node.field_document_type
     - field.storage.node.field_vocab_event_type
-    - field.storage.node.field_image
-    - field.storage.node.field_language
+    - field.storage.node.field_body
+    - field.storage.node.field_date_range
+    - field.storage.node.field_discussion_type
     - field.storage.node.field_location_type
     - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_geo
-    - field.storage.node.field_gallery_slides
-    - field.storage.paragraph.field_gallery_slide_legend
+    - field.storage.node.field_vocab_topics
     - field.storage.media.oe_media_file
+    - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_media
-    - field.storage.node.field_date_range
-    - field.storage.node.field_subtitle
-    - field.storage.profile.field_body
+    - field.storage.paragraph.field_gallery_slide_legend
+    - field.storage.node.field_image
+    - field.storage.node.field_introduction
+    - field.storage.node.field_language
+    - field.storage.message.field_referenced_node
+    - field.storage.group.field_funding_source
+    - field.storage.group.field_event_registration_date
+    - field.storage.group.field_image
+    - field.storage.message.field_share_message
+    - field.storage.media.field_media_file
+    - field.storage.group.field_date_range
+    - field.storage.group.field_location
+    - field.storage.group.field_vocab_event_type
+    - field.storage.group.field_body
+    - field.storage.group.field_location_type
+    - field.storage.group.field_organisation_type
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
+    - field.storage.message.field_group_ref
+    - field.storage.group.field_thumbnail
+    - field.storage.message.field_referenced_comment
+    - field.storage.message.field_operation_type
+    - field.storage.group.field_vocab_services_products
+    - field.storage.group.field_vocab_target_markets
+    - field.storage.message.field_source_group
+    - field.storage.message.field_entity_type
     - field.storage.profile.field_location_address
-    - field.storage.profile.field_vocab_job_title
+    - field.storage.profile.field_body
     - field.storage.profile.field_vocab_language
-    - field.storage.profile.field_social_links
-    - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
+    - field.storage.profile.field_vocab_geo
+    - field.storage.profile.field_vocab_job_title
+    - field.storage.profile.field_social_links
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
   module:
     - search_api_solr
-    - flag
-    - group
+    - message
     - user
     - file
     - media
-    - taxonomy
-    - content_moderation
-    - message
-    - comment
     - node
-    - eic_private_content
-    - path
+    - taxonomy
     - paragraphs
+    - eic_private_content
+    - content_moderation
+    - flag
+    - group
+    - comment
+    - path
     - profile
     - search_api
     - address
+    - eic_events
     - eic_group_statistics
     - eic_search
     - flag_search_api
@@ -467,6 +469,14 @@ field_settings:
       module:
         - file
         - media
+  content_introduction_string:
+    label: 'Introduction » Processed text'
+    datasource_id: 'entity:node'
+    property_path: 'field_introduction:processed'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_introduction
   content_is_private:
     label: 'Only visible to community members'
     datasource_id: 'entity:node'
@@ -496,6 +506,14 @@ field_settings:
       module:
         - node
         - user
+  content_moderation_state:
+    label: 'Moderation state'
+    datasource_id: 'entity:node'
+    property_path: moderation_state
+    type: string
+    dependencies:
+      module:
+        - content_moderation
   content_nid:
     label: ID
     datasource_id: 'entity:node'
@@ -584,6 +602,48 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
+  event_funding_source_string:
+    label: 'Funding source » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_funding_source:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_funding_source
+      module:
+        - taxonomy
+  event_registration_date_end:
+    label: 'Event registration date » End date value'
+    datasource_id: 'entity:group'
+    property_path: 'field_event_registration_date:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_event_registration_date
+  event_registration_date_start:
+    label: 'Event registration date'
+    datasource_id: 'entity:group'
+    property_path: field_event_registration_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_event_registration_date
+  event_teaser_fid:
+    label: 'Thumbnail image » Media » Image » File » File ID'
+    datasource_id: 'entity:group'
+    property_path: 'field_image:entity:oe_media_image:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_image
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
+  event_weight_state:
+    label: 'Event weight state'
+    property_path: event_weight_state
+    type: integer
   field_share_message:
     label: 'Share message'
     datasource_id: 'entity:message'
@@ -660,12 +720,32 @@ field_settings:
     dependencies:
       module:
         - group
+  group_content_end_value:
+    label: '[Group content] Parent group » Group » Date » End date value'
+    datasource_id: 'entity:group_content'
+    property_path: 'gid:entity:field_date_range:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_date_range
+      module:
+        - group
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
     property_path: entity_id
     type: integer
     dependencies:
+      module:
+        - group
+  group_content_field_date_range:
+    label: '[Group content] Parent group » Group » Date'
+    datasource_id: 'entity:group_content'
+    property_path: 'gid:entity:field_date_range'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_date_range
       module:
         - group
   group_content_gid:
@@ -681,6 +761,14 @@ field_settings:
     datasource_id: 'entity:group_content'
     property_path: type
     type: string
+    dependencies:
+      module:
+        - group
+  group_content_uid:
+    label: '[Group content] Creator'
+    datasource_id: 'entity:group_content'
+    property_path: uid
+    type: integer
     dependencies:
       module:
         - group
@@ -720,6 +808,16 @@ field_settings:
       module:
         - file
         - media
+  group_event_type_string:
+    label: 'Event type » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_event_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_event_type
+      module:
+        - taxonomy
   group_field_body:
     label: '[Group] Body'
     datasource_id: 'entity:group'
@@ -752,16 +850,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_location_type
-  group_field_locations_string:
-    label: 'Locations » Taxonomy term » Name'
-    datasource_id: 'entity:group'
-    property_path: 'field_locations:entity:name'
-    type: string
-    dependencies:
-      config:
-        - field.storage.group.field_locations
-      module:
-        - taxonomy
   group_field_organisation_type:
     label: '[Group] Organisation type'
     datasource_id: 'entity:group'
@@ -881,6 +969,18 @@ field_settings:
     dependencies:
       module:
         - group
+  group_teaser_fid:
+    label: 'Thumbnail image » Media » File » File » File ID'
+    datasource_id: 'entity:group'
+    property_path: 'field_thumbnail:entity:oe_media_file:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_thumbnail
+        - field.storage.media.oe_media_file
+      module:
+        - file
+        - media
   group_teaser_url_string:
     label: 'Thumbnail image » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:group'
@@ -1518,6 +1618,18 @@ processor_settings:
     weights:
       preprocess_index: -20
       preprocess_query: -20
+    content_country_code:
+      enable: 0
+      concat: 0
+    content_event_locality:
+      enable: 0
+      concat: 0
+    group_country_code:
+      enable: 0
+      concat: 0
+    group_event_locality:
+      enable: 0
+      concat: 0
     user_profile_city_string:
       enable: 0
       concat: 0
@@ -1528,6 +1640,7 @@ processor_settings:
     all_fields: false
   aggregated_field: {  }
   entity_type: {  }
+  event_weight_state: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
     number_indexed: 0
@@ -1558,12 +1671,46 @@ processor_settings:
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
       group_field_vocab_topics: taxonomy_term-parent
+  html_filter:
+    weights:
+      preprocess_index: -15
+      preprocess_query: -15
+    all_fields: false
+    fields:
+      - content_introduction_string
+    title: false
+    alt: false
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
   language_with_fallback: {  }
   rendered_item: {  }
   reverse_entity_references: {  }
   solr_date_range:
     weights:
       preprocess_index: 0
+  solr_regex_replace:
+    weights:
+      postprocess_query: 0
+      preprocess_index: -16
+      preprocess_query: -16
+    all_fields: false
+    fields:
+      - aggregated_search_spellcheck
+      - content_field_body_fulltext
+      - content_introduction_string
+      - group_field_body
+      - processed
+    regexes:
+      - '#(src=".*image/[^;"]+;base64,.*")#iU'
+      - '#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU'
+    replacements:
+      - '""'
+      - '""'
+    preserve_original: false
 tracker_settings:
   default:
     indexing_order: fifo

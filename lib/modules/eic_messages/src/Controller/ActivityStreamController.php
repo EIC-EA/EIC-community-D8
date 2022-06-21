@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_messages\Controller;
 
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\MessageInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +22,13 @@ class ActivityStreamController {
   public function deleteActivityItem(GroupInterface $group, MessageInterface $message) {
     if (!$message->hasField('field_group_ref')
       || $group->id() !== $message->get('field_group_ref')->entity->id()
+    ) {
+      return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
+    }
+
+    if (
+      $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
+      !UserHelper::isPowerUser(\Drupal::currentUser())
     ) {
       return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
     }

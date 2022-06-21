@@ -94,16 +94,13 @@ class EntityOperations implements ContainerInjectionInterface {
 
           if (isset($entity->book) && empty($entity->book['pid'])) {
             // If top level book page.
-            $build['link_add_child_book_page'] = $add_book_page_urls['add_child_book_page']->toString();
             $build['link_add_child_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new book page'), $add_book_page_urls['add_child_book_page'])->toRenderable();
           }
-          else {
+          elseif (isset($entity->book) && !empty($entity->book['pid'])) {
             // If child book page.
-            $build['link_add_current_level_book_page'] = $add_book_page_urls['add_current_level_book_page']->toString();
             $build['link_add_current_level_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add page on same level'), $add_book_page_urls['add_current_level_book_page'])->toRenderable();
             $build['link_add_current_level_book_page_renderable']['#suffix'] = '<br>';
-            $build['link_add_child_book_page'] = $add_book_page_urls['add_child_book_page']->toString();
-            $build['link_add_child_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page below this page'), $add_book_page_urls['add_child_book_page'])->toRenderable();
+            $build['link_add_child_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add a child page'), $add_book_page_urls['add_child_book_page'])->toRenderable();
           }
         }
         break;
@@ -125,17 +122,19 @@ class EntityOperations implements ContainerInjectionInterface {
       'node_type' => 'book',
     ];
     $link_options = [
-      'add_current_level_book_page' => [
-        'query' => [
-          'parent' => $entity->book['pid'],
-        ],
-      ],
       'add_child_book_page' => [
         'query' => [
           'parent' => $entity->id(),
         ],
       ],
     ];
+    if (!empty($entity->book['pid'])) {
+      $link_options['add_current_level_book_page'] = [
+        'query' => [
+          'parent' => $entity->book['pid'],
+        ],
+      ];
+    }
     $links = [];
     foreach ($link_options as $key => $options) {
       $links[$key] = Url::fromRoute('node.add', $route_parameters, $options);

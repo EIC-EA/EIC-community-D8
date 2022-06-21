@@ -1,0 +1,19 @@
+uuid: 5c10b111-d46b-4f29-9ea2-5ca29469c1cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_visibility
+    - message.template.notify_group_access_change
+id: message.notify_group_access_change.field_group_visibility
+field_name: field_group_visibility
+entity_type: message
+bundle: notify_group_access_change
+label: 'Group visibility'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -56,13 +56,6 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
       $weight_event_state = Event::WEIGHT_STATE_ONGOING;
     }
 
-    $this->addOrUpdateDocumentField(
-      $document,
-      Event::SOLR_FIELD_ID_WEIGHT_STATE,
-      $fields,
-      $weight_event_state
-    );
-
     $labels_map = Event::getStateLabelsMapping();
 
     $this->addOrUpdateDocumentField(
@@ -84,6 +77,22 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
       $key,
       $group_owner instanceof UserInterface ? $group_owner->id() : -1
     );
+  }
+
+  /**
+   * Sanitizes the given string.
+   *
+   * @param string $text
+   *   The text to be sanitized.
+   *
+   * @return string
+   *   The sanitized string.
+   */
+  public function sanitizeFulltextString(string $text) {
+    // Remove inline image src attribute (base64 encoded).
+    $text = preg_replace('#(src=".*image/[^;"]+;base64,.*")#iU', '', $text);
+    $text = preg_replace('#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU', '', $text);
+    return $text;
   }
 
 }

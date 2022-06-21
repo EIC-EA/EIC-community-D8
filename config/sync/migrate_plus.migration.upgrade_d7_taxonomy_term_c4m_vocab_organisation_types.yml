@@ -1,0 +1,46 @@
+uuid: 69c90a1d-a443-405d-a47b-7aa1b3a77990
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_taxonomy_term_c4m_vocab_organisation_types
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Taxonomy terms (Organisation Types)'
+source:
+  plugin: d7_taxonomy_term
+  bundle: c4m_vocab_organisation_types
+  track_changes: true
+  batch_size: 100
+process:
+  name: name
+  description/value: description
+  description/format: format
+  weight: weight
+  parent_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: parent
+    -
+      plugin: migration_lookup
+      migration:
+        - upgrade_d7_taxonomy_term_c4m_vocab_organisation_types
+  parent:
+    -
+      plugin: default_value
+      default_value: 0
+      source: '@parent_id'
+  forum_container: is_container
+  changed: timestamp
+  langcode: language
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: organisation_types
+migration_dependencies:
+  required: {  }
+  optional: {  }

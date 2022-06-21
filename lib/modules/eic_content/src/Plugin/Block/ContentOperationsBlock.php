@@ -208,6 +208,10 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       return $build;
     }
 
+    usort($items, function($a, $b) {
+      return strcmp($a['title'], $b['title']);
+    });
+
     $build = [
       '#theme' => 'eic_content_actions',
       '#actions' => [
@@ -231,7 +235,7 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
     // Add user's activity feed link to the renderable array.
     if ($this->configuration['show_user_activity_feed_link']) {
       $user_feed_link = Url::fromRoute(
-        'entity.user.canonical',
+        'eic_user.user.activity',
         [
           'user' => $this->currentUser->id(),
         ]

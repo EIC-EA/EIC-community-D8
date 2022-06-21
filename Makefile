@@ -39,11 +39,17 @@ destroy:
 run:
 	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c 'npm run $(RUN_ARGS)'
 
+cex:
+	docker exec -it ${APP_NAME}_php bash -c '/app/vendor/bin/drush cex -y'
+
 import-db:
 	docker exec -i ${APP_NAME}_mysql bash -c 'exec mysql -u${DATABASE_USERNAME} ${DATABASE_NAME}' < $(FILE)
 
 ssh:
 	docker exec -it --user web ${APP_NAME}_php bash
+
+ssh_cypress:
+	docker exec -it ${APP_NAME}_cypress bash
 
 help:
 	$(call do_display_commands)
@@ -56,6 +62,9 @@ build-front:
 
 reload-fixtures:
 	$(call do_reload_fixtures)
+
+clear-indexes:
+	$(call clear_indexes)
 
 define do_build_front
 	echo -e 'Installing node modules and building...'
@@ -70,13 +79,8 @@ endef
 
 define do_reload_fixtures
 	echo -e 'Reloading fixtures...'
-	docker exec -it ${APP_NAME}_php bash -c 'drush fixtures:reload all'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush fixtures:reload all'
 	echo -e '\n'
-endef
-
-define do_db_healthcheck
-	docker exec -it ${APP_NAME}_php bash -c 'chmod +x ${APP_ROOT}/docker/php/database-healthcheck.sh'
-	docker exec -it ${APP_NAME}_php bash -c '${APP_ROOT}/docker/php/database-healthcheck.sh'
 endef
 
 define do_setup
@@ -84,14 +88,15 @@ define do_setup
 	docker-compose build --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
 	docker-compose up -d
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
-	$(call do_db_healthcheck)
+
 	$(call do_create_symlinks)
 	$(call do_build_front)
 	docker exec -it ${APP_NAME}_php bash -c 'cp -n ${APP_ROOT}/web/sites/default/default.settings.local.php ${APP_ROOT}/web/sites/default/settings.php'
-	docker exec -it ${APP_NAME}_php bash -c 'drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
-	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
+	$(call clear_indexes)
 	$(call do_reload_fixtures)
-	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} setup completed\e[0m'
 	$(call do_display_app_info)
@@ -109,9 +114,9 @@ endef
 define do_start
 	echo -e 'Starting ${APP_NAME}...'
 	docker-compose up -d
-	$(call do_db_healthcheck)
-	docker exec -it ${APP_NAME}_php bash -c 'drush cim -y'
-	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cim -y'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} started\e[0m'
 	$(call do_display_app_info)
@@ -122,8 +127,8 @@ define do_restart
 	echo -e 'Restarting ${APP_NAME}...'
 	docker-compose down
 	docker-compose up -d
-	$(call do_db_healthcheck)
-	docker exec -it ${APP_NAME}_php bash -c  'drush cr'
+
+	docker exec -it ${APP_NAME}_php bash -c  './vendor/bin/drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} restarted\e[0m'
 	$(call do_display_app_info)
@@ -134,17 +139,17 @@ define do_update
 	echo -e 'Updating ${APP_NAME}...'
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
 	$(call do_build_front)
-	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
-	docker exec -it ${APP_NAME}_php bash -c 'drush cim -y'
-	docker exec -it ${APP_NAME}_php bash -c 'drush updb -y'
-	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cim -y'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush updb -y'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} updated\e[0m'
 endef
 
 define do_cc
 	echo -e 'Clearing ${APP_NAME} caches...'
-	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
 endef
 
 define do_create_symlinks
@@ -164,6 +169,11 @@ define do_stop
 	docker-compose down
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} stopped\e[0m'
+endef
+
+define clear_indexes
+	echo 'Clearing indexes'
+	docker compose exec php bash -c "curl -X POST -H 'Content-Type: application/json' 'http://solr:8983/solr/${SEARCH_INDEX}/update?commit=true' -d '{\"delete\":{\"query\":\"*:*\"}}'"
 endef
 
 define do_destroy

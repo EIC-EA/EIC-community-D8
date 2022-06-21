@@ -6,6 +6,12 @@ eic_admin.settings:
   weight: -50
   # If menu_name is omitted, the "Tools" menu will be used.
   menu_name: administration
+eic_admin.update_all_group_permissions:
+  title: 'Update permissions for all groups entities'
+  description: 'This will update permissions all groups from all group types permissions.'
+  parent: eic_admin.settings
+  route_name: eic_admin.update_all_group_permissions
+  weight: 11
 eic_admin.dashboard:
   title: 'Community'
   description: 'Manage community.'
@@ -30,9 +36,20 @@ eic_admin.groups.groups:
   route_name: view.admin_groups.page_admin_groups
   parent: eic_admin.groups
   weight: 1
+eic_admin.groups.organisations:
+  title: 'Organisations'
+  description: 'Manage all Community Organisations.'
+  route_name: view.admin_groups.page_admin_organisations
+  parent: eic_admin.groups
+  weight: 2
 eic_admin.groups.events:
   title: 'Events'
   description: 'Manage all Community Events.'
   route_name: view.admin_groups.page_admin_events
   parent: eic_admin.groups
-  weight: 2
+  weight: 3
+eic_admin.actions_config:
+  title: 'Action forms configuration'
+  description: 'Configure labels and description for various action forms.'
+  parent: eic_admin.settings
+  route_name: eic_admin.actions_config

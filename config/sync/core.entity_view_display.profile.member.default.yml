@@ -4,7 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.profile.member.field_body
+    - field.field.profile.member.field_comments_notifications
     - field.field.profile.member.field_cv_link
+    - field.field.profile.member.field_digest_frequency
+    - field.field.profile.member.field_digest_status
+    - field.field.profile.member.field_interest_notifications
     - field.field.profile.member.field_location_address
     - field.field.profile.member.field_social_links
     - field.field.profile.member.field_vocab_geo
@@ -41,7 +45,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_location_address:
     type: address_default
@@ -57,7 +61,7 @@ content:
       orientation: vertical
       new_tab: true
     third_party_settings: {  }
-    weight: 16
+    weight: 9
     region: content
   field_vocab_geo:
     type: entity_reference_label
@@ -65,7 +69,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 7
+    weight: 3
     region: content
   field_vocab_job_title:
     type: entity_reference_label
@@ -73,7 +77,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 12
+    weight: 8
     region: content
   field_vocab_language:
     type: entity_reference_label
@@ -81,7 +85,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 11
+    weight: 7
     region: content
   field_vocab_topic_expertise:
     type: entity_reference_label
@@ -89,7 +93,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 8
+    weight: 4
     region: content
   field_vocab_topic_interest:
     type: entity_reference_label
@@ -97,7 +101,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 9
+    weight: 5
     region: content
   field_vocab_user_type:
     type: entity_reference_label
@@ -105,7 +109,11 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 10
+    weight: 6
     region: content
 hidden:
+  field_comments_notifications: true
+  field_digest_frequency: true
+  field_digest_status: true
+  field_interest_notifications: true
   search_api_excerpt: true

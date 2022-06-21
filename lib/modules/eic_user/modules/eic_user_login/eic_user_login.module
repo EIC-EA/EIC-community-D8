@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC User Login module.
+ */
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_user\UserHelper;
+use Drupal\eic_user_login\Constants\SmedUserStatuses;
+use Drupal\eic_user_login\Hooks\FormAlter;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_user_login_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\user\UserInterface $account */
+  $account = $form_state->getFormObject()->getEntity();
+
+  // Remove access to field_user_status for non-power users.
+  if (isset($form['field_user_status']) && !UserHelper::isPowerUser(\Drupal::currentUser())) {
+    $form['field_user_status']['#access'] = FALSE;
+  }
+
+  // Remove access to field_updated_profile_by_service for non-power users.
+  if (isset($form['field_updated_profile_by_service'])) {
+    if (UserHelper::isPowerUser(\Drupal::currentUser())) {
+      $form['field_updated_profile_by_service']['#disabled'] = TRUE;
+    }
+    else {
+      $form['field_updated_profile_by_service']['#access'] = FALSE;
+    }
+  }
+
+  // Disable access to fields if user is managed by cas.
+  if (\Drupal::service('cas.user_manager')->getCasUsernameForAccount($account->id())) {
+    $form['field_first_name']['#disabled'] = TRUE;
+    $form['field_last_name']['#disabled'] = TRUE;
+
+  }
+}
+
+/**
+ * Set dynamic allowed values for the user status field.
+ *
+ * @param \Drupal\Core\Field\BaseFieldDefinition $definition
+ *   The field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity being created if applicable.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @see options_allowed_values()
+ */
+function eic_user_login_user_status_allowed_values(BaseFieldDefinition $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+  return SmedUserStatuses::getUserStatuses();
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function eic_user_login_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() !== 'user') {
+    return [];
+  }
+
+  $fields['field_user_status'] = BaseFieldDefinition::create('list_string')
+    ->setLabel(t('User status'))
+    ->setDescription(t('The status as defined by SMED.'))
+    ->setSetting('allowed_values_function', 'eic_user_login_user_status_allowed_values')
+    ->setCardinality(1)
+    ->setTranslatable(FALSE)
+    ->setRequired(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $fields['field_updated_profile_by_service'] = BaseFieldDefinition::create('timestamp')
+    ->setLabel(t('Updated profile by service'))
+    ->setDescription(t('Last time profile was updated by SMED service.'))
+    ->setCardinality(1)
+    ->setRequired(FALSE)
+    ->setTranslatable(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $fields['field_updated_profile_by_user'] = BaseFieldDefinition::create('timestamp')
+    ->setLabel(t('Updated profile by user'))
+    ->setDescription(t('Last time profile was updated by SMED user.'))
+    ->setCardinality(1)
+    ->setRequired(FALSE)
+    ->setTranslatable(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $fields['field_message_from_service'] = BaseFieldDefinition::create('text_long')
+    ->setLabel(t('Message from service'))
+    ->setDescription(t('Last message from SMED service update.'))
+    ->setCardinality(1)
+    ->setRequired(FALSE)
+    ->setTranslatable(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  return $fields;
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function eic_user_login_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->id() === 'user') {
+    return [
+      'field_user_status' => $base_field_definitions['field_user_status']->setTargetBundle('user'),
+      'field_updated_profile_by_service' => $base_field_definitions['field_updated_profile_by_service']->setTargetBundle('user'),
+      'field_updated_profile_by_user' => $base_field_definitions['field_updated_profile_by_user']->setTargetBundle('user'),
+      'field_message_from_service' => $base_field_definitions['field_message_from_service']->setTargetBundle('user'),
+    ];
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function eic_user_login_user_login(UserInterface $account) {
+  // Check if user profile is completed.
+  if (!\Drupal::service('eic_user.helper')->isUserProfileCompleted($account)) {
+    // Store a variable in session for later use.
+    $tempstore = \Drupal::service('tempstore.private')->get('eic_user_login');
+    $tempstore->set('is_profile_completed', FALSE);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_user_login_form_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormAlter::class)
+    ->formProfileFormAlter($form, $form_state, $form_id);
+}

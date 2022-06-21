@@ -1,0 +1,227 @@
+uuid: 5de8730e-4791-4a5b-8da9-da912cbbdc68
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_organisation
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Organisation)'
+source:
+  plugin: eic_d7_node_complete_with_smed_ids
+  node_type: organisation
+  track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_geo_selling
+    - c4m_vocab_topic
+  constants:
+    FACEBOOK_LINK_TYPE: facebook
+    LINKEDIN_LINK_TYPE: linkedin
+    TWITTER_LINK_TYPE: twitter
+  batch_size: 100
+process:
+  id:
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_node_complete_organisation
+      source: tnid
+    -
+      plugin: node_complete_node_lookup
+  revision_id:
+    -
+      plugin: get
+      source: vid
+  langcode:
+    -
+      plugin: default_value
+      default_value: en
+  label: title
+  uid:
+    -
+      plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status: status
+  moderation_state:
+    -
+      plugin: static_map
+      source: c4m_og_status
+      map:
+        pending: pending
+        draft: draft
+        published: published
+        archived: archived
+        deleted: archived
+  created: created
+  changed: changed
+  revision_user:
+    -
+      plugin: migration_lookup
+      source: revision_uid
+      migration:
+        - upgrade_d7_user
+  revision_log_message: log
+  revision_created: revision_timestamp
+  field_address:
+    -
+      plugin: addressfield
+      source: c4m_location_address
+  field_header_visual:
+    -
+      plugin: sub_process
+      source: c4m_banner
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
+  field_date_establishement:
+    -
+      plugin: format_date
+      from_format: 'Y-m-d H:i:s'
+      to_format: 'Y'
+      source: c4m_date_est/0/value
+  field_body/0/format:
+    -
+      plugin: callback
+      source: field_c4m_about_us/0/format
+      callable:
+        - \Drupal\eic_migrate\Constants\Misc
+        - getTextFormat
+  field_body/0/value:
+    -
+      plugin: eic_html_sanitizer
+      source: field_c4m_about_us/0/value
+    -
+      plugin: eic_media_wysiwyg_filter
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
+  field_email: c4m_email
+  field_organisation_link: c4m_link
+  field_smed_id: c4m_organisation_dashboard_id
+  field_vocab_geo_selling:
+    -
+      plugin: sub_process
+      source: c4m_vocab_geo_selling
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
+  field_thumbnail:
+    -
+      plugin: sub_process
+      source: c4m_media
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
+  field_vocab_topics:
+    -
+      plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+  field_organisation_type:
+    -
+      plugin: sub_process
+      source: c4m_organisations_type
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: tid
+            no_stub: true
+            migration:
+              - upgrade_d7_taxonomy_term_c4m_vocab_organisation_types
+  _social_link_facebook:
+    -
+      plugin: get
+      source:
+        - constants/FACEBOOK_LINK_TYPE
+        - c4m_facebook/0/url
+  _social_link_linkedin:
+    -
+      plugin: get
+      source:
+        - constants/LINKEDIN_LINK_TYPE
+        - c4m_linkedin/0/url
+  _social_link_twitter:
+    -
+      plugin: get
+      source:
+        - constants/TWITTER_LINK_TYPE
+        - c4m_twitter/0/url
+  _field_social_links:
+    -
+      plugin: get
+      source:
+        - '@_social_link_facebook'
+        - '@_social_link_linkedin'
+        - '@_social_link_twitter'
+  field_social_links:
+    -
+      plugin: sub_process
+      source: '@_field_social_links'
+      process:
+        social:
+          -
+            plugin: get
+            source: '0'
+        link:
+          -
+            plugin: str_replace
+            source: '1'
+            regex: true
+            search: '/^((https?:\/\/)?(www\.)?([a-zA-Z-]+\.)?(facebook|linkedin|kedin|linkediin|twitter)(\.com)?\/)/'
+            replace: ''
+destination:
+  plugin: 'entity_complete:group'
+  default_bundle: organisation
+  translations: true
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file_audio_to_media
+    - upgrade_d7_file_document_to_media
+    - upgrade_d7_file_image_to_media
+    - upgrade_d7_file_undefined_to_media
+    - upgrade_d7_file_video_to_media
+    - upgrade_d7_file_youtube_video_to_media
+    - upgrade_d7_taxonomy_term_c4m_vocab_organisation_types
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+  optional: {  }

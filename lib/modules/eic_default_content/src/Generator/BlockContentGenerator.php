@@ -3,6 +3,7 @@
 namespace Drupal\eic_default_content\Generator;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Url;
 use Drupal\fragments\Entity\Fragment;
 
 /**
@@ -104,6 +105,22 @@ class BlockContentGenerator extends CoreGenerator {
       ),
     ]);
     $authenticated_intro->save();
+
+    // Creates contact box block for the help and guidance pages.
+    $block = BlockContent::create([
+      'status' => TRUE,
+      'type' => 'contact_box',
+      // For BC reasons we keep the same UUIDs since they are referenced in configs.
+      'uuid' => '63285e84-4aaf-475a-ae6f-169d5dae81e3',
+      'info' => 'Contact box - Help & Guidance',
+      'body' => [
+        'value' => 'Contact us at</br><a class="" href="mailto:support@eic.com">support@eic.com</a>',
+        'format' => 'full_html',
+      ],
+      'field_title' => "Didn't find what you were looking for?",
+      'field_cta_button' => $this->getLink('internal:/contact', 'Contact us', 'default'),
+    ]);
+    $block->save();
   }
 
   /**

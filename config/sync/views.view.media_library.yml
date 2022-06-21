@@ -10,6 +10,7 @@ dependencies:
     - media
     - media_library
     - user
+    - views_autocomplete_filters
   enforced:
     module:
       - media_library
@@ -136,7 +137,7 @@ display:
           hide_alter_empty: true
           view_mode: media_library
       pager:
-        type: mini
+        type: full
         options:
           offset: 0
           items_per_page: 24
@@ -145,6 +146,8 @@ display:
           tags:
             next: ››
             previous: ‹‹
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -153,6 +156,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
+          quantity: 9
       exposed_form:
         type: basic
         options:
@@ -484,7 +488,24 @@ display:
         - 'url.query_args:sort_by'
         - user
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.media.document.default'
+        - 'config:core.entity_view_display.media.document.media_library'
+        - 'config:core.entity_view_display.media.eic_document.default'
+        - 'config:core.entity_view_display.media.eic_document.download'
+        - 'config:core.entity_view_display.media.eic_document.media_library'
+        - 'config:core.entity_view_display.media.eic_document.oe_theme_main_content'
+        - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.full'
+        - 'config:core.entity_view_display.media.image.media_library'
+        - 'config:core.entity_view_display.media.photo.default'
+        - 'config:core.entity_view_display.media.photo.media_library'
+        - 'config:core.entity_view_display.media.remote_video.default'
+        - 'config:core.entity_view_display.media.remote_video.media_library'
+        - 'config:core.entity_view_display.media.remote_video.oe_theme_main_content'
+        - 'config:core.entity_view_display.media.video.default'
+        - 'config:core.entity_view_display.media.video.download'
+        - 'config:core.entity_view_display.media.video.media_library'
   page:
     id: page
     display_title: Page
@@ -781,7 +802,24 @@ display:
         - 'url.query_args:sort_by'
         - user
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.media.document.default'
+        - 'config:core.entity_view_display.media.document.media_library'
+        - 'config:core.entity_view_display.media.eic_document.default'
+        - 'config:core.entity_view_display.media.eic_document.download'
+        - 'config:core.entity_view_display.media.eic_document.media_library'
+        - 'config:core.entity_view_display.media.eic_document.oe_theme_main_content'
+        - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.full'
+        - 'config:core.entity_view_display.media.image.media_library'
+        - 'config:core.entity_view_display.media.photo.default'
+        - 'config:core.entity_view_display.media.photo.media_library'
+        - 'config:core.entity_view_display.media.remote_video.default'
+        - 'config:core.entity_view_display.media.remote_video.media_library'
+        - 'config:core.entity_view_display.media.remote_video.oe_theme_main_content'
+        - 'config:core.entity_view_display.media.video.default'
+        - 'config:core.entity_view_display.media.video.download'
+        - 'config:core.entity_view_display.media.video.media_library'
   widget:
     id: widget
     display_title: Widget
@@ -1101,7 +1139,24 @@ display:
         - url.query_args
         - 'url.query_args:sort_by'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.media.document.default'
+        - 'config:core.entity_view_display.media.document.media_library'
+        - 'config:core.entity_view_display.media.eic_document.default'
+        - 'config:core.entity_view_display.media.eic_document.download'
+        - 'config:core.entity_view_display.media.eic_document.media_library'
+        - 'config:core.entity_view_display.media.eic_document.oe_theme_main_content'
+        - 'config:core.entity_view_display.media.image.default'
+        - 'config:core.entity_view_display.media.image.full'
+        - 'config:core.entity_view_display.media.image.media_library'
+        - 'config:core.entity_view_display.media.photo.default'
+        - 'config:core.entity_view_display.media.photo.media_library'
+        - 'config:core.entity_view_display.media.remote_video.default'
+        - 'config:core.entity_view_display.media.remote_video.media_library'
+        - 'config:core.entity_view_display.media.remote_video.oe_theme_main_content'
+        - 'config:core.entity_view_display.media.video.default'
+        - 'config:core.entity_view_display.media.video.download'
+        - 'config:core.entity_view_display.media.video.media_library'
   widget_table:
     id: widget_table
     display_title: 'Widget (table)'

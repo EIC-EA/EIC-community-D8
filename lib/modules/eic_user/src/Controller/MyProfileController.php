@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -14,7 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
 class MyProfileController extends ControllerBase {
 
   /**
-   * The member activities endpoint.
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The translatable markup.
+   */
+  public function title() {
+    return $this->t('My interests', [], ['context' => 'eic_user']);
+  }
+
+  /**
+   * The member interests endpoint.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The server request.
@@ -22,7 +31,7 @@ class MyProfileController extends ControllerBase {
    * @return array
    *   An empty array.
    */
-  public function activity(Request $request): array {
+  public function activity(Request $request, UserInterface $user): array {
     return [];
   }
 
@@ -38,7 +47,12 @@ class MyProfileController extends ControllerBase {
    *   An AccessResult object.
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account) {
-    return $account->isAuthenticated() ? AccessResult::allowed() : AccessResult::forbidden();
+    /** @var UserInterface|NULL $user */
+    $user = $route_match->getParameter('user');
+
+    return $user->id() === $account->id() ?
+      AccessResult::allowed() :
+      AccessResult::forbidden();
   }
 
 }
