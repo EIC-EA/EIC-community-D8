@@ -135,6 +135,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
     $this->entityUsage = $entity_usage;
     $this->commentsHelper = $comments_helper;
+    $this->contentModerationInfo = $content_moderation_info;
     $this->solrDocumentProcessor = $solr_processor;
   }
 
@@ -397,7 +398,10 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // If entity is moderated, we need to check the moderation state before
     // update the file statistics.
-    if ($this->contentModerationInfo->isModeratedEntity($entity)) {
+    if (
+      $this->contentModerationInfo instanceof ModerationInformation &&
+      $this->contentModerationInfo->isModeratedEntity($entity)
+    ) {
       switch ($entity->get('moderation_state')->value) {
         case DefaultContentModerationStates::PUBLISHED_STATE:
           // Entity is published, therefore we can update file statistics.
@@ -454,7 +458,10 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // If entity is moderated, we need to check the moderation state before
     // update the file statistics.
-    if ($this->contentModerationInfo->isModeratedEntity($entity)) {
+    if (
+      $this->contentModerationInfo instanceof ModerationInformation &&
+      $this->contentModerationInfo->isModeratedEntity($entity)
+    ) {
       switch ($entity->get('moderation_state')->value) {
         case DefaultContentModerationStates::PUBLISHED_STATE:
           // Entity is published, therefore we can update file statistics.

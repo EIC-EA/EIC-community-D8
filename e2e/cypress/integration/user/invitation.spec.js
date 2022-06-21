@@ -13,13 +13,12 @@ context("User - invitations", () => {
       cy.request(`/user/${Cypress.env('USER_ID_CYPRESS')}/invitations`).should((response) => {
         expect(response.status).to.equal(200)
       })
-      cy.request(`/user/1/invitations`).should((response) => {
-        console.log(response);
+      cy.request({
+        url: '/user/1/invitations',
+        failOnStatusCode: false
+      }).should((response) => {
         expect(response.status).to.equal(403)
       })
     }
   )
-
-
 });
-

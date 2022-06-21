@@ -17,6 +17,7 @@ use Drupal\eic_search\Search\Sources\UserRecommendSourceType;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
+use Drupal\group_flex\GroupFlexGroupType;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 
 /**
@@ -76,6 +77,13 @@ class RecommendContentManager {
   protected $eicGroupsHelper;
 
   /**
+   * The group type flex service.
+   *
+   * @var \Drupal\group_flex\GroupFlexGroupType
+   */
+  protected $groupTypeFlex;
+
+  /**
    * Constructs a RecommendContentManager object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -92,6 +100,8 @@ class RecommendContentManager {
    *   The flag count manager service.
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The EIC Groups helper service.
+   * @param \Drupal\group_flex\GroupFlexGroupType $group_type_flex
+   *   The group type flex service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -100,7 +110,8 @@ class RecommendContentManager {
     EmailValidator $email_validator,
     FlagServiceInterface $flag_service,
     FlagCountManagerInterface $flag_count_manager,
-    EICGroupsHelper $eic_groups_helper
+    EICGroupsHelper $eic_groups_helper,
+    GroupFlexGroupType $group_type_flex
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $current_user;
@@ -109,6 +120,7 @@ class RecommendContentManager {
     $this->flagService = $flag_service;
     $this->flagCountManager = $flag_count_manager;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->groupTypeFlex = $group_type_flex;
   }
 
   /**
@@ -148,14 +160,6 @@ class RecommendContentManager {
       $flag_counter[$flag->id()] = 0;
     }
 
-    $link_label = $this->t(
-      'Recommend @entity_type (@count)',
-      [
-        '@entity_type' => $entity->getEntityTypeId(),
-        '@count' => $flag_counter[$flag->id()],
-      ]
-    );
-
     $user_url = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserRecommendSourceType::class,
@@ -177,7 +181,6 @@ class RecommendContentManager {
           $get_users_url_parameters['current_group'] = $group->id();
           $can_recommend_external_users = $this->canRecommendExternalUsers($group);
         }
-        $link_label = $this->t('Recommend content (@count)', ['@count' => $flag_counter[$flag->id()]]);
         break;
 
       case 'group':
@@ -191,7 +194,7 @@ class RecommendContentManager {
 
     }
 
-    return $endpoint_url ? [
+    return ($endpoint_url && $can_recommend) ? [
       '#theme' => 'eic_recommend_content_link',
       '#entity_type' => $entity->getEntityTypeId(),
       '#entity_id' => $entity->id(),
@@ -199,7 +202,7 @@ class RecommendContentManager {
       '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
-        'link_label' => $link_label,
+        'link_label' => $this->t('Recommend'),
         'modal_title' => $this->t('Recommend this content'),
         'modal_description' => $can_recommend_external_users ?
           $this->t('Select exisiting members or people outside of the platform you wish to recommend this content to. Those will be presented to you as long as they have the permission to view the content you want to share.') :
@@ -320,6 +323,13 @@ class RecommendContentManager {
           break;
         }
 
+        // External users cannot be recommended if group doesn't use group
+        // flex feature.
+        if (!$this->groupTypeFlex->hasFlexibleGroupTypeVisibility($group->getGroupType())) {
+          $can_recommend = FALSE;
+          break;
+        }
+
         $visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
         if (!in_array($visibility_settings['plugin_id'], $allowed_group_visibilities)) {
           $can_recommend = FALSE;
@@ -327,6 +337,13 @@ class RecommendContentManager {
         break;
 
       case 'group':
+        // External users cannot be recommended if group doesn't use group
+        // flex feature.
+        if (!$this->groupTypeFlex->hasFlexibleGroupTypeVisibility($entity->getGroupType())) {
+          $can_recommend = FALSE;
+          break;
+        }
+
         $visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($entity);
         if (!in_array($visibility_settings['plugin_id'], $allowed_group_visibilities)) {
           $can_recommend = FALSE;

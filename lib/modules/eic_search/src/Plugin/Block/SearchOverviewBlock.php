@@ -13,15 +13,18 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -252,6 +255,35 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           return $admin->getUser()->id();
         }, $admins),
       ];
+
+      $post_content_actions = [];
+
+      if ($source instanceof LibrarySourceType) {
+        // User can post content in the library if the group is published.
+        switch ($current_group_route->get('moderation_state')->value) {
+          case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
+            // Adds group content create actions for each node type that is
+            // part of the group library feature.
+            $source->getPrefilteredContentType();
+            foreach ($source->getPrefilteredContentType() as $bundle) {
+              $create_url = Url::fromRoute(
+                'entity.group_content.create_form',
+                [
+                  'group' => $current_group_route->id(),
+                  'plugin_id' => "group_node:$bundle",
+                ]
+              );
+              if ($create_url->access($account)) {
+                $post_content_actions[] = [
+                  'label' => $this->t('Add @type', ['@type' => $bundle]),
+                  'path' => $create_url->toString(),
+                ];
+              }
+            }
+            break;
+
+        }
+      }
     }
     $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
       'eic_statistics.get_node_statistics'
@@ -339,6 +371,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['group' => $current_group_route->id()]
           )->toString() :
           '',
+        '#post_content_actions' => $post_content_actions,
         '#translations' => [
           'public' => $this->t('Public', [], ['context' => 'eic_group']),
           'private' => $this->t('Private', [], ['context' => 'eic_group']),

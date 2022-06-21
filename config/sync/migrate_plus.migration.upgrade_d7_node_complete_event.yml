@@ -237,7 +237,7 @@ process:
       plugin: addressfield
       source: c4m_location_address
   field_location_type: location_type
-  field_link:
+  field_website_url:
     -
       plugin: field_link
       uri_scheme: 'https://'
