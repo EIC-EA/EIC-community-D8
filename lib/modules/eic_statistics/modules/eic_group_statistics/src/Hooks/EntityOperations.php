@@ -14,6 +14,7 @@ use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorage;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
 use Drupal\eic_group_statistics\GroupStatisticTypes;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\entity_usage\EntityUsageInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -92,6 +93,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $contentModerationInfo;
 
   /**
+   * The SOLR document processor service.
+   *
+   * @var SolrDocumentProcessor
+   */
+  protected $solrDocumentProcessor;
+
+  /**
    * Constructs a EntityOperation object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -108,6 +116,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The EIC Comments helper service.
    * @param \Drupal\content_moderation\ModerationInformation $content_moderation_info
    *   The content moderation information service.
+   * @param SolrDocumentProcessor $solr_processor
+   *   The SOLR document processor service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -116,7 +126,8 @@ class EntityOperations implements ContainerInjectionInterface {
     GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex,
     EntityUsageInterface $entity_usage,
     CommentsHelper $comments_helper,
-    ModerationInformation $content_moderation_info
+    ModerationInformation $content_moderation_info,
+    SolrDocumentProcessor $solr_processor
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->groupStatisticsHelper = $group_statistics_helper;
@@ -124,7 +135,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
     $this->entityUsage = $entity_usage;
     $this->commentsHelper = $comments_helper;
-    $this->contentModerationInfo = $content_moderation_info;
+    $this->solrDocumentProcessor = $solr_processor;
   }
 
   /**
@@ -138,7 +149,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('eic_group_statistics.search_api.reindex'),
       $container->get('entity_usage.usage'),
       $container->get('eic_comments.helper'),
-      $container->get('content_moderation.moderation_information')
+      $container->get('content_moderation.moderation_information'),
+      $container->get('eic_search.solr_document_processor')
     );
   }
 
@@ -155,6 +167,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     switch ($entity->getContentPlugin()->getPluginId()) {
       case "group_membership":
+        $this->solrDocumentProcessor->reIndexEntities([$entity->getGroup(), $entity->getEntity()]);
         // Increments number of members in the group statistics.
         $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_MEMBERS);
         break;

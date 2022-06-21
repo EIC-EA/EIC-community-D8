@@ -100,8 +100,12 @@ class ProcessorDiscussion extends DocumentProcessor {
       file_create_url($author_file->get('uri')->value)
     ) : NULL;
 
-    // Sanitize text before indexing.
-    $comment_text = $this->sanitizeFulltextString($comment->get('comment_body')->value);
+    $comment_text = '';
+    if ($comment->get('comment_body')->value) {
+      // Sanitize text before indexing.
+      $comment_text = $this->sanitizeFulltextString($comment->get('comment_body')->value);
+    }
+    
     $document->addField('ss_discussion_last_comment_text', $comment_text);
     $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
     $document->addField(
