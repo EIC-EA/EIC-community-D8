@@ -101,7 +101,7 @@ function eic_community_preprocess_node__document(array &$variables) {
           'name' => in_array($file_type,
             ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
               pathinfo($file->getFilename(), PATHINFO_EXTENSION)
-            ),
+          ),
         ],
       ];
 
@@ -166,8 +166,9 @@ function eic_community_preprocess_node__document(array &$variables) {
         ];
       }
 
+      // Show recommend content flag in the 2nd place.
       if (isset($variables['elements']['recommend_content'])) {
-        $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
+        array_splice($variables['editorial_actions']['items'], 2, 0, [['content' => $variables['elements']['recommend_content']['content']]]);
       }
 
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();

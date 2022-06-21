@@ -148,14 +148,6 @@ class RecommendContentManager {
       $flag_counter[$flag->id()] = 0;
     }
 
-    $link_label = $this->t(
-      'Recommend @entity_type (@count)',
-      [
-        '@entity_type' => $entity->getEntityTypeId(),
-        '@count' => $flag_counter[$flag->id()],
-      ]
-    );
-
     $user_url = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserRecommendSourceType::class,
@@ -177,7 +169,6 @@ class RecommendContentManager {
           $get_users_url_parameters['current_group'] = $group->id();
           $can_recommend_external_users = $this->canRecommendExternalUsers($group);
         }
-        $link_label = $this->t('Recommend content (@count)', ['@count' => $flag_counter[$flag->id()]]);
         break;
 
       case 'group':
@@ -191,7 +182,7 @@ class RecommendContentManager {
 
     }
 
-    return $endpoint_url ? [
+    return ($endpoint_url && $can_recommend) ? [
       '#theme' => 'eic_recommend_content_link',
       '#entity_type' => $entity->getEntityTypeId(),
       '#entity_id' => $entity->id(),
@@ -199,7 +190,7 @@ class RecommendContentManager {
       '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
-        'link_label' => $link_label,
+        'link_label' => $this->t('Recommend'),
         'modal_title' => $this->t('Recommend this content'),
         'modal_description' => $can_recommend_external_users ?
           $this->t('Select exisiting members or people outside of the platform you wish to recommend this content to. Those will be presented to you as long as they have the permission to view the content you want to share.') :
