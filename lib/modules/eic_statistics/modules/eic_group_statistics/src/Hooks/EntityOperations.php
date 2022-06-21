@@ -135,6 +135,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
     $this->entityUsage = $entity_usage;
     $this->commentsHelper = $comments_helper;
+    $this->contentModerationInfo = $content_moderation_info;
     $this->solrDocumentProcessor = $solr_processor;
   }
 
