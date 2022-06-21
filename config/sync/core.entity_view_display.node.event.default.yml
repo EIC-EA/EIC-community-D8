@@ -7,10 +7,10 @@ dependencies:
     - field.field.node.event.field_date_range
     - field.field.node.event.field_document_additional
     - field.field.node.event.field_document_agenda
+    - field.field.node.event.field_document_media
     - field.field.node.event.field_document_presentations
     - field.field.node.event.field_image
     - field.field.node.event.field_language
-    - field.field.node.event.field_link
     - field.field.node.event.field_location
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
@@ -95,18 +95,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 18
-    region: content
-  field_link:
-    type: link
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 13
     region: content
   field_location:
     type: address_default

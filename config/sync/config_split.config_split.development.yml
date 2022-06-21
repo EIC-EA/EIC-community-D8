@@ -13,6 +13,7 @@ module:
   devel_generate: 0
   eic_default_content: 0
   eic_digest_test: 0
+  eic_dummy_content: 0
 theme: {  }
 blacklist:
   - eic_user_login.settings

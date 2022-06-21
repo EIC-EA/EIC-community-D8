@@ -13,4 +13,8 @@
       box-sizing: border-box;
     }
   }
+
+  .ecl-form-group + .ecl-form-group {
+    margin-top: $ecl-spacing-l;
+  }
 }
