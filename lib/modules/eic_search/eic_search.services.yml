@@ -159,6 +159,11 @@ services:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+  eic_search.document_processor_video:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorVideo
+    arguments: ['@file_url_generator']
+    tags:
+      - { name: eic_search.document_processor, priority: 32 }
   eic_search.solr_search_manager:
     class: Drupal\eic_search\Service\SolrSearchManager
     arguments: ['@current_user', '@eic_search.sources_collector', '@entity_type.manager', '@group.membership_loader', '@oec_group_flex.group_visibility.storage']
