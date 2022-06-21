@@ -99,7 +99,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
         );
       $image_item = ImageValueObject::fromStyledImageItem(
         $media->get('oe_media_image')->first(),
-        'large'
+        'oe_theme_ratio_3_2_medium'
       );
       $item['image'] = [
         'src' => $image_item->getSource(),
