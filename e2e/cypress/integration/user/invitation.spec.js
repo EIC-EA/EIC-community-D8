@@ -21,7 +21,4 @@ context("User - invitations", () => {
       })
     }
   )
-
-
 });
-
