@@ -2,23 +2,25 @@
 
 {% if not is_anonymous and can_view_comments %}
   <div class="ecl-section-wrapper ecl-comment-overview">
-    <div class="ecl-container">
+    <div class="{{ no_container ? "" : "ecl-container" }}">
       <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
-        <div class="ecl-container">
+        <div class="class="{{ no_container ? "" : "ecl-container" }}"">
           <div class="ecl-editorial-article__wrapper">
             <div class="ecl-editorial-article__content">
               <div id="comments-discussion" data-ckeditor-settings="{{ ckeditor_js_settings | json_encode }}" data-highlighted-comment="{{ highlighted_comment}}" data-discussion-id="{{ discussion_id }}">{{ 'Comments' | t }}</div>
             </div>
-            <aside class="ecl-editorial-article__aside">
-              <div class="ecl-editorial-article__aside-wrapper">
-                {% block sidebar %}
-                  {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-                    grid: true,
-                    title: "Contributors"|t
-                  }) only %}
-                {% endblock %}
-              </div>
-            </aside>
+            {% if contributors %}
+              <aside class="ecl-editorial-article__aside">
+                <div class="ecl-editorial-article__aside-wrapper">
+                  {% block sidebar %}
+                    {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+                      grid: true,
+                      title: "Contributors"|t
+                    }) only %}
+                  {% endblock %}
+                </div>
+              </aside>
+            {% endif %}
           </div>
         </div>
       </div>

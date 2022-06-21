@@ -55,14 +55,19 @@ process:
   content_translation_source: source_langcode
   node_comment/0/status: comment
   field_body/0/format:
+    - plugin: default_value
+      source: c4m_body/0/format
+      default_value: filtered_html
     - plugin: callback
       source: c4m_body/0/format
       callable:
         - '\Drupal\eic_migrate\Constants\Misc'
         - getTextFormat
   field_body/0/value:
-    - plugin: eic_html_sanitizer
+    - plugin: skip_on_empty
       source: c4m_body/0/value
+      method: process
+    - plugin: eic_html_sanitizer
     - plugin: eic_media_wysiwyg_filter
       media_migrations:
         - upgrade_d7_file_audio_to_media

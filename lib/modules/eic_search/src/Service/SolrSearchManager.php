@@ -5,10 +5,13 @@ namespace Drupal\eic_search\Service;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\Search\Sources\UserRecommendSourceType;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
@@ -19,6 +22,7 @@ use Drupal\search_api\Entity\Index;
 use Drupal\search_api_solr\SolrConnectorInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Solarium\Component\ComponentAwareQueryInterface;
 use Solarium\QueryType\Select\Query\Query;
 
@@ -75,6 +79,11 @@ class SolrSearchManager {
   private Index $index;
 
   /**
+   * @var string|null
+   */
+  private ?string $currentGroup;
+
+  /**
    * @var \Drupal\search_api_solr\SolrConnectorInterface
    */
   private SolrConnectorInterface $connector;
@@ -124,10 +133,11 @@ class SolrSearchManager {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\search_api\SearchApiException
    */
-  public function init(string $source_class, ?array $facets_fields): self {
+  public function init(string $source_class): self {
     $index_storage = $this->em
       ->getStorage('search_api_index');
     $this->index = $index_storage->load('global');
+    $this->currentGroup = NULL;
 
     /** @var \Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend $backend */
     $backend = $this->index->getServerInstance()->getBackend();
@@ -136,7 +146,6 @@ class SolrSearchManager {
     /** @var \Drupal\search_api_solr\Plugin\SolrConnector\BasicAuthSolrConnector $connector */
     $this->connector = $backend->getSolrConnector();
     $this->solrQuery = $this->connector->getSelectQuery();
-    $this->solrQuery->addParam('facet.field', $facets_fields);
     $this->rawQuery = '';
 
     $sources = $this->sourcesCollector->getSources();
@@ -200,6 +209,15 @@ class SolrSearchManager {
 
       //Normally sort key have this structure 'FIELD__ASC' but add double check
       if (2 === count($sorts)) {
+        // Check if sort needs a group injection before sending to solr.
+        $sort_fields_group_context = [
+          DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP,
+          DocumentProcessorInterface::SOLR_GROUP_ROLES,
+        ];
+
+        if (in_array($sorts[0], $sort_fields_group_context)) {
+          $sorts[0] = $sorts[0] . $this->currentGroup;
+        }
         $this->solrQuery->addSort($sorts[0], $sorts[1]);
       }
     }
@@ -209,6 +227,12 @@ class SolrSearchManager {
     // Add second sort.
     if (!empty($default_sort) && 2 === count($default_sort)) {
       $this->solrQuery->addSort($default_sort[0], $default_sort[1]);
+    }
+
+    $default_sort = $this->source->getDefaultSort();
+
+    if ($this->currentGroup && DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP . $this->currentGroup;
     }
 
     // If there are no current sorts check if source has a default sort.
@@ -238,6 +262,10 @@ class SolrSearchManager {
         $query_values = count($values) > 1 ?
           '(' . implode(' AND ', $values) . ')' :
           implode(' AND ', $values);
+
+        if (in_array($key, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
+          $key = $key . $this->currentGroup;
+        }
 
         $facets_query .= ' AND ' . $key . ':' . $query_values;
       }
@@ -303,6 +331,23 @@ class SolrSearchManager {
   }
 
   /**
+   * Set all facets to our SOLR request.
+   *
+   * @param array|null $facets_fields
+   */
+  public function buildFacets(?array $facets_fields) {
+    $facets_fields = array_map(function ($facet) {
+      if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
+        return $facet;
+      }
+
+      return $facet . $this->currentGroup;
+    }, $facets_fields);
+
+    $this->solrQuery->addParam('facet.field', $facets_fields);
+  }
+
+  /**
    * Build group query.
    *
    * @param string|NULL $current_group
@@ -311,6 +356,8 @@ class SolrSearchManager {
     if (!$current_group) {
       return;
     }
+
+    $this->currentGroup = $current_group;
 
     if (
       !$this->source->excludingCurrentGroup() &&
@@ -330,7 +377,10 @@ class SolrSearchManager {
       $this->source instanceof SourceTypeInterface &&
       $this->source->prefilterByGroupVisibility()
     ) {
-      $this->generateUsersQueryVisibilityGroup($current_group);
+      $this->generateUsersQueryVisibilityGroup(
+        $current_group,
+        $this->source instanceof UserRecommendSourceType
+      );
     }
 
     if (
@@ -414,7 +464,23 @@ class SolrSearchManager {
     $this->solrQuery->addParam('q', $this->rawQuery);
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
 
+    $is_admin_group = FALSE;
+
+    if ($this->currentGroup && $current_group_entity = Group::load($this->currentGroup)) {
+      $group_owner = EICGroupsHelper::getGroupOwner($current_group_entity);
+      $group_admins = EICGroupsHelper::getGroupAdmins($current_group_entity);
+
+      $filtered_admins = array_filter($group_admins, function (GroupMembership $member) {
+        return $member->getUser()->id() === $this->currentUser->id();
+      });
+
+      $is_admin_group =
+        ($group_owner instanceof UserInterface && $group_owner->id() === $this->currentUser->id()) ||
+        !empty($filtered_admins);
+    }
+
     if (
+      !$is_admin_group &&
       $this->index->isValidProcessor('group_content_access') &&
       GroupAccessContent::supportsIndex($this->index)
     ) {
@@ -571,9 +637,12 @@ class SolrSearchManager {
   /**
    * Prefilter users by the current group visibility.
    *
-   * @param $group_id
+   * @param string $group_id
+   *   The group id.
+   * @param bool $strict_private
+   *   If TRUE, it will filter only member of private group and NOT people that are allowed to be invited.
    */
-  private function generateUsersQueryVisibilityGroup($group_id) {
+  private function generateUsersQueryVisibilityGroup($group_id, bool $strict_private = FALSE) {
     $query = '';
     $group = Group::load($group_id);
 
@@ -585,7 +654,12 @@ class SolrSearchManager {
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        if ($strict_private) {
+          $query = '(itm_user_group_ids:(' . $group_id . '))';
+        }
+        else {
+          $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        }
         break;
 
       // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
@@ -761,7 +835,7 @@ class SolrSearchManager {
     // Solr cannot handle negate OR in parentheses, so we need to do the reverse condition by negate it.
     $query = '-(!its_global_group_parent_id:("-1") OR (ss_global_content_type:book))';
 
-    $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
+    $this->rawFieldQuery .= empty($this->rawFieldQuery) ?
       "$query" :
       " AND $query";
   }
@@ -777,7 +851,7 @@ class SolrSearchManager {
     // Do not include organisation news as anonymous.
     $query = '(ss_global_group_parent_type:("" OR event OR group))';
 
-    $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
+    $this->rawFieldQuery .= empty($this->rawFieldQuery) ?
       "$query" :
       " AND $query";
   }

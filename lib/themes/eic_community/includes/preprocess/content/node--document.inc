@@ -6,6 +6,7 @@
  */
 
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
@@ -165,6 +166,10 @@ function eic_community_preprocess_node__document(array &$variables) {
         ];
       }
 
+      if (isset($variables['elements']['recommend_content'])) {
+        $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
+      }
+
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
       if ($group instanceof GroupInterface) {
         $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
@@ -174,7 +179,7 @@ function eic_community_preprocess_node__document(array &$variables) {
 
         $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-        if ($visibility instanceof GroupVisibilityRecordInterface
+        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
           $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
         }

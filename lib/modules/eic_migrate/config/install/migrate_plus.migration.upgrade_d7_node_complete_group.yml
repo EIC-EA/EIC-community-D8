@@ -130,9 +130,9 @@ process:
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
   field_message_to_site_admin: field_message_to_site_admin
-  features:
-    - plugin: eic_group_features
-      group_bundle: group
+  # features:
+  #   - plugin: eic_group_features
+  #     group_bundle: group
   # TODO
 #  group_group:
 #    - plugin: get

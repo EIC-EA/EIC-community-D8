@@ -134,7 +134,7 @@
 
     <div class="ecl-comment__main">
       <div class="ecl-editable-wrapper">
-        {{ comment }}
+        {{ comment | raw }}
       </div>
 
       {% if attachments is not empty %}

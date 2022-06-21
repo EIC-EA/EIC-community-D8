@@ -5,6 +5,27 @@
         body: group.field_body.value|raw
       } %}
       {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+
+      {% if agenda_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Agenda and information', files: agenda_files} %}
+      {% endif %}
+
+      {% if presentation_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Presentation', files: presentation_files} %}
+      {% endif %}
+
+      {% if additional_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Additional', files: additional_files} %}
+      {% endif %}
+
+      {% if related_groups is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_groups|default({})|merge({
+          icon_file_path: icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
+          title_extra_classes: "ecl-filelist__title",
+          no_container: true
+        }) only %}
+      {% endif %}
     {% endblock %}
 
     {% block sidebar %}
@@ -36,7 +57,6 @@
       extra_classes: 'ecl-auth-banner--is-compact',
     } only %}
     {% endembed %}
-  {% else %}
   {% endif %}
 
 {% endblock %}

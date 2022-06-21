@@ -16,6 +16,7 @@ use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\MigrateLookup;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -26,6 +27,47 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PostMigrationSubscriber implements EventSubscriberInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * Maps the old group features names to the new ones.
+   *
+   * @var array
+   */
+  const GROUP_FEATURES_MAPPING = [
+    'event' => [
+      'c4m_features_og_documents' => 'eic_groups_files',
+      'c4m_features_og_highlights' => NULL,
+      'c4m_features_og_media' => 'eic_groups_files',
+      'c4m_features_og_members' => 'eic_groups_members',
+      'c4m_features_og_news' => 'eic_groups_news',
+      'c4m_features_og_wiki' => 'eic_groups_wiki',
+    ],
+    'group' => [
+      'c4m_features_og_discussions' => 'eic_groups_discussions',
+      'c4m_features_og_documents' => 'eic_groups_files',
+      'c4m_features_og_events' => 'eic_groups_group_events',
+      'c4m_features_og_highlights' => NULL,
+      'c4m_features_og_media' => 'eic_groups_files',
+      'c4m_features_og_members' => 'eic_groups_members',
+      'c4m_features_og_news' => 'eic_groups_news',
+      'c4m_features_og_wiki' => 'eic_groups_wiki',
+    ],
+    'organisation' => [
+      'c4m_features_og_events' => 'eic_groups_anchor_group_events',
+      'c4m_features_og_media' => NULL,
+      'c4m_features_og_members' => 'eic_groups_anchor_members',
+      'c4m_features_og_news' => 'eic_groups_anchor_news',
+    ],
+  ];
+
+  /**
+   * Group features that we enable by default.
+   *
+   * @var array
+   */
+  const GROUP_FEATURES_ENABLED_BY_DEFAULT = [
+    'eic_groups_latest_activity_stream',
+  ];
 
   /**
    * The database connection to the migrate DB.
@@ -56,6 +98,13 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $groupFlexGroupSaver;
 
   /**
+   * The OEC Group feature helper.
+   *
+   * @var \Drupal\oec_group_features\GroupFeatureHelper
+   */
+  protected $groupFeatureHelper;
+
+  /**
    * Constructs a new MessageCreatorBase object.
    *
    * @param \Drupal\migrate\MigrateLookup $migrate_lookup
@@ -64,11 +113,14 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    *   The entity type manager.
    * @param \Drupal\group_flex\GroupFlexGroupSaver $group_flex_group_saver
    *   The Group Flex Group saver service.
+   * @param \Drupal\oec_group_features\GroupFeatureHelper $group_feature_helper
+   *   The entity storage.
    */
   public function __construct(
     MigrateLookup $migrate_lookup,
     EntityTypeManagerInterface $entity_type_manager,
-    GroupFlexGroupSaver $group_flex_group_saver
+    GroupFlexGroupSaver $group_flex_group_saver,
+    GroupFeatureHelper $group_feature_helper
   ) {
     $connection = Database::getConnection('default', 'migrate');
 
@@ -76,6 +128,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->migrateLookup = $migrate_lookup;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupFlexGroupSaver = $group_flex_group_saver;
+    $this->groupFeatureHelper = $group_feature_helper;
   }
 
   /**
@@ -97,6 +150,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     switch ($event->getMigration()->getBaseId()) {
       case 'upgrade_d7_node_complete_group':
         $this->completeRelatedGroups($event);
+        $this->completeStoriesRelatedGroups($event);
         break;
 
       case 'upgrade_d7_node_complete_article':
@@ -124,6 +178,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         if ($group = $this->entityTypeManager->getStorage('group')->load($gid)) {
           $this->setGroupVisibility($group, $event);
           $this->setGroupJoiningMethod($group, $event);
+          $this->setGroupFeatures($group, $event);
         }
         break;
 
@@ -228,6 +283,93 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Sets the group features after row has been saved.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The migrated group entity.
+   * @param \Drupal\migrate\Event\MigratePostRowSaveEvent $event
+   *   The post row save event object.
+   */
+  protected function setGroupFeatures(GroupInterface $group, MigratePostRowSaveEvent $event) {
+    /** @var \Drupal\migrate\Row $row */
+    $row = $event->getRow();
+
+    $group_bundle = $group->bundle();
+
+    $nid = $row->getSourceIdValues()['nid'];
+
+    $enabled_features = [];
+
+    $migrate_connection = Database::getConnection('default', 'migrate');
+    // Get the group features.
+    $d7_query = $migrate_connection->select('variable_store', 'vs');
+    $d7_query->fields('vs', ['value']);
+    $d7_query->condition('vs.realm', 'og');
+    $d7_query->condition('vs.realm_key', "node_$nid");
+    $d7_query->condition('vs.name', 'c4m_og_features_group');
+
+    $results = $d7_query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    if (count($results)) {
+      $record = reset($results);
+      $features = unserialize($record['value']);
+
+      // Add features that are enabled in the D7.
+      foreach ($features as $old_feature_name => $enabled) {
+        if ($enabled === $old_feature_name) {
+          $enabled_features[] = self::GROUP_FEATURES_MAPPING[$group_bundle][$old_feature_name];
+        }
+      }
+    }
+    else {
+      // If there is no record this means that all features are enabled by
+      // default.
+      $enabled_features = array_merge($enabled_features, array_values(self::GROUP_FEATURES_MAPPING[$group_bundle]));
+    }
+
+    // Filter out feature that are not available for this group type.
+    $group_type_allowed_features = array_keys($this->groupFeatureHelper->getGroupTypeAvailableFeatures(
+      $group_bundle)
+    );
+    foreach ($enabled_features as $index => $enabled_feature) {
+      if (!in_array($enabled_feature, $group_type_allowed_features)) {
+        unset($enabled_features[$index]);
+      }
+    }
+
+    // This will be the final features that will be enabled.
+    $final_enabled_features = array_merge($enabled_features, self::GROUP_FEATURES_ENABLED_BY_DEFAULT);
+
+    $is_all_features_enabled = TRUE;
+    $current_features = $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue();
+    if (!empty($current_features)) {
+      foreach ($current_features as $feature) {
+        if (!in_array($feature['value'], $final_enabled_features)) {
+          $is_all_features_enabled = FALSE;
+          break;
+        }
+      }
+    }
+
+    // If we are updating a group, we need to clear the group features before
+    // we save it again. We need this since there is logic to prevent updating
+    // group features if the enabled features didn't change.
+    if ($is_all_features_enabled) {
+      $group->set(
+        GroupFeatureHelper::FEATURES_FIELD_NAME,
+        []
+      );
+      $group->save();
+    }
+
+    // Updates group features that should be enabled by default.
+    $group->set(
+      GroupFeatureHelper::FEATURES_FIELD_NAME,
+      array_merge($enabled_features, self::GROUP_FEATURES_ENABLED_BY_DEFAULT)
+    );
+    $group->save();
+  }
+
+  /**
    * Returns the configuration of the pluggable_node_access property.
    *
    * @param array $pluggable_node_access
@@ -294,12 +436,12 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
       $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       // Populate the node values.
-      $node_values[$parent_migrated_row['destid1']][] = $migrated_row['destid1'];
+      $node_values[$parent_migrated_row['destid2']][] = $migrated_row['destid1'];
     }
 
     // Set the values for each row.
     foreach ($node_values as $parent_id => $items) {
-      if ($group = $this->entityTypeManager->getStorage('group')->load($parent_id)) {
+      if ($group = $this->entityTypeManager->getStorage('group')->loadRevision($parent_id)) {
         $this->updateEntityReferenceValue($group, 'field_related_groups', $items);
       }
     }
@@ -341,15 +483,96 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
       $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       // Populate the node values.
-      $node_values[$parent_migrated_row['destid1']][] = $migrated_row['destid1'];
+      $node_values[$parent_migrated_row['destid2']][] = $migrated_row['destid1'];
     }
 
     // Set the values for each row.
     foreach ($node_values as $parent_nid => $items) {
-      if ($node = $this->entityTypeManager->getStorage('node')->load($parent_nid)) {
+      if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_nid)) {
         $this->updateEntityReferenceValue($node, 'field_related_stories', $items);
       }
     }
+  }
+
+  /**
+   * Sets the correct entity references for field_related_groups field.
+   *
+   * @param \Drupal\migrate\Event\MigrateImportEvent $event
+   *   The import event object.
+   */
+  protected function completeStoriesRelatedGroups(MigrateImportEvent $event) {
+    $migration = $event->getMigration();
+
+    // Get the original nodes for which we have related groups.
+    $d7_query = $this->connection->select('field_data_c4m_related_group', 'rg');
+    $d7_query->innerJoin('node', 'n', 'n.nid = rg.c4m_related_group_target_id');
+    $d7_query->fields('n', ['nid', 'vid', 'language']);
+    $d7_query->fields('rg', ['c4m_related_group_target_id', 'entity_id']);
+    $d7_query->addField('rg', 'revision_id', 'parent_vid');
+    $d7_query->addField('rg', 'language', 'parent_language');
+    $d7_query->condition('rg.entity_type', 'node')
+      ->condition('rg.bundle', 'article');
+
+    // Gather all items for each row.
+    // Since we are using the node_complete migration, we assume that source ID
+    // is always:
+    // - destid1: nid.
+    // - destid2: vid.
+    // - destid3: langcode.
+    $node_values = [];
+    foreach ($d7_query->execute()->fetchAll(\PDO::FETCH_ASSOC) as $result) {
+      $source_ids = [$result['nid'], $result['vid'], $result['language']];
+      $parent_source_ids = [
+        $result['entity_id'],
+        $result['parent_vid'],
+        $result['parent_language'],
+      ];
+      $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
+      $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
+      $parent_migrated_row = $this->migrateLookup->lookup(
+        [
+          'upgrade_d7_node_complete_article',
+        ],
+        [
+          $result['entity_id'],
+          $result['parent_vid'],
+          $result['parent_language'],
+        ]
+      );
+
+      if (empty($migrated_row) || empty($parent_migrated_row)) {
+        continue;
+      }
+      // Populate the node values.
+      $node_values[$parent_migrated_row[0]['vid']][] = $migrated_row['destid1'];
+    }
+
+    $related_story_node_ids = [];
+    // Set the values for each row.
+    foreach ($node_values as $parent_id => $items) {
+      if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_id)) {
+        $this->updateEntityReferenceValue($node, 'field_related_groups', $items);
+      }
+      $related_story_node_ids[$node->id()] = $node->id();
+    }
+
+    // @todo We need to check if it's necessary to migrate the related stories
+    // into the group or if we can just keep the related groups in stories.
+    // $group_related_stories = [];
+    // foreach ($related_story_node_ids as $node_id) {
+    //   if ($node = $this->entityTypeManager->getStorage('node')->load($node_id)) {
+    //     if ($related_groups = $node->field_related_groups->referencedEntities()) {
+    //       foreach ($related_groups as $group) {
+    //         $group_related_stories[$group->id()][] = $node_id;
+    //       }
+    //     }
+    //   }
+    // }
+    // foreach ($group_related_stories as $group_id => $node_ids) {
+    //   if ($group = $this->entityTypeManager->getStorage('group')->load($group_id)) {
+    //     $this->updateEntityReferenceValue($group, 'field_related_news_stories', $node_ids);
+    //   }
+    // }
   }
 
   /**
@@ -374,10 +597,10 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $changed = $entity->getChangedTime();
     $entity->set($field_name, array_unique(array_merge($entity->get($field_name)->getValue(), $values)));
     $entity->setNewRevision(FALSE);
-    $entity->save();
-
     // Preserve the changed timestamp.
     $entity->setChangedTime($changed);
+    // We enable syncing to avoid creating new revisions.
+    $entity->setSyncing(TRUE);
     $entity->save();
   }
 

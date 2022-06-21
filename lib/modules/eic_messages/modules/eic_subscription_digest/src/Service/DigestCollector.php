@@ -3,6 +3,7 @@
 namespace Drupal\eic_subscription_digest\Service;
 
 use DateTime;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_subscription_digest\Collector\CollectorInterface;
@@ -116,6 +117,16 @@ class DigestCollector {
       return [];
     }
 
+    $content_validation_fields = [
+      'field_group_ref',
+      'field_referenced_node',
+    ];
+    foreach ($content_validation_fields as $field) {
+      if ($message->hasField($field) && !$message->get($field)->entity instanceof ContentEntityInterface) {
+        return [];
+      }
+    }
+
     switch ($template_id) {
       case MessageSubscriptionTypes::NODE_PUBLISHED:
         $formatted_item = [
@@ -138,6 +149,7 @@ class DigestCollector {
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
       case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
       case MessageSubscriptionTypes::NEW_EVENT_PUBLISHED:
+      case MessageSubscriptionTypes::GROUP_CONTENT_SHARED:
         /** @var \Drupal\group\Entity\GroupInterface $group */
         $group = $message->get('field_group_ref')->entity;
         $formatted_item = [
@@ -157,7 +169,10 @@ class DigestCollector {
    *
    * @return array
    */
-  private function sortItems(array $list): array {
+  private
+  function sortItems(
+    array $list
+  ): array {
     foreach ($list as &$category) {
       if (empty($category['items'])) {
         continue;
@@ -183,7 +198,8 @@ class DigestCollector {
    *
    * @return array
    */
-  private function collectMessages(
+  private
+  function collectMessages(
     UserInterface $user,
     string $digest_type,
     DateTime $start_date,

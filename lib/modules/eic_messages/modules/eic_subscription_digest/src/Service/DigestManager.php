@@ -171,6 +171,7 @@ class DigestManager {
       return;
     }
 
+    $send_mail = FALSE;
     $view_builder = $this->entityTypeManager->getViewBuilder('message');
     foreach ($digest_categories as &$category) {
       if (empty($category['items'])) {
@@ -178,10 +179,15 @@ class DigestManager {
       }
 
       foreach ($category['items'] as &$item) {
+        $send_mail = TRUE;
         $item['rendered'] = $view_builder->view($item['message'], 'notify_digest');
       }
     }
 
+    if (!$send_mail) {
+      return;
+    }
+    
     $this->mailManager->mail(
       'eic_subscription_digest',
       'digest',

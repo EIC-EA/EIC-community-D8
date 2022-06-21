@@ -90,9 +90,11 @@ process:
       plugin: get
       source: status_code
   _redirect_exists:
-    - plugin: eic_d7_duplicated_redirect
+    -
+      plugin: eic_d7_duplicated_redirect
       source: source_with_group_prefix
-    - plugin: skip_on_value
+    -
+      plugin: skip_on_value
       value: true
       method: row
       message: 'Duplicated redirect entry.'

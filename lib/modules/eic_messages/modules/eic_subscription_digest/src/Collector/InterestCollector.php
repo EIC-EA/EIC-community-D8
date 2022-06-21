@@ -41,6 +41,7 @@ class InterestCollector implements CollectorInterface {
   public function getMessages(UserInterface $user, DateTimeInterface $start_date, DateTimeInterface $end_date): array {
     $supported_templates = [
       MessageSubscriptionTypes::NODE_PUBLISHED,
+      MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
     ];
 
     $profile = $this->userHelper->getUserMemberProfile($user);

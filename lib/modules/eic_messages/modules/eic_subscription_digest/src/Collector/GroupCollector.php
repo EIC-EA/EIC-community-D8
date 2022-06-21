@@ -35,6 +35,7 @@ class GroupCollector implements CollectorInterface {
       MessageSubscriptionTypes::GROUP_CONTENT_UPDATED,
       MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED,
       MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
+      MessageSubscriptionTypes::GROUP_CONTENT_SHARED,
     ];
 
     $flag_ids = $this->entityTypeManager->getStorage('flagging')
@@ -53,23 +54,35 @@ class GroupCollector implements CollectorInterface {
       $entity_ids[] = $flagging->get('entity_id')->value;
     }
 
-    $message_ids = $this->entityTypeManager->getStorage('message')
-      ->getQuery()
-      ->condition('template', $supported_templates, 'IN')
-      ->condition('field_group_ref', $entity_ids, 'IN')
-      ->condition('created', [
-        $start_date->getTimestamp(),
-        $end_date->getTimestamp(),
-      ], 'BETWEEN')
-      ->sort('created', 'DESC')
-      ->range(0, 10)
-      ->execute();
+    $group_types = $this->entityTypeManager->getStorage('group_type')
+      ->loadMultiple();
 
-    if (empty($message_ids)) {
-      return [];
+    $messages = [];
+    foreach ($group_types as $type) {
+      $message_ids = $this->entityTypeManager->getStorage('message')
+        ->getQuery()
+        ->condition('template', $supported_templates, 'IN')
+        ->condition('field_group_ref', $entity_ids, 'IN')
+        ->condition('field_group_ref.entity:group.type', $type->id())
+        ->condition('created', [
+          $start_date->getTimestamp(),
+          $end_date->getTimestamp(),
+        ], 'BETWEEN')
+        ->sort('created', 'DESC')
+        ->range(0, 3)
+        ->execute();
+
+      if (empty($message_ids)) {
+        continue;
+      }
+
+      $messages = array_merge(
+        $messages,
+        $this->entityTypeManager->getStorage('message')->loadMultiple($message_ids)
+      );
     }
 
-    return $this->entityTypeManager->getStorage('message')->loadMultiple($message_ids);
+    return $messages;
   }
 
 }

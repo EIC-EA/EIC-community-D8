@@ -1,5 +1,6 @@
 route: entity.group.group_request_membership
-label: 'Group membership request'
+paths: ''
+label: 'Group membership request - Create'
 title: 'Membership request confirmation'
 description:
   value: "<p>You are about to request to join <a href=\"[group:url]\">[group:title]</a>.</p>\r\n\r\n<p>Click the request group membership button to complete this action.</p>\r\n"

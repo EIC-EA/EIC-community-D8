@@ -33,6 +33,24 @@ class SubscriptionMessageCreator {
   }
 
   /**
+   * @param \Drupal\group\Entity\GroupInterface $event
+   *
+   * @return \Drupal\message\MessageInterface
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createGlobalEventSubscription(GroupInterface $event) {
+    $message = Message::create([
+      'template' => MessageSubscriptionTypes::NEW_EVENT_PUBLISHED,
+      'field_group_ref' => $event->id(),
+      'field_topic_term' => $event->get('field_vocab_topics')->referencedEntities(),
+    ]);
+    $message->set('field_event_executing_user', $event->getOwnerId());
+    $message->setOwnerId($event->getOwnerId());
+
+    return $message;
+  }
+
+  /**
    * Creates a subscription message for a node with terms of interest.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
@@ -104,7 +122,7 @@ class SubscriptionMessageCreator {
     $flag = $flagging->getFlag();
     $message = NULL;
 
-    if ($flag->id() !== FlagType::RECOMMEND) {
+    if ($flag->id() !== FlagType::RECOMMEND_NODE) {
       return $message;
     }
 

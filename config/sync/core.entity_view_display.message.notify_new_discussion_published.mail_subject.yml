@@ -1,0 +1,17 @@
+uuid: ef64d8d1-433a-49d6-8700-7285a300314b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - message.template.notify_new_discussion_published
+id: message.notify_new_discussion_published.mail_subject
+targetEntityType: message
+bundle: notify_new_discussion_published
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  partial_1: true

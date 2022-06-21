@@ -9,6 +9,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
@@ -38,7 +39,12 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   $entity_type = $entity->getEntityTypeId();
 
   _eic_community_display_topics($variables);
-  _eic_community_display_flags($variables);
+
+  // We show flags only for node, group already have it in the group header.
+  if (!$entity instanceof GroupInterface) {
+    _eic_community_display_flags($variables);
+  }
+
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   if ($group instanceof GroupInterface) {
     if ('node' === $entity_type) {
@@ -46,15 +52,21 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
         $group,
         $entity
       );
+
+      $existing_tags = $variables['#cache']['tags'] ?? [];
+      $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+      if (in_array($group->bundle(), [
+          'event',
+          'group',
+        ]) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+      }
     }
 
     $existing_tags = $variables['#cache']['tags'] ?? [];
     $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
-    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if ($visibility instanceof GroupVisibilityRecordInterface
-      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
-      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
-    }
   }
 
   if ($entity->bundle() !== 'event') {
@@ -242,6 +254,22 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
     ];
   }
 
+  $variables['agenda_files'] = _eic_groups_get_formatted_attachments(
+    $entity,
+    'field_document_agenda',
+    $variables
+  );
+  $variables['presentation_files'] = _eic_groups_get_formatted_attachments(
+    $entity,
+    'field_document_presentations',
+    $variables
+  );
+  $variables['additional_files'] = _eic_groups_get_formatted_attachments(
+    $entity,
+    'field_document_additional',
+    $variables
+  );
+
   /** @var \Drupal\taxonomy\TermInterface $event_type_term */
   $event_type_term = $entity->get('field_vocab_event_type')->entity;
 
@@ -255,4 +283,16 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   }
   // Send event type to the theme variables.
   $variables['event_type'] = $event_type_term ? $event_type_term->getName() : NULL;
+  if ($entity->hasField('field_related_groups') && !$entity->get('field_related_groups')->isEmpty()) {
+    $related_groups = $entity->get('field_related_groups')->referencedEntities();
+    $view_builder = Drupal::entityTypeManager()->getViewBuilder('group');
+    $variables['related_groups'] = [
+      'title' => t('Related groups'),
+      'items' => array_map(
+        function (GroupInterface $group) use ($view_builder) {
+          return ['content' => $view_builder->view($group, 'teaser')];
+        }, $related_groups
+      ),
+    ];
+  }
 }

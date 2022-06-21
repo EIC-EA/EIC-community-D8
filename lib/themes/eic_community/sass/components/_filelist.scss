@@ -1,5 +1,6 @@
 .ecl-filelist {
   $node: &;
+  margin-bottom: 3em;
   &__title {
     //@include ecl-responsive-font('title');
     color: $ecl-color-blue;

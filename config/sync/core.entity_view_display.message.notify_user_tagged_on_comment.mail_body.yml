@@ -15,6 +15,8 @@ bundle: notify_user_tagged_on_comment
 mode: mail_body
 content:
   partial_1:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
 hidden:

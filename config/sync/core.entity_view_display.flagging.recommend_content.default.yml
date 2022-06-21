@@ -1,0 +1,31 @@
+uuid: 206730c2-8ff4-448d-b443-30b261d285d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.recommend_content.field_recommend_emails
+    - field.field.flagging.recommend_content.field_recommend_message
+    - flag.flag.recommend_content
+  module:
+    - text
+id: flagging.recommend_content.default
+targetEntityType: flagging
+bundle: recommend_content
+mode: default
+content:
+  field_recommend_emails:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_recommend_message:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

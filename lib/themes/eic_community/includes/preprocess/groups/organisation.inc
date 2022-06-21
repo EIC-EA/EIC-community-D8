@@ -5,6 +5,8 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -564,6 +566,8 @@ function _generate_overview_prefilter_url(string $filter, string $value): string
  * Fill variables for organisation teaser.
  */
 function _eic_community_render_organisation_teaser(&$variables, GroupInterface $group) {
+  // Get group description.
+  $teaser['description'] = $group->hasField('field_body') ? Markup::create(Xss::filter($group->get('field_body')->value)) : '';
   // Get organisation thumbnail.
   if ($group->hasField('field_thumbnail') && !$group->get('field_thumbnail')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
