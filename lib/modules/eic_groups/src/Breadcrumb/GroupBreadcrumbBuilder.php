@@ -291,15 +291,6 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         }
         break;
 
-      case 'entity.group.canonical':
-        if ($group instanceof GroupInterface) {
-          // Adds the user access as cacheable dependency.
-          if ($access = $group->access('view', $this->account, TRUE)) {
-            $breadcrumb->addCacheableDependency($access);
-          }
-        }
-        break;
-
       case 'entity.group_content.group_approve_membership':
       case 'entity.group_content.group_reject_membership':
       case 'ginvite.invitation.bulk':

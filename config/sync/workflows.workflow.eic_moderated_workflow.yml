@@ -68,7 +68,7 @@ type_settings:
       to: waiting_for_approval
       weight: -2
     unpublish:
-      label: 'Unpublish the content'
+      label: 'Save as unpublished'
       from:
         - draft
         - needs_review

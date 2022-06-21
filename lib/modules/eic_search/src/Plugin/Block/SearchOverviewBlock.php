@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
@@ -288,6 +289,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'eic_statistics.get_node_statistics'
     )->toString();
 
+    $default_sort = $source->getDefaultSort();
+
+    if (
+      $current_group_route instanceof GroupInterface &&
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]
+    ) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP;
+    }
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -303,7 +313,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $account
         ),
       'source_bundle_id' => $source->getEntityBundle(),
-      'default_sorting_option' => $source->getDefaultSort(),
+      'default_sorting_option' => $default_sort,
       'filter_label' => [
         'ss_global_content_type' => [
           'news' => t('News article', [], ['context' => 'eic_search']),
