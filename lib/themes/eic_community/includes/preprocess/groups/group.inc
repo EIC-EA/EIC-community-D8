@@ -6,15 +6,15 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media\MediaHelper;
+use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
-use Drupal\file\Entity\File;
 use Drupal\taxonomy\TermInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Implements hook_preprocess_group__group().
@@ -373,13 +373,11 @@ function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, s
   }
 
   $medias = $entity->get($field_name)->referencedEntities();
-
   $list = [];
   foreach ($medias as $media) {
     $file = File::load($media->field_media_file->target_id);
-    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
-
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
     $list[] = [
       'title' => $media->getName(),
       'language' => $media->language()->getName(),
@@ -389,8 +387,10 @@ function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, s
       'path' => $download_url,
       'icon_file_path' => $variables['eic_icon_path'],
       'icon' => [
-        'type' => $file_type === 'video' ? 'general' : 'custom',
-        'name' => $file_type === 'video' ? $file_type : substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+        'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
+        'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
+            pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+          ),
       ],
     ];
   }
