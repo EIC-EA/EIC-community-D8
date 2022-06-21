@@ -8,13 +8,13 @@
 use CommerceGuys\Addressing\Country\CountryRepository;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\media\Entity\Media;
-use Drupal\file\Entity\File;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\media\Entity\Media;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 
@@ -46,7 +46,8 @@ function eic_community_preprocess_user(array &$variables) {
         $teaser['path'] = $user->toUrl()->toString();
       }
       $teaser['icon_file_path'] = $variables['eic_icon_path'];
-      $teaser['actions'] = array_merge([_eic_community_get_user_contact_link($user)], _eic_community_get_user_social_links($user));
+      $teaser['actions'] = array_merge([_eic_community_get_user_contact_link($user)],
+        _eic_community_get_user_social_links($user));
       $variables['user_item'] = $teaser;
       break;
 
@@ -182,7 +183,8 @@ function eic_community_preprocess_user(array &$variables) {
         ];
       }
       // Gets user topics of expertise.
-      if ($topics_of_expertise = _eic_community_get_user_topics($user, 'field_vocab_topic_expertise', $member_profile)) {
+      if ($topics_of_expertise = _eic_community_get_user_topics($user, 'field_vocab_topic_expertise',
+        $member_profile)) {
         $user_item['flagged_interests']['items'][] = [
           'title' => t('Topics of expertise'),
           'items' => $topics_of_expertise,
@@ -200,7 +202,8 @@ function eic_community_preprocess_user(array &$variables) {
       $user_item['flagged_events'] = [
         'title' => $current_user->id() === $user->id() ? t('My events') : t('Events'),
         'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_events', [$user->id()])
+          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_events',
+            [$user->id()])
           : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_events', [$user->id()])
         ),
       ];
@@ -271,7 +274,8 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
     $author['path'] = $user->toUrl()->toString();
   }
 
-  if (!$user->get('field_media')->isEmpty()) {
+  $current_user = \Drupal::currentUser();
+  if (!$user->get('field_media')->isEmpty() && !$current_user->isAnonymous()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
     if ($media->bundle() == 'image') {
@@ -390,7 +394,11 @@ function _eic_community_get_user_social_links(UserInterface $account, ProfileInt
  * @return array
  *   The render array for templates.
  */
-function _eic_community_get_user_location(UserInterface $account, $format = 'inline', ProfileInterface $member_profile = NULL) {
+function _eic_community_get_user_location(
+  UserInterface $account,
+  $format = 'inline',
+  ProfileInterface $member_profile = NULL
+) {
   $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
 
   // If we don't have a member profile for this user, skip.
@@ -488,7 +496,8 @@ function _eic_community_get_user_job_titles(UserInterface $account, ProfileInter
   $job_titles_terms = $member_profile->get('field_vocab_job_title')->referencedEntities();
   // Adds each fact and figure to the theme variables.
   foreach ($job_titles_terms as $job_title) {
-    $job_title_translation = \Drupal::service('entity.repository')->getTranslationFromContext($job_title, $account->language()->getId());
+    $job_title_translation = \Drupal::service('entity.repository')
+      ->getTranslationFromContext($job_title, $account->language()->getId());
     // @todo Add missing organisations.
     $job_titles[] = [
       'label' => $job_title_translation->getName(),
@@ -508,7 +517,10 @@ function _eic_community_get_user_job_titles(UserInterface $account, ProfileInter
  * @return string
  *   The formatted date when the user joined the platform.
  */
-function _eic_community_get_user_joining_date(UserInterface $account, $format = DateTimeHelper::DATE_FORMAT_MONTH_FULL_YEAR) {
+function _eic_community_get_user_joining_date(
+  UserInterface $account,
+  $format = DateTimeHelper::DATE_FORMAT_MONTH_FULL_YEAR
+) {
   $date_formatter = \Drupal::service('date.formatter');
   return $date_formatter->format($account->getCreatedTime(), $format);
 }
@@ -526,7 +538,11 @@ function _eic_community_get_user_joining_date(UserInterface $account, $format = 
  * @return array
  *   The array of topic terms.
  */
-function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_field_name, ProfileInterface $member_profile = NULL) {
+function _eic_community_get_user_topics(
+  UserInterface $account,
+  $taxonomy_term_field_name,
+  ProfileInterface $member_profile = NULL
+) {
   $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
 
   // If we don't have a member profile for this user, skip.
