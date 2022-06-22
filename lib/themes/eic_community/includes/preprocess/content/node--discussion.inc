@@ -124,7 +124,10 @@ function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   }
 
   // Add last comment if there is one.
-  if ($last_comment = _eic_community_get_entity_last_comment($node)) {
+  if (
+    $last_comment = _eic_community_get_entity_last_comment($node) &&
+    !\Drupal::currentUser()->isAnonymous()
+  ) {
     $teaser['featured'] = [
       'comment' => CommentsHelper::formatHtmlComment($last_comment->get('comment_body')->value),
       'comment_id' => $last_comment->id(),
