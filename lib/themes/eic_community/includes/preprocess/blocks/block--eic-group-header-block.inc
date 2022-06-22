@@ -31,7 +31,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     );
 
     if (!$media->get('oe_media_image')->isEmpty()) {
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $image_item = ImageValueObject::fromStyledImageItem(
+        $media->get('oe_media_image')->first(),
+        'oe_theme_ratio_3_2_medium'
+      );
       $variables['group_values']['image'] = [
         'src' => $image_item->getSource(),
         'alt' => $image_item->getAlt(),

@@ -18,7 +18,6 @@ dependencies:
     - field.storage.group.field_vocab_services_products
     - field.storage.group.field_vocab_target_markets
     - field.storage.group.field_thumbnail
-    - field.storage.media.oe_media_file
     - field.storage.group.field_image
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
@@ -45,6 +44,7 @@ dependencies:
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_legend
+    - field.storage.media.oe_media_file
     - field.storage.paragraph.field_gallery_slide_media
     - field.storage.node.field_date_range
     - field.storage.node.field_subtitle
@@ -970,14 +970,14 @@ field_settings:
       module:
         - group
   group_teaser_fid:
-    label: 'Thumbnail image » Media » File » File » File ID'
+    label: 'Thumbnail image » Media » Image » File » File ID'
     datasource_id: 'entity:group'
-    property_path: 'field_thumbnail:entity:oe_media_file:entity:fid'
+    property_path: 'field_thumbnail:entity:oe_media_image:entity:fid'
     type: integer
     dependencies:
       config:
         - field.storage.group.field_thumbnail
-        - field.storage.media.oe_media_file
+        - field.storage.media.oe_media_image
       module:
         - file
         - media

@@ -39,7 +39,7 @@ class ProcessorNewsStory extends DocumentProcessor {
     $teaser_relative = '';
 
     if ($teaser_image_fid) {
-      $image_style = ImageStyle::load('oe_theme_ratio_3_2_medium');
+      $image_style = ImageStyle::load('ratio_5_4_small');
       $file = File::load($teaser_image_fid);
       $image_uri = $file->getFileUri();
 

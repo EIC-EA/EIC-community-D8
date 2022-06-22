@@ -1,0 +1,15 @@
+uuid: 0bc4d80a-e111-432e-b1b1-a042c5564bd8
+langcode: en
+status: true
+dependencies: {  }
+name: ratio_3_2_small
+label: 'Ratio 3:2 small'
+effects:
+  5c0d4a9e-91ec-47e7-8247-27229c46ba8a:
+    uuid: 5c0d4a9e-91ec-47e7-8247-27229c46ba8a
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 192
+      height: 128
+      anchor: center-center
