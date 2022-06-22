@@ -149,21 +149,18 @@ class ProcessorUser extends DocumentProcessor {
       }
     }
 
-    $fid = array_key_exists('its_user_teaser_image_fid', $fields) ?
-      $fields['its_user_teaser_image_fid'] :
+    $user_picture_uri = array_key_exists('ss_user_profile_image_uri', $fields) ?
+      $fields['ss_user_profile_image_uri'] :
       NULL;
 
     $teaser_relative = '';
 
     // Generates image style for the user picture.
-    if ($fid) {
+    if ($user_picture_uri) {
       /** @var \Drupal\image\Entity\ImageStyle $image_style */
       $image_style = $this->entityTypeManager->getStorage('image_style')
-        ->load('gallery_teaser_crop_160x160');
-      /** @var \Drupal\file\Entity\File $file */
-      $file = $this->entityTypeManager->getStorage('file')->load($fid);
-      $image_uri = $file->getFileUri();
-      $teaser_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($image_uri));
+        ->load('crop_80x80');
+      $teaser_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($user_picture_uri));
     }
 
     $this->addOrUpdateDocumentField(

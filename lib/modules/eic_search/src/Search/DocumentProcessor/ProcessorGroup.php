@@ -157,6 +157,27 @@ class ProcessorGroup extends DocumentProcessor {
       $fields,
       $teaser_relative
     );
+
+    $user_picture_uri = array_key_exists('ss_group_user_image_uri', $fields) ?
+      $fields['ss_group_user_image_uri'] :
+      NULL;
+
+    $user_picture_relative = '';
+
+    // Generates image style for the user picture.
+    if ($user_picture_uri) {
+      /** @var \Drupal\image\Entity\ImageStyle $image_style */
+      $image_style = $this->entityTypeManager->getStorage('image_style')
+        ->load('crop_36x36');
+      $user_picture_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($user_picture_uri));
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_group_teaser_user_formatted_image',
+      $fields,
+      $user_picture_relative
+    );
   }
 
   /**

@@ -212,6 +212,20 @@ field_settings:
         - media
         - message
         - user
+  author_profile_picture_uri:
+    label: 'Created by » User » Picture » Media » Image » File » URI'
+    datasource_id: 'entity:message'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
+        - message
+        - user
   changed:
     label: Changed
     datasource_id: 'entity:node'
@@ -229,6 +243,20 @@ field_settings:
     label: 'Authored by » User » Picture » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:node'
     property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
+        - node
+        - user
+  content_author_image_uri:
+    label: 'Authored by » User » Picture » Media » Image » File » URI'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri'
     type: string
     dependencies:
       config:
@@ -1036,6 +1064,20 @@ field_settings:
         - group
         - media
         - user
+  group_user_image_uri:
+    label: 'Group creator » User » Picture » Media » Image » File » URI'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - group
+        - media
+        - user
   group_user_last_name:
     label: 'Group creator » User » Last name'
     datasource_id: 'entity:group'
@@ -1498,6 +1540,18 @@ field_settings:
     label: 'Picture » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:user'
     property_path: 'field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
+  user_profile_image_uri:
+    label: 'Picture » Media » Image » File » URI'
+    datasource_id: 'entity:user'
+    property_path: 'field_media:entity:oe_media_image:entity:uri'
     type: string
     dependencies:
       config:

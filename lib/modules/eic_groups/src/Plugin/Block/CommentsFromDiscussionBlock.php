@@ -415,7 +415,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       !in_array($node->getOwnerId(), $users)
     ) {
       $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $node->getOwner()
+        $node->getOwner(),
+        'crop_80x80'
       );
     }
 
@@ -423,7 +424,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     foreach ($users as $user) {
       $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $user
+        $user,
+        'crop_80x80'
       );
     }
 

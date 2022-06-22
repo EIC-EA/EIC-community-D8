@@ -51,13 +51,13 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
     $contributors = ['items' => []];
 
     foreach ($users as $user) {
-      $contributors['items'][] = eic_community_get_teaser_user_display($user);
+      $contributors['items'][] = eic_community_get_teaser_user_display($user, 'crop_80x80');
     }
 
     $variables['contributors'] = $contributors;
   }
 
-  $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
+  $variables['author'] = eic_community_get_teaser_user_display($node->getOwner(), 'crop_80x80');
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
   $flags = array_filter($variables['elements'], function ($key) use ($node) {
