@@ -154,7 +154,10 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 function _eic_community_story_image_field(&$variables) {
   if (isset($variables['content']['field_image'][0])) {
     $media = $variables['content']['field_image'][0]['#media'];
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'scale_739px_width_2x'
+    );
     $image_wrapper = [
       'image' => $image_item->getSource(),
     ];

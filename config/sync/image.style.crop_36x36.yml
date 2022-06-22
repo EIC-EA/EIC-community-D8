@@ -1,0 +1,15 @@
+uuid: fe878907-42c0-480e-8682-48a6eb9f84bc
+langcode: en
+status: true
+dependencies: {  }
+name: crop_36x36
+label: 'Crop 36x36'
+effects:
+  99ddc878-0ef2-4bc4-9d30-0a5bb15e10bb:
+    uuid: 99ddc878-0ef2-4bc4-9d30-0a5bb15e10bb
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 36
+      height: 36
+      anchor: center-center
