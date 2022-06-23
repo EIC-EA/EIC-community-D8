@@ -24,7 +24,7 @@ use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
-use Drupal\oec_group_features\GroupFeatureHelper;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -326,6 +326,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     ];
 
     $route_name = $this->routeMatch->getRouteName();
+    $user_from_route = $this->routeMatch->getParameter('user');
 
     return $build + [
         '#theme' => 'search_overview_block',
@@ -356,6 +357,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           EICGroupsHelper::GROUP_OWNER_ROLE,
           $user_group_roles
         ),
+        '#user_id_from_route' => $user_from_route instanceof UserInterface ? $user_from_route->id() : -1,
         '#enable_registration_filter' =>
           $source instanceof SourceTypeInterface &&
           !empty($source->getRegistrationDateIntervalField()),
