@@ -87,8 +87,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
             'type' => 'custom',
           ],
           'link' => [
-            'label' => $link['title'],
-            'path' => $link ? Url::fromUri($link['uri'])->toString() : '',
+            'label' => $link['uri'],
+            'path' => $link['uri'],
           ],
         ],
       ],
