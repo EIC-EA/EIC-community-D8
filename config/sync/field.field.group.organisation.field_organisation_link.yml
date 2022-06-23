@@ -11,7 +11,7 @@ id: group.organisation.field_organisation_link
 field_name: field_organisation_link
 entity_type: group
 bundle: organisation
-label: Link
+label: Website
 description: ''
 required: false
 translatable: false
