@@ -7,6 +7,7 @@ use Drupal\Core\Ajax\CssCommand;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -24,7 +25,6 @@ use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
-use Drupal\oec_group_features\GroupFeatureHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -190,6 +190,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function build() {
+    // Initialize cache.
+    $cache = [
+      'contexts' => [
+        'url.path',
+        'url.query_args',
+      ],
+      'tags' => [],
+    ];
+
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
@@ -259,8 +268,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $post_content_actions = [];
 
       if ($source instanceof LibrarySourceType) {
-        // User can post content in the library if the group is published.
+        // User can post content in the library if the group is in draft or
+        // published state.
         switch ($current_group_route->get('moderation_state')->value) {
+          case GroupsModerationHelper::GROUP_DRAFT_STATE:
           case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
             // Adds group content create actions for each node type that is
             // part of the group library feature.
@@ -284,6 +295,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
         }
       }
+
+      // Adds group cache tags.
+      $cache['tags'] = Cache::mergeTags($cache['tags'], $current_group_route->getCacheTags());
     }
     $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
       'eic_statistics.get_node_statistics'
@@ -329,7 +343,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     return $build + [
         '#theme' => 'search_overview_block',
-        '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+        '#cache' => $cache,
         '#manager_roles' => $group_admins,
         '#facets' => $facets,
         '#sorts' => $sorts,
