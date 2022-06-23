@@ -50,6 +50,8 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
    *   The request cookies ($_COOKIE).
    * @param array $files
    *   The request files ($_FILES).
+   * @param array $server
+   *   The request server variables ($_SERVER).
    * @param string|null $content
    *   The raw body data.
    * @param array $headers
@@ -66,6 +68,7 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
     array $parameters = [],
     array $cookies = [],
     array $files = [],
+    array $server = [],
     string $content = NULL,
     array $headers = []
   ) {
@@ -75,7 +78,7 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
       $parameters,
       $cookies,
       $files,
-      [],
+      $server,
       $content
     );
 
