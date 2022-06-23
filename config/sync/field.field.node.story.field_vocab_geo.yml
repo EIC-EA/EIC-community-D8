@@ -12,7 +12,7 @@ entity_type: node
 bundle: story
 label: 'Regions & Countries'
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

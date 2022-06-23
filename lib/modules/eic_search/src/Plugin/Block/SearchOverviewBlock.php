@@ -13,14 +13,18 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -202,6 +206,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       return $sort;
     });
 
+    $facets = array_keys($facets);
+    $sorts = array_keys($sorts);
+
     $source_type = $this->configuration['source_type'];
     $sources = $this->sourcesCollector->getSources();
 
@@ -248,10 +255,48 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           return $admin->getUser()->id();
         }, $admins),
       ];
+
+      $post_content_actions = [];
+
+      if ($source instanceof LibrarySourceType) {
+        // User can post content in the library if the group is published.
+        switch ($current_group_route->get('moderation_state')->value) {
+          case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
+            // Adds group content create actions for each node type that is
+            // part of the group library feature.
+            $source->getPrefilteredContentType();
+            foreach ($source->getPrefilteredContentType() as $bundle) {
+              $create_url = Url::fromRoute(
+                'entity.group_content.create_form',
+                [
+                  'group' => $current_group_route->id(),
+                  'plugin_id' => "group_node:$bundle",
+                ]
+              );
+              if ($create_url->access($account)) {
+                $post_content_actions[] = [
+                  'label' => $this->t('Add @type', ['@type' => $bundle]),
+                  'path' => $create_url->toString(),
+                ];
+              }
+            }
+            break;
+
+        }
+      }
     }
     $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
       'eic_statistics.get_node_statistics'
     )->toString();
+
+    $default_sort = $source->getDefaultSort();
+
+    if (
+      $current_group_route instanceof GroupInterface &&
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID === $default_sort[0]
+    ) {
+      $default_sort[0] = DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID_GROUP;
+    }
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
@@ -268,7 +313,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $account
         ),
       'source_bundle_id' => $source->getEntityBundle(),
-      'default_sorting_option' => $source->getDefaultSort(),
+      'default_sorting_option' => $default_sort,
       'filter_label' => [
         'ss_global_content_type' => [
           'news' => t('News article', [], ['context' => 'eic_search']),
@@ -286,8 +331,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#theme' => 'search_overview_block',
         '#cache' => ['contexts' => ['url.path', 'url.query_args']],
         '#manager_roles' => $group_admins,
-        '#facets' => array_keys($facets),
-        '#sorts' => array_keys($sorts),
+        '#facets' => $facets,
+        '#sorts' => $sorts,
         '#prefilters' => $this->extractFilterFromUrl(),
         '#prefilter_my_interests' => $source instanceof ActivityStreamSourceType,
         '#search_string' => $search_value,
@@ -326,6 +371,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['group' => $current_group_route->id()]
           )->toString() :
           '',
+        '#post_content_actions' => $post_content_actions,
         '#translations' => [
           'public' => $this->t('Public', [], ['context' => 'eic_group']),
           'private' => $this->t('Private', [], ['context' => 'eic_group']),

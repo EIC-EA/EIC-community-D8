@@ -113,3 +113,11 @@ react-digest-management:
     dist/react/block/digestmanagement/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
+
+react-recommend-content-block:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/recommendcontent/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal

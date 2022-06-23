@@ -35,6 +35,7 @@ content:
 hidden:
   content_moderation_control: true
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_comments: true
   field_language: true
   field_related_downloads: true
   field_related_media: true

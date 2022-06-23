@@ -142,7 +142,6 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       }
     }
 
-
     _eic_community_display_contributors($variables);
     _eic_community_display_topics($variables);
     _eic_community_story_related_stories($variables);
@@ -221,6 +220,11 @@ function _eic_community_display_flags(&$variables) {
     $variables['editorial_actions']['items'][] = [
       'content' => $flag,
     ];
+  }
+
+  // Show recommend content flag in the 2nd place.
+  if (isset($variables['elements']['recommend_content'])) {
+    array_splice($variables['editorial_actions']['items'], 2, 0, [['content' => $variables['elements']['recommend_content']['content']]]);
   }
 }
 

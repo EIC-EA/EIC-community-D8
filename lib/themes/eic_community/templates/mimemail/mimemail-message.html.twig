@@ -31,13 +31,15 @@
 #}
 {% set classes = module ? (key ? module ~ '-' ~ key) %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     {% block title %}
     <title>{{ 'EASME - Executive Agency for SMEs' | t }}</title>
     {% endblock %}
-
+    <!--[if !mso]><!-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<![endif]-->
     <!--[if mso]>
     <noscript>
       <xml>
@@ -48,8 +50,9 @@
       </xml>
     </noscript>
     <![endif]-->
+    <!--[if lte mso 11]>
     <style type="text/css">
-        .mj-outlook-group-fix { width:100% !important; }
+      .mj-outlook-group-fix { width:100% !important; }
     </style>
     <![endif]-->
     <style type="text/css">

@@ -15,7 +15,6 @@ audience: outsider
 group_type: organisation
 permissions_ui: false
 permissions:
-  - 'access content overview'
   - 'access discussions overview'
   - 'access events overview'
   - 'access files overview'

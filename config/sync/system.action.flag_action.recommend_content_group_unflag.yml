@@ -1,0 +1,15 @@
+uuid: 9700f5fa-af3b-46f6-a6a8-9462a789df4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.recommend_content_group
+  module:
+    - flag
+id: flag_action.recommend_content_group_unflag
+label: 'Unflag this item'
+type: group
+plugin: 'flag_action:recommend_content_group_unflag'
+configuration:
+  flag_id: recommend_content_group
+  flag_action: unflag

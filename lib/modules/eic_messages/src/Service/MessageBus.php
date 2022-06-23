@@ -3,10 +3,8 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Logger\LoggerChannelTrait;
-use Drupal\Core\State\StateInterface;
 use Drupal\eic_messages\Handler\MessageHandlerInterface;
 use Drupal\eic_messages\Util\QueuedMessageChecker;
-use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Drupal\message\Entity\Message;
 use Drupal\message\MessageInterface;
 use Exception;
@@ -35,28 +33,23 @@ class MessageBus implements MessageBusInterface {
   private $queuedMessageChecker;
 
   /**
-   * @var StateInterface
-   */
-  private $state;
-
-  /**
    * @param \Drupal\eic_messages\Util\QueuedMessageChecker $queued_message_checker
-   * @param StateInterface $state
    */
   public function __construct(
-    QueuedMessageChecker $queued_message_checker,
-    StateInterface $state
+    QueuedMessageChecker $queued_message_checker
   ) {
     $this->queuedMessageChecker = $queued_message_checker;
-    $this->state = $state;
   }
 
   /**
-   * @param \Drupal\message\MessageInterface|array $message
+   * {@inheritdoc}
    */
-  public function dispatch($message): void {
+  public function dispatch(
+    $message,
+    array $message_options = []
+  ): void {
     // If we are running migrations, stop saving messages and sending notifications.
-    if ($this->state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+    if (eic_migrate_is_migration_running()) {
       return;
     }
 
@@ -81,6 +74,7 @@ class MessageBus implements MessageBusInterface {
       $message = [
         'stamps' => $handler->getStamps($message),
         'entity' => $message,
+        'options' => $message_options,
       ];
 
       $handler->handle($message);

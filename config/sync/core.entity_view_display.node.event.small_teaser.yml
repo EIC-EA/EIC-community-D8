@@ -12,7 +12,6 @@ dependencies:
     - field.field.node.event.field_document_presentations
     - field.field.node.event.field_image
     - field.field.node.event.field_language
-    - field.field.node.event.field_link
     - field.field.node.event.field_location
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
@@ -105,18 +104,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 19
-    region: content
-  field_link:
-    type: link
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 14
     region: content
   field_location:
     type: address_default

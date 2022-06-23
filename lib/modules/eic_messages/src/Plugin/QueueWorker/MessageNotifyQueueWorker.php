@@ -106,10 +106,17 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       return;
     }
 
+    $options = [];
+    if (isset($data['options'])) {
+      $options = $data['options'];
+    }
+    // Notifier shouldn't care whether the message is saved or not!
+    $options['save on fail'] = FALSE;
+    $options['save on success'] = FALSE;
+
     $this->notifier->send(
       $message,
-      // Notifier shouldn't care whether the message is saved or not!
-      ['save on success' => FALSE]
+      $options
     );
   }
 

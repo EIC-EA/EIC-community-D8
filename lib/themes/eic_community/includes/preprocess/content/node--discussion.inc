@@ -5,6 +5,7 @@
  * Prepares variables for node discussion templates.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\GroupInterface;
@@ -72,6 +73,11 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
     return ['content' => $item];
   }, $flags);
 
+  // Show recommend content flag in the 2nd place.
+  if (isset($variables['elements']['recommend_content'])) {
+    array_splice($flags, 2, 0, [$variables['elements']['recommend_content']]);
+  }
+
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   if ($group instanceof GroupInterface) {
     $flags['share_group_content']['content'] = _eic_community_get_share_group_content_link(
@@ -106,7 +112,7 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
  */
 function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   $teaser = _eic_community_prepare_node_teaser_array($node);
-  $teaser['description'] = CommentsHelper::formatHtmlComment($node->get('field_body')->value);
+  $teaser['description'] = Xss::filter($node->get('field_body')->value);
   $teaser['type'] = $discussion_type;
 
   // Remove unwanted items.

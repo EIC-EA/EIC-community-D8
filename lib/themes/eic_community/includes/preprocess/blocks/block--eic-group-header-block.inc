@@ -5,6 +5,7 @@
  * Contains implementation for hook_preprocess_block() for eic_group_header.
  */
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -12,6 +13,7 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_preprocess_eic_group_header_block().
@@ -132,8 +134,17 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $variables['group_values']['actions'] = $actions;
 
   $flags = [];
+
+  // Adds recommend link.
+  if ($recommend_link = \Drupal::service('eic_recommend_content.manager')->getRecommendContentLink($group)) {
+    $variables['group_values']['membership_links']['recommend_content'] = $recommend_link;
+  }
+
   foreach ($variables['group_values']['membership_links'] as $name => $action) {
-    if (isset($action['#lazy_builder'])) {
+    if (
+      isset($action['#lazy_builder']) ||
+      $name === 'recommend_content'
+    ) {
       $flag = ['content' => $action];
     }
     else {
@@ -182,6 +193,12 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
           'type' => 'custom',
         ];
       }
+    }
+
+    // We set the recommend flag in the 2nd position.
+    if ($name === 'recommend_content') {
+      $flags[1] = $flag;
+      continue;
     }
 
     $flags[] = $flag;
@@ -240,9 +257,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         'id' => strtolower($visibility),
       ];
       break;
+
     case 'organisation':
       $types = $group->get('field_organisation_type')->referencedEntities();
-      $tags = array_map(function (\Drupal\taxonomy\Entity\Term $type) {
+      $tags = array_map(function (Term $type) {
         $filters = [
           'sm_group_organisation_type_string' => $type->label(),
         ];
@@ -252,7 +270,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         ];
 
         $overview_page = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::ORGANISATIONS);
-        $url = $overview_page instanceof \Drupal\Core\Link ? $overview_page->getUrl() : NULL;
+        $url = $overview_page instanceof Link ? $overview_page->getUrl() : NULL;
         $url = $url instanceof Url ? $url->setOptions($query_options) : NULL;
 
         return [
@@ -262,6 +280,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         ];
       }, $types);
       break;
+
   }
 
   if ($group->get('moderation_state')->value !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
@@ -271,9 +290,11 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       case GroupsModerationHelper::GROUP_BLOCKED_STATE:
         $id = 'private';
         break;
+
       case GroupsModerationHelper::GROUP_PENDING_STATE:
         $id = 'restricted';
         break;
+
     }
 
     $tags[] = [

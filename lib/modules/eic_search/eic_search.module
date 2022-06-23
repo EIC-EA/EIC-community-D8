@@ -45,6 +45,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'invite_user_url' => '',
         'enable_registration_filter' => FALSE,
         'manager_roles' => [],
+        'post_content_actions' => [],
       ],
     ],
   ];

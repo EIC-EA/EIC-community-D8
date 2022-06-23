@@ -1,0 +1,14 @@
+services:
+  eic_recommend_content.access_check.recommend_content:
+    class: Drupal\eic_recommend_content\Access\RecommendContentAccessCheck
+    arguments: ['@oec_group_flex.helper', '@entity_type.manager', '@eic_recommend_content.manager']
+    tags:
+      - { name: access_check, applies_to: _eic_recommend_content_access_check }
+  eic_recommend_content.manager:
+    class: Drupal\eic_recommend_content\Services\RecommendContentManager
+    arguments: ['@entity_type.manager', '@current_user', '@oec_group_flex.helper', '@email.validator', '@flag', '@flag.count', '@eic_groups.helper', '@group_flex.group_type']
+  eic_recommend_content.flag_event_subscriber:
+    class: Drupal\eic_recommend_content\EventSubscriber\FlagEventSubscriber
+    arguments: ['@entity_type.manager', '@renderer', '@eic_messages.message_bus']
+    tags:
+      - { name: event_subscriber }

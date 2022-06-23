@@ -5,10 +5,16 @@
  * Prepares variables for group templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\EICGroupsHelper;
-use Drupal\taxonomy\TermInterface;
+use Drupal\eic_media\MediaHelper;
+use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_preprocess_group__group().
@@ -46,7 +52,10 @@ function eic_community_preprocess_group__group(array &$variables) {
       }
       break;
 
+    case 'mail_teaser':
     case 'teaser':
+      // Get group description.
+      $item['description'] = $group->hasField('field_body') ? Markup::create(Xss::filter($group->get('field_body')->value)) : '';
       // Get group thumbnail.
       if ($group->hasField('field_thumbnail') && !$group->get('field_thumbnail')->isEmpty()) {
         /** @var \Drupal\media\Entity\Media $media */
@@ -69,6 +78,9 @@ function eic_community_preprocess_group__group(array &$variables) {
         $item['type']['label'] = $group_visibility_label;
         $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
       }
+
+      // Get group tags.
+      $item['tags'] = _preprocess_group_tags($group);
 
       // Get group last activity.
       // @todo Get the real last activity.
@@ -149,7 +161,7 @@ function _group_about_group_tab($variables, &$sections) {
 
     return [
       'title' => realname_load($user),
-      'path' => $user->toUrl()
+      'path' => $user->toUrl(),
     ];
   }, $owners);
 
@@ -166,7 +178,7 @@ function _group_about_group_tab($variables, &$sections) {
 
       return [
         'title' => realname_load($user),
-        'path' => $user->toUrl()
+        'path' => $user->toUrl(),
       ];
     }, $admins);
 
@@ -353,4 +365,60 @@ function _eic_community_get_group_custom_restricted_options_item_list(string $re
       '#items' => $items,
     ],
   ];
+}
+
+function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, string $field_name, $variables) {
+  if (!$entity->hasField($field_name)) {
+    return [];
+  }
+
+  $medias = $entity->get($field_name)->referencedEntities();
+  $list = [];
+  foreach ($medias as $media) {
+    $file = File::load($media->field_media_file->target_id);
+
+    if (!$file instanceof \Drupal\file\FileInterface) {
+      continue;
+    }
+
+    $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+    $list[] = [
+      'title' => $media->getName(),
+      'language' => $media->language()->getName(),
+      'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
+      'filesize' => format_size($file->get('filesize')->getString()),
+      'highlight' => FALSE,
+      'path' => $download_url,
+      'icon_file_path' => $variables['eic_icon_path'],
+      'icon' => [
+        'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
+        'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
+            pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+          ),
+      ],
+    ];
+  }
+
+  return $list;
+}
+
+/**
+ * Preprocesses group topic tags.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $group
+ *   The group entity.
+ *
+ * @return array
+ *   Array of ecl tags.
+ */
+function _preprocess_group_tags(GroupInterface $group) {
+  // Get the topics.
+  $tags = [];
+  if ($group->hasField('field_vocab_topics') && !$group->get('field_vocab_topics')->isEmpty()) {
+    foreach ($group->get('field_vocab_topics')->referencedEntities() as $term) {
+      $tags[] = _eic_community_preprocess_ecl_tag($term)['tag'];
+    }
+  }
+  return $tags;
 }
