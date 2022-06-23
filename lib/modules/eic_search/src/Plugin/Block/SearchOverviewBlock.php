@@ -195,6 +195,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'contexts' => [
         'url.path',
         'url.query_args',
+        'session',
       ],
       'tags' => [],
     ];
