@@ -3,7 +3,6 @@
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class EicUserResource extends EntityResource {
+class EicUserResource extends EicEntityResourceBase {
 
   /**
    * The EIC Webservices helper class.
