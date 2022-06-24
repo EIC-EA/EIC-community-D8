@@ -154,10 +154,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
             'plugin_id' => 'group_invitation',
           ])->toString(),
           '#has_content' => $has_group_content,
-          '#has_member' => !empty($group->getMembers([
-            EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
-            EICGroupsHelper::GROUP_MEMBER_ROLE,
-          ])),
+          '#has_member' => count($group->getMembers()) > 1 ? TRUE : FALSE,
           '#actions' => $content_operations,
           '#help_link' => Url::fromRoute('contact.site_page')->toString(),
         ];
