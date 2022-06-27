@@ -69,6 +69,14 @@
     }
   }
 
+  body &--button-danger {
+    @extend .ecl-button--danger;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   body &--action {
     &,
     &:hover {
