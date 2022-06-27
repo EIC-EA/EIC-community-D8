@@ -91,7 +91,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * The solr search manager service.
    *
-   * @var SolrSearchManager
+   * @var \Drupal\eic_search\Service\SolrSearchManager
    */
   protected $solrSearchManager;
 
@@ -121,7 +121,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The flag service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_statistics_helper
    *   The group statistics helper service.
-   * @param SolrSearchManager $solr_search_manager
+   * @param \Drupal\eic_search\Service\SolrSearchManager $solr_search_manager
    *   The solr search manager service.
    */
   public function __construct(
@@ -298,10 +298,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Load group statistics from Database.
     $group_statistics = $this->groupStatisticsHelper->loadGroupStatistics($group);
-    $this->solrSearchManager->init(GroupEventSourceType::class, []);
-    $this->solrSearchManager->buildGroupQuery($group->id());
-    $results = $this->solrSearchManager->search();
-    $results = json_decode($results, TRUE);
+
+    // Load group event statistics.
+    $group_events = FALSE;
+    if ($group->getGroupType()->hasContentPlugin('group_node:event')) {
+      $group_events = 0;
+      $this->solrSearchManager->init(GroupEventSourceType::class, []);
+      $this->solrSearchManager->buildGroupQuery($group->id());
+      $results = $this->solrSearchManager->search();
+      $results = json_decode($results, TRUE);
+      $group_events = !empty($results) ? $results['response']['numFound'] : 0;
+    }
 
     $build['content'] = [
       '#theme' => 'eic_group_header_block',
@@ -319,10 +326,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           'members' => $group_statistics->getMembersCount(),
           'comments' => $group_statistics->getCommentsCount(),
           'files' => $group_statistics->getFilesCount(),
-          'events' => !empty($results) ? $results['response']['numFound'] : 0,
         ],
       ],
     ];
+
+    if ($group_events !== FALSE) {
+      $build['content']['#group_values']['stats']['events'] = $group_events;
+    }
 
     // Apply cacheable metadata to the renderable array.
     $cacheable_metadata->applyTo($build);
