@@ -1,0 +1,7 @@
+route: entity.group.join
+paths: ''
+label: 'Group membership - Join'
+title: 'Join [group:title]'
+description:
+  value: "<p>You are about to join <a href=\"[group:url]\">[group:title]</a>.</p>\r\n\r\n<p>Click the Join button to complete this action.</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+  format: full_html
