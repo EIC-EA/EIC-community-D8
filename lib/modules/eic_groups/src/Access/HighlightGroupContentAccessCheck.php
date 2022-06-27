@@ -4,14 +4,12 @@ namespace Drupal\eic_groups\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
-use Drupal\user\Entity\User;
 
 /**
- * Class HighlightGroupContentAccessCheck
+ * Provides an access checker for highlighting group content.
  *
  * @package Drupal\eic_groups\Access
  */
@@ -29,11 +27,17 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
   ];
 
   /**
+   * Constructs a new HighlightGroupContentAccessCheck object.
+   *
    * @param \Drupal\Core\Session\AccountProxy $account
+   *   The current user account.
    * @param \Drupal\group\Entity\GroupInterface|null $group
+   *   The group entity.
    * @param \Drupal\node\NodeInterface|null $node
+   *   The group content node.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(
     AccountProxy $account,
@@ -46,7 +50,9 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
 
     $account = $account->getAccount();
     if (!$group->hasPermission('highlight group content', $account)) {
-      return AccessResult::forbidden('highlight group content permission is required');
+      return AccessResult::forbidden('highlight group content permission is required')
+        ->addCacheableDependency($group)
+        ->addCacheableDependency($account);
     }
 
     $group_content = $group->getContentEntities(NULL, [
@@ -55,10 +61,14 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
     ]);
 
     if (empty($group_content)) {
-      return AccessResult::forbidden('Invalid group content argument');
+      return AccessResult::forbidden('Invalid group content argument')
+        ->addCacheableDependency($group)
+        ->addCacheableDependency($account);
     }
 
-    return AccessResult::allowed();
+    return AccessResult::allowed()
+      ->addCacheableDependency($group)
+      ->addCacheableDependency($account);
   }
 
 }
