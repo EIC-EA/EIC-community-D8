@@ -5,12 +5,13 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Represents EIC Organisation Resource records as resources.
  */
-abstract class GroupResourceBase extends EicEntityResourceBase {
+abstract class GroupResourceBase extends EntityResource {
 
   /**
    * The EIC Webservices helper class.
