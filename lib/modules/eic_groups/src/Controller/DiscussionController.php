@@ -623,8 +623,8 @@ class DiscussionController extends ControllerBase {
       'edited_time' => $edited_time ?
         $this->t('Edited on @time', ['@time' => $edited_time ?: $created_time], ['context' => 'eic_groups']) :
         NULL,
-      'is_soft_delete' => $soft_deleted,
-      'is_archived' => $archived,
+      'is_soft_delete' => (int) $soft_deleted,
+      'is_archived' => (int) $archived,
       'created_time' => $this->t(
         'Created on @time',
         ['@time' => $created_time],

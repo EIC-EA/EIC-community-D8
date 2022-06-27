@@ -5,6 +5,7 @@ namespace Drupal\eic_webservices\Authentication;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,16 +28,30 @@ class AuthToken implements AuthenticationProviderInterface {
   protected $entityTypeManager;
 
   /**
+   * The cache kill switch service.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   */
+  protected $cacheKillSwitch;
+
+  /**
    * Constructs the EIC AuthToken authentication provider object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $cache_kill_switch
+   *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    EntityTypeManagerInterface $entity_type_manager,
+    KillSwitch $cache_kill_switch
+  ) {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
+    $this->cacheKillSwitch = $cache_kill_switch;
   }
 
   /**
@@ -50,6 +65,9 @@ class AuthToken implements AuthenticationProviderInterface {
    * {@inheritdoc}
    */
   public function authenticate(Request $request) {
+    // We want avoid caching for all REST requests.
+    $this->cacheKillSwitch->trigger();
+
     // Make sure we have a valid API Key.
     $api_key = $this->configFactory->get('eic_webservices.settings')->get('api_key');
     if (empty($api_key)) {
