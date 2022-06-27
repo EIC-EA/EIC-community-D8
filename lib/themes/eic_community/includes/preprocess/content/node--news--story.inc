@@ -186,10 +186,16 @@ function _eic_community_story_document_field(&$variables) {
         break;
     }
 
+    $author_url = $media->getOwner()->toUrl();
     $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
     $variables['downloads'][] = [
       'title' => $media->getName(),
+      'author' => [
+        'name' => $media->getOwner()->getDisplayName(),
+        'path' => $author_url->access() ? $media->getOwner()->toUrl()->toString() : NULL,
+      ],
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
