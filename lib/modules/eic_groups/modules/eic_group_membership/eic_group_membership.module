@@ -141,6 +141,15 @@ function eic_group_membership_form_alter(
           '%role_name' => $role_name,
         ]);
       }
+      // Replace the delete action link with our custom route.
+      if (isset($form['actions']['delete']['#url'])) {
+        /** @var \Drupal\Core\Url $old_url */
+        $old_url = $form['actions']['delete']['#url'];
+        $new_url = Url::fromRoute('eic_group_membership.group_membership.delete_form');
+        $new_url->setRouteParameters($old_url->getRouteParameters());
+        $new_url->setOptions($old_url->getOptions());
+        $form['actions']['delete']['#url'] = $new_url;
+      }
       break;
   }
 }
