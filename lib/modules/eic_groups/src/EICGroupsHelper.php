@@ -1011,7 +1011,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         !empty(trim($location_values[$key + 1]))
       ) {
         if (!empty(trim($location_values[$key + 1]))) {
-          $location_formatted .= '<br />';
+          $location_formatted .= '<br>';
         }
       }
     }
