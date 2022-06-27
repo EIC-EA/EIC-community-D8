@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_group_membership\GroupMembershipHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Access\GroupAccessResult;
@@ -94,8 +95,16 @@ function eic_group_membership_form_alter(
   FormStateInterface $form_state,
   $form_id
 ) {
-  if ($form_id === 'group_content_group-group_membership_group-leave_form') {
+  if (GroupMembershipHelper::isGroupMembershipLeaveForm($form_id)) {
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $form_state->getFormObject()->getEntity()->getGroup();
+    // Add our custom submit callback.
     $form['actions']['submit']['#submit'][] = 'eic_group_membership_leave_form_submit';
+    // Change the cancel link URL to go back to the group entity itself.
+    if (!empty($form['actions']['cancel']['#url'])) {
+      $new_url = Url::fromRoute('entity.group.canonical', ['group' => $group->id()]);
+      $form['actions']['cancel']['#url'] = $new_url;
+    }
     return;
   }
 
@@ -220,10 +229,29 @@ function eic_group_membership_leave_form_submit(
   array $form,
   FormStateInterface $form_state
 ) {
-  $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::GROUPS);
-  $form_state->setRedirectUrl($group_overview->getUrl());
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $form_state->getFormObject()->getEntity()->getGroup();
 
-  \Drupal::messenger()->addStatus(t('You successfully left the group'));
+  switch ($group->bundle()) {
+    case 'group':
+      $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::GROUPS);
+      $form_state->setRedirectUrl($group_overview->getUrl());
+      break;
+
+    case 'event':
+      $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS);
+      $form_state->setRedirectUrl($group_overview->getUrl());
+      break;
+
+    case 'organisation':
+      $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::ORGANISATIONS);
+      $form_state->setRedirectUrl($group_overview->getUrl());
+      break;
+  }
+
+  \Drupal::messenger()->addStatus(t('You successfully left the %group_type', [
+    '%group_type' => $group->getGroupType()->label(),
+  ]));
 }
 
 /**
