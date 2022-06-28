@@ -142,6 +142,12 @@ class DiscussionController extends ControllerBase {
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
+    // User cannot post empty comments and therefore we return bad request
+    // response.
+    if (!$text) {
+      return new JsonResponse('You cannot post empty comments', Response::HTTP_BAD_REQUEST);
+    }
+
     if ($node = Node::load($discussion_id)) {
       Cache::invalidateTags($node->getCacheTags());
     }

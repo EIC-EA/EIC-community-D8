@@ -1,7 +1,7 @@
 services:
   eic_recommend_content.access_check.recommend_content:
     class: Drupal\eic_recommend_content\Access\RecommendContentAccessCheck
-    arguments: ['@oec_group_flex.helper', '@entity_type.manager', '@eic_recommend_content.manager']
+    arguments: ['@oec_group_flex.helper', '@entity_type.manager', '@eic_recommend_content.manager', '@eic_groups.helper']
     tags:
       - { name: access_check, applies_to: _eic_recommend_content_access_check }
   eic_recommend_content.manager:

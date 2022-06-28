@@ -1,6 +1,6 @@
 text:
   -
-    value: 'MT21 :: Group content shared'
+    value: 'A content has been shared to your group'
     format: plain_text
   -
     value: "<p>[message:field_event_executing_user:entity:display-name] shared the content <a href=\"\\\">[message:field_referenced_node:entity:title]</a> with the group&nbsp;<a href=\"\\\">[message:field_group_ref:entity:title]</a></p>\r\n"

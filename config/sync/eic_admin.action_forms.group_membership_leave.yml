@@ -1,0 +1,7 @@
+route: entity.group.leave
+paths: ''
+label: 'Group membership - Leave'
+title: 'Leave [group:title]'
+description:
+  value: "<p>You are about to leave <a href=\"[group:url]\">[group:title]</a>.</p>\r\n\r\n<p>Click the Leave group button to complete this action.</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+  format: full_html
