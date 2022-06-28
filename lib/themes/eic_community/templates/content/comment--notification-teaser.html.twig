@@ -74,9 +74,7 @@
 																										{% if comment.tagged_users is defined %}
 																											<br><br>With:
 																											{% for user in comment.tagged_users %}
-																												<a style="font-weight: bold; text-decoration: none; color: #004494" href="{{ user.path }}" target="_blank">{{ user.name }}</a>
-																												{% if loop.last == false %},
-																												{% endif %}
+																												<a style="font-weight: bold; text-decoration: none; color: #004494" href="{{ user.path }}" target="_blank">{{ user.name }}</a>{% if loop.last == false %}, {% endif %}
 																											{% endfor %}
 																										{% endif %}
 																									</div>
