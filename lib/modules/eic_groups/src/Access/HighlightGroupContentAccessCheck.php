@@ -51,8 +51,7 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
     $account = $account->getAccount();
     if (!$group->hasPermission('highlight group content', $account)) {
       return AccessResult::forbidden('highlight group content permission is required')
-        ->addCacheableDependency($group)
-        ->addCacheableDependency($account);
+        ->setCacheMaxAge(0);
     }
 
     $group_content = $group->getContentEntities(NULL, [
@@ -62,13 +61,11 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
 
     if (empty($group_content)) {
       return AccessResult::forbidden('Invalid group content argument')
-        ->addCacheableDependency($group)
-        ->addCacheableDependency($account);
+        ->setCacheMaxAge(0);
     }
 
     return AccessResult::allowed()
-      ->addCacheableDependency($group)
-      ->addCacheableDependency($account);
+      ->setCacheMaxAge(0);
   }
 
 }

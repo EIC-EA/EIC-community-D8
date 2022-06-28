@@ -108,8 +108,7 @@ class RecommendContentAccessCheck implements AccessInterface {
 
     // Default access.
     $access = AccessResult::forbidden()
-      ->addCacheableDependency($account)
-      ->addCacheableDependency($entity);
+      ->setCacheMaxAge(0);
 
     if (!$this->recommendContentManager->isRecommendationEnabled($entity)) {
       return $access;
@@ -132,18 +131,14 @@ class RecommendContentAccessCheck implements AccessInterface {
     }
 
     $moderation_state = $entity->get('moderation_state')->value;
-    // Wether or not the current entity is a group content.
-    $is_group_content = FALSE;
 
     switch ($moderation_state) {
       case DefaultContentModerationStates::PUBLISHED_STATE:
         // If the entity belongs to a group and the group is not published, we
         // deny access to recommend it.
         if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
-          $is_group_content = TRUE;
           if ($group->get('moderation_state')->value !== $moderation_state) {
-            $access->addCacheableDependency($account)
-              ->addCacheableDependency($entity);
+            $access->setCacheMaxAge(0);
             break;
           }
         }
@@ -151,8 +146,7 @@ class RecommendContentAccessCheck implements AccessInterface {
         // Power users can always recommend published content.
         if (UserHelper::isPowerUser($account)) {
           $access = AccessResult::allowed()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($entity);
+            ->setCacheMaxAge(0);
           break;
         }
 
@@ -164,14 +158,9 @@ class RecommendContentAccessCheck implements AccessInterface {
         }
 
         $access = AccessResult::allowed()
-          ->addCacheableDependency($account)
-          ->addCacheableDependency($entity);
+          ->setCacheMaxAge(0);
         break;
 
-    }
-
-    if ($is_group_content && $group) {
-      $access->addCacheableDependency($group);
     }
 
     return $access;
