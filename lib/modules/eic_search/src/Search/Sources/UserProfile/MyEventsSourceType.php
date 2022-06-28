@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_search\Search\Sources\Profile;
+namespace Drupal\eic_search\Search\Sources\UserProfile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagType;
@@ -8,11 +8,11 @@ use Drupal\eic_search\Search\Sources\SourceType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
- * Class MyGroupsSourceType
+ * Class MyEventsSourceType
  *
  * @package Drupal\eic_groups\Search\Sources\UserProfile
  */
-class MyGroupsSourceType extends SourceType {
+class MyEventsSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -27,14 +27,14 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Profile - My groups', [], ['context' => 'eic_search']);
+    return $this->t('User profile - My events', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return 'group';
+    return 'global_event';
   }
 
   /**
@@ -98,7 +98,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS_COMPACT;
+    return self::LAYOUT_COMPACT;
   }
 
   /**
@@ -112,7 +112,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredContentType(): array {
-    return ['group'];
+    return ['event'];
   }
 
   /**
@@ -132,6 +132,13 @@ class MyGroupsSourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function prefilterByUserFromRoute(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getDefaultSort(): array {
     return ['ss_drupal_changed_timestamp', 'DESC'];
   }
@@ -140,7 +147,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getUniqueId(): string {
-    return 'profile-' . parent::getUniqueId();
+    return 'user-profile-' . parent::getUniqueId();
   }
 
 }

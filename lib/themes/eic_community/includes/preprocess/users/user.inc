@@ -18,6 +18,7 @@ use Drupal\media\Entity\Media;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 use Drupal\eic_search\Search\Sources\UserProfile\MyGroupsSourceType;
+use Drupal\eic_search\Search\Sources\UserProfile\MyEventsSourceType;
 
 /**
  * Implements hook_preprocess_user().
@@ -197,40 +198,14 @@ function eic_community_preprocess_user(array &$variables) {
         ];
       }
 
-      $block_manager = \Drupal::service('plugin.manager.block');
-      // You can hard code configuration or you load from settings.
-      $config = [
-        'source_type' => MyGroupsSourceType::class,
-        'enable_search' => 0,
-        'facets' => [],
-        'sort_options' => [],
-      ];
-      $plugin_block = $block_manager->createInstance('eic_search_overview', $config);
-      // Some blocks might implement access check.
-      $access_result = $plugin_block->access(\Drupal::currentUser());
-      // Return empty render array if user doesn't have access.
-      // $access_result can be boolean or an AccessResult class
-      if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
-        // You might need to add some cache tags/contexts.
-        return [];
-      }
-      $render = $plugin_block->build();
-
       $user_item['flagged_groups'] = [
         'title' => $current_user->id() === $user->id() ? t('My groups') : t('Groups'),
-        'content' => $render,
+        'content' => _get_render_block_search_overview(MyGroupsSourceType::class),
       ];
 
       $user_item['flagged_events'] = [
         'title' => $current_user->id() === $user->id() ? t('My events') : t('Events'),
-        'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view(
-            'global_index_group_content',
-            'block_user_profile_my_events',
-            [$user->id()]
-          )
-          : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_events', [$user->id()])
-        ),
+        'content' => _get_render_block_search_overview(MyEventsSourceType::class),
       ];
 
       $user_item['flagged_projects'] = [
@@ -244,6 +219,35 @@ function eic_community_preprocess_user(array &$variables) {
       $variables['user_item'] = $user_item;
       break;
 
+  }
+}
+
+/**
+ * Render a search overview block with given source type.
+ *
+ * @param string $source
+ *   The source class in string.
+ *
+ * @return array
+ */
+function _get_render_block_search_overview(string $source): array {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  // You can hard code configuration or you load from settings.
+  $config = [
+    'source_type' => $source,
+    'enable_search' => 0,
+    'facets' => [],
+    'sort_options' => [],
+    'prefilter_group' => 0,
+    'enable_date_filter' => 0,
+  ];
+
+  $plugin_block = $block_manager->createInstance('eic_search_overview', $config);
+  $access_result = $plugin_block->access(\Drupal::currentUser());
+  if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
+    return [];
+  } else {
+    return $plugin_block->build();
   }
 }
 
