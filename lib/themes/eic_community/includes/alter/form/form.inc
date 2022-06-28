@@ -6,15 +6,11 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_group_membership\GroupMembershipHelper;
 
 /**
  * Implements hook_form_alter().
  */
 function eic_community_form_alter(&$form, FormStateInterface $form_state) {
-  if (GroupMembershipHelper::isGroupMembershipDeleteForm($form['#form_id'])) {
-    _eic_community_form_delete_button($form, $form_state, ['submit']);
-  }
   _eic_community_form_cancel_button($form, $form_state);
   _eic_community_form_delete_button($form, $form_state);
 }
