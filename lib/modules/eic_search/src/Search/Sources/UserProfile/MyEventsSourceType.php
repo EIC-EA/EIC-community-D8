@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources\UserProfile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Search\Sources\SourceType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
@@ -140,7 +141,7 @@ class MyEventsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return ['ss_drupal_changed_timestamp', 'DESC'];
+    return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
   }
 
   /**
