@@ -31,6 +31,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'page_options' => '',
         'currentGroup' => '',
         'currentGroupUrl' => '',
+        'user_id_from_route' => '',
         'isGroupOwner' => FALSE,
         'enable_search' => TRUE,
         'enable_date_filter' => FALSE,
