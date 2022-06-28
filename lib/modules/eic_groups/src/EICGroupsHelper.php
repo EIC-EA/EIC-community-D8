@@ -988,18 +988,33 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    */
   public static function formatAddress($address) {
     $countries_map = CountryManager::getStandardList();
-    $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
+    $location_values = [];
+    $location_values[] = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
       . ' ' .
-      $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)] . '<br />';
-    $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
+      $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)];
+    $location_values[] = $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
       . ' ' .
-      $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
-    $location_formatted .= array_key_exists(
-      $address['country_code'],
-      $countries_map
-    ) ?
+      $address[FieldHelper::getPropertyName(AddressField::LOCALITY)];
+    $location_values[] = array_key_exists(
+        $address['country_code'],
+        $countries_map
+      ) ?
       $countries_map[$address['country_code']] :
       '';
+
+    $location_formatted = '';
+    foreach ($location_values as $key => $value) {
+      $location_formatted .= $value;
+      if (
+        isset($location_values[$key + 1]) &&
+        !empty(trim($location_formatted)) &&
+        !empty(trim($location_values[$key + 1]))
+      ) {
+        if (!empty(trim($location_values[$key + 1]))) {
+          $location_formatted .= '<br>';
+        }
+      }
+    }
 
     return $location_formatted;
   }

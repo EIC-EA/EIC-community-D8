@@ -91,7 +91,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * The solr search manager service.
    *
-   * @var SolrSearchManager
+   * @var \Drupal\eic_search\Service\SolrSearchManager
    */
   protected $solrSearchManager;
 
@@ -121,7 +121,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The flag service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_statistics_helper
    *   The group statistics helper service.
-   * @param SolrSearchManager $solr_search_manager
+   * @param \Drupal\eic_search\Service\SolrSearchManager $solr_search_manager
    *   The solr search manager service.
    */
   public function __construct(
@@ -271,12 +271,18 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    // Adds pending membership requests URL to the group operation links.
+    $group_operation_links['edit-membership-requests'] = [
+      'title' => $this->t('Membership requests'),
+      'url' => Url::fromRoute('view.group_pending_members.page_1', ['group' => $group->id()]),
+    ];
+
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
       return in_array(
         $key,
-        ['edit', 'delete', 'publish', 'request_block', 'edit-members']
+        ['edit', 'delete', 'publish', 'request_block', 'edit-members', 'edit-membership-requests']
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 
