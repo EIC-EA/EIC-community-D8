@@ -38,4 +38,8 @@ reactions:
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
+  body_class:
+    id: body_class
+    body_class: eic-action-form
+    saved: false
 weight: 0

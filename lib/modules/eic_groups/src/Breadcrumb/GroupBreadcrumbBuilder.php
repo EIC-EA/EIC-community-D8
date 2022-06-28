@@ -124,6 +124,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     switch ($route_match->getRouteName()) {
       case 'entity.group.add_form':
       case 'entity.group.canonical':
+      case 'entity.group.join':
+      case 'entity.group.leave':
       case 'entity.group_content.group_approve_membership':
       case 'entity.group_content.group_reject_membership':
       case 'ginvite.invitation.bulk':
@@ -295,6 +297,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       case 'entity.group_content.group_reject_membership':
       case 'ginvite.invitation.bulk':
       case 'ginvite.invitation.bulk.confirm':
+      case 'entity.group.join':
+      case 'entity.group.leave':
         $links[] = $group->toLink();
         break;
 
