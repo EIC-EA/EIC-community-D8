@@ -46,7 +46,7 @@
 							{% endif %}
 							{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                 icon: {
-                  size: 'm',
+                  size: 'l',
                   path: icon_file_path,
                   type: 'custom',
                   name: (mime_type in ['doc', 'pdf', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt', 'img'] ? 'document_' ~ mime_type : 'document'),
