@@ -19,6 +19,7 @@ use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 use Drupal\eic_search\Search\Sources\UserProfile\MyGroupsSourceType;
 use Drupal\eic_search\Search\Sources\UserProfile\MyEventsSourceType;
+use Drupal\eic_search\Search\Sources\UserProfile\MyOrganisationsSourceType;
 
 /**
  * Implements hook_preprocess_user().
@@ -210,10 +211,7 @@ function eic_community_preprocess_user(array &$variables) {
 
       $user_item['flagged_projects'] = [
         'title' => $current_user->id() === $user->id() ? t('My organisations') : t('Organisations'),
-        'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_organisations', [$user->id()])
-          : _eic_community_get_rendered_view('groups', 'block_user_profile_organisations', [$user->id()])
-        ),
+        'content' => _get_render_block_search_overview(MyOrganisationsSourceType::class),
       ];
 
       $variables['user_item'] = $user_item;
