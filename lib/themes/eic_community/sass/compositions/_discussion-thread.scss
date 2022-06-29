@@ -55,7 +55,8 @@
   }
 
   &__title {
-    margin-top: 0;
+    margin-bottom:  $ecl-spacing-2-xs;
+    margin-top: $ecl-spacing-xs;
     @include ecl-responsive-font('label');
   }
 
