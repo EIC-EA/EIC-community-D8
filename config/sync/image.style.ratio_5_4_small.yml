@@ -1,0 +1,15 @@
+uuid: e284d3ee-a1df-40d4-a505-353187490570
+langcode: en
+status: true
+dependencies: {  }
+name: ratio_5_4_small
+label: 'Ratio 5:4 small'
+effects:
+  e6f10601-a2ad-4d62-95cf-2c0ecc987ce6:
+    uuid: e6f10601-a2ad-4d62-95cf-2c0ecc987ce6
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 160
+      height: 128
+      anchor: center-center
