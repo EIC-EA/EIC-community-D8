@@ -31,6 +31,8 @@ process:
       source: group_id
       migration:
         - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_event_site
+        - upgrade_d7_node_complete_organisation
     - plugin: node_complete_node_lookup
     - plugin: skip_on_empty
       method: row
@@ -63,4 +65,6 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_event_site
+    - upgrade_d7_node_complete_organisation
   optional: {  }

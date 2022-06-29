@@ -54,6 +54,7 @@ class SolrSearchController extends ControllerBase {
     $topic_term_id = $request->query->get('topics');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
+    $user_id_from_route = (int) $request->query->get('userIdFromRoute');
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE) ?: [];
     // timestamp value, if nothing set "*" (the default value on solr).
@@ -63,6 +64,7 @@ class SolrSearchController extends ControllerBase {
     $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
 
     $search = $this->searchManager->init($source_class);
+    $search->buildUserIdFromUrl($user_id_from_route);
     $search->buildGroupQuery($current_group);
     $search->buildFacets($facets_options);
     $search->buildSortFacets($facets_value, $sort_value);

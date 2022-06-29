@@ -35,7 +35,6 @@
   }
 
   &__aside {
-    flex-shrink: 0;
     margin: auto 0;
 
     @include ecl-media-breakpoint-up('lg') {
@@ -49,10 +48,6 @@
   }
 
   &__searchform {
-    @include ecl-media-breakpoint-up('md') {
-      min-width: map-get($ecl-width, 'form-m');
-    }
-
     .ecl-text-input,
     .ecl-button {
       background-color: map-get($ecl-colors, 'blue-75');
@@ -80,7 +75,6 @@
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
       @include ecl-responsive-font('label');
       padding: map-get($ecl-spacing, 'xs');
-      min-width: 185px;
 
       @include placeholder-color(map-get($ecl-colors, 'blue-25'));
     }

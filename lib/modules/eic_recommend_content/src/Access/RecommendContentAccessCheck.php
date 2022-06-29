@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_recommend_content\Services\RecommendContentManager;
 use Drupal\eic_user\UserHelper;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
@@ -43,6 +44,13 @@ class RecommendContentAccessCheck implements AccessInterface {
   protected $recommendContentManager;
 
   /**
+   * The EIC Groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  protected $eicGroupsHelper;
+
+  /**
    * Constructs a new RecommendGroupAccessCheck object.
    *
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
@@ -51,15 +59,19 @@ class RecommendContentAccessCheck implements AccessInterface {
    *   The Entity type manager.
    * @param \Drupal\eic_recommend_content\Services\RecommendContentManager $recommend_content_manager
    *   The EIC Recommend content manager.
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   *   The EIC Groups helper service.
    */
   public function __construct(
     OECGroupFlexHelper $oec_group_flex_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    RecommendContentManager $recommend_content_manager
+    RecommendContentManager $recommend_content_manager,
+    EICGroupsHelper $eic_groups_helper
   ) {
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->recommendContentManager = $recommend_content_manager;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -96,8 +108,7 @@ class RecommendContentAccessCheck implements AccessInterface {
 
     // Default access.
     $access = AccessResult::forbidden()
-      ->addCacheableDependency($account)
-      ->addCacheableDependency($entity);
+      ->setCacheMaxAge(0);
 
     if (!$this->recommendContentManager->isRecommendationEnabled($entity)) {
       return $access;
@@ -123,11 +134,19 @@ class RecommendContentAccessCheck implements AccessInterface {
 
     switch ($moderation_state) {
       case DefaultContentModerationStates::PUBLISHED_STATE:
+        // If the entity belongs to a group and the group is not published, we
+        // deny access to recommend it.
+        if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
+          if ($group->get('moderation_state')->value !== $moderation_state) {
+            $access->setCacheMaxAge(0);
+            break;
+          }
+        }
+
         // Power users can always recommend published content.
         if (UserHelper::isPowerUser($account)) {
           $access = AccessResult::allowed()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($entity);
+            ->setCacheMaxAge(0);
           break;
         }
 
@@ -139,8 +158,7 @@ class RecommendContentAccessCheck implements AccessInterface {
         }
 
         $access = AccessResult::allowed()
-          ->addCacheableDependency($account)
-          ->addCacheableDependency($entity);
+          ->setCacheMaxAge(0);
         break;
 
     }

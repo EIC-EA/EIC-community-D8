@@ -193,6 +193,13 @@ interface SourceTypeInterface {
   public function prefilterByGroupsMembership(): bool;
 
   /**
+   * Prefilter by user from URL.
+   *
+   * @return bool
+   */
+  public function prefilterByUserFromRoute(): bool;
+
+  /**
    * Get the label for the filter "my groups".
    *
    * @return string
