@@ -8,6 +8,7 @@ dependencies:
     - field.field.paragraph.full_text_content.field_title
     - paragraphs.paragraphs_type.full_text_content
   module:
+    - text
     - typed_link
 id: paragraph.full_text_content.default
 targetEntityType: paragraph
@@ -15,7 +16,7 @@ bundle: full_text_content
 mode: default
 content:
   field_body:
-    type: basic_string
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }

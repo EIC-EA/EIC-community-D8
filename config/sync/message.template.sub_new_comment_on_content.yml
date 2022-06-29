@@ -15,7 +15,7 @@ label: 'SUBSCRIPTION :: MT19 :: New comment on content'
 description: ''
 text:
   -
-    value: 'MT19 :: New comment on content'
+    value: 'Someone commented on a content you''re following'
     format: plain_text
   -
     value: "<p>New comment from [message:field_event_executing_user:entity:display-name] on content <a href=\"[message:field_referenced_comment:entity:entity:url]\"><u>[message:field_referenced_comment:entity:entity:title]</u></a></p>\r\n"

@@ -175,14 +175,22 @@ function _eic_community_story_image_field(&$variables) {
  */
 function _eic_community_story_document_field(&$variables) {
   $node = $variables['node'];
+  /** @var \Drupal\media\MediaInterface[] $medias */
   $medias = $node->get('field_document_media')->referencedEntities();
 
   foreach ($medias as $media) {
-    $file = File::load($media->field_media_file->target_id);
+    switch ($media->bundle()) {
+      case 'video':
+        $file = File::load($media->field_media_video_file->target_id);
+        break;
+
+      default:
+        $file = File::load($media->field_media_file->target_id);
+        break;
+    }
+
     $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
-
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
-
     $variables['downloads'][] = [
       'title' => $media->getName(),
       'language' => $media->language()->getName(),

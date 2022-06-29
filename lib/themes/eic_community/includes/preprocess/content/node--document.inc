@@ -90,7 +90,14 @@ function eic_community_preprocess_node__document(array &$variables) {
       }
 
       $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
-
+      $mime_type = _eic_community_get_file_type_icon_name(
+        pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+      );
+      $supported_icons = ['doc', 'dwg', 'html', 'ppt', 'txt', 'xls', 'zip', 'pdf'];
+      if (!in_array($mime_type, $supported_icons)) {
+        $mime_type = 'doc';
+      }
+      
       $document = [
         'language' => $language,
         'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),
@@ -98,10 +105,7 @@ function eic_community_preprocess_node__document(array &$variables) {
         'highlight' => FALSE,
         'icon' => [
           'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
-          'name' => in_array($file_type,
-            ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
-              pathinfo($file->getFilename(), PATHINFO_EXTENSION)
-          ),
+          'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . $mime_type,
         ],
       ];
 
@@ -168,7 +172,8 @@ function eic_community_preprocess_node__document(array &$variables) {
 
       // Show recommend content flag in the 2nd place.
       if (isset($variables['elements']['recommend_content'])) {
-        array_splice($variables['editorial_actions']['items'], 2, 0, [['content' => $variables['elements']['recommend_content']['content']]]);
+        array_splice($variables['editorial_actions']['items'], 2, 0,
+          [['content' => $variables['elements']['recommend_content']['content']]]);
       }
 
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
@@ -180,7 +185,10 @@ function eic_community_preprocess_node__document(array &$variables) {
 
         $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
+        if (in_array($group->bundle(), [
+            'event',
+            'group',
+          ]) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
           $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
         }

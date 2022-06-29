@@ -53,6 +53,7 @@ type_settings:
     block:
       label: Block
       from:
+        - archived
         - published
       to: blocked
       weight: 4

@@ -93,7 +93,8 @@ class EicUserUpdateResource extends ResourceBase {
 
     // Get the parent resource endpoint URI.
     $parent_resource = $this->resourcePluginManager->getDefinition('eic_webservices_user');
-    $uri = str_replace('{user}', $smed_id, $parent_resource['uri_paths']['canonical']);
+    $uri = $current_request->getBasePath();
+    $uri .= str_replace('{user}', $smed_id, $parent_resource['uri_paths']['canonical']);
     $uri .= '?_format=hal_json';
 
     // Perform the sub-request and return the result.
@@ -103,6 +104,7 @@ class EicUserUpdateResource extends ResourceBase {
       [],
       $current_request->cookies->all(),
       $current_request->files->all(),
+      $current_request->server->all(),
       $current_request->getContent(),
       $current_request->headers->all()
     );

@@ -1,0 +1,15 @@
+.eic-action-form {
+  .ecl-viewport__middle {
+    padding: 100px 0 120px;
+  }
+
+  .ecl-form .ecl-form-group.form-actions,
+  .ecl-form:only-child,
+  .ecl-base-layout__content-before {
+    margin-top: 0;
+  }
+
+  .ecl-form:only-child {
+    margin-bottom: 0;
+  }
+}
