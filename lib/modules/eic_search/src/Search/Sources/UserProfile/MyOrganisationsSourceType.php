@@ -1,18 +1,19 @@
 <?php
 
-namespace Drupal\eic_search\Search\Sources\Profile;
+namespace Drupal\eic_search\Search\Sources\UserProfile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\SourceType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
- * Class MyGroupsSourceType
+ * Class MyEventsSourceType
  *
  * @package Drupal\eic_groups\Search\Sources\UserProfile
  */
-class MyGroupsSourceType extends SourceType {
+class MyOrganisationsSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -27,14 +28,14 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Profile - My groups', [], ['context' => 'eic_search']);
+    return $this->t('User profile - My organisations', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return 'group';
+    return 'organisation';
   }
 
   /**
@@ -42,10 +43,11 @@ class MyGroupsSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_group_visibility_label' => $this->t('Visibility', [], ['context' => 'eic_search']),
-      'sm_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'ss_group_field_vocab_geo_string' => $this->t('Region & countries', [], ['context' => 'eic_search']),
-      'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
+      'sm_group_organisation_type_string' => $this->t('Organisation type', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
+      'sm_group_field_locations_string' => $this->t('Locations', [], ['context' => 'eic_search']),
+      'sm_organisation_services_products' => $this->t('Activity sectors', [], ['context' => 'eic_search']),
+      'sm_organisation_target_market_name' => $this->t('Target sectors', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -54,13 +56,13 @@ class MyGroupsSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => [
+        'label' => $this->t('Most active', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
+      ],
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
-      ],
-      'ss_drupal_changed_timestamp' => [
-        'label' => $this->t('Recently updated', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_global_title' => [
@@ -87,10 +89,16 @@ class MyGroupsSourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function getDefaultSort(): array {
+    return [DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID, 'DESC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getSearchFieldsId(): array {
     return [
       'tm_global_title',
-      'tm_global_fullname',
     ];
   }
 
@@ -98,7 +106,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS_COMPACT;
+    return self::LAYOUT_COLUMNS;
   }
 
   /**
@@ -112,7 +120,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredContentType(): array {
-    return ['group'];
+    return ['organisation'];
   }
 
   /**
@@ -132,15 +140,15 @@ class MyGroupsSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getDefaultSort(): array {
-    return ['ss_drupal_changed_timestamp', 'DESC'];
+  public function prefilterByUserFromRoute(): bool {
+    return TRUE;
   }
 
   /**
    * @inheritDoc
    */
   public function getUniqueId(): string {
-    return 'profile-' . parent::getUniqueId();
+    return 'user-profile-' . parent::getUniqueId();
   }
 
 }

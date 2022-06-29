@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_search\Search\Sources\Profile;
+namespace Drupal\eic_search\Search\Sources\UserProfile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagType;
@@ -10,7 +10,7 @@ use Drupal\eic_search\Service\SolrDocumentProcessor;
 /**
  * Class MyGroupsSourceType
  *
- * @package Drupal\eic_groups\Search\Sources\UserProfile
+ * @package Drupal\eic_groups\Search\Sources
  */
 class MyGroupsSourceType extends SourceType {
 
@@ -27,7 +27,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Profile - My groups', [], ['context' => 'eic_search']);
+    return $this->t('User profile - My groups', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -132,6 +132,13 @@ class MyGroupsSourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function prefilterByUserFromRoute(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getDefaultSort(): array {
     return ['ss_drupal_changed_timestamp', 'DESC'];
   }
@@ -140,7 +147,7 @@ class MyGroupsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getUniqueId(): string {
-    return 'profile-' . parent::getUniqueId();
+    return 'user-profile-' . parent::getUniqueId();
   }
 
 }
