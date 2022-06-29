@@ -55,7 +55,11 @@ class GinviteSubscriber extends GinviteSubscriberBase {
     // @todo Doing this should already improve some performance however, we
     // should create a function to query the invitations and limit the results
     // to 1. This will avoid querying the whole table when we just want to know
-    // if the user has at least 1 pending invitation.
+    // if the user has at least 1 pending invitation. Also, it would probably
+    // worth to create a separated block to show the information about pending
+    // invitations, to avoid strange behavior such as opening a new tab and
+    // navigate through the platform before clicking on accept invitation in
+    // the original tab.
     if (
       !empty($route) &&
       !in_array($route, $route_exclusions) &&
