@@ -168,7 +168,7 @@ function _preprocess_node_page(&$variables) {
 
         $words_per_minute = \Drupal::config('node_read_time.settings')
           ->get('reading_time')['words_per_minute'] ?: 225;
-        $reading_time_service = \Drupal::service('reading_time');
+        $reading_time_service = \Drupal::service('node_read_time.reading_time');
         $reading_time = $reading_time_service
           ->setWordsPerMinute($words_per_minute)
           ->collectWords($node)
