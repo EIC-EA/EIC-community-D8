@@ -63,7 +63,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'large'
+      'banner_3840x392'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),

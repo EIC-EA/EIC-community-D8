@@ -127,7 +127,10 @@ function _preprocess_node_page(&$variables) {
         }
 
         $image_item = isset($media) ?
-          ImageValueObject::fromImageItem($media->get('oe_media_image')->first()) :
+          ImageValueObject::fromStyledImageItem(
+            $media->get('oe_media_image')->first(),
+            'banner_3840x392'
+          ) :
           NULL;
 
         $author = eic_community_get_teaser_user_display($node->getOwner());
