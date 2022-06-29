@@ -127,7 +127,10 @@ function _preprocess_node_page(&$variables) {
         }
 
         $image_item = isset($media) ?
-          ImageValueObject::fromImageItem($media->get('oe_media_image')->first()) :
+          ImageValueObject::fromStyledImageItem(
+            $media->get('oe_media_image')->first(),
+            'banner_3840x392'
+          ) :
           NULL;
 
         $author = eic_community_get_teaser_user_display($node->getOwner());
@@ -168,7 +171,7 @@ function _preprocess_node_page(&$variables) {
 
         $words_per_minute = \Drupal::config('node_read_time.settings')
           ->get('reading_time')['words_per_minute'] ?: 225;
-        $reading_time_service = \Drupal::service('reading_time');
+        $reading_time_service = \Drupal::service('node_read_time.reading_time');
         $reading_time = $reading_time_service
           ->setWordsPerMinute($words_per_minute)
           ->collectWords($node)

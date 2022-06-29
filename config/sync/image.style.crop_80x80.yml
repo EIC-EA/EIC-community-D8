@@ -1,0 +1,15 @@
+uuid: eb1db6e0-4b9e-47aa-b82d-f573364a14d6
+langcode: en
+status: true
+dependencies: {  }
+name: crop_80x80
+label: 'Crop 80x80'
+effects:
+  d0685cf7-ef9d-4a96-bb6c-f9891d54fe2e:
+    uuid: d0685cf7-ef9d-4a96-bb6c-f9891d54fe2e
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 80
+      height: 80
+      anchor: center-center

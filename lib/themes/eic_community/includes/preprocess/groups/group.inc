@@ -65,7 +65,7 @@ function eic_community_preprocess_group__group(array &$variables) {
         );
         $image_item = ImageValueObject::fromStyledImageItem(
           $media->get('oe_media_image')->first(),
-          'oe_theme_list_item_2x'
+          'oe_theme_ratio_3_2_medium'
         );
         $item['image'] = [
           'src' => $image_item->getSource(),

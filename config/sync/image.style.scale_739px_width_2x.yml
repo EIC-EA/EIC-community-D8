@@ -1,0 +1,18 @@
+uuid: b829fe9b-9b07-45e0-8af0-83c8e1e8bbf6
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_theme_helper
+name: scale_739px_width_2x
+label: 'Scale 739px width (2x)'
+effects:
+  6b06e25c-7da1-4c12-9bad-9df12a075da4:
+    uuid: 6b06e25c-7da1-4c12-9bad-9df12a075da4
+    id: retina_image_scale
+    weight: 1
+    data:
+      width: 739
+      height: null
+      upscale: false
+      multiplier: 2

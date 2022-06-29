@@ -291,7 +291,7 @@ function _get_profile_image_array(EntityInterface $user, $relative_url = TRUE): 
  * @throws \Drupal\Core\Entity\EntityMalformedException
  * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
-function eic_community_get_teaser_user_display(UserInterface $user) {
+function eic_community_get_teaser_user_display(UserInterface $user, $picture_image_style = 'crop_36x36') {
   $author = [
     'name' => $user->getDisplayName(),
   ];
@@ -306,7 +306,10 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
     if ($media->bundle() == 'image') {
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $image_item = ImageValueObject::fromStyledImageItem(
+        $media->get('oe_media_image')->first(),
+        $picture_image_style
+      );
       $author['image'] = [
         'src' => $image_item->getSource(),
         'alt' => $author['name'],

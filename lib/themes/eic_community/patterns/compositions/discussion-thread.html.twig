@@ -102,14 +102,21 @@
             <span class="ecl-discussion-thread__started-by-label">
               {{ started_by_label }}
             </span>
-            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-              link: {
-                label: author.name,
-                path: author.path,
-                type: 'standalone',
-              },
-              extra_classes: 'ecl-discussion-thread__author'
-            } only %}</div>
+            {% if author.path %}
+              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                link: {
+                  label: author.name,
+                  path: author.path,
+                  type: 'standalone',
+                },
+                extra_classes: 'ecl-discussion-thread__author'
+              } only %}
+            {% else %}
+              <span class="ecl-author__label">
+                {{ author.name }}
+              </span>
+            {% endif %}
+          </div>
         {% endif %}
 
         {% if timestamp %}

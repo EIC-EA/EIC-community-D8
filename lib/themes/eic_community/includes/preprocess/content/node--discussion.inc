@@ -5,6 +5,7 @@
  * Prepares variables for node discussion templates.
  */
 
+use Drupal\comment\CommentInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\GroupsModerationHelper;
@@ -51,13 +52,13 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
     $contributors = ['items' => []];
 
     foreach ($users as $user) {
-      $contributors['items'][] = eic_community_get_teaser_user_display($user);
+      $contributors['items'][] = eic_community_get_teaser_user_display($user, 'crop_80x80');
     }
 
     $variables['contributors'] = $contributors;
   }
 
-  $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
+  $variables['author'] = eic_community_get_teaser_user_display($node->getOwner(), 'crop_80x80');
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
   $flags = array_filter($variables['elements'], function ($key) use ($node) {
@@ -124,7 +125,11 @@ function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   }
 
   // Add last comment if there is one.
-  if ($last_comment = _eic_community_get_entity_last_comment($node)) {
+  if (
+    ($last_comment = _eic_community_get_entity_last_comment($node)) &&
+    $last_comment instanceof CommentInterface &&
+    !\Drupal::currentUser()->isAnonymous()
+  ) {
     $teaser['featured'] = [
       'comment' => CommentsHelper::formatHtmlComment($last_comment->get('comment_body')->value),
       'comment_id' => $last_comment->id(),
