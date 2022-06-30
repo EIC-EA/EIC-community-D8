@@ -15,7 +15,6 @@ audience: outsider
 group_type: organisation
 permissions_ui: false
 permissions:
-  - 'access content overview'
   - 'access group content menu overview'
   - 'administer members'
   - 'join group'

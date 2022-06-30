@@ -42,8 +42,13 @@ process:
       method: row
   oe_media_image/alt:
     -
-      plugin: get
-      source: field_file_image_alt_text_value
+      plugin: callback
+      source:
+        - filename
+        - field_file_image_alt_text_value
+      callable:
+        - \Drupal\eic_migrate\Constants\Misc
+        - getImageAltText
   oe_media_image/title:
     -
       plugin: get

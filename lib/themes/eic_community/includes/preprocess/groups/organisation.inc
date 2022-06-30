@@ -451,9 +451,11 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   $file = $media_picture ? File::load(
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
-  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
-    file_create_url($file->get('uri')->value)
+  $image_item = $file ? ImageValueObject::fromStyledImageItem(
+    $media_picture[0]->get('oe_media_image')->first(),
+    'crop_80x80'
   ) : NULL;
+  $file_url = $image_item ? $image_item->getSource() : NULL;
   $last_activity_ago = eic_community_get_teaser_time_display(
     $user->get('changed')->value
   );

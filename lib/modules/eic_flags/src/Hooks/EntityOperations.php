@@ -387,7 +387,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function followEntityOnCreation(EntityInterface $entity) {
     // If we are running migrations, stop flagging entities.
-    if (eic_migrate_is_migration_messages_running()) {
+    if (eic_migrate_is_migration_running()) {
       return;
     }
 
@@ -454,7 +454,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function followTopicsOnUserProfileUpdate(ProfileInterface $profile) {
     // If we are running migrations, stop flagging entities.
-    if (eic_migrate_is_migration_messages_running()) {
+    if (eic_migrate_is_migration_running()) {
       return;
     }
 

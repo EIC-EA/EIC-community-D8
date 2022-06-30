@@ -32,6 +32,8 @@ context("User - Group", () => {
       "/cypress-do-not-edit/discussions/discussion-do-not-edit"
     );
 
+    cy.scrollTo(0, 300);
+
     // Write the comment
     const currentTimestamp = Date.now();
     cy.get(".ecl-text-area.ecl-comment-form__textarea").type(

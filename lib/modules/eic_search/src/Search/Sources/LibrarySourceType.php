@@ -160,8 +160,8 @@ class LibrarySourceType extends SourceType {
    */
   public function getPrefilteredContentType(): array {
     return [
-      'gallery',
       'document',
+      'gallery',
       'video',
     ];
   }

@@ -5,6 +5,8 @@
  * Prepares variables for node discussion templates.
  */
 
+use Drupal\comment\CommentInterface;
+use Drupal\Component\Utility\Xss;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\GroupInterface;
@@ -50,13 +52,13 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
     $contributors = ['items' => []];
 
     foreach ($users as $user) {
-      $contributors['items'][] = eic_community_get_teaser_user_display($user);
+      $contributors['items'][] = eic_community_get_teaser_user_display($user, 'crop_80x80');
     }
 
     $variables['contributors'] = $contributors;
   }
 
-  $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
+  $variables['author'] = eic_community_get_teaser_user_display($node->getOwner(), 'crop_80x80');
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
   $flags = array_filter($variables['elements'], function ($key) use ($node) {
@@ -72,8 +74,9 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
     return ['content' => $item];
   }, $flags);
 
+  // Show recommend content flag in the 2nd place.
   if (isset($variables['elements']['recommend_content'])) {
-    $flags['recommend_content'] = $variables['elements']['recommend_content'];
+    array_splice($flags, 2, 0, [$variables['elements']['recommend_content']]);
   }
 
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
@@ -110,7 +113,7 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
  */
 function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   $teaser = _eic_community_prepare_node_teaser_array($node);
-  $teaser['description'] = \Drupal\Component\Utility\Xss::filter($node->get('field_body')->value);
+  $teaser['description'] = Xss::filter($node->get('field_body')->value);
   $teaser['type'] = $discussion_type;
 
   // Remove unwanted items.
@@ -122,7 +125,11 @@ function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   }
 
   // Add last comment if there is one.
-  if ($last_comment = _eic_community_get_entity_last_comment($node)) {
+  if (
+    ($last_comment = _eic_community_get_entity_last_comment($node)) &&
+    $last_comment instanceof CommentInterface &&
+    !\Drupal::currentUser()->isAnonymous()
+  ) {
     $teaser['featured'] = [
       'comment' => CommentsHelper::formatHtmlComment($last_comment->get('comment_body')->value),
       'comment_id' => $last_comment->id(),

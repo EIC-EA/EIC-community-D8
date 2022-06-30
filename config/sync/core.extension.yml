@@ -14,6 +14,7 @@ module:
   block_content_permissions: 0
   block_field: 0
   book: 0
+  book_link_weight: 0
   breakpoint: 0
   cas: 0
   cas_mock_server: 0

@@ -63,7 +63,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'large'
+      'banner_3840x392'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),
@@ -99,7 +99,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
         );
       $image_item = ImageValueObject::fromStyledImageItem(
         $media->get('oe_media_image')->first(),
-        'large'
+        'ratio_5_4_small'
       );
       $item['image'] = [
         'src' => $image_item->getSource(),
@@ -125,10 +125,6 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     _eic_community_story_document_field($variables);
     // Sidebar elements.
     _eic_community_display_flags($variables);
-
-    if (isset($variables['elements']['recommend_content'])) {
-      $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
-    }
 
     $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
     if (!$group && $node->hasField(PrivateContentConst::FIELD_NAME)
@@ -158,7 +154,10 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 function _eic_community_story_image_field(&$variables) {
   if (isset($variables['content']['field_image'][0])) {
     $media = $variables['content']['field_image'][0]['#media'];
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'scale_739px_width_2x'
+    );
     $image_wrapper = [
       'image' => $image_item->getSource(),
     ];
@@ -176,14 +175,22 @@ function _eic_community_story_image_field(&$variables) {
  */
 function _eic_community_story_document_field(&$variables) {
   $node = $variables['node'];
+  /** @var \Drupal\media\MediaInterface[] $medias */
   $medias = $node->get('field_document_media')->referencedEntities();
 
   foreach ($medias as $media) {
-    $file = File::load($media->field_media_file->target_id);
+    switch ($media->bundle()) {
+      case 'video':
+        $file = File::load($media->field_media_video_file->target_id);
+        break;
+
+      default:
+        $file = File::load($media->field_media_file->target_id);
+        break;
+    }
+
     $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
-
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
-
     $variables['downloads'][] = [
       'title' => $media->getName(),
       'language' => $media->language()->getName(),
@@ -226,8 +233,9 @@ function _eic_community_display_flags(&$variables) {
     ];
   }
 
+  // Show recommend content flag in the 2nd place.
   if (isset($variables['elements']['recommend_content'])) {
-    $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
+    array_splice($variables['editorial_actions']['items'], 2, 0, [['content' => $variables['elements']['recommend_content']['content']]]);
   }
 }
 

@@ -41,6 +41,7 @@
 @import './schema/typography';
 
 @import './compositions/4xx.scss';
+@import './compositions/action-form';
 @import './compositions/activity-stream.scss';
 @import './compositions/auth-banner.scss';
 @import './compositions/base-layout.scss';
@@ -131,6 +132,7 @@
 @import "./components/investment";
 @import "./components/link";
 @import "./components/media-container";
+@import "./components/messages";
 @import "./components/meta-list";
 @import "./components/modal";
 @import "./components/navigation-list";

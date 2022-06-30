@@ -10,7 +10,7 @@ use Drupal\eic_search\Service\SolrDocumentProcessor;
 /**
  * Class MyGroupsSourceType
  *
- * @package Drupal\eic_groups\Search\Sources
+ * @package Drupal\eic_groups\Search\Sources\UserProfile
  */
 class MyGroupsSourceType extends SourceType {
 

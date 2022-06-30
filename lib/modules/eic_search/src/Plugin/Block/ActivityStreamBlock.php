@@ -307,7 +307,11 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $media_picture = $user->get('field_media')->referencedEntities();
       /** @var File|NULL $file */
       $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
-      $file_url = $file ? $this->fileUrlGenerator->transformRelative(file_create_url($file->get('uri')->value)) : NULL;
+      /** @var \Drupal\image\Entity\ImageStyle $style */
+      $style = $this->entityTypeManager->getStorage('image_style')->load('crop_80x80');
+      $file_url = $file ?
+        $this->fileUrlGenerator->transformRelative($style->buildUrl($file->get('uri')->getString())) :
+        NULL;
       $user_profile_url = $this->currentUser->hasPermission('access user profiles') ? $user->toUrl()->toString() : NULL;
 
       // Gets the list of user organisations as Markup.

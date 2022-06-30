@@ -84,6 +84,11 @@ class SolrSearchManager {
   private ?string $currentGroup;
 
   /**
+   * @var int|null
+   */
+  private ?int $userIdFromRoute;
+
+  /**
    * @var \Drupal\search_api_solr\SolrConnectorInterface
    */
   private SolrConnectorInterface $connector;
@@ -160,6 +165,15 @@ class SolrSearchManager {
     $this->rawFieldQuery = '(' . implode(' OR ', $datasources_query) . ')';
 
     return $this;
+  }
+
+  /**
+   * Set user id from url if needed to build query.
+   *
+   * @param int|null $user_id
+   */
+  public function buildUserIdFromUrl(?int $user_id) {
+    $this->userIdFromRoute = $user_id;
   }
 
   /**
@@ -757,7 +771,15 @@ class SolrSearchManager {
       return;
     }
 
-    $grps = $this->membershipLoader->loadByUser($this->currentUser);
+    $current_user = $this->source->prefilterByUserFromRoute() ?
+      User::load($this->userIdFromRoute) :
+      $this->currentUser;
+
+    if (!$current_user) {
+      return;
+    }
+
+    $grps = $this->membershipLoader->loadByUser($current_user);
 
     $grp_ids = array_map(function (GroupMembership $grp_membership) {
       return $grp_membership->getGroup()->id();

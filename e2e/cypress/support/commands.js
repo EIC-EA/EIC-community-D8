@@ -15,7 +15,7 @@ Cypress.Commands.add("login", (username = "cypress", password = "cypress") => {
   cy.get("#edit-name").type(username);
   cy.get("#edit-pass").type(password);
   cy.get(".user-login-form").submit();
-  cy.location("pathname").should("contains", "/user/");
+  cy.location("pathname").should("contains", "/users/");
 });
 
 Cypress.Commands.add("preserveCookie", () => {
