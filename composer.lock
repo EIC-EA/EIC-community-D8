@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "249b506b412c6d7d7e285f1c5d37442c",
+    "content-hash": "4248256e5d104402cd6db501b98c3c63",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2144,6 +2144,50 @@
             "homepage": "https://www.drupal.org/project/block_field",
             "support": {
                 "source": "https://git.drupalcode.org/project/block_field"
+            }
+        },
+        {
+            "name": "drupal/book_link_weight",
+            "version": "1.0.0-beta4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/book_link_weight.git",
+                "reference": "1.0.0-beta4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/book_link_weight-1.0.0-beta4.zip",
+                "reference": "1.0.0-beta4",
+                "shasum": "dee4e34dbe5b904993ff1ac79cec26bd25851a2b"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta4",
+                    "datestamp": "1619709427",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "andy_w",
+                    "homepage": "https://www.drupal.org/user/2581622"
+                }
+            ],
+            "description": "Alter the book outline to include a drag and drop link weight.",
+            "homepage": "https://www.drupal.org/project/book_link_weight",
+            "support": {
+                "source": "https://git.drupalcode.org/project/book_link_weight"
             }
         },
         {
@@ -20399,6 +20443,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/block_field": 5,
+        "drupal/book_link_weight": 10,
         "drupal/ckeditor_find": 10,
         "drupal/content_moderation_bypass": 15,
         "drupal/context": 10,
