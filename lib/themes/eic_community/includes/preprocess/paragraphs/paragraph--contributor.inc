@@ -38,7 +38,7 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
     if (!$paragraph->get('field_media')->isEmpty()) {
       /** @var \Drupal\media\Entity\Media $media */
       $media = $paragraph->get('field_media')->entity;
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), 'crop_80x80');
       $contributor['image'] = [
         'src' => $image_item->getSource(),
         'alt' => $image_item->getAlt(),
@@ -61,7 +61,7 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
   else {
     $user = User::load($paragraph->field_user_ref->getString());
     if ($user instanceof UserInterface) {
-      $user_display = eic_community_get_teaser_user_display($user);
+      $user_display = eic_community_get_teaser_user_display($user, 'crop_80x80');
 
       $contributor = array_merge($contributor, $user_display);
     }

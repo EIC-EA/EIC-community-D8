@@ -17,6 +17,9 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\media\Entity\Media;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
+use Drupal\eic_search\Search\Sources\UserProfile\MyGroupsSourceType;
+use Drupal\eic_search\Search\Sources\UserProfile\MyEventsSourceType;
+use Drupal\eic_search\Search\Sources\UserProfile\MyOrganisationsSourceType;
 
 /**
  * Implements hook_preprocess_user().
@@ -46,8 +49,10 @@ function eic_community_preprocess_user(array &$variables) {
         $teaser['path'] = $user->toUrl()->toString();
       }
       $teaser['icon_file_path'] = $variables['eic_icon_path'];
-      $teaser['actions'] = array_merge([_eic_community_get_user_contact_link($user)],
-        _eic_community_get_user_social_links($user));
+      $teaser['actions'] = array_merge(
+        [_eic_community_get_user_contact_link($user)],
+        _eic_community_get_user_social_links($user)
+      );
       $variables['user_item'] = $teaser;
       break;
 
@@ -183,8 +188,11 @@ function eic_community_preprocess_user(array &$variables) {
         ];
       }
       // Gets user topics of expertise.
-      if ($topics_of_expertise = _eic_community_get_user_topics($user, 'field_vocab_topic_expertise',
-        $member_profile)) {
+      if ($topics_of_expertise = _eic_community_get_user_topics(
+        $user,
+        'field_vocab_topic_expertise',
+        $member_profile
+      )) {
         $user_item['flagged_interests']['items'][] = [
           'title' => t('Topics of expertise'),
           'items' => $topics_of_expertise,
@@ -193,32 +201,51 @@ function eic_community_preprocess_user(array &$variables) {
 
       $user_item['flagged_groups'] = [
         'title' => $current_user->id() === $user->id() ? t('My groups') : t('Groups'),
-        'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_groups', [$user->id()])
-          : _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()])
-        ),
+        'content' => _get_render_block_search_overview(MyGroupsSourceType::class),
       ];
 
       $user_item['flagged_events'] = [
         'title' => $current_user->id() === $user->id() ? t('My events') : t('Events'),
-        'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_my_events',
-            [$user->id()])
-          : _eic_community_get_rendered_view('global_index_group_content', 'block_user_profile_events', [$user->id()])
-        ),
+        'content' => _get_render_block_search_overview(MyEventsSourceType::class),
       ];
 
       $user_item['flagged_projects'] = [
         'title' => $current_user->id() === $user->id() ? t('My organisations') : t('Organisations'),
-        'content' => ($current_user->id() === $user->id()
-          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_organisations', [$user->id()])
-          : _eic_community_get_rendered_view('groups', 'block_user_profile_organisations', [$user->id()])
-        ),
+        'content' => _get_render_block_search_overview(MyOrganisationsSourceType::class),
       ];
 
       $variables['user_item'] = $user_item;
       break;
 
+  }
+}
+
+/**
+ * Render a search overview block with given source type.
+ *
+ * @param string $source
+ *   The source class in string.
+ *
+ * @return array
+ */
+function _get_render_block_search_overview(string $source): array {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  // You can hard code configuration or you load from settings.
+  $config = [
+    'source_type' => $source,
+    'enable_search' => 0,
+    'facets' => [],
+    'sort_options' => [],
+    'prefilter_group' => 0,
+    'enable_date_filter' => 0,
+  ];
+
+  $plugin_block = $block_manager->createInstance('eic_search_overview', $config);
+  $access_result = $plugin_block->access(\Drupal::currentUser());
+  if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
+    return [];
+  } else {
+    return $plugin_block->build();
   }
 }
 
@@ -264,7 +291,7 @@ function _get_profile_image_array(EntityInterface $user, $relative_url = TRUE): 
  * @throws \Drupal\Core\Entity\EntityMalformedException
  * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
-function eic_community_get_teaser_user_display(UserInterface $user) {
+function eic_community_get_teaser_user_display(UserInterface $user, $picture_image_style = 'crop_36x36') {
   $author = [
     'name' => $user->getDisplayName(),
   ];
@@ -279,7 +306,10 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
     if ($media->bundle() == 'image') {
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $image_item = ImageValueObject::fromStyledImageItem(
+        $media->get('oe_media_image')->first(),
+        $picture_image_style
+      );
       $author['image'] = [
         'src' => $image_item->getSource(),
         'alt' => $author['name'],

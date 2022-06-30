@@ -4,7 +4,6 @@ namespace Drupal\eic_groups\Controller;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
@@ -12,7 +11,6 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -21,7 +19,6 @@ use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
-use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
@@ -141,6 +138,12 @@ class DiscussionController extends ControllerBase {
     $text = CommentsHelper::formatHtmlComment($content['text']);
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
+
+    // User cannot post empty comments and therefore we return bad request
+    // response.
+    if (!$text) {
+      return new JsonResponse('You cannot post empty comments', Response::HTTP_BAD_REQUEST);
+    }
 
     if ($node = Node::load($discussion_id)) {
       Cache::invalidateTags($node->getCacheTags());
@@ -546,9 +549,13 @@ class DiscussionController extends ControllerBase {
 
     /** @var \Drupal\media\MediaInterface|null $media_picture */
     $media_picture = $user->get('field_media')->referencedEntities();
-    /** @var File|NULL $file */
-    $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
-    $file_url = $file ? $this->fileUrlGenerator->transformRelative(file_create_url($file->get('uri')->value)) : NULL;
+    /** @var \Drupal\file\FileInterface|null $file */
+    $file = $media_picture ?
+      $this->entityTypeManager->getStorage('file')->load($media_picture[0]->get('oe_media_image')->target_id) :
+      NULL;
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    $style = $this->entityTypeManager->getStorage('image_style')->load('crop_36x36');
+    $file_url = $file ? $this->fileUrlGenerator->transformRelative($style->buildUrl($file->get('uri')->getString())) : NULL;
 
     $archive_flags = $this->flagService->getEntityFlaggings(
       $this->flagService->getFlagById('request_archive_comment'),

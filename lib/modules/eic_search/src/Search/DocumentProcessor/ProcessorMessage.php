@@ -5,6 +5,8 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
@@ -58,6 +60,20 @@ class ProcessorMessage extends DocumentProcessor {
   private $flagService;
 
   /**
+   * The Entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
+   * The URL generator service.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  private $urlGenerator;
+
+  /**
    * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $entityDownloadHelper
    *   The entity file download count service.
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
@@ -66,17 +82,25 @@ class ProcessorMessage extends DocumentProcessor {
    *   The comment helper service.
    * @param FlagServiceInterface $flag_service
    *   The flag service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The Entity type manager.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $url_generator
+   *   The URL generator service.
    */
   public function __construct(
     EntityFileDownloadCount $entityDownloadHelper,
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
     CommentsHelper $commentsHelper,
-    FlagServiceInterface $flag_service
+    FlagServiceInterface $flag_service,
+    EntityTypeManagerInterface $entity_type_manager,
+    FileUrlGeneratorInterface $url_generator
   ) {
     $this->entityDownloadHelper = $entityDownloadHelper;
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
     $this->commentsHelper = $commentsHelper;
     $this->flagService = $flag_service;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->urlGenerator = $url_generator;
   }
 
   /**
@@ -229,6 +253,27 @@ class ProcessorMessage extends DocumentProcessor {
         $this->entityDownloadHelper->getFileDownloads($node)
       );
     }
+
+    $author_picture_uri = array_key_exists('ss_author_profile_picture_uri', $fields) ?
+      $fields['ss_author_profile_picture_uri'] :
+      NULL;
+
+    $teaser_relative = '';
+
+    // Generates image style for the user picture.
+    if ($author_picture_uri) {
+      /** @var \Drupal\image\Entity\ImageStyle $image_style */
+      $image_style = $this->entityTypeManager->getStorage('image_style')
+        ->load('crop_80x80');
+      $teaser_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($author_picture_uri));
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_author_formatted_profile_picture',
+      $fields,
+      $teaser_relative
+    );
   }
 
   /**

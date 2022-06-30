@@ -25,6 +25,7 @@ function eic_community_preprocess_node__event(array &$variables) {
     case 'full':
       _eic_community_render_event_detail_page($variables, $variables['node']);
       break;
+
     case 'teaser':
     case 'mail_teaser':
     case 'small_teaser':
@@ -35,7 +36,7 @@ function eic_community_preprocess_node__event(array &$variables) {
       if (!empty($medias = $node->get('field_image')->referencedEntities())) {
         $media = $medias[0];
         if ($media && !empty($media->get('oe_media_image')->getValue())) {
-          $style_name = 'oe_theme_ratio_3_2_medium';
+          $style_name = 'gallery_teaser_crop_160x160';
           $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
           $teaser['image'] = [
             'src' => $image_item->getSource(),

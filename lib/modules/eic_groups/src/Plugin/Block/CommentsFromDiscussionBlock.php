@@ -7,6 +7,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -91,6 +92,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private EditorManager $editorManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   */
+  private $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -109,7 +117,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $container->get('current_route_match'),
       $container->get('request_stack'),
       $container->get('file_url_generator'),
-      $container->get('plugin.manager.editor')
+      $container->get('plugin.manager.editor'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -139,6 +148,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The file url generator service.
    * @param \Drupal\editor\Plugin\EditorManager $editor_manager
    *   The editor manager service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The Entity type manager.
    */
   public function __construct(
     array $configuration,
@@ -150,7 +161,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     RouteMatchInterface $route_match,
     RequestStack $request,
     FileUrlGeneratorInterface $file_url_generator,
-    EditorManager $editor_manager
+    EditorManager $editor_manager,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
@@ -160,6 +172,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $this->request = $request;
     $this->fileUrlGenerator = $file_url_generator;
     $this->editorManager = $editor_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -254,13 +267,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     /** @var \Drupal\media\MediaInterface|null $media_picture */
     $media_picture = $current_user->get('field_media')->referencedEntities();
-    /** @var \Drupal\file\Entity\File|NULL $file */
-    $file = $media_picture ? File::load(
-      $media_picture[0]->get('oe_media_image')->target_id
-    ) : NULL;
-    $file_url = $file ? $this->fileUrlGenerator->transformRelative(
-      file_create_url($file->get('uri')->value)
-    ) : NULL;
+    /** @var \Drupal\file\FileInterface|null $file */
+    $file = $media_picture ?
+      $this->entityTypeManager->getStorage('file')->load($media_picture[0]->get('oe_media_image')->target_id) :
+      NULL;
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    $style = $this->entityTypeManager->getStorage('image_style')->load('crop_36x36');
+    $file_url = $file ? $this->fileUrlGenerator->transformRelative($style->buildUrl($file->get('uri')->getString())) : NULL;
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
     $user_url = Url::fromRoute('eic_search.solr_search', [
@@ -415,7 +428,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       !in_array($node->getOwnerId(), $users)
     ) {
       $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $node->getOwner()
+        $node->getOwner(),
+        'crop_80x80'
       );
     }
 
@@ -423,7 +437,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     foreach ($users as $user) {
       $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $user
+        $user,
+        'crop_80x80'
       );
     }
 

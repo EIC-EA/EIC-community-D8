@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_search\Search\Sources\GlobalSourceType;
@@ -12,48 +14,83 @@ use Drupal\group\Entity\GroupInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
- * Class ProcessorGroup
+ * Provides a processor for group entity.
  *
  * @package Drupal\eic_search\DocumentProcessor
  */
 class ProcessorGroup extends DocumentProcessor {
 
   /**
-   * @var \Drupal\eic_search\Service\SolrSearchManager|NULL
+   * The EIC Solr search manager.
+   *
+   * @var \Drupal\eic_search\Service\SolrSearchManager|null
    */
   private ?SolrSearchManager $solrSearchManager;
 
   /**
-   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper|NULL
+   * The EIC Group statistics helper service.
+   *
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper|null
    */
   private ?GroupStatisticsHelper $groupStatisticsHelper;
 
   /**
-   * @var \Drupal\flag\FlagCountManagerInterface|NULL
+   * The Flag count manager.
+   *
+   * @var \Drupal\flag\FlagCountManagerInterface|null
    */
   private ?FlagCountManagerInterface $flagCountManager;
 
   /**
+   * The Entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
+   * The URL generator service.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  private $urlGenerator;
+
+  /**
+   * Constructs a new ProcessorGroup object.
+   *
    * @param \Drupal\eic_search\Service\SolrSearchManager $solr_search_manager
+   *   The EIC Solr search manager.
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
+   *   The Flag count manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The Entity type manager.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $url_generator
+   *   The URL generator service.
    */
   public function __construct(
     SolrSearchManager $solr_search_manager,
-    FlagCountManagerInterface $flag_count_manager
+    FlagCountManagerInterface $flag_count_manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    FileUrlGeneratorInterface $url_generator
   ) {
     $this->solrSearchManager = $solr_search_manager;
     $this->flagCountManager = $flag_count_manager;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->urlGenerator = $url_generator;
   }
 
   /**
+   * Sets the EIC Group statistics helper service.
+   *
    * @param \Drupal\eic_group_statistics\GroupStatisticsHelper $groupStatisticsHelper
+   *   The EIC Group statistics herlper service.
    */
   public function setGroupStatistics(GroupStatisticsHelper $groupStatisticsHelper) {
     $this->groupStatisticsHelper = $groupStatisticsHelper;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function process(Document &$document, array $fields, array $items = []): void {
     $group_id = $fields['its_group_id_integer'] ?? NULL;
@@ -96,10 +133,55 @@ class ProcessorGroup extends DocumentProcessor {
       $fields,
       $most_active_total
     );
+
+    $fid = array_key_exists('its_group_teaser_fid', $fields) ?
+      $fields['its_group_teaser_fid'] :
+      NULL;
+
+    $teaser_relative = '';
+
+    // Generates image style for the group teaser.
+    if ($fid) {
+      /** @var \Drupal\image\Entity\ImageStyle $image_style */
+      $image_style = $this->entityTypeManager->getStorage('image_style')
+        ->load('oe_theme_ratio_3_2_medium');
+      /** @var \Drupal\file\Entity\File $file */
+      $file = $this->entityTypeManager->getStorage('file')->load($fid);
+      $image_uri = $file->getFileUri();
+      $teaser_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($image_uri));
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_group_teaser_formatted_image',
+      $fields,
+      $teaser_relative
+    );
+
+    $user_picture_uri = array_key_exists('ss_group_user_image_uri', $fields) ?
+      $fields['ss_group_user_image_uri'] :
+      NULL;
+
+    $user_picture_relative = '';
+
+    // Generates image style for the user picture.
+    if ($user_picture_uri) {
+      /** @var \Drupal\image\Entity\ImageStyle $image_style */
+      $image_style = $this->entityTypeManager->getStorage('image_style')
+        ->load('crop_36x36');
+      $user_picture_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($user_picture_uri));
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_group_teaser_user_formatted_image',
+      $fields,
+      $user_picture_relative
+    );
   }
 
   /**
-   * @inerhitDoc
+   * {@inheritdoc}
    */
   public function supports(array $fields): bool {
     $datasource = $fields['ss_search_api_datasource'];
