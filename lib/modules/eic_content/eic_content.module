@@ -11,7 +11,6 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\eic_content\Hooks\EntityOperations;
 use Drupal\eic_content\Hooks\EntityOperationsContributor;
@@ -119,12 +118,4 @@ function eic_content_metatags_attachments_alter(array &$metatag_attachments) {
     ],
     'og_image_0',
   ];
-}
-
-/**
- * Implements hook_form_alter().
- */
-function eic_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Disable html5 form validation.
-  $form['#attributes']['novalidate'] = 'novalidate';
 }

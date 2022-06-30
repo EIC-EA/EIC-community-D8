@@ -29,6 +29,9 @@
     "drupal/entity_usage": {
       "3168418 - Batch update error when there are no entities to load": "https://www.drupal.org/files/issues/2021-12-07/batch-update-error-3168418-16.patch"
     },
+    "drupal/field_group": {
+      "HTML5 Validation Prevents Submission in Tabs": "https://www.drupal.org/files/issues/2021-07-22/2969051-37.patch"
+    },
     "drupal/ginvite": {
       "3209902 - More graceful handling of missing plugin": "https://www.drupal.org/files/issues/2022-03-30/ginvite-fix__invite_route_permission-3209902-5.patch"
     },
