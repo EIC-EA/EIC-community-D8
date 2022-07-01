@@ -13,6 +13,20 @@ use Drupal\Core\Form\FormStateInterface;
 function eic_community_form_alter(&$form, FormStateInterface $form_state) {
   _eic_community_form_cancel_button($form, $form_state);
   _eic_community_form_delete_button($form, $form_state);
+
+  $build_info = $form_state->getBuildInfo();
+  if (!empty($build_info['base_form_id'])) {
+    $base_form_id = $form_state->getBuildInfo()['base_form_id'];
+
+    switch ($base_form_id) {
+      case 'node_form':
+        // We want to always open the book outline in node forms.
+        if (!empty($form['book']) && $form['book']['#type'] == 'details') {
+          $form['book']['#open'] = TRUE;
+        }
+        break;
+    }
+  }
 }
 
 /**

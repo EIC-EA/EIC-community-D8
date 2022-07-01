@@ -81,15 +81,10 @@ class ProcessorDiscussion extends DocumentProcessor {
       ->range(0, 1)
       ->execute();
 
-    $total_comments = $this->entityTypeManager->getStorage('comment')
-      ->getQuery()
-      ->condition('entity_id', $nid)
-      ->count()
-      ->execute();
-
     $discussion = $this->entityTypeManager->getStorage('node')->load($nid);
     $likes = 0;
     $follows = 0;
+    $total_comments = $discussion->field_comments->comment_count;
 
     if ($discussion instanceof NodeInterface) {
       $statistics = $this->statisticsHelper->getEntityStatistics($discussion);
@@ -105,6 +100,9 @@ class ProcessorDiscussion extends DocumentProcessor {
 
     if (!$results) {
       $document->addField('ss_discussion_last_comment_text', '');
+      // Since last comment from the comments field always set a timestamp even
+      // when there are no comments, we set it to 0 here.
+      $document->setField('its_last_comment_timestamp', 0);
       return;
     }
 

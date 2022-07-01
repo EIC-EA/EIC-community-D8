@@ -245,7 +245,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'owner' => -1,
       'admins' => [],
     ];
-
+    
+    $post_content_actions = [];
     if ($current_group_route) {
       $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
@@ -266,8 +267,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           return $admin->getUser()->id();
         }, $admins),
       ];
-
-      $post_content_actions = [];
 
       if ($source instanceof LibrarySourceType) {
         // User can post content in the library if the group is in draft or
