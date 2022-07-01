@@ -222,8 +222,9 @@ class ShareManager {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getSharedEntities(NodeInterface $node, GroupInterface $target_group = NULL): array {
+    $group_content_type = $this->defineGroupContentType($target_group);
     $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
-    $query->condition('type', '%-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID, 'LIKE');
+    $query->condition('type', $group_content_type, 'LIKE');
     $query->condition('entity_id', $node->id());
     if ($target_group) {
       $query->condition('gid', $target_group->id());
@@ -319,6 +320,10 @@ class ShareManager {
     GroupInterface $target_group,
     array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
   ) {
+    // Allow only published content.
+    if (!$source_node->isPublished()) {
+      return FALSE;
+    }
     // Allow only enabled content types.
     if (!$this->groupsHelper->isGroupTypePluginEnabled($target_group->getGroupType(), 'group_node',
       $source_node->bundle())) {
@@ -363,15 +368,17 @@ class ShareManager {
       ->getContentTypeConfigId();
   }
 
-
   /**
-   * @param \Drupal\group\Entity\GroupInterface $source_group
-   * @param \Drupal\group\Entity\GroupInterface $target_group
-   * @param \Drupal\node\NodeInterface $node
-   * @param string|null $message
+   * Creates activity stream message.
    *
-   * @return void
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param \Drupal\node\NodeInterface $node
+   *   The node that was shared.
+   * @param string|null $message
+   *   The message attached to the shared content.
    */
   private function createActivityStreamMessage(
     GroupInterface $source_group,
@@ -401,13 +408,16 @@ class ShareManager {
   }
 
   /**
-   * @param \Drupal\group\Entity\GroupInterface $source_group
-   * @param \Drupal\group\Entity\GroupInterface $target_group
-   * @param \Drupal\node\NodeInterface $node
-   * @param string|null $message
+   * Creates subscription message.
    *
-   * @return void
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param \Drupal\node\NodeInterface $node
+   *   The node that was shared.
+   * @param string|null $message
+   *   The message attached to the shared content.
    */
   private function createSubscription(
     GroupInterface $source_group,

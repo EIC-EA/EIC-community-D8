@@ -125,7 +125,7 @@ class ShareContentController extends ControllerBase {
     $groups = $this->shareManager->getShareableTargetGroupsForUser($this->currentUser, $group, $node);
     $formatted_groups = [];
     foreach ($groups as $group) {
-      $formatted_groups[$group->bundle()][] = [
+      $formatted_groups[$group->getGroupType()->label()][] = [
         'id' => $group->id(),
         'label' => $group->label(),
       ];
