@@ -277,12 +277,26 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url' => Url::fromRoute('view.group_pending_members.page_1', ['group' => $group->id()]),
     ];
 
+    // Adds pending invitations URL to the group operation links.
+    $group_operation_links['edit-invitations'] = [
+      'title' => $this->t('Manage invitations'),
+      'url' => Url::fromRoute('view.group_invitations.page_1', ['group' => $group->id()]),
+    ];
+
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
       return in_array(
         $key,
-        ['edit', 'delete', 'publish', 'request_block', 'edit-members', 'edit-membership-requests']
+        [
+          'edit',
+          'delete',
+          'publish',
+          'request_block',
+          'edit-members',
+          'edit-membership-requests',
+          'edit-invitations',
+        ]
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 
