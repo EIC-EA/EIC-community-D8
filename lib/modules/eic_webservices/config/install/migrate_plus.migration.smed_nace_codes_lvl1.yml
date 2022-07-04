@@ -1,0 +1,47 @@
+id: smed_nace_codes_lvl1
+label: SMED - NACE codes - Level 1
+migration_group: eic_smed_taxonomy
+migration_tags:
+  - eic_smed_api_authentication
+source:
+  plugin: eic_smed_url
+  taxonomy_vocabulary_smed_id: DomainActivities
+  authentication:
+    plugin: basic
+    # Username and password will be set automatically by the eic_smed_url plugin
+    # we just keep them here with dummy data for reference.
+    username: xxx
+    password: xxx
+  data_fetcher_plugin: eic_http_smed_taxonomy_post
+  data_parser_plugin: jsonpath
+  include_raw_data: true
+  track_changes: true
+  # The URL will be set automatically by the eic_smed_url plugin, we just keep
+  # it here with dummy data for reference.
+  urls: { }
+  item_selector: '$.Taxonomy.Group[*]'
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: id
+      label: 'ID'
+      selector: Value
+    -
+      name: name
+      label: 'Name'
+      selector: Name
+process:
+  name:
+    - plugin: get
+      source: name
+  field_smed_id:
+    - plugin: get
+      source: id
+destination:
+  plugin: entity:taxonomy_term
+  default_bundle: services_and_products
+migration_dependencies:
+  required: { }
+  optional: { }
