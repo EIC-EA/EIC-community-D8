@@ -11,10 +11,11 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Class DeleteRequestHandler.
+ * Provides a delete request handler.
  *
  * @package Drupal\eic_flags\Service
  */
@@ -53,31 +54,33 @@ class DeleteRequestHandler extends AbstractRequestHandler {
         break;
 
       case 'node':
-      case 'comment':
-      $now = DrupalDateTime::createFromTimestamp(time());
-      $content_entity->set('comment_body', [
-        'value' => $this->t(
-          'This comment has been removed by a content administrator at @time.',
-          ['@time' => $now->format('d/m/Y - H:i')],
-          ['context' => 'eic_flags']
-        ),
-        'format' => 'plain_text',
-      ]);
-      $content_entity->set('field_comment_is_soft_deleted', TRUE);
-      $content_entity->save();
+        $this->deleteNodeRelationships($content_entity);
         break;
+
+      case 'comment':
+        $now = DrupalDateTime::createFromTimestamp(time());
+        $content_entity->set('comment_body', [
+          'value' => $this->t(
+            'This comment has been removed by a content administrator at @time.',
+            ['@time' => $now->format('d/m/Y - H:i')],
+            ['context' => 'eic_flags']
+          ),
+          'format' => 'plain_text',
+        ]);
+        $content_entity->set('field_comment_is_soft_deleted', TRUE);
+        $content_entity->save();
+        break;
+
     }
   }
 
   /**
-   * Denies the request but un-publish the entity instead
+   * Denies the request but un-publish the entity instead.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    *   The flag object.
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
    *   The concerned entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function archive(
     FlaggingInterface $flagging,
@@ -138,6 +141,46 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
+   * Deletes the relationships of a given node.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The concerned node.
+   */
+  private function deleteNodeRelationships(NodeInterface $node) {
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
+    $group_contents = $this->entityTypeManager->getStorage('group_content')
+      ->loadByEntity($node);
+
+    if (!$group_contents) {
+      return;
+    }
+
+    $batch_builder = (new BatchBuilder())
+      ->setFinishCallback(
+        [
+          DeleteRequestHandler::class,
+          'deleteNodeRelationshipsFinished',
+        ]
+      )
+      ->setTitle(
+        $this->t('Deleting node @node', ['@node' => $node->label()])
+      );
+
+    foreach ($group_contents as $group_content) {
+      $group = $group_content->getGroup();
+      $batch_builder->addOperation(
+        [
+          DeleteRequestHandler::class,
+          'deleteGroupContent',
+        ],
+        [$group_content, $group]
+      );
+    }
+
+    batch_set($batch_builder->toArray());
+  }
+
+  /**
    * Deletes the given group content.
    *
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
@@ -174,7 +217,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       if ($target_entity instanceof ContentEntityInterface) {
         $target_entity->delete();
       }
-    } catch (\Exception $exception) {
+    }
+    catch (\Exception $exception) {
       $context['results']['errors'][] = new TranslatableMarkup(
         'Something went wrong during content removal @error',
         ['@error' => $exception->getMessage()]
@@ -232,21 +276,39 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
+   * Handles the batch finish for deleting a node.
+   *
+   * @param bool $success
+   *   Result of the operation.
+   * @param array $results
+   *   Deleted entities.
+   * @param array $operations
+   *   The array of operations.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public static function deleteNodeRelationshipsFinished(
+    bool $success,
+    array $results,
+    array $operations
+  ) {
+    unset($results['group']);
+    self::deleteGroupContentFinished($success, $results, $operations);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getActions(ContentEntityInterface $entity) {
     return parent::getActions($entity) + [
-        'archive_request' => [
-          'title' => $this->t('Archive'),
-          'url' => $entity->toUrl('close-request')
-            ->setRouteParameter('request_type', $this->getType())
-            ->setRouteParameter('response', RequestStatus::ARCHIVED)
-            ->setRouteParameter(
-              'destination',
-              $this->currentRequest->getRequestUri()
-            ),
-        ],
-      ];
+      'archive_request' => [
+        'title' => $this->t('Archive'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', $this->getType())
+          ->setRouteParameter('response', RequestStatus::ARCHIVED)
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+      ],
+    ];
   }
 
 }
