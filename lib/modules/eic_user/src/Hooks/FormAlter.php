@@ -81,6 +81,8 @@ class FormAlter implements ContainerInjectionInterface {
 
     $options = [
       'selected_terms_label' => $this->t('Select existing platform users to invite', [], ['context' => 'eic_user']),
+      'search_label' => $this->t('Select users', [], ['context' => 'eic_user']),
+      'search_placeholder' => $this->t('Search for users', [], ['context' => 'eic_user']),
     ];
 
     // Existing users field.
@@ -110,6 +112,10 @@ class FormAlter implements ContainerInjectionInterface {
 
     // Tweak email_address field.
     $form['email_address']['#title'] = $this->t('Select new users to invite to the platform',
+      [],
+      ['context' => 'eic_user']
+    );
+    $form['email_address']['#description'] = $this->t('You can copy/paste multiple email addresses, enter one email address per line.',
       [],
       ['context' => 'eic_user']
     );
