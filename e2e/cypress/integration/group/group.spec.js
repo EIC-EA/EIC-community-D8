@@ -32,11 +32,11 @@ context("User - Group", () => {
       "/cypress-do-not-edit/discussions/discussion-do-not-edit"
     );
 
-    cy.scrollTo(0, 300);
+    cy.scrollTo(0, 500);
 
     // Write the comment
     const currentTimestamp = Date.now();
-    cy.get(".ecl-text-area.ecl-comment-form__textarea").type(
+    cy.get("#ecl-comment-form-reply .ql-editor").type(
       "Automated test comment at timestamp: " + currentTimestamp
     );
     // Open the modal and search + click on Bjorn user

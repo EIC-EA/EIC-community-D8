@@ -17,6 +17,9 @@ Cypress.Commands.add("login", (username = "cypress", password = "cypress") => {
   cy.get(".user-login-form").submit();
   cy.location("pathname").should("contains", "/users/");
 });
+Cypress.Commands.add("setResolution", (width = "1920", height = "1080") => {
+  cy.viewport(width, height)
+});
 
 Cypress.Commands.add("preserveCookie", () => {
   Cypress.Cookies.defaults({
