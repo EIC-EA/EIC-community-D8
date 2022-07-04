@@ -4,6 +4,7 @@ namespace Drupal\eic_message_subscriptions\Hooks;
 
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -123,24 +124,25 @@ class EntityOperations implements ContainerInjectionInterface {
    * @return void
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   public function eventUpdate(GroupInterface $event) {
-    if (!$this->moderationInformation->isModeratedEntity($event)) {
+    if (!$this->moderationInformation->isModeratedEntity($event) || $event->bundle() !== 'event') {
+      return;
+    }
+
+    if (!$event->isPublished()) {
       return;
     }
 
     $original = $event->original;
-    if (!$original || !$event->isPublished()) {
+    $new_state = $event->get('moderation_state')->value;
+    if ($original instanceof ContentEntityInterface
+      && ($original->get('moderation_state')->value === $new_state
+        && $original->get('moderation_state')->value !== GroupsModerationHelper::GROUP_DRAFT_STATE)) {
       return;
     }
 
-    $original_state = $original->get('moderation_state')->value;
-    $new_state = $event->get('moderation_state')->value;
-    if (
-      !$event->isPublished()
-      || $original_state === $new_state
-      || $original_state !== GroupsModerationHelper::GROUP_DRAFT_STATE
+    if (!$event->isPublished()
       || $new_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE
     ) {
       return;
