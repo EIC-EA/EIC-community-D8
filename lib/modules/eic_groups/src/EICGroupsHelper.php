@@ -782,9 +782,9 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   public function hasContent(GroupInterface $group) {
     $query = $this->database->select('group_content_field_data', 'gp');
     $query->condition('gp.type', [
-      'group-group_node-discussion',
-      'group-group_node-document',
-      'group-group_node-wiki_page',
+      $group->bundle() . '-group_node-discussion',
+      $group->bundle() . '-group_node-document',
+      $group->bundle() . '-group_node-wiki_page',
     ], 'IN');
     $query->condition('gp.gid', $group->id());
     $query->fields('gp', ['id']);
