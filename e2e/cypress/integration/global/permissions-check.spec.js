@@ -1,5 +1,3 @@
-
-
 context('Permissions', () => {
   // Post files - anonymous user
   specify('Group files overview show post content button for anonymous user', () => {
