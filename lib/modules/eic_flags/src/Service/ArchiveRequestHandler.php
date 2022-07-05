@@ -3,10 +3,14 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\flag\FlaggingInterface;
 
 /**
@@ -32,6 +36,18 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
       RequestStatus::DENIED => 'notify_archival_request_denied',
       RequestStatus::ACCEPTED => 'notify_archival_request_accepted',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canRequest(AccountInterface $account, ContentEntityInterface $entity) {
+    // Deny access if entity is already archived.
+    if ($this->isArchived($entity)) {
+      return AccessResult::forbidden();
+    }
+
+    return parent::canRequest($account, $entity);
   }
 
   /**
@@ -78,6 +94,43 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
       'group' => 'request_archive_group',
       'comment' => 'request_archive_comment',
     ];
+  }
+
+  /**
+   * Checks if the entity is moderated and archived.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity.
+   *
+   * @return bool
+   *   TRUE is entity is archived.
+   */
+  protected function isArchived(ContentEntityInterface $entity) {
+    $is_archived = FALSE;
+
+    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
+      switch ($workflow->id()) {
+        case DefaultContentModerationStates::WORKFLOW_MACHINE_NAME:
+          if ($entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
+            $is_archived = TRUE;
+          }
+          break;
+
+        case 'groups':
+          if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_ARCHIVED_STATE) {
+            $is_archived = TRUE;
+          }
+          break;
+
+        case 'news_stories':
+          if ($entity->get('moderation_state')->value === 'archived') {
+            $is_archived = TRUE;
+          }
+          break;
+      }
+    }
+
+    return $is_archived;
   }
 
 }
