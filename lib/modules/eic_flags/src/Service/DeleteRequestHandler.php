@@ -11,7 +11,6 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -54,7 +53,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
         break;
 
       case 'node':
-        $this->deleteNodeRelationships($content_entity);
+        $content_entity->delete();
         break;
 
       case 'comment':
@@ -128,46 +127,6 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       );
 
     foreach ($group_contents as $group_content) {
-      $batch_builder->addOperation(
-        [
-          DeleteRequestHandler::class,
-          'deleteGroupContent',
-        ],
-        [$group_content, $group]
-      );
-    }
-
-    batch_set($batch_builder->toArray());
-  }
-
-  /**
-   * Deletes the relationships of a given node.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The concerned node.
-   */
-  private function deleteNodeRelationships(NodeInterface $node) {
-    /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
-    $group_contents = $this->entityTypeManager->getStorage('group_content')
-      ->loadByEntity($node);
-
-    if (!$group_contents) {
-      return;
-    }
-
-    $batch_builder = (new BatchBuilder())
-      ->setFinishCallback(
-        [
-          DeleteRequestHandler::class,
-          'deleteNodeRelationshipsFinished',
-        ]
-      )
-      ->setTitle(
-        $this->t('Deleting node @node', ['@node' => $node->label()])
-      );
-
-    foreach ($group_contents as $group_content) {
-      $group = $group_content->getGroup();
       $batch_builder->addOperation(
         [
           DeleteRequestHandler::class,
@@ -273,27 +232,6 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     if (isset($results['group']) && $results['group'] instanceof GroupInterface) {
       $results['group']->delete();
     }
-  }
-
-  /**
-   * Handles the batch finish for deleting a node.
-   *
-   * @param bool $success
-   *   Result of the operation.
-   * @param array $results
-   *   Deleted entities.
-   * @param array $operations
-   *   The array of operations.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public static function deleteNodeRelationshipsFinished(
-    bool $success,
-    array $results,
-    array $operations
-  ) {
-    unset($results['group']);
-    self::deleteGroupContentFinished($success, $results, $operations);
   }
 
   /**
