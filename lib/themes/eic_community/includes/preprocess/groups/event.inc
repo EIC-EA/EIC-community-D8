@@ -74,6 +74,9 @@ function eic_community_preprocess_group__event(&$variables) {
           $teaser['type']['label'] .= " & {$value}";
         }
 
+        // Get group state.
+        $item['group_state'] = _eic_groups_get_moderation_state_tag($group);
+
         $teaser['type'] = [$teaser['type']];
       }
 
