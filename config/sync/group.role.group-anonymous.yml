@@ -12,5 +12,4 @@ audience: anonymous
 group_type: group
 permissions_ui: true
 permissions:
-  - 'access latest activity stream'
   - 'view group'
