@@ -1,158 +1,169 @@
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--event {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  <div class="ecl-teaser__main">
-    {% if image is not empty %}
-      <figure class="ecl-teaser__image-wrapper">
-        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-      </figure>
-    {% endif %}
-    <div class="ecl-teaser__main-wrapper">
-      <div class="ecl-teaser__content-wrapper">
-        <div class="ecl-teaser__content">
-          {% if tags is not empty %}
-            <div class="ecl-teaser__tags-wrapper">
-              <div class="ecl-teaser__tags">
-                {% for tag in tags %}
-                  <div class="ecl-teaser__tag">
-                    {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+	<div class="ecl-teaser__main">
+		{% if image is not empty %}
+			<figure class="ecl-teaser__image-wrapper">
+				<img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}"/>
+			</figure>
+		{% endif %}
+		<div class="ecl-teaser__main-wrapper">
+			<div class="ecl-teaser__content-wrapper">
+				<div class="ecl-teaser__content">
+					{% if tags is not empty || group_state is not empty %}
+						<div class="ecl-teaser__tags-wrapper">
+							<div class="ecl-teaser__tags">
+								{% for tag in tags %}
+									<div class="ecl-teaser__tag">
+										{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
                       tag: tag|merge({
                         type: tag.path ? 'link' : 'display',
                       })
                     } only %}
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          {% endif %}
-
-        <{{ title_element }} class="ecl-teaser__title">
-          {% if path is not empty %}
-            <a href="{{ path }}">
-              {% if title_before %}
-                <span class="ecl-teaser__title-before">{{ title_before }}</span>
-              {% endif %}
-
-              <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
-
-              {% if title_after %}
-                <span class="ecl-teaser__title-after">{{ title_after }}</span>
-              {% endif %}
-            </a>
-          {% else %}
-            {% if title_before %}
-              <span class="ecl-teaser__title-before">{{ title_before }}</span>
-            {% endif %}
-
-            <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
-
-            {% if title_after %}
-              <span class="ecl-teaser__title-after">{{ title_after }}</span>
-            {% endif %}
-          {% endif %}
-        </{{ title_element }}>
-
-          {# {% if stats is not empty or type is not empty %}
-            <div class="ecl-teaser__meta-fields">
-              {% if type is not empty %}
-                {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
-                  extra_classes: 'ecl-teaser__type',
-                  icon_file_path: icon_file_path,
-                }) only %}
-              {% endif %}
-
-              {% if stats is not empty %}
-                <div class="ecl-teaser__stats">
-                  {% for stat in stats %}
-                    <div class="ecl-teaser__stat">
-                      {% if stat.icon is not empty and icon_file_path %}
-                        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                          icon: {
-                            size: 'xs',
-                            path: icon_file_path,
-                            type: stat.icon.type,
-                            name: stat.icon.name,
-                          },
-                          extra_classes: 'ecl-teaser__stat-icon',
-                        } only %}
-                      {% endif %}
-                      <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
-                      <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
-                    </div>
-                  {% endfor %}
-                </div>
-              {% endif %}
-            </div>
-          {% endif %} #}
-
-          {# <div class="ecl-teaser__meta-footer"> #}
-            {# {% if actions is not empty %}
-              <div class="ecl-teaser__actions">
-                {% for action in actions %}
-                  <div class="ecl-teaser__action">
-                    {% set _icon = {} %}
-
-                    {% if icon_file_path and action.icon %}
-                      {% set _icon = action.icon|default({})|merge({
-                        path: icon_file_path,
-                        size: 'm',
-                      }) %}
-                    {% endif %}
-
-                    {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-                      icon: _icon,
-                      extra_classes: 'ecl-link--button ecl-link--button-primary',
-                      link: {
-                        path: action.path,
-                        label: action.label,
-                        icon_position: 'before',
-                        type: 'standalone',
-                      },
+										{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+                      tag: group_state|merge({
+                        type: 'display',
+                      }),
+                      extra_classes: group_state.extra_classes,
                     } only %}
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
 
-            {% if timestamp %}
-              <div class="ecl-teaser__meta-column">
-                {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
-                  icon_file_path: icon_file_path,
-                  extra_classes: 'ecl-teaser__timestamp',
-                }) only %}
-              </div>
-            {% endif %} #}
-          {# </div> #}
-        </div>
-        {% if date is not empty %}
-          <div class="ecl-teaser__content-aside">
-{#            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}#}
-              {% include '@theme/patterns/components/date.custom.html.twig' with date|default({}) only %}
-          </div>
-        {% endif %}
-      </div>
+					<{{title_element}} class="ecl-teaser__title">
+						{% if path is not empty %}
+							<a href="{{ path }}">
+								{% if title_before %}
+									<span class="ecl-teaser__title-before">{{ title_before }}</span>
+								{% endif %}
 
-      <div class="ecl-teaser__meta-footer">
-        <div class="ecl-teaser__meta-column">
-          {% if type is not empty %}
-            {% if type is not iterable %}
-              {% set type = [type] %}
-            {% endif %}
-            {% for typeRow in type %}
-              {% include "@theme/patterns/components/content-type-indicator.html.twig" with typeRow|default({})|merge({
+								<span class="ecl-teaser__title-overflow">
+									<span>{{ title }}</span>
+								</span>
+
+								{% if title_after %}
+									<span class="ecl-teaser__title-after">{{ title_after }}</span>
+								{% endif %}
+							</a>
+						{% else %}
+							{% if title_before %}
+								<span class="ecl-teaser__title-before">{{ title_before }}</span>
+							{% endif %}
+
+							<span class="ecl-teaser__title-overflow">
+								<span>{{ title }}</span>
+							</span>
+
+							{% if title_after %}
+								<span class="ecl-teaser__title-after">{{ title_after }}</span>
+							{% endif %}
+						{% endif %}
+					</{{title_element}}>
+
+					{# {% if stats is not empty or type is not empty %}
+					            <div class="ecl-teaser__meta-fields">
+					              {% if type is not empty %}
+					                {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+					                  extra_classes: 'ecl-teaser__type',
+					                  icon_file_path: icon_file_path,
+					                }) only %}
+					              {% endif %}
+					
+					              {% if stats is not empty %}
+					                <div class="ecl-teaser__stats">
+					                  {% for stat in stats %}
+					                    <div class="ecl-teaser__stat">
+					                      {% if stat.icon is not empty and icon_file_path %}
+					                        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+					                          icon: {
+					                            size: 'xs',
+					                            path: icon_file_path,
+					                            type: stat.icon.type,
+					                            name: stat.icon.name,
+					                          },
+					                          extra_classes: 'ecl-teaser__stat-icon',
+					                        } only %}
+					                      {% endif %}
+					                      <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+					                      <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+					                    </div>
+					                  {% endfor %}
+					                </div>
+					              {% endif %}
+					            </div>
+					          {% endif %} #}
+
+				{# <div class="ecl-teaser__meta-footer"> #}
+					{# {% if actions is not empty %}
+					              <div class="ecl-teaser__actions">
+					                {% for action in actions %}
+					                  <div class="ecl-teaser__action">
+					                    {% set _icon = {} %}
+					
+					                    {% if icon_file_path and action.icon %}
+					                      {% set _icon = action.icon|default({})|merge({
+					                        path: icon_file_path,
+					                        size: 'm',
+					                      }) %}
+					                    {% endif %}
+					
+					                    {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+					                      icon: _icon,
+					                      extra_classes: 'ecl-link--button ecl-link--button-primary',
+					                      link: {
+					                        path: action.path,
+					                        label: action.label,
+					                        icon_position: 'before',
+					                        type: 'standalone',
+					                      },
+					                    } only %}
+					                  </div>
+					                {% endfor %}
+					              </div>
+					            {% endif %}
+					
+					            {% if timestamp %}
+					              <div class="ecl-teaser__meta-column">
+					                {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+					                  icon_file_path: icon_file_path,
+					                  extra_classes: 'ecl-teaser__timestamp',
+					                }) only %}
+					              </div>
+					            {% endif %} #}
+					{# </div> #}
+				</div>
+				{% if date is not empty %}
+					<div
+						class="ecl-teaser__content-aside">
+						{#            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}#}
+						{% include '@theme/patterns/components/date.custom.html.twig' with date|default({}) only %}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="ecl-teaser__meta-footer">
+				<div class="ecl-teaser__meta-column">
+					{% if type is not empty %}
+						{% if type is not iterable %}
+							{% set type = [type] %}
+						{% endif %}
+						{% for typeRow in type %}
+							{% include "@theme/patterns/components/content-type-indicator.html.twig" with typeRow|default({})|merge({
                 extra_classes: 'ecl-teaser__type ' ~ typeRow.extra_classes,
                 icon_file_path: icon_file_path,
               }) only %}
-            {% endfor %}
-          {% endif %}
+						{% endfor %}
+					{% endif %}
 
-          {% if stats is not empty %}
-            <div class="ecl-teaser__stats-wrapper">
-              <div class="ecl-teaser__stats">
-                {% for stat in stats %}
-                  <div class="ecl-teaser__stat">
-                    {% if stat.icon is not empty and icon_file_path %}
-                      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+					{% if stats is not empty %}
+						<div class="ecl-teaser__stats-wrapper">
+							<div class="ecl-teaser__stats">
+								{% for stat in stats %}
+									<div class="ecl-teaser__stat">
+										{% if stat.icon is not empty and icon_file_path %}
+											{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                         icon: {
                           size: 'xs',
                           path: icon_file_path,
@@ -161,48 +172,48 @@
                         },
                         extra_classes: 'ecl-teaser__stat-icon',
                       } only %}
-                    {% endif %}
-                    <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
-                    <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          {% endif %}
+										{% endif %}
+										<span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+										<span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
 
-          {% if members %}
-            {% include "@theme/patterns/components/author-collection.html.twig" with {
+					{% if members %}
+						{% include "@theme/patterns/components/author-collection.html.twig" with {
               extra_classes: 'ecl-teaser__author-collection',
               length: members.value,
             } %}
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
-  {% if timestamp or actions %}
-    <div class="ecl-teaser__footer">
-      {% if timestamp %}
-        {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if timestamp or actions %}
+		<div class="ecl-teaser__footer">
+			{% if timestamp %}
+				{% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
           icon_file_path: icon_file_path,
           extra_classes: 'ecl-teaser__timestamp',
         }) only %}
-      {% endif %}
+			{% endif %}
 
-      {% if actions is not empty %}
-        <div class="ecl-teaser__actions">
-          {% for action in actions %}
-            <div class="ecl-teaser__action">
-              {% set _icon = {} %}
+			{% if actions is not empty %}
+				<div class="ecl-teaser__actions">
+					{% for action in actions %}
+						<div class="ecl-teaser__action">
+							{% set _icon = {} %}
 
-              {% if icon_file_path and action.icon %}
-                {% set _icon = action.icon|default({})|merge({
+							{% if icon_file_path and action.icon %}
+								{% set _icon = action.icon|default({})|merge({
                   path: icon_file_path,
                   size: 'm',
                 }) %}
-              {% endif %}
+							{% endif %}
 
-              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+							{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
                 icon: _icon,
                 extra_classes: 'ecl-link--button ecl-link--button-primary',
                 link: {
@@ -212,10 +223,10 @@
                   type: 'standalone',
                 },
               } only %}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	{% endif %}
 </div>

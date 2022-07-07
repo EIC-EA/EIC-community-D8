@@ -1,61 +1,75 @@
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--organisation {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  {% if image is not empty %}
-  <a href="{{ path }}">
-    <figure class="ecl-teaser__image-wrapper">
-      <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-    </figure>
-  </a>
-  {% endif %}
-  <div class="ecl-teaser__main-wrapper">
-    {% if tags is not empty %}
-      <div class="ecl-teaser__meta-header">
-        <div class="ecl-teaser__tags">
-          {% for tag in tags %}
-            <div class="ecl-teaser__tag">
-              {% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+	{% if image is not empty %}
+		<a href="{{ path }}">
+			<figure class="ecl-teaser__image-wrapper">
+				<img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}"/>
+			</figure>
+		</a>
+	{% endif %}
+	<div class="ecl-teaser__main-wrapper">
+		{% if tags is not empty || group_state is not empty %}
+			<div class="ecl-teaser__meta-header">
+				<div class="ecl-teaser__tags">
+					{% for tag in tags %}
+						<div class="ecl-teaser__tag">
+							{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
                 tag: tag|merge({
                   type: tag.path ? "link" : "display"
                 })
               } only %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-    <div class="ecl-teaser__content-wrapper">
-      <div class="ecl-teaser__content">
-        <{{ title_element }} class="ecl-teaser__title">
-          {% if path is not empty %}
-            <a href="{{ path }}">
-              {% if title_before %}
-                <span class="ecl-teaser__title-before">{{ title_before }}</span>
-              {% endif %}
+						</div>
+					{% endfor %}
+					{% if group_state is not empty %}
+						<div class="ecl-teaser__tag">
+							{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+              tag: group_state|merge({
+                type: 'display',
+              }),
+              extra_classes: group_state.extra_classes,
+            } only %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
+		<div class="ecl-teaser__content-wrapper">
+			<div class="ecl-teaser__content">
+				<{{title_element}} class="ecl-teaser__title">
+					{% if path is not empty %}
+						<a href="{{ path }}">
+							{% if title_before %}
+								<span class="ecl-teaser__title-before">{{ title_before }}</span>
+							{% endif %}
 
-              <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+							<span class="ecl-teaser__title-overflow">
+								<span>{{ title }}</span>
+							</span>
 
-              {% if title_after %}
-                <span class="ecl-teaser__title-after">{{ title_after }}</span>
-              {% endif %}
-            </a>
-          {% else %}
-            {% if title_before %}
-              <span class="ecl-teaser__title-before">{{ title_before }}</span>
-            {% endif %}
+							{% if title_after %}
+								<span class="ecl-teaser__title-after">{{ title_after }}</span>
+							{% endif %}
+						</a>
+					{% else %}
+						{% if title_before %}
+							<span class="ecl-teaser__title-before">{{ title_before }}</span>
+						{% endif %}
 
-            <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+						<span class="ecl-teaser__title-overflow">
+							<span>{{ title }}</span>
+						</span>
 
 
-            {% if title_after %}
-              <span class="ecl-teaser__title-after">{{ title_after }}</span>
-            {% endif %}
-          {% endif %}
-        </{{ title_element }}>
-        {% if location is not empty %}
-          <address class="ecl-teaser__description">
-            {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+						{% if title_after %}
+							<span class="ecl-teaser__title-after">{{ title_after }}</span>
+						{% endif %}
+					{% endif %}
+				</{{title_element}}>
+				{% if location is not empty %}
+					<address class="ecl-teaser__description">
+						{% if icon_file_path %}
+							{% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
                 icon: {
                   size: 'xs',
                   path: icon_file_path,
@@ -63,15 +77,15 @@
                   type: location.icon.type|default('custom'),
                 }
               } only %}
-            {% endif %}
-            {{ location.label }}
-          </address>
-        {% endif %}
+						{% endif %}
+						{{ location.label }}
+					</address>
+				{% endif %}
 
-        {% if size is not empty %}
-          <p class="ecl-teaser__description">
-            {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+				{% if size is not empty %}
+					<p class="ecl-teaser__description">
+						{% if icon_file_path %}
+							{% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
                 icon: {
                   size: 'xs',
                   path: icon_file_path,
@@ -79,19 +93,19 @@
                   type: size.icon.type|default('custom'),
                 }
               } only %}
-            {% endif %}
-            {{ size.label }}
-          </p>
-        {% endif %}
-      </div>
-    </div>
-    {% if stats is not empty %}
-      <div class="ecl-teaser__meta-footer">
-        <div class="ecl-teaser__stats">
-          {% for stat in stats %}
-            <div class="ecl-teaser__stat">
-              {% if stat.icon is not empty and icon_file_path %}
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+						{% endif %}
+						{{ size.label }}
+					</p>
+				{% endif %}
+			</div>
+		</div>
+		{% if stats is not empty %}
+			<div class="ecl-teaser__meta-footer">
+				<div class="ecl-teaser__stats">
+					{% for stat in stats %}
+						<div class="ecl-teaser__stat">
+							{% if stat.icon is not empty and icon_file_path %}
+								{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                   icon: {
                     size: 'xs',
                     path: icon_file_path,
@@ -100,13 +114,13 @@
                   },
                   extra_classes: 'ecl-teaser__stat-icon',
                 } only %}
-              {% endif %}
-              <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
-              <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-  </div>
+							{% endif %}
+							<span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+							<span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+	</div>
 </div>
