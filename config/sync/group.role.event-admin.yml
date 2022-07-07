@@ -15,6 +15,7 @@ permissions:
   - 'access group_node overview'
   - 'access members management'
   - 'administer members'
+  - 'administer membership requests'
   - 'create group_node:discussion entity'
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'

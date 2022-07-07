@@ -1,0 +1,32 @@
+uuid: 03f49c90-4299-48ac-951b-bf9014fd6258
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.services_and_products.field_smed_id
+    - taxonomy.vocabulary.services_and_products
+  module:
+    - text
+id: taxonomy_term.services_and_products.default
+targetEntityType: taxonomy_term
+bundle: services_and_products
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

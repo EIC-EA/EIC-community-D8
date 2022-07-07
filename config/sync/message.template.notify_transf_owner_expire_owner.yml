@@ -14,10 +14,10 @@ label: 'NOTIFY :: MT:: Transfer ownership request - request timeout (owner)'
 description: 'Notifies the entity owner when the request ownership transfer has expired'
 text:
   -
-    value: "<p>Your request to transfer ownership to [message:field_referenced_flag:entity:field_new_owner_ref:entity:field_first_name:value] [message:field_referenced_flag:entity:field_new_owner_ref:entity:field_last_name:value] has been expired</p>\r\n"
+    value: "<p>Your request to transfer ownership to [message:field_referenced_flag:entity:field_new_owner_ref:entity:display-name] has been expired</p>\r\n"
     format: full_html
   -
-    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</u></a>,</p>\r\n\r\n<p>Your request to transfer ownership to&nbsp;<a href=\"[message:field_referenced_flag:entity:field_new_owner_ref:entity:url]\"><u>[message:field_referenced_flag:entity:field_new_owner_ref:entity:field_first_name:value] [message:field_referenced_flag:entity:field_new_owner_ref:entity:field_last_name:value]</u></a> has been expired and therefore you are still the owner of [message:field_entity_type:value] <a href=\"[message:field_entity_url:uri]\"><u>[message:field_referenced_entity_label:value]</u></a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>,</p>\r\n\r\n<p>Your request to transfer ownership to&nbsp;<a href=\"[message:field_referenced_flag:entity:field_new_owner_ref:entity:url]\"><u>[message:field_referenced_flag:entity:field_new_owner_ref:entity:display-name]</u></a> has been expired and therefore you are still the owner of [message:field_entity_type:value] <a href=\"[message:field_entity_url:uri]\"><u>[message:field_referenced_entity_label:value]</u></a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

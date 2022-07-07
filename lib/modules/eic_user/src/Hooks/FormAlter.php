@@ -10,12 +10,13 @@ use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class FormAlter
+ * Implements form hooks.
  *
  * @package Drupal\eic_user\Hooks
  */
@@ -50,16 +51,21 @@ class FormAlter implements ContainerInjectionInterface {
   }
 
   /**
-   * @param $form
+   * Form alter implementation for bulk_group_invitation form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param $form_id
+   *   The current state of the form.
+   * @param string $form_id
+   *   The form ID.
    */
-  public function alterBulkGroupInvitation(&$form, FormStateInterface $form_state, $form_id) {
+  public function alterBulkGroupInvitation(array &$form, FormStateInterface $form_state, string $form_id) {
     $maximum_users = 50;
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = \Drupal::routeMatch()->getParameter('group');
 
-    if (!$group instanceof \Drupal\group\Entity\GroupInterface) {
+    if (!$group instanceof GroupInterface) {
       return;
     }
 
@@ -76,11 +82,13 @@ class FormAlter implements ContainerInjectionInterface {
     $url_search = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserInvitesListSourceType::class,
-      'page' => 1
+      'page' => 1,
     ])->toString();
 
     $options = [
       'selected_terms_label' => $this->t('Select existing platform users to invite', [], ['context' => 'eic_user']),
+      'search_label' => $this->t('Select users', [], ['context' => 'eic_user']),
+      'search_placeholder' => $this->t('Search for users', [], ['context' => 'eic_user']),
     ];
 
     // Existing users field.
@@ -113,6 +121,10 @@ class FormAlter implements ContainerInjectionInterface {
       [],
       ['context' => 'eic_user']
     );
+    $form['email_address']['#description'] = $this->t('You can copy/paste multiple email addresses, enter one email address per line.',
+      [],
+      ['context' => 'eic_user']
+    );
     $form['email_address']['#attributes']['placeholder'] = $this->t('Recipients email addresses here',
       [],
       ['context' => 'eic_user']
@@ -128,13 +140,25 @@ class FormAlter implements ContainerInjectionInterface {
     ];
   }
 
+  /**
+   * Custom validation handler for bulk_group_invitation form.
+   *
+   * @param array $form
+   *   The form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
   public function validateBulkInviteUsers(array &$form, FormStateInterface $form_state) {
     $this->validate($form_state);
   }
 
   /**
+   * Custom submit handler for bulk_group_invitation form.
+   *
    * @param array $form
+   *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitBulkInviteUsers(array $form, FormStateInterface $form_state) {
     $tempstore = \Drupal::service('tempstore.private')
