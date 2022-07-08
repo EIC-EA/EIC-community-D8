@@ -5,6 +5,8 @@
  * Contains implementation for hook_preprocess_field().
  */
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_preprocess_field().
  *
@@ -67,4 +69,28 @@ function eic_community_preprocess_field(&$variables, $hook): void {
       break;
 
   }
+}
+
+/**
+ * Gets the language field of a given entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ *
+ * @return string|bool
+ *   Return the language term name or FALSE if not found.
+ */
+function _eic_community_get_entity_field_language(EntityInterface $entity) {
+  $language = FALSE;
+  // Gets the entity language field if exists.
+  if ($entity->hasField('field_language') && !$entity->get('field_language')->isEmpty()) {
+    /** @var \Drupal\taxonomy\TermInterface[] $languages */
+    $languages = $entity->get('field_language')->referencedEntities();
+    $language = $languages[0]->getName();
+    if ($languages[0]->hasTranslation($entity->language()->getId())) {
+      $language = $languages[0]->getTranslation($entity->language()->getId())
+        ->getName();
+    }
+  }
+  return $language;
 }
