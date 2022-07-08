@@ -227,6 +227,7 @@ function eic_community_preprocess_user(array &$variables) {
  *   The source class in string.
  *
  * @return array
+ *   The search overview block renderable array.
  */
 function _get_render_block_search_overview(string $source): array {
   $block_manager = \Drupal::service('plugin.manager.block');
@@ -657,6 +658,11 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
 
   $processed_user_operation_links = [];
   foreach ($user_operation_links as $key => $user_operation_link) {
+    // Check access to the URL.
+    if (!$user_operation_link['url']->access()) {
+      continue;
+    }
+
     switch ($key) {
       // Override operation link titles.
       case 'edit':
@@ -683,6 +689,11 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
     $member_profile_operation_links = \Drupal::entityTypeManager()->getListBuilder($member_profile->getEntityTypeId())
       ->getOperations($member_profile);
     foreach ($member_profile_operation_links as $key => $member_profile_operation_link) {
+      // Check access to the URL.
+      if (!$member_profile_operation_link['url']->access()) {
+        continue;
+      }
+
       // Override operation link titles.
       switch ($key) {
         case 'edit':
