@@ -151,10 +151,23 @@ class FormOperations implements ContainerInjectionInterface {
       $form_state->set('entity_is_published', $entity->isPublished());
       $form_state->set('previous_state', $entity->get('moderation_state')->value);
 
+      $is_new_content = $entity->isNew();
+      // Check if the current node is the default revision and is in draft
+      // state. If that's the case, it means there is no published or archived
+      // version and therefore the "Send notification" checkbox should be
+      // checked by default.
+      if (
+        !$is_new_content &&
+        $entity->revision_default->value &&
+        $entity->get('moderation_state')->value === DefaultContentModerationStates::DRAFT_STATE
+      ) {
+        $is_new_content = TRUE;
+      }
+
       $form['field_send_notification'] = [
         '#title' => $this->t('Send notification'),
         '#type' => 'checkbox',
-        '#default_value' => $entity->isNew() && !in_array($entity->bundle(), $field_disable_by_default_types),
+        '#default_value' => $is_new_content && !in_array($entity->bundle(), $field_disable_by_default_types),
       ];
       $form['actions']['submit']['#submit'][] = [
         $this,
