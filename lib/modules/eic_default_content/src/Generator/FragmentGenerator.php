@@ -58,7 +58,7 @@ class FragmentGenerator extends CoreGenerator {
 
     $fragment = Fragment::create([
       'type' => 'disclaimer',
-      'title' => 'Disclaimer',
+      'title' => 'Default Disclaimer',
       'field_body' => $this->getFormattedText(
         'full_html',
         'DISCLAIMER: This information is provided in the interest of knowledge sharing and should not be interpreted as the official view of the European Commission, or any other organisation.'
