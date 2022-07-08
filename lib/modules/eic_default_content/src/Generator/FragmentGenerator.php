@@ -36,7 +36,7 @@ class FragmentGenerator extends CoreGenerator {
    * {@inheritdoc}
    */
   public function load() {
-    $this->createNewsDislcaimerFragment();
+    $this->createNewsDisclaimerFragment();
   }
 
   /**
@@ -45,7 +45,7 @@ class FragmentGenerator extends CoreGenerator {
    * @return \Drupal\fragments\Entity\FragmentInterface
    *   The fragment entity.
    */
-  private function createNewsDislcaimerFragment(): FragmentInterface {
+  private function createNewsDisclaimerFragment(): FragmentInterface {
     $fragments = $this->entityTypeManager->getStorage('fragment')
       ->loadByProperties([
         'type' => 'disclaimer',
