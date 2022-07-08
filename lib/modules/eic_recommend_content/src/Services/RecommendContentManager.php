@@ -28,6 +28,11 @@ class RecommendContentManager {
   use StringTranslationTrait;
 
   /**
+   * Array of allowed HTML tags to send on the recommendation email.
+   */
+  const RECOMMEND_ALLOWED_HTML_TAGS = ['a', 'em', 'u', 's', 'p', 'br', 'strong'];
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -290,7 +295,7 @@ class RecommendContentManager {
       'global' => $flag->isGlobal(),
       'field_recommend_emails' => implode(',', $user_emails),
       'field_recommend_message' => [
-        'value' => Markup::create(Xss::filter($message)),
+        'value' => Markup::create(Xss::filter($message, self::RECOMMEND_ALLOWED_HTML_TAGS)),
         'format' => 'basic_text',
       ],
     ]);
