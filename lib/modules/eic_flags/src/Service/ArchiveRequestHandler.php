@@ -123,6 +123,7 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
           break;
 
         case 'news_stories':
+          // @todo Create a constant class for the news_stories workflow.
           if ($entity->get('moderation_state')->value === 'archived') {
             $is_archived = TRUE;
           }
