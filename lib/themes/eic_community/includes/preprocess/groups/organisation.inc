@@ -33,6 +33,7 @@ function eic_community_preprocess_group__organisation(&$variables) {
       _eic_community_render_organisation_detail_page($variables, $group);
       break;
 
+    case 'mail_teaser':
     case 'teaser':
       _eic_community_render_organisation_teaser($variables, $group);
       break;
@@ -543,11 +544,15 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
 }
 
 /**
+ * Generates orverview page url with query filter.
+ *
  * @param string $filter
+ *   The filter name.
  * @param string $value
+ *   The filter value.
  *
  * @return string
- * @throws \Drupal\Core\Entity\EntityMalformedException
+ *   The overview page url.
  */
 function _generate_overview_prefilter_url(string $filter, string $value): string {
   $filters = [
