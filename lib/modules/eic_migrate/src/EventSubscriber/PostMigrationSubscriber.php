@@ -184,6 +184,33 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         }
         break;
 
+      case 'upgrade_d7_node_complete_article':
+      case 'upgrade_d7_node_complete_news':
+        // Check if we have a node revision ID.
+        if (!$vid = $event->getDestinationIdValues()[1]) {
+          return;
+        }
+
+        // Load the migrated node.
+        if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($vid)) {
+          // We enable syncing to avoid creating new revisions.
+          $node->setSyncing(TRUE);
+
+          $fragments = $this->entityTypeManager->getStorage('fragment')
+            ->loadByProperties([
+              'type' => 'disclaimer',
+            ]
+          );
+
+          if (empty($fragments)) {
+            break;
+          }
+
+          // We grab and set the disclaimer fragment in the node.
+          $fragment = reset($fragments);
+          $node->field_disclaimer->target_id = $fragment->id();
+          $node->save();
+        }
     }
   }
 
