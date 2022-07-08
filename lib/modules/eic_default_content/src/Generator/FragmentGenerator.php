@@ -4,10 +4,11 @@ namespace Drupal\eic_default_content\Generator;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\fragments\Entity\Fragment;
 use Drupal\fragments\Entity\FragmentInterface;
 
 /**
- * Class FragmentGenerator
+ * Class to generate fragments using fixtures.
  *
  * @package Drupal\eic_default_content\Generator
  */
