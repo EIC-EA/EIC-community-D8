@@ -8,6 +8,13 @@ namespace Drupal\eic_content\Constants;
 final class DefaultContentModerationStates {
 
   /**
+   * The machine name of the Default workflow.
+   *
+   * @var string
+   */
+  const WORKFLOW_MACHINE_NAME = 'default';
+
+  /**
    * The draft state key.
    *
    * @var string
