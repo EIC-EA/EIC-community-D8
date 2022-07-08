@@ -100,7 +100,7 @@ class BookTokens implements ContainerInjectionInterface {
             break;
           }
 
-          if (!$node->book['nid'] || $node->book['pid'] <= 0) {
+          if (!$node->book || !$node->book['nid'] || $node->book['pid'] <= 0) {
             break;
           }
 
