@@ -245,8 +245,7 @@ function _get_render_block_search_overview(string $source): array {
   $access_result = $plugin_block->access(\Drupal::currentUser());
   if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
     return [];
-  }
-  else {
+  } else {
     return $plugin_block->build();
   }
 }
