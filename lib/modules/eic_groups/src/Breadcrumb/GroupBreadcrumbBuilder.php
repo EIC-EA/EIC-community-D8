@@ -144,6 +144,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       case 'entity.group_content.new_request':
       case 'entity.group_content.user_close_request':
+      case 'entity.group_content.user_cancel_request':
         $group_content = $route_match->getParameter('group_content');
 
         if (!$group_content instanceof GroupContentInterface) {
@@ -304,6 +305,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       case 'entity.group_content.new_request':
       case 'entity.group_content.user_close_request':
+      case 'entity.group_content.user_cancel_request':
       case 'ginvite.invitation.accept':
         /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
         $group_content = $route_match->getParameter('group_content');

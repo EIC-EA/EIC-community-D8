@@ -48,6 +48,7 @@
 
   & .form-item {
     max-width: 100%;
+    margin: $ecl-spacing-xl 0;
   }
 
   & .form-wrapper:not(details) {
@@ -85,6 +86,7 @@
     text-transform: uppercase;
     font-weight: 700;
     color: map-get($ecl-colors, 'blue');
+    margin: map-get($ecl-spacing, '2xl') 0
   }
 
   &,

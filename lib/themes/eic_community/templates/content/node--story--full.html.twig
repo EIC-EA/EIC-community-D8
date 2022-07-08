@@ -7,7 +7,8 @@
 			{% endif %}
 			{{ elements.field_news_paragraphs }}
 			{% if video_download %}
-				{% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
+				<div data-video-title="{{ video_download.stream_target }}" id="react-stream-video-block"></div>
+				{{ attach_library('eic_community/react-video-stream') }}
 			{% else %}
 				{{ elements.field_video }}
 			{% endif %}

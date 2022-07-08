@@ -202,9 +202,21 @@ class EntityTreeWidget extends WidgetBase {
     $entity_type = $this->getFieldSetting('target_type');
 
     $user_input = $form_state->getUserInput();
-    $input_topics = array_key_exists($items->getName(), $user_input) ?
+    $has_required_error = (
+      (
+        isset($user_input[$items->getName()]) &&
+        empty($user_input[$items->getName()])
+      ) &&
+      $this->fieldDefinition->isRequired()
+    );
+    $has_topics = (
+      array_key_exists($items->getName(), $user_input) &&
+      !empty($user_input[$items->getName()])
+    );
+    $input_topics = $has_topics ?
       $user_input[$items->getName()] :
       NULL;
+    $preselected_items = json_encode([]);
 
     if ($input_topics) {
       $entities_id = explode(',', $input_topics);
@@ -215,10 +227,9 @@ class EntityTreeWidget extends WidgetBase {
         $this->treeManager->getTreeWidgetProperty($entity_type)->loadEntities($entities_id) :
         Term::loadMultiple($entities_id);
       $preselected_items = $this->formatPreselection($entities, $entity_type);
-    } else {
+    } elseif (!$has_required_error) {
       $preselected_items = $this->formatPreselection($items->referencedEntities(), $entity_type);
     }
-
 
     $options = [
       'match_top_level_limit' => $this->getSetting(TreeWidgetProperties::OPTION_ITEMS_TO_LOAD),
@@ -237,6 +248,7 @@ class EntityTreeWidget extends WidgetBase {
       'selected_terms_label' => $this->getSetting('selected_terms_label'),
       'search_label' => $this->getSetting('search_label'),
       'search_placeholder' => $this->getSetting('search_placeholder'),
+      'has_error' => $has_required_error,
     ];
 
     $element += self::getEntityTreeFieldStructure(
@@ -440,7 +452,8 @@ class EntityTreeWidget extends WidgetBase {
         // We can only create terms on the fly.
         'data-can-create-tag' =>
           (int) ($current_user->hasPermission("create terms in $target_bundle") &&
-            $options['can_create_tag'])
+            $options['can_create_tag']),
+        'data-has-error' => (int) $options['has_error'],
       ],
     ];
 

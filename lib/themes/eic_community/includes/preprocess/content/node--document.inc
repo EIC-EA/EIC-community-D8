@@ -10,6 +10,7 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\file\FileInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
@@ -97,7 +98,7 @@ function eic_community_preprocess_node__document(array &$variables) {
       if (!in_array($mime_type, $supported_icons)) {
         $mime_type = 'doc';
       }
-      
+
       $document = [
         'language' => $language,
         'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),
@@ -119,7 +120,11 @@ function eic_community_preprocess_node__document(array &$variables) {
       $files_list = [];
 
       foreach ($files as $file) {
-        $download = File::load($file->field_media_file->getValue()[0]['target_id']);
+        $download = '';
+        if ($media_file= $file->field_media_file) {
+          $download = File::load($media_file->getValue()[0]['target_id']);
+        }
+
         $download_url = MediaHelper::formatMediaDownloadLink($file)->toString();
         $files_list[] = [
           'name' => $file->getName(),
@@ -137,11 +142,13 @@ function eic_community_preprocess_node__document(array &$variables) {
             ],
             [
               'hide_label' => TRUE,
-              'value' => format_size($download->get('filesize')->getString()),
+              'value' => format_size(
+                $download instanceof FileInterface ? $download->get('filesize')->getString() : '0'
+              ),
             ],
           ],
           'mime_type' => _eic_community_get_file_type_icon_name(
-            pathinfo($download->getFilename(), PATHINFO_EXTENSION)
+            pathinfo($download instanceof FileInterface ? $download->getFilename() : '', PATHINFO_EXTENSION)
           ),
           'path' => $download_url,
         ];
@@ -172,8 +179,12 @@ function eic_community_preprocess_node__document(array &$variables) {
 
       // Show recommend content flag in the 2nd place.
       if (isset($variables['elements']['recommend_content'])) {
-        array_splice($variables['editorial_actions']['items'], 2, 0,
-          [['content' => $variables['elements']['recommend_content']['content']]]);
+        array_splice(
+          $variables['editorial_actions']['items'],
+          2,
+          0,
+          [['content' => $variables['elements']['recommend_content']['content']]]
+        );
       }
 
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();

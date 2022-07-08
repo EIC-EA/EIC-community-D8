@@ -14,7 +14,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Class DeleteRequestHandler.
+ * Provides a delete request handler.
  *
  * @package Drupal\eic_flags\Service
  */
@@ -53,31 +53,33 @@ class DeleteRequestHandler extends AbstractRequestHandler {
         break;
 
       case 'node':
-      case 'comment':
-      $now = DrupalDateTime::createFromTimestamp(time());
-      $content_entity->set('comment_body', [
-        'value' => $this->t(
-          'This comment has been removed by a content administrator at @time.',
-          ['@time' => $now->format('d/m/Y - H:i')],
-          ['context' => 'eic_flags']
-        ),
-        'format' => 'plain_text',
-      ]);
-      $content_entity->set('field_comment_is_soft_deleted', TRUE);
-      $content_entity->save();
+        $content_entity->delete();
         break;
+
+      case 'comment':
+        $now = DrupalDateTime::createFromTimestamp(time());
+        $content_entity->set('comment_body', [
+          'value' => $this->t(
+            'This comment has been removed by a content administrator at @time.',
+            ['@time' => $now->format('d/m/Y - H:i')],
+            ['context' => 'eic_flags']
+          ),
+          'format' => 'plain_text',
+        ]);
+        $content_entity->set('field_comment_is_soft_deleted', TRUE);
+        $content_entity->save();
+        break;
+
     }
   }
 
   /**
-   * Denies the request but un-publish the entity instead
+   * Denies the request but un-publish the entity instead.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    *   The flag object.
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
    *   The concerned entity.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function archive(
     FlaggingInterface $flagging,
@@ -174,7 +176,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       if ($target_entity instanceof ContentEntityInterface) {
         $target_entity->delete();
       }
-    } catch (\Exception $exception) {
+    }
+    catch (\Exception $exception) {
       $context['results']['errors'][] = new TranslatableMarkup(
         'Something went wrong during content removal @error',
         ['@error' => $exception->getMessage()]
@@ -236,17 +239,14 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    */
   public function getActions(ContentEntityInterface $entity) {
     return parent::getActions($entity) + [
-        'archive_request' => [
-          'title' => $this->t('Archive'),
-          'url' => $entity->toUrl('close-request')
-            ->setRouteParameter('request_type', $this->getType())
-            ->setRouteParameter('response', RequestStatus::ARCHIVED)
-            ->setRouteParameter(
-              'destination',
-              $this->currentRequest->getRequestUri()
-            ),
-        ],
-      ];
+      'archive_request' => [
+        'title' => $this->t('Archive'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', $this->getType())
+          ->setRouteParameter('response', RequestStatus::ARCHIVED)
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+      ],
+    ];
   }
 
 }

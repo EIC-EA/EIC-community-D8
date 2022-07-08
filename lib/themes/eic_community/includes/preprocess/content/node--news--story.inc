@@ -5,6 +5,7 @@
  * Prepares variables for node News and Story templates.
  */
 
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\GroupsModerationHelper;
@@ -381,6 +382,7 @@ function _eic_community_story_video_field(&$variables) {
       case 'video':
         $file = File::load($media->field_media_video_file->target_id);
         $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+        $stream_target = StreamWrapperManager::getTarget($file->getFileUri());
         $variables['video_download'] = [
           'title' => $media->getName(),
           'language' => $media->language()->getName(),
@@ -393,6 +395,7 @@ function _eic_community_story_video_field(&$variables) {
             'type' => 'general',
             'name' => 'video',
           ],
+          'stream_target' => $stream_target,
         ];
         break;
 

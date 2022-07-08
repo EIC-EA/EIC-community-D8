@@ -12,7 +12,7 @@ field_name: field_video_media
 entity_type: node
 bundle: video
 label: Video
-description: '<p>You can upload a video or link a remote video from : youtube, daylimotion, vimeo.</p>'
+description: "<p>You can upload a video or link a remote video from : Youtube, Dailymotion, Vimeo.</p>\r\n<p>Important note: the video you are uploading will be processed by our video conversion system. This means that for a short period of time, the video will not be accessible. An info message \"Your video is being processed, come back later.\" will be displayed in the front-office instead.</p>"
 required: true
 translatable: false
 default_value: {  }

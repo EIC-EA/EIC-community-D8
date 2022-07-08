@@ -149,7 +149,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#theme' => 'notification_settings',
         '#data' => [
           'title' => $this->t('Your digest settings'),
-          'body' => $this->t('We will send you a summary of the activity on content you follow. You can decide wheater or not you want to receive this notification and manage its periodicity here.'),
+          'body' => $this->t('We will send you a summary of the activity on content you follow. You can decide whether or not you want to receive this notification and manage its periodicity here.'),
           'digest_action' => [
             'toggle' => [
               'update_url' => Url::fromRoute('eic_subscription_digest.update_status')->toString(),
@@ -207,7 +207,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#theme' => 'notification_settings',
         '#data' => [
           'title' => $this->t('Your interest notifications'),
-          'body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
+          'body' => $this->t('Manage the email notifications for the topics you\'re interested in. You can enable or disable the notifications by switching the button bellow.'),
           'action' => $this->getEditProfileLink($profile),
           'interests' => [
             [
@@ -272,7 +272,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#theme' => 'notification_settings',
         '#data' => [
           'title' => $this->t('Your group notifications'),
-          'body' => $this->t('You receive a periodic notification email for these groups because you\'re following them.'),
+          'body' => $this->t('Manage the email notifications of the groups you follow. You can enable or disable the notifications by temporarily disabling them or completely unsubscribing from them by clicking on the “Unsubscribe”.'),
           'table' => [
             'title' => $this->t('Groups'),
             'unsubscribe' => TRUE,
@@ -297,7 +297,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#theme' => 'notification_settings',
         '#data' => [
           'title' => $this->t('Your organisation notifications'),
-          'body' => $this->t('You receive a periodic notification email for these organisation because you\'re following them.'),
+          'body' => $this->t('Manage the email notifications of the organizations you follow. You can enable or disable the notifications by temporarily disabling them or completely unsubscribing from them by clicking on the “Unsubscribe”.'),
           'table' => [
             'title' => $this->t('Organisations'),
             'unsubscribe' => TRUE,
@@ -322,7 +322,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#theme' => 'notification_settings',
         '#data' => [
           'title' => $this->t('Your event notifications'),
-          'body' => $this->t('You receive a periodic notification email for these events because you\'re following them.'),
+          'body' => $this->t('Manage the email notifications of the events you follow. You can enable or disable the notifications by temporarily disabling them or completely unsubscribing from them by clicking on the “Unsubscribe”.'),
           'table' => [
             'title' => $this->t('Events'),
             'unsubscribe' => TRUE,
@@ -347,7 +347,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         '#theme' => 'notification_settings',
         '#data' => [
           'title' => $this->t('Your comments notifications'),
-          'body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
+          'body' => $this->t('Manage the email notifications of the comments you follow. You can enable or disable the notifications by switching the button bellow.'),
           'global_action' => [
             'title' => $this->t('Comments email notifications'),
             'state' => $profile instanceof ProfileInterface ? $profile->get('field_comments_notifications')->value : FALSE,
