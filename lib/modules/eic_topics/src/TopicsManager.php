@@ -146,7 +146,7 @@ class TopicsManager {
     }
 
     $filters = [
-      Topics::TERM_TOPICS_ID_FIELD_USER_SOLR => $term->label(),
+      'sm_user_profile_topic_expertise_string' => $term->label(),
     ];
 
     $query_options = [
