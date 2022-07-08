@@ -89,7 +89,7 @@ class NewsGenerator extends CoreGenerator {
       $fragment->save();
       return $fragment;
     }
-    return !empty($fragments) ? reset($fragments) : NULL;
+    return reset($fragments);
   }
 
   /**
