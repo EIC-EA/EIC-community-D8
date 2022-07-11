@@ -61,6 +61,7 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
       self::NODE_PUBLISHED,
       self::CONTENT_RECOMMENDED,
       self::NEW_EVENT_PUBLISHED,
+      self::GROUP_CONTENT_SHARED,
     ];
   }
 
