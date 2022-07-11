@@ -57,7 +57,7 @@ process:
         - value
     -
       plugin: explode
-      delimiter: '/'
+      delimiter: /
     -
       plugin: array_pop
   name: '@_media_title'
