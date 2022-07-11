@@ -9,7 +9,7 @@
 		</a>
 	{% endif %}
 	<div class="ecl-teaser__main-wrapper">
-		{% if tags is not empty || group_state is not empty %}
+		{% if tags is not empty or group_state is not empty %}
 			<div class="ecl-teaser__meta-header">
 				<div class="ecl-teaser__tags">
 					{% for tag in tags %}

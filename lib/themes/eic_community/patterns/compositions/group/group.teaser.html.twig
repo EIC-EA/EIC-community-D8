@@ -26,20 +26,26 @@
 		</a>
 	{% endif %}
 	<div class="ecl-teaser__main-wrapper">
-		{% if type is not empty || group_state is not empty %}
+		{% if type is not empty or group_state is not empty %}
 			<div class="ecl-teaser__meta-header">
-				{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
-          tag: type|merge({
-            type: type.path ? 'link' : 'display',
-          }),
-          extra_classes: type.extra_classes,
-        } only %}
-				{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
-          tag: group_state|merge({
-            type: 'display',
-          }),
-          extra_classes: group_state.extra_classes,
-        } only %}
+				<div class="ecl-teaser__tag">
+					{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+						tag: type|merge({
+							type: type.path ? 'link' : 'display',
+						}),
+						extra_classes: type.extra_classes,
+					} only %}
+				</div>
+				{% if group_state is not empty %}
+					<div class="ecl-teaser__tag">
+						{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+							tag: group_state|merge({
+								type: 'display',
+							}),
+							extra_classes: group_state.extra_classes,
+						} only %}
+					</div>
+				{% endif %}
 			</div>
 		{% endif %}
 		<div class="ecl-teaser__content-wrapper">

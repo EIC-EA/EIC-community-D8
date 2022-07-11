@@ -10,7 +10,7 @@
 		<div class="ecl-teaser__main-wrapper">
 			<div class="ecl-teaser__content-wrapper">
 				<div class="ecl-teaser__content">
-					{% if tags is not empty || group_state is not empty %}
+					{% if tags is not empty or group_state is not empty %}
 						<div class="ecl-teaser__tags-wrapper">
 							<div class="ecl-teaser__tags">
 								{% for tag in tags %}
@@ -20,14 +20,18 @@
                         type: tag.path ? 'link' : 'display',
                       })
                     } only %}
-										{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
-                      tag: group_state|merge({
-                        type: 'display',
-                      }),
-                      extra_classes: group_state.extra_classes,
-                    } only %}
 									</div>
 								{% endfor %}
+								{% if group_state is not empty %}
+									<div class="ecl-teaser__tag">
+										{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+											tag: group_state|merge({
+												type: 'display',
+											}),
+											extra_classes: group_state.extra_classes,
+										} only %}
+									</div>
+								{% endif %}
 							</div>
 						</div>
 					{% endif %}
@@ -70,7 +74,7 @@
 					                  icon_file_path: icon_file_path,
 					                }) only %}
 					              {% endif %}
-					
+
 					              {% if stats is not empty %}
 					                <div class="ecl-teaser__stats">
 					                  {% for stat in stats %}
@@ -101,14 +105,14 @@
 					                {% for action in actions %}
 					                  <div class="ecl-teaser__action">
 					                    {% set _icon = {} %}
-					
+
 					                    {% if icon_file_path and action.icon %}
 					                      {% set _icon = action.icon|default({})|merge({
 					                        path: icon_file_path,
 					                        size: 'm',
 					                      }) %}
 					                    {% endif %}
-					
+
 					                    {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
 					                      icon: _icon,
 					                      extra_classes: 'ecl-link--button ecl-link--button-primary',
@@ -123,7 +127,7 @@
 					                {% endfor %}
 					              </div>
 					            {% endif %}
-					
+
 					            {% if timestamp %}
 					              <div class="ecl-teaser__meta-column">
 					                {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
