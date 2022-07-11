@@ -22,9 +22,11 @@ services:
       - { name: data_fixtures }
   eic_default_content.story_generator:
     class: Drupal\eic_dummy_content\Generator\StoryGenerator
+    arguments: [ '@entity_type.manager' ]
     tags:
       - { name: data_fixtures }
   eic_default_content.news_generator:
     class: Drupal\eic_dummy_content\Generator\NewsGenerator
+    arguments: [ '@entity_type.manager' ]
     tags:
       - { name: data_fixtures }

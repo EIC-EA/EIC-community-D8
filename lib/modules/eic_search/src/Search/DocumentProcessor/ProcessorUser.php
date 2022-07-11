@@ -218,6 +218,7 @@ class ProcessorUser extends DocumentProcessor {
     }, $memberships));
 
     $this->addOrUpdateDocumentField($document, 'itm_user_group_ids', $fields, $group_ids);
+    $group_statistics = [];
 
     foreach ($memberships as $membership) {
       $group = $membership->getGroup();
@@ -237,8 +238,8 @@ class ProcessorUser extends DocumentProcessor {
       $query_comments->join('group_content_field_data', 'gcfd', 'cfd.entity_id = gcfd.entity_id');
       $total_group_comments = (int) $query_comments->countQuery()->execute()->fetchAssoc()['expression'];
 
-      $most_active_total = 3 * $total_followers + 2 * $total_group_content + 2 * $total_group_comments + $total_groups + $total_events;
-      $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID_GROUP . $group->id(), $fields, $most_active_total);
+      $group_statistics[$group->id()] = 3 * $total_followers + 2 * $total_group_content + 2 * $total_group_comments;
+
       $roles = array_map(function (GroupRole $group_role) {
         return $group_role->label();
       }, $membership->getRoles());
@@ -254,6 +255,11 @@ class ProcessorUser extends DocumentProcessor {
           $total_groups += 1;
           break;
       }
+    }
+
+    foreach ($group_statistics as $key => $group_statistic) {
+      $most_active_total = $group_statistic + $total_groups + $total_events;
+      $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID_GROUP . $key, $fields, $most_active_total);
     }
 
     $most_active_total = 3 * $total_followers + 2 * $total_content + 2 * $total_comments + $total_groups + $total_events;

@@ -78,7 +78,7 @@
           {% if author %}
             <div class="ecl-attachment__action">
               {% if author.path %}
-                {{ 'Uploaded by'|t }}&nbsp;{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                Uploaded by&nbsp;{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
                   link: {
                     type: 'standalone',
                     label: author.name,
@@ -87,7 +87,7 @@
                   extra_classes: "ecl-attachment__author",
                 } only %}
               {% else %}
-                {{ 'Uploaded by'|t }}&nbsp;<span class="ecl-attachment__author">{{ author.name }}</span>
+                Uploaded by&nbsp;<span class="ecl-attachment__author">{{ author.name }}</span>
               {% endif %}
             </div>
           {% endif %}

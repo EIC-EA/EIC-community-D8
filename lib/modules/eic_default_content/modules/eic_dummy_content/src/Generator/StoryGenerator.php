@@ -3,7 +3,6 @@
 namespace Drupal\eic_dummy_content\Generator;
 
 use Drupal\eic_moderation\Constants\EICContentModeration;
-use Drupal\eic_default_content\Generator\CoreGenerator;
 use Drupal\node\Entity\Node;
 
 /**
@@ -11,12 +10,14 @@ use Drupal\node\Entity\Node;
  *
  * @package Drupal\eic_dummy_content\Generator
  */
-class StoryGenerator extends CoreGenerator {
+class StoryGenerator extends NewsGenerator {
 
   /**
    * {@inheritdoc}
    */
   public function load() {
+    $disclaimer = $this->getFragmentDisclaimer();
+
     for ($i = 0; $i < 5; $i++) {
       $values = [
         'title' => "Story #$i",
@@ -32,6 +33,7 @@ class StoryGenerator extends CoreGenerator {
         'field_image_caption' => $this->faker->sentence(10),
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
+        'field_disclaimer' => $disclaimer,
         'moderation_state' => EICContentModeration::STATE_PUBLISHED,
       ];
 

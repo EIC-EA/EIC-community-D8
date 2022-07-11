@@ -11,3 +11,8 @@ services:
     class: Drupal\eic_default_content\Generator\OverviewPageGenerator
     tags:
       - { name: data_fixtures, priority: 1 }
+  eic_default_content.fragment_generator:
+    class: Drupal\eic_default_content\Generator\FragmentGenerator
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: data_fixtures, priority: -1 }

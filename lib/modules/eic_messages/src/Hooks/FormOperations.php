@@ -140,6 +140,18 @@ class FormOperations implements ContainerInjectionInterface {
     if ($is_group_content && $form_state->get('form_display')
       ->getComponent('field_post_activity')) {
 
+      // Check if the current node is the default revision and is in draft
+      // state. If that's the case, it means there is no published or archived
+      // version and therefore the post activity checkbox should be checked by
+      // default.
+      if (
+        !$is_new_content &&
+        $entity->revision_default->value &&
+        $entity->get('moderation_state')->value === DefaultContentModerationStates::DRAFT_STATE
+      ) {
+        $is_new_content = TRUE;
+      }
+
       // We show the field_post_activity if the node has an Activity message
       // template.
       if (ActivityStreamMessageTemplates::hasTemplate($node)) {

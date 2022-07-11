@@ -3,5 +3,5 @@ text:
     value: 'A content has been updated'
     format: plain_text
   -
-    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] updated the&nbsp;<strong>[message:field_referenced_node:entity:type]</strong>&nbsp;in the [message:field_group_ref:entity:type] <a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p>You can view it by clicking <a href=\"[message:field_referenced_node:entity:url]\">here</a></p>\r\n\r\n<p><em>The European Innovation Council team</em></p>\r\n"
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] updated the&nbsp;<strong>[message:field_referenced_node:entity:type]</strong>&nbsp;in the [message:field_group_ref:entity:type] <a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p><u><a href=\"[message:field_referenced_node:entity:url]\">[message:field_referenced_node:entity:title]</a></u></p>\r\n\r\n<p>You can view it by clicking <a href=\"[message:field_referenced_node:entity:url]\">here</a></p>\r\n\r\n<p><em>The European Innovation Council team</em></p>\r\n"
     format: full_html

@@ -47,13 +47,18 @@ function eic_community_preprocess_field__field_related_downloads(array &$variabl
       break;
     }
 
+    $language = $media->language()->getName();
+    if ($media_language = _eic_community_get_entity_field_language($media)) {
+      $language = $media_language;
+    }
+
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
 
     $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
 
     $document = [
       'title' => $media->getName(),
-      'language' => $media->language()->getName(),
+      'language' => $language,
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'entity' => $media,
