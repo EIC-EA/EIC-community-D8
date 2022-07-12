@@ -65,9 +65,12 @@ class MyEventsSourceType extends SourceType {
         'label' => $this->t('State (1. ongoing, 2. future, 3. past)', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Ongoing/upcoming', [], ['context' => 'eic_search'])
       ],
+      'ss_global_created_date' => [
+        'label' => $this->t('Date created', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Date created', [], ['context' => 'eic_search']),
+      ],
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_group_label_string' => [
