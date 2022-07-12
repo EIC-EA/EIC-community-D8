@@ -287,6 +287,11 @@ class EntityOperations implements ContainerInjectionInterface {
             // Unsets book navigation since we already have that show in the
             // eic_groups_wiki_book_navigation block plugin.
             unset($build['book_navigation']);
+            // Adds group cache tags otherwise links won't get updated if the
+            // group changes moderation state.
+            if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
+              $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $group->getCacheTags());
+            }
             // Adds user group permissions cache.
             $build['#cache']['contexts'][] = 'user.group_permissions';
           }
@@ -309,8 +314,17 @@ class EntityOperations implements ContainerInjectionInterface {
               }
             }
           }
+
+          $build['#cache']['tags'] = !empty($build['#cache']['tags']) ? $build['#cache']['tags'] : [];
+          // Adds group cache tags otherwise links won't get updated if the
+          // group changes moderation state.
+          if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
+            $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $group->getCacheTags());
+          }
+
           // Adds user group permissions cache.
           $build['#cache']['contexts'][] = 'user.group_permissions';
+
         }
         break;
 
