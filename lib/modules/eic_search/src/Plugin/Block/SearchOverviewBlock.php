@@ -245,7 +245,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'owner' => -1,
       'admins' => [],
     ];
-    
+
     $post_content_actions = [];
     if ($current_group_route) {
       $account = \Drupal::currentUser();
@@ -315,18 +315,24 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
-        EICGroupsHelper::GROUP_OWNER_ROLE,
+        EICGroupsHelper::getGroupTypeRole(
+          $current_group_route->bundle(),
+          EICGroupsHelper::GROUP_TYPE_OWNER_ROLE
+        ),
         $user_group_roles
       ),
       'label_my_groups' => $source->getLabelFilterMyGroups(),
       'open_registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
       'is_group_admin' => array_key_exists(
-        EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
+        EICGroupsHelper::getGroupTypeRole(
+          $current_group_route->bundle(),
+          EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
+        ),
         $user_group_roles
       ),
       'is_power_user' => $account instanceof AccountInterface && UserHelper::isPowerUser(
-          $account
-        ),
+        $account
+      ),
       'source_bundle_id' => $source->getEntityBundle(),
       'default_sorting_option' => $default_sort,
       'filter_label' => [

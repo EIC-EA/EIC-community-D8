@@ -16,14 +16,10 @@ use Drupal\node\NodeInterface;
 class HighlightGroupContentAccessCheck implements AccessInterface {
 
   const SUPPORTED_PLUGIN_IDS = [
-    'group-group_node-document',
-    'group-group_node-discussion',
-    'group-group_node-video',
-    'group-group_node-gallery',
-    'event-group_node-document',
-    'event-group_node-discussion',
-    'event-group_node-video',
-    'event-group_node-gallery',
+    'group_node:document',
+    'group_node:discussion',
+    'group_node:video',
+    'group_node:gallery',
   ];
 
   /**
@@ -54,8 +50,23 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
         ->setCacheMaxAge(0);
     }
 
+    $supported_plugins = [];
+    foreach (self::SUPPORTED_PLUGIN_IDS as $plugin_id) {
+      if (!$group->getGroupType()->hasContentPlugin($plugin_id)) {
+        continue;
+      }
+      $supported_plugins[] = $group->getGroupType()
+        ->getContentPlugin($plugin_id)
+        ->getContentTypeConfigId();
+    }
+
+    if (empty($supported_plugins)) {
+      return AccessResult::forbidden('Content not supported')
+        ->setCacheMaxAge(0);
+    }
+
     $group_content = $group->getContentEntities(NULL, [
-      'type' => self::SUPPORTED_PLUGIN_IDS,
+      'type' => $supported_plugins,
       'entity_id' => $node->id(),
     ]);
 
