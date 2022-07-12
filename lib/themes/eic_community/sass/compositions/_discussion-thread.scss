@@ -56,7 +56,7 @@
 
   &__title {
     margin-bottom:  $ecl-spacing-2-xs;
-    margin-top: $ecl-spacing-xs;
+    margin-top: $ecl-spacing-s;
     @include ecl-responsive-font('label');
   }
 
