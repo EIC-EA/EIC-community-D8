@@ -324,7 +324,6 @@ class EntityOperations implements ContainerInjectionInterface {
 
           // Adds user group permissions cache.
           $build['#cache']['contexts'][] = 'user.group_permissions';
-
         }
         break;
 
