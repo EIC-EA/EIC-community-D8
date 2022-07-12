@@ -3,6 +3,7 @@
 namespace Drupal\eic_topics;
 
 use Drupal\Core\Url;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
@@ -175,6 +176,7 @@ class TopicsManager {
     }
 
     $route_name = '';
+    $route_parameters = [];
     $solr_topic_field_id = '';
 
     switch ($group_type) {
@@ -189,8 +191,9 @@ class TopicsManager {
         break;
 
       case 'organisation':
-        // @todo Set the correct route name once available.
-        $route_name = '';
+        $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::ORGANISATIONS)->getUrl();
+        $route_name = $url->getRouteName();
+        $route_parameters = $url->getRouteParameters();
         $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
         break;
     }
@@ -209,7 +212,7 @@ class TopicsManager {
 
     return Url::fromRoute(
       $route_name,
-      [],
+      $route_parameters,
       $query_options
     )->toString();
   }
