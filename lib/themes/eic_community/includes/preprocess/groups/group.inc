@@ -75,7 +75,10 @@ function eic_community_preprocess_group__group(array &$variables) {
       }
 
       // Get group visibility.
-      if ($group_visibility_label = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group)) {
+      if (
+        \Drupal::currentUser()->isAuthenticated() &&
+        $group_visibility_label = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group)
+      ) {
         $item['type']['label'] = $group_visibility_label;
         $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
       }
@@ -437,10 +440,6 @@ function _preprocess_group_tags(GroupInterface $group) {
  *   The group moderation state tag.
  */
 function _eic_groups_get_moderation_state_tag(GroupInterface $group) {
-  if (\Drupal::currentUser()->isAnonymous()) {
-    return [];
-  }
-
   $moderation_state = $group->get('moderation_state')->value;
   $tag = [];
   if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
