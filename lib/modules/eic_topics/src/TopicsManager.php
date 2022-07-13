@@ -4,8 +4,11 @@ namespace Drupal\eic_topics;
 
 use Drupal\Core\Url;
 use Drupal\eic_overviews\GlobalOverviewPages;
-use Drupal\eic_search\Search\Sources\NewsStorySourceType;
-use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\Search\Sources\GlobalEventSourceType;
+use Drupal\eic_search\Search\Sources\GlobalSourceType;
+use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\OrganisationSourceType;
+use Drupal\eic_search\Search\Sources\UserGallerySourceType;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_search\Service\SolrSearchManager;
 use Drupal\eic_topics\Constants\Topics;
@@ -57,23 +60,23 @@ class TopicsManager {
 
     return [
       'stories' => [
-        'stat' => $this->getStatBySolr($tid, NewsStorySourceType::class),
+        'stat' => $this->getStatBySolr($tid, GlobalSourceType::class, 'story'),
         'url' => $this->getNodeRedirectUrl($term, 'story'),
       ],
       'wiki_page' => [
-        'stat' => $this->getStatByEntityType($tid, 'node', 'wiki_page'),
+        'stat' => $this->getStatBySolr($tid, GlobalSourceType::class, 'wiki_page'),
         'url' => $this->getNodeRedirectUrl($term, 'wiki_page'),
       ],
       'discussion' => [
-        'stat' => $this->getStatByEntityType($tid, 'node', 'discussion'),
+        'stat' => $this->getStatBySolr($tid, GlobalSourceType::class, 'discussion'),
         'url' => $this->getNodeRedirectUrl($term, 'discussion'),
       ],
       'news' => [
-        'stat' => $this->getStatByEntityType($tid, 'node', 'news'),
+        'stat' => $this->getStatBySolr($tid, GlobalSourceType::class, 'news'),
         'url' => $this->getNodeRedirectUrl($term, 'news'),
       ],
       'group' => [
-        'stat' => $this->getStatByEntityType($tid, 'group', 'group'),
+        'stat' => $this->getStatBySolr($tid, GroupSourceType::class),
         'url' => $this->getGroupRedirectUrl($term, 'group'),
       ],
       /** @TODO To define how media will be displayed in global search */
@@ -82,15 +85,15 @@ class TopicsManager {
         'url' => '',
       ],
       'event' => [
-        'stat' => $this->getStatByEntityType($tid, 'group', 'event'),
+        'stat' => $this->getStatBySolr($tid, GlobalEventSourceType::class),
         'url' => $this->getGroupRedirectUrl($term, 'event'),
       ],
       'expert' => [
-        'stat' => count($this->userHelper->getUsersByExpertise($term)),
+        'stat' => $this->getStatBySolr($tid, UserGallerySourceType::class),
         'url' => $this->getUserRedirectUrl($term),
       ],
       'organisation' => [
-        'stat' => $this->getStatByEntityType($tid, 'group', 'organisation'),
+        'stat' => $this->getStatBySolr($tid, OrganisationSourceType::class),
         'url' => $this->getGroupRedirectUrl($term, 'organisation'),
       ],
     ];
@@ -120,17 +123,22 @@ class TopicsManager {
   /**
    * @param int $tid
    * @param string $source_class
+   * @param string|null $content_type
    *
+   * @return int|mixed
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\search_api\SearchApiException
    * @throws \Drupal\search_api_solr\SearchApiSolrException
    */
-  private function getStatBySolr(int $tid, string $source_class) {
+  private function getStatBySolr(int $tid, string $source_class, ?string $content_type = NULL) {
     $solr_query = $this->searchManager->init($source_class);
     $solr_query->buildPrefilterTopic($tid);
-    $results = $this->searchManager->search();
+    if ($content_type) {
+      $solr_query->buildSortFacets([Topics::CONTENT_TYPE_ID_FIELD_SOLR => [$content_type => TRUE]], NULL);
+    }
+    $results = $solr_query->search();
     $results = json_decode($results, TRUE);
     return !empty($results) ? $results['response']['numFound'] : 0;
   }

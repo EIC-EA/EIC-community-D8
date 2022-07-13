@@ -139,4 +139,11 @@ class GlobalEventSourceType extends SourceType {
     return 'event-' . parent::getUniqueId();
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_group_field_vocab_topics'];
+  }
+
 }
