@@ -24,6 +24,7 @@ permissions:
   - 'access members overview'
   - 'access news overview'
   - 'access wiki overview'
+  - 'administer members'
   - 'delete any invitation'
   - 'delete own invitations'
   - 'edit all comments'
