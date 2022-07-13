@@ -4,7 +4,10 @@ namespace Drupal\eic_topics;
 
 use Drupal\Core\Url;
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_search\Search\Sources\NewsStorySourceType;
+use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
+use Drupal\eic_search\Service\SolrSearchManager;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\taxonomy\Entity\Term;
@@ -27,13 +30,21 @@ class TopicsManager {
   protected $userHelper;
 
   /**
+   * @var \Drupal\eic_search\Service\SolrSearchManager
+   */
+  private $searchManager;
+
+  /**
    * Constructs a new UserHelper.
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
    *   The EIC user helper service.
+   * @param SolrSearchManager $solr_search_manager
+   *   The solr search manager service.
    */
-  public function __construct(UserHelper $user_helper) {
+  public function __construct(UserHelper $user_helper, SolrSearchManager $solr_search_manager) {
     $this->userHelper = $user_helper;
+    $this->searchManager = $solr_search_manager;
   }
 
   /**
@@ -46,7 +57,7 @@ class TopicsManager {
 
     return [
       'stories' => [
-        'stat' => $this->getStatByEntityType($tid, 'node', 'story'),
+        'stat' => $this->getStatBySolr($tid, NewsStorySourceType::class),
         'url' => $this->getNodeRedirectUrl($term, 'story'),
       ],
       'wiki_page' => [
@@ -104,6 +115,24 @@ class TopicsManager {
       ->condition('status', 1);
 
     return $query->count()->execute();
+  }
+
+  /**
+   * @param int $tid
+   * @param string $source_class
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\search_api\SearchApiException
+   * @throws \Drupal\search_api_solr\SearchApiSolrException
+   */
+  private function getStatBySolr(int $tid, string $source_class) {
+    $solr_query = $this->searchManager->init($source_class);
+    $solr_query->buildPrefilterTopic($tid);
+    $results = $this->searchManager->search();
+    $results = json_decode($results, TRUE);
+    return !empty($results) ? $results['response']['numFound'] : 0;
   }
 
   /**
