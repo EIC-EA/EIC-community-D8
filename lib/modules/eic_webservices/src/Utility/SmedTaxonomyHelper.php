@@ -20,11 +20,15 @@ class SmedTaxonomyHelper {
    * @var string[]
    */
   protected const SMED_VOCABULARIES = [
+    'geo',
     'global_event_type',
-    'target_markets',
     'job_titles',
     'languages',
+    'organisation_sizes',
+    'services_and_products',
+    'target_markets',
     'topics',
+    'user_types',
   ];
 
   /**
