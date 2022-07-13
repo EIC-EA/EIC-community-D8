@@ -24,6 +24,7 @@ permissions:
   - 'access latest activity stream'
   - 'access members management'
   - 'access members overview'
+  - 'access news overview'
   - 'access wiki overview'
   - 'administer members'
   - 'administer membership requests'

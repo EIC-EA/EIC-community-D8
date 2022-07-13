@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use Drupal\redirect\Entity\Redirect;
 
 /**
  * Drupal 7 path redirect source from database.
@@ -82,6 +83,18 @@ class UrlAliasToPathRedirect extends PathRedirect {
         'source_with_group_prefix',
         $group_prefix . '/' . $row->getSourceProperty('source')
       );
+    }
+
+    // Make sure we don't have duplicate entries, otherwise this would cause
+    // runtime exceptions.
+    $query = $row->getSourceProperty('source_options') ?? [];
+    // We assume language is always 'en'.
+    $hash = Redirect::generateHash($row->getSourceProperty('source'), $query, 'en');
+    $redirects = $this->entityTypeManager
+      ->getStorage('redirect')
+      ->loadByProperties(['hash' => $hash]);
+    if (!empty($redirects)) {
+      return FALSE;
     }
 
     return $result;
