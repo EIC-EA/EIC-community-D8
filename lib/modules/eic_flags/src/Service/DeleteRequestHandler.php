@@ -6,8 +6,11 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -86,7 +89,21 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity
   ) {
     if ($this->moderationInformation->isModeratedEntity($content_entity)) {
-      $content_entity->set('moderation_state', 'archived');
+      $workflow = $this->moderationInformation->getWorkflowForEntity($content_entity);
+
+      switch ($workflow->id()) {
+        case EICContentModeration::MACHINE_NAME:
+          $content_entity->set('moderation_state', EICContentModeration::STATE_UNPUBLISHED);
+          break;
+
+        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
+          $content_entity->set('moderation_state', GroupsModerationHelper::GROUP_ARCHIVED_STATE);
+          break;
+
+        default:
+          $content_entity->set('moderation_state', DefaultContentModerationStates::ARCHIVED_STATE);
+          break;
+      }
     }
     else {
       $content_entity->set('status', FALSE);

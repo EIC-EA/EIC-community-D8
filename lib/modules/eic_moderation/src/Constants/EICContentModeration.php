@@ -43,6 +43,13 @@ final class EICContentModeration {
   const STATE_PUBLISHED = 'published';
 
   /**
+   * The 'Unpublished' state machine name.
+   *
+   * @var string
+   */
+  const STATE_UNPUBLISHED = 'unpublished';
+
+  /**
    * The 'Content ready for review' message template machine name.
    *
    * @var string
