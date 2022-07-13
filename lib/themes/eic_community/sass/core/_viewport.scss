@@ -41,14 +41,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
+    
     &__content {
-      max-width: 786px;
-      width: 50%;
+      box-sizing: border-box;
+      width: Max(50%, 880px);
       background-color: #fff;
       box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.2);
       padding: 65px 95px;
       position: relative;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
     }
 
     & form {
