@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
+<<<<<<< HEAD:lib/modules/eic_moderation/config/install/field.storage.message.field_message.yml
     - message
 id: message.field_message
 field_name: field_message
@@ -9,6 +10,14 @@ entity_type: message
 type: string_long
 settings:
   case_sensitive: false
+=======
+    - node
+id: node.field_email
+field_name: field_email
+entity_type: node
+type: email
+settings: {  }
+>>>>>>> master:lib/modules/eic_dummy_content_type/config/install/field.storage.node.field_email.yml
 module: core
 locked: false
 cardinality: 1
