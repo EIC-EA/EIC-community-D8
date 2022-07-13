@@ -15,6 +15,8 @@ source:
   node_type: organisation
   track_changes: true
   smed_taxonomy_fields:
+    - c4m_offering
+    - c4m_target_markets
     - c4m_vocab_geo
     - c4m_vocab_geo_selling
     - c4m_vocab_topic
@@ -100,10 +102,33 @@ process:
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
   field_email: c4m_email
-  field_organisation_link: c4m_link
-  #field_vocab_services_products:
+  field_organisation_link:
+    - plugin: field_link
+      uri_scheme: 'https://'
+      source: c4m_link
+  field_vocab_services_products:
+    - plugin: sub_process
+      source: c4m_offering
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_nace_codes_lvl1
+              - smed_nace_codes_lvl2
   field_smed_id: c4m_organisation_dashboard_id
-  #field_vocab_target_markets:
+  field_vocab_target_markets:
+    - plugin: sub_process
+      source: c4m_target_markets
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_target_markets_lvl1
+              - smed_target_markets_lvl2
   field_vocab_geo_selling:
     - plugin: sub_process
       source: c4m_vocab_geo_selling
@@ -199,4 +224,6 @@ migration_dependencies:
     - upgrade_d7_taxonomy_term_c4m_vocab_organisation_types
     - smed_regions_countries_lvl1
     - smed_regions_countries_lvl2
+    - smed_nace_codes_lvl1
+    - smed_nace_codes_lvl2
   optional: { }

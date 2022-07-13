@@ -120,13 +120,13 @@ class EicWsHelper {
    *
    * @param string $type
    *   The type of link to get.
-   * @param int|null $smed_id
+   * @param string|null $smed_id
    *   The SMED ID of the entity if applicable.
    *
    * @return string
    *   The URL to the SMED.
    */
-  public function getSmedLink(string $type, int $smed_id = NULL) {
+  public function getSmedLink(string $type, string $smed_id = NULL) {
     $url = FALSE;
 
     $smed_base_url = $this->configFactory->get('eic_webservices.settings')->get('smed_url');

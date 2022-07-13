@@ -214,7 +214,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return bool
    *   TRUE if user is a group admin.
    */
-  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
+  public static function userIsGroupAdmin(
+    GroupInterface $group,
+    AccountInterface $account,
+    GroupMembership $membership = NULL
+  ) {
     // If user is power user, return TRUE.
     if (UserHelper::isPowerUser($account)) {
       return TRUE;
@@ -503,22 +507,28 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     switch ($key) {
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t("This @group-type is visible to everyone visiting the @group-type. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.", ['@group-type' => $group_type]);
+        return $this->t("This @group-type is visible to everyone visiting the @group-type. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.",
+          ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t("This @group-type is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.", ['@group-type' => $group_type]);
+        return $this->t("This @group-type is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.",
+          ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('This @group-type is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this @group-type because the organisation you work for is allowed to see this content or the @group-type owners and administrators have chosen to specifically grant you access to this @group-type. If you want to participate, please become a group member.', ['@group-type' => $group_type]);
+        return $this->t('This @group-type is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this @group-type because the organisation you work for is allowed to see this content or the @group-type owners and administrators have chosen to specifically grant you access to this @group-type. If you want to participate, please become a group member.',
+          ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('A private @group-type is only visible to people who received an invitation via email and accepted it. No one else can see this @group-type.', ['@group-type' => $group_type]);
+        return $this->t('A private @group-type is only visible to people who received an invitation via email and accepted it. No one else can see this @group-type.',
+          ['@group-type' => $group_type]);
 
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('This means that EIC Community members can join this @group-type immediately by clicking "join group".', ['@group-type' => $group_type]);
+        return $this->t('This means that EIC Community members can join this @group-type immediately by clicking "join group".',
+          ['@group-type' => $group_type]);
 
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('This means that EIC Community members can request to join this @group-type. This request needs to be validated by the @group-type owner or administrator.', ['@group-type' => $group_type]);
+        return $this->t('This means that EIC Community members can request to join this @group-type. This request needs to be validated by the @group-type owner or administrator.',
+          ['@group-type' => $group_type]);
 
       default:
         return '';
@@ -676,7 +686,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return bool
    *   TRUE if plugin is enabled, FALSE otherwise.
    */
-  public function isGroupTypePluginEnabled(GroupTypeInterface $group_type, string $plugin_type, string $bundle = ''):bool {
+  public function isGroupTypePluginEnabled(
+    GroupTypeInterface $group_type,
+    string $plugin_type,
+    string $bundle = ''
+  ): bool {
     $enabled_plugins = $this->getGroupTypeEnabledPlugins($group_type);
     $plugin_id = $plugin_type;
     if (!empty($bundle)) {
@@ -782,9 +796,9 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   public function hasContent(GroupInterface $group) {
     $query = $this->database->select('group_content_field_data', 'gp');
     $query->condition('gp.type', [
-      'group-group_node-discussion',
-      'group-group_node-document',
-      'group-group_node-wiki_page',
+      $group->getGroupType()->getContentPlugin('group_node:discussion')->getContentTypeConfigId(),
+      $group->getGroupType()->getContentPlugin('group_node:document')->getContentTypeConfigId(),
+      $group->getGroupType()->getContentPlugin('group_node:wiki_page')->getContentTypeConfigId(),
     ], 'IN');
     $query->condition('gp.gid', $group->id());
     $query->fields('gp', ['id']);
@@ -847,7 +861,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         $plugin = isset($group_custom_restricted_visibility_plugins[$pluginId]) ? $group_custom_restricted_visibility_plugins[$pluginId] : NULL;
 
         if ($plugin instanceof CustomRestrictedVisibilityInterface) {
-          $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(), $group_visibility_settings['settings']);
+          $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(),
+            $group_visibility_settings['settings']);
           if (!$pluginAccess->isNeutral()) {
             $is_group_page = $group;
             break;
@@ -988,18 +1003,33 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    */
   public static function formatAddress($address) {
     $countries_map = CountryManager::getStandardList();
-    $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
+    $location_values = [];
+    $location_values[] = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
       . ' ' .
-      $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)] . '<br />';
-    $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
+      $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)];
+    $location_values[] = $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
       . ' ' .
-      $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
-    $location_formatted .= array_key_exists(
+      $address[FieldHelper::getPropertyName(AddressField::LOCALITY)];
+    $location_values[] = array_key_exists(
       $address['country_code'],
       $countries_map
     ) ?
       $countries_map[$address['country_code']] :
       '';
+
+    $location_formatted = '';
+    foreach ($location_values as $key => $value) {
+      $location_formatted .= $value;
+      if (
+        isset($location_values[$key + 1]) &&
+        !empty(trim($location_formatted)) &&
+        !empty(trim($location_values[$key + 1]))
+      ) {
+        if (!empty(trim($location_values[$key + 1]))) {
+          $location_formatted .= '<br>';
+        }
+      }
+    }
 
     return $location_formatted;
   }
@@ -1080,10 +1110,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   public function getUserOrganisations(AccountInterface $account) {
     /** @var \Drupal\group\Entity\GroupContentInterface[] $user_memberships */
     $user_memberships = $this->entityTypeManager->getStorage('group_content')
-    ->loadByProperties([
-      'type' => "organisation-group_membership",
-      'entity_id' => $account->id(),
-    ]);
+      ->loadByProperties([
+        'type' => "organisation-group_membership",
+        'entity_id' => $account->id(),
+      ]);
 
     // The user doesn't belong to any organisation, so we return empty results.
     if (empty($user_memberships)) {

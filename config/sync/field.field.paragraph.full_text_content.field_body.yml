@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_body
     - paragraphs.paragraphs_type.full_text_content
+  module:
+    - text
 id: paragraph.full_text_content.field_body
 field_name: field_body
 entity_type: paragraph
@@ -16,4 +18,4 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: text_long

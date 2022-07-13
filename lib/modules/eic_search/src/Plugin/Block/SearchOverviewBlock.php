@@ -7,21 +7,25 @@ use Drupal\Core\Ajax\CssCommand;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -187,6 +191,16 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function build() {
+    // Initialize cache.
+    $cache = [
+      'contexts' => [
+        'url.path',
+        'url.query_args',
+        'session',
+      ],
+      'tags' => [],
+    ];
+
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
@@ -231,7 +245,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'owner' => -1,
       'admins' => [],
     ];
-
+    
+    $post_content_actions = [];
     if ($current_group_route) {
       $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
@@ -252,6 +267,38 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           return $admin->getUser()->id();
         }, $admins),
       ];
+
+      if ($source instanceof LibrarySourceType) {
+        // User can post content in the library if the group is in draft or
+        // published state.
+        switch ($current_group_route->get('moderation_state')->value) {
+          case GroupsModerationHelper::GROUP_DRAFT_STATE:
+          case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
+            // Adds group content create actions for each node type that is
+            // part of the group library feature.
+            $source->getPrefilteredContentType();
+            foreach ($source->getPrefilteredContentType() as $bundle) {
+              $create_url = Url::fromRoute(
+                'entity.group_content.create_form',
+                [
+                  'group' => $current_group_route->id(),
+                  'plugin_id' => "group_node:$bundle",
+                ]
+              );
+              if ($create_url->access($account)) {
+                $post_content_actions[] = [
+                  'label' => $this->t('Add @type', ['@type' => $bundle]),
+                  'path' => $create_url->toString(),
+                ];
+              }
+            }
+            break;
+
+        }
+      }
+
+      // Adds group cache tags.
+      $cache['tags'] = Cache::mergeTags($cache['tags'], $current_group_route->getCacheTags());
     }
     $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
       'eic_statistics.get_node_statistics'
@@ -294,10 +341,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     ];
 
     $route_name = $this->routeMatch->getRouteName();
+    $user_from_route = $this->routeMatch->getParameter('user');
 
     return $build + [
         '#theme' => 'search_overview_block',
-        '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+        '#cache' => $cache,
         '#manager_roles' => $group_admins,
         '#facets' => $facets,
         '#sorts' => $sorts,
@@ -324,6 +372,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           EICGroupsHelper::GROUP_OWNER_ROLE,
           $user_group_roles
         ),
+        '#user_id_from_route' => $user_from_route instanceof UserInterface ? $user_from_route->id() : -1,
         '#enable_registration_filter' =>
           $source instanceof SourceTypeInterface &&
           !empty($source->getRegistrationDateIntervalField()),
@@ -339,6 +388,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['group' => $current_group_route->id()]
           )->toString() :
           '',
+        '#post_content_actions' => $post_content_actions,
         '#translations' => [
           'public' => $this->t('Public', [], ['context' => 'eic_group']),
           'private' => $this->t('Private', [], ['context' => 'eic_group']),

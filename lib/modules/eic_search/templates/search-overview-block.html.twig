@@ -1,6 +1,7 @@
 {{ attach_library('eic_community/react-block-overview-search') }}
 <div
   id="group-overview"
+  class="group-overview"
   data-facets="{{ facets | json_encode }}"
   data-sorts="{{ sorts | json_encode }}"
   data-page-options="{{ page_options }}"
@@ -17,6 +18,7 @@
   data-current-group="{{ currentGroup }}"
   data-current-group-url="{{ currentGroupUrl }}"
   data-is-group-owner="{{ isGroupOwner }}"
+  data-user-id-from-route="{{ user_id_from_route }}"
   data-enable-facet-my-groups="{{ enable_facet_my_groups }}"
   data-enable-facet-interests="{{ enable_facet_interests }}"
   data-allow-pagination="{{ allow_pagination }}"
@@ -28,4 +30,5 @@
   data-invite-user-url="{{ invite_user_url }}"
   data-group-admins="{{ manager_roles | json_encode }}"
   data-enable-registration-filter="{{ enable_registration_filter }}"
+  data-post-content-actions="{{ post_content_actions | json_encode }}"
 ></div>

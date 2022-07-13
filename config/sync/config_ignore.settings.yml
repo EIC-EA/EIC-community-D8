@@ -30,3 +30,5 @@ ignored_config_entities:
   - 's3fs.settings:region'
   - 's3fs.settings:root_folder'
   - 'cas.settings:server.*'
+  - 'eic_webservices.settings:api_key'
+  - 'eic_webservices.settings:webservice_user_account'

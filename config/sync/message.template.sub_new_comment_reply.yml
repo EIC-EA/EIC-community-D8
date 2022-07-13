@@ -15,7 +15,7 @@ label: 'SUBSCRIPTION :: MT16 :: New comment (reply) after comment'
 description: ''
 text:
   -
-    value: 'MT16 :: New comment (reply) after comment'
+    value: 'Someone replied to your comment'
     format: plain_text
   -
     value: "<p>[message:field_event_executing_user:entity:display-name] replied to your comment on content <a href=\"[message:field_referenced_comment:entity:entity:url]\"><u>[message:field_referenced_comment:entity:entity:title]</u></a></p>\r\n"

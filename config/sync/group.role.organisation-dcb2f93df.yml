@@ -15,16 +15,7 @@ audience: outsider
 group_type: organisation
 permissions_ui: false
 permissions:
-  - 'access content overview'
-  - 'access discussions overview'
-  - 'access events overview'
-  - 'access files overview'
   - 'access group content menu overview'
-  - 'access group search overview'
-  - 'access latest activity stream'
-  - 'access members overview'
-  - 'access news overview'
-  - 'access wiki overview'
   - 'join group'
   - 'share content between groups'
   - 'view comments'

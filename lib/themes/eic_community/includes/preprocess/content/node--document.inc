@@ -10,6 +10,7 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\file\FileInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
@@ -90,6 +91,13 @@ function eic_community_preprocess_node__document(array &$variables) {
       }
 
       $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+      $mime_type = _eic_community_get_file_type_icon_name(
+        pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+      );
+      $supported_icons = ['doc', 'dwg', 'html', 'ppt', 'txt', 'xls', 'zip', 'pdf'];
+      if (!in_array($mime_type, $supported_icons)) {
+        $mime_type = 'doc';
+      }
 
       $document = [
         'language' => $language,
@@ -98,10 +106,7 @@ function eic_community_preprocess_node__document(array &$variables) {
         'highlight' => FALSE,
         'icon' => [
           'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
-          'name' => in_array($file_type,
-            ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
-              pathinfo($file->getFilename(), PATHINFO_EXTENSION)
-            ),
+          'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . $mime_type,
         ],
       ];
 
@@ -115,7 +120,11 @@ function eic_community_preprocess_node__document(array &$variables) {
       $files_list = [];
 
       foreach ($files as $file) {
-        $download = File::load($file->field_media_file->getValue()[0]['target_id']);
+        $download = '';
+        if ($media_file= $file->field_media_file) {
+          $download = File::load($media_file->getValue()[0]['target_id']);
+        }
+
         $download_url = MediaHelper::formatMediaDownloadLink($file)->toString();
         $files_list[] = [
           'name' => $file->getName(),
@@ -133,11 +142,13 @@ function eic_community_preprocess_node__document(array &$variables) {
             ],
             [
               'hide_label' => TRUE,
-              'value' => format_size($download->get('filesize')->getString()),
+              'value' => format_size(
+                $download instanceof FileInterface ? $download->get('filesize')->getString() : '0'
+              ),
             ],
           ],
           'mime_type' => _eic_community_get_file_type_icon_name(
-            pathinfo($download->getFilename(), PATHINFO_EXTENSION)
+            pathinfo($download instanceof FileInterface ? $download->getFilename() : '', PATHINFO_EXTENSION)
           ),
           'path' => $download_url,
         ];
@@ -166,8 +177,14 @@ function eic_community_preprocess_node__document(array &$variables) {
         ];
       }
 
+      // Show recommend content flag in the 2nd place.
       if (isset($variables['elements']['recommend_content'])) {
-        $variables['editorial_actions']['items'][]['content'] = $variables['elements']['recommend_content']['content'];
+        array_splice(
+          $variables['editorial_actions']['items'],
+          2,
+          0,
+          [['content' => $variables['elements']['recommend_content']['content']]]
+        );
       }
 
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
@@ -179,7 +196,10 @@ function eic_community_preprocess_node__document(array &$variables) {
 
         $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
+        if (in_array($group->bundle(), [
+            'event',
+            'group',
+          ]) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
           $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
         }

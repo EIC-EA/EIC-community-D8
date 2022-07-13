@@ -38,5 +38,10 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   search_api_excerpt: true

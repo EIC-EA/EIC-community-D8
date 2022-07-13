@@ -4,6 +4,7 @@ namespace Drupal\eic_share_content\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelperInterface;
@@ -19,8 +20,10 @@ use Drupal\group\GroupMembershipLoader;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\group_flex\GroupFlexGroup;
 use Drupal\message\Entity\Message;
+use Drupal\message_subscribe\SubscribersInterface;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
+use Drupal\user\Entity\User;
 
 /**
  * Class that manages functions for the sharing feature.
@@ -81,20 +84,24 @@ class ShareManager {
   private $messageBus;
 
   /**
-   * Constructs a new ShareManager object.
-   *
+   * @var \Drupal\message_subscribe\SubscribersInterface
+   */
+  private $messageSubscribersService;
+
+  /**
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  private $currentUser;
+
+  /**
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $groups_helper
-   *   The EIC Groups helper.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
-   *   The group content enabler manager.
    * @param \Drupal\group\GroupMembershipLoader $group_membership_loader
-   *   The group membership loader.
    * @param \Drupal\group_flex\GroupFlexGroup $group_flex_group
-   *   The group flex group service.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
-   *   The EIC message bus.
+   * @param \Drupal\message_subscribe\SubscribersInterface $message_subscribers_service
+   * @param \Drupal\Core\Session\AccountProxyInterface $account
    */
   public function __construct(
     EICGroupsHelperInterface $groups_helper,
@@ -102,7 +109,9 @@ class ShareManager {
     GroupContentEnablerManagerInterface $plugin_manager,
     GroupMembershipLoader $group_membership_loader,
     GroupFlexGroup $group_flex_group,
-    MessageBusInterface $message_bus
+    MessageBusInterface $message_bus,
+    SubscribersInterface $message_subscribers_service,
+    AccountProxyInterface $account
   ) {
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
@@ -110,6 +119,8 @@ class ShareManager {
     $this->groupMembershipLoader = $group_membership_loader;
     $this->groupFlexGroup = $group_flex_group;
     $this->messageBus = $message_bus;
+    $this->messageSubscribersService = $message_subscribers_service;
+    $this->currentUser = $account;
   }
 
   /**
@@ -149,7 +160,6 @@ class ShareManager {
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   public function share(
@@ -223,10 +233,20 @@ class ShareManager {
    */
   public function getSharedEntities(NodeInterface $node, GroupInterface $target_group = NULL): array {
     $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
-    $query->condition('type', '%-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID, 'LIKE');
     $query->condition('entity_id', $node->id());
     if ($target_group) {
+      $query->condition('type', $this->defineGroupContentType($target_group), 'LIKE');
       $query->condition('gid', $target_group->id());
+    }
+    else {
+      // Filter by all group types.
+      $group_types = $this->entityTypeManager->getStorage('group_type')->loadMultiple();
+      $group_type_conditions = [];
+      foreach ($group_types as $group_type) {
+        $group_type_conditions[] = $group_type->getContentPlugin(self::GROUP_CONTENT_SHARED_PLUGIN_ID)
+          ->getContentTypeConfigId();
+      }
+      $query->condition('type', $group_type_conditions, 'IN');
     }
     return $this->entityTypeManager->getStorage('group_content')->loadMultiple($query->execute());
   }
@@ -319,6 +339,10 @@ class ShareManager {
     GroupInterface $target_group,
     array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
   ) {
+    // Allow only published content.
+    if (!$source_node->isPublished()) {
+      return FALSE;
+    }
     // Allow only enabled content types.
     if (!$this->groupsHelper->isGroupTypePluginEnabled($target_group->getGroupType(), 'group_node',
       $source_node->bundle())) {
@@ -363,15 +387,17 @@ class ShareManager {
       ->getContentTypeConfigId();
   }
 
-
   /**
-   * @param \Drupal\group\Entity\GroupInterface $source_group
-   * @param \Drupal\group\Entity\GroupInterface $target_group
-   * @param \Drupal\node\NodeInterface $node
-   * @param string|null $message
+   * Creates activity stream message.
    *
-   * @return void
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param \Drupal\node\NodeInterface $node
+   *   The node that was shared.
+   * @param string|null $message
+   *   The message attached to the shared content.
    */
   private function createActivityStreamMessage(
     GroupInterface $source_group,
@@ -401,13 +427,16 @@ class ShareManager {
   }
 
   /**
-   * @param \Drupal\group\Entity\GroupInterface $source_group
-   * @param \Drupal\group\Entity\GroupInterface $target_group
-   * @param \Drupal\node\NodeInterface $node
-   * @param string|null $message
+   * Creates subscription message.
    *
-   * @return void
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param \Drupal\node\NodeInterface $node
+   *   The node that was shared.
+   * @param string|null $message
+   *   The message attached to the shared content.
    */
   private function createSubscription(
     GroupInterface $source_group,
@@ -415,15 +444,25 @@ class ShareManager {
     NodeInterface $node,
     ?string $message
   ) {
+    $current_user = User::load($this->currentUser->id());
     $subscription = Message::create([
       'template' => MessageSubscriptionTypes::GROUP_CONTENT_SHARED,
       'field_group_ref' => $target_group,
       'field_source_group' => $source_group,
       'field_referenced_node' => $node,
-      'field_event_executing_user' => $node->getOwnerId(),
+      'field_event_executing_user' => $current_user,
       'field_share_message' => $message,
     ]);
+
     $subscription->save();
+
+    $context = [
+      'group' => [
+        $target_group->id(),
+      ],
+    ];
+
+    $this->messageSubscribersService->sendMessage($node, $subscription, [], [], $context);
   }
 
 }

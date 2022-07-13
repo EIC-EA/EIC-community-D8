@@ -33,6 +33,7 @@ function eic_community_preprocess_group__organisation(&$variables) {
       _eic_community_render_organisation_detail_page($variables, $group);
       break;
 
+    case 'mail_teaser':
     case 'teaser':
       _eic_community_render_organisation_teaser($variables, $group);
       break;
@@ -87,8 +88,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
             'type' => 'custom',
           ],
           'link' => [
-            'label' => $link['title'],
-            'path' => $link ? Url::fromUri($link['uri'])->toString() : '',
+            'label' => $link['uri'],
+            'path' => $link['uri'],
           ],
         ],
       ],
@@ -451,9 +452,11 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   $file = $media_picture ? File::load(
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
-  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
-    file_create_url($file->get('uri')->value)
+  $image_item = $file ? ImageValueObject::fromStyledImageItem(
+    $media_picture[0]->get('oe_media_image')->first(),
+    'crop_80x80'
   ) : NULL;
+  $file_url = $image_item ? $image_item->getSource() : NULL;
   $last_activity_ago = eic_community_get_teaser_time_display(
     $user->get('changed')->value
   );
@@ -541,11 +544,15 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
 }
 
 /**
+ * Generates orverview page url with query filter.
+ *
  * @param string $filter
+ *   The filter name.
  * @param string $value
+ *   The filter value.
  *
  * @return string
- * @throws \Drupal\Core\Entity\EntityMalformedException
+ *   The overview page url.
  */
 function _generate_overview_prefilter_url(string $filter, string $value): string {
   $filters = [

@@ -73,3 +73,9 @@ services:
     decoration_priority: 1
     public: true
     arguments: ['@eic_groups.pathauto.generator.decorator.inner', '@current_route_match', '@config.factory', '@module_handler', '@token', '@pathauto.alias_cleaner', '@pathauto.alias_storage_helper', '@pathauto.alias_uniquifier', '@pathauto.verbose_messenger', '@string_translation', '@token.entity_mapper', '@entity_type.manager', '@plugin.manager.alias_type']
+  eic_groups.ginvite_event_subscriber.decorator:
+    class: Drupal\eic_groups\EventSubscriber\GinviteSubscriber
+    decorates: ginvite_event_subscriber
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_groups.ginvite_event_subscriber.decorator.inner', '@ginvite.invitation_loader', '@current_user', '@messenger', '@logger.factory']

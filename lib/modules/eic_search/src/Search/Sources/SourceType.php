@@ -184,6 +184,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function prefilterByUserFromRoute(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getLabelFilterMyGroups(): string {
     return $this->t('My groups & content only', [], ['context' => 'eic_search']);
   }

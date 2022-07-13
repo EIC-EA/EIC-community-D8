@@ -149,15 +149,11 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
           '#group' => $group,
           '#edit_link' => $group->toUrl('edit-form')->toString(),
           '#delete_link' => $group->toUrl('delete-form')->toString(),
-          '#invite_link' => Url::fromRoute('entity.group_content.add_form', [
+          '#invite_link' => Url::fromRoute('ginvite.invitation.bulk', [
             'group' => $group->id(),
-            'plugin_id' => 'group_invitation',
           ])->toString(),
           '#has_content' => $has_group_content,
-          '#has_member' => !empty($group->getMembers([
-            EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
-            EICGroupsHelper::GROUP_MEMBER_ROLE,
-          ])),
+          '#has_member' => count($group->getMembers()) > 1,
           '#actions' => $content_operations,
           '#help_link' => Url::fromRoute('contact.site_page')->toString(),
         ];

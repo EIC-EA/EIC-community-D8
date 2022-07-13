@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_document_media
     - media.type.eic_document
+    - media.type.video
     - node.type.news
 id: node.news.field_document_media
 field_name: field_document_media
@@ -21,8 +22,10 @@ settings:
   handler_settings:
     target_bundles:
       eic_document: eic_document
+      video: video
     sort:
       field: _none
+      direction: ASC
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: eic_document
 field_type: entity_reference

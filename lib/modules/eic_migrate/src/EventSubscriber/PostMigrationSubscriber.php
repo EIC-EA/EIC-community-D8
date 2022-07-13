@@ -176,12 +176,41 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
         // Load the migrated group.
         if ($group = $this->entityTypeManager->getStorage('group')->load($gid)) {
+          // We enable syncing to avoid creating new revisions.
+          $group->setSyncing(TRUE);
           $this->setGroupVisibility($group, $event);
           $this->setGroupJoiningMethod($group, $event);
           $this->setGroupFeatures($group, $event);
         }
         break;
 
+      case 'upgrade_d7_node_complete_article':
+      case 'upgrade_d7_node_complete_news':
+        // Check if we have a node revision ID.
+        if (!$vid = $event->getDestinationIdValues()[1]) {
+          return;
+        }
+
+        // Load the migrated node.
+        if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($vid)) {
+          // We enable syncing to avoid creating new revisions.
+          $node->setSyncing(TRUE);
+
+          $fragments = $this->entityTypeManager->getStorage('fragment')
+            ->loadByProperties([
+              'type' => 'disclaimer',
+            ]
+          );
+
+          if (empty($fragments)) {
+            break;
+          }
+
+          // We grab and set the disclaimer fragment in the node.
+          $fragment = reset($fragments);
+          $node->field_disclaimer->target_id = $fragment->id();
+          $node->save();
+        }
     }
   }
 
@@ -442,7 +471,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Set the values for each row.
     foreach ($node_values as $parent_id => $items) {
       if ($group = $this->entityTypeManager->getStorage('group')->loadRevision($parent_id)) {
-        $this->updateEntityReferenceValue($group, 'field_related_groups', $items);
+        $this->updateEntityReferenceValue($group, 'field_related_groups', $items, FALSE);
       }
     }
   }
@@ -489,7 +518,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Set the values for each row.
     foreach ($node_values as $parent_nid => $items) {
       if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_nid)) {
-        $this->updateEntityReferenceValue($node, 'field_related_stories', $items);
+        $this->updateEntityReferenceValue($node, 'field_related_stories', $items, FALSE);
       }
     }
   }
@@ -528,16 +557,11 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         $result['parent_language'],
       ];
       $migrated_row = $migration->getIdMap()->getRowBySource($source_ids);
-      $parent_migrated_row = $migration->getIdMap()->getRowBySource($parent_source_ids);
       $parent_migrated_row = $this->migrateLookup->lookup(
         [
           'upgrade_d7_node_complete_article',
         ],
-        [
-          $result['entity_id'],
-          $result['parent_vid'],
-          $result['parent_language'],
-        ]
+        $parent_source_ids
       );
 
       if (empty($migrated_row) || empty($parent_migrated_row)) {
@@ -551,7 +575,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Set the values for each row.
     foreach ($node_values as $parent_id => $items) {
       if ($node = $this->entityTypeManager->getStorage('node')->loadRevision($parent_id)) {
-        $this->updateEntityReferenceValue($node, 'field_related_groups', $items);
+        $this->updateEntityReferenceValue($node, 'field_related_groups', $items, FALSE);
       }
       $related_story_node_ids[$node->id()] = $node->id();
     }

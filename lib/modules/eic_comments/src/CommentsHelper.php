@@ -64,7 +64,11 @@ class CommentsHelper {
    *
    * @return string
    */
-  public static function formatHtmlComment(string $body): string {
+  public static function formatHtmlComment(?string $body): string {
+    if (!$body) {
+      return '';
+    }
+
     $allowed_tags = array_merge(FieldFilteredMarkup::allowedTags(), ['u', 's']);
     return Xss::filter($body, $allowed_tags);
   }

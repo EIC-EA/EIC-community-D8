@@ -15,10 +15,10 @@ label: 'SUBSCRIPTION :: MT21 :: Group content shared'
 description: ''
 text:
   -
-    value: 'MT21 :: Group content shared'
+    value: 'A content has been shared to your group'
     format: plain_text
   -
-    value: "<p>[message:field_event_executing_user:entity:display-name] shared the content <a href=\"\\\">[message:field_referenced_node:entity:title]</a> with the group&nbsp;<a href=\"\\\">[message:field_group_ref:entity:title]</a></p>\r\n"
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p><a href=\"[message:field_event_executing_user:entity:url]\">[message:field_event_executing_user:entity:display-name]</a> shared the&nbsp;<strong>[message:field_referenced_node:entity:type]</strong> <a href=\"[message:field_referenced_node:entity:url]\">[message:field_referenced_node:entity:title]</a> from&nbsp;<a href=\"[message:field_source_group:entity:url]\">[message:field_source_group:entity:title]</a>&nbsp;in&nbsp;<a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a>&nbsp;</p>\r\n"
     format: full_html
 settings:
   'token options':
