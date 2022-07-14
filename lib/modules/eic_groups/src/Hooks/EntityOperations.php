@@ -350,6 +350,9 @@ class EntityOperations implements ContainerInjectionInterface {
       ];
       $node = $this->entityTypeManager->getStorage('node')
         ->create($node_values);
+      if ($entity->get('status')->value) {
+        $node->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
+      }
       $node->save();
       $entity->addContent($node, 'group_node:book');
     }
@@ -403,8 +406,14 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The group entity.
    */
   private function publishGroupWiki(GroupInterface $group) {
+    $installedContentPlugins = $group->getGroupType()
+      ->getInstalledContentPlugins();
+    if (!$installedContentPlugins || in_array('group_node:book', $installedContentPlugins->getInstanceIds())) {
+      return;
+    }
+    $book_content_plugin_id = $group->getGroupType()->getContentPlugin('group_node:book')->getContentTypeConfigId();
     $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
-    $query->condition('type', 'group-group_node-book');
+    $query->condition('type', $book_content_plugin_id);
     $query->condition('gid', $group->id());
     $query->range(0, 1);
     $results = $query->execute();
