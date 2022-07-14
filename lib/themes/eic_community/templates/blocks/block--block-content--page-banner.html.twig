@@ -1,0 +1,60 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+{% embed "@theme/patterns/compositions/editable-hero-banner.html.twig" with hero|default({})|merge({
+  extra_classes: 'ecl-editable-hero-banner--is-blue',
+}) %}
+  {% block content %}
+    {% if content.field_subtitle is not empty %}
+      <span class="ecl-description">{{ content.field_subtitle.0 }}</span>
+    {% endif %}
+
+    {% if content.field_title is not empty %}
+      <h1 class="ecl-title ecl-title--display1">{{ content.field_title.0 }}</h1>
+    {% endif %}
+
+    {% if content.field_body is not empty %}
+      <p class="ecl-description">{{ content.field_body.0 }}</p>
+    {% endif %}
+
+    {% if content.field_cta_links is not empty %}
+      {% set _items = [] %}
+      {% for item in content['#block_content'].field_cta_links %}
+        {% set  _items = _items|merge([{
+            link: {
+              label: item.title,
+              path: item.url,
+              type: item.link_type == 'default' ? 'standalone' : item.link_type,
+            },
+          }]) %}
+      {% endfor %}
+      {% include "@theme/patterns/components/inline-actions.html.twig" with {
+        items: _items
+      } only %}
+    {% endif %}
+  {% endblock %}
+{% endembed %}
