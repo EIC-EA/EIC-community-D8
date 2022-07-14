@@ -65,7 +65,7 @@ class GlobalEventSourceType extends SourceType {
       ],
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
       ],
       'ss_group_label_string' => [
         'label' => $this->t('Event name', [], ['context' => 'eic_search']),
