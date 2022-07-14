@@ -137,6 +137,10 @@ class EntityOperations implements ContainerInjectionInterface {
     }
     $links = [];
     foreach ($link_options as $key => $options) {
+      $url = Url::fromRoute('node.add', $route_parameters, $options);
+      if (!$url->access()) {
+        continue;
+      }
       $links[$key] = Url::fromRoute('node.add', $route_parameters, $options);
     }
     return $links;
