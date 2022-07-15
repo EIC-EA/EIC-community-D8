@@ -31,7 +31,7 @@ reactions:
         id: 'block_content:a6aaef49-c248-4009-8dd5-0db08108067b'
         label: 'Member access description'
         provider: block_content
-        label_display: visible
+        label_display: '0'
         region: content_before
         weight: '0'
         custom_id: block_content_a6aaef49_c248_4009_8dd5_0db08108067b
