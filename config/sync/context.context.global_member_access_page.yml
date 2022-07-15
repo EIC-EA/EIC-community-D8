@@ -8,6 +8,7 @@ dependencies:
   module:
     - block_content
     - route_condition
+    - system
 label: 'Global - Member access page'
 name: global_member_access_page
 group: Global
@@ -51,7 +52,7 @@ reactions:
         provider: block_content
         label_display: visible
         region: page_header
-        weight: '0'
+        weight: '-1'
         custom_id: block_content_8d5fdf72_3a4e_4f98_ae22_2652ed4be3d3
         theme: eic_community
         css_class: ''
@@ -61,6 +62,21 @@ reactions:
         status: true
         info: ''
         view_mode: full
+        third_party_settings: {  }
+      71030e22-8521-4f6c-bf41-c2b629772ce4:
+        uuid: 71030e22-8521-4f6c-bf41-c2b629772ce4
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_member_access_page
+        context_mapping: {  }
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
