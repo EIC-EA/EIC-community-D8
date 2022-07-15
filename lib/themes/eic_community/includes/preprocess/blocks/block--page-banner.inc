@@ -22,6 +22,20 @@ function eic_community_preprocess_block__page_banner(&$variables, &$cache_tags =
       case 'image':
         $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
         $variables['hero']['image'] = $image_item->getSource();
+
+        // @todo harmonise templates, so we don't need to make exceptions.
+        switch ($variables['elements']['#id']) {
+          case 'block_content_8d5fdf72_3a4e_4f98_ae22_2652ed4be3d3':
+            $variables['editorial_header'] = [
+              'title' => $block_content->field_title->value,
+              'image' => [
+                'src' => $image_item->getSource(),
+                'alt' => $image_item->getAlt(),
+              ],
+            ];
+            break;
+        }
+
         break;
 
     }

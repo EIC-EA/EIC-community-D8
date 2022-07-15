@@ -25,7 +25,7 @@
  * @see template_preprocess_block()
  */
 #}
-{% embed "@theme/patterns/compositions/editable-hero-banner.html.twig" with hero|default({})|merge({
+{% embed "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
   extra_classes: 'ecl-editable-hero-banner--is-blue',
 }) %}
   {% block content %}
