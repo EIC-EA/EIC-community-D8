@@ -84,10 +84,13 @@ class MemberAccessController extends ControllerBase {
     // Redirect to the homepage.
     if ($this->currentUser->isAuthenticated()) {
       if (empty($destination)) {
-        $destination = '<front>';
+        $url = Url::fromRoute('<front>')->toString();
       }
-      $url = Url::fromRoute($destination);
-      return new RedirectResponse($url->toString());
+      else {
+        $url = $destination;
+      }
+
+      return new RedirectResponse($url);
     }
 
     $login_url = Url::fromRoute('cas.login', [], [
