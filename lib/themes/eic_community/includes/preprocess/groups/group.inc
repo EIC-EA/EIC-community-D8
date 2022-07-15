@@ -10,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
@@ -74,13 +75,19 @@ function eic_community_preprocess_group__group(array &$variables) {
       }
 
       // Get group visibility.
-      if ($group_visibility_label = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group)) {
+      if (
+        \Drupal::currentUser()->isAuthenticated() &&
+        $group_visibility_label = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group)
+      ) {
         $item['type']['label'] = $group_visibility_label;
         $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
       }
 
       // Get group tags.
       $item['tags'] = _preprocess_group_tags($group);
+
+      // Get group state.
+      $item['group_state'] = _eic_groups_get_moderation_state_tag($group);
 
       // Get group last activity.
       // @todo Get the real last activity.
@@ -421,4 +428,40 @@ function _preprocess_group_tags(GroupInterface $group) {
     }
   }
   return $tags;
+}
+
+/**
+ * Gets group moderation state tag.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $group
+ *   The group entity.
+ *
+ * @return array
+ *   The group moderation state tag.
+ */
+function _eic_groups_get_moderation_state_tag(GroupInterface $group) {
+  $moderation_state = $group->get('moderation_state')->value;
+  $tag = [];
+  if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+    $moderation_id = 'public';
+
+    switch ($moderation_id) {
+      case 'draft':
+      case 'blocked':
+        $moderation_id = 'private';
+        break;
+
+      case 'pending':
+        $moderation_id = 'restricted';
+        break;
+
+    }
+
+    $tag = [
+      'label' => ucfirst($moderation_state),
+      'extra_classes' => "ecl-tag--is-$moderation_id",
+    ];
+  }
+
+  return $tag;
 }

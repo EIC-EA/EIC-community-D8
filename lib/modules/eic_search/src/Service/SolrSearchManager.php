@@ -191,7 +191,7 @@ class SolrSearchManager {
       return;
     }
 
-    $search_query_value = $search_value ? "*$search_value*" : '*';
+    $search_query_value = $search_value ? "\"$search_value\"" : '*';
 
     $query_fields = [];
 

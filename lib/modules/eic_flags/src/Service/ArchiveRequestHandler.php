@@ -12,6 +12,7 @@ use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlaggingInterface;
 
 /**
@@ -20,6 +21,23 @@ use Drupal\flag\FlaggingInterface;
  * @package Drupal\eic_flags\Service
  */
 class ArchiveRequestHandler extends AbstractRequestHandler {
+
+  /**
+   * The Solr document processor service.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
+   */
+  private $solrDocumentProcessor;
+
+  /**
+   * Injects SOLR document processor service.
+   *
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|null $solr_document_processor
+   *   The EIC Search Solr Document Processor.
+   */
+  public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
+    $this->solrDocumentProcessor = $solr_document_processor;
+  }
 
   /**
    * {@inheritdoc}
@@ -92,6 +110,13 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
         ]);
         $content_entity->set('field_comment_is_archived', TRUE);
         $content_entity->save();
+
+        // Reindex user entity to update data like most_active_score.
+        $this->solrDocumentProcessor->lateReIndexEntities([$content_entity->getOwner()]);
+
+        // Reindex commented entity to update overview teaser and
+        // most_active_score.
+        $this->solrDocumentProcessor->reIndexEntities([$content_entity->getCommentedEntity()]);
       }
       else {
         $content_entity->set('status', FALSE);

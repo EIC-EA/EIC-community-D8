@@ -148,3 +148,17 @@ function eic_user_login_form_profile_form_alter(&$form, FormStateInterface $form
   \Drupal::classResolver(FormAlter::class)
     ->formProfileFormAlter($form, $form_state, $form_id);
 }
+
+/**
+ * Implements hook_theme().
+ */
+function eic_user_login_theme($existing, $type, $theme, $path) {
+  return [
+    'member_access_page' => [
+      'variables' => [
+        'login_link' => NULL,
+        'register_link' => NULL,
+      ],
+    ],
+  ];
+}

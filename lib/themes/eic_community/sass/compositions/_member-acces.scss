@@ -1,0 +1,42 @@
+.member-acces {
+  display: flex;
+  justify-content: space-between;
+  gap: $ecl-spacing-2-xl;
+  margin: $ecl-spacing-3-xl 0;
+
+  @include ecl-media-breakpoint-down('sm') {
+    flex-direction: column;
+  }
+
+  &__item {
+    border-top: .75em solid $ecl-color-blue;
+    width: 50%;
+    padding: $ecl-spacing-m;
+    display: flex;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+    }
+
+    & p {
+      font-weight: bold;
+      margin-top: 0;
+      font-size: 1.25em;
+    }
+
+    & a {
+      display: inline-block;
+      align-self: flex-end;
+      @extend .ecl-button;
+      @extend .ecl-button--primary;
+      color: $ecl-color-blue;
+      background-color: $ecl-color-blue-5;
+      border-color: $ecl-color-blue-5  !important;
+
+      &:hover {
+        border-color: $ecl-color-blue  !important;
+      }
+    }
+  }
+}

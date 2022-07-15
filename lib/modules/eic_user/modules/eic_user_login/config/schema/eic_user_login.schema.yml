@@ -7,6 +7,9 @@ eic_user_login.settings:
     allow_user_register:
       type: boolean
       label: 'Allow users to register within Drupal'
+    user_registration_url:
+      type: string
+      label: 'User registration URL'
     endpoint_url:
       type: string
       label: 'SMED Endpoint URL'
