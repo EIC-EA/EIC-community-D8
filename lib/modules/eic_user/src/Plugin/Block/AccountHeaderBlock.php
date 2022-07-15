@@ -85,12 +85,21 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   public function build() {
     if ($this->currentUser->isAnonymous()) {
+      // If there is a defined destination, preserve it, otherwise use the
+      // current page for the destination.
+      if (!empty($this->currentRequest->get('destination'))) {
+        $destination = $this->currentRequest->get('destination');
+      }
+      else {
+        $destination = $this->currentRequest->getRequestUri();
+      }
+
       $build['#login']['link'] = [
-        'label' => t('Log in'),
+        'label' => t('Member access'),
         'path' => Url::fromRoute(
-          'user.login',
+          'eic_user_login.member_access',
           [
-            'destination' => $this->currentRequest->getRequestUri(),
+            'destination' => $destination,
           ]
         ),
       ];

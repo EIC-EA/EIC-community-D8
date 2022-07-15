@@ -24,6 +24,7 @@ class BlockContentGenerator extends CoreGenerator {
     $this->createNewsletterBlock();
     $this->createFiguresBlock();
     $this->createSiteInfoBlock();
+    $this->createMemberAccessBlocks();
   }
 
   /**
@@ -65,6 +66,34 @@ class BlockContentGenerator extends CoreGenerator {
     ];
 
     $block = BlockContent::create($values);
+    $block->save();
+  }
+
+  /**
+   * Creates member access page blocks.
+   */
+  private function createMemberAccessBlocks() {
+    $block = BlockContent::create([
+      'status' => TRUE,
+      'type' => 'page_banner',
+      // For BC reasons we keep the same UUIDs since they are referenced in configs.
+      'uuid' => '8d5fdf72-3a4e-4f98-ae22-2652ed4be3d3',
+      'field_title' => 'Member access',
+      'info' => 'Member access page - Banner',
+      'field_media' => $this->getRandomEntities('media', ['bundle' => 'image']),
+    ]);
+    $block->save();
+
+    $text = '<p>Your place to connect, find partners and share knowledge.</p>
+            <p>The community is open to all EIC beneficiaries.</p>';
+    $block = BlockContent::create([
+      'status' => TRUE,
+      'type' => 'basic',
+      'uuid' => 'a6aaef49-c248-4009-8dd5-0db08108067b',
+      'info' => 'Member access page - Description',
+      'field_title' => 'Welcome to the EIC Community!',
+      'body' => $this->getFormattedText('full_html', $text),
+    ]);
     $block->save();
   }
 
