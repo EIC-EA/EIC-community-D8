@@ -59,8 +59,8 @@ class BlockContentGenerator extends CoreGenerator {
       'info' => 'Homepage - Banner block',
       'field_body' => $this->getFormattedText('full_html'),
       'field_cta_links' => [
-        $this->getLink('internal:/user/register', 'Register', 'cta'),
-        $this->getLink('internal:/user/login', 'Login', 'default'),
+        $this->getLink('internal:/member-access', 'Register', 'cta'),
+        $this->getLink('internal:/member-access', 'Login', 'default'),
       ],
       'field_media' => $this->getRandomEntities('media', ['bundle' => 'image']),
     ];
