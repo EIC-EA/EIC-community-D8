@@ -371,6 +371,13 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
     }
 
+    // Reindex user entity to update data like most_active_score.
+    $this->solrDocumentProcessor->lateReIndexEntities([$comment->getOwner()]);
+
+    // Reindex commented entity to update overview teaser and
+    // most_active_score.
+    $this->solrDocumentProcessor->reIndexEntities([$comment->getCommentedEntity()]);
+
     return new JsonResponse([]);
   }
 
@@ -418,6 +425,13 @@ class DiscussionController extends ControllerBase {
 
       return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
     }
+
+    // Reindex user entity to update data like most_active_score.
+    $this->solrDocumentProcessor->lateReIndexEntities([$comment->getOwner()]);
+
+    // Reindex commented entity to update overview teaser and
+    // most_active_score.
+    $this->solrDocumentProcessor->reIndexEntities([$comment->getCommentedEntity()]);
 
     return new JsonResponse([]);
   }

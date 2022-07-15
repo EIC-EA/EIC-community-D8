@@ -38,6 +38,12 @@ function eic_media_media_access(EntityInterface $entity, $operation, AccountInte
   // Loads up the entity usage for the media.
   $media_usage = \Drupal::service('entity_usage.usage')->listSources($entity);
 
+  // If no usages on the media but current user is owner of media, return allowed
+  if (empty($media_usage) && (int) $account->id() === (int) $entity->getOwnerId()) {
+    return AccessResult::allowed()
+      ->cachePerUser();
+  }
+
   // We loop through all source entities and we try to find one the user has
   // access to.
   foreach (array_keys($media_usage) as $entity_type) {

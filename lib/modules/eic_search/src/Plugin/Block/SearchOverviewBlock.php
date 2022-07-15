@@ -245,7 +245,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'owner' => -1,
       'admins' => [],
     ];
-    
+
+    $user_is_anonymous = \Drupal::currentUser()->isAnonymous();
+
     $post_content_actions = [];
     if ($current_group_route) {
       $account = \Drupal::currentUser();
@@ -314,19 +316,27 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     $build['#attached']['drupalSettings']['overview'] = [
-      'is_group_owner' => array_key_exists(
-        EICGroupsHelper::GROUP_OWNER_ROLE,
-        $user_group_roles
-      ),
+      'is_group_owner' => $current_group_route ?
+        array_key_exists(
+          EICGroupsHelper::getGroupTypeRole(
+            $current_group_route->bundle(),
+            EICGroupsHelper::GROUP_TYPE_OWNER_ROLE
+          ),
+          $user_group_roles
+        ) : FALSE,
       'label_my_groups' => $source->getLabelFilterMyGroups(),
       'open_registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
-      'is_group_admin' => array_key_exists(
-        EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
-        $user_group_roles
-      ),
+      'is_group_admin' => $current_group_route ?
+        array_key_exists(
+          EICGroupsHelper::getGroupTypeRole(
+            $current_group_route->bundle(),
+            EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
+          ),
+          $user_group_roles
+        ) : FALSE,
       'is_power_user' => $account instanceof AccountInterface && UserHelper::isPowerUser(
-          $account
-        ),
+        $account
+      ),
       'source_bundle_id' => $source->getEntityBundle(),
       'default_sorting_option' => $default_sort,
       'filter_label' => [
@@ -362,12 +372,12 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#enable_search' => $this->configuration['enable_search'],
         '#enable_date_filter' => $this->configuration['enable_date_filter'] ?? FALSE,
         '#url' => Url::fromRoute('eic_search.solr_search')->toString(),
-        '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
+        '#isAnonymous' => $user_is_anonymous,
         '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
         '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString(
         ) : NULL,
-        '#enable_facet_interests' => $this->configuration['add_facet_interests'],
-        '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
+        '#enable_facet_interests' => !$user_is_anonymous ? $this->configuration['add_facet_interests'] : 0,
+        '#enable_facet_my_groups' => !$user_is_anonymous ? $this->configuration['add_facet_my_groups'] : 0,
         '#isGroupOwner' => array_key_exists(
           EICGroupsHelper::GROUP_OWNER_ROLE,
           $user_group_roles
