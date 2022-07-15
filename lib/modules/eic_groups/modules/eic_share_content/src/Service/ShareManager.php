@@ -416,7 +416,7 @@ class ShareManager {
     // Dispatch the message.
     $this->messageBus->dispatch([
       'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
-      'uid' => $node->getOwnerId(),
+      'uid' => $this->currentUser->id(),
       'field_operation_type' => ActivityStreamOperationTypes::SHARED_ENTITY,
       'field_referenced_node' => $node->id(),
       'field_entity_type' => $node->bundle(),
