@@ -216,12 +216,13 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       'contexts' => [
         'url.path',
         'url.query_args',
+        'user.roles',
       ],
     ];
 
     // Send members data and cache tags.
     $members = [];
-    if ($show_members) {
+    if ($show_members && !$this->currentUser->isAnonymous()) {
       $members = $this->getMembersData($group);
       $cache['tags'] = [];
       foreach ($members as $member) {
@@ -229,12 +230,12 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
           Cache::mergeTags($cache['tags'], $member['cache_tags']) :
           $cache['tags'];
       }
+      $build['#members'] = $members;
     }
 
     return $build += [
       '#theme' => 'eic_group_last_activities_members',
       '#cache' => $cache,
-      '#members' => $members,
       '#url' => Url::fromRoute('eic_search.solr_search', [], $url_options)->toString(),
       '#translations' => [
         'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
