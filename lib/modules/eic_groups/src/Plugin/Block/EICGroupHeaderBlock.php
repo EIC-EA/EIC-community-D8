@@ -274,7 +274,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // Adds pending membership requests URL to the group operation links.
     $group_operation_links['edit-membership-requests'] = [
       'title' => $this->t('Membership requests'),
-      'url' => Url::fromRoute('view.group_pending_members.page_1', ['group' => $group->id()]),
+      'url' => Url::fromRoute('view.eic_group_pending_members.page_1', ['group' => $group->id()]),
     ];
 
     // Adds pending invitations URL to the group operation links.
