@@ -330,7 +330,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
 
       return [
         'joined_date' => $this->dateFormatter->format($groupContent->getCreatedTime(), 'eu_short_date'),
-        'full_name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
+        'full_name' => $user->getDisplayName(),
         'email' => $user->getEmail(),
         'picture' => $file_url,
         'url' => $user_profile_url,
