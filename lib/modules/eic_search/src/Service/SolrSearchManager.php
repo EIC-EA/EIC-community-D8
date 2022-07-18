@@ -350,6 +350,7 @@ class SolrSearchManager {
    * @param array|null $facets_fields
    */
   public function buildFacets(?array $facets_fields) {
+    $facets_fields = $facets_fields ?? [];
     $facets_fields = array_map(function ($facet) {
       if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
         return $facet;
