@@ -475,7 +475,7 @@ class SolrSearchManager {
     $this->generateAvoidGroupBookPage();
     $this->generateIgnoreAnonymousNewsStoriesContent();
 
-    $this->solrQuery->addParam('q', $this->rawQuery);
+    $this->solrQuery->addParam('q', !empty($this->rawQuery) ? $this->rawQuery : '*:*');
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
 
     $is_admin_group = FALSE;

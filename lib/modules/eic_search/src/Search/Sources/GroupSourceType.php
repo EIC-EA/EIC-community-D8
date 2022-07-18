@@ -133,4 +133,11 @@ class GroupSourceType extends SourceType {
     return 'group-' . parent::getUniqueId();
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_group_field_vocab_topics'];
+  }
+
 }

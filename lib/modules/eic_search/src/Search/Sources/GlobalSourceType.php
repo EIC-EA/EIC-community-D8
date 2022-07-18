@@ -158,4 +158,11 @@ class GlobalSourceType extends SourceType {
     return ['ss_global_created_date', 'DESC'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_content_field_vocab_topics'];
+  }
+
 }
