@@ -23,13 +23,14 @@ reactions:
     id: blocks
     uuid: 51f37ab4-072e-402d-83ae-1f389f21e09e
     blocks:
-      79680eb5-d2aa-4cdf-ae18-6a558fe7a72a:
-        uuid: 79680eb5-d2aa-4cdf-ae18-6a558fe7a72a
+      43aaa1ef-c809-4fbf-886d-f9d1d3274573:
+        uuid: 43aaa1ef-c809-4fbf-886d-f9d1d3274573
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
+        weight: '0'
         custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
@@ -43,8 +44,8 @@ reactions:
           ss_group_field_vocab_geo_string: ss_group_field_vocab_geo_string
           ss_group_user_fullname: 0
         sort_options:
-          ss_drupal_changed_timestamp: ss_drupal_changed_timestamp
-          timestamp: 0
+          ss_global_created_date: ss_global_created_date
+          timestamp: timestamp
           ss_global_title: 0
           ss_group_user_fullname: 0
           its_last_flagged_like_content: 0

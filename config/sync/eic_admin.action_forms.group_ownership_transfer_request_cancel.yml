@@ -3,5 +3,5 @@ paths: ''
 label: 'Group ownership transfer request - Cancel'
 title: 'Cancel group ownership transfer request'
 description:
-  value: "<p>You are about to cancel the ownership of <a href=\"[group_content:group:url]\">[group_content:group:title]</a> to <a href=\"[group_content:user:url]\">[group_content:user:display-name]</a>.</p>\r\n\r\n<p>State the reason for this cancellation in the field below then click the confirm cancellation button to complete this action.</p>\r\n"
+  value: "<p>You are about to cancel the group ownership transfer request for&nbsp;<a href=\"[group_content:user:url]\">[group_content:user:display-name]</a> in <a href=\"[group_content:group:url]\">[group_content:group:title]</a>.</p>\r\n\r\n<p>State the reason for this cancellation in the field below then click the confirm cancellation button to complete this action.</p>\r\n"
   format: full_html

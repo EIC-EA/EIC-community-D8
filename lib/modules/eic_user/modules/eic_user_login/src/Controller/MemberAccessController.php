@@ -108,7 +108,9 @@ class MemberAccessController extends ControllerBase {
     ]);
 
     if (!empty($destination)) {
-      $login_url->setRouteParameter('destination', $destination);
+      // For the login link, we use the special returnto query param that is
+      // handled by cas module.
+      $login_url->setRouteParameter('returnto', $destination);
       $register_url->setOption('query', ['destination' => $destination]);
     }
 
