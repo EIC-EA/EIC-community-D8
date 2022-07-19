@@ -139,6 +139,9 @@ class ShareContentController extends ControllerBase {
       ];
     }
 
+    // Also sort on group type.
+    ksort($formatted_groups);
+
     return new JsonResponse($formatted_groups);
   }
 
