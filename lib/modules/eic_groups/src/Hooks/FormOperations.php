@@ -11,6 +11,8 @@ use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\grequest\MembershipRequestManager;
+use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest;
 use Drupal\group\Entity\Group;
 use Drupal\node\Entity\Node;
 use Drupal\oec_group_features\GroupFeaturePluginManager;
@@ -26,6 +28,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class FormOperations implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The group membership request manager.
+   *
+   * @var \Drupal\grequest\MembershipRequestManager
+   */
+  protected $membershipRequestManager;
 
   /**
    * The config factory.
@@ -65,6 +74,8 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * Constructs a new EntityOperations object.
    *
+   * @param \Drupal\grequest\MembershipRequestManager $membership_request_manager
+   *   The group membership request manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_plugin_manager
@@ -77,12 +88,14 @@ class FormOperations implements ContainerInjectionInterface {
    *   The request stack service.
    */
   public function __construct(
+    MembershipRequestManager $membership_request_manager,
     ConfigFactoryInterface $config_factory,
     GroupFeaturePluginManager $group_feature_plugin_manager,
     EICGroupsHelperInterface $eic_groups_helper,
     RouteMatchInterface $route_match,
     RequestStack $request_stack
   ) {
+    $this->membershipRequestManager = $membership_request_manager;
     $this->configFactory = $config_factory;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
     $this->eicGroupsHelper = $eic_groups_helper;
@@ -95,6 +108,7 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('grequest.membership_request_manager'),
       $container->get('config.factory'),
       $container->get('plugin.manager.group_feature'),
       $container->get('eic_groups.helper'),
@@ -185,6 +199,52 @@ class FormOperations implements ContainerInjectionInterface {
         $this,
         'formRedirectToGroupHomepage',
       ];
+    }
+  }
+
+  /**
+   * Implements hook_form_alter() for group membership request form.
+   */
+  public function groupMembershipRequestFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    // We need our custom validation handler to run first.
+    array_unshift($form['#validate'], [
+      $this,
+      'groupMembershipRequestValidate',
+    ]);
+  }
+
+  /**
+   * Custom validation handler for group membership request forms.
+   *
+   * We want users to be able to request membership again if they were already
+   * rejected.
+   * Since the grequest module only allows one membership request per
+   * user/group, we need to delete the previously existing one.
+   */
+  public function groupMembershipRequestValidate(&$form, FormStateInterface $form_state) {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $form_state->getFormObject()->getEntity();
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_content->getGroup();
+    $user = $group_content->getEntity();
+
+    // If user is already a member we do nothing.
+    if ($group->getMember($user)) {
+      return;
+    }
+
+    // If we find an existing membership request that is either approved or
+    // rejected, we delete it.
+    if ($membership_request = $this->membershipRequestManager->getMembershipRequest($user, $group)) {
+      switch ($membership_request->grequest_status->value) {
+        // We also delete the approved ones since if we get here, this means the
+        // user is not a member anyway.
+        case GroupMembershipRequest::REQUEST_REJECTED:
+        case GroupMembershipRequest::REQUEST_APPROVED:
+          $membership_request->delete();
+          break;
+
+      }
     }
   }
 
