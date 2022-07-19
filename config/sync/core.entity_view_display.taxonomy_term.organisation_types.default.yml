@@ -1,0 +1,32 @@
+uuid: 12c6cbd4-213a-4465-ac98-b56ac4aaf9d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.organisation_types.field_smed_id
+    - taxonomy.vocabulary.organisation_types
+  module:
+    - text
+id: taxonomy_term.organisation_types.default
+targetEntityType: taxonomy_term
+bundle: organisation_types
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
