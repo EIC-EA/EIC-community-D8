@@ -6,11 +6,15 @@ services:
   eic_flags.delete_request_handler:
     class: Drupal\eic_flags\Service\DeleteRequestHandler
     arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    calls:
+      - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: request_handler }
   eic_flags.delete_archive_handler:
     class: Drupal\eic_flags\Service\ArchiveRequestHandler
     arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    calls:
+      - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: request_handler }
   eic_flags.block_request_handler:

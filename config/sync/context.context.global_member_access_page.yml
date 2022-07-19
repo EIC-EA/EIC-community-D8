@@ -1,0 +1,83 @@
+uuid: 596ea851-fe04-4cd9-87ef-c178832ff4b5
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:a6aaef49-c248-4009-8dd5-0db08108067b'
+    - 'block_content:page_banner:8d5fdf72-3a4e-4f98-ae22-2652ed4be3d3'
+  module:
+    - block_content
+    - route_condition
+    - system
+label: 'Global - Member access page'
+name: global_member_access_page
+group: Global
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: 394d895a-8cda-479c-9e6c-eaecb506ce50
+    context_mapping: {  }
+    routes: eic_user_login.member_access
+reactions:
+  blocks:
+    id: blocks
+    uuid: 3b103b3b-7d7b-4062-be9d-698de5e3dc01
+    blocks:
+      db961b1c-bf79-49d1-bf32-fe316be125e0:
+        uuid: db961b1c-bf79-49d1-bf32-fe316be125e0
+        id: 'block_content:a6aaef49-c248-4009-8dd5-0db08108067b'
+        label: 'Member access description'
+        provider: block_content
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: block_content_a6aaef49_c248_4009_8dd5_0db08108067b
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_member_access_page
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+        third_party_settings: {  }
+      6e26f8f6-d8e6-4e31-bcc2-9f8ad6fadede:
+        uuid: 6e26f8f6-d8e6-4e31-bcc2-9f8ad6fadede
+        id: 'block_content:8d5fdf72-3a4e-4f98-ae22-2652ed4be3d3'
+        label: 'Member access page'
+        provider: block_content
+        label_display: visible
+        region: page_header
+        weight: '-1'
+        custom_id: block_content_8d5fdf72_3a4e_4f98_ae22_2652ed4be3d3
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_member_access_page
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+        third_party_settings: {  }
+      71030e22-8521-4f6c-bf41-c2b629772ce4:
+        uuid: 71030e22-8521-4f6c-bf41-c2b629772ce4
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_member_access_page
+        context_mapping: {  }
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

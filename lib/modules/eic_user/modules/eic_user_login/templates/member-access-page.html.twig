@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present the member access page.
+ *
+ * Available variables:
+ * - login_link: link to log in.
+ * - register_link: link to register.
+ *
+ * @see template_preprocess_member_access_page()
+ */
+#}
+<div class="ecl-container">
+  <div class="member-acces">
+    <div class="member-acces__item member-access-login">
+      <p>{{ 'Already a member?'|t }}</p>
+      {{ login_link }}
+    </div>
+
+    <div class="member-acces__item member-access-register">
+      <p>{{ 'Not a member yet?'|t }}</p>
+      {{ register_link }}
+    </div>
+  </div>
+</div>

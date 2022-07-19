@@ -137,6 +137,7 @@ context("Organisation - As cypress_ga, add content", () => {
       cy.get('#block-eic-group-header .ecl-editorial-header__wrapper .ecl-collapsible-options__collapse-wrapper').contains('Add Event').click()
 
       cy.get('#edit-title-0-value').type('Test event');
+      cy.get('#edit-field-location-type').scrollIntoView();
       cy.get('#edit-field-location-type .ecl-checkbox__box').first().click()
 
       cy.get('#edit-field-vocab-event-type-wrapper').scrollIntoView()

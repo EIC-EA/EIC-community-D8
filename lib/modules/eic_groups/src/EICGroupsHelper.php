@@ -238,8 +238,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $is_admin = in_array(
         $role->id(),
         [
-          self::GROUP_ADMINISTRATOR_ROLE,
-          self::GROUP_OWNER_ROLE,
+          self::getGroupTypeRole($group->bundle(), self::GROUP_TYPE_ADMINISTRATOR_ROLE),
+          self::getGroupTypeRole($group->bundle(), self::GROUP_TYPE_OWNER_ROLE),
         ]
       );
 

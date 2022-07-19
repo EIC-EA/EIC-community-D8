@@ -44,6 +44,7 @@ RUN groupadd -o -g ${GID} web \
   && sed -i s/'group = www-data'/'group = web'/g /usr/local/etc/php-fpm.d/www.conf \
   && chown -R web:web /var/www
 
+RUN echo 'pm.max_children = 10' >> /usr/local/etc/php-fpm.d/zz-docker.conf
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/
 
