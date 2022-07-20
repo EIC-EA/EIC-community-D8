@@ -52,6 +52,13 @@ class GroupsModerationHelper {
   const GROUP_ARCHIVED_STATE = 'archived';
 
   /**
+   * The worflow machine name.
+   *
+   * @var string
+   */
+  const WORKFLOW_MACHINE_NAME = 'groups';
+
+  /**
    * Checks if a group is archived.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
