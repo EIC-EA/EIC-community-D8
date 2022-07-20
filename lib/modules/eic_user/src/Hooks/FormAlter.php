@@ -5,10 +5,12 @@ namespace Drupal\eic_user\Hooks;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\eic_content\Services\EntityTreeManager;
+use Drupal\eic_user\UserHelper;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\user\Entity\User;
@@ -25,6 +27,13 @@ class FormAlter implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * The EIC Content entity tree manager service.
    *
    * @var \Drupal\eic_content\Services\EntityTreeManager
@@ -34,10 +43,16 @@ class FormAlter implements ContainerInjectionInterface {
   /**
    * Constructs a new EntityOperations object.
    *
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    * @param \Drupal\eic_content\Services\EntityTreeManager $entity_tree_manager
    *   The EIC Content entity tree manager service.
    */
-  public function __construct(EntityTreeManager $entity_tree_manager) {
+  public function __construct(
+    AccountProxyInterface $current_user,
+    EntityTreeManager $entity_tree_manager
+  ) {
+    $this->currentUser = $current_user;
     $this->treeManager = $entity_tree_manager;
   }
 
@@ -46,8 +61,31 @@ class FormAlter implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('current_user'),
       $container->get('eic_content.entity_tree_manager')
     );
+  }
+
+  /**
+   * Form alter implementation for alterUserForm form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param string $form_id
+   *   The form ID.
+   */
+  public function alterUserForm(array &$form, FormStateInterface $form_state, string $form_id) {
+    // Deny access to metadata fields for non-power users.
+    if (!UserHelper::isPowerUser($this->currentUser->getAccount())) {
+      $form['field_is_deleted']['#access'] = FALSE;
+      $form['field_is_deleted_anonymous']['#access'] = FALSE;
+      $form['field_is_deleted_by_uid']['#access'] = FALSE;
+      $form['field_is_invalid_email']['#access'] = FALSE;
+      $form['field_is_organisation_user']['#access'] = FALSE;
+      $form['field_is_spammer']['#access'] = FALSE;
+    }
   }
 
   /**
