@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.message.notify_content_recommendation.field_receiver_email
     - field.field.message.notify_content_recommendation.field_referenced_flag
     - field.field.message.notify_content_recommendation.field_rendered_content
     - message.template.notify_content_recommendation
@@ -13,6 +14,13 @@ targetEntityType: message
 bundle: notify_content_recommendation
 mode: default
 content:
+  field_receiver_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
   field_referenced_flag:
     type: entity_reference_label
     label: above

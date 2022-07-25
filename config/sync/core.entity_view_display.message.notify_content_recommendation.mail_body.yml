@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_content_recommendation.field_receiver_email
     - field.field.message.notify_content_recommendation.field_referenced_flag
     - field.field.message.notify_content_recommendation.field_rendered_content
     - message.template.notify_content_recommendation
@@ -23,6 +24,7 @@ content:
     weight: 0
     region: content
 hidden:
+  field_receiver_email: true
   field_referenced_flag: true
   field_rendered_content: true
   partial_0: true
