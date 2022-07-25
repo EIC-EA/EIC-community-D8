@@ -123,13 +123,24 @@ class ShareContentController extends ControllerBase {
     }
 
     $groups = $this->shareManager->getShareableTargetGroupsForUser($this->currentUser, $group, $node);
-    $formatted_groups = [];
+
+    // Sort groups alphabetically.
+    $sorted_groups = [];
     foreach ($groups as $group) {
+      $sorted_groups[$group->label()] = $group;
+    }
+    ksort($sorted_groups);
+
+    $formatted_groups = [];
+    foreach ($sorted_groups as $group) {
       $formatted_groups[$group->getGroupType()->label()][] = [
         'id' => $group->id(),
         'label' => $group->label(),
       ];
     }
+
+    // Also sort on group type.
+    ksort($formatted_groups);
 
     return new JsonResponse($formatted_groups);
   }
