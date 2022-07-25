@@ -700,6 +700,16 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Returns the list of existing group types.
+   *
+   * @return \Drupal\group\Entity\GroupTypeInterface[]
+   *   An array of group type objects.
+   */
+  public function getGroupTypes() {
+    return $this->entityTypeManager->getStorage('group_type')->loadMultiple();
+  }
+
+  /**
    * Returns nodes that belong to a group.
    *
    * @param \Drupal\group\Entity\GroupInterface $group

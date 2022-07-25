@@ -45,6 +45,14 @@ function eic_community_preprocess_message(&$variables) {
   ];
 
   $message = $variables['message'];
+
+  switch ($message->bundle()) {
+    case 'notify_content_recommendation':
+      _eic_community_preprocess_message_receiver_name($variables);
+      break;
+
+  }
+
   if (!$message instanceof MessageInterface
     || !array_key_exists($message->bundle(), $supported_templates)
   ) {
@@ -155,4 +163,31 @@ function _eic_community_preprocess_digest_message(&$variables) {
     'rendered_entity' => \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId())
       ->view($entity, 'mail_teaser'),
   ];
+}
+
+/**
+ * Adds user display name to the message body from field_receiver_email.
+ */
+function _eic_community_preprocess_message_receiver_name(&$variables) {
+  $message = $variables['message'];
+
+  if (!$message->hasField('field_receiver_email')) {
+    return;
+  }
+
+  if ($receiver_email = $message->get('field_receiver_email')->value) {
+    /** @var \Drupal\user\UserInterface $user */
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties([
+          'mail' => $receiver_email,
+        ]
+      );
+    $intro_text = t('Dear');
+    if ($users) {
+      $user = reset($users);
+      $intro_text = t('Dear @user_full_name', ['@user_full_name' => $user->getDisplayName()]);
+    }
+    $variables['content']['partial_1']['#markup'] = "<p>$intro_text,</p>" . $variables['content']['partial_1']['#markup'];
+  }
 }

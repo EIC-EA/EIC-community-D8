@@ -185,6 +185,7 @@ class EntityTreeWidget extends WidgetBase {
         'search_label' => t('Select a value', [], ['context' => 'eic_search']),
         'search_placeholder' => t('Search', [], ['context' => 'eic_search']),
         'selected_terms_label' => t('Your selected values', [], ['context' => 'eic_search']),
+        'has_error' => 0,
       ] + parent::defaultSettings();
   }
 

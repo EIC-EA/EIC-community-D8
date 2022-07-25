@@ -132,6 +132,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
 
     // Sends notification to all emails.
     foreach ($emails as $email) {
+      $message->set('field_receiver_email', $email);
       $this->messageBus->dispatch(
         $message,
         [

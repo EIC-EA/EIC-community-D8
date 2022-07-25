@@ -11,6 +11,8 @@ id: groups_regions_countries
 name: 'Regions & Countries'
 weight: 0
 min_count: 1
+missing: false
+missing_label: others
 url_alias: regions_countries
 facet_source_id: 'search_api:views_page__global_overviews__page_1'
 field_identifier: group_field_vocab_geo

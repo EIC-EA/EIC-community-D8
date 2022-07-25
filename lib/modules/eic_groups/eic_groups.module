@@ -358,6 +358,13 @@ function eic_groups_module_implements_alter(&$implementations, $hook) {
  * Implements hook_form_alter().
  */
 function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Get group types.
+  $group_types = [];
+  /** @var \Drupal\group\Entity\GroupTypeInterface $group_type */
+  foreach (\Drupal::service('eic_groups.helper')->getGroupTypes() as $group_type) {
+    $group_types[] = $group_type->id();
+  }
+
   switch ($form_id) {
     case 'node_wiki_page_form':
     case 'node_wiki_page_edit_form':
@@ -377,6 +384,16 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
         ->groupInvitationFormAlter($form, $form_state, $form_id);
       break;
 
+  }
+
+  // Handle group membership request form.
+  $group_membership_request_form_ids = [];
+  foreach ($group_types as $group_type) {
+    $group_membership_request_form_ids[] = "group_content_$group_type-group_membership_request_group-request-membership_form";
+  }
+  if (in_array($form_id, $group_membership_request_form_ids)) {
+    \Drupal::classResolver(FormOperations::class)
+      ->groupMembershipRequestFormAlter($form, $form_state, $form_id);
   }
 }
 
