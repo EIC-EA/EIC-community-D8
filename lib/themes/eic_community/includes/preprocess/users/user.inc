@@ -237,8 +237,11 @@ function _get_render_block_search_overview(string $source): array {
     'enable_search' => 0,
     'facets' => [],
     'sort_options' => [],
+    'page_options' => [],
     'prefilter_group' => 0,
     'enable_date_filter' => 0,
+    'add_facet_my_groups' => 0,
+    'add_facet_interests' => 0,
   ];
 
   $plugin_block = $block_manager->createInstance('eic_search_overview', $config);

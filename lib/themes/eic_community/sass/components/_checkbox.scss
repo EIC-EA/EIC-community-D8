@@ -18,6 +18,12 @@
   & label svg {
     display: none;
   }
+
+  &__label {
+    em {
+      margin-left: 0.3em;
+    }
+  }
 }
 
 

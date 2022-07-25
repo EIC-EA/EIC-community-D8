@@ -238,8 +238,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $is_admin = in_array(
         $role->id(),
         [
-          self::GROUP_ADMINISTRATOR_ROLE,
-          self::GROUP_OWNER_ROLE,
+          self::getGroupTypeRole($group->bundle(), self::GROUP_TYPE_ADMINISTRATOR_ROLE),
+          self::getGroupTypeRole($group->bundle(), self::GROUP_TYPE_OWNER_ROLE),
         ]
       );
 
@@ -697,6 +697,16 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $plugin_id .= ":$bundle";
     }
     return in_array($plugin_id, $enabled_plugins);
+  }
+
+  /**
+   * Returns the list of existing group types.
+   *
+   * @return \Drupal\group\Entity\GroupTypeInterface[]
+   *   An array of group type objects.
+   */
+  public function getGroupTypes() {
+    return $this->entityTypeManager->getStorage('group_type')->loadMultiple();
   }
 
   /**

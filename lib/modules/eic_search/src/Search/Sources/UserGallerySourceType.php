@@ -135,4 +135,11 @@ class UserGallerySourceType extends SourceType {
     return 'user-gallery-' . parent::getUniqueId();
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_user_profile_field_vocab_topic_expertise'];
+  }
+
 }

@@ -6,8 +6,12 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_moderation\Constants\EICContentModeration;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -19,6 +23,23 @@ use Drupal\user\UserInterface;
  * @package Drupal\eic_flags\Service
  */
 class DeleteRequestHandler extends AbstractRequestHandler {
+
+  /**
+   * The Solr document processor service.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
+   */
+  private $solrDocumentProcessor;
+
+  /**
+   * Injects SOLR document processor service.
+   *
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|null $solr_document_processor
+   *   The EIC Search Solr Document Processor.
+   */
+  public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
+    $this->solrDocumentProcessor = $solr_document_processor;
+  }
 
   /**
    * {@inheritdoc}
@@ -68,6 +89,13 @@ class DeleteRequestHandler extends AbstractRequestHandler {
         ]);
         $content_entity->set('field_comment_is_soft_deleted', TRUE);
         $content_entity->save();
+
+        // Reindex user entity to update data like most_active_score.
+        $this->solrDocumentProcessor->lateReIndexEntities([$content_entity->getOwner()]);
+
+        // Reindex commented entity to update overview teaser and
+        // most_active_score.
+        $this->solrDocumentProcessor->reIndexEntities([$content_entity->getCommentedEntity()]);
         break;
 
     }
@@ -86,7 +114,21 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity
   ) {
     if ($this->moderationInformation->isModeratedEntity($content_entity)) {
-      $content_entity->set('moderation_state', 'archived');
+      $workflow = $this->moderationInformation->getWorkflowForEntity($content_entity);
+
+      switch ($workflow->id()) {
+        case EICContentModeration::MACHINE_NAME:
+          $content_entity->set('moderation_state', EICContentModeration::STATE_UNPUBLISHED);
+          break;
+
+        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
+          $content_entity->set('moderation_state', GroupsModerationHelper::GROUP_ARCHIVED_STATE);
+          break;
+
+        default:
+          $content_entity->set('moderation_state', DefaultContentModerationStates::ARCHIVED_STATE);
+          break;
+      }
     }
     else {
       $content_entity->set('status', FALSE);

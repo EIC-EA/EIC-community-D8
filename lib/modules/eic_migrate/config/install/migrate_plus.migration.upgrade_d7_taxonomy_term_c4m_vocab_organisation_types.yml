@@ -40,7 +40,7 @@ process:
     - plugin: default_value
       default_value: 0
       source: '@parent_id'
-  forum_container: is_container
+  field_smed_id: c4m_dashboard_key
   changed: timestamp
   langcode: language
 destination:

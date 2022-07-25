@@ -202,13 +202,15 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
             ]
           );
 
-          if (empty($fragments)) {
-            break;
+          if (!empty($fragments)) {
+            // We grab and set the disclaimer fragment in the node.
+            $fragment = reset($fragments);
+            $node->field_disclaimer->target_id = $fragment->id();
           }
 
-          // We grab and set the disclaimer fragment in the node.
-          $fragment = reset($fragments);
-          $node->field_disclaimer->target_id = $fragment->id();
+          // Make sure we have a value for the 'private' field.
+          $node->private->value = 0;
+
           $node->save();
         }
     }

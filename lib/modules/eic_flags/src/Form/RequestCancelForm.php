@@ -109,6 +109,9 @@ class RequestCancelForm extends ContentEntityConfirmFormBase {
     $form['response_text'] = [
       '#type' => 'textarea',
       '#title' => $this->getResponseTitle(),
+      '#attributes' => [
+        'placeholder' => $this->t('Your reason here'),
+      ],
       '#required' => TRUE,
     ];
 
@@ -125,7 +128,7 @@ class RequestCancelForm extends ContentEntityConfirmFormBase {
     switch ($this->requestType) {
       case RequestTypes::TRANSFER_OWNERSHIP:
         return $this->t(
-          'Are you sure you want to cancel the request to transfer ownership? Please provide a mandatory reason for cancelling this request.',
+          'State the reason for cancelling this request.',
         );
 
     }

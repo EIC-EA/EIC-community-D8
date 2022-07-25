@@ -23,13 +23,14 @@ reactions:
     id: blocks
     uuid: 55edfcc0-d241-43a4-9cda-a839fdc3d28c
     blocks:
-      f713fec5-e0c9-49a3-89c7-d8af3d27606d:
-        uuid: f713fec5-e0c9-49a3-89c7-d8af3d27606d
+      c3fc1797-cc5a-4ce7-b5b3-79749b1bcd53:
+        uuid: c3fc1797-cc5a-4ce7-b5b3-79749b1bcd53
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
+        weight: '0'
         custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
@@ -49,6 +50,7 @@ reactions:
           ss_group_event_country: 0
         sort_options:
           its_event_weight_state: its_event_weight_state
+          ss_global_created_date: ss_global_created_date
           timestamp: timestamp
           ss_group_label_string: ss_group_label_string
           its_content_field_date_range_start_value: its_content_field_date_range_start_value
