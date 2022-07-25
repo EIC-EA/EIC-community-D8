@@ -88,7 +88,11 @@ class EntityOperations implements ContainerInjectionInterface {
           $add_book_page_urls = $this->getBookPageAddFormUrls($entity);
 
           // If user can't access the route.
-          if (!$add_book_page_urls['add_child_book_page']->access($this->currentUser)) {
+          if (
+            empty($add_book_page_urls) ||
+            !array_key_exists('add_child_book_page', $add_book_page_urls) ||
+            !$add_book_page_urls['add_child_book_page']->access($this->currentUser)
+          ) {
             return;
           }
 
