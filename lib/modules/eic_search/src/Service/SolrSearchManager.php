@@ -350,6 +350,7 @@ class SolrSearchManager {
    * @param array|null $facets_fields
    */
   public function buildFacets(?array $facets_fields) {
+    $facets_fields = $facets_fields ?? [];
     $facets_fields = array_map(function ($facet) {
       if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
         return $facet;
@@ -475,7 +476,7 @@ class SolrSearchManager {
     $this->generateAvoidGroupBookPage();
     $this->generateIgnoreAnonymousNewsStoriesContent();
 
-    $this->solrQuery->addParam('q', $this->rawQuery);
+    $this->solrQuery->addParam('q', !empty($this->rawQuery) ? $this->rawQuery : '*:*');
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
 
     $is_admin_group = FALSE;

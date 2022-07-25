@@ -59,10 +59,13 @@ class OrganisationSourceType extends SourceType {
         'label' => $this->t('Most active', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
       ],
+      'ss_global_created_date' => [
+        'label' => $this->t('Date created', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Date created', [], ['context' => 'eic_search']),
+      ],
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
       ],
       'ss_global_title' => [
         'label' => $this->t('Group label', [], ['context' => 'eic_search']),
@@ -127,6 +130,13 @@ class OrganisationSourceType extends SourceType {
    */
   public function getPrefilteredGroupFieldId(): array {
     return ['its_group_id_integer'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_group_field_vocab_topics'];
   }
 
 }

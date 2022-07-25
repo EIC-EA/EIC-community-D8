@@ -13,4 +13,4 @@ services:
 
   eic_topics.topics_manager:
     class: Drupal\eic_topics\TopicsManager
-    arguments: ['@eic_user.helper']
+    arguments: ['@eic_user.helper', '@eic_search.solr_search_manager']

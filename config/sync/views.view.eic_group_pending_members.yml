@@ -1,6 +1,6 @@
-uuid: 4d5e76e2-db40-468f-999f-76525f763f5b
+uuid: a1c63060-ca1a-49ad-8a69-da17c38d48b1
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - grequest
@@ -13,8 +13,8 @@ dependencies:
       - grequest
 _core:
   default_config_hash: vDoRmHPUPADRnIq7_sjWDMxTjBshjwP_nZ0Vxkg6q3U
-id: group_pending_members
-label: 'Group pending members'
+id: eic_group_pending_members
+label: 'EIC - Group pending members'
 module: views
 description: ''
 tag: ''
@@ -581,6 +581,50 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        type:
+          id: type
+          table: group_content_field_data
+          field: type
+          relationship: group_content
+          group_type: group
+          admin_label: ''
+          entity_type: group_content
+          entity_field: type
+          plugin_id: bundle
+          operator: empty
+          value: {  }
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups: {  }
       style:
         type: table
         options:
@@ -675,7 +719,28 @@ display:
           required: true
           group_content_plugins:
             group_membership_request: group_membership_request
+            group_request_archival: '0'
+            group_request_block: '0'
+            group_request_delete: '0'
+            group_invitation: '0'
             group_membership: '0'
+        group_content:
+          id: group_content
+          table: users_field_data
+          field: group_content
+          relationship: gc__user
+          group_type: group
+          admin_label: 'User group content'
+          entity_type: user
+          plugin_id: group_content_to_entity_reverse
+          required: false
+          group_content_plugins:
+            group_membership: group_membership
+            group_request_archival: '0'
+            group_request_block: '0'
+            group_request_delete: '0'
+            group_invitation: '0'
+            group_membership_request: '0'
       header: {  }
       footer: {  }
       display_extenders: {  }

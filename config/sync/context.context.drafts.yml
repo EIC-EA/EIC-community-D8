@@ -23,8 +23,8 @@ reactions:
     id: blocks
     uuid: 9f7f9eb5-1a04-4d53-9b5a-bb5606f75eec
     blocks:
-      8e094a5e-bc46-4c6e-a8ca-529ab1dac953:
-        uuid: 8e094a5e-bc46-4c6e-a8ca-529ab1dac953
+      8e84ec8c-17f4-4b38-9f9c-0ef6e4b69813:
+        uuid: 8e84ec8c-17f4-4b38-9f9c-0ef6e4b69813
         id: eic_search_overview
         label: ''
         provider: eic_search
@@ -46,6 +46,7 @@ reactions:
           ss_group_user_fullname: 0
         sort_options:
           ss_global_created_date: ss_global_created_date
+          timestamp: timestamp
           ss_global_title: ss_global_title
           score: score
           ss_group_user_fullname: 0
