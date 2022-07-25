@@ -33,12 +33,16 @@ class EventResource extends GroupResourceBase {
 
     // Check if event already exists.
     if (!empty($entity->{$smed_id_field}->value) &&
-      $organisation = $this->wsHelper->getGroupBySmedId($entity->{$smed_id_field}->value, 'event')) {
+      $event = $this->wsHelper->getGroupBySmedId($entity->{$smed_id_field}->value, 'event')) {
+      $url = $event->toUrl('canonical', ['absolute' => TRUE]);
 
       // Send custom response.
       $data = [
         'message' => 'Unprocessable Entity: validation failed. Event already exists.',
-        $smed_id_field => $organisation->{$smed_id_field}->value,
+        'gid' => $event->id(),
+        'label' => $event->label(),
+        'uri' => $url->toString(TRUE)->getGeneratedUrl(),
+        $smed_id_field => $event->{$smed_id_field}->value,
       ];
 
       return new ResourceResponse($data, 422);

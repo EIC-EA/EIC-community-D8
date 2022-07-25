@@ -15,6 +15,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_group_membership\GroupMembershipHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
+use Drupal\grequest\Entity\Form\GroupMembershipApproveForm;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\Form\GroupContentForm;
 use Drupal\group\Entity\GroupInterface;
@@ -108,6 +109,16 @@ function eic_group_membership_form_alter(
     return;
   }
 
+  // Handle group_membership form.
+  _eic_group_membership_handle_group_membership_form($form, $form_state, $form_id);
+  // Handle group_membership_request form.
+  _eic_group_membership_handle_group_membership_request_form($form, $form_state, $form_id);
+}
+
+/**
+ * Handle group_membership form.
+ */
+function _eic_group_membership_handle_group_membership_form(&$form, FormStateInterface $form_state, $form_id) {
   /** @var \Drupal\Core\Entity\EntityForm $form_object */
   $form_object = $form_state->getFormObject();
   if (!$form_object instanceof GroupContentForm) {
@@ -160,6 +171,43 @@ function eic_group_membership_form_alter(
         $form['actions']['delete']['#url'] = $new_url;
       }
       break;
+  }
+}
+
+/**
+ * Handle group_membership form.
+ */
+function _eic_group_membership_handle_group_membership_request_form(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\Core\Entity\EntityForm $form_object */
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof GroupMembershipApproveForm) {
+    return;
+  }
+
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  $entity = $form_object->getEntity();
+
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership_request') {
+    return;
+  }
+
+  $group_type = $entity->getContentPlugin()->getGroupTypeId();
+  $owner_role = $group_type . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+
+  switch ($form_id) {
+    case "group_content_{$group_type}-group_membership_request_{$group_type}-approve-membership_form":
+      // Remove the owner role.
+      if (isset($form['roles']['#options'][$owner_role])) {
+        unset($form['roles']['#options'][$owner_role]);
+      }
+      // Rename the options.
+      foreach ($form['roles']['#options'] as $role_id => $role_name) {
+        $form['roles']['#options'][$role_id] = t('Set as %role_name', [
+          '%role_name' => $role_name,
+        ]);
+      }
+      break;
+
   }
 }
 
