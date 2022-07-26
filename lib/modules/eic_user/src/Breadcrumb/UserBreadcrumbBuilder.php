@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
@@ -46,7 +47,14 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function applies(RouteMatchInterface $route_match) {
     $route_name = $route_match->getRouteName();
-    return strpos($route_name, 'eic_user.user.') !== FALSE || $route_name === 'entity.profile.edit_form';
+    if (strpos($route_name, 'eic_user.user.') !== FALSE) {
+      return TRUE;
+    }
+    $routes = [
+      'entity.profile.edit_form',
+      'entity.user.edit_form',
+    ];
+    return in_array($route_name, $routes);
   }
 
   /**
@@ -63,6 +71,14 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         $user = $profile->getOwner();
       }
     }
+
+    // Add link to Members overview page.
+    $links[] = Link::fromTextAndUrl(
+      $this->t('Members'),
+      GlobalOverviewPages::getGlobalOverviewPageLink(
+        GlobalOverviewPages::MEMBERS
+      )->getUrl()
+    );
 
     if ($user instanceof UserInterface) {
       $links[] = Link::fromTextAndUrl(
