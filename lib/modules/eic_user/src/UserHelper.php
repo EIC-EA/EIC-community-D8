@@ -243,6 +243,36 @@ class UserHelper {
   }
 
   /**
+   * This will make sure the user has a member profile entity created.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *  The user entity.
+   *
+   * @return bool
+   *   TRUE if a member profile exists for the given user.
+   */
+  public function ensureUserMemberProfile(UserInterface $user) {
+    /** @var \Drupal\profile\Entity\ProfileInterface $profile */
+    if (!$this->getUserMemberProfile($user)) {
+      try {
+        $profile = $this->entityTypeManager->getStorage('profile')->create([
+          'type' => ProfileConst::MEMBER_PROFILE_TYPE_NAME,
+          'uid' => $user->id(),
+        ]);
+        $profile->setDefault(TRUE);
+        $profile->setPublished();
+        $profile->save();
+        return TRUE;
+      }
+      catch (\Exception $error) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
    * Checks if a user has completed their profile.
    *
    * @param \Drupal\user\UserInterface $account
@@ -252,6 +282,9 @@ class UserHelper {
    *   TRUE if profile is completed, FALSE otherwise.
    */
   public function isUserProfileCompleted(UserInterface $account) {
+    // Make sure the user has a member profile entity.
+    $this->ensureUserMemberProfile($account);
+
     /** @var \Drupal\profile\Entity\ProfileInterface $profile */
     if (!$profile = $this->getUserMemberProfile($account)) {
       return FALSE;
