@@ -39,7 +39,7 @@ content:
     third_party_settings: {  }
   field_cv_link:
     type: link_default
-    weight: 1
+    weight: 5
     region: content
     settings:
       placeholder_url: ''
@@ -47,93 +47,92 @@ content:
     third_party_settings: {  }
   field_location_address:
     type: address_default
-    weight: 6
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_social_links:
     type: social_links
-    weight: 9
+    weight: 6
     region: content
     settings:
       select_social: false
       disable_weight: false
     third_party_settings: {  }
   field_vocab_geo:
-    type: entity_reference_autocomplete
-    weight: 3
+    type: entity_tree
+    weight: 1
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      items_to_load: '25'
+      selected_terms_label: ''
+      search_label: 'Select a value'
+      search_placeholder: Search
+      auto_select_parents: '1'
+      disable_top_choices: 0
+      load_all: 0
+      can_create_tag: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      has_error: 0
     third_party_settings: {  }
   field_vocab_job_title:
-    type: entity_reference_autocomplete
-    weight: 8
+    type: options_buttons
+    weight: 9
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_vocab_language:
-    type: entity_reference_autocomplete
-    weight: 7
+    type: options_buttons
+    weight: 8
     region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+    settings: {  }
     third_party_settings: {  }
   field_vocab_topic_expertise:
     type: entity_tree
-    weight: 4
-    region: content
-    settings:
-      match_top_level_limit: '0'
-      disable_top_choices: '1'
-      items_to_load: '25'
-      load_all: 0
-      auto_select_parents: 0
-      ignore_current_user: 0
-      target_bundles: {  }
-      is_required: false
-      can_create_tag: false
-      search_label: 'Select a value'
-      search_placeholder: Search
-      selected_terms_label: 'Your selected values'
-    third_party_settings: {  }
-  field_vocab_topic_interest:
-    type: entity_tree
-    weight: 5
-    region: content
-    settings:
-      match_top_level_limit: '0'
-      disable_top_choices: '1'
-      items_to_load: '25'
-      load_all: 0
-      auto_select_parents: 0
-      ignore_current_user: 0
-      target_bundles: {  }
-      is_required: false
-      can_create_tag: false
-      search_label: 'Select a value'
-      search_placeholder: Search
-      selected_terms_label: 'Your selected values'
-    third_party_settings: {  }
-  field_vocab_user_type:
-    type: entity_reference_autocomplete
     weight: 2
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
+      has_error: 0
+    third_party_settings: {  }
+  field_vocab_topic_interest:
+    type: entity_tree
+    weight: 3
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
+      has_error: 0
+    third_party_settings: {  }
+  field_vocab_user_type:
+    type: options_buttons
+    weight: 7
+    region: content
+    settings: {  }
     third_party_settings: {  }
 hidden:
   field_comments_notifications: true
