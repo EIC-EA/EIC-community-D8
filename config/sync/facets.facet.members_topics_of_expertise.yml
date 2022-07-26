@@ -11,6 +11,8 @@ id: members_topics_of_expertise
 name: 'Topics of expertise'
 weight: -2
 min_count: 1
+missing: false
+missing_label: others
 url_alias: topics_of_expertise
 facet_source_id: 'search_api:views_page__group_overviews__members'
 field_identifier: user_profile_field_vocab_topic_expertise

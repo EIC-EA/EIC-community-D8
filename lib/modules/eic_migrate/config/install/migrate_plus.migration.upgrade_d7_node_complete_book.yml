@@ -66,6 +66,12 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
+  moderation_state:
+    - plugin: static_map
+      source: status
+      map:
+        0: draft
+        1: published
 destination:
   plugin: 'entity_complete:node'
   translations: true

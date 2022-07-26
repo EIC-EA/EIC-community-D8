@@ -113,6 +113,17 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return [
+      'add_facet_my_groups' => 0,
+      'add_facet_interests' => 0,
+      'page_options' => [],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(
     array $form,
     FormStateInterface $form_state
