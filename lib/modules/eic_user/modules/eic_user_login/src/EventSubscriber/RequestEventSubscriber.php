@@ -22,12 +22,13 @@ class RequestEventSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * Lis of routes that should not be redirected.
+   * List of routes that should not be redirected.
    *
    * @var array
    */
   const ALLOWED_ROUTES = [
     ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME,
+    'entity.user.edit_form',
     'user.logout',
   ];
 
@@ -99,12 +100,11 @@ class RequestEventSubscriber implements EventSubscriberInterface {
 
     // Check if user profile is completed.
     if ($this->tempStore->get('is_profile_completed') === FALSE) {
-      // Redirect the user to their member profile.
+      // Redirect the user to their user account.
       $route_parameters = [
         'user' => $this->currentUser->id(),
-        'profile_type' => ProfileConst::MEMBER_PROFILE_TYPE_NAME,
       ];
-      $url = Url::fromRoute(ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME, $route_parameters);
+      $url = Url::fromRoute('entity.user.edit_form', $route_parameters);
       $response = new RedirectResponse($url->toString());
       $event->setResponse($response);
 
