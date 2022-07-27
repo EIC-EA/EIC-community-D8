@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\NodeInterface;
 
@@ -104,6 +105,9 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
     }
 
     $variables['news_stories_items'][] = $item;
+
+    // Add link to the overview.
+    $variables['news_stories_overview_url'] = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::NEWS_STORIES)->getUrl();
 
     // Add node cache tags.
     $cache_tags = Cache::mergeTags(
