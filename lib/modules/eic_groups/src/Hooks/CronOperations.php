@@ -299,9 +299,11 @@ class CronOperations implements ContainerInjectionInterface {
 
     // Date from which we want to skip invitation reminders to avoind sending
     // reminders for old invitations.
-    $skip_invitation_reminder_time = new DrupalDateTime('today -' . Settings::get('cron_interval_group_skip_invite_time', 86400 * 30) . ' days');
+    $skip_invitation_reminder_time = new DrupalDateTime('today -' . Settings::get('cron_interval_group_skip_invite_reminder_time', 86400 * 30) . ' days');
 
-    $last_reminder_time = new DrupalDateTime('today -3 days');
+    // Frequency date to send reminders. By default every 3 days a reminder
+    // will be sent for the same invitation.
+    $reminder_frequency_time = new DrupalDateTime('today -' . Settings::get('cron_interval_group_invite_reminder_frequency_time', 86400 * 3) . ' days');
 
     $query = $this->database->select('group_content_field_data', 'gc_fd');
     $query->condition('gc_fd.type', '%-group_invitation', 'LIKE');
@@ -321,7 +323,7 @@ class CronOperations implements ContainerInjectionInterface {
     // invitations where the last reminder date was registered 3 days ago.
     $orInvitationReminderDate = $query->orConditionGroup()
       ->isNull('gc_ird.field_invitation_reminder_date_value')
-      ->condition('gc_ird.field_invitation_reminder_date_value', $last_reminder_time->getTimestamp(), '<=');
+      ->condition('gc_ird.field_invitation_reminder_date_value', $reminder_frequency_time->getTimestamp(), '<=');
     $query->condition($orInvitationReminderDate);
 
     $query->condition('gc_is.invitation_status_value', GroupInvitation::INVITATION_PENDING);
