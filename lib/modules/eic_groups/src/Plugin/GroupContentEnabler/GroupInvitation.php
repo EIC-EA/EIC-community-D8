@@ -15,6 +15,8 @@ use Drupal\ginvite\Plugin\GroupContentEnabler\GroupInvitation as GroupInvitation
  */
 class GroupInvitation extends GroupInvitationBase {
 
+  const INVITATION_REMINDER_MAX_COUNT = 3;
+
   /**
    * {@inheritdoc}
    */

@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups\Hooks;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -11,6 +12,7 @@ use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_groups\Plugin\GroupContentEnabler\GroupInvitation as GroupContentEnablerGroupInvitation;
 use Drupal\eic_messages\Service\MessageBus;
 use Drupal\ginvite\Plugin\GroupContentEnabler\GroupInvitation;
 use Drupal\group\Entity\Group;
@@ -295,11 +297,35 @@ class CronOperations implements ContainerInjectionInterface {
       return;
     }
 
+    // Date from which we want to skip invitation reminders to avoind sending
+    // reminders for old invitations.
+    $skip_invitation_reminder_time = new DrupalDateTime('today -' . Settings::get('cron_interval_group_skip_invite_time', 86400 * 30) . ' days');
+
+    $last_reminder_time = new DrupalDateTime('today -3 days');
+
     $query = $this->database->select('group_content_field_data', 'gc_fd');
     $query->condition('gc_fd.type', '%-group_invitation', 'LIKE');
     $query->join('group_content__invitation_status', 'gc_is', 'gc_is.entity_id = gc_fd.id');
     $query->fields('gc_fd', ['id', 'gid', 'entity_id']);
+
+    $query->leftJoin('group_content__field_invitation_reminder_count', 'gc_irc', 'gc_irc.entity_id = gc_fd.id');
+    // Reminders are sent 3 times and therefore, we skip invitations that
+    // reached that limit.
+    $orInvitationReminderCounter = $query->orConditionGroup()
+      ->isNull('gc_irc.field_invitation_reminder_count_value')
+      ->condition('gc_irc.field_invitation_reminder_count_value', GroupContentEnablerGroupInvitation::INVITATION_REMINDER_MAX_COUNT, '<');
+    $query->condition($orInvitationReminderCounter);
+
+    $query->leftJoin('group_content__field_invitation_reminder_date', 'gc_ird', 'gc_ird.entity_id = gc_fd.id');
+    // Reminders are sent every 3 days and therefore we need to grab
+    // invitations where the last reminder date was registered 3 days ago.
+    $orInvitationReminderDate = $query->orConditionGroup()
+      ->isNull('gc_ird.field_invitation_reminder_date_value')
+      ->condition('gc_ird.field_invitation_reminder_date_value', $last_reminder_time->getTimestamp(), '<=');
+    $query->condition($orInvitationReminderDate);
+
     $query->condition('gc_is.invitation_status_value', GroupInvitation::INVITATION_PENDING);
+    $query->condition('gc_fd.created', $skip_invitation_reminder_time->getTimestamp(), '>=');
     $query->orderBy('gc_fd.id');
     $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -327,6 +353,9 @@ class CronOperations implements ContainerInjectionInterface {
       }
 
       $owner = $group_content->getOwner();
+      $reminder_counter = $group_content->get('field_invitation_reminder_count')->isEmpty() ?
+        1 :
+        (int) $group_content->get('field_invitation_reminder_count')->value + 1;
 
       $message = Message::create([
         'template' => 'notify_group_invitation_reminder',
@@ -340,6 +369,10 @@ class CronOperations implements ContainerInjectionInterface {
       $message->setOwnerId($uid);
 
       $this->messageBus->dispatch($message);
+
+      $group_content->set('field_invitation_reminder_count', $reminder_counter);
+      $group_content->set('field_invitation_reminder_date', $now);
+      $group_content->save();
     }
 
     $this->state->set('last_cron_group_invite_time', $now);

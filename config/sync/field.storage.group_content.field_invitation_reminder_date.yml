@@ -1,0 +1,18 @@
+uuid: 264920ce-6237-4fde-9d88-b1c33a34a741
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group_content.field_invitation_reminder_date
+field_name: field_invitation_reminder_date
+entity_type: group_content
+type: timestamp
+settings: {  }
+module: core
+locked: true
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - field.field.group_content.group-group_invitation.field_invitation_counter
+    - field.field.group_content.group-group_invitation.field_invitation_reminder_count
+    - field.field.group_content.group-group_invitation.field_invitation_reminder_date
     - field.field.group_content.group-group_invitation.group_roles
     - field.field.group_content.group-group_invitation.invitation_status
     - field.field.group_content.group-group_invitation.invitee_mail
@@ -13,6 +15,19 @@ targetEntityType: group_content
 bundle: group-group_invitation
 mode: default
 content:
+  field_invitation_reminder_count:
+    type: number
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_invitation_reminder_date:
+    type: datetime_timestamp
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   group_roles:
     type: options_buttons
     weight: 2
