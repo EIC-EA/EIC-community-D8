@@ -23,3 +23,15 @@ function eic_webservices_form_user_form_alter(&$form, FormStateInterface $form_s
   \Drupal::classResolver(FormOperations::class)
     ->formUserFormAlter($form, $form_state, $form_id);
 }
+
+/**
+ * Implements hook_validation_constraint_alter().
+ */
+function eic_webservices_validation_constraint_alter(array &$definitions) {
+  // We want our custom implementation for AddressFormat constraint validation.
+  if (!empty($definitions['AddressFormat'])) {
+    if (isset($definitions['AddressFormat']['provider']) && $definitions['AddressFormat']['provider'] == 'address') {
+      $definitions['AddressFormat']['class'] = 'Drupal\eic_webservices\Plugin\Validation\Constraint\AddressFormatConstraint';
+    }
+  }
+}
