@@ -4,6 +4,7 @@ namespace Drupal\eic_webservices\Utility;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides helper functions for EIC Webservices module.
@@ -25,6 +26,20 @@ class WsRestHelper {
    */
   public function __construct(EntityFieldManagerInterface $entity_field_manager) {
     $this->entityFieldManager = $entity_field_manager;
+  }
+
+  /**
+   * Determines if the current request is a SMED rest request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @return bool
+   *   TRUE if this is a SMED rest request.
+   */
+  public static function isSmedRestRequest(Request $request) {
+    $path_info = $request->getPathInfo();
+    return (strpos($path_info, '/smed/api/v1') === 0);
   }
 
   /**
@@ -91,19 +106,6 @@ class WsRestHelper {
       }
     }
 
-    return $value;
-  }
-
-  /**
-   * Make sure values are acceptable for Address fields.
-   *
-   * @param array $value
-   *   The value for the address field.
-   *
-   * @return array
-   *   The processed address value.
-   */
-  public static function handleAddressFields(array $value): array {
     return $value;
   }
 
