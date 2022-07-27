@@ -175,10 +175,10 @@ $settings['cron_interval_late_reindex_entities'] = getenv('CRON_INTERVAL_LATE_RE
 
 $databases['migrate']['default'] = array (
   'database' => 'communityd7',
-  'username' => 'communityd7',
+  'username' => getenv('MIGRATION_DATABASE_USER'),
   'password' => getenv('MIGRATION_DATABASE_PASSWORD'),
   'prefix' => '',
-  'host' => 'eismea-mariadb-mariadb.communityd8.svc.cluster.local',
+  'host' => getenv('MIGRATION_DATABASE_HOST'),
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
