@@ -120,10 +120,10 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
       $register_text = $config['register_text'];
     }
 
-    $register_route = Url::fromRoute('user.register');
+    $register_route = Url::fromRoute('eic_user_login.member_access');
     $registration_link = Link::fromTextAndUrl($register_text, $register_route);
 
-    $login_route = Url::fromRoute('user.login');
+    $login_route = Url::fromRoute('eic_user_login.member_access');
     $login_link = Link::fromTextAndUrl($login_text, $login_route);
 
     $build['title'] = $title;
