@@ -184,3 +184,7 @@ $databases['migrate']['default'] = array (
   'driver' => 'mysql',
   'collation' => 'utf8mb4_general_ci',
 );
+
+if (PHP_SAPI === 'cli') {
+  ini_set('memory_limit', '4G');
+}
