@@ -172,3 +172,19 @@ $settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
 $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
 
 $settings['cron_interval_late_reindex_entities'] = getenv('CRON_INTERVAL_LATE_REINDEX_ENTITIES_QUEUE');
+
+$databases['migrate']['default'] = array (
+  'database' => 'communityd7',
+  'username' => getenv('MIGRATION_DATABASE_USER'),
+  'password' => getenv('MIGRATION_DATABASE_PASSWORD'),
+  'prefix' => '',
+  'host' => getenv('MIGRATION_DATABASE_HOST'),
+  'port' => '3306',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+  'collation' => 'utf8mb4_general_ci',
+);
+
+if (PHP_SAPI === 'cli') {
+  ini_set('memory_limit', '4G');
+}
