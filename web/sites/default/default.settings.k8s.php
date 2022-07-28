@@ -187,4 +187,8 @@ $databases['migrate']['default'] = array (
 
 if (PHP_SAPI === 'cli') {
   ini_set('memory_limit', '4G');
+  if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+    // Set Redis as the default backend for any cache bin not otherwise specified.
+    $settings['cache']['default'] = 'cache.backend.null';
+  }
 }
