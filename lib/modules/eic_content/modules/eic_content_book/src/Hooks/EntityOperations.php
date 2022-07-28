@@ -88,7 +88,11 @@ class EntityOperations implements ContainerInjectionInterface {
           $add_book_page_urls = $this->getBookPageAddFormUrls($entity);
 
           // If user can't access the route.
-          if (!$add_book_page_urls['add_child_book_page']->access($this->currentUser)) {
+          if (
+            empty($add_book_page_urls) ||
+            !array_key_exists('add_child_book_page', $add_book_page_urls) ||
+            !$add_book_page_urls['add_child_book_page']->access($this->currentUser)
+          ) {
             return;
           }
 
@@ -137,6 +141,10 @@ class EntityOperations implements ContainerInjectionInterface {
     }
     $links = [];
     foreach ($link_options as $key => $options) {
+      $url = Url::fromRoute('node.add', $route_parameters, $options);
+      if (!$url->access()) {
+        continue;
+      }
       $links[$key] = Url::fromRoute('node.add', $route_parameters, $options);
     }
     return $links;

@@ -3,14 +3,17 @@
 namespace Drupal\eic_default_content\Generator;
 
 use Drupal\eic_events\Constants\Event;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_overviews\Entity\OverviewPage;
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\GlobalSourceType;
 use Drupal\eic_search\Search\Sources\GlobalEventSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\OrganisationSourceType;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class OverviewPageGenerator
@@ -30,6 +33,21 @@ class OverviewPageGenerator extends CoreGenerator {
         'sm_content_field_vocab_topics_string' => 'sm_content_field_vocab_topics_string',
         'sm_content_field_vocab_geo_string' => 'sm_content_field_vocab_geo_string',
       ],
+      'sort_options' => [
+        'ss_global_created_date' => 'ss_global_created_date',
+        'timestamp' => 'timestamp',
+        'ss_group_user_fullname' => 'ss_group_user_fullname',
+        'its_document_download_total' => 'its_document_download_total',
+        'its_statistics_view' => 'its_statistics_view',
+        'its_content_comment_count' => 'its_content_comment_count',
+        'its_flag_like_content' => 'its_flag_like_content',
+        'dm_aggregated_changed' => 'dm_aggregated_changed',
+        'its_last_comment_timestamp' => 'its_last_comment_timestamp',
+        'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => (
+          'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT
+        ),
+        'score' => 'score',
+      ],
       'source_type' => GlobalSourceType::class,
     ], 'Global search', '/search',
       GlobalOverviewPages::GLOBAL_SEARCH
@@ -39,6 +57,15 @@ class OverviewPageGenerator extends CoreGenerator {
       'enable_search' => TRUE,
       'facets' => [
         'sm_group_topic_name' => 'sm_group_topic_name',
+      ],
+      'sort_options' => [
+        DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID,
+        'ss_global_created_date' => 'ss_global_created_date',
+        'timestamp' => 'timestamp',
+        'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => (
+          'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT
+        ),
+        'score' => 'score',
       ],
       'source_type' => GroupSourceType::class,
     ], 'Groups', '/groups',
@@ -54,6 +81,13 @@ class OverviewPageGenerator extends CoreGenerator {
         'ss_user_profile_field_location_address_country_code' => 'ss_user_profile_field_location_address_country_code',
         'sm_user_profile_field_vocab_language_array' => 'sm_user_profile_field_vocab_language_array'
       ],
+      'sort_options' => [
+        DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID,
+        'ss_global_created_date' => 'ss_global_created_date',
+        'timestamp' => 'timestamp',
+        'ds_user_access' => 'ds_user_access',
+        'score' => 'score',
+      ],
       'source_type' => UserGallerySourceType::class,
     ], 'Members', '/people',
       GlobalOverviewPages::MEMBERS
@@ -65,6 +99,13 @@ class OverviewPageGenerator extends CoreGenerator {
         'ss_content_type' => 'ss_content_type',
         'sm_content_field_vocab_topics_string' => 'sm_content_field_vocab_topics_string',
         'sm_content_field_vocab_geo_string' => 'sm_content_field_vocab_geo_string',
+      ],
+      'sort_options' => [
+        'ss_drupal_changed_timestamp' => 'ss_drupal_changed_timestamp',
+        'ss_drupal_timestamp' => 'ss_drupal_timestamp',
+        'its_statistics_view' => 'its_statistics_view',
+        'its_flag_like_content' => 'its_flag_like_content',
+        'its_content_comment_count' => 'its_content_comment_count',
       ],
       'source_type' => NewsStorySourceType::class,
     ], 'News & Stories', '/articles',
@@ -79,6 +120,14 @@ class OverviewPageGenerator extends CoreGenerator {
         Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
         'ss_group_event_country' => 'ss_group_event_country',
       ],
+      'sort_options' => [
+        Event::SOLR_FIELD_ID_WEIGHT_STATE => Event::SOLR_FIELD_ID_WEIGHT_STATE,
+        'ss_global_created_date' => 'ss_global_created_date',
+        'timestamp' => 'timestamp',
+        'ss_group_label_string' => 'ss_group_label_string',
+        'its_content_field_date_range_start_value' => 'its_content_field_date_range_start_value',
+        'score' => 'score',
+      ],
       'source_type' => GlobalEventSourceType::class,
     ], 'Events', '/events',
       GlobalOverviewPages::EVENTS
@@ -90,6 +139,12 @@ class OverviewPageGenerator extends CoreGenerator {
         'sm_group_organisation_type_string' => 'sm_group_organisation_type_string',
         'sm_group_topic_name' => 'sm_group_topic_name',
         'sm_group_field_locations_string' => 'sm_group_field_locations_string',
+      ],
+      'sort_options' => [
+        DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID,
+        'ss_global_created_date' => 'ss_global_created_date',
+        'timestamp' => 'timestamp',
+        'score' => 'score',
       ],
       'source_type' => OrganisationSourceType::class,
     ], 'Organisations', '/organisations',

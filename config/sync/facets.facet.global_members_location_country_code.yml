@@ -11,6 +11,8 @@ id: global_members_location_country_code
 name: Location
 weight: 0
 min_count: 1
+missing: false
+missing_label: others
 url_alias: location
 facet_source_id: 'search_api:views_page__global_overviews__members'
 field_identifier: user_profile_field_location_address_country_code

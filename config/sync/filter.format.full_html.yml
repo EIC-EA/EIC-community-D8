@@ -29,6 +29,12 @@ filters:
       allowed_view_modes: {  }
       allowed_media_types:
         image: image
+  filter_iframe_cck:
+    id: filter_iframe_cck
+    provider: oe_webtools_cookie_consent
+    status: true
+    weight: 0
+    settings: {  }
   eic_filter_div_tables:
     id: eic_filter_div_tables
     provider: eic_wysiwyg
@@ -46,12 +52,6 @@ filters:
   filter_autop:
     id: filter_autop
     provider: filter
-    status: true
-    weight: 0
-    settings: {  }
-  filter_iframe_cck:
-    id: filter_iframe_cck
-    provider: oe_webtools_cookie_consent
     status: true
     weight: 0
     settings: {  }

@@ -5,3 +5,12 @@ eic_user_login.settings:
     _form: 'Drupal\eic_user_login\Form\SettingsForm'
   requirements:
     _permission: 'administer site configuration'
+
+eic_user_login.member_access:
+  path: '/member-access'
+  defaults:
+    _title: 'Member access'
+    _controller: '\Drupal\eic_user_login\Controller\MemberAccessController::build'
+  requirements:
+    # This page should be accessible to anyone.
+    _access: 'TRUE'

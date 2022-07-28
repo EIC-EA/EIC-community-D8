@@ -274,7 +274,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // Adds pending membership requests URL to the group operation links.
     $group_operation_links['edit-membership-requests'] = [
       'title' => $this->t('Membership requests'),
-      'url' => Url::fromRoute('view.group_pending_members.page_1', ['group' => $group->id()]),
+      'url' => Url::fromRoute('view.eic_group_pending_members.page_1', ['group' => $group->id()]),
     ];
 
     // Adds pending invitations URL to the group operation links.
@@ -380,7 +380,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
             'destination' => Url::fromRoute('<current>')->toString(),
           ],
         ];
-        $link['url'] = Url::fromRoute('user.login', [], $login_link_options);
+        $link['url'] = Url::fromRoute('eic_user_login.member_access', [], $login_link_options);
         switch ($joining_methods[0]['plugin_id']) {
           case 'tu_open_method':
             $link['title'] = $this->t('Log in to join group');

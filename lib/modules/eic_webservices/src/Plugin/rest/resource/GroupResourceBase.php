@@ -21,6 +21,13 @@ abstract class GroupResourceBase extends EntityResource {
   protected $wsHelper;
 
   /**
+   * The EIC Webservices REST helper class.
+   *
+   * @var \Drupal\eic_webservices\Utility\WsRestHelper
+   */
+  protected $wsRestHelper;
+
+  /**
    * The SMED taxonomy helper class.
    *
    * @var \Drupal\eic_webservices\Utility\SmedTaxonomyHelper
@@ -40,6 +47,7 @@ abstract class GroupResourceBase extends EntityResource {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->wsHelper = $container->get('eic_webservices.ws_helper');
+    $instance->wsRestHelper = $container->get('eic_webservices.ws_rest_helper');
     $instance->smedTaxonomyHelper = $container->get('eic_webservices.taxonomy_helper');
     $instance->requestStack = $container->get('request_stack');
     return $instance;
@@ -51,6 +59,10 @@ abstract class GroupResourceBase extends EntityResource {
   public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
     // Process SMED taxonomy fields to convert the SMED ID to Term ID.
     $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
+
+    // Process fields to be formatted according to their type.
+    $this->wsRestHelper->formatEntityFields($entity);
+
     return parent::patch($original_entity, $entity);
   }
 

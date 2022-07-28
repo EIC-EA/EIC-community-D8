@@ -17,6 +17,12 @@ function eic_community_theme_suggestions_block_alter(
   array &$suggestions,
   array $variables
 ) {
+  // Add suggestions per block type.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    $bundle = $variables['elements']['content']['#block_content']->bundle();
+    array_splice($suggestions, 1, 0, 'block__block_content__' . $bundle);
+  }
+
   $is_taxonomy_page = TopicsManager::isTopicPage();
 
   if (
@@ -24,8 +30,7 @@ function eic_community_theme_suggestions_block_alter(
     && isset($variables['elements']['#configuration']['region'])
     && 'content' === $variables['elements']['#configuration']['region']
     && 'views' === $variables['elements']['#configuration']['provider']
-  )
-  {
+  ) {
     $suggestions[] = 'block__global_block_taxonomy_term_page';
   }
 

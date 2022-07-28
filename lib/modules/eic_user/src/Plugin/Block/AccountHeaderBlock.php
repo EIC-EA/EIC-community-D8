@@ -5,6 +5,7 @@ namespace Drupal\eic_user\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\masquerade\Masquerade;
@@ -37,6 +38,13 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   private $currentRequest;
 
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
 
   /**
    * @param array $configuration
@@ -52,12 +60,14 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
     $plugin_definition,
     AccountProxyInterface $account_proxy,
     RequestStack $request_stack,
+    RouteMatchInterface $current_route_match,
     Masquerade $masquerade
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->currentUser = $account_proxy;
     $this->currentRequest = $request_stack->getCurrentRequest();
+    $this->currentRouteMatch = $current_route_match;
     $this->masquerade = $masquerade;
   }
 
@@ -76,6 +86,7 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
       $plugin_definition,
       $container->get('current_user'),
       $container->get('request_stack'),
+      $container->get('current_route_match'),
       $container->get('masquerade')
     );
   }
@@ -85,14 +96,26 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
    */
   public function build() {
     if ($this->currentUser->isAnonymous()) {
+      // If there is a defined destination, preserve it, otherwise use the
+      // current page for the destination.
+      $destination = NULL;
+      if (!empty($this->currentRequest->get('destination'))) {
+        $destination = $this->currentRequest->get('destination');
+      }
+      else {
+        if ($this->currentRouteMatch->getRouteName() !== 'eic_user_login.member_access') {
+          $destination = $this->currentRequest->getRequestUri();
+        }
+      }
+
+      $url = Url::fromRoute('eic_user_login.member_access');
+      if ($destination) {
+        $url->setOption('query', ['destination' => $destination]);
+      }
+
       $build['#login']['link'] = [
-        'label' => t('Log in'),
-        'path' => Url::fromRoute(
-          'user.login',
-          [
-            'destination' => $this->currentRequest->getRequestUri(),
-          ]
-        ),
+        'label' => t('Member access'),
+        'path' => $url,
       ];
     }
     else {

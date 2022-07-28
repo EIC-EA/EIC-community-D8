@@ -165,7 +165,7 @@ class ProcessorGlobal extends DocumentProcessor {
           );
         }
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
-          $fullname = realname_load($owner);
+          $fullname = $owner->getDisplayName();
 
           $this->addOrUpdateDocumentField(
             $document,
@@ -183,7 +183,12 @@ class ProcessorGlobal extends DocumentProcessor {
           $user_url = $user instanceof UserInterface ? $user->toUrl()
             ->toString() : '';
         }
-        $fullname = $fields['ss_author_first_name'] . ' ' . $fields['ss_author_last_name'];
+        if (!empty($fields['ss_author_first_name']) && !empty($fields['ss_author_last_name'])) {
+          $fullname = $fields['ss_author_first_name'] . ' ' . $fields['ss_author_last_name'];
+        }
+        else {
+          $fullname = 'undefined';
+        }
         $status = TRUE;
         $type = $fields['ss_type'];
         $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];
@@ -192,7 +197,7 @@ class ProcessorGlobal extends DocumentProcessor {
         break;
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
-        $fullname = realname_load($user);
+        $fullname = $user->getDisplayName();
 
         $this->addOrUpdateDocumentField(
           $document,

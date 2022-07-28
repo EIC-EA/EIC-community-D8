@@ -34,10 +34,14 @@ class OrganisationResource extends GroupResourceBase {
     // Check if organisation already exists.
     if (!empty($entity->{$smed_id_field}->value) &&
       $organisation = $this->wsHelper->getGroupBySmedId($entity->{$smed_id_field}->value, 'organisation')) {
+      $url = $organisation->toUrl('canonical', ['absolute' => TRUE]);
 
       // Send custom response.
       $data = [
         'message' => 'Unprocessable Entity: validation failed. Organisation already exists.',
+        'gid' => $organisation->id(),
+        'label' => $organisation->label(),
+        'uri' => $url->toString(TRUE)->getGeneratedUrl(),
         $smed_id_field => $organisation->{$smed_id_field}->value,
       ];
 
@@ -46,6 +50,9 @@ class OrganisationResource extends GroupResourceBase {
 
     // Process SMED taxonomy fields to convert the SMED ID to Term ID.
     $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
+
+    // Process fields to be formatted according to their type.
+    $this->wsRestHelper->formatEntityFields($entity);
 
     $this->handleGroupOwner($entity);
 

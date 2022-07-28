@@ -103,6 +103,11 @@ class EICBookNavigationBlock extends BookNavigationBlock {
       return [];
     }
 
+    // Ignore book pages that don't have a bid.
+    if (empty($node->book['bid'])) {
+      return [];
+    }
+
     $data = $this->bookManager->bookTreeAllData($node->book['bid']);
     $book_data = reset($data);
 

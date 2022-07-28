@@ -1,0 +1,19 @@
+uuid: 297127f0-ea41-4b02-9e23-72d8349bf609
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_receiver_email
+    - message.template.notify_content_recommendation
+id: message.notify_content_recommendation.field_receiver_email
+field_name: field_receiver_email
+entity_type: message
+bundle: notify_content_recommendation
+label: 'Receiver email'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

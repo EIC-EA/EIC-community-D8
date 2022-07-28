@@ -25,6 +25,7 @@ class SmedTaxonomyHelper {
     'job_titles',
     'languages',
     'organisation_sizes',
+    'organisation_types',
     'services_and_products',
     'target_markets',
     'topics',

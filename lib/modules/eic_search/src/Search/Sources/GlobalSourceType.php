@@ -58,9 +58,12 @@ class GlobalSourceType extends SourceType {
   public function getAvailableSortOptions(): array {
     return [
       'ss_global_created_date' => [
+        'label' => $this->t('Date created', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Date created', [], ['context' => 'eic_search']),
+      ],
+      'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
       ],
       'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
@@ -155,7 +158,14 @@ class GlobalSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return ['ss_global_created_date', 'DESC'];
+    return ['timestamp', 'DESC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_content_field_vocab_topics'];
   }
 
 }

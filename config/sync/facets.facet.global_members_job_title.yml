@@ -11,6 +11,8 @@ id: global_members_job_title
 name: 'Job title'
 weight: -1
 min_count: 1
+missing: false
+missing_label: others
 url_alias: job_title
 facet_source_id: 'search_api:views_page__global_overviews__members'
 field_identifier: user_profile_job_string

@@ -68,6 +68,7 @@ process:
       default_value: filtered_html
     -
       plugin: callback
+      source: c4m_body/0/format
       callable:
         - \Drupal\eic_migrate\Constants\Misc
         - getTextFormat

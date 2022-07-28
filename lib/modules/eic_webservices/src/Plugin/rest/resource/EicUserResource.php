@@ -80,9 +80,14 @@ class EicUserResource extends EntityResource {
 
     // If user already exists, return a customised response.
     if ($user_exists) {
+      $url = $user->toUrl('canonical', ['absolute' => TRUE]);
       // Send custom response.
       $data = [
         'message' => 'Unprocessable Entity: validation failed. User already exists.',
+        'uid' => $user->id(),
+        'username' => $entity->getAccountName(),
+        'email' => $entity->getEmail(),
+        'uri' => $url->toString(TRUE)->getGeneratedUrl(),
         $smed_id_field => $user->{$smed_id_field}->value,
       ];
 
