@@ -4,12 +4,10 @@ status: true
 dependencies:
   config:
     - system.menu.footer---european-commision
+    - system.menu.footer---european-innovation-cou
     - system.menu.footer---european-union
     - system.menu.main
-  content:
-    - 'block_content:basic:34a810c9-d608-4979-ac40-00657bce344b'
   module:
-    - block_content
     - system
 label: Global
 name: global
@@ -26,7 +24,7 @@ reactions:
       6e7a0bbc-0152-4e8d-91b4-be66ea3bd664:
         uuid: 6e7a0bbc-0152-4e8d-91b4-be66ea3bd664
         id: 'system_menu_block:footer---european-commision'
-        label: 'European Commision'
+        label: 'European Commission'
         provider: system
         label_display: visible
         region: footer
@@ -40,6 +38,7 @@ reactions:
         level: '1'
         depth: '0'
         expand_all_items: 0
+        third_party_settings: {  }
       4c79c45d-9cbe-4c6a-9e40-f3f8647544bb:
         uuid: 4c79c45d-9cbe-4c6a-9e40-f3f8647544bb
         id: 'system_menu_block:footer---european-union'
@@ -57,23 +56,6 @@ reactions:
         level: '1'
         depth: '0'
         expand_all_items: 0
-      88c19636-8f74-41ec-801c-6829bfe3a44d:
-        uuid: 88c19636-8f74-41ec-801c-6829bfe3a44d
-        id: 'block_content:34a810c9-d608-4979-ac40-00657bce344b'
-        label: 'Footer - Site info'
-        provider: block_content
-        label_display: '0'
-        region: footer
-        weight: '-1'
-        custom_id: block_content_34a810c9_d608_4979_ac40_00657bce344b
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: global
-        context_mapping: {  }
-        status: true
-        info: ''
-        view_mode: full
       116105ac-257d-4a9f-9495-133d1ad12d7c:
         uuid: 116105ac-257d-4a9f-9495-133d1ad12d7c
         id: 'system_menu_block:main'
@@ -105,6 +87,24 @@ reactions:
         unique: 0
         context_id: global
         context_mapping: {  }
+      dfb68702-8705-49c3-b0f0-bb5e1659dc45:
+        uuid: dfb68702-8705-49c3-b0f0-bb5e1659dc45
+        id: 'system_menu_block:footer---european-innovation-cou'
+        label: 'European Innovation Council Community'
+        provider: system
+        label_display: '0'
+        region: footer
+        weight: '-1'
+        custom_id: system_menu_block_footer_european_innovation_cou
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        context_mapping: {  }
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        third_party_settings: {  }
     include_default_blocks: 0
     saved: false
 weight: 0

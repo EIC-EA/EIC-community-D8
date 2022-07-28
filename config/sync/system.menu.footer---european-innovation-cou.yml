@@ -1,4 +1,4 @@
-uuid: 37045eea-0e0e-44f1-ac45-8279d4f7ff19
+uuid: 7f0ac40b-a008-4567-aac1-21e1316dbe39
 langcode: en
 status: true
 dependencies:
@@ -7,7 +7,7 @@ dependencies:
 third_party_settings:
   menu_trail_by_path:
     trail_source: ''
-id: footer---european-commision
-label: 'Footer - European Commission'
+id: footer---european-innovation-cou
+label: 'Footer - European Innovation Council'
 description: ''
 locked: false
