@@ -184,6 +184,21 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         }
         break;
 
+      case 'upgrade_d7_node_complete_event_site':
+      case 'upgrade_d7_node_complete_organisation':
+        // Check if we have a group ID.
+        if (!$gid = $event->getDestinationIdValues()[0]) {
+          return;
+        }
+
+        // Load the migrated group.
+        if ($group = $this->entityTypeManager->getStorage('group')->load($gid)) {
+          // We enable syncing to avoid creating new revisions.
+          $group->setSyncing(TRUE);
+          $this->setGroupFeatures($group, $event);
+        }
+        break;
+
       case 'upgrade_d7_node_complete_article':
       case 'upgrade_d7_node_complete_news':
         // Check if we have a node revision ID.
