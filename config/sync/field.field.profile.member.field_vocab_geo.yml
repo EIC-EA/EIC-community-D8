@@ -12,7 +12,7 @@ entity_type: profile
 bundle: member
 label: 'Target Region & Countries'
 description: "Select all countries and/or regions which you are targetting.\r\nYou can select maximum 3 regions and an unlimited number of subregions or countries."
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
