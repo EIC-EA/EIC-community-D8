@@ -76,17 +76,7 @@ function eic_community_preprocess_user(array &$variables) {
         'type' => _eic_community_get_user_type($user, $member_profile),
         'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
         'image' => _get_profile_image_array($user),
-        'meta' => [
-          [
-            'label' => t('Email'),
-            'items' => [
-              [
-                'label' => $user->getEmail(),
-                'path' => "mailto:{$user->getEmail()}",
-              ],
-            ],
-          ],
-        ],
+        'meta' => [],
       ];
 
       // Gets user operation links.
@@ -248,7 +238,8 @@ function _get_render_block_search_overview(string $source): array {
   $access_result = $plugin_block->access(\Drupal::currentUser());
   if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
     return [];
-  } else {
+  }
+  else {
     return $plugin_block->build();
   }
 }
