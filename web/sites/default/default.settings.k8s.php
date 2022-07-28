@@ -132,14 +132,16 @@ if (getenv('TIKA_HOST')) {
 /**
  * SMTP settings.
  */
-if (!empty(getenv('SMTP_SERVER')) && !empty(getenv('SMTP_PASSWORD'))) {
+if (!empty(getenv('SMTP_SERVER'))) {
   $config['smtp.settings']['smtp_host'] = getenv('SMTP_SERVER');
   $config['smtp.settings']['smtp_hostbackup'] = '';
   $config['smtp.settings']['smtp_port'] = getenv('SMTP_PORT');
   $config['smtp.settings']['smtp_protocol'] = getenv('SMTP_PROTOCOL');
+  $config['smtp.settings']['smtp_client_hostname'] = '';
+}
+if (!empty(getenv('SMTP_PASSWORD'))) {
   $config['smtp.settings']['smtp_username'] = getenv('SMTP_USERNAME');
   $config['smtp.settings']['smtp_password'] = getenv('SMTP_PASSWORD');
-  $config['smtp.settings']['smtp_client_hostname'] = '';
 }
 
 if ($from_mail = getenv('NOREPLY_MAIL')) {
