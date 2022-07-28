@@ -10,7 +10,7 @@ id: profile.member.field_vocab_geo
 field_name: field_vocab_geo
 entity_type: profile
 bundle: member
-label: 'Target Region & Countries'
+label: 'Countries and regions of interest'
 description: "Select all countries and/or regions which you are targetting.\r\nYou can select maximum 3 regions and an unlimited number of subregions or countries."
 required: true
 translatable: false
