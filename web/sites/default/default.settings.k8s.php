@@ -96,6 +96,13 @@ if ($solr_host = getenv('SOLR_HOST')) {
 }
 
 /**
+ * Matomo settings.
+ */
+$config['matomo.settings']['site_id'] = getenv('MATOMO_SITE_ID');
+$config['matomo.settings']['url_http'] = 'http://' . getenv('MATOMO_URL');
+$config['matomo.settings']['url_https'] = 'https://' . getenv('MATOMO_URL');
+
+/**
  * EU Login settings.
  */
 $config['cas.settings']['server']['hostname'] = getenv('EULOGIN_URL');
