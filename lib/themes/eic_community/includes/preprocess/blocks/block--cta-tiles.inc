@@ -31,7 +31,10 @@ function eic_community_preprocess_block__cta_tiles(&$variables, &$cache_tags = [
       // Adds CTA Tiles to the theme variables.
       $variables['block_content']['items'][] = [
         'title' => $paragraph_translation->get('field_title')->value,
-        'description' => $paragraph_translation->get('field_body')->value,
+        'description' => check_markup(
+          $paragraph_translation->get('field_body')->value,
+          $paragraph_translation->get('field_body')->format
+        ),
         'actions' => [
           [
             'link' => [
