@@ -1,8 +1,13 @@
 uuid: 37045eea-0e0e-44f1-ac45-8279d4f7ff19
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_trail_by_path
+third_party_settings:
+  menu_trail_by_path:
+    trail_source: ''
 id: footer---european-commision
-label: 'Footer - European Commision'
+label: 'Footer - European Commission'
 description: ''
 locked: false

@@ -24,7 +24,7 @@ reactions:
       6e7a0bbc-0152-4e8d-91b4-be66ea3bd664:
         uuid: 6e7a0bbc-0152-4e8d-91b4-be66ea3bd664
         id: 'system_menu_block:footer---european-commision'
-        label: 'European Commision'
+        label: 'European Commission'
         provider: system
         label_display: visible
         region: footer
@@ -38,6 +38,7 @@ reactions:
         level: '1'
         depth: '0'
         expand_all_items: 0
+        third_party_settings: {  }
       4c79c45d-9cbe-4c6a-9e40-f3f8647544bb:
         uuid: 4c79c45d-9cbe-4c6a-9e40-f3f8647544bb
         id: 'system_menu_block:footer---european-union'
