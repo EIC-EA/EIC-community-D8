@@ -83,7 +83,7 @@ function eic_community_preprocess_page(array &$variables): void {
       'links' => $links,
     ];
 
-    if ($key === 0) {
+    if ($key < count($menu_sections) - 1) {
       $section['list_class_name'] = 'ecl-footer-core__list--columns';
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
     }
