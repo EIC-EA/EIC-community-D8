@@ -23,12 +23,6 @@
     }
 
     &__section {
-      &:first-of-type {
-        .ecl-footer-core__title {
-          width: 100%;
-        }
-      }
-
       &,
       &:first-of-type {
         flex-wrap: wrap;

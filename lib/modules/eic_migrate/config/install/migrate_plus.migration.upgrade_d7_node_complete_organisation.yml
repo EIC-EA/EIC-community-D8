@@ -62,7 +62,7 @@ process:
       migration:
         - upgrade_d7_user
   revision_log_message: log
-  revision_created: revision_timestamp
+  revision_created: timestamp
   # features:
   #   - plugin: eic_group_features
   #     group_bundle: organisation

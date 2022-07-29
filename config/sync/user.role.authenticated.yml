@@ -10,6 +10,7 @@ dependencies:
     - filter
     - flag
     - fragments
+    - matomo
     - media
     - media_entity_download
     - profile
@@ -41,6 +42,7 @@ permissions:
   - 'flag recommend_content'
   - 'flag recommend_content_group'
   - 'flag recommend_group'
+  - 'opt-in or out of matomo tracking'
   - 'unflag bookmark_content'
   - 'unflag bookmark_media'
   - 'unflag follow_content'
