@@ -76,6 +76,9 @@ RUN echo 'deb https://packages.tideways.com/apt-packages-main any-version main' 
 
 RUN echo 'extension=tideways.so\ntideways.api_key=${TIDEWAYS_APIKEY}\n' > /usr/local/etc/php/conf.d/40-tideways.ini
 
-USER web
+#USER web
 
-CMD ["php-fpm"]
+# CMD ["php-fpm"]
+COPY start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh
+CMD ["./start.sh"]
