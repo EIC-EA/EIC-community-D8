@@ -79,6 +79,4 @@ RUN echo 'extension=tideways.so\ntideways.api_key=${TIDEWAYS_APIKEY}\n' > /usr/l
 #USER web
 
 # CMD ["php-fpm"]
-COPY start.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start.sh
-CMD ["./start.sh"]
+CMD ["/usr/local/bin/start.sh"]
