@@ -75,7 +75,8 @@ RUN echo 'deb https://packages.tideways.com/apt-packages-main any-version main' 
     DEBIAN_FRONTEND=noninteractive apt-get -y install tideways-daemon tideways-php tideways-cli
 
 RUN echo 'extension=tideways.so\ntideways.api_key=${TIDEWAYS_APIKEY}\n' > /usr/local/etc/php/conf.d/40-tideways.ini
-
+RUN usermod -a -G tideways web
+RUN chmod 777 /run/tideways
 USER web
 
 CMD ["php-fpm"]
