@@ -310,7 +310,7 @@ function eic_groups_update_9005(&$sandbox) {
 
       switch ($current_uri) {
         case "internal:/group/$group":
-          $new_uri = "route:entity.group.cannonical;group=$group";
+          $new_uri = "route:entity.group.canonical;group=$group";
           break;
         case "internal:/group/$group/about":
           $new_uri = "route:eic_groups.about_page;group=$group";
