@@ -450,7 +450,7 @@ class EntityOperations implements ContainerInjectionInterface {
           ->create([
             'title' => $this->t('About'),
             'link' => [
-              'uri' => 'internal:/group/' . $group->id() . '/about',
+              'uri' => 'route:eic_groups.about_page;group=' . $group->id(),
             ],
             'menu_name' => $menu_name,
             'weight' => 7,

@@ -243,14 +243,10 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    *   A MenuLinkContent object (unsaved).
    */
   protected function getMenuItem(Url $url, string $menu_name) {
-    $uri = empty(static::ANCHOR_ID) ?
-      'internal:/' . $url->getInternalPath() :
-      $url->toUriString();
-
     return $this->menuLinkContentStorage->create([
       'title' => $this->label(),
       'link' => [
-        'uri' => $uri,
+        'uri' => $url->toUriString(),
       ],
       'menu_name' => $menu_name,
       'weight' => 2,
