@@ -110,7 +110,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
 
     $cacheable_metadata = new CacheableMetadata();
     $cacheable_metadata->setCacheContexts([
-      'user.group_permissions',
+      'session',
     ]);
     $cacheable_metadata->addCacheTags([
       'group_content_list:group:' . $group->id(),

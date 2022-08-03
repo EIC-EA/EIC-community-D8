@@ -155,7 +155,7 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
 
     // Add cache contexts.
     $output['#cache']['contexts'][] = 'route.group';
-    $output['#cache']['contexts'][] = 'user.group_permissions';
+//    $output['#cache']['contexts'][] = 'user.group_permissions';
 
     if ($group instanceof GroupInterface) {
       $output['#cache']['contexts'][] = 'user.is_group_member:' . $group->id();
