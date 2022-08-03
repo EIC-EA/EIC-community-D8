@@ -8,10 +8,12 @@
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group_content_menu\GroupContentMenuInterface;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
 
 /**
@@ -380,6 +382,36 @@ function eic_groups_update_9006(&$sandbox) {
 }
 
 /**
+ * Sets default visibility and joining methods for group type event.
+ */
+function eic_groups_update_9007(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $groups = $em->getStorage('group')->getQuery()
+    ->condition('type', 'event')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $max_groups = count($groups);
+  $progress = 0;
+  $groups_per_batch = 100;
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation('_eic_groups_batch_update_event_visibility', [$progress, $progress + $groups_per_batch, $max_groups]);
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
  * Operation batch for publishing group wiki section.
  */
 function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $total, &$context) {
@@ -417,6 +449,36 @@ function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $tota
         $book_node->save();
       }
     }
+  }
+}
+
+/**
+ * Operation batch for publishing group wiki section.
+ */
+function _eic_groups_batch_update_event_visibility(int $progress, int $max, int $total, &$context) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $groups = $em->getStorage('group')->getQuery()
+    ->condition('type', 'event')
+    ->range($progress, $max)
+    ->accessCheck(FALSE)
+    ->execute();
+
+  /** @var \Drupal\group_flex\GroupFlexGroupSaver $group_flex_group_saver */
+  $group_flex_group_saver = \Drupal::service('group_flex.group_saver');
+
+  $context['message'] = t('Updating progress - @progress of @total', [
+    '@progress' => $progress,
+    '@total' => $total,
+  ]);
+
+  foreach ($groups as $group) {
+    $loaded_group = $em->getStorage('group')->load($group);
+    $group_flex_group_saver->saveGroupVisibility($loaded_group, GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $group_flex_group_saver->saveGroupJoiningMethods($loaded_group, [
+      GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN,
+    ]);
   }
 }
 
