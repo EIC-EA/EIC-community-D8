@@ -270,6 +270,18 @@ function eic_groups_group_view(
 }
 
 /**
+ * Implements hook_rebuild().
+ */
+function eic_groups_rebuild()
+{
+  /** @var \Drupal\group_permissions\Access\GroupPermissionsChainGroupPermissionCalculator $chain_permission_group */
+  $chain_permission_group = \Drupal::service('group_permission.group_permission_chain_calculator');
+
+  $chain_permission_group->calculateAnonymousPermissions();
+  $chain_permission_group->calculateOutsiderPermissions(\Drupal::currentUser());
+}
+
+/**
  * Implements hook_ENTITY_TYPE_view().
  */
 function eic_groups_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {

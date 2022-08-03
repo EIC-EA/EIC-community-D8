@@ -193,7 +193,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $cache_context = [
       'url.path',
       'url.query_args',
-      'user.group_permissions',
       'session',
       'route',
     ];
