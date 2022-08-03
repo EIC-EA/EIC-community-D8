@@ -8,6 +8,7 @@
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\group\Entity\Group;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
 
@@ -292,9 +293,11 @@ function eic_groups_update_9005(&$sandbox) {
 
   foreach ($groups as $group) {
     $query = $database->select('menu_link_content_data', 'm');
+    $query->condition('m.menu_name', "group_menu_link_content-$group");
     $or_condition = $query->orConditionGroup()
       ->condition('m.link__uri', "internal:/group/$group", 'LIKE')
-      ->condition('m.link__uri', "internal:/group/$group/%", 'LIKE');
+      ->condition('m.link__uri', "internal:/group/$group/%", 'LIKE')
+      ->condition('m.link__uri', "internal:/node/%", 'LIKE');
     $query->condition($or_condition);
     $query->fields('m', ['id']);
     $entity_ids = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
@@ -332,6 +335,11 @@ function eic_groups_update_9005(&$sandbox) {
           break;
         default:
           $new_uri = $current_uri;
+          // Fix menu link if it points to a node page.
+          if (strpos($current_uri, 'internal:/node/') !== FALSE) {
+            $node_id = str_replace('internal:/node/', '', $current_uri);
+            $new_uri = "route:entity.node.canonical;node=$node_id";
+          }
       }
 
       $menu_link->link->uri = $new_uri;
