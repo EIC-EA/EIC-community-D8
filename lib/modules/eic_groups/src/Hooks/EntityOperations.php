@@ -293,7 +293,7 @@ class EntityOperations implements ContainerInjectionInterface {
               $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $group->getCacheTags());
             }
             // Adds user group permissions cache.
-            $build['#cache']['contexts'][] = 'user.group_permissions';
+            $build['#cache']['contexts'][] = 'session';
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
@@ -323,7 +323,7 @@ class EntityOperations implements ContainerInjectionInterface {
           }
 
           // Adds user group permissions cache.
-          $build['#cache']['contexts'][] = 'user.group_permissions';
+          $build['#cache']['contexts'][] = 'session';
         }
         break;
 
@@ -450,7 +450,7 @@ class EntityOperations implements ContainerInjectionInterface {
           ->create([
             'title' => $this->t('About'),
             'link' => [
-              'uri' => 'internal:/group/' . $group->id() . '/about',
+              'uri' => 'route:eic_groups.about_page;group=' . $group->id(),
             ],
             'menu_name' => $menu_name,
             'weight' => 7,

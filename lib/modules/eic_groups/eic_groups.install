@@ -8,6 +8,7 @@
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\group\Entity\Group;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
 
@@ -275,6 +276,74 @@ function eic_groups_update_9004(&$sandbox) {
         $group->save();
         break;
       }
+    }
+  }
+}
+
+/**
+ * Set correct links for every Group Feature.
+ */
+function eic_groups_update_9005(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+  $database = \Drupal::database();
+  $groups = $em->getStorage('group')->getQuery()
+    ->accessCheck(FALSE)
+    ->execute();
+
+  foreach ($groups as $group) {
+    $query = $database->select('menu_link_content_data', 'm');
+    $query->condition('m.menu_name', "group_menu_link_content-$group");
+    $or_condition = $query->orConditionGroup()
+      ->condition('m.link__uri', "internal:/group/$group", 'LIKE')
+      ->condition('m.link__uri', "internal:/group/$group/%", 'LIKE')
+      ->condition('m.link__uri', "internal:/node/%", 'LIKE');
+    $query->condition($or_condition);
+    $query->fields('m', ['id']);
+    $entity_ids = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $entity_ids = array_map(function ($data) {
+      return $data['id'];
+    }, $entity_ids);
+
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent[] $menu_links */
+    $menu_links = \Drupal\menu_link_content\Entity\MenuLinkContent::loadMultiple($entity_ids);
+
+    foreach ($menu_links as $menu_link) {
+      $current_uri = $menu_link->link->uri;
+
+      switch ($current_uri) {
+        case "internal:/group/$group":
+          $new_uri = "route:entity.group.canonical;group=$group";
+          break;
+        case "internal:/group/$group/about":
+          $new_uri = "route:eic_groups.about_page;group=$group";
+          break;
+        case "internal:/group/$group/discussions":
+          $new_uri = "route:eic_overviews.groups.overview_page.discussions;group=$group";
+          break;
+        case "internal:/group/$group/library":
+          $new_uri = "route:eic_overviews.groups.overview_page.files;group=$group";
+          break;
+        case "internal:/group/$group/events":
+          $new_uri = "route:eic_overviews.groups.overview_page.events;group=$group";
+          break;
+        case "internal:/group/$group/latest-activity":
+          $new_uri = "route:eic_overviews.groups.overview_page.latest_activity_stream;group=$group";
+          break;
+        case "internal:/group/$group/people":
+          $new_uri = "route:eic_overviews.groups.overview_page.members;group=$group";
+          break;
+        default:
+          $new_uri = $current_uri;
+          // Fix menu link if it points to a node page.
+          if (strpos($current_uri, 'internal:/node/') !== FALSE) {
+            $node_id = str_replace('internal:/node/', '', $current_uri);
+            $new_uri = "route:entity.node.canonical;node=$node_id";
+          }
+      }
+
+      $menu_link->link->uri = $new_uri;
+      $menu_link->save();
     }
   }
 }
