@@ -69,7 +69,7 @@ process:
       migration:
         - upgrade_d7_user
   revision_log_message: log
-  revision_created: revision_timestamp
+  revision_created: timestamp
   field_address:
     -
       plugin: addressfield

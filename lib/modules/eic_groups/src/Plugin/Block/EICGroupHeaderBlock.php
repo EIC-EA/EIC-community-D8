@@ -194,7 +194,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // metadata from the context, as set by the context provider.
     $cacheable_metadata = new CacheableMetadata();
     $cacheable_metadata->setCacheContexts([
-      'user.group_permissions',
+      'session',
       'url.path',
     ]);
     // We also need to add group cache tags.
