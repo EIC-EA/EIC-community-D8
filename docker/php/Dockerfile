@@ -32,9 +32,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 RUN apt-get update -y; \
     apt-get install mariadb-client -y; \
-    pecl install xdebug apcu; \
+    pecl install apcu; \
     docker-php-ext-install pdo_mysql; \
-    docker-php-ext-enable xdebug apcu; \
+    docker-php-ext-enable apcu; \
     pecl clear-cache;
 
 # Change the fpm user
@@ -67,6 +67,16 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && npm --version \
   && yarn --version
 
+RUN apt-get update && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
+
+RUN echo 'deb https://packages.tideways.com/apt-packages-main any-version main' > /etc/apt/sources.list.d/tideways.list && \
+    curl -L -sS 'https://packages.tideways.com/key.gpg' | apt-key add - && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install tideways-daemon tideways-php tideways-cli
+
+RUN echo 'extension=tideways.so\ntideways.api_key=${TIDEWAYS_APIKEY}\n' > /usr/local/etc/php/conf.d/40-tideways.ini
+RUN usermod -a -G tideways web
+RUN chmod 774 /run/tideways
 USER web
 
 CMD ["php-fpm"]
