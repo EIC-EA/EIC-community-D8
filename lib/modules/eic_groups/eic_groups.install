@@ -375,7 +375,14 @@ function eic_groups_update_9006(&$sandbox) {
   $groups_per_batch = 100;
 
   for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
-    $batch_builder->addOperation('_eic_groups_batch_publish_group_wiki', [$progress, $progress + $groups_per_batch, $max_groups]);
+    $batch_builder->addOperation(
+      '_eic_groups_batch_publish_group_wiki',
+      [
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
   }
 
   batch_set($batch_builder->toArray());
@@ -405,7 +412,14 @@ function eic_groups_update_9007(&$sandbox) {
   $groups_per_batch = 100;
 
   for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
-    $batch_builder->addOperation('_eic_groups_batch_update_event_visibility', [$progress, $progress + $groups_per_batch, $max_groups]);
+    $batch_builder->addOperation(
+      '_eic_groups_batch_update_event_visibility',
+      [
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
   }
 
   batch_set($batch_builder->toArray());
@@ -477,7 +491,7 @@ function _eic_groups_batch_update_event_visibility(int $progress, int $max, int 
     $loaded_group = $em->getStorage('group')->load($group);
     $group_flex_group_saver->saveGroupVisibility($loaded_group, GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $group_flex_group_saver->saveGroupJoiningMethods($loaded_group, [
-      GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN,
+      GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST,
     ]);
   }
 }
