@@ -4,11 +4,9 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.group.teaser
-    - group.type.event
     - group.type.group
     - group.type.organisation
   module:
-    - datetime
     - group
     - user
 id: groups
@@ -110,7 +108,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: tag
+        type: none
         options: {  }
       empty:
         area_text_custom:

@@ -375,7 +375,7 @@ display:
         options:
           perm: 'access eic_admin dashboard'
       cache:
-        type: tag
+        type: none
         options: {  }
       empty:
         area:
