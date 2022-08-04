@@ -440,7 +440,7 @@ function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $tota
   /** @var \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper */
   $eic_groups_helper = \Drupal::service('eic_groups.helper');
 
-  $context['message'] = t('Updating progress - @progress of @total', [
+  $context['message'] = t('Updating group wiki section - @progress of @total', [
     '@progress' => $progress,
     '@total' => $total,
   ]);
@@ -482,7 +482,7 @@ function _eic_groups_batch_update_event_visibility(int $progress, int $max, int 
   /** @var \Drupal\group_flex\GroupFlexGroupSaver $group_flex_group_saver */
   $group_flex_group_saver = \Drupal::service('group_flex.group_saver');
 
-  $context['message'] = t('Updating progress - @progress of @total', [
+  $context['message'] = t('Updating event visibility and joining method - @progress of @total', [
     '@progress' => $progress,
     '@total' => $total,
   ]);
@@ -491,7 +491,7 @@ function _eic_groups_batch_update_event_visibility(int $progress, int $max, int 
     $loaded_group = $em->getStorage('group')->load($group);
     $group_flex_group_saver->saveGroupVisibility($loaded_group, GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
     $group_flex_group_saver->saveGroupJoiningMethods($loaded_group, [
-      GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST,
+      GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST,
     ]);
   }
 }
