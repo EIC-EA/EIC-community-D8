@@ -303,9 +303,29 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     GroupInterface $group,
     array $joiningMethods
   ) {
-    $groupPermission = $this->getGroupPermissionObject($group);
+    /** @var \Drupal\group_permissions\Entity\GroupPermission $groupPermission */
+    if (!$groupPermission = $this->getGroupPermissionObject($group)) {
+      return;
+    }
 
-    if (!$groupPermission) {
+    // Check if joining methods have changed.
+    $needs_update = FALSE;
+    foreach ($this->getAllJoiningMethods() as $id => $plugin_instance) {
+      if (in_array($id, $joiningMethods)) {
+        if (!$this->isJoiningMethodEnabled($group, $id)) {
+          // Joining method is being asked and is currently disabled, we need to
+          // update permissions.
+          $needs_update = TRUE;
+        }
+      }
+      elseif ($this->isJoiningMethodEnabled($group, $id)) {
+        // Joining method is not being asked and is currently enabled, we need
+        // to update permissions.
+        $needs_update = TRUE;
+      }
+    }
+
+    if (!$needs_update) {
       return;
     }
 
@@ -343,6 +363,50 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
 
     // Invalidates group cache tags.
     Cache::invalidateTags($group->getCacheTagsToInvalidate());
+  }
+
+  /**
+   * Checks if the given joining method is enabled for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group to save.
+   * @param string $joining_method
+   *   The joining method machine name.
+   *
+   * @return bool
+   *   TRUE if joining method is enabled.
+   */
+  public function isJoiningMethodEnabled(GroupInterface $group, string $joining_method): bool {
+    if (!$groupPermission = $this->getGroupPermissionObject($group)) {
+      return FALSE;
+    }
+
+    $group_permissions = $groupPermission->getPermissions();
+
+    // Loop through all available joining methods.
+    /** @var \Drupal\group_flex\Plugin\GroupJoiningMethodBase $pluginInstance */
+    foreach ($this->getAllJoiningMethods() as $id => $pluginInstance) {
+      if ($joining_method != $id) {
+        continue;
+      }
+
+      // Loop through all roles.
+      foreach ($pluginInstance->getGroupPermissions($group) as $role => $role_permissions) {
+        foreach ($role_permissions as $role_permission) {
+          if (!isset($group_permissions[$role][$role_permission])) {
+            return FALSE;
+          }
+        }
+
+        // At this point, we found the matching joining method and all its roles
+        // and permissions are enabled.
+        // This means the joining method is enabled.
+        return TRUE;
+      }
+    }
+
+    // We didn't find any matching method, joining method is disabled.
+    return FALSE;
   }
 
 }
