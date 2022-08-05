@@ -81,6 +81,9 @@
     "drupal/migrate_plus": {
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
     },
+    "drupal/publication_date": {
+      "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch"
+    },
     "drupal/realname": {
       "#3059311 - Autocomplete suggestions should respect the entity reference View": "patches/realname/autocomplete-condition-fix-3059311-5.patch"
     },

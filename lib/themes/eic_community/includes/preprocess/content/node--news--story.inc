@@ -50,7 +50,9 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       ],
     ],
     'timestamp' => [
-      'label' => eic_community_get_teaser_time_display($node->get('published_at')->value),
+      'label' => $node->get('published_at')->isEmpty() ?
+        eic_community_get_teaser_time_display($node->get('created')->value) :
+        eic_community_get_teaser_time_display($node->get('published_at')->value),
     ],
     'author' => eic_community_get_teaser_user_display($node->getOwner()),
   ];
