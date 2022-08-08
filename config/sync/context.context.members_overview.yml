@@ -37,6 +37,9 @@ reactions:
         unique: 0
         context_id: members_overview
         context_mapping: {  }
+        add_facet_my_groups: 0
+        add_facet_interests: 0
+        page_options: normal
         facets:
           sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
           sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array
@@ -47,10 +50,7 @@ reactions:
           ds_user_access: ds_user_access
         source_type: Drupal\eic_search\Search\Sources\UserGallerySourceType
         enable_search: 1
-        page_options: normal
         prefilter_group: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 0
     include_default_blocks: 0
     saved: false
 weight: 0

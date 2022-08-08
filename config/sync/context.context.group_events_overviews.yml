@@ -36,6 +36,9 @@ reactions:
         unique: 0
         context_id: group_events_overviews
         context_mapping: {  }
+        add_facet_my_groups: 0
+        add_facet_interests: 0
+        page_options: normal
         source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
         facets:
           ss_content_event_type_string: ss_content_event_type_string
@@ -54,11 +57,8 @@ reactions:
           its_last_flagged_like_content: 0
           its_last_flagged_highlight_content: 0
         enable_search: 1
-        page_options: normal
         prefilter_group: 1
         enable_date_filter: 1
-        add_facet_interests: 0
-        add_facet_my_groups: 0
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
