@@ -111,7 +111,11 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   $action = [];
 
   // We only show signup in global event (group type: event).
-  if ('group' === $entity_type && $signup_link = $entity->get('field_link')->getString()) {
+  if (
+    'group' === $entity_type &&
+    !$entity->get('field_link')->isEmpty() &&
+    $signup_link = $entity->get('field_link')->uri
+  ) {
     $action = [
       'title' => t('Sign up to this event', [], ['context' => 'eic_community']),
       'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [],
