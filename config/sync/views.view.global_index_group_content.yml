@@ -5,7 +5,6 @@ dependencies:
   config:
     - search_api.index.global
   module:
-    - eic_search
     - search_api
 id: global_index_group_content
 label: 'Global index - Group content'
@@ -185,7 +184,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: search_api_tag_per_user
+        type: none
         options: {  }
       empty: {  }
       sorts:
@@ -543,7 +542,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
@@ -774,9 +772,9 @@ display:
       query:
         type: search_api_query
         options:
-          skip_access: 0
-          bypass_access: 0
-          preserve_facet_query_args: 0
+          bypass_access: false
+          skip_access: false
+          preserve_facet_query_args: false
       defaults:
         empty: false
         query: false
@@ -795,7 +793,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - user
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'

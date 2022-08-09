@@ -43,7 +43,11 @@
       "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-05-17/incorrect-access-check-on-media-library-3071489-27.patch",
       "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
       "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch",
-      "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch"
+      "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch",
+      "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch"
+    },
+    "drupal/group_permissions": {
+      "3302469 - Allow other modules to alter the calculated permissions": "patches/group_permissions/group_permissions-cache_performance_issue.patch"
     },
     "drupal/group_content_menu": {
       "3209011 - Active trail is cached incorrectly": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch"
