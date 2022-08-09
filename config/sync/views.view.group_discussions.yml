@@ -113,7 +113,7 @@ display:
           group_permission: 'access discussions overview'
           linked_feature: eic_groups_discussions
       cache:
-        type: tag
+        type: none
         options: {  }
       empty:
         area_text_custom:

@@ -169,6 +169,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   public function onMigratePostRowSave(MigratePostRowSaveEvent $event) {
     switch ($event->getMigration()->getBaseId()) {
       case 'upgrade_d7_node_complete_group':
+      case 'upgrade_d7_node_complete_event_site':
         // Check if we have a group ID.
         if (!$gid = $event->getDestinationIdValues()[0]) {
           return;
@@ -184,7 +185,6 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         }
         break;
 
-      case 'upgrade_d7_node_complete_event_site':
       case 'upgrade_d7_node_complete_organisation':
         // Check if we have a group ID.
         if (!$gid = $event->getDestinationIdValues()[0]) {

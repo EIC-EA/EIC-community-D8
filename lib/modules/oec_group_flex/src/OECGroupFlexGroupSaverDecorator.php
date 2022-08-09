@@ -119,6 +119,9 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       return;
     }
 
+    // Save original permissions.
+    $original_permissions = $groupPermission->getPermissions();
+
     $visibilityPlugins = $this->getAllGroupVisibility();
 
     // Clears group role permissions.
@@ -154,7 +157,13 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       }
       throw new EntityStorageException('Group permissions are not saved correctly, because:' . $message);
     }
-    $groupPermission->save();
+    // Only save group permissions if they changed.
+    if ($groupPermission->getPermissions() != $original_permissions) {
+      $groupPermission->save();
+
+      // Invalidates group cache tags.
+      Cache::invalidateTags($group->getCacheTagsToInvalidate());
+    }
 
     if (!($item = $this->groupVisibilityStorage->load($group->id()))) {
       $item = $this->groupVisibilityStorage->create([
@@ -186,9 +195,6 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
         $item,
       ]
     );
-
-    // Invalidates group cache tags.
-    Cache::invalidateTags($group->getCacheTagsToInvalidate());
 
     // If group visibility changed we need to reupdate all group contents.
     // These re-index logic is on 2 different places because of visibility
@@ -309,6 +315,9 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       return;
     }
 
+    // Save original permissions.
+    $original_permissions = $groupPermission->getPermissions();
+
     /** @var \Drupal\group_flex\Plugin\GroupJoiningMethodBase $pluginInstance */
     foreach ($this->getAllJoiningMethods() as $id => $pluginInstance) {
       // Checks if the method is enabled.
@@ -329,6 +338,11 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       foreach ($pluginInstance->getDisallowedGroupPermissions($group) as $role => $rolePermissions) {
         $groupPermission = $this->removeRolePermissionsFromGroup($groupPermission, $role, $rolePermissions);
       }
+    }
+
+    // Don't save group permissions if they didn't change.
+    if ($groupPermission->getPermissions() == $original_permissions) {
+      return;
     }
 
     $violations = $groupPermission->validate();

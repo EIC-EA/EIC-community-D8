@@ -37,6 +37,9 @@ reactions:
         unique: 0
         context_id: group_news_overviews
         context_mapping: {  }
+        add_facet_my_groups: 0
+        add_facet_interests: 0
+        page_options: normal
         source_type: Drupal\eic_search\Search\Sources\NewsSourceType
         facets:
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
@@ -52,11 +55,8 @@ reactions:
           its_last_flagged_highlight_content: its_last_flagged_highlight_content
           score: score
         enable_search: 1
-        page_options: normal
         prefilter_group: 1
         enable_date_filter: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 0
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
