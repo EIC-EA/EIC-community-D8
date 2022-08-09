@@ -317,7 +317,7 @@ display:
         options:
           group_permission: 'edit group'
       cache:
-        type: tag
+        type: none
         options: {  }
       empty: {  }
       sorts: {  }
