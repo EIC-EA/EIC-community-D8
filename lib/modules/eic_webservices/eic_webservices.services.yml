@@ -13,6 +13,7 @@ services:
     class: Drupal\eic_webservices\ParamConverter\SmedIdConverter
     calls:
       - [setConfigFactory, ['@config.factory']]
+      - [setModuleHandler, ['@module_handler']]
     tags:
       # Priority 10, to ensure it runs before @paramconverter.entity.
       - { name: paramconverter, priority: 10 }
