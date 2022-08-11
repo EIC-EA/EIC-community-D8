@@ -215,12 +215,10 @@ class FormAlter implements ContainerInjectionInterface {
    *   The form ID.
    */
   public function alterProfileMemberForm(array &$form, FormStateInterface $form_state, string $form_id) {
-    $user = \Drupal::routeMatch()->getParameter('user');
+    /** @var \Drupal\profile\Entity\Profile $profile */
+    $profile = $form_state->getFormObject()->getEntity();
+    $user = $profile->getOwner();
     $is_admin = UserHelper::isPowerUser($this->currentUser);
-
-    if (!$user instanceof UserInterface) {
-      return;
-    }
 
     // If the user has a SMED ID, we make the job title field as readonly.
     if (
