@@ -824,7 +824,7 @@ class SolrSearchManager {
     // Add filters by AND operator.
     if (!empty($extra_filters['AND'])) {
       foreach ($extra_filters['AND'] as $field => $values) {
-        $query_extra_filter[] = "$field:(" . implode('AND', $values) . ")";
+        $query_extra_filter[] = "$field:(" . implode(' AND ', $values) . ")";
       }
     }
 
