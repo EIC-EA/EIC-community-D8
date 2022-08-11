@@ -35,7 +35,7 @@ index 5feb845..22bbbf0 100644
    group_permission.group_permissions_manager:
      arguments: ['@cache.default', '@entity_type.manager', '@group_role.synchronizer']
 diff --git a/src/Access/GroupPermissionCalculator.php b/src/Access/GroupPermissionCalculator.php
-index cbb1074..a746981 100644
+index cbb1074..e55cbd8 100644
 --- a/src/Access/GroupPermissionCalculator.php
 +++ b/src/Access/GroupPermissionCalculator.php
 @@ -4,10 +4,10 @@ namespace Drupal\group_permissions\Access;
@@ -59,7 +59,7 @@ index cbb1074..a746981 100644
  
    /**
     * The entity type manager.
-@@ -54,22 +54,40 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
+@@ -54,22 +54,46 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
      $this->groupPermissionsManager = $group_permissions_manager;
    }
  
@@ -74,7 +74,13 @@ index cbb1074..a746981 100644
 +   *   The user account.
 +   */
 +  public function doCalculation(RefinableCalculatedGroupPermissions &$calculated_permissions, GroupInterface $group, AccountInterface $account) {
-+    // Now add the new calculation.
++    // If the group isn't saved yet, no need to calculate permissions for it,
++    // group type permissions will do.
++    if ($group->isNew()) {
++      return;
++    }
++
++    // Add the new calculation.
 +    if ($account->isAuthenticated()) {
 +      $calculated_permissions->merge($this->calculateMemberPermissions($group, $account));
 +      $calculated_permissions->merge($this->calculateOutsiderPermissions($group, $account));
@@ -94,10 +100,10 @@ index cbb1074..a746981 100644
 +  public function calculateMemberPermissions(GroupInterface $group, AccountInterface $account) {
      $calculated_permissions = new RefinableCalculatedGroupPermissions();
 -    $calculated_permissions->addCacheContexts(['user']);
--
+ 
 -    $user = $this->entityTypeManager->getStorage('user')->load($account->id());
 -    $calculated_permissions->addCacheableDependency($user);
- 
+-
 -    foreach ($this->membershipLoader->loadByUser($account) as $group_membership) {
 -      $group = $group_membership->getGroup();
 +    if ($group_membership = $this->membershipLoader->load($group, $account)) {
@@ -108,7 +114,7 @@ index cbb1074..a746981 100644
          foreach ($group_membership->getRoles() as $group_role) {
            $item = new CalculatedGroupPermissionsItem(
              CalculatedGroupPermissionsItemInterface::SCOPE_GROUP,
-@@ -78,10 +96,8 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
+@@ -78,10 +102,8 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
            );
  
            $calculated_permissions->addItem($item);
@@ -119,7 +125,7 @@ index cbb1074..a746981 100644
        }
      }
      return $calculated_permissions;
-@@ -90,30 +106,20 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
+@@ -90,30 +112,20 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
    /**
     * {@inheritdoc}
     */
@@ -134,24 +140,24 @@ index cbb1074..a746981 100644
 -      $group = $group_permission->getGroup();
 -      if (!empty($group) && !empty($group_permission)) {
 -        $calculated_permissions->addCacheableDependency($group_permission);
--
--        $custom_permissions = $group_permission->getPermissions();
--        $group_role = $group->getGroupType()->getAnonymousRole();
 +    if ($group_permission = $this->groupPermissionsManager->getGroupPermission($group)) {
 +      $custom_permissions = $group_permission->getPermissions();
 +      $group_role = $group->getGroupType()->getAnonymousRole();
  
--        $item = new CalculatedGroupPermissionsItem(
--          CalculatedGroupPermissionsItemInterface::SCOPE_GROUP,
--          $group->id(),
--          $custom_permissions[$group_role->id()] ?? []
--        );
+-        $custom_permissions = $group_permission->getPermissions();
+-        $group_role = $group->getGroupType()->getAnonymousRole();
 +      $item = new CalculatedGroupPermissionsItem(
 +        CalculatedGroupPermissionsItemInterface::SCOPE_GROUP,
 +        $group->id(),
 +        $custom_permissions[$group_role->id()] ?? []
 +      );
  
+-        $item = new CalculatedGroupPermissionsItem(
+-          CalculatedGroupPermissionsItemInterface::SCOPE_GROUP,
+-          $group->id(),
+-          $custom_permissions[$group_role->id()] ?? []
+-        );
+-
 -        $calculated_permissions->addItem($item);
 -        $calculated_permissions->addCacheableDependency($group);
 -        $calculated_permissions->addCacheableDependency($group_role);
@@ -160,7 +166,7 @@ index cbb1074..a746981 100644
      }
  
      return $calculated_permissions;
-@@ -122,38 +128,23 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
+@@ -122,38 +134,23 @@ class GroupPermissionCalculator extends GroupPermissionCalculatorBase {
    /**
     * {@inheritdoc}
     */
@@ -170,24 +176,24 @@ index cbb1074..a746981 100644
      $calculated_permissions = new RefinableCalculatedGroupPermissions();
 -    $calculated_permissions->addCacheTags(['group_list']);
 -    $calculated_permissions->addCacheContexts(['user']);
--
+ 
 -    $user = $this->entityTypeManager->getStorage('user')->load($account->id());
 -    $calculated_permissions->addCacheableDependency($user);
++    if ($group_permission = $this->groupPermissionsManager->getGroupPermission($group)) {
++      // Get all outsider roles.
++      $roles = $this->groupPermissionsManager->getOutsiderRoles($group, $account);
  
 -    $group_permissions = $this->groupPermissionsManager->getAll();
 -    foreach ($group_permissions as $group_permission) {
 -      if (!empty($group_permission)) {
 -        $group = $group_permission->getGroup();
 -        $calculated_permissions->addCacheableDependency($group_permission);
-+    if ($group_permission = $this->groupPermissionsManager->getGroupPermission($group)) {
-+      // Get all outsider roles.
-+      $roles = $this->groupPermissionsManager->getOutsiderRoles($group, $account);
++      $custom_permissions = $group_permission->getPermissions();
  
 -        // Get all outsider roles.
 -        $roles = $this->groupPermissionsManager->getOutsiderRoles($group, $account);
 -        $calculated_permissions->addCacheableDependency($group_permission);
-+      $custom_permissions = $group_permission->getPermissions();
- 
+-
 -        $custom_permissions = $group_permission->getPermissions();
 -
 -        foreach ($roles as $group_role) {
