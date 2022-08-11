@@ -835,16 +835,26 @@ class SolrSearchManager {
    */
   private function generateExtraPrefilter() {
     $extra_filters = $this->source->extraPrefilter();
+    $query_extra_filter = [];
 
-    if (empty($extra_filters)) {
+    // Add filters by AND operator.
+    if (!empty($extra_filters['AND'])) {
+      foreach ($extra_filters['AND'] as $field => $values) {
+        $query_extra_filter[] = "$field:(" . implode(' AND ', $values) . ")";
+      }
+    }
+
+    // Add filters by OR operator.
+    if (!empty($extra_filters['OR'])) {
+      foreach ($extra_filters['OR'] as $field => $values) {
+        $query_extra_filter[] = "$field:(" . implode(' OR ', $values) . ")";
+      }
+    }
+
+    if (empty($query_extra_filter)) {
       return;
     }
 
-    $query_extra_filter = [];
-
-    foreach ($extra_filters as $field => $value) {
-      $query_extra_filter[] = "$field:($value)";
-    }
     $query_extra_filter = implode(' AND ', $query_extra_filter);
     $this->rawFieldQuery .= " AND ($query_extra_filter)";
   }
