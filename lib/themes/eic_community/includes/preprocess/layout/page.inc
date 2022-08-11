@@ -166,7 +166,7 @@ function _preprocess_node_page(&$variables) {
                 \Drupal::service('date.formatter')
                   ->format($node->get('created')->value, 'custom', $publish_date_format) :
                 \Drupal::service('date.formatter')
-                  ->format($node->get('published_at')->value, 'custom', $publish_date_format),
+                  ->format($node->get('published_at')->published_at_or_created, 'custom', $publish_date_format),
             ],
           ],
           'title' => $node->label(),
