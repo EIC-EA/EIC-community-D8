@@ -5,6 +5,7 @@
  * Primary module hooks for EIC Web Services module.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_webservices\Hooks\FormOperations;
 
@@ -33,5 +34,38 @@ function eic_webservices_validation_constraint_alter(array &$definitions) {
     if (isset($definitions['AddressFormat']['provider']) && $definitions['AddressFormat']['provider'] == 'address') {
       $definitions['AddressFormat']['class'] = 'Drupal\eic_webservices\Plugin\Validation\Constraint\AddressFormatConstraint';
     }
+  }
+}
+
+/**
+ * Implements hook_smed_id_converter_entity_ids_alter().
+ */
+function eic_webservices_smed_id_converter_entity_ids_alter(array &$entity_ids, array $context) {
+  // If the converter couldn't find a user based on SMED ID, try to find it by
+  // email.
+  if (!empty($entity_ids)) {
+    return;
+  }
+
+  if ($context['entity_type_id'] != 'user') {
+    return;
+  }
+
+  if ($context['defaults']['_route'] != 'rest.eic_webservices_user.PATCH') {
+    return;
+  }
+
+  // Get the content of the request.
+  $request = \Drupal::request();
+  $content = Json::decode($request->getContent());
+
+  if (empty($content['mail'][0]['value'])) {
+    return;
+  }
+
+  /** @var \Drupal\user\UserInterface $user */
+  if ($user = user_load_by_mail($content['mail'][0]['value'])) {
+    // We found a user, return the ID.
+    $entity_ids = [$user->id()];
   }
 }

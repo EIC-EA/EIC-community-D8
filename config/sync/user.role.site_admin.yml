@@ -58,6 +58,7 @@ dependencies:
     - filter
     - flag
     - group
+    - locale
     - masquerade
     - media
     - message
@@ -225,6 +226,7 @@ permissions:
   - 'revert video revisions'
   - 'revert wiki_page revisions'
   - 'schedule publishing of nodes'
+  - 'translate interface'
   - 'unflag recommend_group'
   - 'update any basic block content'
   - 'update any cta_tiles block content'

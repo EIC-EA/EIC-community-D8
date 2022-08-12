@@ -11,7 +11,11 @@ use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\Search\Sources\UserGallerySourceType;
+use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
+use Drupal\eic_search\Search\Sources\UserListSourceType;
 use Drupal\eic_search\Search\Sources\UserRecommendSourceType;
+use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
@@ -202,6 +206,18 @@ class SolrSearchManager {
     $this->rawQuery .= empty($this->rawQuery) ?
       '(' . implode(' OR ', $query_fields) . ')' :
       ' AND (' . implode(' OR ', $query_fields) . ')';
+
+    $source_type = get_class($this->source);
+    switch ($source_type) {
+      case UserGallerySourceType::class:
+      case UserInvitesListSourceType::class:
+      case UserListSourceType::class:
+      case UserRecommendSourceType::class:
+      case UserTaggingCommentsSourceType::class:
+        // Filter out blocked users.
+        $this->rawQuery .= empty($this->rawQuery) ? '(bs_status : true)' : ' AND (bs_status : true)';
+        break;
+    }
   }
 
   /**
@@ -819,16 +835,26 @@ class SolrSearchManager {
    */
   private function generateExtraPrefilter() {
     $extra_filters = $this->source->extraPrefilter();
+    $query_extra_filter = [];
 
-    if (empty($extra_filters)) {
+    // Add filters by AND operator.
+    if (!empty($extra_filters['AND'])) {
+      foreach ($extra_filters['AND'] as $field => $values) {
+        $query_extra_filter[] = "$field:(" . implode(' AND ', $values) . ")";
+      }
+    }
+
+    // Add filters by OR operator.
+    if (!empty($extra_filters['OR'])) {
+      foreach ($extra_filters['OR'] as $field => $values) {
+        $query_extra_filter[] = "$field:(" . implode(' OR ', $values) . ")";
+      }
+    }
+
+    if (empty($query_extra_filter)) {
       return;
     }
 
-    $query_extra_filter = [];
-
-    foreach ($extra_filters as $field => $value) {
-      $query_extra_filter[] = "$field:($value)";
-    }
     $query_extra_filter = implode(' AND ', $query_extra_filter);
     $this->rawFieldQuery .= " AND ($query_extra_filter)";
   }

@@ -72,14 +72,20 @@ function eic_user_field_widget_social_links_form_alter(&$element, FormStateInter
 }
 
 /**
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- * @param $form_id
+ * Implements hook_form_alter().
  */
 function eic_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if ('bulk_group_invitation' === $form_id) {
-    \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
-      ->alterBulkGroupInvitation($form, $form_state, $form_id);
+  switch ($form_id) {
+    case 'bulk_group_invitation':
+      \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+        ->alterBulkGroupInvitation($form, $form_state, $form_id);
+      break;
+
+    case 'profile_member_edit_form':
+    case 'profile_member_add_form':
+      \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+        ->alterProfileMemberForm($form, $form_state, $form_id);
+      break;
   }
 }
 

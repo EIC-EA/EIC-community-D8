@@ -60,8 +60,8 @@ class GroupSourceType extends SourceType {
         'label' => $this->t('Date created', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Date created', [], ['context' => 'eic_search']),
       ],
-      'timestamp' => [
-        'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
+      'ss_drupal_changed_timestamp' => [
+        'label' => $this->t('Recently updated', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
       ],
       'tm_global_title' => [
