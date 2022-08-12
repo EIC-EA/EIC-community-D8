@@ -107,9 +107,14 @@ $config['matomo.settings']['url_https'] = 'https://' . getenv('MATOMO_URL') . '/
  */
 $config['cas.settings']['server']['hostname'] = getenv('EULOGIN_URL');
 
-// Uncomment this line to force EU Login known user accounts to login through EU
-// Login.
-//$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+/**
+ * CAS settings.
+ */
+$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+// Always set the auto-register to TRUE as this event is being catched by
+// eic_user_login module.
+$config['cas.settings']['user_accounts']['auto_register'] = TRUE;
+
 // Allow self-registered users to login.
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
 
