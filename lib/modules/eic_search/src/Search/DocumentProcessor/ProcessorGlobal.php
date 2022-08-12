@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
@@ -124,6 +125,12 @@ class ProcessorGlobal extends DocumentProcessor {
           }
 
           $last_moderation_state = $this->getLastRevisionModerationState($node);
+
+          // For News and Stories, the published date should be saved.
+          if (in_array($node->bundle(), ['news', 'story'])) {
+            $date = \Drupal::service('date.formatter')
+              ->format($node->get('published_at')->published_at_or_created, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+          }
         }
         break;
       case 'entity:group':
