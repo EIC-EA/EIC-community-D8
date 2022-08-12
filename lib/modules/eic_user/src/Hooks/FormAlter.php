@@ -218,14 +218,11 @@ class FormAlter implements ContainerInjectionInterface {
     /** @var \Drupal\profile\Entity\Profile $profile */
     $profile = $form_state->getFormObject()->getEntity();
     $user = $profile->getOwner();
-    $is_admin = UserHelper::isPowerUser($this->currentUser);
+    $current_user_is_admin = UserHelper::isPowerUser($this->currentUser);
+    $is_smed_user = UserHelper::isSmedUser($user);
 
     // If the user has a SMED ID, we make the job title field as readonly.
-    if (
-      !$is_admin &&
-      $user->hasField('field_smed_id') &&
-      !$user->get('field_smed_id')->isEmpty()
-    ) {
+    if (!$current_user_is_admin && $is_smed_user) {
       $form['field_vocab_job_title']['#disabled'] = TRUE;
     }
   }
