@@ -5,11 +5,13 @@ namespace Drupal\eic_user\Hooks;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -32,13 +34,26 @@ class FormAlter implements ContainerInjectionInterface {
   private $treeManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  private $currentUser;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\eic_content\Services\EntityTreeManager $entity_tree_manager
    *   The EIC Content entity tree manager service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    */
-  public function __construct(EntityTreeManager $entity_tree_manager) {
+  public function __construct(
+    EntityTreeManager $entity_tree_manager,
+    AccountProxyInterface $current_user
+  ) {
     $this->treeManager = $entity_tree_manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -46,7 +61,8 @@ class FormAlter implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('eic_content.entity_tree_manager')
+      $container->get('eic_content.entity_tree_manager'),
+      $container->get('current_user')
     );
   }
 
@@ -186,6 +202,29 @@ class FormAlter implements ContainerInjectionInterface {
 
     $tempstore_params['emails'] = $emails;
     $tempstore->set('params', $tempstore_params);
+  }
+
+  /**
+   * Form alter implementation for profile_member form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param string $form_id
+   *   The form ID.
+   */
+  public function alterProfileMemberForm(array &$form, FormStateInterface $form_state, string $form_id) {
+    /** @var \Drupal\profile\Entity\Profile $profile */
+    $profile = $form_state->getFormObject()->getEntity();
+    $user = $profile->getOwner();
+    $current_user_is_admin = UserHelper::isPowerUser($this->currentUser);
+    $is_smed_user = UserHelper::isSmedUser($user);
+
+    // If the user has a SMED ID, we make the job title field as readonly.
+    if (!$current_user_is_admin && $is_smed_user) {
+      $form['field_vocab_job_title']['#disabled'] = TRUE;
+    }
   }
 
   /**

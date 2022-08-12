@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
@@ -426,6 +427,40 @@ function eic_groups_update_9007(&$sandbox) {
 }
 
 /**
+ * Remove "join group" permission from group outsider roles.
+ */
+function eic_groups_update_9008(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to remove group permission.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->condition('gid.entity:group.type', 'organisation')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $progress = 0;
+  $groups_per_batch = 100;
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_remove_group_permission',
+      [
+        'join group',
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
  * Operation batch for publishing group wiki section.
  */
 function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $total, &$context) {
@@ -497,6 +532,69 @@ function _eic_groups_batch_update_event_visibility(int $progress, int $max, int 
 }
 
 /**
+ * Operation batch for removing group permission.
+ */
+function _eic_groups_batch_remove_group_permission(string $permission_to_remove, int $progress, int $max, int $total, &$context) {
+  $context['message'] = t('Removing group permissions - @progress of @total', [
+    '@progress' => $progress,
+    '@total' => $total,
+  ]);
+
+  $results = \Drupal::entityQuery('group_permission')
+    ->condition('gid.entity:group.type', 'organisation')
+    ->range($progress, $max)
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $group_permissions = GroupPermission::loadMultiple($results);
+
+  foreach ($group_permissions as &$group_permission) {
+    $permissions = $group_permission->getPermissions();
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_permission->getGroup();
+    $group_type = $group->getGroupType()->id();
+    $roles = [
+      "$group_type-outsider",
+    ];
+    $outsider_roles = [
+      'trusted_user',
+    ];
+    $groupRoleSynchronizer = \Drupal::service('group_role.synchronizer');
+
+    foreach ($outsider_roles as $outsider_role) {
+      $role = $groupRoleSynchronizer->getGroupRoleId($group_type, $outsider_role);
+      $roles[] = $role;
+    }
+
+    if (empty($permissions)) {
+      continue;
+    }
+
+    foreach ($roles as $role) {
+      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup(
+        $group_permission,
+        $role,
+        [$permission_to_remove]
+      );
+    }
+
+    $group_permission->setNewRevision();
+    $group_permission->setRevisionUserId(1);
+    $group_permission->setRevisionCreationTime(time());
+    $group_permission->setRevisionLogMessage(t('Add "administer membership requests" permission to group owner and admin roles.'));
+
+    if (count($group_permission->validate()) > 0) {
+      continue;
+    }
+
+    $group_permission->save();
+
+    Cache::invalidateTags($group->getCacheTags());
+  }
+}
+
+/**
  * Generic function to use in batch processes.
  */
 function _eic_groups_batch_finished($success, array $results, array $operations) {
@@ -516,5 +614,4 @@ function _eic_groups_batch_finished($success, array $results, array $operations)
         '@args' => print_r($error_operation[0], TRUE),
       ]));
   }
-
 }
