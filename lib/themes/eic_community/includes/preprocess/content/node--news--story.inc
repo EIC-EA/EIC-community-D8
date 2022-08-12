@@ -52,7 +52,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     'timestamp' => [
       'label' => $node->get('published_at')->isEmpty() ?
         eic_community_get_teaser_time_display($node->get('created')->value) :
-        eic_community_get_teaser_time_display($node->get('published_at')->value),
+        eic_community_get_teaser_time_display($node->get('published_at')->published_at_or_created),
     ],
     'author' => eic_community_get_teaser_user_display($node->getOwner()),
   ];
