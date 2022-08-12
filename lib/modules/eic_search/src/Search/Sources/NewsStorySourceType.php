@@ -141,6 +141,17 @@ class NewsStorySourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function extraPrefilter(): array {
+    // @todo In the future we should provide a configuration in the overview
+    // block so that we can enable/disable this extra filter.
+    return [
+      'its_global_group_parent_id' => '("-1")',
+    ];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getDefaultSort(): array {
     return ['ss_drupal_timestamp', 'DESC'];
   }
