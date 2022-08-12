@@ -145,7 +145,11 @@ class NewsStorySourceType extends SourceType {
     // @todo In the future we should provide a configuration in the overview
     // block so that we can enable/disable this extra filter.
     return [
-      'its_global_group_parent_id' => '("-1")',
+      'AND' => [
+        'its_global_group_parent_id' => [
+          '("-1")'
+        ],
+      ],
     ];
   }
 
