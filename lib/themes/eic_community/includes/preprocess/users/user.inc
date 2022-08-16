@@ -31,9 +31,10 @@ function eic_community_preprocess_user(array &$variables) {
   switch ($variables['elements']['#view_mode']) {
     case 'teaser':
       $teaser = [];
+      $media_entities = $user->get('field_media')->referencedEntities();
       // Get the user profile.
       /** @var \Drupal\media\MediaInterface $media */
-      $media = $user->get('field_media')->referencedEntities()[0];
+      $media = $media_entities ? $media_entities[0] : NULL;
       if ($media && !empty($media->get('oe_media_image')->getValue())) {
         $style_name = 'oe_theme_list_item';
         $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
@@ -298,17 +299,20 @@ function eic_community_get_teaser_user_display(UserInterface $user, $picture_ima
 
   $current_user = \Drupal::currentUser();
   if (!$user->get('field_media')->isEmpty() && !$current_user->isAnonymous()) {
-    /** @var \Drupal\media\Entity\Media $media */
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
-    if ($media->bundle() == 'image') {
-      $image_item = ImageValueObject::fromStyledImageItem(
-        $media->get('oe_media_image')->first(),
-        $picture_image_style
-      );
-      $author['image'] = [
-        'src' => $image_item->getSource(),
-        'alt' => $author['name'],
-      ];
+    $media_entity = $user->get('field_media')->entity;
+    if ($media_entity) {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::service('entity.repository')->getTranslationFromContext($media_entity);
+      if ($media->bundle() == 'image') {
+        $image_item = ImageValueObject::fromStyledImageItem(
+          $media->get('oe_media_image')->first(),
+          $picture_image_style
+        );
+        $author['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $author['name'],
+        ];
+      }
     }
   }
 
