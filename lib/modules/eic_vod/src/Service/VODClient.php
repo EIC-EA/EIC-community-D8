@@ -50,6 +50,12 @@ class VODClient {
    */
   public function getPresignedUrl(string $action, string $file): ?string {
     $url = $this->config['cloudfront_url'];
+    if (empty($url)) {
+      return NULL;
+    }
+
+    $url = strpos($url, 'https://') !== 0 ? "https://$url" : $url;
+
     if (StreamWrapperManager::getScheme($file)) {
       $file = StreamWrapperManager::getTarget($file);
     }
@@ -117,6 +123,11 @@ class VODClient {
   public function getCookies(string $file): ?array {
     try {
       $url = $this->config['cloudfront_url'];
+      if (empty($url)) {
+        return NULL;
+      }
+
+      $url = strpos($url, 'https://') !== 0 ? "https://$url" : $url;
       $response = $this->httpClient->request('GET', "$url/stream/download", [
         'query' => [
           'file' => $file,
@@ -142,11 +153,12 @@ class VODClient {
    * @return string|null
    */
   public function getStreamUrl(string $file): ?string {
-    if (!isset($this->config['cloudfront_url'])) {
+    $url = $this->config['cloudfront_url'];
+    if (empty($url)) {
       return NULL;
     }
 
-    $url = $this->config['cloudfront_url'];
+    $url = strpos($url, 'https://') !== 0 ? "https://$url" : $url;
 
     return "$url/streams/$file/AppleHLS1/$file.m3u8";
   }
