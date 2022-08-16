@@ -9,7 +9,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_user\UserHelper;
 use Drupal\eic_user_login\Constants\SmedUserStatuses;
 use Drupal\eic_user_login\Hooks\FormAlter;
 use Drupal\user\UserInterface;
@@ -18,27 +17,8 @@ use Drupal\user\UserInterface;
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function eic_user_login_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  /** @var \Drupal\user\UserInterface $account */
-  $account = $form_state->getFormObject()->getEntity();
-
-  // Remove access to SMED related fields for non-power users.
-  if (!UserHelper::isPowerUser(\Drupal::currentUser())) {
-    $form['field_user_status']['#access'] = FALSE;
-    $form['field_message_from_service']['#access'] = FALSE;
-    $form['field_updated_profile_by_service']['#access'] = FALSE;
-    $form['field_updated_profile_by_user']['#access'] = FALSE;
-  }
-
-  // Disable field_updated_profile_by_service and field_updated_profile_by_user.
-  $form['field_updated_profile_by_service']['#disabled'] = TRUE;
-  $form['field_updated_profile_by_user']['#disabled'] = TRUE;
-
-  // Disable access to fields if user is managed by cas.
-  if (\Drupal::service('cas.user_manager')->getCasUsernameForAccount($account->id())) {
-    $form['field_first_name']['#disabled'] = TRUE;
-    $form['field_last_name']['#disabled'] = TRUE;
-
-  }
+  \Drupal::classResolver(FormAlter::class)
+    ->formUserFormAlter($form, $form_state, $form_id);
 }
 
 /**
