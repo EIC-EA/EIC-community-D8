@@ -151,6 +151,7 @@ content:
       search_label: 'Select a value'
       search_placeholder: Search
       selected_terms_label: 'Your selected values'
+      has_error: 0
     third_party_settings: {  }
   field_is_invalid_email:
     type: boolean_checkbox
@@ -218,6 +219,11 @@ content:
   field_user_status:
     type: options_select
     weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  matomo:
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }

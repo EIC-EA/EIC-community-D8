@@ -32,3 +32,6 @@ ignored_config_entities:
   - 'cas.settings:server.*'
   - 'eic_webservices.settings:api_key'
   - 'eic_webservices.settings:webservice_user_account'
+  - 'matomo.settings:site_id'
+  - 'matomo.settings:url_http'
+  - 'matomo.settings:url_https'

@@ -2,6 +2,9 @@ services:
   eic_webservices.ws_helper:
     class: Drupal\eic_webservices\Utility\EicWsHelper
     arguments: ['@config.factory', '@entity_type.manager']
+  eic_webservices.ws_rest_helper:
+    class: Drupal\eic_webservices\Utility\WsRestHelper
+    arguments: ['@entity_field.manager']
   eic_webservices.taxonomy_helper:
     class: Drupal\eic_webservices\Utility\SmedTaxonomyHelper
     arguments: ['@config.factory', '@entity_type.manager', '@entity_field.manager']
@@ -10,6 +13,7 @@ services:
     class: Drupal\eic_webservices\ParamConverter\SmedIdConverter
     calls:
       - [setConfigFactory, ['@config.factory']]
+      - [setModuleHandler, ['@module_handler']]
     tags:
       # Priority 10, to ensure it runs before @paramconverter.entity.
       - { name: paramconverter, priority: 10 }

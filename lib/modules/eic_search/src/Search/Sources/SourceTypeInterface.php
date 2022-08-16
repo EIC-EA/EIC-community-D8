@@ -223,6 +223,29 @@ interface SourceTypeInterface {
   /**
    * Return an array of key as the field and the value of it.
    *
+   * Array must be keyed by operator:
+   * - AND: contains an array of field as key and an array of values for each
+   *   key.
+   * - OR: contains an array of field as key and an array of values for each
+   *   key.
+   *
+   * Example:
+   * @code
+   * return [
+   *   'OR' => [
+   *     'field_a' => [
+   *        'value1_for_field_a',
+   *        'value2_for_field_a',
+   *     ],
+   *   ],
+   *   'AND' => [
+   *     'field_b' => [
+   *        'value1_for_field_b',
+   *     ],
+   *   ],
+   * ];
+   * @endcode
+   *
    * @return array
    */
   public function extraPrefilter(): array;

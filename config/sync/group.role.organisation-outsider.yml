@@ -12,6 +12,5 @@ audience: outsider
 group_type: organisation
 permissions_ui: true
 permissions:
-  - 'join group'
   - 'view group'
   - 'view group_node:event content'

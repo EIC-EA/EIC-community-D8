@@ -3,7 +3,7 @@
 <div class="ecl-bulletin-block {{ extra_classes }}">
   <{{ title_element }} class="ecl-bulletin-block__title">{{ title }}</{{ title_element }}>
   {% if description %}
-    <p class="ecl-bulletin-block__description">{{ description }}</p>
+    <div class="ecl-bulletin-block__description">{{ description }}</div>
   {% endif %}
 
   {% if items is not empty %}
@@ -23,7 +23,7 @@
                   <{{ item_title_element }} class="ecl-bulletin-block__item-title" >{{ item.title }}</{{ item_title_element }}>
                 {% endif %}
                 {% if item.description %}
-                  <p class="ecl-bulletin-block__item-description">{{ item.description }}</p>
+                  <div class="ecl-bulletin-block__item-description">{{ item.description }}</div>
                 {% endif %}
               {% endblock %}
 

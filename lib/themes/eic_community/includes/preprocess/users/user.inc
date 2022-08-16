@@ -76,17 +76,7 @@ function eic_community_preprocess_user(array &$variables) {
         'type' => _eic_community_get_user_type($user, $member_profile),
         'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
         'image' => _get_profile_image_array($user),
-        'meta' => [
-          [
-            'label' => t('Email'),
-            'items' => [
-              [
-                'label' => $user->getEmail(),
-                'path' => "mailto:{$user->getEmail()}",
-              ],
-            ],
-          ],
-        ],
+        'meta' => [],
       ];
 
       // Gets user operation links.

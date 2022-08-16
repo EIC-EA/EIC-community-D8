@@ -109,7 +109,7 @@ class RequestEventSubscriber implements EventSubscriberInterface {
       $event->setResponse($response);
 
       // Print a message to the user.
-      $message = $this->t("Don't forget to complete your profile - Your profile says a lot about who you are and helps other community members recognize your expertise.", [], ['context' => 'eic_user_login']);
+      $message = $this->t("Complete your profile in order to receive information and notifications on new contents, events, stories, groups, challenges that are important for you and increase your chances to network with the right people and companies.", [], ['context' => 'eic_user_login']);
       $this->messenger()->addWarning($message);
     }
   }

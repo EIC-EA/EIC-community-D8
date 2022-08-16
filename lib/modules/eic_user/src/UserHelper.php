@@ -365,4 +365,17 @@ class UserHelper {
     return (int) $user_flag_counters[FlagType::FOLLOW_USER];
   }
 
+  /**
+   * Checks if a user is a SMED user.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account to check if is SMED user.
+   *
+   * @return bool
+   *   TRUE if user is a SMED user.
+   */
+  public static function isSmedUser(AccountInterface $account) {
+    return $account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty();
+  }
+
 }

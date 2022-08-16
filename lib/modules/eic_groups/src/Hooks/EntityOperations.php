@@ -293,7 +293,7 @@ class EntityOperations implements ContainerInjectionInterface {
               $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $group->getCacheTags());
             }
             // Adds user group permissions cache.
-            $build['#cache']['contexts'][] = 'user.group_permissions';
+            $build['#cache']['contexts'][] = 'session';
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
@@ -323,7 +323,7 @@ class EntityOperations implements ContainerInjectionInterface {
           }
 
           // Adds user group permissions cache.
-          $build['#cache']['contexts'][] = 'user.group_permissions';
+          $build['#cache']['contexts'][] = 'session';
         }
         break;
 
@@ -408,7 +408,10 @@ class EntityOperations implements ContainerInjectionInterface {
   private function publishGroupWiki(GroupInterface $group) {
     $installedContentPlugins = $group->getGroupType()
       ->getInstalledContentPlugins();
-    if (!$installedContentPlugins || in_array('group_node:book', $installedContentPlugins->getInstanceIds())) {
+    if (
+      !$installedContentPlugins ||
+      !in_array('group_node:book', $installedContentPlugins->getInstanceIds())
+    ) {
       return;
     }
     $book_content_plugin_id = $group->getGroupType()->getContentPlugin('group_node:book')->getContentTypeConfigId();
@@ -420,7 +423,11 @@ class EntityOperations implements ContainerInjectionInterface {
 
     if (!empty($results)) {
       $group_content = GroupContent::load(reset($results));
-      if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
+      if (
+        ($node_book = $group_content->getEntity()) &&
+        $node_book instanceof NodeInterface &&
+        $node_book->get('moderation_state')->value !== DefaultContentModerationStates::PUBLISHED_STATE
+      ) {
         $node_book->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
         $node_book->save();
       }
@@ -450,7 +457,7 @@ class EntityOperations implements ContainerInjectionInterface {
           ->create([
             'title' => $this->t('About'),
             'link' => [
-              'uri' => 'internal:/group/' . $group->id() . '/about',
+              'uri' => 'route:eic_groups.about_page;group=' . $group->id(),
             ],
             'menu_name' => $menu_name,
             'weight' => 7,

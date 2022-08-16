@@ -194,7 +194,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // metadata from the context, as set by the context provider.
     $cacheable_metadata = new CacheableMetadata();
     $cacheable_metadata->setCacheContexts([
-      'user.group_permissions',
+      'session',
       'url.path',
     ]);
     // We also need to add group cache tags.
@@ -380,7 +380,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
             'destination' => Url::fromRoute('<current>')->toString(),
           ],
         ];
-        $link['url'] = Url::fromRoute('user.login', [], $login_link_options);
+        $link['url'] = Url::fromRoute('eic_user_login.member_access', [], $login_link_options);
         switch ($joining_methods[0]['plugin_id']) {
           case 'tu_open_method':
             $link['title'] = $this->t('Log in to join group');

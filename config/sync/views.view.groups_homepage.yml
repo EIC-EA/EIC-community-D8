@@ -385,7 +385,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: false
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+          content: 'Check our EIC Community Groups! They can be focused on an event, an innovative hot topic, or cover a broader eye-catching thematic. Find the ones that interest you the most, join the groups and take part in the conversations.'
           tokenize: false
       footer: {  }
       display_extenders: {  }

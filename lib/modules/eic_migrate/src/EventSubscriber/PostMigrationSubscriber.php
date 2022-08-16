@@ -169,6 +169,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   public function onMigratePostRowSave(MigratePostRowSaveEvent $event) {
     switch ($event->getMigration()->getBaseId()) {
       case 'upgrade_d7_node_complete_group':
+      case 'upgrade_d7_node_complete_event_site':
         // Check if we have a group ID.
         if (!$gid = $event->getDestinationIdValues()[0]) {
           return;
@@ -180,6 +181,20 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
           $group->setSyncing(TRUE);
           $this->setGroupVisibility($group, $event);
           $this->setGroupJoiningMethod($group, $event);
+          $this->setGroupFeatures($group, $event);
+        }
+        break;
+
+      case 'upgrade_d7_node_complete_organisation':
+        // Check if we have a group ID.
+        if (!$gid = $event->getDestinationIdValues()[0]) {
+          return;
+        }
+
+        // Load the migrated group.
+        if ($group = $this->entityTypeManager->getStorage('group')->load($gid)) {
+          // We enable syncing to avoid creating new revisions.
+          $group->setSyncing(TRUE);
           $this->setGroupFeatures($group, $event);
         }
         break;
