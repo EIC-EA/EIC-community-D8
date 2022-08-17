@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -13,6 +14,32 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Bulk operations related with invitation entity.
  */
 class BulkGroupInvitationConfirm extends BulkGroupInvitationConfirmBase implements ContainerInjectionInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+
+    $email_list_markup = "";
+    foreach ($this->tempstore['emails'] as $email) {
+      $invitee = $email;
+      // If user already exist on the platform, display the username instead of
+      // the email address.
+      /** @var \Drupal\user\UserInterface $user */
+      if ($user = user_load_by_mail($email)) {
+        $invitee = $user->toLink($user->getDisplayName())->toString();
+      }
+      $email_list_markup .= "{$invitee} <br />";
+    }
+
+    $description = $this->t("Invitation recipients: <br /> @email_list",
+      [
+        '@email_list' => new FormattableMarkup($email_list_markup, []),
+      ]
+    );
+
+    return $description;
+  }
 
   /**
    * {@inheritdoc}
