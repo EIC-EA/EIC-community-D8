@@ -48,7 +48,7 @@
       "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch"
     },
     "drupal/group_permissions": {
-      "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-6.patch"
+      "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch"
     },
     "drupal/group_content_menu": {
       "3209011 - Active trail is cached incorrectly": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch"
