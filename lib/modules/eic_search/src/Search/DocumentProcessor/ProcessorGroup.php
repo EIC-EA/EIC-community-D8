@@ -118,8 +118,8 @@ class ProcessorGroup extends DocumentProcessor {
 
     // Count likes and follows.
     $flag_counts = $this->flagCountManager->getEntityFlagCounts($group);
-    $total_likes = array_key_exists(FlagType::RECOMMEND_GROUP, $flag_counts) ?
-      (int) $flag_counts[FlagType::RECOMMEND_GROUP] :
+    $total_likes = array_key_exists(FlagType::LIKE_GROUP, $flag_counts) ?
+      (int) $flag_counts[FlagType::LIKE_GROUP] :
       0;
     $total_follows = array_key_exists(FlagType::FOLLOW_GROUP, $flag_counts) ?
       (int) $flag_counts[FlagType::FOLLOW_GROUP] :

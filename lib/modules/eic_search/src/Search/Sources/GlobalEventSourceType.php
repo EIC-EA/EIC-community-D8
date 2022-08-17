@@ -77,7 +77,7 @@ class GlobalEventSourceType extends SourceType {
         'ASC' => $this->t('First events in time', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last events in time', [], ['context' => 'eic_search']),
       ],
-      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_GROUP => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],

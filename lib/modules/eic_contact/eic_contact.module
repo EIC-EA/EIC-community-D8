@@ -118,32 +118,40 @@ function _eic_contact_alter_submit(
     \Drupal::currentUser()->id()
   );
 
+  /** @var \Drupal\contact\MessageInterface $message */
+  $message = $form_state->getFormObject()->getEntity();
+
+  // Clone the sender, as we make changes to mail and name properties.
+  $sender_cloned = clone $current_user;
+
+  if ($sender_cloned->isAnonymous()) {
+    // At this point, $sender contains an anonymous user, so we need to take
+    // over the submitted form values.
+    $sender_cloned->name = $message->getSenderName();
+    $sender_cloned->mail = $message->getSenderMail();
+
+    // For the email message, clarify that the sender name is not verified; it
+    // could potentially clash with a username on this site.
+    $sender_cloned->name = t('@name (not verified)', ['@name' => $message->getSenderName()]);
+  }
+
   $email = $category->get('field_target_email')->value;
 
   $params = [
     'contact_message' => $message_form->getEntity(),
-    'sender' => $current_user,
+    'sender' => $sender_cloned,
     'recipients' => $email,
     'contact_form' => $message_form->getEntity()->getContactForm(),
   ];
-
-  $query = \Drupal::entityQuery('user')
-    ->condition('status', 1);
-
-  $or_condition = $query->orConditionGroup()
-    ->condition('roles', 'content_administrator')
-    ->condition('roles', 'site_admin');
-
-  $uids = $query->condition($or_condition)->execute();
 
   /** @var \Drupal\eic_messages\Service\MessageBus $bus */
   $bus = \Drupal::service('eic_messages.message_bus');
 
   // Send notification to all SCM/SA
-  foreach ($uids as $uid) {
+  foreach (\Drupal::service('eic_user.helper')->getSitePowerUsers() as $uid) {
     $bus->dispatch([
       'template' => 'notify_mt_contact_global',
-      'field_sender' => ['target_id' => $current_user->id()],
+      'field_sender' => ['target_id' => $sender_cloned->id()],
       'field_body' => $form_state->getValue('field_contact_message')[0],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'field_contact_category' => ['target_id' => $category_id],
@@ -157,7 +165,7 @@ function _eic_contact_alter_submit(
     // Send a copy of the contact form to the current user.
     $bus->dispatch([
       'template' => 'notify_contact_global_copy',
-      'field_sender' => ['target_id' => $current_user->id()],
+      'field_sender' => ['target_id' => $sender_cloned->id()],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'field_body' => $form_state->getValue('field_contact_message')[0],
       'uid' => ['target_id' => $current_user->id()]
@@ -166,9 +174,9 @@ function _eic_contact_alter_submit(
     // Send notification to the sender to confirm email has been sent.
     $bus->dispatch([
       'template' => 'notify_contact_global_confirm',
-      'field_sender' => ['target_id' => $current_user->id()],
+      'field_sender' => ['target_id' => $sender_cloned->id()],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
-      'uid' => ['target_id' => $current_user->id()]
+      'uid' => ['target_id' => $sender_cloned->id()]
     ]);
   }
 
