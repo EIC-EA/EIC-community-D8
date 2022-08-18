@@ -2,7 +2,9 @@
 
 namespace Drupal\oec_group_features;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
@@ -12,6 +14,8 @@ use Drupal\group_permissions\GroupPermissionsManagerInterface;
  * GroupFeatureHelper service that provides helper functions for Group features.
  */
 class GroupFeatureHelper {
+
+  use LoggerChannelTrait;
 
   /**
    * Name of the Features field.
@@ -155,6 +159,31 @@ class GroupFeatureHelper {
     }
 
     return $permissions;
+  }
+
+  /**
+   * Rebuilds group features permissions for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity for which we need to rebuild permissions.
+   */
+  public function rebuildPermissions(GroupInterface $group = NULL): void {
+    $enabled_features = $group->get(self::FEATURES_FIELD_NAME)->getValue();
+
+    // We need to disable and re-enable each of the selected features.
+    foreach ($enabled_features as $item) {
+      $feature_name = $item['value'];
+      try {
+        /** @var \Drupal\oec_group_features\GroupFeatureInterface $feature_plugin */
+        $feature_plugin = $this->groupFeaturePluginManager->createInstance($feature_name);
+        $feature_plugin->disable($group);
+        $feature_plugin->enable($group);
+      }
+      catch (PluginException $e) {
+        $logger = $this->getLogger('oec_group_features');
+        $logger->error($e->getMessage());
+      }
+    }
   }
 
 }
