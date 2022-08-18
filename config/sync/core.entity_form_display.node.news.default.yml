@@ -39,7 +39,6 @@ third_party_settings:
         - group_details
         - group_documents
         - group_related_stories
-        - group_related_groups
         - group_topics_countries_tags
         - group_settings
       label: 'News details'
@@ -108,9 +107,9 @@ third_party_settings:
       children:
         - field_related_groups
       label: 'Related groups'
-      region: content
-      parent_name: group_news_details
-      weight: 40
+      region: hidden
+      parent_name: ''
+      weight: 20
       format_type: tab
       format_settings:
         classes: ''
@@ -237,6 +236,7 @@ content:
       ignore_current_user: 0
       target_bundles: {  }
       is_required: false
+      has_error: 0
     third_party_settings: {  }
   field_news_paragraphs:
     type: entity_reference_paragraphs
@@ -254,16 +254,6 @@ content:
     weight: 5
     region: content
     settings: {  }
-    third_party_settings: {  }
-  field_related_groups:
-    type: entity_reference_autocomplete
-    weight: 29
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
   field_related_stories:
     type: entity_reference_autocomplete
@@ -297,6 +287,7 @@ content:
       ignore_current_user: 0
       target_bundles: {  }
       is_required: false
+      has_error: 0
     third_party_settings: {  }
   field_video:
     type: media_library_widget
@@ -322,6 +313,7 @@ content:
       ignore_current_user: 0
       target_bundles: {  }
       is_required: false
+      has_error: 0
     third_party_settings: {  }
   field_vocab_topics:
     type: entity_tree
@@ -340,6 +332,7 @@ content:
       ignore_current_user: 0
       target_bundles: {  }
       is_required: false
+      has_error: 0
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -441,5 +434,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_related_groups: true
   member_content_edit_access: true
   promote: true
