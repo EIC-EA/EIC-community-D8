@@ -29,6 +29,7 @@ class RequestEventSubscriber implements EventSubscriberInterface {
   const ALLOWED_ROUTES = [
     ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME,
     'entity.user.edit_form',
+    'masquerade.unmasquerade',
     'user.logout',
   ];
 
