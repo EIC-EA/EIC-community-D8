@@ -9,6 +9,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
+use Drupal\eic_user\Hooks\FormAlter;
 use Drupal\eic_user\NotificationFrequencies;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\user\EntityOwnerInterface;
@@ -74,16 +75,21 @@ function eic_user_field_widget_social_links_form_alter(&$element, FormStateInter
 /**
  * Implements hook_form_alter().
  */
-function eic_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function eic_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   switch ($form_id) {
     case 'bulk_group_invitation':
-      \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+      \Drupal::classResolver(FormAlter::class)
         ->alterBulkGroupInvitation($form, $form_state, $form_id);
+      break;
+
+    case 'user_form':
+      \Drupal::classResolver(FormAlter::class)
+        ->alterUserForm($form, $form_state, $form_id);
       break;
 
     case 'profile_member_edit_form':
     case 'profile_member_add_form':
-      \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+      \Drupal::classResolver(FormAlter::class)
         ->alterProfileMemberForm($form, $form_state, $form_id);
       break;
   }
