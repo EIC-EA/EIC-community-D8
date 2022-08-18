@@ -212,17 +212,11 @@ class ProcessorMessage extends DocumentProcessor {
 
       if ($group = Group::load($node_group_id)) {
         $group_follows = $this->getFollowUidByFlag('follow_group', $group);
-        $group_parent_label = $group->label();
-        $group_parent_url = $group->toUrl()->toString();
         $group_parent_id = $group->id();
-        $group_is_published = $group->isPublished();
         $group_type = $group->getGroupType()->id();
 
-        $this->addOrUpdateDocumentField($document, 'ss_global_group_parent_label', $fields, $group_parent_label);
-        $this->addOrUpdateDocumentField($document, 'ss_global_group_parent_url', $fields, $group_parent_url);
         $this->addOrUpdateDocumentField($document, 'ss_global_group_parent_type', $fields, $group_type);
         $this->addOrUpdateDocumentField($document, 'its_global_group_parent_id', $fields, $group_parent_id);
-        $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, (int) $group_is_published);
       }
 
       $follows = array_merge(
