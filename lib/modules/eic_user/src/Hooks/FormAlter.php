@@ -94,9 +94,10 @@ class FormAlter implements ContainerInjectionInterface {
       $user = $form_state->getFormObject()->getEntity();
       $is_smed_user = UserHelper::isSmedUser($user);
 
-      // If the user has a SMED ID, we make the job title field as readonly.
+      // If the user has a SMED ID, we make some fields as readonly.
       if (!$current_user_is_admin && $is_smed_user) {
         $form['member_profiles']['widget'][0]['entity']['field_vocab_job_title']['#disabled'] = TRUE;
+        $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
     }
 
@@ -257,9 +258,10 @@ class FormAlter implements ContainerInjectionInterface {
     $current_user_is_admin = UserHelper::isPowerUser($this->currentUser);
     $is_smed_user = UserHelper::isSmedUser($user);
 
-    // If the user has a SMED ID, we make the job title field as readonly.
+    // If the user has a SMED ID, we make some fields as readonly.
     if (!$current_user_is_admin && $is_smed_user) {
       $form['field_vocab_job_title']['#disabled'] = TRUE;
+      $form['field_vocab_user_type']['#disabled'] = TRUE;
     }
   }
 
