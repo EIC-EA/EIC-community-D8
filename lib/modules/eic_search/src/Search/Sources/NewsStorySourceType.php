@@ -26,7 +26,7 @@ class NewsStorySourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('News & Stories', [], ['context' => 'eic_search']);
+    return $this->t('Stories', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -41,7 +41,6 @@ class NewsStorySourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_content_type' => $this->t('Type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
       'bs_content_is_private' => $this->t('Visibility', [], ['context' => 'eic_search']),
@@ -135,7 +134,7 @@ class NewsStorySourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredContentType(): array {
-    return ['story', 'news'];
+    return ['story'];
   }
 
   /**
