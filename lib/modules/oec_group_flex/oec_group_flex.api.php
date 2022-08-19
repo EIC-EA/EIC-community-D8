@@ -38,5 +38,42 @@ function hook_group_flex_visibility_save(
 }
 
 /**
+ * Allows to deny a permission for a certain role in a certain context.
+ *
+ * This alter call is being used in Drupal\oec_group_flex\Plugin\GroupVisibility\PublicVisibility
+ * only for now.
+ *
+ * @param bool $is_allowed
+ *   Wether to allow the permission.
+ * @param array $context
+ *   Array containing:
+ *   - plugin: the plugin instance.
+ *   - group: the group entity.
+ *   - role: role being treated.
+ *   - permission: the permission being applied.
+ */
+function hook_oec_group_flex_plugin_permission_alter(bool &$is_allowed, array $context) {
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $context['group'];
+  /** @var \Drupal\group\Entity\GroupRoleInterface $role */
+  $role = $context['role'];
+  $plugin = $context['plugin'];
+
+  switch ($group->getGroupType()->id()) {
+    case 'event':
+      switch ($plugin->getPluginDefinition()['id']) {
+        case 'group_node':
+          // We deny access to view content for anonymous/outsider roles.
+          if ($role->isOutsider() || $role->isAnonymous()) {
+            $is_allowed = FALSE;
+          }
+          break;
+
+      }
+      break;
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

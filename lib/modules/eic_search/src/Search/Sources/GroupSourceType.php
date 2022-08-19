@@ -60,8 +60,8 @@ class GroupSourceType extends SourceType {
         'label' => $this->t('Date created', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Date created', [], ['context' => 'eic_search']),
       ],
-      'timestamp' => [
-        'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
+      'ss_drupal_changed_timestamp' => [
+        'label' => $this->t('Recently updated', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
       ],
       'tm_global_title' => [
@@ -74,7 +74,7 @@ class GroupSourceType extends SourceType {
         'ASC' => $this->t('Fullname A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Fullname Z-A', [], ['context' => 'eic_search']),
       ],
-      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_GROUP => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],

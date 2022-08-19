@@ -5,6 +5,7 @@ namespace Drupal\eic_user_login\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\eic_user\UserHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,8 +44,56 @@ class FormAlter implements ContainerInjectionInterface {
   /**
    * Implements hook_form_BASE_FORM_ID_alter().
    */
+  public function formUserFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    /** @var \Drupal\user\UserInterface $account */
+    $account = $form_state->getFormObject()->getEntity();
+
+    // Remove access to SMED related fields for non-power users.
+    if (!UserHelper::isPowerUser(\Drupal::currentUser())) {
+      $form['field_user_status']['#access'] = FALSE;
+      $form['field_message_from_service']['#access'] = FALSE;
+      $form['field_updated_profile_by_service']['#access'] = FALSE;
+      $form['field_updated_profile_by_user']['#access'] = FALSE;
+    }
+
+    // Disable field_updated_profile_by_service and field_updated_profile_by_user.
+    $form['field_updated_profile_by_service']['#disabled'] = TRUE;
+    $form['field_updated_profile_by_user']['#disabled'] = TRUE;
+
+    // Disable access to fields if user is managed by cas.
+    if (\Drupal::service('cas.user_manager')->getCasUsernameForAccount($account->id())) {
+      $form['field_first_name']['#disabled'] = TRUE;
+      $form['field_last_name']['#disabled'] = TRUE;
+    }
+
+    $form['actions']['submit']['#submit'][] = [$this, 'formUserFormSubmit'];
+  }
+
+  /**
+   * Implements hook_form_BASE_FORM_ID_alter().
+   */
   public function formProfileFormAlter(&$form, FormStateInterface $form_state, $form_id) {
     $form['actions']['submit']['#submit'][] = [$this, 'formProfileFormSubmit'];
+  }
+
+  /**
+   * Custom submit callback for the user form.
+   *
+   * @param array $form
+   *   The form.
+   * @param Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   */
+  public function formUserFormSubmit(array $form, FormStateInterface $form_state) {
+    if (empty($form['member_profiles']['widget'][0]['entity'])) {
+      return;
+    }
+    // Check if profile is completed.
+    if ($form['member_profiles']['widget'][0]['entity']['#validated'] === TRUE) {
+      $this->tempStore->delete('is_profile_completed');
+    }
   }
 
   /**

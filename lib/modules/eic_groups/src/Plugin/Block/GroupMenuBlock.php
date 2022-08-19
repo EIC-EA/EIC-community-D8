@@ -201,7 +201,7 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
 
     /** @var \Drupal\group\Entity\Storage\GroupContentStorage $groupStorage */
     $groupStorage = $this->entityTypeManager->getStorage('group_content');
-    $contentPluginId = $groupStorage->loadByContentPluginId($group_menu_plugin_id);
+    $contentPluginId = $this->loadByContentPluginId($group_menu_plugin_id, $entity->id());
 
     if (empty($contentPluginId)) {
       return NULL;
@@ -212,6 +212,22 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
       return array_pop($instances)->getEntity();
     }
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function loadByContentPluginId($plugin_id, $group_id) {
+    // If no responsible group content types were found, we return nothing.
+    /** @var \Drupal\group\Entity\Storage\GroupContentTypeStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('group_content_type');
+    $group_content_types = $storage->loadByContentPluginId($plugin_id);
+    if (empty($group_content_types)) {
+      return [];
+    }
+    $groupStorage = $this->entityTypeManager->getStorage('group_content');
+
+    return $groupStorage->loadByProperties(['type' => array_keys($group_content_types), 'gid' => $group_id]);
   }
 
 }

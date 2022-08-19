@@ -116,6 +116,9 @@ class ProcessorFlags extends DocumentProcessor {
       case 'entity:group':
         $entity_id = $fields['its_group_id_integer'];
         $entity_type = 'group';
+        $last_flagging_flag_types = [
+          FlagType::LIKE_GROUP,
+        ];
 
         $group = Group::load($entity_id);
 

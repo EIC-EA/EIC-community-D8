@@ -33,6 +33,13 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   const ANCHOR_ID = '';
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The EIC Group Helper class.
    *
    * @var \Drupal\eic_groups\EICGroupsHelper
@@ -54,6 +61,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
       $plugin_id,
       $plugin_definition
     );
+    $instance->moduleHandler = $container->get('module_handler');
     $instance->eicGroupHelper = $container->get('eic_groups.helper');
     return $instance;
   }
@@ -166,6 +174,14 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
         $group_type_roles[] = $role;
       }
 
+      // Check if this feature should be publicly available.
+      $is_publicly_available = TRUE;
+      $context = [
+        'group' => $group,
+        'group_feature' => $this->getPluginId(),
+      ];
+      $this->moduleHandler->alter('eic_groups_group_feature_public', $is_publicly_available, $context);
+
       // Initialize array of public role IDs to update group permissions.
       $public_role_ids = [];
 
@@ -193,13 +209,15 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
             );
           }
 
-          // Adds group permission for the public roles.
-          foreach ($public_role_ids as $role) {
-            $group_permissions = $this->addRolePermissionsToGroup(
-              $group_permissions,
-              $role,
-              $config->get('public_permissions')
-            );
+          if ($is_publicly_available) {
+            // Adds group permission for the public roles.
+            foreach ($public_role_ids as $role) {
+              $group_permissions = $this->addRolePermissionsToGroup(
+                $group_permissions,
+                $role,
+                $config->get('public_permissions')
+              );
+            }
           }
           break;
 

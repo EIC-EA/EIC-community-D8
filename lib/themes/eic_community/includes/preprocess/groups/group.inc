@@ -382,7 +382,13 @@ function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, s
   $medias = $entity->get($field_name)->referencedEntities();
   $list = [];
   foreach ($medias as $media) {
-    $file = File::load($media->field_media_file->target_id);
+    $media_id = $media->field_media_file ? $media->field_media_file->target_id : NULL;
+
+    if (!$media_id) {
+      continue;
+    }
+
+    $file = File::load($media_id);
 
     if (!$file instanceof \Drupal\file\FileInterface) {
       continue;
