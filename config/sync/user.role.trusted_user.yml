@@ -48,7 +48,6 @@ permissions:
   - 'create event group'
   - 'create group group'
   - 'create image media'
-  - 'create news content'
   - 'create remote_video media'
   - 'create story content'
   - 'create video media'
