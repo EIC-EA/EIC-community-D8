@@ -114,6 +114,7 @@ $config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
 // Always set the auto-register to TRUE as this event is being catched by
 // eic_user_login module.
 $config['cas.settings']['user_accounts']['auto_register'] = TRUE;
+$config['eic_user_login.settings']['check_sync_user'] = TRUE;
 
 // Allow self-registered users to login.
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
