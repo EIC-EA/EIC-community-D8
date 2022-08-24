@@ -113,23 +113,24 @@ class CasEventSubscriber implements EventSubscriberInterface {
     $account->field_last_name->value = $properties->getAttribute('lastName');
     $account->save();
 
-    // Check if we have a proper value for the SMED ID.
-    if ($account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty()) {
-      // We only check/sync user against SMED if account is not active.
-      // This is to avoid too much load on the SMED.
-      if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
+    // We only check/sync user against SMED if account is not active.
+    // This is to avoid too much load on the SMED.
+    if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
 
-        // Fetch information from SMED.
-        $data = [
-          'user_dashboard_id' => $account->field_smed_id->value,
-          'email' => $account->getEmail(),
-          'username' => $account->getAccountName(),
-        ];
+      // Fetch information from SMED.
+      $data = [
+        'email' => $account->getEmail(),
+        'username' => $account->getAccountName(),
+      ];
 
-        if ($result = $this->smedUserConnection->queryEndpoint($data)) {
-          // Update the user status.
-          $this->smedUserManager->updateUserInformation($account, $result);
-        }
+      // Check if we have a proper value for the SMED ID.
+      if ($account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty()) {
+        $data['user_dashboard_id'] = $account->field_smed_id->value;
+      }
+
+      if ($result = $this->smedUserConnection->queryEndpoint($data)) {
+        // Update the user status.
+        $this->smedUserManager->updateUserInformation($account, $result);
       }
     }
 

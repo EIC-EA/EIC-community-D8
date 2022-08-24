@@ -94,13 +94,13 @@ class EicUserResource extends EntityResource {
       return new ResourceResponse($data, 422);
     }
 
-    parent::post($entity);
+    $response = parent::post($entity);
 
     // We need to add this new user to the authmap so it is recognised when
     // trying to log in through EU Login.
     $this->casUserManager->setCasUsernameForAccount($entity, $entity->getEmail());
 
-    return new ResourceResponse($entity);
+    return $response;
   }
 
 }
