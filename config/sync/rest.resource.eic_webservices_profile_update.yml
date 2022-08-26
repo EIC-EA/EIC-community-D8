@@ -1,0 +1,17 @@
+uuid: 3a966ef8-a693-4c44-b943-8f1feffd14ad
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_webservices
+    - hal
+id: eic_webservices_profile_update
+plugin_id: eic_webservices_profile_update
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - hal_json
+  authentication:
+    - eic_webservices_token_auth
