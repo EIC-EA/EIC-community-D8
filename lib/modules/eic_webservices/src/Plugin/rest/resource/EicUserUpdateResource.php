@@ -112,7 +112,7 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->headers->all()
     );
 
-    $this->updateProfile($sub_request);
+    $this->updateProfile($sub_request, $smed_id);
 
     // If user was updated, make sure we update the authmap as well with the new
     // email address.
@@ -133,11 +133,12 @@ class EicUserUpdateResource extends ResourceBase {
    *
    * @throws \Exception
    */
-  private function updateProfile(SubRequestController $sub_request){
+  private function updateProfile(SubRequestController $sub_request, int $smed_id){
     $current_request = $this->requestStack->getCurrentRequest();
     // Get the parent resource endpoint URI.
     $uri = '/smed/api/v1/profile?_format=hal_json';
     $content = json_decode($current_request->getContent(), TRUE);
+    $content['_embedded']['profile']['smed_id'] = $smed_id;
 
     $sub_request->subRequest(
       $uri,
