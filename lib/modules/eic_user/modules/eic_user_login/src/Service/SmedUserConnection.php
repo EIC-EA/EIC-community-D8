@@ -126,7 +126,7 @@ class SmedUserConnection {
       }
       else {
         $result = JSON::decode($response->getBody());
-        if ($result) {
+        if ($result && $result['status'] == '200') {
           return $this->processResponse($result);
         }
         else {
