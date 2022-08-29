@@ -115,9 +115,12 @@ class CasEventSubscriber implements EventSubscriberInterface {
 
     // We only check/sync user against SMED if account is not active.
     // This is to avoid too much load on the SMED.
-    if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
+    if ($this->configFactory->get('eic_user_login.settings')->get('check_sync_user') &&
+         (!$account->isActive() ||
+         ($account->hasField('field_smed_id') && $account->get('field_smed_id')->isEmpty()) ||
+         ($account->hasField('field_user_status') && $account->get('field_user_status')->isEmpty()))) {
 
-      // Fetch information from SMED.
+      // Fetch missing information from SMED.
       $data = [
         'email' => $account->getEmail(),
         'username' => $account->getAccountName(),
