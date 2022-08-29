@@ -1,10 +1,10 @@
 services:
   eic_webservices.ws_helper:
     class: Drupal\eic_webservices\Utility\EicWsHelper
-    arguments: ['@config.factory', '@entity_type.manager']
+    arguments: ['@request_stack', '@http_kernel.basic', '@plugin.manager.rest', '@config.factory', '@entity_type.manager', '@eic_user.helper']
   eic_webservices.ws_rest_helper:
     class: Drupal\eic_webservices\Utility\WsRestHelper
-    arguments: ['@entity_field.manager']
+    arguments: ['@entity_field.manager', '@eic_helper.social_link_field']
   eic_webservices.taxonomy_helper:
     class: Drupal\eic_webservices\Utility\SmedTaxonomyHelper
     arguments: ['@config.factory', '@entity_type.manager', '@entity_field.manager']

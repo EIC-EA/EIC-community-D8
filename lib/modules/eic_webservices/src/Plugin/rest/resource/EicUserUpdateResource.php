@@ -80,13 +80,7 @@ class EicUserUpdateResource extends ResourceBase {
   }
 
   /**
-   * Responds to POST requests.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
-   *
-   * @return \Drupal\rest\ModifiedResourceResponse
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * {@inheritdoc}
    */
   public function post(EntityInterface $entity = NULL) {
     // Prepare the request.
@@ -112,44 +106,19 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->headers->all()
     );
 
-    $this->updateProfile($sub_request, $smed_id);
-
-    // If user was updated, make sure we update the authmap as well with the new
-    // email address.
-    if ($response->getStatusCode() == 200) {
+    if ($response->isSuccessful()) {
       // Get the user being updated.
       /** @var \Drupal\user\UserInterface $account */
       if ($account = $this->wsHelper->getUserBySmedId($smed_id)) {
         // Update the authmap with the new email address.
         $this->casUserManager->setCasUsernameForAccount($account, $account->getEmail());
+
+        // Update the user profile.
+        $this->wsHelper->updateUserProfileSubRequest(\Drupal::request(), $entity);
       }
     }
 
     return new ModifiedResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
-  }
-
-  /**
-   * @param \Drupal\eic_webservices\Controller\SubRequestController $sub_request
-   *
-   * @throws \Exception
-   */
-  private function updateProfile(SubRequestController $sub_request, int $smed_id){
-    $current_request = $this->requestStack->getCurrentRequest();
-    // Get the parent resource endpoint URI.
-    $uri = '/smed/api/v1/profile?_format=hal_json';
-    $content = json_decode($current_request->getContent(), TRUE);
-    $content['_embedded']['profile']['smed_id'] = $smed_id;
-
-    $sub_request->subRequest(
-      $uri,
-      Request::METHOD_POST,
-      [],
-      $current_request->cookies->all(),
-      $current_request->files->all(),
-      $current_request->server->all(),
-      json_encode($content['_embedded']['profile']),
-      $current_request->headers->all()
-    );
   }
 
 }
