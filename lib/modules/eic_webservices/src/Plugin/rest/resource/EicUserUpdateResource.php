@@ -114,7 +114,7 @@ class EicUserUpdateResource extends ResourceBase {
         $this->casUserManager->setCasUsernameForAccount($account, $account->getEmail());
 
         // Update the user profile.
-        $this->wsHelper->updateUserProfileSubRequest(\Drupal::request(), $entity);
+        $this->wsHelper->updateUserProfileSubRequest(\Drupal::request(), $account);
       }
     }
 
