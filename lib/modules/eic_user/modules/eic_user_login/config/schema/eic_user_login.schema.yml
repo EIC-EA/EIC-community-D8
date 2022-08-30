@@ -22,3 +22,10 @@ eic_user_login.settings:
     api_key:
       type: string
       label: 'API Key'
+action.configuration.eic_change_user_smed_status:
+  type: mapping
+  label: 'Change user SMED status'
+  mapping:
+    smed_status:
+      type: text
+      label: 'SMED status'
