@@ -11,7 +11,6 @@ plugin_id: eic_webservices_profile
 granularity: resource
 configuration:
   methods:
-    - GET
     - POST
     - PATCH
   formats:
