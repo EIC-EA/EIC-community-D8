@@ -91,6 +91,11 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
       $collection->add('eic_group_membership.group_membership.delete_form', $new_route);
     }
+
+    if ($route = $collection->get('entity.group_content.add_form')) {
+      // Set all group_content add routes as non admin.
+      $route->setOption('_admin_route', FALSE);
+    }
   }
 
   /**
