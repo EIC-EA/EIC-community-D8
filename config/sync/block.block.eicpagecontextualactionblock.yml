@@ -1,0 +1,40 @@
+uuid: 5a853a56-2d75-4c9d-974c-221c344d032f
+langcode: en
+status: true
+dependencies:
+  module:
+    - context
+    - eic_blocks
+  theme:
+    - eic_community
+id: eicpagecontextualactionblock
+theme: eic_community
+region: content
+weight: 0
+provider: null
+plugin: eic_page_contextual_action_block
+settings:
+  id: eic_page_contextual_action_block
+  label: 'EIC Page Contextual Action block'
+  label_display: '0'
+  provider: eic_blocks
+visibility:
+  user_status:
+    id: user_status
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    user_status:
+      viewing_profile: '0'
+      logged_viewing_profile: '0'
+      own_page_true: '0'
+      field_value: '0'
+    user_fields: uid
+  context_all:
+    id: context_all
+    negate: null
+    values: ''
+  context:
+    id: context
+    negate: null
+    values: ''
