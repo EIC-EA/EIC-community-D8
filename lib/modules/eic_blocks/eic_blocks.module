@@ -2,9 +2,18 @@
 
 /**
  * @file
- * Primary module hooks for EIC Social feed module.
- *
- * @DCG
- * This file is no longer required in Drupal 8.
- * @see https://www.drupal.org/node/2217931
+ * Primary module hooks for EIC Blocks module.
  */
+
+/**
+ * Implements hook_theme().
+ */
+function eic_blocks_theme($existing, $type, $theme, $path) {
+  return [
+    'eic_action_block' => [
+      'variables' => [
+        'links' => NULL,
+      ],
+    ],
+  ];
+}

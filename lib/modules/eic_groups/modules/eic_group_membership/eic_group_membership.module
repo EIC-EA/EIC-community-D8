@@ -8,6 +8,8 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
@@ -68,6 +70,23 @@ function eic_group_membership_entity_operation_alter(
         $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
         break;
     }
+  }
+}
+
+/**
+ * Implements hook_eic_page_contextual_actions().
+ */
+function eic_group_membership_eic_page_contextual_actions(array &$links, RouteMatchInterface $route, AccountInterface $account) {
+  switch ($route->getRouteName()) {
+    case 'view.eic_group_members.page_group_members':
+      $group = $route->getParameter('group');
+      $plugin_id = 'group_membership';
+      $url = Url::fromRoute('entity.group_content.add_form', [
+        'group' => $group->id(),
+        'plugin_id' => $plugin_id,
+      ]);
+      $links[] = Link::fromTextAndUrl(t('Add member'), $url);
+      break;
   }
 }
 

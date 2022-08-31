@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override to display an action block.
+ *
+ * Available variables:
+ * - links: A list of available action links.
+ *
+ * @see template_preprocess_eic_action_block()
+ */
+#}
+{% block header %}
+  {{ title_prefix }}
+  {{ title_suffix }}
+{% endblock %}
+
+<div class="ecl-container">
+{% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
+  icon_file_path: eic_icon_path,
+  items: links,
+  extra_classes: extra_classes
+} only %}
+</div>
