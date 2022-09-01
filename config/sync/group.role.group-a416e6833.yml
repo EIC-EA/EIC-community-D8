@@ -32,6 +32,7 @@ permissions:
   - 'delete any invitation'
   - 'delete own invitations'
   - 'edit all comments'
+  - 'edit memberships'
   - 'edit own comments'
   - 'highlight group content'
   - 'invite users to group'

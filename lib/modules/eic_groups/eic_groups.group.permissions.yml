@@ -1,5 +1,2 @@
 access members management:
   title: 'Access members management page'
-edit membership:
-  title: 'Edit membership'
-  description: 'Allows to edit memberships independently of the "Administer group members" permission'

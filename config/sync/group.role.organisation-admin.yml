@@ -15,7 +15,6 @@ permissions:
   - 'access group search overview'
   - 'access group_node overview'
   - 'access members management'
-  - 'administer members'
   - 'create group_node:event entity'
   - 'create group_node:news entity'
   - 'delete activity item'
