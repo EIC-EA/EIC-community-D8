@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the EIC Statistics module.
  */
 
+module_load_include('inc', 'eic_groups', 'eic_groups.install');
+
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -13,6 +15,7 @@ use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityInterface;
@@ -485,6 +488,101 @@ function eic_groups_update_9009(&$sandbox) {
       '_eic_groups_batch_rebuild_group_feature_permissions',
       [
         'event',
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Modify membership permissions.
+ */
+function eic_groups_update_9010(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to modify group permissions.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $groups_per_batch = 100;
+
+  $internal_roles = [
+    'group-owner',
+    'group-admin',
+    'event-owner',
+    'event-admin',
+    'organisation-owner',
+    'organisation-admin',
+  ];
+  $external_roles = [
+    UserHelper::ROLE_DRUPAL_ADMINISTRATOR,
+    UserHelper::ROLE_SITE_ADMINISTRATOR,
+    UserHelper::ROLE_CONTENT_ADMINISTRATOR,
+  ];
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_modify_group_permissions',
+      [
+        ['edit memberships'],
+        $internal_roles,
+        $external_roles,
+        'add',
+        [],
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Modify membership permissions.
+ */
+function eic_groups_update_9011(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to modify group permissions.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $groups_per_batch = 100;
+
+  $internal_roles = [
+    'group-owner',
+    'group-admin',
+    'event-owner',
+    'event-admin',
+    'organisation-owner',
+    'organisation-admin',
+  ];
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_modify_group_permissions',
+      [
+        ['administer members'],
+        $internal_roles,
+        [],
+        'remove',
+        [],
         $progress,
         $progress + $groups_per_batch,
         $max_groups,
