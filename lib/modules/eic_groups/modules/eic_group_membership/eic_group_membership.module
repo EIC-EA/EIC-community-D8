@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -70,6 +71,63 @@ function eic_group_membership_entity_operation_alter(
         $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
         break;
     }
+  }
+}
+
+/**
+ * Implements hook_group_content_info_alter().
+ */
+function eic_group_membership_group_content_info_alter(array &$definitions) {
+  if (isset($definitions['group_membership'])) {
+    // Overrides the group content access control handler class.
+    $definitions['group_membership']['handlers']['access'] = '\Drupal\eic_group_membership\Access\GroupContentMembershipAccessControlHandler';
+  }
+}
+
+/**
+ * Implements hook_entity_field_access_alter().
+ *
+ * We need to alter the result of group_entity_field_access().
+ * This is pretty much a verbatim copy of the above function, with just a change
+ * in permissions checking.
+ *
+ * @see group_entity_field_access()
+ */
+function eic_group_membership_entity_field_access_alter(array &$grants, array $context) {
+  // Can't retrieve an entity from an empty item list.
+  if (!isset($context['items'])) {
+    return;
+  }
+
+  // We only care about the group_roles field when on a form.
+  if ($context['field_definition']->getName() != 'group_roles' || $context['operation'] !== 'edit') {
+    return;
+  }
+
+  // We only care if it is attached to a group content entity.
+  if ($context['items']->getEntity()->getEntityTypeId() != 'group_content') {
+    return;
+  }
+
+  /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+  $group_content = $context['items']->getEntity();
+
+  // We only care if the group content entity is a group membership.
+  if ($group_content->getContentPlugin()->getPluginId() != 'group_membership') {
+    return;
+  }
+
+  // Now that we know we're dealing with a group_roles field on a group
+  // membership form, we need to check whether the group membership belongs to a
+  // group yet. If not, we can't check for access and should always hide it.
+  if (!$group = $group_content->getGroup()) {
+    return;
+  }
+
+  // Only group administrators should be able to change the membership roles.
+  if ($group->hasPermission('administer members', $context['account'])
+    || $group->hasPermission('edit memberships', $context['account'])) {
+    $grants['group'] = AccessResult::allowed();
   }
 }
 
