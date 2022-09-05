@@ -95,9 +95,9 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
       'stats' => $stats,
     ];
 
-    if (!$node_translation->get('field_header_visual')->isEmpty()) {
+    if (!$node_translation->get('field_image')->isEmpty()) {
       /** @var \Drupal\media\Entity\Media $media */
-      $media = \Drupal::service('entity.repository')->getTranslationFromContext($node_translation->get('field_header_visual')->entity, $block_content->language()->getId());
+      $media = \Drupal::service('entity.repository')->getTranslationFromContext($node_translation->get('field_image')->entity, $block_content->language()->getId());
       $file_uri = $media->get('oe_media_image')->first()->entity->getFileUri();
       $item['media'] = [
         'image' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($file_uri),
