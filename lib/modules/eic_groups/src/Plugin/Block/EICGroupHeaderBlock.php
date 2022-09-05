@@ -200,6 +200,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We also need to add group cache tags.
     $cacheable_metadata->addCacheTags($group->getCacheTags());
 
+    // Add the user membership as a cache dependency.
+    if ($membership = $group->getMember($this->currentUser->getAccount())) {
+      $cacheable_metadata->addCacheableDependency($membership);
+    }
+
     // Get group operation links.
     $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())
       ->getOperations($group);
