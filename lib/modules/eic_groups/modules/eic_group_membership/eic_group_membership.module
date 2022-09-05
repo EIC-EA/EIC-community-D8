@@ -511,8 +511,8 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
 
       // We deny access if the user is not a power user or doesn't have
       // permission to administer group members.
-      $has_delete_permission = ($current_member->hasPermission('administer members') ||
-        $current_member->hasPermission('delete memberships'));
+      $has_delete_permission = ($account->hasPermission('administer members') ||
+        $account->hasPermission('delete memberships'));
       $access = GroupAccessResult::forbiddenIf(
         $current_member instanceof GroupMembership &&
           !$has_delete_permission
