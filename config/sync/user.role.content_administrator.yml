@@ -85,6 +85,7 @@ permissions:
   - 'access media overview'
   - 'access news_stories entity browser pages'
   - 'access overview page overview'
+  - 'access taxonomy overview'
   - 'access toolbar'
   - 'access topics activity stream'
   - 'access user profiles'
