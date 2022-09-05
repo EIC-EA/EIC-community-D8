@@ -80,10 +80,7 @@ class EicUserUpdateResource extends ResourceBase {
   }
 
   /**
-   * Responds to POST requests.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
-   *   The entity.
+   * {@inheritdoc}
    */
   public function post(EntityInterface $entity = NULL) {
     // Prepare the request.
@@ -109,14 +106,15 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->headers->all()
     );
 
-    // If user was updated, make sure we update the authmap as well with the new
-    // email address.
-    if ($response->getStatusCode() == 200) {
+    if ($response->isSuccessful()) {
       // Get the user being updated.
       /** @var \Drupal\user\UserInterface $account */
       if ($account = $this->wsHelper->getUserBySmedId($smed_id)) {
         // Update the authmap with the new email address.
         $this->casUserManager->setCasUsernameForAccount($account, $account->getEmail());
+
+        // Update the user profile.
+        $this->wsHelper->updateUserProfileSubRequest(\Drupal::request(), $account);
       }
     }
 
