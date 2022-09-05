@@ -79,8 +79,8 @@ function eic_group_membership_entity_operation_alter(
  */
 function eic_group_membership_group_content_info_alter(array &$definitions) {
   if (isset($definitions['group_membership'])) {
-    // Overrides the group content access control handler class.
-    $definitions['group_membership']['handlers']['access'] = '\Drupal\eic_group_membership\Access\GroupContentMembershipAccessControlHandler';
+    // Overrides the group_membership handlers.
+    $definitions['group_membership']['handlers']['permission_provider'] = '\Drupal\eic_group_membership\Plugin\GroupMembershipPermissionProvider';
   }
 }
 
@@ -491,10 +491,6 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
     return $access;
   }
 
-  $group = $entity->getGroup();
-  /** @var \Drupal\user\UserInterface $group_content_member */
-  $group_content_member = $entity->getEntity();
-
   switch ($operation) {
     case 'delete':
       $group = $entity->getGroup();
@@ -515,10 +511,11 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
 
       // We deny access if the user is not a power user or doesn't have
       // permission to administer group members.
+      $has_delete_permission = ($current_member->hasPermission('administer members') ||
+        $current_member->hasPermission('delete memberships'));
       $access = GroupAccessResult::forbiddenIf(
-          !UserHelper::isPowerUser($account) &&
-          $current_member instanceof GroupMembership &&
-          !$current_member->hasPermission('administer members')
+        $current_member instanceof GroupMembership &&
+          !$has_delete_permission
         )
         ->addCacheableDependency($account)
         ->addCacheableDependency($entity)
