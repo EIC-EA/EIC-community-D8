@@ -56,8 +56,12 @@ class SmedUserManager {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateUserInformation(UserInterface $account, array $data = []) {
-    $account->field_smed_id->value = $data['user_dashboard_id'];
-    $account->field_user_status->value = $data['user_status'];
+    if (!empty($data['user_dashboard_id'])) {
+      $account->field_smed_id->value = $data['user_dashboard_id'];
+    }
+    if (!empty($data['user_status'])) {
+      $account->field_user_status->value = $data['user_status'];
+    }
     $account->field_updated_profile_by_service->value = $this->time->getRequestTime();
 
     switch ($account->field_user_status->value) {

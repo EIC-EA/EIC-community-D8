@@ -99,7 +99,7 @@ class MemberAccessController extends ControllerBase {
       ],
     ]);
 
-    $register_url = $this->configFactory->getEditable('eic_user_login.settings')->get('user_registration_url');
+    $register_url = $this->configFactory->get('eic_user_login.settings')->get('user_registration_url');
     $register_url = Url::fromUri($register_url, [
       'attributes' => [
         'class' => ['cas-register-link'],

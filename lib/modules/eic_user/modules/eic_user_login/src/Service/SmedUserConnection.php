@@ -126,11 +126,12 @@ class SmedUserConnection {
       }
       else {
         $result = JSON::decode($response->getBody());
-        if ($result && $result['status'] == '200') {
+        if ($result && in_array($result['status'], ['200', '501'])) {
           return $this->processResponse($result);
         }
         else {
           $debug_info = [
+            'request_response_status' => $result['status'],
             'request_payload' => $data,
             'response_payload' => $result,
           ];
@@ -202,7 +203,7 @@ class SmedUserConnection {
     return [
       'Content-Type' => 'application/json',
       'X-EIC-Auth-Token' => $this->authToken,
-      'Cookie' => 'JSESSIONID=node01x0omb1iy32bfdv8xnsyxwe35183.node0',
+      'Cookie' => 'JSESSIONID=node0q65w9gvp88qdktw6f6blm4xy1983.node0',
     ];
   }
 
