@@ -145,6 +145,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
     }
     catch (SmedUserLoginException $e) {
       $event->cancelLogin($e->getUserMessage());
+      $this->messenger()->addWarning($e->getUserMessage());
     }
   }
 

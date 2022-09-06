@@ -129,7 +129,7 @@ class SmedUserManager {
   public function getLoginMessage(UserInterface $account): TranslatableMarkup {
     $account_status = $account->field_user_status->value;
 
-    $smed_url = $this->config->get('eic_webservices.settings')->get('smed_url');
+    $smed_url = $this->config->get('eic_user_login.settings')->get('user_registration_url');
 
     switch ($account_status) {
       case SmedUserStatuses::USER_VALID:
