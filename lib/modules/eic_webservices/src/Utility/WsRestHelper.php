@@ -4,6 +4,7 @@ namespace Drupal\eic_webservices\Utility;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_helper\SocialLinksFieldHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,13 +20,26 @@ class WsRestHelper {
   protected $entityFieldManager;
 
   /**
+   * The social links field helper.
+   *
+   * @var \Drupal\eic_helper\SocialLinksFieldHelper
+   */
+  protected $socialLinksFieldHelper;
+
+  /**
    * Class constructor.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\eic_helper\SocialLinksFieldHelper $social_link_helper
+   *   The social links field helper.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(
+    EntityFieldManagerInterface $entity_field_manager,
+    SocialLinksFieldHelper $social_link_helper
+  ) {
     $this->entityFieldManager = $entity_field_manager;
+    $this->socialLinksFieldHelper = $social_link_helper;
   }
 
   /**
@@ -66,6 +80,23 @@ class WsRestHelper {
             /** @var \Drupal\Core\Field\FieldItemBase $value */
             foreach ($entity->{$field_name} as $value) {
               $new_values[] = self::handleLinkFields($value->getValue());
+            }
+            // Replace old values with the new ones.
+            $entity->{$field_name} = $new_values;
+          }
+          break;
+
+        case 'social_links':
+          if (!$entity->{$field_name}->isEmpty()) {
+            $new_values = [];
+            /** @var \Drupal\Core\Field\FieldItemBase $value */
+            foreach ($entity->{$field_name} as $value) {
+              $social = $value->getValue()['social'];
+              $link = $value->getValue()['link'];
+              $new_values[] = [
+                'social' => $social,
+                'link' => $this->socialLinksFieldHelper->cleanUpSocialLinkValue($social, $link),
+              ];
             }
             // Replace old values with the new ones.
             $entity->{$field_name} = $new_values;

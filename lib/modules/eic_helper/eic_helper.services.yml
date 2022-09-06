@@ -2,6 +2,9 @@ services:
   eic_helper.datetime:
     class: Drupal\eic_helper\DateTimeHelper
     arguments: [ '@datetime.time' ]
+  eic_helper.social_link_field:
+    class: Drupal\eic_helper\SocialLinksFieldHelper
+    arguments: [ '@plugin.manager.social_link_field.platform' ]
   eic_helper.reverse_proxy_header_mapper:
     class: Drupal\eic_helper\StackMiddleware\HeaderMapper
     arguments: [ '@settings' ]

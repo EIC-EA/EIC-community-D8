@@ -2,14 +2,43 @@
 
 namespace Drupal\eic_user\Hooks;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_helper\SocialLinksFieldHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class FieldWidgetOperations.
  *
  * Implementations for field widget hooks.
  */
-class FieldWidgetOperations {
+class FieldWidgetOperations implements ContainerInjectionInterface {
+
+  /**
+   * The social links field helper.
+   *
+   * @var \Drupal\eic_helper\SocialLinksFieldHelper
+   */
+  protected $socialLinksFieldHelper;
+
+  /**
+   * Constructs a new EntityOperations object.
+   *
+   * @param \Drupal\eic_helper\SocialLinksFieldHelper $social_link_helper
+   *   The social links field helper.
+   */
+  public function __construct(SocialLinksFieldHelper $social_link_helper) {
+    $this->socialLinksFieldHelper = $social_link_helper;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('eic_helper.social_link_field')
+    );
+  }
 
   /**
    * Implements hook_field_widget_social_links_form_alter().
@@ -30,8 +59,6 @@ class FieldWidgetOperations {
    * Custom element validation for social link fields.
    */
   public function socialLinksFieldValidate($element, FormStateInterface $form_state, $form) {
-    $social_network_name = $element['social']['#default_value'];
-    $social_network_base_url = $element['link']['#field_prefix'];
     $field_name = reset($element['#parents']);
 
     // Get form state values for the field.
@@ -43,32 +70,11 @@ class FieldWidgetOperations {
     // validation so that users don't need to figure out how to properly insert
     // their usernames.
     foreach ($form_state_values as $key => $value) {
-      // Make sure full URLs start with "www".
-      $value['link'] = str_replace('https://' . $value['social'], 'https://www.' . $value['social'], $value['link']);
-
-      if ($value['social'] === $social_network_name) {
-        $form_state_values[$key]['link'] = str_replace($social_network_base_url, '', $value['link']);
-        $new_url = $form_state_values[$key]['link'];
-
-        // Exception for LinkedIn since we need to prepend "in/" if missing.
-        if ($social_network_name === 'linkedin' && !empty($value['link'])) {
-          // Remove backslash from the beginning if exists.
-          if (substr($form_state_values[$key]['link'], 0, 1) === '/') {
-            $new_url = substr($form_state_values[$key]['link'], 1);
-          }
-
-          if (substr($new_url, 0, 3) !== 'in/') {
-            $form_state_values[$key]['link'] = 'in/' . $new_url;
-          }
-
-          // If the link value only contains the base LinkedIn path, we clean
-          // up the value.
-          if ($form_state_values[$key]['link'] === 'in/') {
-            $form_state_values[$key]['link'] = '';
-          }
-        }
-        break;
-      }
+      $social_network_name = $element['social']['#default_value'];
+      $form_state_values[$key]['link'] = $this->socialLinksFieldHelper->cleanUpSocialLinkValue(
+        $social_network_name,
+        $value['link']
+      );
     }
 
     $form_state->setValue($field_name, $form_state_values);

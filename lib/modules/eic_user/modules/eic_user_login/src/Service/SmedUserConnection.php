@@ -126,7 +126,7 @@ class SmedUserConnection {
       }
       else {
         $result = JSON::decode($response->getBody());
-        if ($result) {
+        if ($result && $result['status'] == '200') {
           return $this->processResponse($result);
         }
         else {
@@ -201,7 +201,7 @@ class SmedUserConnection {
   protected function generateHeaders() {
     return [
       'Content-Type' => 'application/json',
-      'Authorization2' => $this->authToken,
+      'X-EIC-Auth-Token' => $this->authToken,
       'Cookie' => 'JSESSIONID=node01x0omb1iy32bfdv8xnsyxwe35183.node0',
     ];
   }

@@ -92,10 +92,9 @@ class FormAlter implements ContainerInjectionInterface {
     if (!empty($form['member_profiles'])) {
       /** @var \Drupal\user\UserInterface $user */
       $user = $form_state->getFormObject()->getEntity();
-      $is_smed_user = UserHelper::isSmedUser($user);
 
-      // If the user has a SMED ID, we make some fields as readonly.
-      if (!$current_user_is_admin && $is_smed_user) {
+      // Disable fields for non power users.
+      if (!$current_user_is_admin) {
         $form['member_profiles']['widget'][0]['entity']['field_vocab_job_title']['#disabled'] = TRUE;
         $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
@@ -252,14 +251,10 @@ class FormAlter implements ContainerInjectionInterface {
    *   The form ID.
    */
   public function alterProfileMemberForm(array &$form, FormStateInterface $form_state, string $form_id) {
-    /** @var \Drupal\profile\Entity\Profile $profile */
-    $profile = $form_state->getFormObject()->getEntity();
-    $user = $profile->getOwner();
     $current_user_is_admin = UserHelper::isPowerUser($this->currentUser);
-    $is_smed_user = UserHelper::isSmedUser($user);
 
-    // If the user has a SMED ID, we make some fields as readonly.
-    if (!$current_user_is_admin && $is_smed_user) {
+    // Disable fields for non power users.
+    if (!$current_user_is_admin) {
       $form['field_vocab_job_title']['#disabled'] = TRUE;
       $form['field_vocab_user_type']['#disabled'] = TRUE;
     }

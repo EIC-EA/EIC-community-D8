@@ -128,6 +128,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       case 'entity.group.leave':
       case 'entity.group_content.group_approve_membership':
       case 'entity.group_content.group_reject_membership':
+      case 'entity.group_content.add_form':
       case 'ginvite.invitation.bulk':
       case 'ginvite.invitation.bulk.confirm':
       case 'ginvite.invitation.accept':
@@ -327,6 +328,15 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         $links[] = $group->toLink();
         break;
 
+      case 'entity.group_content.add_form':
+        /** @var \Drupal\group\Entity\GroupInterface $group */
+        $group = $route_match->getParameter('group');
+
+        if (!$group instanceof GroupInterface) {
+          break;
+        }
+        $links[] = $group->toLink();
+        break;
     }
 
     if ($group) {
