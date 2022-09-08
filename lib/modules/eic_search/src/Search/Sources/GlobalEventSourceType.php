@@ -114,6 +114,13 @@ class GlobalEventSourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function getPrefilteredGroupFieldId(): array {
+    return ['its_group_id_integer'];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function supportDateFilter(): bool {
     return TRUE;
   }
@@ -147,6 +154,13 @@ class GlobalEventSourceType extends SourceType {
    */
   public function getPrefilteredTopicsFieldId(): array {
     return ['itm_group_field_vocab_topics'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('My events & content only', [], ['context' => 'eic_search']);
   }
 
 }
