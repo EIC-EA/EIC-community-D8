@@ -3,9 +3,7 @@
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Drupal\rest\ResourceResponse;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a resource to get, create and update users.
@@ -21,36 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class EicUserResource extends EntityResource {
-
-  /**
-   * The EIC Webservices helper class.
-   *
-   * @var \Drupal\eic_webservices\Utility\EicWsHelper
-   */
-  protected $wsHelper;
-
-  /**
-   * The CAS user manager.
-   *
-   * @var \Drupal\cas\Service\CasUserManager
-   */
-  protected $casUserManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(
-    ContainerInterface $container,
-    array $configuration,
-    $plugin_id,
-    $plugin_definition
-  ) {
-    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->wsHelper = $container->get('eic_webservices.ws_helper');
-    $instance->casUserManager = $container->get('cas.user_manager');
-    return $instance;
-  }
+class EicUserResource extends EicUserResourceBase {
 
   /**
    * Responds to POST requests.
@@ -96,9 +65,14 @@ class EicUserResource extends EntityResource {
 
     $response = parent::post($entity);
 
-    // We need to add this new user to the authmap so it is recognised when
-    // trying to log in through EU Login.
-    $this->casUserManager->setCasUsernameForAccount($entity, $entity->getEmail());
+    if ($response->isSuccessful()) {
+      // We need to add this new user to the authmap so it is recognised when
+      // trying to log in through EU Login.
+      $this->casUserManager->setCasUsernameForAccount($entity, $entity->getEmail());
+
+      // Update the user profile.
+      $this->wsHelper->updateUserProfileSubRequest(\Drupal::request(), $entity);
+    }
 
     return $response;
   }

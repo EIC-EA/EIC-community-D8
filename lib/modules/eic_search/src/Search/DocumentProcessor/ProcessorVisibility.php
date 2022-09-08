@@ -95,14 +95,20 @@ class ProcessorVisibility extends DocumentProcessor {
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
     $group_visibility_entity = $group_visibility_storage->load($group->id());
+    // If group type is organisation, only trusted users can access it.
+    // Therefore we assume the same visibility as GROUP_VISIBILITY_COMMUNITY"".
     $visibility_type = $group_visibility_entity ?
       $group_visibility_entity->getType() :
-      NULL;
+      (
+        $group->bundle() === 'organisation' ?
+        GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY :
+        NULL
+      );
 
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        $group_visibility = $group_visibility_entity->getType();
+        $group_visibility = $group_visibility_entity ? $group_visibility_entity->getType() : GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY;
         break;
 
       // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...

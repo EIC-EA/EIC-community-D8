@@ -113,24 +113,29 @@ class CasEventSubscriber implements EventSubscriberInterface {
     $account->field_last_name->value = $properties->getAttribute('lastName');
     $account->save();
 
-    // We only check/sync user against SMED if account is not active.
-    // This is to avoid too much load on the SMED.
-    if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
+    if ($this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
+      $missing_smed_id = ($account->hasField('field_smed_id') && $account->get('field_smed_id')->isEmpty());
+      $missing_smed_status = ($account->hasField('field_user_status') && $account->get('field_user_status')->isEmpty());
 
-      // Fetch information from SMED.
-      $data = [
-        'email' => $account->getEmail(),
-        'username' => $account->getAccountName(),
-      ];
+      // We only check/sync user against SMED if account is not active or is
+      // missing information.
+      // This is to avoid too much load on the SMED.
+      if (!$account->isActive() || $missing_smed_id || $missing_smed_status) {
+        // Fetch missing information from SMED.
+        $data = [
+          'email' => $account->getEmail(),
+          'username' => $account->getAccountName(),
+        ];
 
-      // Check if we have a proper value for the SMED ID.
-      if ($account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty()) {
-        $data['user_dashboard_id'] = $account->field_smed_id->value;
-      }
+        // Check if we have a proper value for the SMED ID.
+        if ($account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty()) {
+          $data['user_dashboard_id'] = $account->field_smed_id->value;
+        }
 
-      if ($result = $this->smedUserConnection->queryEndpoint($data)) {
-        // Update the user status.
-        $this->smedUserManager->updateUserInformation($account, $result);
+        if ($result = $this->smedUserConnection->queryEndpoint($data)) {
+          // Update the user status.
+          $this->smedUserManager->updateUserInformation($account, $result);
+        }
       }
     }
 
@@ -140,6 +145,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
     }
     catch (SmedUserLoginException $e) {
       $event->cancelLogin($e->getUserMessage());
+      $this->messenger()->addWarning($e->getUserMessage());
     }
   }
 
