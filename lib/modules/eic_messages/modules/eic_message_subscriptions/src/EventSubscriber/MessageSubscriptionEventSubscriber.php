@@ -208,7 +208,14 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The MessageSubscription event.
    */
   public function nodeCreated(MessageSubscriptionEvent $event) {
+    /** @var \Drupal\node\NodeInterface $entity */
     $entity = $event->getEntity();
+
+    // If node doesn't have topics, skip it.
+    if (!$entity->hasField('field_vocab_topics')) {
+      return;
+    }
+
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
     $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
