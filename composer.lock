@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "535baaa3bbfc9dae58155669c286e023",
+    "content-hash": "69fa09d2d64a3b9eaddd6d50d68819b3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1931,6 +1931,67 @@
             }
         },
         {
+            "name": "drupal/allowed_formats",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/allowed_formats.git",
+                "reference": "8.x-1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/allowed_formats-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "dbf61bee7aec87beaa2cf307c1d0d9d5b896328c"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1648060331",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Northern Commerce (formerly Digital Echidna)",
+                    "homepage": "https://www.drupal.org/northern-commerce-formerly-digital-echidna",
+                    "role": "Supporting organization"
+                },
+                {
+                    "name": "Jordan Thompson (nord102)",
+                    "homepage": "https://www.drupal.org/u/nord102",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Wunder",
+                    "homepage": "https://www.drupal.org/wunder",
+                    "role": "Supporting organization"
+                },
+                {
+                    "name": "Florian Loretan (floretan)",
+                    "homepage": "https://www.drupal.org/u/floretan",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Limit which text formats are available for each field instance.",
+            "homepage": "https://www.drupal.org/project/allowed_formats",
+            "support": {
+                "source": "http://cgit.drupalcode.org/allowed_formats",
+                "issues": "https://www.drupal.org/project/issues/allowed_formats"
+            }
+        },
+        {
             "name": "drupal/anchor_link",
             "version": "2.5.0",
             "source": {
@@ -3343,7 +3404,8 @@
                     "2582295 - Confirmation cancel links are incorrect if installed in a subdirectory": "https://www.drupal.org/files/issues/2021-08-23/2582295-52.patch",
                     "2329253 - Allow the ChangedItem to skip updating the entity's \"changed\" timestamp when synchronizing (f.e. when migrating)": "https://www.drupal.org/files/issues/2022-05-30/2329253-90.patch",
                     "3052115 - Mark an entity as 'syncing' during a migration update": "https://www.drupal.org/files/issues/2022-05-12/3052115-47.patch",
-                    "2907760 - Notice: Undefined index: default in Drupal\\views\\Plugin\\views\\PluginBase->setOptionDefaults()": "https://www.drupal.org/files/issues/2022-05-26/2907760-11-9.3.x.patch"
+                    "2907760 - Notice: Undefined index: default in Drupal\\views\\Plugin\\views\\PluginBase->setOptionDefaults()": "https://www.drupal.org/files/issues/2022-05-26/2907760-11-9.3.x.patch",
+                    "3183509 - Use the user display name instead of the username on the user authoring information in the node edit form": "https://git.drupalcode.org/project/drupal/-/merge_requests/352.patch"
                 }
             },
             "autoload": {
@@ -4833,7 +4895,8 @@
                     "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-05-17/incorrect-access-check-on-media-library-3071489-27.patch",
                     "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
                     "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch",
-                    "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch"
+                    "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch",
+                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5004,6 +5067,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -10431,6 +10497,16 @@
             "homepage": "http://github.com/myclabs/php-enum",
             "keywords": [
                 "enum"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
+                    "type": "tidelift"
+                }
             ],
             "time": "2021-07-05T08:18:36+00:00"
         },
