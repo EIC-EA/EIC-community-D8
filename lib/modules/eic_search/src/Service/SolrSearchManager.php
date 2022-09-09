@@ -252,6 +252,17 @@ class SolrSearchManager {
       }
     }
 
+    if (
+      array_key_exists(0, $sorts) &&
+      array_key_exists(SourceTypeInterface::SECOND_SORT_KEY, $this->source->getAvailableSortOptions()[$sorts[0]])
+    ) {
+      $second_sorts = $this->source->getAvailableSortOptions()[$sorts[0]][SourceTypeInterface::SECOND_SORT_KEY];
+
+      foreach ($second_sorts as $second_sort) {
+        $this->solrQuery->addSort($second_sort['id'], $second_sort['direction']);
+      }
+    }
+
     $default_sort = $this->source->getSecondDefaultSort();
 
     // Add second sort.

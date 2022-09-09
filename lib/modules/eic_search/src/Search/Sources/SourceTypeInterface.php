@@ -27,6 +27,8 @@ interface SourceTypeInterface {
 
   const READ_MORE_NUMBER_TO_LOAD = 5;
 
+  const SECOND_SORT_KEY = 'second_sort';
+
   /**
    * Get the label that will be shown into the admin.
    *

@@ -58,6 +58,16 @@ function eic_content_node_view(
  * Implements hook_entity_presave().
  */
 function eic_content_entity_presave(EntityInterface $entity) {
+  // Remove spaces before title
+  switch ($entity->getEntityTypeId()) {
+    case 'node':
+      $entity->setTitle(ltrim($entity->getTitle()));
+      break;
+    case 'group':
+      $entity->set('label', ltrim($entity->label()));
+      break;
+  }
+
   if (FALSE === $entity instanceof NodeInterface) {
     return;
   }
