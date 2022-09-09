@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -106,6 +107,13 @@ class CronOperations implements ContainerInjectionInterface {
   private $database;
 
   /**
+   * The EIC Groups settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  private $eicGroupSettings;
+
+  /**
    * Constructs a CronOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -122,6 +130,8 @@ class CronOperations implements ContainerInjectionInterface {
    *   The message bus service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -130,7 +140,8 @@ class CronOperations implements ContainerInjectionInterface {
     QueueWorkerManagerInterface $queue_worker_manager,
     StateInterface $state,
     MessageBus $bus,
-    Connection $database
+    Connection $database,
+    ConfigFactoryInterface $config_factory
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->pathautoGenerator = $pathauto_generator;
@@ -139,6 +150,7 @@ class CronOperations implements ContainerInjectionInterface {
     $this->state = $state;
     $this->messageBus = $bus;
     $this->database = $database;
+    $this->eicGroupSettings = $config_factory->get('eic_groups.settings');
   }
 
   /**
@@ -152,7 +164,8 @@ class CronOperations implements ContainerInjectionInterface {
       $container->get('plugin.manager.queue_worker'),
       $container->get('state'),
       $container->get('eic_messages.message_bus'),
-      $container->get('database')
+      $container->get('database'),
+      $container->get('config.factory')
     );
   }
 
@@ -293,17 +306,27 @@ class CronOperations implements ContainerInjectionInterface {
     $last_reminder_time = $this->state->get('last_cron_group_invite_time', 0);
     $now = time();
 
-    if (0 < ($last_reminder_time + Settings::get('cron_interval_group_invite_time', 86400)) - $now) {
+    $cron_interval_group_invite = $this->eicGroupSettings->get('eic_groups_cron_settings.cron_interval_group_invite_time') ?
+      $this->eicGroupSettings->get('eic_groups_cron_settings.cron_interval_group_invite_time') :
+      86400;
+
+    if (0 < ($last_reminder_time + $cron_interval_group_invite) - $now) {
       return;
     }
 
     // Date from which we want to skip invitation reminders to avoind sending
     // reminders for old invitations.
-    $skip_invitation_reminder_time = new DrupalDateTime('today -' . Settings::get('cron_interval_group_skip_invite_reminder_time', 86400 * 30) . ' days');
+    $skip_invitation_reminder_default_days = $this->eicGroupSettings->get('eic_groups_cron_settings.cron_interval_group_skip_invite_reminder_days') ?
+      $this->eicGroupSettings->get('eic_groups_cron_settings.cron_interval_group_skip_invite_reminder_days') :
+      30;
+    $skip_invitation_reminder_time = new DrupalDateTime('today -' . $skip_invitation_reminder_default_days . ' days');
 
     // Frequency date to send reminders. By default every 3 days a reminder
     // will be sent for the same invitation.
-    $reminder_frequency_time = new DrupalDateTime('today -' . Settings::get('cron_interval_group_invite_reminder_frequency_time', 86400 * 3) . ' days');
+    $reminder_frequency_default_days = $this->eicGroupSettings->get('eic_groups_cron_settings.cron_interval_group_invite_reminder_frequency_days') ?
+      $this->eicGroupSettings->get('eic_groups_cron_settings.cron_interval_group_invite_reminder_frequency_days') :
+      3;
+    $reminder_frequency_time = new DrupalDateTime('today -' . $reminder_frequency_default_days . ' days');
 
     $query = $this->database->select('group_content_field_data', 'gc_fd');
     $query->condition('gc_fd.type', '%-group_invitation', 'LIKE');
