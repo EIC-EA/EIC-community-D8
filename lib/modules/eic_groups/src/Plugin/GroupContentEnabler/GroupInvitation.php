@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_groups\Plugin\GroupContentEnabler;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -14,6 +16,8 @@ use Drupal\ginvite\Plugin\GroupContentEnabler\GroupInvitation as GroupInvitation
  * Extends content enabler class for group invitations.
  */
 class GroupInvitation extends GroupInvitationBase {
+
+  const INVITATION_REMINDER_MAX_COUNT = 3;
 
   /**
    * {@inheritdoc}
@@ -112,6 +116,33 @@ class GroupInvitation extends GroupInvitationBase {
     }
 
     return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postInstall() {
+    parent::postInstall();
+
+    if (!$this->configInstaller->isSyncing()) {
+      $group_content_type_id = $this->getContentTypeConfigId();
+
+      // Add field_invitation_reminder_date field.
+      FieldConfig::create([
+        'field_storage' => FieldStorageConfig::loadByName('group_content', 'field_invitation_reminder_date'),
+        'bundle' => $group_content_type_id,
+        'label' => $this->t('Invitation last reminder timestamp'),
+        'required' => FALSE,
+      ])->save();
+
+      // Add field_invitation_reminder_count field.
+      FieldConfig::create([
+        'field_storage' => FieldStorageConfig::loadByName('group_content', 'field_invitation_reminder_count'),
+        'bundle' => $group_content_type_id,
+        'label' => $this->t('Invitation reminder counter'),
+        'required' => FALSE,
+      ])->save();
+    }
   }
 
 }

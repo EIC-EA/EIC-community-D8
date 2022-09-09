@@ -39,6 +39,9 @@ function _eic_groups_batch_modify_group_permissions(array $permissions, array $i
       continue;
     }
 
+    // (Re)initialize the array.
+    $role_ids = [];
+
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = $group_permission->getGroup();
     $group_type = $group->getGroupType();

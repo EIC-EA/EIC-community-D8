@@ -63,8 +63,11 @@ class StatisticsStorage implements StatisticsStorageInterface {
     if ($this->entityTypeManager->hasDefinition($entity_type)) {
       $entity_storage = $this->entityTypeManager->getStorage($entity_type);
       $query = $entity_storage->getQuery();
+      // Disable access check on this query.
+      $query->accessCheck(FALSE);
       // Add status condition for node and user entities.
       switch ($entity_type) {
+        case 'group':
         case 'node':
         case 'user':
           $query->condition('status', TRUE);

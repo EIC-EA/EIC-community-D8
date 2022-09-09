@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC User module.
+ */
+
+use Drupal\eic_user\ProfileConst;
+
+/**
+ * Switch all profile field_body formats to filtered_html.
+ */
+function eic_user_update_9001(&$sandbox) {
+  $query = \Drupal::database()->select('profile', 'p');
+  $query->fields('p', ['profile_id']);
+  $query->join('profile__field_body', 'fb', 'p.profile_id = fb.entity_id');
+  $query->condition('type', ProfileConst::MEMBER_PROFILE_TYPE_NAME);
+  $query->condition('fb.field_body_format', 'full_html');
+
+  foreach ($query->execute()->fetchCol('profile_id') as $profile_id) {
+    if ($profile = \Drupal::entityTypeManager()->getStorage('profile')->load($profile_id)) {
+      $field_body = $profile->get('field_body');
+      $field_body->format = 'filtered_html';
+      $profile->field_body = $field_body;
+      $profile->save();
+    }
+  }
+}
