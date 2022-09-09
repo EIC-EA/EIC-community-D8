@@ -1,0 +1,25 @@
+uuid: a6ecc22c-4cda-45ac-b5d6-97da9112fcd4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.field_invitation_reminder_count
+    - group.content_type.event-group_invitation
+id: group_content.event-group_invitation.field_invitation_reminder_count
+field_name: field_invitation_reminder_count
+entity_type: group_content
+bundle: event-group_invitation
+label: 'Invitation reminder counter'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 3
+default_value_callback: ''
+settings:
+  min: 0
+  max: 3
+  prefix: ''
+  suffix: ''
+field_type: integer
