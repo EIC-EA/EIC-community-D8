@@ -5,6 +5,7 @@ namespace Drupal\eic_search\Search\Sources\Profile;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_search\Search\Sources\SourceType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
@@ -182,7 +183,13 @@ class DraftSourceType extends SourceType {
    */
   public function extraPrefilter(): array {
     return [
-      'ss_global_last_moderation_state' => DefaultContentModerationStates::DRAFT_STATE,
+      'OR' => [
+        'ss_global_last_moderation_state' => [
+          DefaultContentModerationStates::DRAFT_STATE,
+          EICContentModeration::STATE_NEEDS_REVIEW,
+          EICContentModeration::STATE_WAITING_APPROVAL,
+        ],
+      ]
     ];
   }
 

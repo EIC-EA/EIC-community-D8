@@ -83,7 +83,7 @@ function eic_community_preprocess_page(array &$variables): void {
       'links' => $links,
     ];
 
-    if ($key === 0) {
+    if ($key < count($menu_sections) - 1) {
       $section['list_class_name'] = 'ecl-footer-core__list--columns';
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
     }
@@ -146,7 +146,7 @@ function _preprocess_node_page(&$variables) {
         }
         /* @todo Missing follow author flag when user is logged in. */
 
-        $publish_date_format = $variables['node']->getType() === 'news' ? 'd F' : 'd F Y';
+        $publish_date_format = 'd F Y';
         $is_restricted = $node->private->value === '1';
         $tag = [
           'type' => 'display',
@@ -162,8 +162,11 @@ function _preprocess_node_page(&$variables) {
           'meta' => [
             ['label' => $node->type->entity->label()],
             [
-              'label' => \Drupal::service('date.formatter')
-                ->format($node->get('published_at')->value, 'custom', $publish_date_format),
+              'label' => $node->get('published_at')->isEmpty() ?
+                \Drupal::service('date.formatter')
+                  ->format($node->get('created')->value, 'custom', $publish_date_format) :
+                \Drupal::service('date.formatter')
+                  ->format($node->get('published_at')->published_at_or_created, 'custom', $publish_date_format),
             ],
           ],
           'title' => $node->label(),

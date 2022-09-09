@@ -73,7 +73,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     $group = $this->groupHelper->getGroupFromContent($entity);
     $extra_resync = [];
 
-    if ($group instanceof GroupInterface && $flagging->getFlagId() === FlagType::RECOMMEND_GROUP) {
+    if ($group instanceof GroupInterface && $flagging->getFlagId() === FlagType::LIKE_GROUP) {
       /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
       // Reindex group parent to have correct most active score.
       $extra_resync[] = $group;
@@ -97,7 +97,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     $group = $this->groupHelper->getGroupFromContent($flagging->getFlaggable());
     $extra_resync = [];
 
-    if ($group instanceof GroupInterface && $flagging->getFlagId() === FlagType::RECOMMEND_GROUP) {
+    if ($group instanceof GroupInterface && $flagging->getFlagId() === FlagType::LIKE_GROUP) {
       /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
       // Reindex group parent to have correct most active score.
       $extra_resync[] = $group;

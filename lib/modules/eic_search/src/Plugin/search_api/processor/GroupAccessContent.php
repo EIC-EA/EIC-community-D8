@@ -139,8 +139,10 @@ class GroupAccessContent extends ProcessorPluginBase {
     $user_organisation_types = \Drupal::service('eic_organisations.helper')->getUserOrganisationTypes($user);
     $user_organisation_types_formatted = !empty($user_organisation_types) ? implode(' OR ', $user_organisation_types) : 0;
 
+    // Event group content can be only seen by member of groups event if the group is public.
     $query = '
-    ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . '
+    (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . ' AND !ss_global_group_parent_type:event)
+    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . ' AND ss_global_group_parent_type:(event) AND its_global_group_parent_id:(' . $group_ids_formatted . '))
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND its_global_group_parent_id:(' . $group_ids_formatted . '))
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':*' . $domain . '*)
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ':(' . $group_ids_formatted . '))

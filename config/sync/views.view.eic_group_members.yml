@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block.block.eicpagecontextualactionblock
     - field.storage.group_content.group_roles
   module:
     - eic_group_membership
@@ -425,7 +426,7 @@ display:
         options:
           group_permission: 'access members management'
       cache:
-        type: tag
+        type: none
         options: {  }
       empty:
         area_text_custom:
@@ -588,7 +589,20 @@ display:
           group_content_plugins:
             group_membership: group_membership
       group_by: false
-      header: {  }
+      header:
+        entity_block:
+          id: entity_block
+          table: views
+          field: entity_block
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: entity
+          empty: true
+          target: eicpagecontextualactionblock
+          view_mode: default
+          tokenize: false
+          bypass_access: false
       footer: {  }
       display_extenders: {  }
     cache_metadata:

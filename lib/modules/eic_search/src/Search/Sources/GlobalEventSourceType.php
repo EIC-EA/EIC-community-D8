@@ -63,8 +63,8 @@ class GlobalEventSourceType extends SourceType {
         'label' => $this->t('Date created', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Date created', [], ['context' => 'eic_search']),
       ],
-      'timestamp' => [
-        'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
+      'ss_drupal_changed_timestamp' => [
+        'label' => $this->t('Recently updated', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
       ],
       'ss_group_label_string' => [
@@ -77,7 +77,7 @@ class GlobalEventSourceType extends SourceType {
         'ASC' => $this->t('First events in time', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last events in time', [], ['context' => 'eic_search']),
       ],
-      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_GROUP => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],

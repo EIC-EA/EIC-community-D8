@@ -5,10 +5,20 @@
  * Install, update and uninstall functions for the EIC Statistics module.
  */
 
+module_load_include('inc', 'eic_groups', 'eic_groups.install');
+
+use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\Group;
 use Drupal\group_content_menu\GroupContentMenuInterface;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
 
 /**
@@ -276,5 +286,534 @@ function eic_groups_update_9004(&$sandbox) {
         break;
       }
     }
+  }
+}
+
+/**
+ * Set correct links for every Group Feature.
+ */
+function eic_groups_update_9005(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+  $database = \Drupal::database();
+  $groups = $em->getStorage('group')->getQuery()
+    ->accessCheck(FALSE)
+    ->execute();
+
+  foreach ($groups as $group) {
+    $query = $database->select('menu_link_content_data', 'm');
+    $query->condition('m.menu_name', "group_menu_link_content-$group");
+    $or_condition = $query->orConditionGroup()
+      ->condition('m.link__uri', "internal:/group/$group", 'LIKE')
+      ->condition('m.link__uri', "internal:/group/$group/%", 'LIKE')
+      ->condition('m.link__uri', "internal:/node/%", 'LIKE');
+    $query->condition($or_condition);
+    $query->fields('m', ['id']);
+    $entity_ids = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $entity_ids = array_map(function ($data) {
+      return $data['id'];
+    }, $entity_ids);
+
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent[] $menu_links */
+    $menu_links = \Drupal\menu_link_content\Entity\MenuLinkContent::loadMultiple($entity_ids);
+
+    foreach ($menu_links as $menu_link) {
+      $current_uri = $menu_link->link->uri;
+
+      switch ($current_uri) {
+        case "internal:/group/$group":
+          $new_uri = "route:entity.group.canonical;group=$group";
+          break;
+        case "internal:/group/$group/about":
+          $new_uri = "route:eic_groups.about_page;group=$group";
+          break;
+        case "internal:/group/$group/discussions":
+          $new_uri = "route:eic_overviews.groups.overview_page.discussions;group=$group";
+          break;
+        case "internal:/group/$group/library":
+          $new_uri = "route:eic_overviews.groups.overview_page.files;group=$group";
+          break;
+        case "internal:/group/$group/events":
+          $new_uri = "route:eic_overviews.groups.overview_page.events;group=$group";
+          break;
+        case "internal:/group/$group/latest-activity":
+          $new_uri = "route:eic_overviews.groups.overview_page.latest_activity_stream;group=$group";
+          break;
+        case "internal:/group/$group/people":
+          $new_uri = "route:eic_overviews.groups.overview_page.members;group=$group";
+          break;
+        default:
+          $new_uri = $current_uri;
+          // Fix menu link if it points to a node page.
+          if (strpos($current_uri, 'internal:/node/') !== FALSE) {
+            $node_id = str_replace('internal:/node/', '', $current_uri);
+            $new_uri = "route:entity.node.canonical;node=$node_id";
+          }
+      }
+
+      $menu_link->link->uri = $new_uri;
+      $menu_link->save();
+    }
+  }
+}
+
+/**
+ * Publish all wiki sections for non pending groups.
+ */
+function eic_groups_update_9006(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $groups = $em->getStorage('group')->getQuery()
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $max_groups = count($groups);
+  $progress = 0;
+  $groups_per_batch = 100;
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_publish_group_wiki',
+      [
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Sets default visibility and joining methods for group type event.
+ */
+function eic_groups_update_9007(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $groups = $em->getStorage('group')->getQuery()
+    ->condition('type', 'event')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $max_groups = count($groups);
+  $progress = 0;
+  $groups_per_batch = 100;
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_update_event_visibility',
+      [
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Remove "join group" permission from group outsider roles.
+ */
+function eic_groups_update_9008(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to remove group permission.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->condition('gid.entity:group.type', 'organisation')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $progress = 0;
+  $groups_per_batch = 100;
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_remove_group_permission',
+      [
+        'join group',
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Rebuilds group feature permissions for event groups.
+ */
+function eic_groups_update_9009(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Rebuild group feature permissions for Event groups.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $groups = \Drupal::entityQuery('group')
+    ->condition('type', 'event')
+    ->execute();
+
+  $max_groups = count($groups);
+  $progress = 0;
+  $groups_per_batch = 50;
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_rebuild_group_feature_permissions',
+      [
+        'event',
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Modify membership permissions.
+ */
+function eic_groups_update_9010(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to modify group permissions.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $groups_per_batch = 100;
+
+  $internal_roles = [
+    'group-owner',
+    'group-admin',
+    'event-owner',
+    'event-admin',
+    'organisation-owner',
+    'organisation-admin',
+  ];
+  $external_roles = [
+    UserHelper::ROLE_DRUPAL_ADMINISTRATOR,
+    UserHelper::ROLE_SITE_ADMINISTRATOR,
+    UserHelper::ROLE_CONTENT_ADMINISTRATOR,
+  ];
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_modify_group_permissions',
+      [
+        ['edit memberships'],
+        $internal_roles,
+        $external_roles,
+        'add',
+        [],
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Modify membership permissions.
+ */
+function eic_groups_update_9011(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to modify group permissions.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $groups_per_batch = 100;
+
+  $internal_roles = [
+    'group-owner',
+    'group-admin',
+    'event-owner',
+    'event-admin',
+    'organisation-owner',
+    'organisation-admin',
+  ];
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_modify_group_permissions',
+      [
+        ['administer members'],
+        $internal_roles,
+        [],
+        'remove',
+        [],
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+
+/**
+ * Modify membership permissions.
+ */
+function eic_groups_update_9012(&$sandbox) {
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to modify group permissions.'))
+    ->setFinishCallback('_eic_groups_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $max_groups = count($group_permissions);
+  $groups_per_batch = 100;
+
+  $internal_roles = [
+    'group-owner',
+    'group-admin',
+  ];
+  $external_roles = [
+    UserHelper::ROLE_DRUPAL_ADMINISTRATOR,
+    UserHelper::ROLE_SITE_ADMINISTRATOR,
+    UserHelper::ROLE_CONTENT_ADMINISTRATOR,
+  ];
+
+  for ($progress = 0; $progress < $max_groups; $progress += $groups_per_batch) {
+    $batch_builder->addOperation(
+      '_eic_groups_batch_modify_group_permissions',
+      [
+        ['delete memberships'],
+        $internal_roles,
+        $external_roles,
+        'add',
+        [],
+        $progress,
+        $progress + $groups_per_batch,
+        $max_groups,
+      ]
+    );
+  }
+
+  batch_set($batch_builder->toArray());
+}
+
+/**
+ * Operation batch for publishing group wiki section.
+ */
+function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $total, &$context) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $groups = $em->getStorage('group')->getQuery()
+    ->range($progress, $max)
+    ->accessCheck(FALSE)
+    ->execute();
+
+  /** @var \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper */
+  $eic_groups_helper = \Drupal::service('eic_groups.helper');
+
+  $context['message'] = t('Updating group wiki section - @progress of @total', [
+    '@progress' => $progress,
+    '@total' => $total,
+  ]);
+
+  foreach ($groups as $group) {
+    $loaded_group = $em->getStorage('group')->load($group);
+    if ($loaded_group->get('moderation_state')->value === GroupsModerationHelper::GROUP_PENDING_STATE) {
+      continue;
+    }
+
+    if ($book = $eic_groups_helper->getGroupBookPage($loaded_group)) {
+      /** @var \Drupal\node\NodeInterface|null $book_node*/
+      $book_node = $em->getStorage('node')->load($book);
+      if (
+        $book_node &&
+        !$book_node->isPublished()
+      ) {
+        $book_node->setSyncing(TRUE);
+        $book_node->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
+        $book_node->save();
+      }
+    }
+  }
+}
+
+/**
+ * Operation batch for publishing group wiki section.
+ */
+function _eic_groups_batch_update_event_visibility(int $progress, int $max, int $total, &$context) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $groups = $em->getStorage('group')->getQuery()
+    ->condition('type', 'event')
+    ->range($progress, $max)
+    ->accessCheck(FALSE)
+    ->execute();
+
+  /** @var \Drupal\group_flex\GroupFlexGroupSaver $group_flex_group_saver */
+  $group_flex_group_saver = \Drupal::service('group_flex.group_saver');
+
+  $context['message'] = t('Updating event visibility and joining method - @progress of @total', [
+    '@progress' => $progress,
+    '@total' => $total,
+  ]);
+
+  foreach ($groups as $group) {
+    $loaded_group = $em->getStorage('group')->load($group);
+    $group_flex_group_saver->saveGroupVisibility($loaded_group, GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
+    $group_flex_group_saver->saveGroupJoiningMethods($loaded_group, [
+      GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST,
+    ]);
+  }
+}
+
+/**
+ * Operation batch for removing group permission.
+ */
+function _eic_groups_batch_remove_group_permission(string $permission_to_remove, int $progress, int $max, int $total, &$context) {
+  $context['message'] = t('Removing group permissions - @progress of @total', [
+    '@progress' => $progress,
+    '@total' => $total,
+  ]);
+
+  $results = \Drupal::entityQuery('group_permission')
+    ->condition('gid.entity:group.type', 'organisation')
+    ->range($progress, $max)
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $group_permissions = GroupPermission::loadMultiple($results);
+
+  foreach ($group_permissions as &$group_permission) {
+    $permissions = $group_permission->getPermissions();
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_permission->getGroup();
+    $group_type = $group->getGroupType()->id();
+    $roles = [
+      "$group_type-outsider",
+    ];
+    $outsider_roles = [
+      'trusted_user',
+    ];
+    $groupRoleSynchronizer = \Drupal::service('group_role.synchronizer');
+
+    foreach ($outsider_roles as $outsider_role) {
+      $role = $groupRoleSynchronizer->getGroupRoleId($group_type, $outsider_role);
+      $roles[] = $role;
+    }
+
+    if (empty($permissions)) {
+      continue;
+    }
+
+    foreach ($roles as $role) {
+      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup(
+        $group_permission,
+        $role,
+        [$permission_to_remove]
+      );
+    }
+
+    $group_permission->setNewRevision();
+    $group_permission->setRevisionUserId(1);
+    $group_permission->setRevisionCreationTime(time());
+    $group_permission->setRevisionLogMessage(t('Add "administer membership requests" permission to group owner and admin roles.'));
+
+    if (count($group_permission->validate()) > 0) {
+      continue;
+    }
+
+    $group_permission->save();
+
+    Cache::invalidateTags($group->getCacheTags());
+  }
+}
+
+/**
+ * Operation batch to rebuild group feature permissions.
+ */
+function _eic_groups_batch_rebuild_group_feature_permissions(string $group_type, int $progress, int $max, int $total, &$context) {
+  $context['message'] = t('Rebuild group feature permissions - @progress of @total', [
+    '@progress' => $progress,
+    '@total' => $total,
+  ]);
+
+  $results = \Drupal::entityQuery('group')
+    ->condition('type', $group_type)
+    ->range($progress, $max)
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $groups = Group::loadMultiple($results);
+
+  foreach ($groups as $group) {
+    \Drupal::service('oec_group_features.helper')->rebuildPermissions($group);
+  }
+}
+
+/**
+ * Generic function to use in batch processes.
+ */
+function _eic_groups_batch_finished($success, array $results, array $operations) {
+  if ($success) {
+    \Drupal::messenger()
+      ->addMessage(t('@count results processed.', [
+        '@count' => count($results),
+      ]));
+  }
+  else {
+    // An error occurred.
+    // $operations contains the operations that remained unprocessed.
+    $error_operation = reset($operations);
+    \Drupal::messenger()
+      ->addError(t('An error occurred while processing @operation with arguments : @args', [
+        '@operation' => $error_operation[0],
+        '@args' => print_r($error_operation[0], TRUE),
+      ]));
   }
 }

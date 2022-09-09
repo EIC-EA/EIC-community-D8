@@ -22,12 +22,14 @@ class RequestEventSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * Lis of routes that should not be redirected.
+   * List of routes that should not be redirected.
    *
    * @var array
    */
   const ALLOWED_ROUTES = [
     ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME,
+    'entity.user.edit_form',
+    'masquerade.unmasquerade',
     'user.logout',
   ];
 
@@ -99,17 +101,16 @@ class RequestEventSubscriber implements EventSubscriberInterface {
 
     // Check if user profile is completed.
     if ($this->tempStore->get('is_profile_completed') === FALSE) {
-      // Redirect the user to their member profile.
+      // Redirect the user to their user account.
       $route_parameters = [
         'user' => $this->currentUser->id(),
-        'profile_type' => ProfileConst::MEMBER_PROFILE_TYPE_NAME,
       ];
-      $url = Url::fromRoute(ProfileConst::MEMBER_PROFILE_EDIT_ROUTE_NAME, $route_parameters);
+      $url = Url::fromRoute('entity.user.edit_form', $route_parameters);
       $response = new RedirectResponse($url->toString());
       $event->setResponse($response);
 
       // Print a message to the user.
-      $message = $this->t("Don't forget to complete your profile - Your profile says a lot about who you are and helps other community members recognize your expertise.", [], ['context' => 'eic_user_login']);
+      $message = $this->t("Complete your profile in order to receive information and notifications on new contents, events, stories, groups, challenges that are important for you and increase your chances to network with the right people and companies.", [], ['context' => 'eic_user_login']);
       $this->messenger()->addWarning($message);
     }
   }

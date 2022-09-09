@@ -16,7 +16,6 @@ group_type: organisation
 permissions_ui: false
 permissions:
   - 'access group content menu overview'
-  - 'join group'
   - 'share content between groups'
   - 'view comments'
   - 'view group'

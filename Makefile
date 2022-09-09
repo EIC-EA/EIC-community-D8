@@ -13,9 +13,6 @@ endif
 UNAME := $(shell uname)
 
 setup:
-  ifeq ($(UNAME),Darwin)
-		$(call do_macos_setup)
-  endif
 	$(call do_setup)
 
 start:

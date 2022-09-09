@@ -31,9 +31,10 @@ function eic_community_preprocess_user(array &$variables) {
   switch ($variables['elements']['#view_mode']) {
     case 'teaser':
       $teaser = [];
+      $media_entities = $user->get('field_media')->referencedEntities();
       // Get the user profile.
       /** @var \Drupal\media\MediaInterface $media */
-      $media = $user->get('field_media')->referencedEntities()[0];
+      $media = $media_entities ? $media_entities[0] : NULL;
       if ($media && !empty($media->get('oe_media_image')->getValue())) {
         $style_name = 'oe_theme_list_item';
         $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
@@ -76,17 +77,7 @@ function eic_community_preprocess_user(array &$variables) {
         'type' => _eic_community_get_user_type($user, $member_profile),
         'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
         'image' => _get_profile_image_array($user),
-        'meta' => [
-          [
-            'label' => t('Email'),
-            'items' => [
-              [
-                'label' => $user->getEmail(),
-                'path' => "mailto:{$user->getEmail()}",
-              ],
-            ],
-          ],
-        ],
+        'meta' => [],
       ];
 
       // Gets user operation links.
@@ -248,7 +239,8 @@ function _get_render_block_search_overview(string $source): array {
   $access_result = $plugin_block->access(\Drupal::currentUser());
   if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
     return [];
-  } else {
+  }
+  else {
     return $plugin_block->build();
   }
 }
@@ -307,17 +299,20 @@ function eic_community_get_teaser_user_display(UserInterface $user, $picture_ima
 
   $current_user = \Drupal::currentUser();
   if (!$user->get('field_media')->isEmpty() && !$current_user->isAnonymous()) {
-    /** @var \Drupal\media\Entity\Media $media */
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
-    if ($media->bundle() == 'image') {
-      $image_item = ImageValueObject::fromStyledImageItem(
-        $media->get('oe_media_image')->first(),
-        $picture_image_style
-      );
-      $author['image'] = [
-        'src' => $image_item->getSource(),
-        'alt' => $author['name'],
-      ];
+    $media_entity = $user->get('field_media')->entity;
+    if ($media_entity) {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::service('entity.repository')->getTranslationFromContext($media_entity);
+      if ($media->bundle() == 'image') {
+        $image_item = ImageValueObject::fromStyledImageItem(
+          $media->get('oe_media_image')->first(),
+          $picture_image_style
+        );
+        $author['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $author['name'],
+        ];
+      }
     }
   }
 
@@ -669,7 +664,7 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
     switch ($key) {
       // Override operation link titles.
       case 'edit':
-        $user_operation_link['title'] = t('Edit account information');
+        $user_operation_link['title'] = t('Edit profile');
         break;
 
       case 'delete':
@@ -683,38 +678,6 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
         'path' => $user_operation_link['url']->toString(),
       ],
     ];
-  }
-
-  // Loads user member profile.
-  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
-  // Get user member profile operation links.
-  if ($member_profile) {
-    $member_profile_operation_links = \Drupal::entityTypeManager()->getListBuilder($member_profile->getEntityTypeId())
-      ->getOperations($member_profile);
-    foreach ($member_profile_operation_links as $key => $member_profile_operation_link) {
-      // Check access to the URL.
-      if (!$member_profile_operation_link['url']->access()) {
-        continue;
-      }
-
-      // Override operation link titles.
-      switch ($key) {
-        case 'edit':
-          $member_profile_operation_link['title'] = t('Edit profile details');
-          break;
-
-        case 'delete':
-          $member_profile_operation_link['title'] = t('Delete profile');
-          break;
-
-      }
-      $processed_user_operation_links[] = [
-        'link' => [
-          'label' => $member_profile_operation_link['title'],
-          'path' => $member_profile_operation_link['url']->toString(),
-        ],
-      ];
-    }
   }
 
   if (empty($processed_user_operation_links)) {

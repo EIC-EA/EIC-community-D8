@@ -96,13 +96,26 @@ if ($solr_host = getenv('SOLR_HOST')) {
 }
 
 /**
+ * Matomo settings.
+ */
+$config['matomo.settings']['site_id'] = getenv('MATOMO_SITE_ID');
+$config['matomo.settings']['url_http'] = 'http://' . getenv('MATOMO_URL') . '/';
+$config['matomo.settings']['url_https'] = 'https://' . getenv('MATOMO_URL') . '/';
+
+/**
  * EU Login settings.
  */
 $config['cas.settings']['server']['hostname'] = getenv('EULOGIN_URL');
 
-// Uncomment this line to force EU Login known user accounts to login through EU
-// Login.
-//$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+/**
+ * CAS settings.
+ */
+$config['cas.settings']['user_accounts.prevent_normal_login'] = TRUE;
+// Always set the auto-register to TRUE as this event is being catched by
+// eic_user_login module.
+$config['cas.settings']['user_accounts']['auto_register'] = TRUE;
+$config['eic_user_login.settings']['check_sync_user'] = TRUE;
+
 // Allow self-registered users to login.
 $config['oe_authentication.settings']['assurance_level'] = 'LOW';
 
@@ -125,14 +138,16 @@ if (getenv('TIKA_HOST')) {
 /**
  * SMTP settings.
  */
-if (!empty(getenv('SMTP_SERVER')) && !empty(getenv('SMTP_PASSWORD'))) {
+if (!empty(getenv('SMTP_SERVER'))) {
   $config['smtp.settings']['smtp_host'] = getenv('SMTP_SERVER');
   $config['smtp.settings']['smtp_hostbackup'] = '';
   $config['smtp.settings']['smtp_port'] = getenv('SMTP_PORT');
   $config['smtp.settings']['smtp_protocol'] = getenv('SMTP_PROTOCOL');
+  $config['smtp.settings']['smtp_client_hostname'] = '';
+}
+if (!empty(getenv('SMTP_PASSWORD'))) {
   $config['smtp.settings']['smtp_username'] = getenv('SMTP_USERNAME');
   $config['smtp.settings']['smtp_password'] = getenv('SMTP_PASSWORD');
-  $config['smtp.settings']['smtp_client_hostname'] = '';
 }
 
 if ($from_mail = getenv('NOREPLY_MAIL')) {
@@ -172,3 +187,19 @@ $settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
 $settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
 
 $settings['cron_interval_late_reindex_entities'] = getenv('CRON_INTERVAL_LATE_REINDEX_ENTITIES_QUEUE');
+
+$databases['migrate']['default'] = array (
+  'database' => 'communityd7',
+  'username' => getenv('MIGRATION_DATABASE_USER'),
+  'password' => getenv('MIGRATION_DATABASE_PASSWORD'),
+  'prefix' => '',
+  'host' => getenv('MIGRATION_DATABASE_HOST'),
+  'port' => '3306',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+  'collation' => 'utf8mb4_general_ci',
+);
+
+if (PHP_SAPI === 'cli') {
+  ini_set('memory_limit', '4G');
+}

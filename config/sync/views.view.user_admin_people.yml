@@ -6,6 +6,7 @@ dependencies:
     - options
     - user
     - views_autocomplete_filters
+    - views_bulk_operations
 _core:
   default_config_hash: J5EbGNdz0YUaSIYKwomyFSOtZjsV9TrBA3qdb3ZwBS0
 id: user_admin_people
@@ -24,16 +25,15 @@ display:
     display_options:
       title: People
       fields:
-        user_bulk_form:
-          id: user_bulk_form
-          table: users
-          field: user_bulk_form
+        views_bulk_operations_bulk_form:
+          id: views_bulk_operations_bulk_form
+          table: views
+          field: views_bulk_operations_bulk_form
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: user
-          plugin_id: user_bulk_form
-          label: 'Bulk update'
+          plugin_id: views_bulk_operations_bulk_form
+          label: 'Views bulk operations'
           exclude: false
           alter:
             alter_text: false
@@ -74,6 +74,56 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          batch: true
+          batch_size: 10
+          form_step: true
+          buttons: false
+          action_title: Action
+          clear_on_exposed: true
+          force_selection_info: false
+          selected_actions:
+            -
+              action_id: eic_change_user_smed_status
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: 'flag_action:follow_user_flag'
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: 'flag_action:follow_user_unflag'
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: realname_update_realname_action
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: user_add_role_action
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: user_unblock_user_action
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: user_remove_role_action
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: user_block_user_action
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: views_bulk_operations_delete_entity
+            -
+              action_id: vbo_cancel_user_action
+              preconfiguration:
+                add_confirmation: 0
+            -
+              action_id: 'entity:save_action:user'
+              preconfiguration:
+                add_confirmation: 0
         name:
           id: name
           table: users_field_data
@@ -192,7 +242,7 @@ display:
           entity_type: user
           entity_field: field_user_status
           plugin_id: field
-          label: 'User status'
+          label: 'SMED status'
           exclude: false
           alter:
             alter_text: false
@@ -615,7 +665,7 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Filter
+          submit_button: Apply
           reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'

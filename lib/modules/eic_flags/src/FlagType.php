@@ -25,10 +25,10 @@ final class FlagType {
 
   const LIKE_CONTENT = 'like_content';
 
+  const LIKE_GROUP = 'recommend_group';
+
   const RECOMMEND_NODE = 'recommend_content';
 
   const RECOMMEND_CONTENT_GROUP = 'recommend_content_group';
-
-  const RECOMMEND_GROUP = 'recommend_group';
 
 }

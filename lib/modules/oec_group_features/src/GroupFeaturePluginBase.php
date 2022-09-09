@@ -328,14 +328,11 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    */
   protected function getExistingMenuItem(MenuLinkContentInterface $menu_item) {
     $url = $menu_item->getUrlObject();
-    $uri = empty(static::ANCHOR_ID) ?
-      'internal:/' . $url->getInternalPath() :
-      $url->toUriString();
 
-    /** @var Drupal\menu_link_content\MenuLinkContentInterface[] $items */
+    /** @var MenuLinkContentInterface[] $items */
     $items = $this->menuLinkContentStorage->loadByProperties([
       'menu_name' => $menu_item->getMenuName(),
-      'link__uri' => $uri,
+      'link__uri' => $url->toUriString(),
     ]);
 
     if (!empty($items)) {

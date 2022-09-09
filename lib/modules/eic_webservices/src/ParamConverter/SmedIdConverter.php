@@ -3,6 +3,7 @@
 namespace Drupal\eic_webservices\ParamConverter;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Symfony\Component\Routing\Route;
 
@@ -33,11 +34,18 @@ class SmedIdConverter extends EntityConverter {
   ];
 
   /**
-   * Drupal\Core\Config\ConfigFactory definition.
+   * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactory
    */
   protected $configFactory;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * {@inheritdoc}
@@ -58,7 +66,21 @@ class SmedIdConverter extends EntityConverter {
     if ($bundle) {
       $query->condition('type', $bundle);
     }
-    if (!$entity_ids = $query->execute()) {
+
+    $entity_ids = $query->execute();
+    if (empty($entity_ids)) {
+      $entity_ids = [];
+    }
+
+    // Allow other modules to alter the result.
+    $context = [
+      'smed_id' => $value,
+      'entity_type_id' => $entity_type_id,
+      'defaults' => $defaults,
+    ];
+    $this->moduleHandler->alter('smed_id_converter_entity_ids', $entity_ids, $context);
+
+    if (empty($entity_ids)) {
       return NULL;
     }
 
@@ -118,6 +140,16 @@ class SmedIdConverter extends EntityConverter {
    */
   public function setConfigFactory(ConfigFactory $config_factory) {
     $this->configFactory = $config_factory;
+  }
+
+  /**
+   * Injects the module handler service.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The config factory.
+   */
+  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
   }
 
 }

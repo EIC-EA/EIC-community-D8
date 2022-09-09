@@ -99,6 +99,47 @@ function eic_groups_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_eic_groups_group_feature_public_alter().
+ */
+function eic_groups_eic_groups_group_feature_public_alter(bool &$is_publicly_available, array $context) {
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $context['group'];
+
+  switch ($group->getGroupType()->id()) {
+    case 'event':
+      // None of the group feature for events should be publicly available for
+      // events.
+      $is_publicly_available = FALSE;
+      break;
+  }
+}
+
+/**
+ * Implements hook_oec_group_flex_plugin_permission_alter().
+ */
+function eic_groups_oec_group_flex_plugin_permission_alter(bool &$is_allowed, array $context) {
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $context['group'];
+  /** @var \Drupal\group\Entity\GroupRoleInterface $role */
+  $role = $context['role'];
+  $plugin = $context['plugin'];
+
+  switch ($group->getGroupType()->id()) {
+    case 'event':
+      switch ($plugin->getPluginDefinition()['id']) {
+        case 'group_node':
+          // We deny access to view content for anonymous/outsider roles.
+          if ($role->isOutsider() || $role->isAnonymous()) {
+            $is_allowed = FALSE;
+          }
+          break;
+
+      }
+      break;
+  }
+}
+
+/**
  * Implements hook_views_data().
  */
 function eic_groups_views_data() {

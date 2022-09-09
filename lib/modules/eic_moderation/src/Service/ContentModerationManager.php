@@ -114,8 +114,23 @@ class ContentModerationManager {
     $workflow->getTypePlugin()->getInitialState($entity);
 
     // Check the group permissions.
-    return array_filter($current_state->getTransitions(), function (Transition $transition) use ($workflow, $account, $group) {
+    return array_filter($current_state->getTransitions(), function (Transition $transition) use ($workflow, $account, $group, $entity) {
       if ($group->hasPermission('use ' . $workflow->id() . ' transition ' . $transition->id(), $account)) {
+        // We hide unpublish transition until the default revision is set to
+        // published.
+        if ($transition->id() === 'unpublish') {
+          if ($entity->isNew()) {
+            return FALSE;
+          }
+          $default_revision = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
+            ->load($entity->id());
+          if (
+            !$default_revision->isPublished() &&
+            $default_revision->moderation_state->value !== $transition->to()->id()
+          ) {
+            return FALSE;
+          }
+        }
         return TRUE;
       }
     });

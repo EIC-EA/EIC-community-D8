@@ -36,6 +36,9 @@ reactions:
         unique: 0
         context_id: search
         context_mapping: {  }
+        add_facet_my_groups: 1
+        add_facet_interests: 1
+        page_options: normal
         source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
         facets:
           ss_global_content_type: ss_global_content_type
@@ -53,10 +56,7 @@ reactions:
           its_flag_like_content: its_flag_like_content
           its_last_flagged_like_content: its_last_flagged_like_content
         enable_search: 1
-        page_options: normal
         prefilter_group: 0
-        add_facet_interests: 1
-        add_facet_my_groups: 1
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
