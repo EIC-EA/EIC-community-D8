@@ -3,6 +3,10 @@
   overflow-y: auto !important;
 }
 
+.entity-tree--options > .MuiPaper-root > .MuiCollapse-container {
+  max-height: 350px !important;
+}
+
 .MuiChip-root {
   margin: 0 $ecl-spacing-xs $ecl-spacing-xs 0;
 }
