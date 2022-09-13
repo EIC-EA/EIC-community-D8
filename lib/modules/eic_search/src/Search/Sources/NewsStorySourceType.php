@@ -134,7 +134,7 @@ class NewsStorySourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredContentType(): array {
-    return ['news', 'story'];
+    return ['story'];
   }
 
   /**
