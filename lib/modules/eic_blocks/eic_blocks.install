@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Blocks module.
+ */
+
+use Drupal\block_content\Entity\BlockContent;
+
+/**
+ * Add the missing "Homepage - USP Tiles" block.
+ */
+function eic_blocks_update_9001(&$sandbox) {
+  $values = [
+    'status' => TRUE,
+    'type' => 'tiles_reference',
+    // For BC reasons we keep the same UUIDs since they are referenced in
+    // configs.
+    'uuid' => '8271c779-92e1-43f2-beb5-3addbfd84c70',
+    'info' => 'Homepage - USP Tiles',
+    'field_title' => 'As an EIC beneficiary, access a one-stop-shop',
+    'field_body' => [
+      'value' => '',
+      'format' => 'filtered_html',
+    ],
+  ];
+
+  $block = BlockContent::create($values);
+  $block->save();
+}
