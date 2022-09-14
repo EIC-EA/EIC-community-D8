@@ -1,0 +1,5 @@
+eic_groups_cron_settings:
+  cron_interval_group_invite_time: 86400
+  cron_interval_group_skip_invite_reminder_days: 30
+  cron_interval_group_invite_reminder_frequency_days: 3
+

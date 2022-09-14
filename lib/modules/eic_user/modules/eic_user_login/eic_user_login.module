@@ -5,6 +5,7 @@
  * Primary module hooks for EIC User Login module.
  */
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -124,6 +125,38 @@ function eic_user_login_user_login(UserInterface $account) {
 function eic_user_login_form_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::classResolver(FormAlter::class)
     ->formProfileFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements template_preprocess_status_messages().
+ */
+function eic_user_login_preprocess_status_messages(&$variables) {
+  // We want to remove some system messages as we are displaying custom ones.
+  $remove_messages = [
+    'error' => [
+      'Your account is blocked or has not been activated. Please contact a site administrator.',
+    ],
+  ];
+
+  // Loop through all types/messages.
+  foreach ($remove_messages as $type => $strings) {
+    if (isset($variables['message_list'][$type])) {
+      foreach ($strings as $string) {
+        foreach ($variables['message_list'][$type] as $delta => $message) {
+          if ($message instanceof MarkupInterface) {
+            if ((string) $message == (string) t($string)) {
+              unset($variables['message_list'][$type][$delta]);
+            }
+          }
+        }
+      }
+
+      // Remove the section if there are no more messages.
+      if (empty($variables['message_list'][$type])) {
+        unset($variables['message_list'][$type]);
+      }
+    }
+  }
 }
 
 /**
