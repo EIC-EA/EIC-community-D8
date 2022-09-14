@@ -77,6 +77,13 @@ final class SmedUserStatuses {
   const USER_UNSUBSCRIBED = 'user_unsubscribed';
 
   /**
+   * User archived.
+   *
+   * @var string
+   */
+  const USER_ARCHIVED = 'user_archived';
+
+  /**
    * Returns a list of possible statuses with their labels.
    *
    * @return array
@@ -92,6 +99,7 @@ final class SmedUserStatuses {
       self::USER_NOT_BOOTSTRAPPED => t('User not boostrapped', [], ['context' => 'eic_user_login']),
       self::USER_BLOCKED => t('User blocked', [], ['context' => 'eic_user_login']),
       self::USER_UNSUBSCRIBED => t('User unsubscribed', [], ['context' => 'eic_user_login']),
+      self::USER_ARCHIVED => t('User archived', [], ['context' => 'eic_user_login']),
       self::USER_UNKNOWN => t('User unknown', [], ['context' => 'eic_user_login']),
     ];
   }

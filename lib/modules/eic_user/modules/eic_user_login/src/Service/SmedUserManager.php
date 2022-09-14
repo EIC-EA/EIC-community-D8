@@ -76,6 +76,7 @@ class SmedUserManager {
       case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
       case SmedUserStatuses::USER_BLOCKED:
       case SmedUserStatuses::USER_UNSUBSCRIBED:
+      case SmedUserStatuses::USER_ARCHIVED:
       case SmedUserStatuses::USER_UNKNOWN:
         $account->block();
         break;
@@ -160,6 +161,7 @@ class SmedUserManager {
 
       case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
       case SmedUserStatuses::USER_BLOCKED:
+      case SmedUserStatuses::USER_ARCHIVED:
         $message = $this->t('It looks like something went wrong, Please contact us via the <a href=":contact_form_url">contact form</a>.', [
           ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
@@ -170,6 +172,7 @@ class SmedUserManager {
           ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
+
       case SmedUserStatuses::USER_UNKNOWN:
         $message = $this->t('<p>It looks like you are not a member yet. Interested? </p> Please <span class="register_button"><a class="ecl-link ecl-link--cta" href=":smed_url" target="_blank">register</a></span> <p>If you have any questions <a href=":contact_form_url">contact us</a>.</p>', [
           ':smed_url' => $smed_url,
