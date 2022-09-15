@@ -14,6 +14,7 @@ dependencies:
     - content_moderation
     - field_group
     - link
+    - media_library
     - paragraphs
     - path
     - publication_date
@@ -81,14 +82,11 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_image:
-    type: entity_reference_autocomplete
+    type: media_library_widget
     weight: 6
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
   field_introduction:
     type: text_textarea

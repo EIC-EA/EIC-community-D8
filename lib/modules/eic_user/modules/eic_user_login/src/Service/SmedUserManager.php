@@ -138,35 +138,42 @@ class SmedUserManager {
         break;
 
       case SmedUserStatuses::USER_APPROVED_INCOMPLETE:
-        $message = $this->t('Welcome @username, before you can continue please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>.', [
+        $message = $this->t('Welcome @username, <p>Almost there! It look like your registration is in <b>draft</b>.</p> <p>Please go to your <span class="register_button"><a class="ecl-link ecl-link--cta" href=":smed_url" target="_blank">draft registration</a></span></p><p>If you have any questions <a href=":contact_form_url">contact us</a>.</p>', [
           '@username' => $account->getDisplayName(),
           ':smed_url' => $smed_url,
         ]);
         break;
 
       case SmedUserStatuses::USER_PENDING:
-        $message = $this->t('Welcome @username, your account is pending approval, once approved you will receive a notification e-mail.', [
+        $message = $this->t('Dear @username, <br><p>Currently your access is under review.</p><p> If you do not hear from us in the coming days, please <a href=":contact_form_url">contact us</a>.</p>', [
           '@username' => $account->getDisplayName(),
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
 
       case SmedUserStatuses::USER_INVITED:
-        $message = $this->t('Please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>.', [
+        $message = $this->t('<p>Welcome to the EIC community!</p> <br>To get you started please <span class="register_button"><a class="ecl-link ecl-link--cta" href=":smed_url" target="_blank">register here</a></span>. <p>If you have any questions <a href=":contact_form_url">contact us</a>.</p>', [
           ':smed_url' => $smed_url,
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
 
       case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
       case SmedUserStatuses::USER_BLOCKED:
-        $message = $this->t('Please contact us via the <a href=":contact_form_url">contact form</a>.', [
+        $message = $this->t('It looks like something went wrong, Please contact us via the <a href=":contact_form_url">contact form</a>.', [
           ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
 
       case SmedUserStatuses::USER_UNSUBSCRIBED:
+        $message = $this->t('It looks like something went wrong, please contact us via the <a href=":contact_form_url">contact form</a>.', [
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
+        ]);
+        break;
       case SmedUserStatuses::USER_UNKNOWN:
-        $message = $this->t('Please register at <a href=":smed_url" target="_blank">:smed_url</a>.', [
+        $message = $this->t('<p>It looks like you are not a member yet. Interested? </p> Please <span class="register_button"><a class="ecl-link ecl-link--cta" href=":smed_url" target="_blank">register</a></span> <p>If you have any questions <a href=":contact_form_url">contact us</a>.</p>', [
           ':smed_url' => $smed_url,
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
 
