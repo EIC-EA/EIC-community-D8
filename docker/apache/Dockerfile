@@ -7,7 +7,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false upd
 RUN a2enmod rewrite headers \
     && a2enmod proxy_fcgi \
     && a2enmod rewrite \
-    && a2enmod ssl;
+    && a2enmod ssl
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
