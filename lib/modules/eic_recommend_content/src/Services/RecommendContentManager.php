@@ -219,7 +219,7 @@ class RecommendContentManager {
         ),
       ],
       '#tree_settings' => $get_users_url_parameters,
-      '#tree_translations' => EntityTreeManager::getTranslationsWidget(),
+      '#tree_translations' => ['your_values' => $this->t('Selected members')->render()] + EntityTreeManager::getTranslationsWidget(),
     ] : NULL;
   }
 
