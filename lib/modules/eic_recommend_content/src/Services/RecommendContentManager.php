@@ -203,7 +203,7 @@ class RecommendContentManager {
       '#theme' => 'eic_recommend_content_link',
       '#entity_type' => $entity->getEntityTypeId(),
       '#entity_id' => $entity->id(),
-      '#endpoint' => $endpoint_url->toString(),
+      '#endpoint' => '/' . $endpoint_url->getInternalPath(),
       '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
