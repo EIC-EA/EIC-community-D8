@@ -137,7 +137,9 @@ class ProcessorGlobal extends DocumentProcessor {
         // The node should not be accessible if the group is not published.
         if ($node_group_contents = GroupContent::loadByEntity($node)) {
           $node_group_content = reset($node_group_contents);
-          $status = $node_group_content->getGroup()->isPublished();
+          $status = $node_group_content->getGroup()->isPublished() ?
+            $fields['bs_content_status'] :
+            FALSE;
         }
         break;
       case 'entity:group':

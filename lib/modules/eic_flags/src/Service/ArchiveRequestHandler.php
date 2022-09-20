@@ -14,6 +14,8 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlaggingInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 
 /**
  * Service that provides logic to request entity archival.
@@ -61,8 +63,8 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
    * {@inheritdoc}
    */
   public function canRequest(AccountInterface $account, ContentEntityInterface $entity) {
-    // Deny access if entity is already archived.
-    if ($this->isArchived($entity)) {
+    // Deny access if entity is not published.
+    if (!$this->isPublished($entity)) {
       return AccessResult::forbidden();
     }
 
@@ -172,6 +174,46 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
     }
 
     return $is_archived;
+  }
+
+  /**
+   * Checks if the entity is moderated and published.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity.
+   *
+   * @return bool
+   *   TRUE is entity is published.
+   */
+  protected function isPublished(ContentEntityInterface $entity) {
+    $is_published = FALSE;
+
+    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
+      switch ($workflow->id()) {
+        case DefaultContentModerationStates::WORKFLOW_MACHINE_NAME:
+          if ($entity->get('moderation_state')->value === DefaultContentModerationStates::PUBLISHED_STATE) {
+            $is_published = TRUE;
+          }
+          break;
+
+        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
+          if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+            $is_published = TRUE;
+          }
+          break;
+
+        case EICContentModeration::MACHINE_NAME:
+          if ($entity->get('moderation_state')->value === EICContentModeration::STATE_PUBLISHED) {
+            $is_published = TRUE;
+          }
+          break;
+      }
+    }
+    else {
+      $is_published = $entity->isPublished();
+    }
+
+    return $is_published;
   }
 
 }

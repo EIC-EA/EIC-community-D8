@@ -51,6 +51,9 @@ class EventResource extends GroupResourceBase {
     // Process SMED taxonomy fields to convert the SMED ID to Term ID.
     $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
 
+    // Process fields to be formatted according to their type.
+    $this->wsRestHelper->formatEntityFields($entity);
+
     $this->handleGroupOwner($entity);
 
     // Initialise required fields if not provided.

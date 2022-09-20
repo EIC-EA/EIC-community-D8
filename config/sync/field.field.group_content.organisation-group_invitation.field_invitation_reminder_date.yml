@@ -1,0 +1,21 @@
+uuid: ee452158-c8d3-44ef-b8e1-8fa590d7cd52
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.field_invitation_reminder_date
+    - group.content_type.organisation-group_invitation
+id: group_content.organisation-group_invitation.field_invitation_reminder_date
+field_name: field_invitation_reminder_date
+entity_type: group_content
+bundle: organisation-group_invitation
+label: 'Invitation last reminder timestamp'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1658935038
+default_value_callback: ''
+settings: {  }
+field_type: timestamp

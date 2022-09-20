@@ -6,7 +6,13 @@ dependencies:
     - field.storage.profile.field_body
     - profile.type.member
   module:
+    - allowed_formats
     - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - filtered_html
+      - basic_text
 id: profile.member.field_body
 field_name: field_body
 entity_type: profile

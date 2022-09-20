@@ -126,7 +126,8 @@ class EicWsHelper {
 
     // Get the profile resource endpoint URI.
     $profile_resource = $this->resourcePluginManager->getDefinition('eic_webservices_profile');
-    $uri = str_replace('{profile}', $profile->id(), $profile_resource['uri_paths']['canonical']);
+    $uri = $initial_request->getBasePath();
+    $uri .= str_replace('{profile}', $profile->id(), $profile_resource['uri_paths']['canonical']);
     $uri .= '?_format=hal_json';
 
     // Get the embedded profile content.

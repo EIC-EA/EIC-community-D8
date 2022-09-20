@@ -4,6 +4,7 @@ namespace Drupal\eic_topics\Plugin\Block;
 
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\eic_topics\TopicsManager;
@@ -72,8 +73,20 @@ class TopicStatisticsBlock extends BlockBase implements ContainerFactoryPluginIn
     return [
       '#theme' => 'topics_statistics_block',
       '#stats' => $this->topicsManager->generateTopicsStats($term->id()),
-      '#cache' => ['tags' => ['taxonomy_term:' . $term->id()]],
+      '#cache' => [
+        'tags' => [
+          'taxonomy_term:' . $term->id(),
+        ],
+      ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    // Adds extra cache contexts to the block.
+    return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
   }
 
 }

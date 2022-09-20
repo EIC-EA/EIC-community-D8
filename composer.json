@@ -22,6 +22,7 @@
         "cweagans/composer-patches": "^1.7",
         "drupal/address": "^1.9",
         "drupal/admin_toolbar": "^3.0",
+        "drupal/allowed_formats": "^1.5",
         "drupal/anchor_link": "^2.5",
         "drupal/antibot": "^1.5",
         "drupal/block_content_permissions": "^1.10",

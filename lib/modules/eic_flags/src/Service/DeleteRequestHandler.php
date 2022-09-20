@@ -2,9 +2,11 @@
 
 namespace Drupal\eic_flags\Service;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
@@ -58,6 +60,21 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       RequestStatus::ACCEPTED => 'notify_delete_request_accepted',
       RequestStatus::ARCHIVED => 'notify_delete_request_archived',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  ) {
+    // If user can delete the entity, there is no need to allow deletion request.
+    if ($entity->access('delete', $account)) {
+      return AccessResult::forbidden();
+    }
+
+    return parent::canRequest($account, $entity);
   }
 
   /**

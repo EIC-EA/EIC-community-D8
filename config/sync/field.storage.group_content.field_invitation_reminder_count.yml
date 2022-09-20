@@ -1,0 +1,20 @@
+uuid: f4fe5a77-1848-4aee-9383-cd67c511d432
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group_content.field_invitation_reminder_count
+field_name: field_invitation_reminder_count
+entity_type: group_content
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: true
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

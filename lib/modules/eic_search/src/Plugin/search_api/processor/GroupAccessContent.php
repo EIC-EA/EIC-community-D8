@@ -149,6 +149,11 @@ class GroupAccessContent extends ProcessorPluginBase {
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . ':(' . $user_organisation_types_formatted . '))
     ';
 
+    // Group members can view their own groups regardless of the group visibility.
+    if ($user->isAuthenticated()) {
+      $query .= ' OR its_global_group_parent_id:(' . $group_ids_formatted . ')';
+    }
+
     // Restricted community group, only trusted_user role can view.
     if (!$user->isAnonymous() && ($user->hasRole(UserHelper::ROLE_TRUSTED_USER) || UserHelper::isPowerUser($this->getCurrentUser()))) {
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';

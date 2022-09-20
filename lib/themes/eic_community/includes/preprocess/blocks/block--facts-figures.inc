@@ -45,26 +45,6 @@ function eic_community_preprocess_block__facts_figures(&$variables, &$cache_tags
           $cache_tags[] = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
           break;
 
-        case 'group':
-          switch ($bundle) {
-            case 'event':
-              $source = GlobalEventSourceType::class;
-              break;
-            case 'organisation':
-              $source = OrganisationSourceType::class;
-              break;
-            default:
-              $source = GroupSourceType::class;
-              break;
-          }
-          $solr_query = $solr_search_manager->init($source);
-          $results = $solr_query->search();
-          $results = json_decode($results, TRUE);
-
-          $counter = !empty($results) ? $results['response']['numFound'] : 0;
-          $cache_tags[] = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
-          break;
-
         default:
           $counter = $eic_statistics_storage->getEntityCounter($entity_type, $bundle);
           $cache_tags[] = $eic_statistics_storage->getEntityCounterCacheTag($entity_type, $bundle);
