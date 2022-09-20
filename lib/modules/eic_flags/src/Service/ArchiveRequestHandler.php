@@ -222,6 +222,10 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
           $is_published = $check_entity->isActive();
           break;
 
+        case 'group':
+          $is_published = (bool) $check_entity->get('status')->value;
+          break;
+
         default:
           $is_published = $check_entity->isPublished();
           break;
