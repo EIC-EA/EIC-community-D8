@@ -169,4 +169,11 @@ class GlobalEventSourceType extends SourceType {
     return $this->t('My events & content only', [], ['context' => 'eic_search']);
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getLabelActiveFilterMyGroups(): string {
+    return $this->t('My events', [], ['context' => 'eic_search']);
+  }
+
 }

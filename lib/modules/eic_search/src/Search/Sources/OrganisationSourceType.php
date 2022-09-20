@@ -146,4 +146,11 @@ class OrganisationSourceType extends SourceType {
     return $this->t('My organisations & content only', [], ['context' => 'eic_search']);
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getLabelActiveFilterMyGroups(): string {
+    return $this->t('My organisations', [], ['context' => 'eic_search']);
+  }
+
 }
