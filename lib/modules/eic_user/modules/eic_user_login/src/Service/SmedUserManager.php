@@ -161,7 +161,6 @@ class SmedUserManager {
 
       case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
       case SmedUserStatuses::USER_BLOCKED:
-      case SmedUserStatuses::USER_ARCHIVED:
         $message = $this->t('It looks like something went wrong, Please contact us via the <a href=":contact_form_url">contact form</a>.', [
           ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
@@ -169,6 +168,12 @@ class SmedUserManager {
 
       case SmedUserStatuses::USER_UNSUBSCRIBED:
         $message = $this->t('It looks like something went wrong, please contact us via the <a href=":contact_form_url">contact form</a>.', [
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
+        ]);
+        break;
+
+      case SmedUserStatuses::USER_ARCHIVED:
+        $message = $this->t('Your account has been archived and is no longer active. If you think this is a mistake, please contact us via the <a href=":contact_form_url">contact form</a>.', [
           ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
