@@ -210,7 +210,15 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
       }
     }
     else {
-      $is_published = $entity->isPublished();
+      switch ($entity->getEntityTypeId()) {
+        case 'user':
+          $is_published = $entity->isActive();
+          break;
+
+        default:
+          $is_published = $entity->isPublished();
+          break;
+      }
     }
 
     return $is_published;
