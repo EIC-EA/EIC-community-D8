@@ -14,6 +14,8 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlaggingInterface;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
@@ -210,7 +212,24 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
       }
     }
     else {
-      $is_published = $entity->isPublished();
+      $check_entity = $entity;
+      if ($entity instanceof GroupContentInterface) {
+        $check_entity = $entity->getEntity();
+      }
+
+      switch ($check_entity->getEntityTypeId()) {
+        case 'user':
+          $is_published = $check_entity->isActive();
+          break;
+
+        case 'group':
+          $is_published = (bool) $check_entity->get('status')->value;
+          break;
+
+        default:
+          $is_published = $check_entity->isPublished();
+          break;
+      }
     }
 
     return $is_published;
