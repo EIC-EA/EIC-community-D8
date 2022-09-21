@@ -1137,4 +1137,16 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return $user_groups;
   }
 
+  /**
+   * Gets default features plugin IDs for a group.
+   *
+   * @param \Drupal\group\Entity\Group $group
+   *   The group entity.
+   */
+  public static function getGroupDefaultFeatures(Group $group) {
+    $group_type_id = $group->getGroupType()->id();
+    $config = \Drupal::configFactory()->get("eic_groups.group_features.default_features.$group_type_id");
+    return $config->get('default_features') ?? [];
+  }
+
 }

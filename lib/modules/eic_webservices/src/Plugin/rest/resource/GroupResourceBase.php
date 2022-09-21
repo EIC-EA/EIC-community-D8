@@ -4,7 +4,9 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -96,6 +98,33 @@ abstract class GroupResourceBase extends EntityResource {
       $group->setOwnerId($author_uid);
     }
 
+  }
+
+  /**
+   * Sets group default features.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  protected function setDefaultGroupFeatures(GroupInterface &$group) {
+    // We don't set default group features if the group is being updated.
+    if (!$group->isNew()) {
+      return;
+    }
+
+    $default_features = EICGroupsHelper::getGroupDefaultFeatures($group);;
+
+    // Check if field exists.
+    if (!$group->hasField(GroupFeatureHelper::FEATURES_FIELD_NAME)) {
+      return;
+    }
+
+    // Check if field is empty.
+    if (!$group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->isEmpty()) {
+      return;
+    }
+
+    $group->set(GroupFeatureHelper::FEATURES_FIELD_NAME, $default_features);
   }
 
 }
