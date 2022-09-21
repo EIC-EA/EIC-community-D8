@@ -149,36 +149,46 @@ function _eic_contact_alter_submit(
 
   // Send notification to all SCM/SA
   foreach (\Drupal::service('eic_user.helper')->getSitePowerUsers() as $uid) {
-    $bus->dispatch([
+    $message_entity = [
       'template' => 'notify_mt_contact_global',
-      'field_sender' => ['target_id' => $sender_cloned->id()],
+      'field_sender_name' => $message->getSenderName(),
+      'field_sender_email' => $message->getSenderMail(),
       'field_body' => $form_state->getValue('field_contact_message')[0],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'field_contact_category' => ['target_id' => $category_id],
       'uid' => $uid
-    ]);
+    ];
+    if (!$sender_cloned->isAnonymous()) {
+      $message_entity['field_sender'] = ['target_id' => $sender_cloned->id()];
+    }
+    $bus->dispatch($message_entity);
   }
 
   $send_copy = $form_state->getValue('self_copy');
 
   if ($send_copy) {
     // Send a copy of the contact form to the current user.
-    $bus->dispatch([
+    $message_entity = [
       'template' => 'notify_contact_global_copy',
-      'field_sender' => ['target_id' => $sender_cloned->id()],
+      'field_sender_name' => $message->getSenderName(),
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'field_body' => $form_state->getValue('field_contact_message')[0],
       'uid' => ['target_id' => $current_user->id()]
-    ]);
+    ];
   } else {
     // Send notification to the sender to confirm email has been sent.
-    $bus->dispatch([
+    $message_entity = [
       'template' => 'notify_contact_global_confirm',
-      'field_sender' => ['target_id' => $sender_cloned->id()],
+      'field_sender_name' => $message->getSenderName(),
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'uid' => ['target_id' => $sender_cloned->id()]
-    ]);
+    ];
   }
+
+  if ($message_entity && !$sender_cloned->isAnonymous()) {
+    $message_entity['field_sender'] = ['target_id' => $sender_cloned->id()];
+  }
+  $bus->dispatch($message_entity);
 
   /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
   $mail_manager = Drupal::service('plugin.manager.mail');

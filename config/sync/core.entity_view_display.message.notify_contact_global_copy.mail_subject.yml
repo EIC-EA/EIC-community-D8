@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.message.mail_subject
     - field.field.message.notify_contact_global_copy.field_body
     - field.field.message.notify_contact_global_copy.field_sender
+    - field.field.message.notify_contact_global_copy.field_sender_name
     - field.field.message.notify_contact_global_copy.field_subject
     - message.template.notify_contact_global_copy
 id: message.notify_contact_global_copy.mail_subject
@@ -14,11 +15,15 @@ bundle: notify_contact_global_copy
 mode: mail_subject
 content:
   partial_0:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
 hidden:
   field_body: true
   field_sender: true
+  field_sender_name: true
   field_subject: true
   partial_1: true
+  partial_2: true
   search_api_excerpt: true

@@ -1,0 +1,19 @@
+uuid: 057227a4-27d1-45ad-bc02-a408a5908742
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_sender_name
+    - message.template.notify_contact_global_confirm
+id: message.notify_contact_global_confirm.field_sender_name
+field_name: field_sender_name
+entity_type: message
+bundle: notify_contact_global_confirm
+label: 'Sender name'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
