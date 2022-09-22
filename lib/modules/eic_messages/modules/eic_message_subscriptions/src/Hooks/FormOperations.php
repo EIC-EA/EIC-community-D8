@@ -165,9 +165,10 @@ class FormOperations implements ContainerInjectionInterface {
       }
 
       $form['field_send_notification'] = [
-        '#title' => $this->t('Send notification to members.'),
+        '#title' => $this->t('Send notifications to members.'),
         '#type' => 'checkbox',
         '#default_value' => $is_new_content && !in_array($entity->bundle(), $field_disable_by_default_types),
+        '#description' => t('Notifications will not be sent as long your content is in Draft state.'),
       ];
       $form['actions']['submit']['#submit'][] = [
         $this,
