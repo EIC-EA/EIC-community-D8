@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.notify_contact_global_confirm.field_sender
+    - field.field.message.notify_contact_global_confirm.field_sender_name
     - field.field.message.notify_contact_global_confirm.field_subject
     - message.template.notify_contact_global_confirm
 id: message.notify_contact_global_confirm.default
@@ -19,6 +20,14 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_sender_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_subject:
     type: string
     label: above
@@ -33,6 +42,11 @@ content:
     weight: 0
     region: content
   partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_2:
     settings: {  }
     third_party_settings: {  }
     weight: 0

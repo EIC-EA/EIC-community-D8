@@ -1,0 +1,19 @@
+uuid: 7e6c0263-37e8-4d69-ac8d-f866df4b9335
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_sender_email
+    - message.template.notify_mt_contact_global
+id: message.notify_mt_contact_global.field_sender_email
+field_name: field_sender_email
+entity_type: message
+bundle: notify_mt_contact_global
+label: 'Sender email'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email
