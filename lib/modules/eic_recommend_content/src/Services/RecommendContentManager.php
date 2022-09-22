@@ -152,9 +152,6 @@ class RecommendContentManager {
       [
         'entity_type' => $entity->getEntityTypeId(),
         'entity_id' => $entity->id(),
-      ],
-      [
-        'absolute' => TRUE,
       ]
     );
     $can_recommend = TRUE;
@@ -203,7 +200,7 @@ class RecommendContentManager {
       '#theme' => 'eic_recommend_content_link',
       '#entity_type' => $entity->getEntityTypeId(),
       '#entity_id' => $entity->id(),
-      '#endpoint' => '/' . $endpoint_url->getInternalPath(),
+      '#endpoint' => $endpoint_url->toString(),
       '#can_recommend' => $can_recommend,
       '#can_recommend_external_users' => $can_recommend_external_users,
       '#translations' => [
