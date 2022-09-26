@@ -69,6 +69,11 @@ class GroupContentUrlAliasUpdate extends QueueWorkerBase implements ContainerFac
     /** @var \Drupal\group\Entity\GroupContent $group_content */
     $group_content = GroupContent::load($data);
 
+    // If we find no group content, we skip the item.
+    if (!$group_content) {
+      return;
+    }
+
     // Update url alias of node that belongs to the group content that is
     // being processed.
     if (($node = $group_content->getEntity()) && $node instanceof NodeInterface) {
