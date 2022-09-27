@@ -17,6 +17,7 @@ class GroupEventSourceType extends SourceType {
   use StringTranslationTrait;
 
   const START_DATE_SOLR_FIELD_ID = 'its_content_field_date_range_start_value';
+
   const END_DATE_SOLR_FIELD_ID = 'its_content_field_date_range_end_value';
 
   /**
@@ -60,7 +61,13 @@ class GroupEventSourceType extends SourceType {
     return [
       Event::SOLR_FIELD_ID_WEIGHT_STATE => [
         'label' => $this->t('State (1. ongoing, 2. future, 3. past)', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Ongoing/upcoming', [], ['context' => 'eic_search'])
+        'ASC' => $this->t('Ongoing/upcoming', [], ['context' => 'eic_search']),
+        self::SECOND_SORT_KEY => [
+          [
+            'id' => GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+            'direction' => 'ASC',
+          ],
+        ],
       ],
       'ss_global_created_date' => [
         'label' => $this->t('Date created', [], ['context' => 'eic_search']),
@@ -75,10 +82,10 @@ class GroupEventSourceType extends SourceType {
         'ASC' => $this->t('Event name A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Event name Z-A', [], ['context' => 'eic_search']),
       ],
-      'its_content_field_date_range_start_value' => [
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID => [
         'label' => $this->t('Event time', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('First events in time', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Last events in time', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Last events in time', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('First events in time', [], ['context' => 'eic_search']),
       ],
       'dm_aggregated_changed' => [
         'label' => $this->t('Last updated', [], ['context' => 'eic_search']),

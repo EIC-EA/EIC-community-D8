@@ -9,6 +9,7 @@
  * @see https://www.drupal.org/node/2217931
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
@@ -58,6 +59,16 @@ function eic_content_node_view(
  * Implements hook_entity_presave().
  */
 function eic_content_entity_presave(EntityInterface $entity) {
+  // Remove spaces before title
+  switch ($entity->getEntityTypeId()) {
+    case 'node':
+      $entity->setTitle(ltrim($entity->getTitle()));
+      break;
+    case 'group':
+      $entity->set('label', ltrim($entity->label()));
+      break;
+  }
+
   if (FALSE === $entity instanceof NodeInterface) {
     return;
   }
@@ -118,4 +129,30 @@ function eic_content_metatags_attachments_alter(array &$metatag_attachments) {
     ],
     'og_image_0',
   ];
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function eic_content_menu_local_tasks_alter(&$data, $route_name) {
+  $remove_route_links = [
+    'entity.node.canonical' => [
+      'entity.node.canonical',
+    ],
+    'entity.node.latest_version' => [
+      'content_moderation.workflows:node.latest_version_tab',
+    ],
+  ];
+
+  if (
+    isset($remove_route_links[$route_name]) &&
+    isset($data['tabs'][0])
+  ) {
+    foreach ($remove_route_links[$route_name] as $local_task_link_key) {
+      // Removes the local task link from the local tasks for the current route.
+      if (array_key_exists($local_task_link_key, $data['tabs'][0])) {
+        unset($data['tabs'][0][$local_task_link_key]);
+      }
+    }
+  }
 }

@@ -252,6 +252,17 @@ class SolrSearchManager {
       }
     }
 
+    if (
+      array_key_exists(0, $sorts) &&
+      array_key_exists(SourceTypeInterface::SECOND_SORT_KEY, $this->source->getAvailableSortOptions()[$sorts[0]])
+    ) {
+      $second_sorts = $this->source->getAvailableSortOptions()[$sorts[0]][SourceTypeInterface::SECOND_SORT_KEY];
+
+      foreach ($second_sorts as $second_sort) {
+        $this->solrQuery->addSort($second_sort['id'], $second_sort['direction']);
+      }
+    }
+
     $default_sort = $this->source->getSecondDefaultSort();
 
     // Add second sort.
@@ -638,27 +649,29 @@ class SolrSearchManager {
       "its_group_owner_id:$user_id",
     ];
 
-    if (!$is_power_user) {
-      switch ($this->source->getEntityBundle()) {
-        case 'library':
-        case 'discussion':
-        case 'node_event':
-        case 'news':
-          // Show own content even if it's in draft, archived, ...
-          $query_bundle[] = "its_content_uid:$user_id";
-          break;
-        case 'group':
-          $query_bundle[] = 'its_global_group_parent_published:1';
-          break;
-        case 'activity_stream':
-          $query_bundle[] = "its_uid:$user_id";
-          break;
-        default:
-          break;
-      }
+    switch ($this->source->getEntityBundle()) {
+      case 'library':
+      case 'discussion':
+      case 'node_event':
+      case 'news':
+        // Show own content even if it's in draft, archived, ...
+        $query_bundle[] = "its_content_uid:$user_id";
+        break;
 
-      $status_query .= ' OR (' . implode(' OR ', $query_bundle) . ')';
+      case 'group':
+        $query_bundle[] = 'its_global_group_parent_published:1';
+        break;
+
+      case 'activity_stream':
+        $query_bundle[] = "its_uid:$user_id";
+        break;
+
+      case 'global':
+        $query_bundle[] = "its_content_uid:$user_id";
+        break;
     }
+
+    $status_query .= ' OR (' . implode(' OR ', $query_bundle) . ')';
 
     $status_query .= ')';
 

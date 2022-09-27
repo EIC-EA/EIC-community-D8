@@ -65,7 +65,7 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   # smoke test
   && node --version \
   && npm --version \
-  && yarn --version
+  && yarn --version;
 
 RUN apt-get update && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
 

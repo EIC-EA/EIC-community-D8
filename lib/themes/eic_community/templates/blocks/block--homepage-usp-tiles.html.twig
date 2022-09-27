@@ -40,7 +40,7 @@
 
 {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
   title: content['#block_content'].field_title.value|default(''),
-  description: content['#block_content'].field_body.value|default(''),
+  description: content.field_body|default(''),
   items: _items,
   extra_classes: 'ecl-section-wrapper ecl-featured-content-collection--has-compact-layout',
 } only %}

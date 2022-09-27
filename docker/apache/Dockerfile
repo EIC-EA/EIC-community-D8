@@ -16,5 +16,4 @@ EXPOSE 80
 COPY apache-foreground /usr/local/bin/
 RUN chmod +x /usr/local/bin/apache-foreground
 
-
 CMD ["apache-foreground"]

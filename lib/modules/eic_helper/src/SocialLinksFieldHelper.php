@@ -26,12 +26,9 @@ class SocialLinksFieldHelper {
   protected $socialPlatforms = [];
 
   /**
-   * Constructs a DateTimeHelper object.
-   *
    * @param \Drupal\social_link_field\SocialLinkFieldPlatformManager $platform_manager
-   *   The Social Links field platform manager.
    */
-  public function __construct(SocialLinkFieldPlatformManager $platform_manager) {
+  public function setSocial(?SocialLinkFieldPlatformManager $platform_manager) {
     $this->platformManager = $platform_manager;
     $this->socialPlatforms = $this->platformManager->getPlatforms();
   }
