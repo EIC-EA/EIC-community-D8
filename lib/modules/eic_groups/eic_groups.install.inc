@@ -89,3 +89,15 @@ function _eic_groups_batch_modify_group_permissions(array $permissions, array $i
     Cache::invalidateTags($group->getCacheTags());
   }
 }
+
+/**
+ * Deletes all the old group permissions and keep only the last one.
+ */
+function _eic_groups_delete_old_group_permission_revisions() {
+  /** @var \Drupal\Core\Database\StatementInterface $query */
+  $query = \Drupal::database()->query("DELETE group_permission_revision FROM group_permission_revision
+  LEFT JOIN group_permission ON group_permission_revision.revision_id = group_permission.revision_id
+  WHERE group_permission.revision_id IS NULL;");
+
+  return $query->execute();
+}

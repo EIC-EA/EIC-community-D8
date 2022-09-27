@@ -641,6 +641,13 @@ function eic_groups_update_9012(&$sandbox) {
 }
 
 /**
+ * Delete old group_permission revisions.
+ */
+function eic_groups_update_9013() {
+  _eic_groups_delete_old_group_permission_revisions();
+}
+
+/**
  * Operation batch for publishing group wiki section.
  */
 function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $total, &$context) {
