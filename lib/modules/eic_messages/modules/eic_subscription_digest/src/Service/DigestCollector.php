@@ -121,10 +121,16 @@ class DigestCollector {
       'field_group_ref',
       'field_referenced_node',
     ];
+
+    $isValid = FALSE;
     foreach ($content_validation_fields as $field) {
-      if ($message->hasField($field) && !$message->get($field)->entity instanceof ContentEntityInterface) {
-        return [];
+      if ($message->hasField($field) && $message->get($field)->entity instanceof ContentEntityInterface) {
+        $isValid = TRUE;
       }
+    }
+
+    if (!$isValid) {
+      return [];
     }
 
     switch ($template_id) {
