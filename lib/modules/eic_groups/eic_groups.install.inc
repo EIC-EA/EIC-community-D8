@@ -80,11 +80,6 @@ function _eic_groups_batch_modify_group_permissions(array $permissions, array $i
       }
     }
 
-    $group_permission->setNewRevision();
-    $group_permission->setRevisionUserId(1);
-    $group_permission->setRevisionCreationTime(time());
-    $group_permission->setRevisionLogMessage("Modified permissions.");
-
     if (count($group_permission->validate()) > 0) {
       continue;
     }
