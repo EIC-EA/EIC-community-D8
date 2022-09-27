@@ -71,6 +71,7 @@ class SmedUserManager {
         break;
 
       case SmedUserStatuses::USER_APPROVED_INCOMPLETE:
+      case SmedUserStatuses::USER_DRAFT:
       case SmedUserStatuses::USER_PENDING:
       case SmedUserStatuses::USER_INVITED:
       case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
@@ -138,6 +139,7 @@ class SmedUserManager {
         break;
 
       case SmedUserStatuses::USER_APPROVED_INCOMPLETE:
+      case SmedUserStatuses::USER_DRAFT:
         $message = $this->t('Welcome @username, <p>Almost there! It look like your registration is in <b>draft</b>.</p> <p>Please go to your <span class="register_button"><a class="ecl-link ecl-link--cta" href=":smed_url" target="_blank">draft registration</a></span></p><p>If you have any questions <a href=":contact_form_url">contact us</a>.</p>', [
           '@username' => $account->getDisplayName(),
           ':smed_url' => $smed_url,
