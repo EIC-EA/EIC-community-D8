@@ -59,6 +59,10 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: access_check, applies_to: _group_pages_access_check }
+  eic_groups.smed_group_permission_route_access_check:
+    class: Drupal\eic_groups\Access\SmedGroupPermissionAccessCheck
+    tags:
+      - { name: access_check, applies_to: _smed_group_permission_access_check }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:

@@ -1149,4 +1149,14 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return $config->get('default_features') ?? [];
   }
 
+  /**
+   * Checks if a group is a SMED group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  public static function isSmedGroup(GroupInterface $group) {
+    return $group->hasField('field_smed_id') && !$group->get('field_smed_id')->isEmpty();
+  }
+
 }

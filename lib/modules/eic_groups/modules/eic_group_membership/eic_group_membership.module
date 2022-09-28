@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_group_membership\GroupMembershipHelper;
+use Drupal\eic_group_membership\Hooks\EntityOperations;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\grequest\Entity\Form\GroupMembershipApproveForm;
@@ -494,6 +495,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
   switch ($operation) {
     case 'delete':
       $group = $entity->getGroup();
+
       /** @var \Drupal\user\UserInterface $group_content_member */
       $group_content_member = $entity->getEntity();
       $group_owner = EICGroupsHelper::getGroupOwner($group);
@@ -507,12 +509,26 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
         break;
       }
 
+      // Admins cannot be removed from SMED groups.
+      if (
+        EICGroupsHelper::isSmedGroup($group) &&
+        !UserHelper::isPowerUser($group_content_member) &&
+        $group_admin_member = EICGroupsHelper::userIsGroupAdmin($group, $group_content_member)
+
+      ) {
+        $access = GroupAccessResult::forbidden()
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($group_admin_member)
+          ->addCacheableDependency($group);
+        break;
+      }
+
       $current_member = $group->getMember($account);
 
       // We deny access if the user is not a power user or doesn't have
       // permission to administer group members.
-      $has_delete_permission = ($account->hasPermission('administer members') ||
-        $account->hasPermission('delete memberships'));
+      $has_delete_permission = ($current_member->hasPermission('administer members') ||
+        $current_member->hasPermission('delete memberships'));
       $access = GroupAccessResult::forbiddenIf(
         $current_member instanceof GroupMembership &&
           !$has_delete_permission

@@ -48,6 +48,23 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->addRequirements(['_archived_route_access_check' => 'TRUE']);
     }
 
+    $check_smed_group_permission_routes = [
+      'entity.group.leave',
+    ];
+    foreach ($check_smed_group_permission_routes as $route_name) {
+      $route = $collection->get($route_name);
+
+      if (!$route instanceof Route) {
+        continue;
+      }
+      $requirements = $route->getRequirements();
+      if (isset($requirements['_group_permission'])) {
+        $requirements['_smed_group_permission_access_check'] = $requirements['_group_permission'];
+        unset($requirements['_group_permission']);
+        $route->addRequirements($requirements);
+      }
+    }
+
     $this->alterGroupInviteRoutes($collection);
     $this->alterGroupPagesRoutes($collection);
   }
