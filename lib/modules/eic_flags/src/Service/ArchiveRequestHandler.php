@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
@@ -16,8 +17,10 @@ use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupContentInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Service that provides logic to request entity archival.
@@ -217,18 +220,14 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
         $check_entity = $entity->getEntity();
       }
 
-      switch ($check_entity->getEntityTypeId()) {
-        case 'user':
-          $is_published = $check_entity->isActive();
-          break;
-
-        case 'group':
-          $is_published = (bool) $check_entity->get('status')->value;
-          break;
-
-        default:
-          $is_published = $check_entity->isPublished();
-          break;
+      if ($check_entity instanceof UserInterface) {
+        $is_published = $check_entity->isActive();
+      }
+      elseif ($check_entity instanceof EntityPublishedInterface) {
+        $is_published = $check_entity->isPublished();
+      }
+      else {
+        $is_published = TRUE;
       }
     }
 
