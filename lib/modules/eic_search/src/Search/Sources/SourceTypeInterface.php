@@ -209,6 +209,13 @@ interface SourceTypeInterface {
   public function getLabelFilterMyGroups(): string;
 
   /**
+   * Get the label to show when filter "my groups" is active.
+   *
+   * @return string
+   */
+  public function getLabelActiveFilterMyGroups(): string;
+
+  /**
    * Get fields to prefilter empty values.
    *
    * @return array

@@ -198,6 +198,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getLabelActiveFilterMyGroups(): string {
+    return $this->t('My groups', [], ['context' => 'eic_search']);
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getFieldsToFilterEmptyValue(): array {
     return [];
   }
