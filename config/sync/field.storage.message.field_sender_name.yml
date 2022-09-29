@@ -1,0 +1,21 @@
+uuid: 18b7367d-fd06-461d-9d9f-3f3d6bf1b0e0
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.field_sender_name
+field_name: field_sender_name
+entity_type: message
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

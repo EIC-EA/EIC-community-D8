@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.mail_body
     - field.field.message.notify_contact_global_confirm.field_sender
+    - field.field.message.notify_contact_global_confirm.field_sender_name
     - field.field.message.notify_contact_global_confirm.field_subject
     - message.template.notify_contact_global_confirm
 id: message.notify_contact_global_confirm.mail_body
@@ -13,10 +14,18 @@ bundle: notify_contact_global_confirm
 mode: mail_body
 content:
   partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
 hidden:
   field_sender: true
+  field_sender_name: true
   field_subject: true
   partial_0: true
   search_api_excerpt: true

@@ -5,3 +5,6 @@ text:
   -
     value: "<p>Dear <a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a>,<br />\r\n<br />\r\nWe are informing you through this email that your message has been successfully delivered!<br />\r\nHere's a copy of the message you just sent on the European Innovation Council platform:</p>\r\n\r\n<hr />\r\n<blockquote>\r\n<p>[message:field_body]</p>\r\n</blockquote>\r\n\r\n<hr />\r\n<p>One of our members will get back to you shortly.</p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
     format: full_html
+  -
+    value: "<p>Dear [message:field_sender_name],<br />\r\n<br />\r\nWe are informing you through this email that your message has been successfully delivered!<br />\r\nHere's a copy of the message you just sent on the European Innovation Council platform:</p>\r\n\r\n<hr />\r\n<blockquote>\r\n<p>[message:field_body]</p>\r\n</blockquote>\r\n\r\n<hr />\r\n<p>One of our members will get back to you shortly.</p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
+    format: full_html
