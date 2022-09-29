@@ -171,12 +171,14 @@ class OverviewPageGenerator extends CoreGenerator {
       'settings' => $block_settings + $this->getDefaultSettings(),
     ];
 
+    $random_image = $this->getRandomImage();
+
     $overview = OverviewPage::create([
       'title' => $title,
       'path' => $path_alias,
       'field_overview_block' => $block_field,
       'banner_image' => [
-        'target_id' => $this->getRandomImage()->id(),
+        'target_id' => $random_image ? $random_image->id() : NULL,
         'alt' => $title,
       ],
       'field_overview_id' => $page_id,
