@@ -336,6 +336,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $user_group_roles
         ) : FALSE,
       'label_my_groups' => $source->getLabelFilterMyGroups(),
+      'label_active_my_groups' => $source->getLabelActiveFilterMyGroups(),
       'open_registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
       'is_group_admin' => $current_group_route ?
         array_key_exists(

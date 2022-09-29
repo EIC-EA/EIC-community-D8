@@ -139,4 +139,18 @@ class OrganisationSourceType extends SourceType {
     return ['itm_group_field_vocab_topics'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('My organisations & content only', [], ['context' => 'eic_search']);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelActiveFilterMyGroups(): string {
+    return $this->t('My organisations', [], ['context' => 'eic_search']);
+  }
+
 }

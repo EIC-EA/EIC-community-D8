@@ -51,6 +51,20 @@ function eic_community_preprocess_message(&$variables) {
       _eic_community_preprocess_message_receiver_name($variables);
       break;
 
+    case 'notify_mt_contact_global':
+    case 'notify_contact_global_confirm':
+    case 'notify_contact_global_copy':
+      // If field_sender is empty, it means the global message was sent from an
+      // anonymous user. Therefore, we remove the body message that is supposed
+      // to be for authenticated users.
+      if ($message->get('field_sender')->isEmpty()) {
+        unset($variables['content']['partial_1']);
+      }
+      else {
+        unset($variables['content']['partial_2']);
+      }
+      break;
+
   }
 
   if (!$message instanceof MessageInterface
