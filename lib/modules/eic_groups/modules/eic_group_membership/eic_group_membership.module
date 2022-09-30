@@ -513,7 +513,6 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
         EICGroupsHelper::isSmedGroup($group) &&
         !UserHelper::isPowerUser($group_content_member) &&
         $group_admin_member = EICGroupsHelper::userIsGroupAdmin($group, $group_content_member)
-
       ) {
         $access = GroupAccessResult::forbidden()
           ->addCacheableDependency($entity)
