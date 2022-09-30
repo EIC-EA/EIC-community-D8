@@ -57,10 +57,8 @@ function eic_community_preprocess_message(&$variables) {
       // If field_sender is empty, it means the global message was sent from an
       // anonymous user. Therefore, we remove the body message that is supposed
       // to be for authenticated users.
-      if (
-        $message->get('field_sender')->isEmpty() ||
-        $message->get('field_sender')->value == 0
-      ) {
+      $sender = $message->get('field_sender')->entity;
+      if (!$sender || $sender->id() == 0) {
         unset($variables['content']['partial_1']);
       }
       else {
