@@ -40,6 +40,13 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
   protected $groupVisibilityStorage;
 
   /**
+   * The group joining method storage service.
+   *
+   * @var \Drupal\oec_group_flex\GroupJoiningMethodDatabaseStorageInterface
+   */
+  protected $groupJoiningMethodStorage;
+
+  /**
    * Constructs a new OECGroupFlexGroupDecorator.
    *
    * @param \Drupal\group_flex\GroupFlexGroup $groupFlexGroup
@@ -54,12 +61,23 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
    *   The group permissions manager.
    * @param \Drupal\group_flex\GroupFlexGroupType $flexGroupType
    *   The group type flex.
+   * @param \Drupal\oec_group_flex\GroupJoiningMethodDatabaseStorageInterface $groupVisibilityStorage
+   *   The group joining method storage service.
    */
-  public function __construct(GroupFlexGroup $groupFlexGroup, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupFlexGroupType $flexGroupType) {
+  public function __construct(
+    GroupFlexGroup $groupFlexGroup,
+    ConfigFactoryInterface $configFactory,
+    GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage,
+    EntityTypeManagerInterface $entityTypeManager,
+    GroupPermissionsManager $groupPermManager,
+    GroupFlexGroupType $flexGroupType,
+    GroupJoiningMethodDatabaseStorageInterface $groupJoiningMethodStorage
+  ) {
     parent::__construct($entityTypeManager, $groupPermManager, $flexGroupType);
     $this->groupFlexGroup = $groupFlexGroup;
     $this->oecGroupFlexConfigSettings = $configFactory->get('oec_group_flex.settings');
     $this->groupVisibilityStorage = $groupVisibilityStorage;
+    $this->groupJoiningMethodStorage = $groupJoiningMethodStorage;
   }
 
   /**
@@ -76,6 +94,16 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
       return GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
     }
     return $group_visibility_record->getType();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultJoiningMethods(GroupInterface $group): array {
+    if (!($item = $this->groupJoiningMethodStorage->load($group->id()))) {
+      return $this->groupFlexGroup->getDefaultJoiningMethods($group);
+    }
+    return [$item->getType()];
   }
 
   /**
