@@ -16,7 +16,6 @@ use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_group_membership\GroupMembershipHelper;
-use Drupal\eic_group_membership\Hooks\EntityOperations;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\grequest\Entity\Form\GroupMembershipApproveForm;
