@@ -25,6 +25,7 @@ use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\node\NodeInterface;
@@ -492,6 +493,9 @@ class EntityOperations implements ContainerInjectionInterface {
     elseif ($entity instanceof NodeInterface) {
       $access = $this->nodeFieldAccess($operation, $field_definition, $account, $items);
     }
+    elseif ($entity instanceof GroupContentInterface) {
+      $access = $this->groupContentFieldAccess($operation, $field_definition, $account, $items);
+    }
 
     return $access;
   }
@@ -593,6 +597,36 @@ class EntityOperations implements ContainerInjectionInterface {
         // At this point it means the user is just a group member and
         // therefore we deny access to edit the field.
         $access = AccessResult::forbidden();
+        break;
+
+    }
+
+    return $access;
+  }
+
+  /**
+   * Custom field access implementation for 'group_content' entity type.
+   *
+   * @see hook_entity_field_access()
+   * @see \Drupal\eic_groups\Hooks\EntityOperations::entityFieldAccess()
+   */
+  protected function groupContentFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    $access = AccessResult::neutral();
+    /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+    $entity = $items->getEntity();
+
+    switch ($entity->getGroupContentType()->getContentPlugin()->getPluginId()) {
+      case 'group_invitation':
+        if ($field_definition->getName() == 'invitee_mail') {
+          /** @var \Drupal\user\UserInterface $user */
+          $user = $entity->getEntity();
+
+          // If invited user is not anonymous and current user does not have
+          // permission to see email addresses, we deny access.
+          if (!$user->isAnonymous() && !$account->hasPermission('view user email addresses')) {
+            $access = AccessResult::forbidden();
+          }
+        }
         break;
 
     }
