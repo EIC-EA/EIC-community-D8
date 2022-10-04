@@ -229,6 +229,7 @@ class SolrSearchManager {
   public function buildSortFacets(?array $facets_value, ?string $sort_value) {
     $this->facets = $facets_value;
     $this->interests = [];
+    $sorts = [];
 
     if (array_key_exists('interests', $this->facets)) {
       $this->interests = $this->facets['interests'];
