@@ -2,3 +2,7 @@ services:
   eic_moderation.content_moderation_manager:
     class: 'Drupal\eic_moderation\Service\ContentModerationManager'
     arguments: ['@entity_type.manager', '@content_moderation.moderation_information']
+
+  eic_moderation.helper:
+    class: 'Drupal\eic_moderation\ModerationHelper'
+    arguments: ['@content_moderation.moderation_information']
