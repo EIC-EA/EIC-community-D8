@@ -50,7 +50,7 @@
         "drupal/facets": "^2.0",
         "drupal/field_group": "^3.2",
         "drupal/flag": "^4.0@beta",
-        "drupal/flag_search_api": "^1.5",
+        "drupal/flag_search_api": "1.x-dev#3ffb747090f79e32943ebcc6a1b5fa01976e29c2",
         "drupal/fragments": "^2.0",
         "drupal/gcontent_moderation": "^1.0@beta",
         "drupal/ginvite": "^2.0.0",

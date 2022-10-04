@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65f759b1f9067bcf6157931ae940c473",
+    "content-hash": "3e2659cbb502eab40d96aa8c12bbd882",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -106,16 +106,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.237.0",
+            "version": "3.237.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "9ecb0aac2c8ad78585689d1c3e71817310aa69f1"
+                "reference": "6027eb8b9316d208537fba1c12e53e379a4574b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9ecb0aac2c8ad78585689d1c3e71817310aa69f1",
-                "reference": "9ecb0aac2c8ad78585689d1c3e71817310aa69f1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6027eb8b9316d208537fba1c12e53e379a4574b6",
+                "reference": "6027eb8b9316d208537fba1c12e53e379a4574b6",
                 "shasum": ""
             },
             "require": {
@@ -191,7 +191,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-09-29T18:16:17+00:00"
+            "time": "2022-10-03T18:15:06+00:00"
         },
         {
             "name": "chi-teck/drupal-code-generator",
@@ -4643,17 +4643,11 @@
         },
         {
             "name": "drupal/flag_search_api",
-            "version": "1.5.0",
+            "version": "dev-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flag_search_api.git",
-                "reference": "8.x-1.5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flag_search_api-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "e621e2c7d875a85ed8440c019a0c1f679a70caa0"
+                "reference": "3ffb747090f79e32943ebcc6a1b5fa01976e29c2"
             },
             "require": {
                 "drupal/core": "^8 || ^9",
@@ -4662,12 +4656,15 @@
             },
             "type": "drupal-module",
             "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1648199417",
+                    "version": "8.x-1.4+5-dev",
+                    "datestamp": "1573290484",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
                 },
                 "patches_applied": {
@@ -4696,7 +4693,8 @@
             "homepage": "https://www.drupal.org/project/flag_search_api",
             "support": {
                 "source": "https://git.drupalcode.org/project/flag_search_api"
-            }
+            },
+            "time": "2019-10-31T09:25:15+00:00"
         },
         {
             "name": "drupal/fragments",
@@ -6748,21 +6746,21 @@
         },
         {
             "name": "drupal/profile",
-            "version": "1.4.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/profile.git",
-                "reference": "8.x-1.4"
+                "reference": "8.x-1.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/profile-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "253fd577c3b791c93747bb910ad2ae8e67d71eed"
+                "url": "https://ftp.drupal.org/files/projects/profile-8.x-1.6.zip",
+                "reference": "8.x-1.6",
+                "shasum": "b5706898e4e5a6403ee36d2cc7bdeb76cdaa7703"
             },
             "require": {
-                "drupal/core": "^8.9 || ^9 || ^10",
-                "drupal/entity": "^1.0-rc2"
+                "drupal/core": "^9 || ^10",
+                "drupal/entity": "^1.0"
             },
             "require-dev": {
                 "drupal/token": "^1.7"
@@ -6770,8 +6768,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1652430373",
+                    "version": "8.x-1.6",
+                    "datestamp": "1664796377",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -6809,7 +6807,7 @@
                 }
             ],
             "description": "Provides configurable user profiles.",
-            "homepage": "http://drupal.org/project/profile",
+            "homepage": "https://drupal.org/project/profile",
             "support": {
                 "source": "https://git.drupalcode.org/project/profile"
             }
@@ -6883,17 +6881,17 @@
         },
         {
             "name": "drupal/raven",
-            "version": "3.2.18",
+            "version": "3.2.19",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/raven.git",
-                "reference": "3.2.18"
+                "reference": "3.2.19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/raven-3.2.18.zip",
-                "reference": "3.2.18",
-                "shasum": "90f3ee87e9a15c2114e77be511dbef14204cb9f3"
+                "url": "https://ftp.drupal.org/files/projects/raven-3.2.19.zip",
+                "reference": "3.2.19",
+                "shasum": "98d3e6ff947cafb3b28d6341ccc995fb5aeda301"
             },
             "require": {
                 "drupal/core": "^8 || ^9 || ^10",
@@ -6905,8 +6903,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "3.2.18",
-                    "datestamp": "1662482841",
+                    "version": "3.2.19",
+                    "datestamp": "1664734528",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -20567,6 +20565,7 @@
         "drupal/default_content": 15,
         "drupal/entity_usage": 10,
         "drupal/flag": 10,
+        "drupal/flag_search_api": 20,
         "drupal/gcontent_moderation": 10,
         "drupal/group_flex": 10,
         "drupal/group_permissions": 15,
