@@ -35,9 +35,17 @@ class ProcessorVideo extends DocumentProcessor {
    * {@inheritdoc}
    */
   public function process(Document &$document, array $fields, array $items = []): void {
+    // Try to get the teaser from the node.
     $fid = array_key_exists('its_content_teaser_image_fid', $fields) ?
       $fields['its_content_teaser_image_fid'] :
       NULL;
+
+    // If not available, fallback to the video thumbnail (auto-generated).
+    if (empty($fid)) {
+      $fid = array_key_exists('its_content_field_video_media_thumbnail_fid', $fields) ?
+      $fields['its_content_field_video_media_thumbnail_fid'] :
+      NULL;
+    }
 
     $teaser_relative = '';
 
