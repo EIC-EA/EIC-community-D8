@@ -14,9 +14,58 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+
+/**
+ * Determines if the given entity can be shared to social media.
+ *
+ * @todo This is business logic, it should be moved to the modules.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity.
+ *
+ * @return bool
+ *   TRUE if entity can be shared.
+ */
+function _eic_community_can_use_social_share(EntityInterface $entity) {
+  $access = FALSE;
+  if ($entity instanceof NodeInterface) {
+    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+    if (!$group && $entity->hasField(PrivateContentConst::FIELD_NAME)
+      && !$entity->get(PrivateContentConst::FIELD_NAME)->value) {
+      $access = TRUE;
+    }
+    elseif ($group instanceof GroupInterface) {
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+      if (in_array($group->bundle(), ['event', 'group'])
+        && !GroupsModerationHelper::isBlocked($group)
+        && $visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      ) {
+        $access = TRUE;
+      }
+    }
+  }
+  elseif ($entity instanceof GroupInterface) {
+    if (in_array($entity->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($entity)) {
+      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($entity->id());
+      if ($visibility instanceof GroupVisibilityRecordInterface
+        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+        $access = TRUE;
+      }
+    }
+  }
+  else {
+    // For any other entity we allow sharing.
+    $access = TRUE;
+  }
+  return $access;
+}
 
 /**
  * Returns the build of the social share block.

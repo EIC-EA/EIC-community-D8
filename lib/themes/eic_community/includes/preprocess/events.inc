@@ -7,13 +7,10 @@
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
-use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -55,12 +52,7 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
 
       $existing_tags = $variables['#cache']['tags'] ?? [];
       $variables['#cache']['tags'] = array_merge($existing_tags, $group->getCacheTags());
-      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-      if (in_array($group->bundle(), [
-          'event',
-          'group',
-        ]) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
-        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+      if (_eic_community_can_use_social_share($entity)) {
         $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
       }
     }
