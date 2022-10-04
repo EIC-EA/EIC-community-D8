@@ -508,10 +508,13 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
         break;
       }
 
+      /** @var \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper */
+      $eic_ws_helper = \Drupal::service('eic_webservices.ws_helper');
+
       // Admins cannot be removed from SMED groups.
       if (
-        EICGroupsHelper::isSmedGroup($group) &&
-        !UserHelper::isPowerUser($group_content_member) &&
+        $eic_ws_helper->isCreatedThroughSmed($group) &&
+        !UserHelper::isPowerUser($account) &&
         $group_admin_member = EICGroupsHelper::userIsGroupAdmin($group, $group_content_member)
       ) {
         $access = GroupAccessResult::forbidden()
@@ -523,14 +526,11 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
 
       $current_member = $group->getMember($account);
 
-      // We deny access if the user is not a power user or doesn't have
-      // permission to administer group members.
-      $has_delete_permission = ($current_member->hasPermission('administer members') ||
-        $current_member->hasPermission('delete memberships'));
-      $access = GroupAccessResult::forbiddenIf(
-        $current_member instanceof GroupMembership &&
-          !$has_delete_permission
-        )
+      // We deny access if the user doesn't have permission to administer group
+      // members or delete members.
+      $has_delete_permission = ($group->hasPermission('administer members', $account) ||
+        $group->hasPermission('delete memberships', $account));
+      $access = GroupAccessResult::forbiddenIf(!$has_delete_permission)
         ->addCacheableDependency($account)
         ->addCacheableDependency($entity)
         ->addCacheableDependency($group);

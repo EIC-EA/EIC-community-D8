@@ -2,7 +2,11 @@
 
 namespace Drupal\eic_groups\Access;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_webservices\Utility\EicWsHelper;
+use Drupal\group\Access\GroupContentCreateEntityAccessCheck as GroupContentCreateEntityAccessCheckBase;
 use Drupal\group\Access\GroupPermissionAccessCheck;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\Core\Access\AccessResult;
@@ -15,6 +19,23 @@ use Symfony\Component\Routing\Route;
  * $module.group_permissions.yml files.
  */
 class SmedGroupPermissionAccessCheck extends GroupPermissionAccessCheck {
+
+  /**
+   * The EIC Webservices helper.
+   *
+   * @var \Drupal\eic_webservices\Utility\EicWsHelper
+   */
+  protected $eicWsHelper;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper
+   *   The EIC Webservices helper.
+   */
+  public function __construct(EicWsHelper $eic_ws_helper) {
+    $this->eicWsHelper = $eic_ws_helper;
+  }
 
   /**
    * Checks access.
@@ -50,7 +71,7 @@ class SmedGroupPermissionAccessCheck extends GroupPermissionAccessCheck {
     }
 
     // User cannot leave from SMED groups.
-    if (EICGroupsHelper::isSmedGroup($group)) {
+    if ($this->eicWsHelper->isCreatedThroughSmed($group)) {
       return AccessResult::forbidden()
         ->addCacheableDependency($account)
         ->addCacheableDependency($group);

@@ -61,6 +61,7 @@ services:
       - { name: access_check, applies_to: _group_pages_access_check }
   eic_groups.smed_group_permission_route_access_check:
     class: Drupal\eic_groups\Access\SmedGroupPermissionAccessCheck
+    arguments: ['@?eic_webservices.ws_helper']
     tags:
       - { name: access_check, applies_to: _smed_group_permission_access_check }
   eic_groups.route_subscriber:
