@@ -167,8 +167,8 @@ function _group_about_group_tab($variables, &$sections) {
     $user = $owner->getUser();
 
     return [
-      'title' => realname_load($user),
-      'path' => $user->toUrl(),
+      'title' => $user->getDisplayName(),
+      'path' => $user->toUrl()->access() ? $user->toUrl() : '',
     ];
   }, $owners);
 
@@ -184,13 +184,13 @@ function _group_about_group_tab($variables, &$sections) {
       $user = $admin->getUser();
 
       return [
-        'title' => realname_load($user),
-        'path' => $user->toUrl(),
+        'title' => $user->getDisplayName(),
+        'path' => $user->toUrl()->access() ? $user->toUrl() : '',
       ];
     }, $admins);
 
     $about_items[] = [
-      'title' => t('Administrator'),
+      'title' => t('Administrators'),
       'items' => $admins,
     ];
   }
@@ -230,9 +230,7 @@ function _group_about_group_tab($variables, &$sections) {
 
   $about_items[] = [
     'title' => t('Group description'),
-    'content' => $group->hasField('field_body') ?
-      $group->get('field_body')->value :
-      '',
+    'content' => $group->hasField('field_body') ? $group->get('field_body')->value : '',
   ];
 
   $sections[] = [

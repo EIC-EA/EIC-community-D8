@@ -92,4 +92,3 @@ permissions:
   - 'view own unpublished media'
   - 'view private content'
   - 'view recommend_group'
-  - 'view user email addresses'

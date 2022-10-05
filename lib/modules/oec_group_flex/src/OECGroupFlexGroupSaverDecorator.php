@@ -53,6 +53,13 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   private $solrDocumentProcessor;
 
   /**
+   * The group joining method storage service.
+   *
+   * @var \Drupal\oec_group_flex\GroupJoiningMethodDatabaseStorageInterface
+   */
+  protected $groupJoiningMethodStorage;
+
+  /**
    * Constructs a new GroupFlexGroupSaver object.
    *
    * @param \Drupal\group_flex\GroupFlexGroupSaver $groupFlexSaver
@@ -71,6 +78,8 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    *   The group joining method manager.
    * @param \Drupal\group_flex\GroupFlexGroup $groupFlex
    *   The group flex.
+   * @param \Drupal\oec_group_flex\GroupJoiningMethodDatabaseStorageInterface $groupVisibilityStorage
+   *   The group joining method storage service.
    */
   public function __construct(
     GroupFlexGroupSaver $groupFlexSaver,
@@ -80,12 +89,19 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     GroupPermissionsManager $groupPermManager,
     GroupVisibilityManager $visibilityManager,
     GroupJoiningMethodManager $joiningMethodManager,
-    GroupFlexGroup $groupFlex
+    GroupFlexGroup $groupFlex,
+    GroupJoiningMethodDatabaseStorageInterface $groupJoiningMethodStorage
   ) {
-    parent::__construct($entityTypeManager, $groupPermManager,
-      $visibilityManager, $joiningMethodManager, $groupFlex);
+    parent::__construct(
+      $entityTypeManager,
+      $groupPermManager,
+      $visibilityManager,
+      $joiningMethodManager,
+      $groupFlex
+    );
     $this->groupFlexSaver = $groupFlexSaver;
     $this->groupVisibilityStorage = $groupVisibilityStorage;
+    $this->groupJoiningMethodStorage = $groupJoiningMethodStorage;
     $this->moduleHandler = $module_handler;
   }
 
@@ -232,9 +248,6 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
         'status' => 1,
       ]);
     }
-    else {
-      $groupPermission->setNewRevision(TRUE);
-    }
 
     return $groupPermission;
   }
@@ -318,6 +331,9 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     // Save original permissions.
     $original_permissions = $groupPermission->getPermissions();
 
+    /** @var \Drupal\group_flex\Plugin\GroupJoiningMethodBase|null $enabled_plugin */
+    $enabled_plugin = NULL;
+
     /** @var \Drupal\group_flex\Plugin\GroupJoiningMethodBase $pluginInstance */
     foreach ($this->getAllJoiningMethods() as $id => $pluginInstance) {
       // Checks if the method is enabled.
@@ -326,9 +342,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       $allowedVisibilities = $pluginInstance->getVisibilityOptions();
       $isAllowed = in_array($this->groupFlex->getGroupVisibility($group), $allowedVisibilities, TRUE);
       if ($isEnabled && $isAllowed) {
-        foreach ($pluginInstance->getGroupPermissions($group) as $role => $rolePermissions) {
-          $groupPermission = $this->addRolePermissionsToGroup($groupPermission, $role, $rolePermissions);
-        }
+        $enabled_plugin = $pluginInstance;
         continue;
       }
 
@@ -340,8 +354,29 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       }
     }
 
+    if ($enabled_plugin) {
+      foreach ($enabled_plugin->getGroupPermissions($group) as $role => $rolePermissions) {
+        $groupPermission = $this->addRolePermissionsToGroup($groupPermission, $role, $rolePermissions);
+      }
+    }
+
+    if (!($item = $this->groupJoiningMethodStorage->load($group->id()))) {
+      $item = $this->groupJoiningMethodStorage->create([
+        'id' => 0,
+        'gid' => (int) $group->id(),
+        'type' => '',
+      ]);
+    }
+
+    if ($item->getType() !== $enabled_plugin->getPluginId()) {
+      $item->setType($enabled_plugin->getPluginId());
+    }
+
     // Don't save group permissions if they didn't change.
-    if ($groupPermission->getPermissions() == $original_permissions) {
+    if (
+      $item->getType() === $enabled_plugin->getPluginId() &&
+      $groupPermission->getPermissions() == $original_permissions
+    ) {
       return;
     }
 
@@ -354,6 +389,8 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       throw new EntityStorageException('Group permissions are not saved correctly, because:' . $message);
     }
     $groupPermission->save();
+
+    $this->groupJoiningMethodStorage->save($item);
 
     // Invalidates group cache tags.
     Cache::invalidateTags($group->getCacheTagsToInvalidate());
