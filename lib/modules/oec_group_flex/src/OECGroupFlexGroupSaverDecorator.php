@@ -232,9 +232,6 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
         'status' => 1,
       ]);
     }
-    else {
-      $groupPermission->setNewRevision(TRUE);
-    }
 
     return $groupPermission;
   }
