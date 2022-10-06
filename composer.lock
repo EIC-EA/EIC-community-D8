@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e2659cbb502eab40d96aa8c12bbd882",
+    "content-hash": "82f30fa2f36a3c9471a89a5f78bcf0a9",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4677,10 +4677,6 @@
             ],
             "authors": [
                 {
-                    "name": "tamerzg",
-                    "homepage": "https://www.drupal.org/user/464564"
-                },
-                {
                     "name": "ws.agency",
                     "homepage": "https://www.drupal.org/user/2851415"
                 },
@@ -4970,7 +4966,8 @@
                     "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
                     "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch",
                     "2916907 - Group content tokens for label and referenced entity": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch",
-                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch"
+                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch",
+                    "3294949 - Group Permission Callbacks Create White Screen Error on Group Type Permissions Page": "https://www.drupal.org/files/issues/2022-07-27/group-3294949-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5191,7 +5188,9 @@
                     }
                 },
                 "patches_applied": {
-                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch"
+                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch",
+                    "3210227 - Column not found: 1054 Unknown column 'revision_log'": "https://www.drupal.org/files/issues/2022-09-27/3210227-8-revision_log_problem.patch",
+                    "3221828 - More than one group breaks permission tab in Drupal 9.2.0": "https://git.drupalcode.org/project/group_permissions/-/merge_requests/11.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
