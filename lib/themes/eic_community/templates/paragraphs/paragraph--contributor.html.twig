@@ -1,1 +1,3 @@
-{% include "@theme/patterns/components/author.html.twig" with author only %}
+{% include "@theme/patterns/components/author.html.twig" with author|default({})|merge({
+  eic_icon_path: eic_icon_path
+}) %}
