@@ -60,7 +60,21 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
+    /** @var \Drupal\taxonomy\TermInterface $term */
     $term = $route_match->getParameter('taxonomy_term');
+
+    if ($term->bundle() == Topics::TERM_VOCABULARY_TOPICS_ID) {
+      // Add the vocabulary in the breadcrumb.
+      /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
+      if ($vocabulary = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($term->bundle())) {
+        $breadcrumb->addLink(
+          Link::createFromRoute($vocabulary->label(), 'eic_overviews.taxonomy.topics')
+        );
+
+        $breadcrumb->addCacheableDependency($vocabulary);
+      }
+    }
+
     // Breadcrumb needs to have terms cacheable metadata as a cacheable
     // dependency even though it is not shown in the breadcrumb because e.g. its
     // parent might have changed.

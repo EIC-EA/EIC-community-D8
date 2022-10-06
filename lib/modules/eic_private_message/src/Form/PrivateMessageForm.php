@@ -6,7 +6,6 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_messages\Service\MessageBus;
-use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_private_message\PrivateMessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
@@ -68,7 +67,7 @@ class PrivateMessageForm extends FormBase {
    *   The EIC User helper service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
-   * @param MessageBus $bus
+   * @param \Drupal\eic_messages\Service\MessageBus $bus
    *   The message bus service.
    * @param \Drupal\eic_private_message\PrivateMessageHelper $private_message_helper
    *   The private message helper service.
@@ -129,7 +128,7 @@ class PrivateMessageForm extends FormBase {
     $form['title'] = [
       '#type' => 'html_tag',
       '#tag' => 'h2',
-      '#value' => $this->t('Contact @user', ['@user' => $this->userHelper->getFullName($user)])
+      '#value' => $this->t('Contact @user', ['@user' => $this->userHelper->getFullName($user)]),
     ];
 
     $form['from'] = [
@@ -145,9 +144,8 @@ class PrivateMessageForm extends FormBase {
         ['context' => 'eic_private_message']
       ),
       '#required' => TRUE,
-      '#attributes' => [
-        'readonly' => 'readonly',
-      ],
+      '#disabled' => TRUE,
+      '#access' => FALSE,
     ];
 
     if ($group instanceof GroupInterface) {

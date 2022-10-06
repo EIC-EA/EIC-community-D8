@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the OEC Group Flex module.
  */
 
+use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupType;
+
 /**
  * Implements hook_schema().
  */
@@ -46,6 +49,43 @@ function oec_group_flex_schema() {
     ],
   ];
 
+  $schema['oec_group_joining_method'] = [
+    'description' => 'Stores group joining method information.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique record ID.',
+      ],
+      'gid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The group ID.',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The Group visibility plugin id.',
+      ],
+      'options' => [
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'The group joining method options of the item.',
+        'serialize' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'type' => ['type'],
+      'gid' => ['gid'],
+    ],
+  ];
+
   return $schema;
 }
 
@@ -75,6 +115,56 @@ function oec_group_flex_update_9001(&$sandbox) {
       $group_visibility->setOptions($newOptions);
 
       $group_visibility_storage->save($group_visibility);
+    }
+  }
+}
+
+/**
+ * Update OEC Group Flex Schema tables.
+ */
+function oec_group_flex_update_9002(&$sandbox) {
+  $tables = oec_group_flex_schema();
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  foreach ($tables as $table_name => $table) {
+    // If table doesn't exist we create it.
+    if (!$schema->tableExists($table_name)) {
+      $schema->createTable($table_name, $table);
+    }
+  }
+}
+
+/**
+ * Update group visibility options to new data structure.
+ */
+function oec_group_flex_update_9003(&$sandbox) {
+  /** @var \Drupal\group_flex\GroupFlexGroupType $groupFlexType */
+  $groupFlexType = \Drupal::service('group_flex.group_type');
+  /** @var \Drupal\oec_group_flex\GroupJoiningMethodDatabaseStorage $groupJoiningMethodStorage */
+  $groupJoiningMethodStorage = \Drupal::service('oec_group_flex.group_joining_method.storage');
+  /** @var \Drupal\group_flex\GroupFlexGroup $groupFlex */
+  $groupFlex = \Drupal::service('group_flex.group');
+  $group_types = GroupType::loadMultiple();
+
+  foreach ($group_types as $group_type) {
+    if ($groupFlexType->hasFlexEnabled($group_type)) {
+      $query = \Drupal::entityQuery('group');
+      $query->condition('type', $group_type->id());
+      if ($results = $query->execute()) {
+        foreach ($results as $gid) {
+          $group = Group::load($gid);
+          $enabledMethods = $groupFlexType->getEnabledJoiningMethodPlugins($group_type);
+          $defaultOptions = $groupFlex->getDefaultJoiningMethods($group);
+          $joining_method_type = !empty($defaultOptions) ? reset($defaultOptions) : array_key_first($enabledMethods);
+
+          $joining_method_item = $groupJoiningMethodStorage->create([
+            'id' => 0,
+            'gid' => (int) $group->id(),
+            'type' => $joining_method_type,
+          ]);
+          $groupJoiningMethodStorage->save($joining_method_item);
+        }
+      }
     }
   }
 }

@@ -34,12 +34,8 @@
     "drupal/field_group": {
       "HTML5 Validation Prevents Submission in Tabs": "https://www.drupal.org/files/issues/2021-07-22/2969051-37.patch"
     },
-    "drupal/ginvite": {
-      "3209902 - More graceful handling of missing plugin": "https://www.drupal.org/files/issues/2022-03-30/ginvite-fix__invite_route_permission-3209902-5.patch"
-    },
     "drupal/group": {
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
-      "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
       "2815971 - More contexts needed": "https://www.drupal.org/files/issues/2021-02-19/2815971-28.patch",
       "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-05-17/incorrect-access-check-on-media-library-3071489-27.patch",
       "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
@@ -48,7 +44,9 @@
       "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch"
     },
     "drupal/group_permissions": {
-      "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch"
+      "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch",
+      "3210227 - Column not found: 1054 Unknown column 'revision_log'": "https://www.drupal.org/files/issues/2022-09-27/3210227-8-revision_log_problem.patch",
+      "3221828 - More than one group breaks permission tab in Drupal 9.2.0": "https://git.drupalcode.org/project/group_permissions/-/merge_requests/11.patch"
     },
     "drupal/group_content_menu": {
       "3209011 - Active trail is cached incorrectly": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch"
@@ -99,8 +97,7 @@
       "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
     },
     "drupal/subpathauto": {
-      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch",
-      "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
+      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2022-02-04/group-content-add-create-3130139-11.patch"
     },
     "drupal/views_data_export": {
       "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",

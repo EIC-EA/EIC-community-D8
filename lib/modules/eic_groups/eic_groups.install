@@ -641,9 +641,16 @@ function eic_groups_update_9012(&$sandbox) {
 }
 
 /**
+ * Delete old group_permission revisions.
+ */
+function eic_groups_update_9013() {
+  _eic_groups_delete_old_group_permission_revisions();
+}
+
+/**
  * Add delete memberships permission to GO/GA.
  */
-function eic_groups_update_9013(&$sandbox) {
+function eic_groups_update_9014(&$sandbox) {
   $batch_builder = (new BatchBuilder())
     ->setTitle(t('Processing Batch to modify group permissions.'))
     ->setFinishCallback('_eic_groups_batch_finished')
@@ -804,11 +811,6 @@ function _eic_groups_batch_remove_group_permission(string $permission_to_remove,
         [$permission_to_remove]
       );
     }
-
-    $group_permission->setNewRevision();
-    $group_permission->setRevisionUserId(1);
-    $group_permission->setRevisionCreationTime(time());
-    $group_permission->setRevisionLogMessage(t('Add "administer membership requests" permission to group owner and admin roles.'));
 
     if (count($group_permission->validate()) > 0) {
       continue;

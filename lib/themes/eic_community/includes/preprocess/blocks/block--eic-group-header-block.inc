@@ -200,7 +200,13 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
     // We set the recommend flag in the 2nd position.
     if ($name === 'recommend_content') {
-      $flags[1] = $flag;
+      if (count($flags) > 2) {
+        $flags = array_merge(array_slice($flags, 0, 1), [$flag], array_slice($flags, 1));
+      }
+      else {
+        $flags[1] = $flag;
+      }
+
       continue;
     }
 
