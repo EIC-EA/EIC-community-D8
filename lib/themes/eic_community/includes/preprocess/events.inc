@@ -128,22 +128,27 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   }
 
   // Event detail items.
-  $items = [
-    [
+  $items = [];
+  if (!empty($location_types)) {
+    $items[] = [
       'content' => ucfirst(implode(' & ', $location_types)),
       'icon' => [
         'type' => 'custom',
         'name' => 'tag',
       ],
-    ],
-    [
+    ];
+  }
+  if (!$entity->get('field_date_range')->isEmpty()) {
+    $items[] = [
       'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
       'icon' => [
         'type' => 'custom',
         'name' => 'calendar',
       ],
-    ],
-    [
+    ];
+  }
+  if (!$entity->get($fields_map[$entity_type]['languages'])->isEmpty()) {
+    $items[] = [
       'content' => implode(', ', array_map(function (Term $term) {
         return $term->label();
       }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
@@ -151,8 +156,8 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
         'type' => 'custom',
         'name' => 'glob',
       ],
-    ],
-  ];
+    ];
+  }
 
   // Adds location address in the beginning of events detail items.
   if ($location_formatted) {
