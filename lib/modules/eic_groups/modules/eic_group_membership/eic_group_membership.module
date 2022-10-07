@@ -497,6 +497,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       $group = $entity->getGroup();
       $is_power_user = UserHelper::isPowerUser($account);
       $deny_moderation_states = [
+        GroupsModerationHelper::GROUP_ARCHIVED_STATE,
         GroupsModerationHelper::GROUP_BLOCKED_STATE,
         GroupsModerationHelper::GROUP_PENDING_STATE,
         GroupsModerationHelper::GROUP_REFUSED_STATE,
@@ -514,6 +515,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       $group = $entity->getGroup();
       $is_power_user = UserHelper::isPowerUser($account);
       $deny_moderation_states = [
+        GroupsModerationHelper::GROUP_ARCHIVED_STATE,
         GroupsModerationHelper::GROUP_BLOCKED_STATE,
         GroupsModerationHelper::GROUP_PENDING_STATE,
         GroupsModerationHelper::GROUP_REFUSED_STATE,
