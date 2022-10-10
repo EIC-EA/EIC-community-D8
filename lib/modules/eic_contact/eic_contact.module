@@ -34,9 +34,6 @@ function eic_contact_entity_type_alter(array &$entity_types) {
   $entity_types['contact_form']->setHandlerClass('form',
     ['edit' => 'Drupal\eic_contact\ContactFormEditForm']
   );
-//  $entity_types['message_form']->setHandlerClass('form',
-//    ['default' => 'Drupal\eic_contact\MessageForm']
-//  );
 }
 
 /**
