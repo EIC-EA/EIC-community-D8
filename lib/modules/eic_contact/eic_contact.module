@@ -37,15 +37,6 @@ function eic_contact_entity_type_alter(array &$entity_types) {
 }
 
 /**
- * Implements hook_entity_type_build().
- */
-function eic_contact_entity_type_build(&$entity_types) {
-  if (isset($entity_types['contact_form'])) {
-    $entity_types['contact_form']->setClass('Drupal\eic_contact\Entity\ContactForm');
-  }
-}
-
-/**
  * Implements hook_form_alter.
  *
  * @param $form
