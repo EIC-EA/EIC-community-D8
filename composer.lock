@@ -1848,7 +1848,8 @@
                     }
                 },
                 "patches_applied": {
-                    "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch"
+                    "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch",
+                    "2995992 - Country field should display the \"- Select -\" option to match core behavior": "https://www.drupal.org/files/issues/2022-03-14/2995992-56.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -4677,10 +4678,6 @@
             ],
             "authors": [
                 {
-                    "name": "tamerzg",
-                    "homepage": "https://www.drupal.org/user/464564"
-                },
-                {
                     "name": "ws.agency",
                     "homepage": "https://www.drupal.org/user/2851415"
                 },
@@ -5143,7 +5140,9 @@
                     }
                 },
                 "patches_applied": {
-                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch"
+                    "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch",
+                    "3210227 - Column not found: 1054 Unknown column 'revision_log'": "https://www.drupal.org/files/issues/2022-09-27/3210227-8-revision_log_problem.patch",
+                    "3221828 - More than one group breaks permission tab in Drupal 9.2.0": "https://git.drupalcode.org/project/group_permissions/-/merge_requests/11.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

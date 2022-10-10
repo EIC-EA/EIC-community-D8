@@ -203,12 +203,6 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
       throw new EntityStorageException('Group permissions are not saved correctly, because:' . $message);
     }
 
-    // Saves the GroupPermission object with a new revision.
-    $group_permissions->setNewRevision();
-    $group_permissions->setRevisionUserId(\Drupal::currentUser()->id());
-    $group_permissions->setRevisionCreationTime(\Drupal::service('datetime.time')
-      ->getRequestTime());
-    $group_permissions->setRevisionLogMessage('Group features enabled/disabled.');
     $group_permissions->save();
   }
 
@@ -329,7 +323,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   protected function getExistingMenuItem(MenuLinkContentInterface $menu_item) {
     $url = $menu_item->getUrlObject();
 
-    /** @var MenuLinkContentInterface[] $items */
+    /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $items */
     $items = $this->menuLinkContentStorage->loadByProperties([
       'menu_name' => $menu_item->getMenuName(),
       'link__uri' => $url->toUriString(),

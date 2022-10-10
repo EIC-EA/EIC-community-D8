@@ -280,14 +280,9 @@ class UpdateAllGroupPermissionsForm extends FormBase {
         continue;
       }
 
-      // Saves the GroupPermission object with a new revision.
-      $groupPermissions->setNewRevision();
-      $groupPermissions->setRevisionUserId(1);
-      $groupPermissions->setRevisionCreationTime($this->datetime->getRequestTime());
-      $groupPermissions->setRevisionLogMessage('Group features enabled/disabled.');
       $groupPermissions->save();
 
-      // Saves group visibilit + joining methods if flex feature is enabled for
+      // Saves group visibility + joining methods if flex feature is enabled for
       // the group.
       if ($this->groupTypeFlex->hasFlexEnabled($group_type)) {
         $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
