@@ -35,19 +35,24 @@ use Drupal\taxonomy\TermInterface;
 function _eic_community_can_use_social_share(EntityInterface $entity) {
   $access = FALSE;
   if ($entity instanceof NodeInterface) {
-    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-    if (!$group && $entity->hasField(PrivateContentConst::FIELD_NAME)
-      && !$entity->get(PrivateContentConst::FIELD_NAME)->value) {
-      $access = TRUE;
+    if (!\Drupal::service('eic_moderation.helper')->isPublished($entity)) {
+      $access = FALSE;
     }
-    elseif ($group instanceof GroupInterface) {
-      $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-      if (in_array($group->bundle(), ['event', 'group'])
-        && !GroupsModerationHelper::isBlocked($group)
-        && $visibility instanceof GroupVisibilityRecordInterface
-        && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
-      ) {
+    else {
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if (!$group && $entity->hasField(PrivateContentConst::FIELD_NAME)
+        && !$entity->get(PrivateContentConst::FIELD_NAME)->value) {
         $access = TRUE;
+      }
+      elseif ($group instanceof GroupInterface) {
+        $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+        if (in_array($group->bundle(), ['event', 'group'])
+          && !GroupsModerationHelper::isBlocked($group)
+          && $visibility instanceof GroupVisibilityRecordInterface
+          && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+        ) {
+          $access = TRUE;
+        }
       }
     }
   }
