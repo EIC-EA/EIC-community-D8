@@ -14,7 +14,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
-use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
@@ -47,7 +46,7 @@ function _eic_community_can_use_social_share(EntityInterface $entity) {
       elseif ($group instanceof GroupInterface) {
         $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
         if (in_array($group->bundle(), ['event', 'group'])
-          && !GroupsModerationHelper::isBlocked($group)
+          && \Drupal::service('eic_moderation.helper')->isPublished($group)
           && $visibility instanceof GroupVisibilityRecordInterface
           && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
         ) {
@@ -57,7 +56,8 @@ function _eic_community_can_use_social_share(EntityInterface $entity) {
     }
   }
   elseif ($entity instanceof GroupInterface) {
-    if (in_array($entity->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($entity)) {
+    if (in_array($entity->bundle(), ['event', 'group'])
+      && \Drupal::service('eic_moderation.helper')->isPublished($entity)) {
       $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($entity->id());
       if ($visibility instanceof GroupVisibilityRecordInterface
         && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
