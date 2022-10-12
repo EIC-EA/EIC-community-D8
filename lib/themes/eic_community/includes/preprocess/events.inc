@@ -117,11 +117,9 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
     $signup_link = $entity->get('field_link')->uri
   ) {
     $action = [
-      'title' => t('Sign up to this event', [], ['context' => 'eic_community']),
-      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [],
-        ['context' => 'eic_community']),
+      'title' => t('Register to this event', [], ['context' => 'eic_community']),
       'action' => [
-        'label' => t('Sign up now', [], ['context' => 'eic_community']),
+        'label' => t('Register now', [], ['context' => 'eic_community']),
         'url' => $signup_link,
       ],
     ];
