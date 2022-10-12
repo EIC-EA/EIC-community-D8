@@ -11,6 +11,7 @@ third_party_settings:
     group_type_joining_method:
       tu_open_method: tu_open_method
       tu_group_membership_request: tu_group_membership_request
+      tu_close_method: tu_close_method
       group_invitation: '0'
     group_type_joining_method_override: true
 id: event
