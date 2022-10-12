@@ -78,7 +78,7 @@ class BulkGroupInvitationConfirm extends BulkGroupInvitationConfirmBase implemen
     if ($success) {
       try {
         $tempstore = \Drupal::service('tempstore.private')->get('ginvite_bulk_invitation');
-        $destination = new Url('view.group_invitations.page_1', ['group' => $tempstore->get('params')['gid']]);
+        $destination = new Url('view.eic_group_invitations.page_1', ['group' => $tempstore->get('params')['gid']]);
         if (!$destination->access()) {
           $destination = new Url('entity.group.canonical', ['group' => $tempstore->get('params')['gid']]);
         }
