@@ -1,6 +1,12 @@
 <div class="ecl-signup">
-  <h3 class="ecl-signup_title">Sign up to this event</h3>
-  <p class="ecl-signup_text">Get notified of the latest changes and take part in the discussion linked to this event.</p>
+  {% if title %}
+    <h3 class="ecl-signup_title">{{ title }}</h3>
+  {% else %}
+    <h3 class="ecl-signup_title">Sign up to this event</h3>
+  {% endif %}
+  {% if text %}
+    <p class="ecl-signup_text">{{ text }}</p>
+  {% endif %}
   <a href="{{ action.url }}" class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--button--big">
     <span class="ecl-link__label">{{ action.label }}</span>
   </a>
