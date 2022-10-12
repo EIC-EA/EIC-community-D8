@@ -89,7 +89,12 @@ class UrlAliasToPathRedirect extends PathRedirect {
     // runtime exceptions.
     $query = $row->getSourceProperty('source_options') ?? [];
     // We assume language is always 'en'.
-    $hash = Redirect::generateHash($row->getSourceProperty('source'), $query, 'en');
+    if ($this->includeGroupPrefix) {
+      $hash = Redirect::generateHash($row->getSourceProperty('source_with_group_prefix'), $query, 'en');
+    }
+    else {
+      $hash = Redirect::generateHash($row->getSourceProperty('source'), $query, 'en');
+    }
     $redirects = $this->entityTypeManager
       ->getStorage('redirect')
       ->loadByProperties(['hash' => $hash]);

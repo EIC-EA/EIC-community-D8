@@ -1848,7 +1848,8 @@
                     }
                 },
                 "patches_applied": {
-                    "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch"
+                    "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch",
+                    "2995992 - Country field should display the \"- Select -\" option to match core behavior": "https://www.drupal.org/files/issues/2022-03-14/2995992-56.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

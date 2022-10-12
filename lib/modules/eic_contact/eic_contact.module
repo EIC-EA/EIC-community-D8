@@ -28,6 +28,15 @@ function eic_contact_install($is_syncing) {
 }
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function eic_contact_entity_type_alter(array &$entity_types) {
+  $entity_types['contact_form']->setHandlerClass('form',
+    ['edit' => 'Drupal\eic_contact\ContactFormEditForm']
+  );
+}
+
+/**
  * Implements hook_form_alter.
  *
  * @param $form
