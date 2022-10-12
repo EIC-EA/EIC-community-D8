@@ -42,6 +42,17 @@ class ShareManager {
   const GROUP_CONTENT_SHARED_PLUGIN_ID = 'group_shared_content';
 
   /**
+   * Node types excluded from being shared in certain group types.
+   *
+   * @var array
+   */
+  const GROUP_CONTENT_EXCLUDE_SHARE_GROUPS = [
+    'gallery' => [
+      'organisation',
+    ],
+  ];
+
+  /**
    * The EIC Groups helper.
    *
    * @var \Drupal\eic_groups\EICGroupsHelperInterface
@@ -339,6 +350,12 @@ class ShareManager {
     GroupInterface $target_group,
     array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
   ) {
+    // Some content cannot be shared if defined in constant
+    // "GROUP_CONTENT_EXCLUDE_SHARE_GROUPS".
+    if (self::isGroupContentShareExcludedForGroupType($source_node, $target_group)) {
+      return FALSE;
+    }
+
     // Allow only published content.
     if (!$source_node->isPublished()) {
       return FALSE;
@@ -463,6 +480,30 @@ class ShareManager {
     ];
 
     $this->messageSubscribersService->sendMessage($node, $subscription, [], [], $context);
+  }
+
+  /**
+   * Checks if a node is excluded from being a group.
+   *
+   * @param \Drupal\node\NodeInterface $source_node
+   *   The node to be shared.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   *
+   * @return bool
+   *   TRUE if the group content cannot be shared in the group.
+   */
+  public static function isGroupContentShareExcludedForGroupType(
+    NodeInterface $source_node,
+    GroupInterface $target_group
+  ) {
+    if (
+      isset(self::GROUP_CONTENT_EXCLUDE_SHARE_GROUPS[$source_node->bundle()]) &&
+      in_array($target_group->bundle(), self::GROUP_CONTENT_EXCLUDE_SHARE_GROUPS[$source_node->bundle()])
+    ) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }
