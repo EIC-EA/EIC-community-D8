@@ -13,6 +13,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
@@ -499,8 +500,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public static function getGroupHeaderFlagsIds() {
     return [
-      'follow_group',
-      'recommend_group',
+      FlagType::FOLLOW_GROUP,
+      FlagType::LIKE_GROUP,
     ];
   }
 

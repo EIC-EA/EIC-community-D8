@@ -196,12 +196,6 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       }
     }
 
-    // We set the recommend flag in the 2nd position.
-    if ($name === 'recommend_content') {
-      $flags[1] = $flag;
-      continue;
-    }
-
     $flags[] = $flag;
   }
 
