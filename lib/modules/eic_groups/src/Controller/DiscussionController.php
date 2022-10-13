@@ -15,10 +15,8 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_comments\CommentsHelper;
-use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
-use Drupal\eic_groups\EICGroupsHelper;
-use Drupal\eic_moderation\Service\ContentModerationManager;
+use Drupal\eic_moderation\ModerationHelper;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
@@ -86,9 +84,9 @@ class DiscussionController extends ControllerBase {
   /**
    * The EIC Content Moderation Manager.
    *
-   * @var \Drupal\eic_moderation\Service\ContentModerationManager
+   * @var \Drupal\eic_moderation\ModerationHelper
    */
-  private $eicContentModerationManager;
+  private $eicModerationHelper;
 
   /**
    * DiscussionController constructor.
@@ -99,8 +97,8 @@ class DiscussionController extends ControllerBase {
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
-   * @param \Drupal\eic_moderation\Service\ContentModerationManager $eic_content_moderation_manager
-   *   The EIC Content Moderation Manager.
+   * @param \Drupal\eic_moderation\ModerationHelper $eic_moderation_helper
+   *   The EIC Content Moderation Helper.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -109,7 +107,7 @@ class DiscussionController extends ControllerBase {
     DateFormatter $date_formatter,
     FileUrlGeneratorInterface $file_url_generator,
     SolrDocumentProcessor $solr_document_processor,
-    ContentModerationManager $eic_content_moderation_manager
+    ModerationHelper $eic_moderation_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
@@ -117,7 +115,7 @@ class DiscussionController extends ControllerBase {
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
     $this->solrDocumentProcessor = $solr_document_processor;
-    $this->eicContentModerationManager = $eic_content_moderation_manager;
+    $this->eicModerationHelper = $eic_moderation_helper;
   }
 
   /**
@@ -131,7 +129,7 @@ class DiscussionController extends ControllerBase {
       $container->get('date.formatter'),
       $container->get('file_url_generator'),
       $container->get('eic_search.solr_document_processor'),
-      $container->get('eic_moderation.content_moderation_manager')
+      $container->get('eic_moderation.helper')
     );
   }
 
@@ -149,8 +147,8 @@ class DiscussionController extends ControllerBase {
     if (
       ($discussion) &&
       (
-        $this->eicContentModerationManager->isDraft($discussion) ||
-        $this->eicContentModerationManager->isUnpublished($discussion)
+        $this->eicModerationHelper->isDraft($discussion) ||
+        $this->eicModerationHelper->isUnpublished($discussion)
       )
     ) {
       return new JsonResponse('You do not have access to add comments', Response::HTTP_FORBIDDEN);
@@ -294,15 +292,15 @@ class DiscussionController extends ControllerBase {
     $discussion = Node::load($discussion_id);
     $group = $this->loadGroupFromNode($discussion_id);
 
-    if ($group && $this->eicContentModerationManager->isDraft($group)) {
+    if ($group && $this->eicModerationHelper->isDraft($group)) {
       return new JsonResponse('You do not have access to flag comments', Response::HTTP_FORBIDDEN);
     }
 
     if (
       ($discussion) &&
       (
-        $this->eicContentModerationManager->isDraft($discussion) ||
-        $this->eicContentModerationManager->isUnpublished($discussion)
+        $this->eicModerationHelper->isDraft($discussion) ||
+        $this->eicModerationHelper->isUnpublished($discussion)
       )
     ) {
       return new JsonResponse('You do not have access to flag comments', Response::HTTP_FORBIDDEN);
@@ -380,8 +378,8 @@ class DiscussionController extends ControllerBase {
       !UserHelper::isPowerUser($this->currentUser()) &&
       ($group) &&
       (
-        $this->eicContentModerationManager->isArchived($group) ||
-        $this->eicContentModerationManager->isDraft($group)
+        $this->eicModerationHelper->isArchived($group) ||
+        $this->eicModerationHelper->isDraft($group)
       )
     ) {
       return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
@@ -390,8 +388,8 @@ class DiscussionController extends ControllerBase {
     if (
       ($discussion) &&
       (
-        $this->eicContentModerationManager->isDraft($discussion) ||
-        $this->eicContentModerationManager->isUnpublished($discussion)
+        $this->eicModerationHelper->isDraft($discussion) ||
+        $this->eicModerationHelper->isUnpublished($discussion)
       )
     ) {
       return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
@@ -463,8 +461,8 @@ class DiscussionController extends ControllerBase {
       !UserHelper::isPowerUser($this->currentUser()) &&
       ($group) &&
       (
-        $this->eicContentModerationManager->isArchived($group) ||
-        $this->eicContentModerationManager->isDraft($group)
+        $this->eicModerationHelper->isArchived($group) ||
+        $this->eicModerationHelper->isDraft($group)
       )
     ) {
       return new JsonResponse('You do not have access to delete own comment', Response::HTTP_FORBIDDEN);
@@ -473,8 +471,8 @@ class DiscussionController extends ControllerBase {
     if (
       $discussion &&
       (
-        $this->eicContentModerationManager->isDraft($discussion) ||
-        $this->eicContentModerationManager->isUnpublished($discussion)
+        $this->eicModerationHelper->isDraft($discussion) ||
+        $this->eicModerationHelper->isUnpublished($discussion)
       )
     ) {
       return new JsonResponse('You do not have access to delete own comment', Response::HTTP_FORBIDDEN);
@@ -545,15 +543,15 @@ class DiscussionController extends ControllerBase {
     $discussion = Node::load($discussion_id);
     $group = $this->loadGroupFromNode($discussion_id);
 
-    if ($group && $this->eicContentModerationManager->isDraft($group)) {
+    if ($group && $this->eicModerationHelper->isDraft($group)) {
       return new JsonResponse('You do not have access to flag own comment', Response::HTTP_FORBIDDEN);
     }
 
     if (
       $discussion &&
       (
-        $this->eicContentModerationManager->isDraft($discussion) ||
-        $this->eicContentModerationManager->isUnpublished($discussion)
+        $this->eicModerationHelper->isDraft($discussion) ||
+        $this->eicModerationHelper->isUnpublished($discussion)
       )
     ) {
       return new JsonResponse('You do not have access to flag own comment', Response::HTTP_FORBIDDEN);

@@ -4,16 +4,10 @@ namespace Drupal\eic_moderation\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
-use Drupal\eic_content\Constants\DefaultContentModerationStates;
-use Drupal\eic_groups\GroupsModerationHelper;
-use Drupal\eic_moderation\Constants\EICContentModeration;
-use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\user\UserInterface;
 use Drupal\workflows\Transition;
 
 /**
@@ -139,118 +133,6 @@ class ContentModerationManager {
         return TRUE;
       }
     });
-  }
-
-  /**
-   * Checks if the entity is moderated and unpublished.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity.
-   *
-   * @return bool
-   *   TRUE is entity is published.
-   */
-  public function isUnpublished(ContentEntityInterface $entity): bool {
-    $is_unpublished = FALSE;
-
-    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
-      switch ($workflow->id()) {
-        case EICContentModeration::MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === EICContentModeration::STATE_UNPUBLISHED) {
-            $is_unpublished = TRUE;
-          }
-          break;
-      }
-    }
-    else {
-      $check_entity = $entity;
-      if ($entity instanceof GroupContentInterface) {
-        $check_entity = $entity->getEntity();
-      }
-
-      if ($check_entity instanceof UserInterface) {
-        $is_unpublished = $check_entity->isBlocked();
-      }
-      elseif ($check_entity instanceof EntityPublishedInterface) {
-        $is_unpublished = !$check_entity->isPublished();
-      }
-    }
-
-    return $is_unpublished;
-  }
-
-  /**
-   * Checks if the entity is moderated and archived.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The content entity.
-   *
-   * @return bool
-   *   TRUE if entity is archived.
-   */
-  public function isArchived(ContentEntityInterface $entity): bool {
-    $is_archived = FALSE;
-
-    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
-      switch ($workflow->id()) {
-        case DefaultContentModerationStates::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
-            $is_archived = TRUE;
-          }
-          break;
-
-        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_ARCHIVED_STATE) {
-            $is_archived = TRUE;
-          }
-          break;
-
-        case EICContentModeration::MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === EICContentModeration::STATE_UNPUBLISHED) {
-            $is_archived = TRUE;
-          }
-          break;
-      }
-    }
-
-    return $is_archived;
-  }
-
-  /**
-   * Checks if the entity is moderated and draft.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The content entity.
-   *
-   * @return bool
-   *   TRUE if entity is archived.
-   */
-  public function isDraft(ContentEntityInterface $entity): bool {
-    $is_draft = FALSE;
-
-    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
-      switch ($workflow->id()) {
-        case DefaultContentModerationStates::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === DefaultContentModerationStates::DRAFT_STATE) {
-            $is_draft = TRUE;
-          }
-          break;
-
-        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_DRAFT_STATE) {
-            $is_draft = TRUE;
-          }
-          break;
-
-        case EICContentModeration::MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === EICContentModeration::STATE_DRAFT) {
-            $is_draft = TRUE;
-          }
-          break;
-      }
-    }
-
-    return $is_draft;
   }
 
 }

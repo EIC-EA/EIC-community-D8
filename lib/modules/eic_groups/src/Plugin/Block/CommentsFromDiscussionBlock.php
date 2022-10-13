@@ -19,12 +19,9 @@ use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\Entity\Group;
-use Drupal\eic_groups\GroupsModerationHelper;
-use Drupal\eic_moderation\Constants\EICContentModeration;
-use Drupal\eic_moderation\Service\ContentModerationManager;
+use Drupal\eic_moderation\ModerationHelper;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
-use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -102,11 +99,11 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $entityTypeManager;
 
   /**
-   * The EIC Content Moderation Manager.
+   * The EIC Content Moderation Helper.
    *
-   * @var \Drupal\eic_moderation\Service\ContentModerationManager
+   * @var \Drupal\eic_moderation\ModerationHelper
    */
-  private $eicContentModerationManager;
+  private $eicModerationHelper;
 
   /**
    * {@inheritdoc}
@@ -129,7 +126,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $container->get('file_url_generator'),
       $container->get('plugin.manager.editor'),
       $container->get('entity_type.manager'),
-      $container->get('eic_moderation.content_moderation_manager')
+      $container->get('eic_moderation.helper')
     );
   }
 
@@ -161,8 +158,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The editor manager service.
    * @param EntityTypeManagerInterface $entity_type_manager
    *   The Entity type manager.
-   * @param \Drupal\eic_moderation\Service\ContentModerationManager $eic_content_moderation_manager
-   *   The EIC Content Moderation Manager.
+   * @param \Drupal\eic_moderation\ModerationHelper $eic_moderation_helper
+   *   The EIC Content Moderation Helper.
    */
   public function __construct(
     array $configuration,
@@ -176,7 +173,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     FileUrlGeneratorInterface $file_url_generator,
     EditorManager $editor_manager,
     EntityTypeManagerInterface $entity_type_manager,
-    ContentModerationManager $eic_content_moderation_manager
+    ModerationHelper $eic_moderation_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
@@ -187,7 +184,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $this->fileUrlGenerator = $file_url_generator;
     $this->editorManager = $editor_manager;
     $this->entityTypeManager = $entity_type_manager;
-    $this->eicContentModerationManager = $eic_content_moderation_manager;
+    $this->eicModerationHelper = $eic_moderation_helper;
   }
 
   /**
@@ -307,8 +304,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       !UserHelper::isPowerUser($account) &&
       $node->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
 
-    $is_content_draft = $this->eicContentModerationManager->isDraft($node);
-    $is_content_unpublished = $this->eicContentModerationManager->isUnpublished($node);
+    $is_content_draft = $this->eicModerationHelper->isDraft($node);
+    $is_content_unpublished = $this->eicModerationHelper->isUnpublished($node);
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
