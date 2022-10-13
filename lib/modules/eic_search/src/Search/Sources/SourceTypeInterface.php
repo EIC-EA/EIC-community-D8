@@ -272,4 +272,11 @@ interface SourceTypeInterface {
    * @return string
    */
   public function getUniqueId(): string;
+
+  /**
+   * Return facet fields using or condition.
+   *
+   * @return array
+   */
+  public function getFacetsUsingOrCondition(): array;
 }

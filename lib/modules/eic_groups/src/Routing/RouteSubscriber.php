@@ -32,7 +32,6 @@ class RouteSubscriber extends RouteSubscriberBase {
       'entity.node.delete_form',
       'entity.group.leave',
       'entity.group.edit_form',
-      'view.eic_group_members.page_group_members',
       'ginvite.invitation.bulk',
       'entity.group.join',
       'entity.group.group_request_membership',
@@ -46,6 +45,23 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
 
       $route->addRequirements(['_archived_route_access_check' => 'TRUE']);
+    }
+
+    $check_smed_group_permission_routes = [
+      'entity.group.leave',
+    ];
+    foreach ($check_smed_group_permission_routes as $route_name) {
+      $route = $collection->get($route_name);
+
+      if (!$route instanceof Route) {
+        continue;
+      }
+      $requirements = $route->getRequirements();
+      if (isset($requirements['_group_permission'])) {
+        $requirements['_smed_group_permission_access_check'] = $requirements['_group_permission'];
+        unset($requirements['_group_permission']);
+        $route->addRequirements($requirements);
+      }
     }
 
     $this->alterGroupInviteRoutes($collection);

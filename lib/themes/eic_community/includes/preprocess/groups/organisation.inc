@@ -284,29 +284,15 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
   }
 
-  $url_add_news = Url::fromRoute(
-    'entity.group_content.create_form',
-    ['group' => $group->id(), 'plugin_id' => 'group_node:news']
-  );
-
-  $url_add_event = Url::fromRoute(
-    'entity.group_content.create_form',
-    ['group' => $group->id(), 'plugin_id' => 'group_node:event']
-  );
-
-  $render_news = _eic_community_get_rendered_view(
+  // Display the render view.
+  $variables['news'] = _eic_community_get_rendered_view(
     'organisation_content',
     'organisation_news'
   );
-
-  $render_events = _eic_community_get_rendered_view(
+  $variables['events'] = _eic_community_get_rendered_view(
     'organisation_content',
     'organisation_events'
   );
-
-  // Display the render view for some roles even if there are 0 results (so CTA to add content is shown)
-  $variables['news'] = !$url_add_news->access() && empty($render_news['#rows']) ? [] : $render_news;
-  $variables['events'] = !$url_add_event->access() && empty($render_events['#rows']) ? [] : $render_events;
 
   $view_builder = Drupal::entityTypeManager()->getViewBuilder('paragraph');
   $variables['teams'] = [

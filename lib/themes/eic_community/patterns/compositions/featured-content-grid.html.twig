@@ -73,7 +73,9 @@
                   {% if item.author is not empty or item.stats is not empty %}
                     <div class="ecl-featured-content-grid__item-content-footer">
                       {% if item.author is not empty %}
-                        {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) only %}
+                        {% include "@theme/patterns/components/author.html.twig" with item.author|default({})|merge({
+                          eic_icon_path: icon_file_path
+                        }) only %}
                       {% endif %}
                       {% if item.stats is not empty and key == 0 %}
                         <div class="ecl-teaser__stats">
