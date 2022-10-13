@@ -694,6 +694,25 @@ function eic_groups_update_9014(&$sandbox) {
 }
 
 /**
+ * Remove obsolete News group menu items.
+ */
+function eic_groups_update_9015() {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+
+  $menu_link_ids = \Drupal::entityQuery('menu_link_content')
+    ->condition('link__uri', 'internal:/group/%/news', 'LIKE')
+    ->condition('menu_name', 'group_menu_link_content-%', 'LIKE')
+    ->execute();
+
+  /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $menu_links */
+  $menu_links = $em->getStorage('menu_link_content')->loadMultiple($menu_link_ids);
+  $em->getStorage('menu_link_content')->delete($menu_links);
+
+  return t('Deleted @count menu items.', ['@count' => count($menu_links)]);
+}
+
+/**
  * Operation batch for publishing group wiki section.
  */
 function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $total, &$context) {
