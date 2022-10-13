@@ -6,7 +6,6 @@ use Drupal\comment\CommentInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
@@ -15,12 +14,6 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlaggingInterface;
-use Drupal\group\Entity\GroupContent;
-use Drupal\group\Entity\GroupContentInterface;
-use Drupal\group\Entity\GroupInterface;
-use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Service that provides logic to request entity archival.
@@ -69,7 +62,7 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
    */
   public function canRequest(AccountInterface $account, ContentEntityInterface $entity) {
     // Deny access if entity is not published.
-    if (!$this->isPublished($entity)) {
+    if (!$this->moderationHelper->isPublished($entity)) {
       return AccessResult::forbidden();
     }
 
@@ -142,96 +135,6 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
       'group' => 'request_archive_group',
       'comment' => 'request_archive_comment',
     ];
-  }
-
-  /**
-   * Checks if the entity is moderated and archived.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity.
-   *
-   * @return bool
-   *   TRUE is entity is archived.
-   */
-  protected function isArchived(ContentEntityInterface $entity) {
-    $is_archived = FALSE;
-
-    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
-      switch ($workflow->id()) {
-        case DefaultContentModerationStates::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
-            $is_archived = TRUE;
-          }
-          break;
-
-        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_ARCHIVED_STATE) {
-            $is_archived = TRUE;
-          }
-          break;
-
-        case EICContentModeration::MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === EICContentModeration::STATE_UNPUBLISHED) {
-            $is_archived = TRUE;
-          }
-          break;
-      }
-    }
-
-    return $is_archived;
-  }
-
-  /**
-   * Checks if the entity is moderated and published.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity.
-   *
-   * @return bool
-   *   TRUE is entity is published.
-   */
-  protected function isPublished(ContentEntityInterface $entity) {
-    $is_published = FALSE;
-
-    if ($workflow = $this->moderationInformation->getWorkflowForEntity($entity)) {
-      switch ($workflow->id()) {
-        case DefaultContentModerationStates::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === DefaultContentModerationStates::PUBLISHED_STATE) {
-            $is_published = TRUE;
-          }
-          break;
-
-        case GroupsModerationHelper::WORKFLOW_MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
-            $is_published = TRUE;
-          }
-          break;
-
-        case EICContentModeration::MACHINE_NAME:
-          if ($entity->get('moderation_state')->value === EICContentModeration::STATE_PUBLISHED) {
-            $is_published = TRUE;
-          }
-          break;
-      }
-    }
-    else {
-      $check_entity = $entity;
-      if ($entity instanceof GroupContentInterface) {
-        $check_entity = $entity->getEntity();
-      }
-
-      if ($check_entity instanceof UserInterface) {
-        $is_published = $check_entity->isActive();
-      }
-      elseif ($check_entity instanceof EntityPublishedInterface) {
-        $is_published = $check_entity->isPublished();
-      }
-      else {
-        $is_published = TRUE;
-      }
-    }
-
-    return $is_published;
   }
 
 }

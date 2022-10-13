@@ -32,6 +32,7 @@ permissions:
   - 'delete any group_node:wiki_page entity'
   - 'delete any invitation'
   - 'delete group'
+  - 'delete memberships'
   - 'delete own group_node:discussion entity'
   - 'delete own group_node:document entity'
   - 'delete own group_node:gallery entity'
