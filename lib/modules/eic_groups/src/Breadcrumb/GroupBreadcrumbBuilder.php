@@ -226,7 +226,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                   0,
                   [
                     Link::fromTextAndUrl(
-                      $this->t('Groups'),
+                      $this->eicGroupsHelper->getGroupBundleLabel($group, TRUE),
                       GlobalOverviewPages::getGlobalOverviewPageLink(
                         GlobalOverviewPages::GROUPS
                       )->getUrl()
