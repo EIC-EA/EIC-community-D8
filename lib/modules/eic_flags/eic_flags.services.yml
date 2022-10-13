@@ -5,26 +5,26 @@ services:
       - { name: service_collector, tag: request_handler, call: addHandler }
   eic_flags.delete_request_handler:
     class: Drupal\eic_flags\Service\DeleteRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@eic_moderation.helper', '@request_stack', '@entity_field.manager' ]
     calls:
       - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: request_handler }
   eic_flags.delete_archive_handler:
     class: Drupal\eic_flags\Service\ArchiveRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@eic_moderation.helper', '@request_stack', '@entity_field.manager' ]
     calls:
       - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: request_handler }
   eic_flags.block_request_handler:
     class: Drupal\eic_flags\Service\BlockRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@eic_moderation.helper', '@request_stack', '@entity_field.manager' ]
     tags:
       - { name: request_handler }
   eic_flags.transfer_ownership_request_handler:
     class: Drupal\eic_flags\Service\TransferOwnershipRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@eic_moderation.helper', '@request_stack', '@entity_field.manager' ]
     calls:
       - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:

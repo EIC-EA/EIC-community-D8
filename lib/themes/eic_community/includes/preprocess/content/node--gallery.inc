@@ -8,13 +8,10 @@
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\eic_groups\Constants\GroupVisibilityType;
-use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Implements hook_preprocess_node__bundle() for gallery node.
@@ -36,9 +33,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         );
 
         $variables['#cache']['tags'] = array_merge($variables['#cache']['tags'], $group->getCacheTags());
-        $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-        if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group) && $visibility instanceof GroupVisibilityRecordInterface
-          && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+        if (_eic_community_can_use_social_share($node)) {
           $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
         }
       }

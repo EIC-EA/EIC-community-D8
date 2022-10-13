@@ -8,6 +8,7 @@ use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_moderation\ModerationHelper;
 use Drupal\eic_recommend_content\Services\RecommendContentManager;
 use Drupal\eic_user\UserHelper;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
@@ -51,6 +52,13 @@ class RecommendContentAccessCheck implements AccessInterface {
   protected $eicGroupsHelper;
 
   /**
+   * The EIC Moderation helper service.
+   *
+   * @var \Drupal\eic_moderation\ModerationHelper
+   */
+  protected $moderationHelper;
+
+  /**
    * Constructs a new RecommendGroupAccessCheck object.
    *
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
@@ -61,17 +69,21 @@ class RecommendContentAccessCheck implements AccessInterface {
    *   The EIC Recommend content manager.
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The EIC Groups helper service.
+   * @param \Drupal\eic_moderation\ModerationHelper $moderation_helper
+   *   The EIC Moderation helper service.
    */
   public function __construct(
     OECGroupFlexHelper $oec_group_flex_helper,
     EntityTypeManagerInterface $entity_type_manager,
     RecommendContentManager $recommend_content_manager,
-    EICGroupsHelper $eic_groups_helper
+    EICGroupsHelper $eic_groups_helper,
+    ModerationHelper $moderation_helper
   ) {
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->recommendContentManager = $recommend_content_manager;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->moderationHelper = $moderation_helper;
   }
 
   /**
@@ -137,7 +149,7 @@ class RecommendContentAccessCheck implements AccessInterface {
         // If the entity belongs to a group and the group is not published, we
         // deny access to recommend it.
         if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
-          if ($group->get('moderation_state')->value !== $moderation_state) {
+          if (!$this->moderationHelper->isPublished($group)) {
             $access->setCacheMaxAge(0);
             break;
           }
