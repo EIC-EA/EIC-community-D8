@@ -18,6 +18,7 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
 use Drupal\eic_search\Search\Sources\DiscussionSourceType;
+use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
@@ -282,34 +283,39 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         }, $admins),
       ];
 
-      // We add post content actions in library and discussions overviews.
-      if (
-        $source instanceof LibrarySourceType ||
-        $source instanceof DiscussionSourceType
-      ) {
-        // User can post content if the group is in draft or published state.
-        switch ($current_group_route->get('moderation_state')->value) {
-          case GroupsModerationHelper::GROUP_DRAFT_STATE:
-          case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
-            // Adds group content create actions for each node type that is
-            // part of the group feature related to the current source type.
-            $source->getPrefilteredContentType();
-            foreach ($source->getPrefilteredContentType() as $bundle) {
-              $create_url = Url::fromRoute(
-                'entity.group_content.create_form',
-                [
-                  'group' => $current_group_route->id(),
-                  'plugin_id' => "group_node:$bundle",
-                ]
-              );
-              if ($create_url->access($account)) {
-                $post_content_actions[] = [
-                  'label' => $this->t('Add @type', ['@type' => $bundle]),
-                  'path' => $create_url->toString(),
-                ];
+      // We add post content actions for specific source types.
+      $enabled_post_action_sources = [
+        LibrarySourceType::class,
+        DiscussionSourceType::class,
+        GroupEventSourceType::class,
+      ];
+      foreach ($enabled_post_action_sources as $source_type_class) {
+        if ($source instanceof $source_type_class) {
+          // User can post content if the group is in draft or published state.
+          switch ($current_group_route->get('moderation_state')->value) {
+            case GroupsModerationHelper::GROUP_DRAFT_STATE:
+            case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
+              // Adds group content create actions for each node type that is
+              // part of the group feature related to the current source type.
+              $source->getPrefilteredContentType();
+              foreach ($source->getPrefilteredContentType() as $bundle) {
+                $create_url = Url::fromRoute(
+                  'entity.group_content.create_form',
+                  [
+                    'group' => $current_group_route->id(),
+                    'plugin_id' => "group_node:$bundle",
+                  ]
+                );
+                if ($create_url->access($account)) {
+                  $post_content_actions[] = [
+                    'label' => $this->t('Add @type', ['@type' => $bundle]),
+                    'path' => $create_url->toString(),
+                  ];
+                }
               }
-            }
-            break;
+              break;
+          }
+          break;
         }
       }
 
