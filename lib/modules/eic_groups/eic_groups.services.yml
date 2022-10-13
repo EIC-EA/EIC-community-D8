@@ -59,6 +59,16 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: access_check, applies_to: _group_pages_access_check }
+  eic_groups.smed_group_permission_route_access_check:
+    class: Drupal\eic_groups\Access\SmedGroupPermissionAccessCheck
+    arguments: ['@?eic_webservices.ws_helper']
+    tags:
+      - { name: access_check, applies_to: _smed_group_permission_access_check }
+  eic_groups.group_views_moderation_state_permission_route_access_check:
+    class: Drupal\eic_groups\Access\GroupViewsModerationStatePermissionChecker
+    arguments: [ '@?group_permission.checker.outsider_in', '@?group_permission.chain_calculator' ]
+    tags:
+      - { name: access_check, applies_to: _group_views_moderation_state_permission_access_check }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:

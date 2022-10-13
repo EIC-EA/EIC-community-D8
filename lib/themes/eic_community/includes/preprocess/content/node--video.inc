@@ -33,16 +33,27 @@ function eic_community_preprocess_node__video(array &$variables) {
         }
       }
       break;
+
     case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
       // Get the thumbnail.
-      /** @var \Drupal\media\MediaInterface $media */
-      $media = $node->get('field_video_media')->referencedEntities()[0];
-      if ($media && !empty($media->get('thumbnail')->getValue())) {
-        $style_name = 'gallery_teaser_crop_160x160';
-        $teaser['image'] = ImageValueObject::fromStyledImageItem($media->get('thumbnail')->first(), $style_name);
+      if (!$node->get('field_image')->isEmpty()) {
+        /** @var \Drupal\media\MediaInterface $media */
+        $media = $node->get('field_image')->referencedEntities()[0];
+        if ($media && !empty($media->get('thumbnail')->getValue())) {
+          $style_name = 'gallery_teaser_crop_160x160';
+          $teaser['image'] = ImageValueObject::fromStyledImageItem($media->get('thumbnail')->first(), $style_name);
+        }
+      }
+      else {
+        /** @var \Drupal\media\MediaInterface $media */
+        $media = $node->get('field_video_media')->referencedEntities()[0];
+        if ($media && !empty($media->get('thumbnail')->getValue())) {
+          $style_name = 'gallery_teaser_crop_160x160';
+          $teaser['image'] = ImageValueObject::fromStyledImageItem($media->get('thumbnail')->first(), $style_name);
+        }
       }
 
       $teaser['type'] = [

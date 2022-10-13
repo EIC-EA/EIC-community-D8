@@ -1,6 +1,6 @@
 uuid: 6fc6b12b-b84e-4c23-9300-7f34a706dc87
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - field.storage.group_content.group_roles
@@ -545,7 +545,7 @@ display:
       access:
         type: group_permission
         options:
-          group_permission: 'administer members'
+          group_permission: 'view group invitations'
       cache:
         type: tag
         options: {  }

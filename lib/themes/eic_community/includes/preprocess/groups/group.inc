@@ -64,13 +64,15 @@ function eic_community_preprocess_group__group(array &$variables) {
           $group->get('field_thumbnail')->entity,
           $group->language()->getId()
         );
-        $image_item = ImageValueObject::fromStyledImageItem(
-          $media->get('oe_media_image')->first(),
+        /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $image */
+        $image = $media->get('oe_media_image')->first();
+        $image_item = $image ? ImageValueObject::fromStyledImageItem(
+          $image,
           'oe_theme_ratio_3_2_medium'
-        );
+        ) : NULL;
         $item['image'] = [
-          'src' => $image_item->getSource(),
-          'alt' => $image_item->getAlt(),
+          'src' => $image_item ? $image_item->getSource() : '',
+          'alt' => $image_item ? $image_item->getAlt() : '',
         ];
       }
 
@@ -167,8 +169,8 @@ function _group_about_group_tab($variables, &$sections) {
     $user = $owner->getUser();
 
     return [
-      'title' => realname_load($user),
-      'path' => $user->toUrl(),
+      'title' => $user->getDisplayName(),
+      'path' => $user->toUrl()->access() ? $user->toUrl() : '',
     ];
   }, $owners);
 
@@ -184,13 +186,13 @@ function _group_about_group_tab($variables, &$sections) {
       $user = $admin->getUser();
 
       return [
-        'title' => realname_load($user),
-        'path' => $user->toUrl(),
+        'title' => $user->getDisplayName(),
+        'path' => $user->toUrl()->access() ? $user->toUrl() : '',
       ];
     }, $admins);
 
     $about_items[] = [
-      'title' => t('Administrator'),
+      'title' => t('Administrators'),
       'items' => $admins,
     ];
   }
@@ -230,9 +232,7 @@ function _group_about_group_tab($variables, &$sections) {
 
   $about_items[] = [
     'title' => t('Group description'),
-    'content' => $group->hasField('field_body') ?
-      $group->get('field_body')->value :
-      '',
+    'content' => $group->hasField('field_body') ? $group->get('field_body')->value : '',
   ];
 
   $sections[] = [

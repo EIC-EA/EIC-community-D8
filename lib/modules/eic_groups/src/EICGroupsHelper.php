@@ -784,11 +784,6 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       throw new EntityStorageException('Group permissions were not saved correctly, because:' . $message);
     }
 
-    // Saves the GroupPermission object with a new revision.
-    $group_permissions->setNewRevision();
-    $group_permissions->setRevisionUserId($this->currentUser->id());
-    $group_permissions->setRevisionCreationTime($this->time->getRequestTime());
-    $group_permissions->setRevisionLogMessage('Group permissions updated successfully.');
     $group_permissions->save();
   }
 

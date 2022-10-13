@@ -3,6 +3,7 @@
 namespace Drupal\eic_user_login\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\cas\Service\CasUserManager;
@@ -15,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package Drupal\eic_user_login\Hooks
  */
 class FormAlter implements ContainerInjectionInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The cas user manager.

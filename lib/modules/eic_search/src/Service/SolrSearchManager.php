@@ -229,6 +229,7 @@ class SolrSearchManager {
   public function buildSortFacets(?array $facets_value, ?string $sort_value) {
     $this->facets = $facets_value;
     $this->interests = [];
+    $sorts = [];
 
     if (array_key_exists('interests', $this->facets)) {
       $this->interests = $this->facets['interests'];
@@ -253,6 +254,7 @@ class SolrSearchManager {
     }
 
     if (
+      NULL !== $sorts &&
       array_key_exists(0, $sorts) &&
       array_key_exists(SourceTypeInterface::SECOND_SORT_KEY, $this->source->getAvailableSortOptions()[$sorts[0]])
     ) {
@@ -300,9 +302,11 @@ class SolrSearchManager {
           $value = "\"$value\"";
         });
 
+        $condition_operator = in_array($key, $this->source->getFacetsUsingOrCondition()) ? 'OR' : 'AND';
+
         $query_values = count($values) > 1 ?
-          '(' . implode(' AND ', $values) . ')' :
-          implode(' AND ', $values);
+          '(' . implode(" $condition_operator ", $values) . ')' :
+          implode(" $condition_operator ", $values);
 
         if (in_array($key, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
           $key = $key . $this->currentGroup;

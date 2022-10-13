@@ -248,9 +248,6 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
         'status' => 1,
       ]);
     }
-    else {
-      $groupPermission->setNewRevision(TRUE);
-    }
 
     return $groupPermission;
   }
@@ -371,14 +368,20 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       ]);
     }
 
-    if ($item->getType() !== $enabled_plugin->getPluginId()) {
+    if (
+      $enabled_plugin &&
+      $item->getType() !== $enabled_plugin->getPluginId()
+    ) {
       $item->setType($enabled_plugin->getPluginId());
     }
 
     // Don't save group permissions if they didn't change.
     if (
-      $item->getType() === $enabled_plugin->getPluginId() &&
-      $groupPermission->getPermissions() == $original_permissions
+      $groupPermission->getPermissions() == $original_permissions &&
+      (
+        !$enabled_plugin ||
+        $item->getType() === $enabled_plugin->getPluginId()
+      )
     ) {
       return;
     }

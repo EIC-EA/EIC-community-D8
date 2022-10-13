@@ -7,6 +7,7 @@ dependencies:
     - field.storage.group_content.group_roles
   module:
     - eic_group_membership
+    - eic_groups
     - group
     - user
 _core:
@@ -422,9 +423,16 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: group_permission
+        type: eic_group_moderation_state_permission
         options:
           group_permission: 'access members management'
+          moderation_states:
+            draft: draft
+            published: published
+            archived: 0
+            blocked: 0
+            pending: 0
+            refused: 0
       cache:
         type: none
         options: {  }

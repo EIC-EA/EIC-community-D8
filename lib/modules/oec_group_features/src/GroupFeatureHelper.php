@@ -132,9 +132,6 @@ class GroupFeatureHelper {
         'status' => 1,
       ]);
     }
-    else {
-      $groupPermission->setNewRevision(TRUE);
-    }
 
     return $groupPermission;
   }

@@ -14,6 +14,7 @@ dependencies:
     - node.type.story
     - node.type.video
     - node.type.wiki_page
+    - taxonomy.vocabulary.tags
     - workflows.workflow.default
     - workflows.workflow.eic_moderated_workflow
     - workflows.workflow.groups
@@ -32,6 +33,7 @@ dependencies:
     - media
     - node
     - profile
+    - taxonomy
 id: trusted_user
 label: 'Trusted user'
 weight: -8
@@ -50,6 +52,7 @@ permissions:
   - 'create image media'
   - 'create remote_video media'
   - 'create story content'
+  - 'create terms in tags'
   - 'create video media'
   - 'delete own news content'
   - 'delete own page content'
@@ -92,4 +95,3 @@ permissions:
   - 'view own unpublished media'
   - 'view private content'
   - 'view recommend_group'
-  - 'view user email addresses'

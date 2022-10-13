@@ -15,6 +15,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_group_membership\GroupMembershipHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
@@ -492,8 +493,44 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
   }
 
   switch ($operation) {
+    case 'edit':
+      $group = $entity->getGroup();
+      $is_power_user = UserHelper::isPowerUser($account);
+      $deny_moderation_states = [
+        GroupsModerationHelper::GROUP_ARCHIVED_STATE,
+        GroupsModerationHelper::GROUP_BLOCKED_STATE,
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_REFUSED_STATE,
+      ];
+      // Group is blocked or refused and therefore only power users can edit
+      // group memberships.
+      if (in_array($group->get('moderation_state')->value, $deny_moderation_states) && !$is_power_user) {
+        $access = GroupAccessResult::forbidden()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($group);
+      }
+      break;
     case 'delete':
       $group = $entity->getGroup();
+      $is_power_user = UserHelper::isPowerUser($account);
+      $deny_moderation_states = [
+        GroupsModerationHelper::GROUP_ARCHIVED_STATE,
+        GroupsModerationHelper::GROUP_BLOCKED_STATE,
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_REFUSED_STATE,
+      ];
+
+      // Group is blocked or refused and therefore only power users can delete
+      // group memberships.
+      if (in_array($group->get('moderation_state')->value, $deny_moderation_states) && !$is_power_user) {
+        $access = GroupAccessResult::forbidden()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($group);
+        break;
+      }
+
       /** @var \Drupal\user\UserInterface $group_content_member */
       $group_content_member = $entity->getEntity();
       $group_owner = EICGroupsHelper::getGroupOwner($group);
@@ -507,16 +544,29 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
         break;
       }
 
+      /** @var \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper */
+      $eic_ws_helper = \Drupal::service('eic_webservices.ws_helper');
+
+      // Admins cannot be removed from SMED groups.
+      if (
+        $eic_ws_helper->isCreatedThroughSmed($group) &&
+        !UserHelper::isPowerUser($account) &&
+        $group_admin_member = EICGroupsHelper::userIsGroupAdmin($group, $group_content_member)
+      ) {
+        $access = GroupAccessResult::forbidden()
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($group_admin_member)
+          ->addCacheableDependency($group);
+        break;
+      }
+
       $current_member = $group->getMember($account);
 
-      // We deny access if the user is not a power user or doesn't have
-      // permission to administer group members.
-      $has_delete_permission = ($account->hasPermission('administer members') ||
-        $account->hasPermission('delete memberships'));
-      $access = GroupAccessResult::forbiddenIf(
-        $current_member instanceof GroupMembership &&
-          !$has_delete_permission
-        )
+      // We deny access if the user doesn't have permission to administer group
+      // members or delete members.
+      $has_delete_permission = ($group->hasPermission('administer members', $account) ||
+        $group->hasPermission('delete memberships', $account));
+      $access = GroupAccessResult::forbiddenIf(!$has_delete_permission)
         ->addCacheableDependency($account)
         ->addCacheableDependency($entity)
         ->addCacheableDependency($group);
