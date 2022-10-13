@@ -69,13 +69,15 @@ class GlobalOverviewPages {
    *
    * @param int $page
    *   The page identifier for which we return the URL.
+   * @param array $params
+   *   Parameters to be used for the link.
    *
    * @return \Drupal\Core\Link
    *   The URL object or NULL if does not apply.
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public static function getGlobalOverviewPageLink(int $page, $params = []): Link {
+  public static function getGlobalOverviewPageLink(int $page, array $params = []): Link {
     $overview_entities = \Drupal::entityQuery('overview_page')
       ->condition('field_overview_id', $page)
       ->execute();
@@ -103,23 +105,28 @@ class GlobalOverviewPages {
   }
 
   /**
+   * Returns the overview page ID based on the group type.
+   *
    * @param string $group_type
+   *   The group bundle machine name.
    *
    * @return int
+   *   The ID of the overview.
    */
-  public static function getOverviewPageIdFromGroupType(
-    string $group_type
-  ): int {
+  public static function getOverviewPageIdFromGroupType(string $group_type): int {
     switch ($group_type) {
       case 'event':
         $overview_id = GlobalOverviewPages::EVENTS;
         break;
+
       case 'organisation':
         $overview_id = GlobalOverviewPages::ORGANISATIONS;
         break;
+
       default:
         $overview_id = GlobalOverviewPages::GROUPS;
         break;
+
     }
 
     return $overview_id;
@@ -137,18 +144,24 @@ class GlobalOverviewPages {
    *   - url: the operation URL string.
    */
   public function getGlobalOverviewPageOperations(int $page): array {
+    // Initialise variables.
     $operations = [];
+    $bundles = [];
+    $entity_id = NULL;
+
     switch ($page) {
       case GlobalOverviewPages::GROUPS:
         $entity_id = 'group';
         $bundles = ['group'];
         $add_route = "entity.$entity_id.add_form";
         break;
+
       case GlobalOverviewPages::EVENTS:
         $entity_id = 'group';
         $bundles = ['event'];
         $add_route = "entity.$entity_id.add_form";
         break;
+
       case GlobalOverviewPages::NEWS_STORIES:
         $entity_id = 'node';
         $bundles = ['story', 'news'];
@@ -156,6 +169,7 @@ class GlobalOverviewPages {
           return Url::fromRoute('node.add', ['node_type' => $bundle]);
         };
         break;
+
     }
 
     if (!$bundles || !$entity_id) {
@@ -183,6 +197,7 @@ class GlobalOverviewPages {
    * Return the current overview page ID.
    *
    * @return int|null
+   *   The ID of the overview.
    */
   public function getCurrentOverviewPageId(): ?int {
     $current_overview = \Drupal::routeMatch()->getParameter('overview_page');
