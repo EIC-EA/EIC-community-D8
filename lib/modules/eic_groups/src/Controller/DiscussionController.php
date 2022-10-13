@@ -82,7 +82,7 @@ class DiscussionController extends ControllerBase {
   private ?SolrDocumentProcessor $solrDocumentProcessor;
 
   /**
-   * The EIC Content Moderation Manager.
+   * The EIC Content Moderation Helper.
    *
    * @var \Drupal\eic_moderation\ModerationHelper
    */
