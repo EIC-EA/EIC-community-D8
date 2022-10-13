@@ -650,7 +650,7 @@ function eic_groups_update_9013() {
 /**
  * Remove obsolete News group menu items.
  */
-function eic_groups_update_9014() {
+function eic_groups_update_9015() {
   /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
   $em = \Drupal::service('entity_type.manager');
 
