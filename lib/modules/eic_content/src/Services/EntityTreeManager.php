@@ -170,6 +170,46 @@ class EntityTreeManager {
         [],
         ['context' => 'eic_groups']
       )->render(),
+      'comment_added' => t(
+        'Comment added',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'comment_deleted' => t(
+        'Comment deleted',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'comment_edited' => t(
+        'Comment edited',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'comment_liked' => t(
+        'Comment liked',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'comment_unliked' => t(
+        'Comment unliked',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'comment_request_archived' => t(
+        'Your archived request has been sent',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'comment_request_deleted' => t(
+        'Your delete request has been sent',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
+      'action_request_default' => t(
+        'Your request has been sent',
+        [],
+        ['context' => 'eic_groups']
+      )->render(),
       'action_edit_comment' => t(
         'Edit comment',
         [],
