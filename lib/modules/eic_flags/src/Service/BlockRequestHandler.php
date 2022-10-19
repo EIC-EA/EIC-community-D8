@@ -38,7 +38,7 @@ class BlockRequestHandler extends AbstractRequestHandler {
    *   Flag service provided by the flag module.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   Core's moderation information service.
-   * @param \Drupal\eic_moderation\ModerationHelper $moderation_helper
+   * @param \Drupal\eic_moderation\ModerationHelper|null $moderation_helper
    *   The EIC Moderation helper service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
@@ -48,7 +48,7 @@ class BlockRequestHandler extends AbstractRequestHandler {
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     ModerationInformationInterface $moderation_information,
-    ModerationHelper $moderation_helper,
+    ?ModerationHelper $moderation_helper,
     RequestStack $request_stack
   ) {
     $this->moduleHandler = $module_handler;
