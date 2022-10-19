@@ -122,3 +122,10 @@ eic_groups.group_content.resend_invite:
         type: entity:group_content
       group:
         type: entity:group
+
+eic_groups.user.my_invitations:
+  path: '/user/invitations'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\UserMyInvitationsController::build'
+  requirements:
+    _user_is_logged_in: 'TRUE'
