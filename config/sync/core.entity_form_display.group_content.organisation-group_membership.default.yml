@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group_content.organisation-group_membership.field_vocab_job_title
     - field.field.group_content.organisation-group_membership.group_roles
     - group.content_type.organisation-group_membership
   module:
@@ -21,6 +22,12 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_vocab_job_title:
+    type: options_buttons
+    weight: 32
+    region: content
+    settings: {  }
     third_party_settings: {  }
   group_roles:
     type: options_buttons
