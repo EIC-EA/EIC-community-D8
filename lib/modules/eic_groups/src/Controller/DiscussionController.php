@@ -16,6 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_moderation\ModerationHelper;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
@@ -89,6 +90,13 @@ class DiscussionController extends ControllerBase {
   private $eicModerationHelper;
 
   /**
+   * The EIC groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  private $groupsHelper;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -99,6 +107,8 @@ class DiscussionController extends ControllerBase {
    * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
    * @param \Drupal\eic_moderation\ModerationHelper $eic_moderation_helper
    *   The EIC Content Moderation Helper.
+   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
+   *   The EIC groups helper service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -107,7 +117,8 @@ class DiscussionController extends ControllerBase {
     DateFormatter $date_formatter,
     FileUrlGeneratorInterface $file_url_generator,
     SolrDocumentProcessor $solr_document_processor,
-    ModerationHelper $eic_moderation_helper
+    ModerationHelper $eic_moderation_helper,
+    EICGroupsHelper $groups_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
@@ -116,6 +127,7 @@ class DiscussionController extends ControllerBase {
     $this->fileUrlGenerator = $file_url_generator;
     $this->solrDocumentProcessor = $solr_document_processor;
     $this->eicModerationHelper = $eic_moderation_helper;
+    $this->groupsHelper = $groups_helper;
   }
 
   /**
@@ -129,7 +141,8 @@ class DiscussionController extends ControllerBase {
       $container->get('date.formatter'),
       $container->get('file_url_generator'),
       $container->get('eic_search.solr_document_processor'),
-      $container->get('eic_moderation.helper')
+      $container->get('eic_moderation.helper'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -290,7 +303,7 @@ class DiscussionController extends ControllerBase {
     }
 
     $discussion = Node::load($discussion_id);
-    $group = $this->loadGroupFromNode($discussion_id);
+    $group = $this->groupsHelper->getGroupFromContent($discussion);
 
     if ($group && $this->eicModerationHelper->isDraft($group)) {
       return new JsonResponse('You do not have access to flag comments', Response::HTTP_FORBIDDEN);
@@ -372,7 +385,7 @@ class DiscussionController extends ControllerBase {
 
     $discussion = Node::load($discussion_id);
     $comment = Comment::load($comment_id);
-    $group = $this->loadGroupFromNode($discussion_id);
+    $group = $this->groupsHelper->getGroupFromContent($discussion);
 
     if (
       !UserHelper::isPowerUser($this->currentUser()) &&
@@ -455,7 +468,7 @@ class DiscussionController extends ControllerBase {
   public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $discussion = Node::load($discussion_id);
     $comment = Comment::load($comment_id);
-    $group = $this->loadGroupFromNode($discussion_id);
+    $group = $this->groupsHelper->getGroupFromContent($discussion);
 
     if (
       !UserHelper::isPowerUser($this->currentUser()) &&
@@ -541,7 +554,7 @@ class DiscussionController extends ControllerBase {
     }
 
     $discussion = Node::load($discussion_id);
-    $group = $this->loadGroupFromNode($discussion_id);
+    $group = $this->groupsHelper->getGroupFromContent($discussion);
 
     if ($group && $this->eicModerationHelper->isDraft($group)) {
       return new JsonResponse('You do not have access to flag own comment', Response::HTTP_FORBIDDEN);
@@ -749,33 +762,6 @@ class DiscussionController extends ControllerBase {
         ['context' => 'eic_groups']
       ),
     ];
-  }
-
-  /**
-   * Loads a group from a node id.
-   *
-   * @param int $node_id
-   *   The group content node ID.
-   *
-   * @return GroupInterface|bool
-   *   The group entity.
-   */
-  private function loadGroupFromNode(int $node_id): bool {
-    $node = Node::load($node_id);
-
-    if (!$node instanceof NodeInterface) {
-      return FALSE;
-    }
-
-    $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node);
-
-    if (empty($group_contents)) {
-      return FALSE;
-    }
-
-    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-    $group_content = reset($group_contents);
-    return $group_content->getGroup();
   }
 
 }

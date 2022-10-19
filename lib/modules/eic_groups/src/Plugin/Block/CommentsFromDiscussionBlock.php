@@ -94,7 +94,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
@@ -142,21 +142,21 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin definition.
-   * @param EICGroupsHelper $groups_helper
+   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
    *   The EIC groups helper service.
-   * @param GroupPermissionChecker $group_permission_checker
+   * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    *   The group permission checker.
-   * @param Connection $database
+   * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
-   * @param RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
-   * @param RequestStack $request
+   * @param \Drupal\Core\Http\RequestStack $request
    *   The current request.
-   * @param FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file url generator service.
-   * @param EditorManager $editor_manager
+   * @param \Drupal\editor\Plugin\EditorManager $editor_manager
    *   The editor manager service.
-   * @param EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The Entity type manager.
    * @param \Drupal\eic_moderation\ModerationHelper $eic_moderation_helper
    *   The EIC Content Moderation Helper.
