@@ -119,6 +119,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
   }
 
+  $contact_data = NULL;
   if ($mail_data) {
     $contact_data = [
       'title' => t('Contact', [], ['context' => 'eic_community']),
@@ -294,7 +295,6 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     'organisation_events'
   );
 
-  $view_builder = Drupal::entityTypeManager()->getViewBuilder('paragraph');
   $variables['teams'] = [
     'title' => t('Our team', [], ['context' => 'eic_community']),
     'call_to_action' => [
@@ -306,13 +306,29 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
         )->toString(),
       ],
     ],
-    'items' => array_map(
+  ];
+
+  // If manuel field is set.
+  if (!$group->get('field_team_members')->isEmpty()) {
+    $view_builder = Drupal::entityTypeManager()->getViewBuilder('paragraph');
+    $variables['teams']['items'] = array_map(
       function (ParagraphInterface $paragraph) use ($view_builder) {
         return ['content' => $view_builder->view($paragraph)];
       },
       $group->get('field_team_members')->referencedEntities()
-    ),
-  ];
+    );
+  }
+  else {
+    // Get items from automatic view.
+    $view = \Drupal\views\Views::getView('eic_group_members');
+    $view->setDisplay('block_group_members');
+    $view->setArguments([6]);
+    $view->execute();
+    $view_builder = Drupal::entityTypeManager()->getViewBuilder('group_content');
+    foreach ($view->result as $id => $result) {
+      $variables['teams']['items'][]['content'] = $view_builder->view($result->_entity, 'teaser');
+    }
+  }
 
   $variables['details'] = [
     'title' => t('Organisation details', [], ['context' => 'eic_community']),
