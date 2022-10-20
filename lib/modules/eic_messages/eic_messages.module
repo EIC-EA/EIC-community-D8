@@ -318,12 +318,3 @@ function eic_messages_eic_groups_group_predelete(array $entities) {
   $class = \Drupal::classResolver(GroupMessageCreator::class);
   $class->groupPredelete($entities);
 }
-
-/**
- * Implements hook_ENTITY_TYPE_update().
- */
-function eic_messages_node_delete(EntityInterface $entity) {
-  /** @var Drupal\eic_messages\Hooks\EntityOperations $class */
-  $class = \Drupal::classResolver(EntityOperations::class);
-  $class->nodeDelete($entity);
-}
