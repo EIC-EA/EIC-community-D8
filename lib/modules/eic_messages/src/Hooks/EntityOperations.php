@@ -72,8 +72,7 @@ class EntityOperations implements ContainerInjectionInterface {
   public function __construct(
     ModerationInformationInterface $moderationInformation,
     MessageBusInterface $message_bus,
-    AccountProxyInterface $current_user,
-    EntityTypeManagerInterface $entity_type_manager
+    AccountProxyInterface $current_user
   ) {
     $this->moderationInformation = $moderationInformation;
     $this->messageBus = $message_bus;
