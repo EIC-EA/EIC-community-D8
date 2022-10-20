@@ -5,10 +5,12 @@ namespace Drupal\eic_messages\Hooks;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Service\MessageBusInterface;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -58,6 +60,13 @@ class EntityOperations implements ContainerInjectionInterface {
   private $currentUser;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
@@ -66,15 +75,19 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The message bus service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
   public function __construct(
     ModerationInformationInterface $moderationInformation,
     MessageBusInterface $message_bus,
-    AccountProxyInterface $current_user
+    AccountProxyInterface $current_user,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->moderationInformation = $moderationInformation;
     $this->messageBus = $message_bus;
     $this->currentUser = $current_user;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -84,7 +97,8 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('content_moderation.moderation_information'),
       $container->get('eic_messages.message_bus'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -177,6 +191,17 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Implements hook_ENTITY_TYPE_update() for nodes.
+   */
+  public function nodeDelete(EntityInterface $entity) {
+    // Deletes related activity stream messages.
+    if ($messages = $this->getActivityStreamMessagesForNode($entity)) {
+      $this->entityTypeManager->getStorage('message')
+        ->delete($messages);
+    }
+  }
+
+  /**
    * Gets the user ID that will receive the notification about content status.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -207,6 +232,28 @@ class EntityOperations implements ContainerInjectionInterface {
         break;
     }
     return $uid;
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity that we want to retrieve activity stream messages.
+   *
+   * @return array|\Drupal\Core\Entity\EntityInterface[]
+   *   Array of message entities.
+   */
+  private function getActivityStreamMessagesForNode(EntityInterface $entity) {
+    $messages = [];
+    if (ActivityStreamMessageTemplates::hasTemplate($entity)) {
+      $message_storage = $this->entityTypeManager->getStorage('message');
+      $activity_stream_template = ActivityStreamMessageTemplates::getTemplate($entity);
+      $query_messages = $message_storage->getQuery();
+      $query_messages->condition('template', $activity_stream_template);
+      $query_messages->condition('field_referenced_node', $entity->id());
+      if ($results = $query_messages->execute()) {
+        $messages = $message_storage->loadMultiple($results);
+      }
+    }
+    return $messages;
   }
 
 }
