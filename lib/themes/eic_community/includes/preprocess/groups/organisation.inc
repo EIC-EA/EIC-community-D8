@@ -49,8 +49,8 @@ function eic_community_preprocess_group__organisation(&$variables) {
 /**
  * Fill informations for organisation detail page full.
  *
- * @param $variables
- * @param $group
+ * @param array $variables
+ * @param \Drupal\group\Entity\GroupInterface $group
  *
  * @throws \Drupal\Core\Entity\EntityMalformedException
  */
@@ -322,7 +322,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     // Get items from automatic view.
     $view = \Drupal\views\Views::getView('eic_group_members');
     $view->setDisplay('block_group_members');
-    $view->setArguments([6]);
+    $view->setArguments([$group->id()]);
     $view->execute();
     $view_builder = Drupal::entityTypeManager()->getViewBuilder('group_content');
     foreach ($view->result as $id => $result) {
