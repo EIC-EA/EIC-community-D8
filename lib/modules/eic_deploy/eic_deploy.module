@@ -58,10 +58,6 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
     }
 
     $group_permission->setPermissions($permissions);
-    $group_permission->setNewRevision();
-    $group_permission->setRevisionUserId(1);
-    $group_permission->setRevisionCreationTime(time());
-    $group_permission->setRevisionLogMessage(t('Update group permissions.'));
 
     if (count($group_permission->validate()) > 0) {
       continue;

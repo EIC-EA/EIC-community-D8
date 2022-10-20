@@ -25,6 +25,7 @@ use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\node\NodeInterface;
@@ -486,83 +487,148 @@ class EntityOperations implements ContainerInjectionInterface {
 
     $entity = $items->getEntity();
 
-    if ($entity instanceof GroupInterface && $entity->bundle() === 'group') {
-      $group_restricted_fields = [
-        'field_related_groups',
-        'field_related_news_stories',
-      ];
-
-      // If field is non of the restricted ones, we do nothing.
-      if (!in_array($field_definition->getName(), $group_restricted_fields)) {
-        return $access;
-      }
-
-      switch ($operation) {
-        case 'edit':
-          // Deny access if it's a new group and the user doesn't have
-          // "site_admin" or "content_administrator" roles.
-          if ($entity->isNew()) {
-            $access = AccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
-              ->addCacheableDependency($account);
-            break;
-          }
-          break;
-
-      }
+    if ($entity instanceof GroupInterface) {
+      $access = $this->groupFieldAccess($operation, $field_definition, $account, $items);
     }
     elseif ($entity instanceof NodeInterface) {
-      $access = AccessResult::neutral();
+      $access = $this->nodeFieldAccess($operation, $field_definition, $account, $items);
+    }
+    elseif ($entity instanceof GroupContentInterface) {
+      $access = $this->groupContentFieldAccess($operation, $field_definition, $account, $items);
+    }
 
-      if ($operation !== 'edit') {
-        return $access;
-      }
+    return $access;
+  }
 
-      switch ($field_definition->getName()) {
-        case NodeProperty::MEMBER_CONTENT_EDIT_ACCESS:
+  /**
+   * Custom field access implementation for 'group' entity type.
+   *
+   * @see hook_entity_field_access()
+   * @see \Drupal\eic_groups\Hooks\EntityOperations::entityFieldAccess()
+   */
+  protected function groupFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    $access = AccessResult::neutral();
+    $entity = $items->getEntity();
 
-          if ($entity->isNew()) {
-            $group = $this->eicGroupsHelper->getGroupFromRoute();
+    switch ($entity->bundle() === 'group') {
+      case 'group':
+        $group_restricted_fields = [
+          'field_related_groups',
+          'field_related_news_stories',
+        ];
 
-            if (!$group) {
-              return AccessResult::forbidden();
+        // If field is none of the restricted ones, we do nothing.
+        if (!in_array($field_definition->getName(), $group_restricted_fields)) {
+          return $access;
+        }
+
+        switch ($operation) {
+          case 'edit':
+            // Deny access if it's a new group and the user doesn't have
+            // "site_admin" or "content_administrator" roles.
+            if ($entity->isNew()) {
+              $access = AccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
+                ->addCacheableDependency($account);
+              break;
             }
+            break;
 
-            return $access;
-          }
+        }
+        break;
+    }
 
-          /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
-          $storage = $this->entityTypeManager->getStorage('group_content');
-          $group_contents = $storage->loadByEntity($entity);
+    return $access;
+  }
 
-          // Wiki page is not part of a group, so we always hide the field.
-          if (empty($group_contents)) {
+  /**
+   * Custom field access implementation for 'node' entity type.
+   *
+   * @see hook_entity_field_access()
+   * @see \Drupal\eic_groups\Hooks\EntityOperations::entityFieldAccess()
+   */
+  protected function nodeFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    $access = AccessResult::neutral();
+    $entity = $items->getEntity();
+
+    if ($operation !== 'edit') {
+      return $access;
+    }
+
+    switch ($field_definition->getName()) {
+      case NodeProperty::MEMBER_CONTENT_EDIT_ACCESS:
+
+        if ($entity->isNew()) {
+          $group = $this->eicGroupsHelper->getGroupFromRoute();
+
+          if (!$group) {
             return AccessResult::forbidden();
           }
 
-          // If user is the group author, we allow access.
-          if ($entity->getOwnerId() === $account->id()) {
-            break;
-          }
+          return $access;
+        }
 
-          // If user is a power user, we allow access.
-          if (UserHelper::isPowerUser($account)) {
-            break;
-          }
+        /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+        $storage = $this->entityTypeManager->getStorage('group_content');
+        $group_contents = $storage->loadByEntity($entity);
 
-          $group_content = reset($group_contents);
-          $group = $group_content->getGroup();
+        // Wiki page is not part of a group, so we always hide the field.
+        if (empty($group_contents)) {
+          return AccessResult::forbidden();
+        }
 
-          // If user is a group admin, we allow access.
-          if (EICGroupsHelper::userIsGroupAdmin($group, $account)) {
-            break;
-          }
-
-          // At this point it means the user is just a group member and
-          // therefore we deny access to edit the field.
-          $access = AccessResult::forbidden();
+        // If user is the group author, we allow access.
+        if ($entity->getOwnerId() === $account->id()) {
           break;
+        }
 
-      }
+        // If user is a power user, we allow access.
+        if (UserHelper::isPowerUser($account)) {
+          break;
+        }
+
+        $group_content = reset($group_contents);
+        $group = $group_content->getGroup();
+
+        // If user is a group admin, we allow access.
+        if (EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+          break;
+        }
+
+        // At this point it means the user is just a group member and
+        // therefore we deny access to edit the field.
+        $access = AccessResult::forbidden();
+        break;
+
+    }
+
+    return $access;
+  }
+
+  /**
+   * Custom field access implementation for 'group_content' entity type.
+   *
+   * @see hook_entity_field_access()
+   * @see \Drupal\eic_groups\Hooks\EntityOperations::entityFieldAccess()
+   */
+  protected function groupContentFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    $access = AccessResult::neutral();
+    /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+    $entity = $items->getEntity();
+
+    switch ($entity->getGroupContentType()->getContentPlugin()->getPluginId()) {
+      case 'group_invitation':
+        if ($field_definition->getName() == 'invitee_mail') {
+          /** @var \Drupal\user\UserInterface $user */
+          $user = $entity->getEntity();
+
+          // If invited user is not anonymous and current user does not have
+          // permission to see email addresses, we deny access.
+          if (!$user->isAnonymous() && !$account->hasPermission('view user email addresses')) {
+            $access = AccessResult::forbidden();
+          }
+        }
+        break;
+
     }
 
     return $access;

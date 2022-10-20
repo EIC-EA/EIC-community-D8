@@ -3,7 +3,7 @@ services:
     class: Drupal\eic_topics\TermBreadcrumbBuilder
     arguments: ['@entity_type.manager', '@entity.repository']
     tags:
-      - { name: breadcrumb_builder, priority: 1002 }
+      - { name: breadcrumb_builder, priority: 1100 }
 
   eic_topics.topics_redirect_subscriber:
     class: Drupal\eic_topics\EventSubscriber\TopicsRedirectSubscriber
