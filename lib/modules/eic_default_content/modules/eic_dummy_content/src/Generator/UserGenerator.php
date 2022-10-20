@@ -177,7 +177,6 @@ class UserGenerator extends CoreGenerator {
       'field_vocab_topic_interest' => $this->getRandomEntities('taxonomy_term', ['vid' => Topics::TERM_VOCABULARY_TOPICS_ID], 3),
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 3),
       'field_vocab_language' => $this->getRandomEntities('taxonomy_term', ['vid' => 'languages'], 4),
-      'field_vocab_job_title' => $this->getRandomEntities('taxonomy_term', ['vid' => 'job_titles'], 2),
       'field_location_address' => [
         'country_code' => $country,
         'locality' => $city,
