@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_flags\Service;
 
-use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -11,11 +10,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Util\LogMessageTemplates;
+use Drupal\eic_moderation\ModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
@@ -24,7 +24,6 @@ use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\message\MessageInterface;
-use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -67,6 +66,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   protected $moderationInformation;
 
   /**
+   * The EIC Moderation helper service.
+   *
+   * @var \Drupal\eic_moderation\ModerationHelper
+   */
+  protected $moderationHelper;
+
+  /**
    * The current request object.
    *
    * @var \Symfony\Component\HttpFoundation\Request|null
@@ -91,6 +97,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    *   Flag service provided by the flag module.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   Core's moderation information service.
+   * @param \Drupal\eic_moderation\ModerationHelper|null $moderation_helper
+   *   The EIC Moderation helper service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
@@ -101,6 +109,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     ModerationInformationInterface $moderation_information,
+    ?ModerationHelper $moderation_helper,
     RequestStack $request_stack,
     EntityFieldManagerInterface $entity_field_manager
   ) {
@@ -108,6 +117,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->moderationInformation = $moderation_information;
+    $this->moderationHelper = $moderation_helper;
     $this->currentRequest = $request_stack->getCurrentRequest();
     $this->entityFieldManager = $entity_field_manager;
   }
@@ -379,7 +389,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ->setRouteParameter(
             'destination',
             $this->currentRequest->getRequestUri()
-          ),
+        ),
       ],
       'accept_request' => [
         'title' => $this->t('Accept'),
@@ -389,7 +399,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ->setRouteParameter(
             'destination',
             $this->currentRequest->getRequestUri()
-          ),
+        ),
       ],
     ];
   }

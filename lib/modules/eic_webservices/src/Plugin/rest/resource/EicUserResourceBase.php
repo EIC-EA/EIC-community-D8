@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
+use Drupal\Component\Utility\EmailValidator;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\UserInterface;
 use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -75,6 +77,38 @@ abstract class EicUserResourceBase extends EntityResource {
     $this->wsRestHelper->formatEntityFields($entity);
 
     return parent::patch($original_entity, $entity);
+  }
+
+  /**
+   * Check that the user entity has the required/valid information.
+   *
+   * @param \Drupal\user\UserInterface|null $entity
+   *   The user entity.
+   *
+   * @return bool|\Exception
+   *   TRUE if user entity is valid, Exception otherwise.
+   */
+  public function checkUserEntityIntegrity(UserInterface $entity = NULL) {
+    // Check if entity is null.
+    if (is_null($entity)) {
+      return new \Exception("Entity is null.");
+    }
+
+    // Check if account has an account name.
+    if (empty($entity->getAccountName())) {
+      return new \Exception("Account name is empty.");
+    }
+
+    // Check that there is email address.
+    if (empty($entity->getEmail())) {
+      return new \Exception("Email address is empty.");
+    }
+    // Check that the email address is valid.
+    elseif (!EmailValidator::isValid($entity->getEmail())) {
+      return new \Exception("Email address is not valid.");
+    }
+
+    return TRUE;
   }
 
 }

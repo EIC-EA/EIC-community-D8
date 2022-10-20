@@ -302,9 +302,11 @@ class SolrSearchManager {
           $value = "\"$value\"";
         });
 
+        $condition_operator = in_array($key, $this->source->getFacetsUsingOrCondition()) ? 'OR' : 'AND';
+
         $query_values = count($values) > 1 ?
-          '(' . implode(' AND ', $values) . ')' :
-          implode(' AND ', $values);
+          '(' . implode(" $condition_operator ", $values) . ')' :
+          implode(" $condition_operator ", $values);
 
         if (in_array($key, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
           $key = $key . $this->currentGroup;

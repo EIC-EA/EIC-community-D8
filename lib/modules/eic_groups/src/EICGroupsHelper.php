@@ -1144,4 +1144,37 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return $config->get('default_features') ?? [];
   }
 
+  /**
+   * Gets group bundle label.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param bool $return_plural
+   *   Return as plural.
+   *
+   * @return string
+   *   The group label.
+   */
+  public function getGroupBundleLabel(GroupInterface $group, bool $return_plural = FALSE) {
+    $label = $group->type->entity->label();
+
+    if ($return_plural) {
+      switch ($group->bundle()) {
+        case 'group':
+          $label = $this->t('Groups');
+          break;
+
+        case 'event':
+          $label = $this->t('Events');
+          break;
+
+        case 'organisation':
+          $label = $this->t('Organisations');
+          break;
+      }
+    }
+
+    return $label;
+  }
+
 }

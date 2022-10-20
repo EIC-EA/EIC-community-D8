@@ -11,6 +11,7 @@ use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
  * @package Drupal\eic_groups\Search\Sources
  */
 abstract class SourceType implements SourceTypeInterface {
+
   use StringTranslationTrait;
 
   /**
@@ -235,6 +236,13 @@ abstract class SourceType implements SourceTypeInterface {
    */
   public function getUniqueId(): string {
     return $this->getEntityBundle();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFacetsUsingOrCondition(): array {
+    return [];
   }
 
 }

@@ -34,6 +34,7 @@ dependencies:
     - taxonomy.vocabulary.target_markets
     - taxonomy.vocabulary.topics
     - taxonomy.vocabulary.user_types
+    - user.role.trusted_user
     - workflows.workflow.default
     - workflows.workflow.eic_moderated_workflow
     - workflows.workflow.groups

@@ -34,6 +34,17 @@ class EicUserResource extends EicUserResourceBase {
     // Get the field name that contains the SMED ID.
     $smed_id_field = $this->configFactory->get('eic_webservices.settings')->get('smed_id_field');
 
+    // Check entity integrity.
+    $is_valid = $this->checkUserEntityIntegrity($entity);
+    if ($is_valid instanceof \Exception) {
+      // Send custom response.
+      $data = [
+        'message' => "Unprocessable Entity: validation failed. " . $is_valid->getMessage(),
+      ];
+
+      return new ResourceResponse($data, 422);
+    }
+
     // Check if user already exists.
     $user_exists = FALSE;
     if ($user = user_load_by_mail($entity->getEmail())) {
