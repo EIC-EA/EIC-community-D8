@@ -8,7 +8,7 @@
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Create default terms for story_type vocabulary.
+ * Create default terms for story_type and program_type vocabularies.
  */
 function eic_taxonomy_update_9001() {
   $terms = [
@@ -19,6 +19,18 @@ function eic_taxonomy_update_9001() {
       'Open Calls ',
       'Partner Calls',
       'Impact Stories',
+    ],
+    'program_type' => [
+      'EIC Corporate Partnership Programme',
+      'EIC Innovation Procurement Programme',
+      'EIC Overseas Trade Fair Programme',
+      'EIC Women Leadership Programme',
+      'EIC Ecosystem Partnership Programme',
+      'EIC Investment Programme',
+      'EIC & EIT',
+      'EIC Scale Up 100',
+      'EIC Tech To Market Services',
+      'EIC Community Activities',
     ],
   ];
 
