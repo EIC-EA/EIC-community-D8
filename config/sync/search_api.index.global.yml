@@ -370,6 +370,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_location_type
+  content_field_story_type_string:
+    label: 'Type » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_story_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_story_type
+      module:
+        - taxonomy
   content_field_subtitle:
     label: '[Content] Subtitle'
     datasource_id: 'entity:node'
