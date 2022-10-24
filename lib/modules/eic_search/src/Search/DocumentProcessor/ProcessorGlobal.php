@@ -33,7 +33,8 @@ use Solarium\QueryType\Update\Query\Document;
 class ProcessorGlobal extends DocumentProcessor {
 
   /**
-   * @var \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
+   * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
+   *   $nodeStatisticsDatabaseStorage
    */
   private $nodeStatisticsDatabaseStorage;
 
@@ -103,6 +104,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
           $fields['sm_content_field_vocab_topics_string'] :
           [];
+        $topics = $this->createChildrenTerm($topics);
         $geo = array_key_exists('sm_content_field_vocab_geo_string', $fields) ?
           $fields['sm_content_field_vocab_geo_string'] :
           [];
@@ -152,6 +154,8 @@ class ProcessorGlobal extends DocumentProcessor {
           }
         }
 
+        $topics = $this->createChildrenTerm($topics);
+
         $changed = $fields['ds_aggregated_changed'];
         $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = $fields['ss_group_type'];
@@ -168,6 +172,12 @@ class ProcessorGlobal extends DocumentProcessor {
           'its_group_id_integer',
           $fields,
           $group_id
+        );
+        $this->addOrUpdateDocumentField(
+          $document,
+          'sm_group_topic_name',
+          $fields,
+          $topics
         );
         $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
@@ -276,6 +286,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('tm_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
+
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
     $this->addOrUpdateDocumentField($document, 'ss_global_moderation_state', $fields, $moderation_state);
@@ -348,7 +359,8 @@ class ProcessorGlobal extends DocumentProcessor {
 
     $last_revision = $entity->getRevisionId() !== $last_revision_id ?
       $this->em->getStorage($entity_type)->loadRevision($last_revision_id) :
-      $this->em->getStorage($entity_type)->loadRevision($entity->getRevisionId());
+      $this->em->getStorage($entity_type)
+        ->loadRevision($entity->getRevisionId());
 
     return $last_revision->get('moderation_state')->value;
   }

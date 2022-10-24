@@ -336,25 +336,23 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     $build['#attached']['drupalSettings']['overview'] = [
-      'is_group_owner' => $current_group_route ?
-        array_key_exists(
+      'is_group_owner' => $current_group_route && array_key_exists(
           EICGroupsHelper::getGroupTypeRole(
             $current_group_route->bundle(),
             EICGroupsHelper::GROUP_TYPE_OWNER_ROLE
           ),
           $user_group_roles
-        ) : FALSE,
+        ),
       'label_my_groups' => $source->getLabelFilterMyGroups(),
       'label_active_my_groups' => $source->getLabelActiveFilterMyGroups(),
       'open_registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
-      'is_group_admin' => $current_group_route ?
-        array_key_exists(
+      'is_group_admin' => $current_group_route && array_key_exists(
           EICGroupsHelper::getGroupTypeRole(
             $current_group_route->bundle(),
             EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
           ),
           $user_group_roles
-        ) : FALSE,
+        ),
       'is_power_user' => $account instanceof AccountInterface && UserHelper::isPowerUser(
         $account
       ),

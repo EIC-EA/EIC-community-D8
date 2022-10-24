@@ -4,6 +4,7 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
@@ -93,6 +94,44 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
     $text = preg_replace('#(src=".*image/[^;"]+;base64,.*")#iU', '', $text);
     $text = preg_replace('#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU', '', $text);
     return $text;
+  }
+
+  /**
+   * @param string|array $topics
+   *
+   * @return array
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function createChildrenTerm($topics, $vid = Topics::TERM_VOCABULARY_TOPICS_ID): array {
+    $topics_data = is_array($topics) ?: [$topics];
+    $topics = [];
+
+    foreach ($topics_data as $topic) {
+      /** @var \Drupal\taxonomy\TermInterface[] $topic */
+      $topic = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->loadByProperties([
+          'name' => $topic,
+          'vid' => $vid,
+        ]);
+
+      $topic = reset($topic);
+      $parents = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->loadParents($topic->id());
+      /** @var \Drupal\taxonomy\TermInterface $parent */
+      $parent = reset($parents);
+
+      if (!empty($parent)) {
+        $topics[] = $topic->getName() . '___' . $parent->getName();
+      }
+      else {
+        $topics[] = $topic->getName();
+      }
+    }
+
+    return $topics;
   }
 
 }
