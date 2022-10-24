@@ -94,6 +94,7 @@ module:
   eic_share_content: 0
   eic_statistics: 0
   eic_subscription_digest: 0
+  eic_taxonomy: 0
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
