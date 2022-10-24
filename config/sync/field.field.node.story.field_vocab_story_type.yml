@@ -1,0 +1,29 @@
+uuid: 71b56336-b7de-459c-808c-b87dd4991a54
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vocab_story_type
+    - node.type.story
+    - taxonomy.vocabulary.story_type
+id: node.story.field_vocab_story_type
+field_name: field_vocab_story_type
+entity_type: node
+bundle: story
+label: Type
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      story_type: story_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

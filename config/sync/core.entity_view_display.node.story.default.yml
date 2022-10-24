@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.story.field_tags
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
+    - field.field.node.story.field_vocab_story_type
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
@@ -153,6 +154,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 11
+    region: content
+  field_vocab_story_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 23
     region: content
   field_vocab_topics:
     type: entity_reference_label
