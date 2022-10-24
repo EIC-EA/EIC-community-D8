@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.story.field_tags
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
+    - field.field.node.story.field_vocab_program_type
     - field.field.node.story.field_vocab_story_type
     - field.field.node.story.field_vocab_topics
     - node.type.story
@@ -72,6 +73,7 @@ hidden:
   field_tags: true
   field_video: true
   field_vocab_geo: true
+  field_vocab_program_type: true
   field_vocab_story_type: true
   field_vocab_topics: true
   flag_bookmark_content: true
