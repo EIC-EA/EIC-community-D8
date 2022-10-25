@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d70bce7322b330f686a1ef576f7e5e00",
+    "content-hash": "33310cc8ac32fc97fdab1a5bb5bbd218",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7792,26 +7792,27 @@
         },
         {
             "name": "drupal/smart_trim",
-            "version": "1.3.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/smart_trim.git",
-                "reference": "8.x-1.3"
+                "reference": "2.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/smart_trim-8.x-1.3.zip",
-                "reference": "8.x-1.3",
-                "shasum": "5894aa067fba19a3452ed8ce749f33bd9ae91907"
+                "url": "https://ftp.drupal.org/files/projects/smart_trim-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "d917ad4d78b50cf535f3a292a2e09cc73b87bf4f"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/token": "^1.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.3",
-                    "datestamp": "1589766531",
+                    "version": "2.0.0",
+                    "datestamp": "1666374010",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -7829,30 +7830,22 @@
                     "role": "Maintainer"
                 },
                 {
-                    "name": "chrisjlee",
-                    "homepage": "https://www.drupal.org/user/760600"
-                },
-                {
-                    "name": "drywall",
-                    "homepage": "https://www.drupal.org/user/192591"
-                },
-                {
-                    "name": "jsenich",
-                    "homepage": "https://www.drupal.org/user/58871"
-                },
-                {
-                    "name": "markie",
-                    "homepage": "https://www.drupal.org/user/206687"
-                },
-                {
                     "name": "newsignature",
                     "homepage": "https://www.drupal.org/user/765518"
+                },
+                {
+                    "name": "ultimike",
+                    "homepage": "https://www.drupal.org/user/51132"
+                },
+                {
+                    "name": "volkswagenchick",
+                    "homepage": "https://www.drupal.org/user/3332522"
                 }
             ],
             "description": "Provides a more robust alternative to 'summary or trimmed' textfield format.",
             "homepage": "https://drupal.org/project/smart_trim",
             "support": {
-                "source": "https://cgit.drupalcode.org/smart_trim",
+                "source": "https://git.drupalcode.org/project/smart_trim",
                 "issues": "https://drupal.org/project/issues/smart_trim"
             }
         },
@@ -8481,32 +8474,33 @@
         },
         {
             "name": "drupal/views_bulk_operations",
-            "version": "3.13.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_bulk_operations.git",
-                "reference": "8.x-3.13"
+                "reference": "4.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_bulk_operations-8.x-3.13.zip",
-                "reference": "8.x-3.13",
-                "shasum": "70583d08b91be3b5e008f571589425c2176eb73b"
+                "url": "https://ftp.drupal.org/files/projects/views_bulk_operations-4.2.1.zip",
+                "reference": "4.2.1",
+                "shasum": "3bce967e24c0ce19fc7e0de031594729e22c38ef"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9.4 || ^10",
+                "php": ">=7.4.0"
             },
             "require-dev": {
-                "drush/drush": "^10"
+                "drush/drush": "^11"
             },
             "suggest": {
-                "drush/drush": "^9 || ^10"
+                "drush/drush": "^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.13",
-                    "datestamp": "1619697066",
+                    "version": "4.2.1",
+                    "datestamp": "1666185226",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -8514,7 +8508,7 @@
                 },
                 "drush": {
                     "services": {
-                        "drush.services.yml": "^9 || ^10"
+                        "drush.services.yml": "^10 || ^11"
                     }
                 }
             },
@@ -8528,16 +8522,8 @@
                     "homepage": "https://www.drupal.org/u/graber"
                 },
                 {
-                    "name": "Jon Pugh",
-                    "homepage": "https://www.drupal.org/user/17028"
-                },
-                {
-                    "name": "bojanz",
-                    "homepage": "https://www.drupal.org/user/86106"
-                },
-                {
-                    "name": "infojunkie",
-                    "homepage": "https://www.drupal.org/user/48424"
+                    "name": "Graber",
+                    "homepage": "https://www.drupal.org/user/1599440"
                 },
                 {
                     "name": "joelpittet",
