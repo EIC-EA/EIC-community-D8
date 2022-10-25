@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "424160f61f39c6d89a1f828800b2217c",
+    "content-hash": "d70bce7322b330f686a1ef576f7e5e00",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -57,141 +57,6 @@
                 "stack"
             ],
             "time": "2019-12-24T22:41:47+00:00"
-        },
-        {
-            "name": "aws/aws-crt-php",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/awslabs/aws-crt-php.git",
-                "reference": "3942776a8c99209908ee0b287746263725685732"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/awslabs/aws-crt-php/zipball/3942776a8c99209908ee0b287746263725685732",
-                "reference": "3942776a8c99209908ee0b287746263725685732",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5.4.3"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "AWS SDK Common Runtime Team",
-                    "email": "aws-sdk-common-runtime@amazon.com"
-                }
-            ],
-            "description": "AWS Common Runtime for PHP",
-            "homepage": "http://aws.amazon.com/sdkforphp",
-            "keywords": [
-                "amazon",
-                "aws",
-                "crt",
-                "sdk"
-            ],
-            "time": "2021-09-03T22:57:30+00:00"
-        },
-        {
-            "name": "aws/aws-sdk-php",
-            "version": "3.240.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "34c6bf82f337cadf31475c88ca70e8302afc624b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/34c6bf82f337cadf31475c88ca70e8302afc624b",
-                "reference": "34c6bf82f337cadf31475c88ca70e8302afc624b",
-                "shasum": ""
-            },
-            "require": {
-                "aws/aws-crt-php": "^1.0.2",
-                "ext-json": "*",
-                "ext-pcre": "*",
-                "ext-simplexml": "*",
-                "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
-                "guzzlehttp/promises": "^1.4.0",
-                "guzzlehttp/psr7": "^1.8.5 || ^2.3",
-                "mtdowling/jmespath.php": "^2.6",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "andrewsville/php-token-reflection": "^1.4",
-                "aws/aws-php-sns-message-validator": "~1.0",
-                "behat/behat": "~3.0",
-                "composer/composer": "^1.10.22",
-                "dms/phpunit-arraysubset-asserts": "^0.4.0",
-                "doctrine/cache": "~1.4",
-                "ext-dom": "*",
-                "ext-openssl": "*",
-                "ext-pcntl": "*",
-                "ext-sockets": "*",
-                "nette/neon": "^2.3",
-                "paragonie/random_compat": ">= 2",
-                "phpunit/phpunit": "^4.8.35 || ^5.6.3 || ^9.5",
-                "psr/cache": "^1.0",
-                "psr/simple-cache": "^1.0",
-                "sebastian/comparator": "^1.2.3 || ^4.0",
-                "yoast/phpunit-polyfills": "^1.0"
-            },
-            "suggest": {
-                "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
-                "doctrine/cache": "To use the DoctrineCacheAdapter",
-                "ext-curl": "To send requests using cURL",
-                "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
-                "ext-sockets": "To use client-side monitoring"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
-                "psr-4": {
-                    "Aws\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Amazon Web Services",
-                    "homepage": "http://aws.amazon.com"
-                }
-            ],
-            "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
-            "homepage": "http://aws.amazon.com/sdkforphp",
-            "keywords": [
-                "amazon",
-                "aws",
-                "cloud",
-                "dynamodb",
-                "ec2",
-                "glacier",
-                "s3",
-                "sdk"
-            ],
-            "time": "2022-10-24T19:03:23+00:00"
         },
         {
             "name": "chi-teck/drupal-code-generator",
@@ -7302,83 +7167,6 @@
             }
         },
         {
-            "name": "drupal/s3fs",
-            "version": "3.0.0-rc2",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/s3fs.git",
-                "reference": "8.x-3.0-rc2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/s3fs-8.x-3.0-rc2.zip",
-                "reference": "8.x-3.0-rc2",
-                "shasum": "bf4b673ca66f28c1656062401bf358ab2617b450"
-            },
-            "require": {
-                "aws/aws-sdk-php": "^3.18",
-                "drupal/core": "^8.8 || ^9"
-            },
-            "require-dev": {
-                "drush/drush": "^10 || ^11"
-            },
-            "suggest": {
-                "doctrine/cache": "~1.4"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-3.0-rc2",
-                    "datestamp": "1665604346",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "RC releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Abhishek Anand",
-                    "homepage": "https://www.drupal.org/user/1790054",
-                    "email": "fly2abhishek@gmail.com"
-                },
-                {
-                    "name": "Juanen Bernal",
-                    "homepage": "https://www.drupal.org/u/jansete"
-                },
-                {
-                    "name": "Manuel Garcia",
-                    "homepage": "https://www.drupal.org/user/213194"
-                },
-                {
-                    "name": "naveenvalecha",
-                    "homepage": "https://www.drupal.org/user/2665733"
-                },
-                {
-                    "name": "ram4nd",
-                    "homepage": "https://www.drupal.org/user/601534"
-                },
-                {
-                    "name": "Rhane",
-                    "homepage": "https://www.drupal.org/user/2655479"
-                },
-                {
-                    "name": "ron_s",
-                    "homepage": "https://www.drupal.org/user/184990"
-                }
-            ],
-            "description": "Adds an Amazon Simple Storage Service-based remote file system to Drupal.",
-            "homepage": "https://www.drupal.org/project/s3fs",
-            "support": {
-                "source": "https://git.drupalcode.org/project/s3fs",
-                "issues": "https://www.drupal.org/project/issues/s3fs"
-            }
-        },
-        {
             "name": "drupal/scheduler",
             "version": "1.4.0",
             "source": {
@@ -10546,63 +10334,6 @@
                 "xml"
             ],
             "time": "2022-08-18T16:18:26+00:00"
-        },
-        {
-            "name": "mtdowling/jmespath.php",
-            "version": "2.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jmespath/jmespath.php.git",
-                "reference": "9b87907a81b87bc76d19a7fb2d61e61486ee9edb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/9b87907a81b87bc76d19a7fb2d61e61486ee9edb",
-                "reference": "9b87907a81b87bc76d19a7fb2d61e61486ee9edb",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.4 || ^7.0 || ^8.0",
-                "symfony/polyfill-mbstring": "^1.17"
-            },
-            "require-dev": {
-                "composer/xdebug-handler": "^1.4 || ^2.0",
-                "phpunit/phpunit": "^4.8.36 || ^7.5.15"
-            },
-            "bin": [
-                "bin/jp.php"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/JmesPath.php"
-                ],
-                "psr-4": {
-                    "JmesPath\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Declaratively specify how to extract elements from a JSON document",
-            "keywords": [
-                "json",
-                "jsonpath"
-            ],
-            "time": "2021-06-14T00:11:39+00:00"
         },
         {
             "name": "myclabs/php-enum",
@@ -20684,7 +20415,6 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "drupal/realname": 10,
-        "drupal/s3fs": 10,
         "drupal/search_api_attachments": 10,
         "drupal/social_link_field": 15,
         "drupal/workflow_buttons": 10,
