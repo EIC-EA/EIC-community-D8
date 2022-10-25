@@ -18,7 +18,6 @@ module:
   book_link_weight: 0
   breakpoint: 0
   cas: 0
-  cas_mock_server: 0
   ckeditor: 0
   ckeditor_div_manager: 0
   ckeditor_find: 0
