@@ -31,16 +31,7 @@ settings:
             - Link
             - Unlink
             - Anchor
-  plugins:
-    stylescombo:
-      styles: ''
-    language:
-      language_list: un
-    font:
-      font_names: ''
-      font_sizes: ''
-    colorbutton:
-      colors: ''
+  plugins: {  }
 image_upload:
   status: false
   scheme: public
