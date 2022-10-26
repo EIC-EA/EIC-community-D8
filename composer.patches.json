@@ -98,6 +98,9 @@
     "drupal/social_link_field": {
       "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
     },
+    "drupal/smtp": {
+      "#3316049 - Some custom headers (Reply-To/Sender/Return-Path) are overriden by the module": "https://www.drupal.org/files/issues/2022-10-19/3316049-4-some-custom-headers-are-overriden.patch"
+    },
     "drupal/subpathauto": {
       "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2022-02-04/group-content-add-create-3130139-11.patch"
     },

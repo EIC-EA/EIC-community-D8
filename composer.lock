@@ -8128,6 +8128,9 @@
                 },
                 "branch-alias": {
                     "dev-8.x-1.x": "1.x-dev"
+                },
+                "patches_applied": {
+                    "#3316049 - Some custom headers (Reply-To/Sender/Return-Path) are overriden by the module": "https://www.drupal.org/files/issues/2022-10-19/3316049-4-some-custom-headers-are-overriden.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
