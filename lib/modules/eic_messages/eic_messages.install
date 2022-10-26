@@ -30,7 +30,7 @@ function eic_messages_update_9001(&$sandbox) {
   }
 
   $batch_builder = (new BatchBuilder())
-    ->setTitle(t('Processing Batch to modify group permissions.'))
+    ->setTitle(t('Processing Batch to delete messages with references to non-existing content.'))
     ->setFinishCallback('_eic_messages_batch_finished')
     ->setInitMessage(t('Batch is starting'))
     ->setProgressMessage(t('Processed @current out of @total.'))
