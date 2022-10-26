@@ -184,6 +184,8 @@ function eic_group_membership_form_alter(
       $new_url = Url::fromRoute('entity.group.canonical', ['group' => $group->id()]);
       $form['actions']['cancel']['#url'] = $new_url;
     }
+    // Change the title of the submit button.
+    $form['actions']['submit']['#value'] = t('Leave');
     return;
   }
 
@@ -248,6 +250,10 @@ function _eic_group_membership_handle_group_membership_form(&$form, FormStateInt
         $new_url->setOptions($old_url->getOptions());
         $form['actions']['delete']['#url'] = $new_url;
       }
+      break;
+
+    case "group_content_{$group_type}-group_membership_group-join_form":
+      $form['actions']['submit']['#value'] = t('Join');
       break;
   }
 }
@@ -580,4 +586,19 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_group_operations_alter().
+ */
+function eic_group_membership_group_operations_alter(array &$operations, GroupInterface $group) {
+  if (isset($operations['group-join'])) {
+    $operations['group-join']['title'] = t('Join');
+  }
+  if (isset($operations['group-request-membership'])) {
+    $operations['group-request-membership']['title'] = t('Request membership');
+  }
+  if (isset($operations['group-leave'])) {
+    $operations['group-leave']['title'] = t('Leave');
+  }
 }
