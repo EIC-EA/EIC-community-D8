@@ -115,15 +115,38 @@ class CronOperations implements ContainerInjectionInterface {
    */
   public function reindexNodeViewCountersStatistic() {
     $node_view_counter_state_cache = $this->state->get(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, []);
-    $this->state->delete(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE);
+    // If there are no nodes to re-index, we do nothing.
     if (empty($node_view_counter_state_cache)) {
       return;
     }
 
-    $nodes = $this->entityTypeManager->getStorage('node')
-      ->loadMultiple($node_view_counter_state_cache);
+    // We re-index each node one by one.
+    foreach ($node_view_counter_state_cache as $key => $nid) {
+      if ($node = $this->entityTypeManager->getStorage('node')->load($nid)) {
+        $this->solrDocumentProcessor->reIndexEntities([$node]);
+      }
 
-    $this->solrDocumentProcessor->reIndexEntities($nodes);
+      // Removes the current node from state cache.
+      unset($node_view_counter_state_cache[$key]);
+
+      // Gets node IDs from the current state cache and removes the current nid
+      // from the current state cache.
+      $current_state_cache = $this->state->get(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, []);
+      $search_nid_key = array_search($nid, $current_state_cache);
+      if ($search_nid_key !== FALSE) {
+        unset($current_state_cache[$search_nid_key]);
+      }
+
+      // Merge remaining node IDs with the ones in the state cache.
+      $update_state_cache = array_unique(
+        array_merge(
+          $node_view_counter_state_cache,
+          $current_state_cache,
+        )
+      );
+      // Updates the state cache.
+      $this->state->set(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, $update_state_cache);
+    }
   }
 
 }
