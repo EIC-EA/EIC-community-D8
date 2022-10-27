@@ -20,6 +20,7 @@ module:
   cas: 0
   cas_mock_server: 0
   ckeditor: 0
+  ckeditor_blockimagepaste: 0
   ckeditor_div_manager: 0
   ckeditor_find: 0
   ckeditor_font: 0
