@@ -233,7 +233,13 @@ class MembershipResource extends ResourceBase {
             $group_content->save();
           }
 
-          $message = "User has been added to $group_type_label successfully.";
+          if ($data['action'] == 'add') {
+            $message = "User membership to $group_type_label has been added successfully.";
+          }
+          else {
+            $message = "User membership to $group_type_label has been updated successfully.";
+          }
+
           return new ModifiedResourceResponse(['message' => $message]);
         }
         catch (\Exception $exception) {
