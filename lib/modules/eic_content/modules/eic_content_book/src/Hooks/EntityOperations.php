@@ -78,7 +78,7 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'entity.node.canonical':
         if ($entity->bundle() === 'book') {
           // Ignore book page that belongs to a group.
-          if ($this->eicContentHelper->getGroupContentByEntity($entity)) {
+          if ($this->eicContentHelper->getGroupContentByEntity($entity, [], ["group_node:{$entity->bundle()}"])) {
             return;
           }
           // Unsets book navigation since we already have that show in the

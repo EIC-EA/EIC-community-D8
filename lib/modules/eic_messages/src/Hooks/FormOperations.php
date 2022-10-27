@@ -131,7 +131,10 @@ class FormOperations implements ContainerInjectionInterface {
     }
     // Check we are updating a node which has an associated GroupContent entity.
     if ($node = $form_state->getFormObject()->getEntity()) {
-      if (!$node->isNew() && $this->eicContentHelper->getGroupContentByEntity($node)) {
+      if (
+        !$node->isNew() &&
+        $this->eicContentHelper->getGroupContentByEntity($node, [], ["group_node:{$node->bundle()}"])
+      ) {
         $is_group_content = TRUE;
       }
     }
@@ -234,7 +237,7 @@ class FormOperations implements ContainerInjectionInterface {
 
     $group = $this->routeMatch->getParameter('group');
     if (!$group instanceof GroupInterface) {
-      $group_content = $this->eicContentHelper->getGroupContentByEntity($entity);
+      $group_content = $this->eicContentHelper->getGroupContentByEntity($entity, [], ["group_node:{$entity->bundle()}"]);
       if (empty($group_content)) {
         return;
       }
