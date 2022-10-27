@@ -100,6 +100,7 @@ class FormAlter implements ContainerInjectionInterface {
       }
     }
 
+    unset($form['account']['mail']['#description']);
   }
 
   /**
