@@ -39,6 +39,7 @@ services:
       - { name: access_check, applies_to: _orphan_group_content_access_check }
   eic_groups.archived_route_access_checker:
     class: Drupal\eic_groups\Access\ArchivedRouteAccessCheck
+    arguments: ['@eic_groups.helper', '']
     tags:
       - { name: access_check, applies_to: _archived_route_access_check }
   eic_groups.access_check.flag_group_content:
