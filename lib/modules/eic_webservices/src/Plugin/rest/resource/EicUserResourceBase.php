@@ -105,7 +105,7 @@ abstract class EicUserResourceBase extends EntityResource {
       return new \Exception("Email address is empty.");
     }
     // Check that the email address is valid.
-    elseif (!$emailValidator::isValid($entity->getEmail())) {
+    elseif (!$emailValidator->isValid($entity->getEmail())) {
       return new \Exception("Email address is not valid.");
     }
 
