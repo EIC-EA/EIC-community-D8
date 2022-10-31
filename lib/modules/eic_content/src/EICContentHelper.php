@@ -45,13 +45,63 @@ class EICContentHelper implements EICContentHelperInterface {
   /**
    * {@inheritDoc}
    */
-  public function getGroupContentByEntity(ContentEntityInterface $entity) {
+  public function getGroupContentByEntity(
+    ContentEntityInterface $entity,
+    array $filter_group_types = [],
+    array $filter_group_content_types = []
+  ) {
     if (!$this->moduleHandler->moduleExists('group')) {
       return FALSE;
     }
 
     try {
-      return $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity);
+      if (!$filter_group_types && !$filter_group_content_types) {
+        return $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity);
+      }
+
+      /** @var \Drupal\group\Entity\GroupContentTypeInterface[] $group_content_types */
+      $group_content_types = $this->entityTypeManager->getStorage('group_content_type')
+        ->loadMultiple();
+      if (!$group_content_types) {
+        return FALSE;
+      }
+
+      $load_group_content_types = [];
+      foreach ($group_content_types as $group_content_type) {
+        // Gets group content type plugin ids for specific group types.
+        if ($filter_group_types) {
+          foreach ($filter_group_types as $group_type_id) {
+            if (
+              $group_content_type->getGroupTypeId() === $group_type_id &&
+              (
+                !$filter_group_content_types ||
+                in_array($group_content_type->getContentPluginId(), $filter_group_content_types)
+              )
+            ) {
+              $load_group_content_types[] = $group_content_type->id();
+            }
+          }
+          continue;
+        }
+
+        // Gets group content type plugin ids for all group types.
+        if (
+          !$filter_group_content_types ||
+          in_array($group_content_type->getContentPluginId(), $filter_group_content_types)
+        ) {
+          $load_group_content_types[] = $group_content_type->id();
+        }
+      }
+
+      if (!$load_group_content_types) {
+        return FALSE;
+      }
+
+      return $this->entityTypeManager->getStorage('group_content')
+        ->loadByProperties([
+          'type' => $load_group_content_types,
+          'entity_id' => $entity->id()
+        ]);
     }
     catch (PluginException $e) {
       return FALSE;

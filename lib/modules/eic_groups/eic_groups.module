@@ -278,7 +278,7 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
  */
 function eic_groups_node_update(EntityInterface $entity) {
   /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
-  $group_contents = \Drupal::service('eic_content.helper')->getGroupContentByEntity($entity);
+  $group_contents = \Drupal::service('eic_content.helper')->getGroupContentByEntity($entity, [], ["group_node:{$entity->bundle()}"]);
 
   if (empty($group_contents)) {
     return;
