@@ -151,6 +151,11 @@ class FormOperations implements ContainerInjectionInterface {
       $form_state->set('entity_is_published', $entity->isPublished());
       $form_state->set('previous_state', $entity->get('moderation_state')->value);
 
+      if (!$entity->isNew()) {
+        $latest_version = \Drupal::entityTypeManager()->getStorage('node')->load($entity->id());
+        $form_state->set('entity_is_published', $latest_version->isPublished());
+      }
+
       $is_new_content = $entity->isNew();
       // Check if the current node is the default revision and is in draft
       // state. If that's the case, it means there is no published or archived
@@ -243,8 +248,12 @@ class FormOperations implements ContainerInjectionInterface {
         $event = new MessageSubscriptionEvent($entity);
 
         // Dispatch the event to trigger message subscription notification
-        // about new content published.
-        if ($entity->isPublished() && empty($group_contents)) {
+        // about new content published when content changes from 
+        if (
+          $form_state->get('entity_is_published') === FALSE &&
+          $entity->isPublished() &&
+          empty($group_contents)
+        ) {
           // Node is not part of a group content so we dispatch the message
           // subscription event for node creation.
           $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
