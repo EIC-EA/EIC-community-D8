@@ -223,7 +223,7 @@ class FormOperations implements ContainerInjectionInterface {
           break;
         }
 
-        $group_contents = $this->eicContentHelper->getGroupContentByEntity($entity);
+        $group_contents = $this->eicContentHelper->getGroupContentByEntity($entity, [], ["group_node:{$entity->bundle()}"]);
         if (empty($group_contents)) {
           // If we are creating a new group content, we handle the notification
           // at a later stage because at this point we don't have the group
