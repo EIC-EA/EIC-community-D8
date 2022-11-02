@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC User module.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Create default terms for story_type vocabulary.
+ */
+function eic_taxonomy_update_9001() {
+  $terms = [
+    'story_type' => [
+      'News',
+      'Stories',
+      'Events',
+      'Open Calls ',
+      'Partner Calls',
+      'Impact Stories',
+    ],
+  ];
+
+  foreach ($terms as $vid => $terms) {
+    foreach ($terms as $name) {
+      Term::create([
+        'name' => $name,
+        'vid' => $vid,
+      ])->save();
+    }
+  }
+}
