@@ -10,7 +10,7 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Create default terms for story_type and program_type vocabularies.
  */
-function eic_taxonomy_update_9001() {
+function eic_taxonomy_install() {
   $terms = [
     'story_type' => [
       'News',
