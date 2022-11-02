@@ -459,7 +459,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
       // Retrieve the operations from the installed content plugins and merges
       // cacheable metadata.
-      if (!is_null($cacheable_metadata)) {
+      if (
+        !is_null($cacheable_metadata) &&
+        $plugin->getEntityTypeId() === 'user'
+      ) {
         // $cacheable_metadata = $cacheable_metadata->merge($plugin->getGroupOperationsCacheableMetadata());
       }
     }
@@ -1229,6 +1232,21 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $label;
+  }
+
+  /**
+   * Gets the enabled joining method for a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return string
+   *   The joining method plugin id.
+   */
+  public function getGroupJoiningMethod(GroupInterface $group) {
+    $joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group);
+    $joining_method = reset($joining_methods);
+    return $joining_method['plugin_id'];
   }
 
 }

@@ -236,6 +236,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    $has_sent_membership_request = TRUE;
     // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
       if (in_array($action['url']->getRouteName(),
@@ -247,6 +248,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         unset($user_operation_links[$key]);
         // We discard the operation link if user doesn't have access to it.
         if ($action['url']->access($this->currentUser)) {
+          if ($action['url']->getRouteName() === 'entity.group.group_request_membership') {
+            $has_sent_membership_request = FALSE;
+          }
           // We add the current page URL as destination so that the user will
           // be redirected back to the current page after joining the group.
           $action['url']->setOption('query',
@@ -258,6 +262,19 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           $operation_links[$key] = $action;
         }
       }
+    }
+
+    // Shows the "Request sent" button.
+    if (
+      !$membership &&
+      $this->eicGroupsHelper->getGroupJoiningMethod($group) &&
+      $has_sent_membership_request
+    ) {
+      $operation_links[] = [
+        'title' => $this->t('Request sent', [], ['context' => 'eic_groups']),
+        'url' => Url::fromRoute('<nolink>'),
+        'weight' => 0,
+      ];
     }
 
     // Gather all the group content creation links to create a two dimensional
