@@ -1,0 +1,3 @@
+administer eic user roles:
+  title: 'Administer roles'
+  restrict access: true

@@ -54,6 +54,7 @@ dependencies:
     - eic_private_content
     - eic_private_message
     - eic_topics
+    - eic_user
     - entity_browser
     - file
     - filter
@@ -96,6 +97,7 @@ permissions:
   - 'administer book outlines'
   - 'administer comments'
   - 'administer contact forms'
+  - 'administer eic user roles'
   - 'administer menu'
   - 'administer message templates'
   - 'administer nodes'
