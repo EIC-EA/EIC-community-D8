@@ -995,3 +995,15 @@ function eic_groups_views_pre_render(ViewExecutable $view) {
 
   }
 }
+
+/**
+ * Implements hook_metatags_alter().
+ */
+function eic_groups_metatags_alter(array &$metatags, array &$context) {
+  // Includes group title in the node metatags.
+  if (\Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    if($group = \Drupal::service('eic_groups.helper')->getOwnerGroupByEntity($context['entity'])) {
+      $metatags['title'] = $metatags['og_title'] = "[current-page:title] | {$group->label()} | [site:name]";
+    }
+  }
+}
