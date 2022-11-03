@@ -22,6 +22,13 @@ class ArchivedRouteAccessCheck implements AccessInterface {
   use StringTranslationTrait;
 
   /**
+   * The current route.
+   *
+   * @var Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRoute;
+
+  /**
    * The route match service.
    *
    * @var Drupal\eic_groups\EICGroupsHelperInterface
@@ -31,10 +38,13 @@ class ArchivedRouteAccessCheck implements AccessInterface {
   /**
    * The constructor.
    *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $groups_helper
    *   The EIC groups helper service.
    */
-  public function __construct(EICGroupsHelperInterface $groups_helper) {
+  public function __construct(RouteMatchInterface $route_match, EICGroupsHelperInterface $groups_helper) {
+    $this->currentRoute = $route_match;
     $this->groupsHelper = $groups_helper;
   }
 
@@ -78,12 +88,15 @@ class ArchivedRouteAccessCheck implements AccessInterface {
       }
 
       if (!is_null($group)) {
-        // Print a message to the user to explain they cannot perform this
-        // action.
-        $message = $this->t('This @group_type is now archived. You cannot perform this action.', [
-          '@group_type' => strtolower($group->getGroupType()->label()),
-        ]);
-        $this->messenger()->addWarning($message);
+        // Check if the given route is the current route.
+        if ($route_match->getRouteName() == $this->currentRoute->getRouteName()) {
+          // Print a message to the user to explain they cannot perform this
+          // action.
+          $message = $this->t('This @group_type is now archived. You cannot perform this action.', [
+            '@group_type' => strtolower($group->getGroupType()->label()),
+          ]);
+          $this->messenger()->addWarning($message);
+        }
       }
 
       return AccessResult::forbidden()->addCacheableDependency($group);
