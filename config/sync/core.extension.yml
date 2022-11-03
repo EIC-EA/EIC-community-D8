@@ -185,6 +185,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  role_delegation: 0
   route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
