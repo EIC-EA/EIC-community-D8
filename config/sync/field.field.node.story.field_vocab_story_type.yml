@@ -1,16 +1,16 @@
-uuid: 3d103756-c5f9-4914-a444-53886c337d6f
+uuid: 71b56336-b7de-459c-808c-b87dd4991a54
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.group.field_vocab_topics
-    - group.type.group
-    - taxonomy.vocabulary.topics
-id: group.group.field_vocab_topics
-field_name: field_vocab_topics
-entity_type: group
-bundle: group
-label: Topics
+    - field.storage.node.field_vocab_story_type
+    - node.type.story
+    - taxonomy.vocabulary.story_type
+id: node.story.field_vocab_story_type
+field_name: field_vocab_story_type
+entity_type: node
+bundle: story
+label: Type
 description: ''
 required: true
 translatable: false
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      topics: topics
+      story_type: story_type
     sort:
       field: name
       direction: asc

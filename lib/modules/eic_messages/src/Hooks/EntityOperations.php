@@ -5,10 +5,12 @@ namespace Drupal\eic_messages\Hooks;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Service\MessageBusInterface;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

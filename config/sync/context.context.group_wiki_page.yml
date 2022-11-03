@@ -13,14 +13,6 @@ description: 'Context used when viewing group wiki pages'
 requireAllConditions: true
 disabled: false
 conditions:
-  node_type:
-    id: node_type
-    negate: false
-    uuid: 118a3ee8-d75a-43fa-8dc7-13e7c95a283f
-    context_mapping:
-      node: '@node.node_route_context:node'
-    bundles:
-      wiki_page: wiki_page
   group_type:
     id: group_type
     group_types:
@@ -30,6 +22,14 @@ conditions:
     uuid: 3fc5c7c9-452a-4dbc-be07-3532e63831ff
     context_mapping:
       group: '@group.group_route_context:group'
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 4d814838-6951-46b2-a5e9-8bfa0d6ea030
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      wiki_page: wiki_page
 reactions:
   blocks:
     id: blocks
