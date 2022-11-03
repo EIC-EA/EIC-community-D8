@@ -99,27 +99,6 @@ class FormAlter implements ContainerInjectionInterface {
         $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
     }
-
-    // Enable field roles if the user can administer roles and is not user 1
-    // neither drupal administrator.
-    if (
-      $this->currentUser->id() !== 1 &&
-      !in_array('administrator', $this->currentUser->getRoles()) &&
-      UserHelper::canAdministerRoles($this->currentUser)
-    ) {
-      $form['account']['roles']['#access'] = TRUE;
-      $disabled_roles = [
-        UserHelper::ROLE_DRUPAL_ADMINISTRATOR,
-        UserHelper::ROLE_SITE_ADMINISTRATOR,
-      ];
-      foreach ($disabled_roles as $role) {
-        $form['account']['roles'][$role] = [
-          '#default_value' => in_array($role, $form['account']['roles']["#default_value"]),
-          '#disabled' => TRUE,
-        ];
-      }
-    }
-
   }
 
   /**

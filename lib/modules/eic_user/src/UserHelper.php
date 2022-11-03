@@ -378,17 +378,4 @@ class UserHelper {
     return $account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty();
   }
 
-  /**
-   * Checks if a user can administer user roles.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account.
-   *
-   * @return bool
-   *   TRUE if user can administer roles.
-   */
-  public static function canAdministerRoles(AccountInterface $account) {
-    return $account->hasPermission('administer roles');
-  }
-
 }
