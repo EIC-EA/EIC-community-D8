@@ -42,6 +42,7 @@ class NewsStorySourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'sm_content_field_story_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_program_type_string' => $this->t('Program type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
       'bs_content_is_private' => $this->t('Visibility', [], ['context' => 'eic_search']),
