@@ -94,7 +94,10 @@ class FieldWidgetOperations implements ContainerInjectionInterface {
         $translations = Json::decode($element['#attributes']['data-translations']);
         // Removes match limit label for entity tree widgets in user profile
         // form.
-        if ($translations['data-target-bundle'] !== 'user') {
+        if (
+          !isset($translations['data-target-bundle']) ||
+          $translations['data-target-bundle'] !== 'user'
+        ) {
           $translations['match_limit'] = '';
           $element['#attributes']['data-translations'] = Json::encode($translations);
         }
