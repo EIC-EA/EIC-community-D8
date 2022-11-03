@@ -147,8 +147,6 @@ class FormOperations implements ContainerInjectionInterface {
       $form_state->get('form_display')
         ->getComponent('field_send_notification')
     ) {
-      // We set the current publish status of the entity.
-      $form_state->set('entity_is_published', $entity->isPublished());
       $form_state->set('previous_state', $entity->get('moderation_state')->value);
 
       if (!$entity->isNew()) {
@@ -168,6 +166,9 @@ class FormOperations implements ContainerInjectionInterface {
       ) {
         $is_new_content = TRUE;
       }
+
+      // We set the current publish status of the entity.
+      $form_state->set('entity_is_published', $is_new_content ? FALSE : $entity->isPublished());
 
       $form['field_send_notification'] = [
         '#title' => $this->t('Send notifications to members.'),
@@ -248,7 +249,7 @@ class FormOperations implements ContainerInjectionInterface {
         $event = new MessageSubscriptionEvent($entity);
 
         // Dispatch the event to trigger message subscription notification
-        // about new content published when content changes from 
+        // about new content published when content changes from
         if (
           $form_state->get('entity_is_published') === FALSE &&
           $entity->isPublished() &&
