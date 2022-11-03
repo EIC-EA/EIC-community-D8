@@ -19,9 +19,9 @@ use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\Entity\Group;
+use Drupal\eic_moderation\ModerationHelper;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
-use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -94,9 +94,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
+
+  /**
+   * The EIC Content Moderation Helper.
+   *
+   * @var \Drupal\eic_moderation\ModerationHelper
+   */
+  private $eicModerationHelper;
 
   /**
    * {@inheritdoc}
@@ -118,7 +125,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $container->get('request_stack'),
       $container->get('file_url_generator'),
       $container->get('plugin.manager.editor'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('eic_moderation.helper')
     );
   }
 
@@ -140,7 +148,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The group permission checker.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
-   * @param RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
    * @param \Drupal\Core\Http\RequestStack $request
    *   The current request.
@@ -150,6 +158,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The editor manager service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The Entity type manager.
+   * @param \Drupal\eic_moderation\ModerationHelper $eic_moderation_helper
+   *   The EIC Content Moderation Helper.
    */
   public function __construct(
     array $configuration,
@@ -162,7 +172,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     RequestStack $request,
     FileUrlGeneratorInterface $file_url_generator,
     EditorManager $editor_manager,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    ModerationHelper $eic_moderation_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
@@ -173,6 +184,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $this->fileUrlGenerator = $file_url_generator;
     $this->editorManager = $editor_manager;
     $this->entityTypeManager = $entity_type_manager;
+    $this->eicModerationHelper = $eic_moderation_helper;
   }
 
   /**
@@ -292,6 +304,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       !UserHelper::isPowerUser($account) &&
       $node->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE;
 
+    $is_content_draft = $this->eicModerationHelper->isDraft($node);
+    $is_content_unpublished = $this->eicModerationHelper->isUnpublished($node);
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
         EICGroupsHelper::GROUP_OWNER_ROLE,
@@ -318,18 +333,18 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'users_url' => $user_url,
       'users_url_search' => $user_url,
       'permissions' => [
-        'post_comment' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+        'post_comment' => !$is_group_archived && !$is_content_archived && !$is_content_draft && !$is_content_unpublished && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'post comments'
         ),
-        'edit_all_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+        'edit_all_comments' => !$is_group_archived && !$is_content_archived && !$is_content_draft && !$is_content_unpublished && $this->hasGroupOrGlobalPermission(
             $group_contents,
             $current_user,
             'edit all comments'
           ),
-        'delete_all_comments' => !$is_group_archived && !$is_content_archived && UserHelper::isPowerUser($current_user),
-        'edit_own_comments' => !$is_group_archived && !$is_content_archived && $this->hasGroupOrGlobalPermission(
+        'delete_all_comments' => !$is_group_archived && !$is_content_archived && !$is_content_draft && !$is_content_unpublished && UserHelper::isPowerUser($current_user),
+        'edit_own_comments' => !$is_group_archived && !$is_content_archived && !$is_content_draft && !$is_content_unpublished && $this->hasGroupOrGlobalPermission(
           $group_contents,
           $current_user,
           'edit own comments'

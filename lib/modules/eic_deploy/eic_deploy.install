@@ -5,8 +5,9 @@
  * Install, update and uninstall functions for the EIC Deploy module.
  */
 
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Url;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_install().
@@ -278,4 +279,41 @@ function eic_deploy_update_9008(&$sandbox) {
   ];
 
   eic_deploy_add_group_permissions_to_role($new_permissions, $roles, $group_visibilities);
+}
+
+/**
+ * Create default terms for story_type and program_type vocabularies.
+ */
+function eic_deploy_update_9009() {
+  $terms = [
+    'story_type' => [
+      'News',
+      'Stories',
+      'Events',
+      'Open Calls ',
+      'Partner Calls',
+      'Impact Stories',
+    ],
+    'program_type' => [
+      'EIC Corporate Partnership Programme',
+      'EIC Innovation Procurement Programme',
+      'EIC Overseas Trade Fair Programme',
+      'EIC Women Leadership Programme',
+      'EIC Ecosystem Partnership Programme',
+      'EIC Investment Programme',
+      'EIC & EIT',
+      'EIC Scale Up 100',
+      'EIC Tech To Market Services',
+      'EIC Community Activities',
+    ],
+  ];
+
+  foreach ($terms as $vid => $terms) {
+    foreach ($terms as $name) {
+      Term::create([
+        'name' => $name,
+        'vid' => $vid,
+      ])->save();
+    }
+  }
 }

@@ -32,9 +32,13 @@ class RouteSubscriber extends RouteSubscriberBase {
       'entity.node.delete_form',
       'entity.group.leave',
       'entity.group.edit_form',
-      'ginvite.invitation.bulk',
       'entity.group.join',
       'entity.group.group_request_membership',
+      'entity.group_content.group_approve_membership',
+      'entity.group_content.group_reject_membership',
+      'ginvite.invitation.accept',
+      'ginvite.invitation.decline',
+      'ginvite.invitation.bulk',
     ];
 
     foreach ($denied_routes_archived_group as $route_name) {

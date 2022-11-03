@@ -278,7 +278,7 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
  */
 function eic_groups_node_update(EntityInterface $entity) {
   /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
-  $group_contents = \Drupal::service('eic_content.helper')->getGroupContentByEntity($entity);
+  $group_contents = \Drupal::service('eic_content.helper')->getGroupContentByEntity($entity, [], ["group_node:{$entity->bundle()}"]);
 
   if (empty($group_contents)) {
     return;
@@ -993,5 +993,17 @@ function eic_groups_views_pre_render(ViewExecutable $view) {
       }
       break;
 
+  }
+}
+
+/**
+ * Implements hook_metatags_alter().
+ */
+function eic_groups_metatags_alter(array &$metatags, array &$context) {
+  // Includes group title in the node metatags.
+  if (\Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+    if($group = \Drupal::service('eic_groups.helper')->getOwnerGroupByEntity($context['entity'])) {
+      $metatags['title'] = $metatags['og_title'] = "[current-page:title] | {$group->label()} | [site:name]";
+    }
   }
 }

@@ -111,20 +111,27 @@ services:
     arguments: ['@eic_statistics.statistics.storage.node.decorator', '@file_url_generator', '@entity_type.manager']
     tags:
       - { name: eic_search.document_processor }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_group_content:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroupContent
     tags:
       - { name: eic_search.document_processor, priority: 12 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_message:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorMessage
     arguments: ['@eic_media_statistics.entity_file_download_count', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper', '@flag', '@entity_type.manager', '@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 14 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_group:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroup
     arguments: ['@eic_search.solr_search_manager', '@flag.count', '@entity_type.manager', '@file_url_generator']
     calls:
       - [ setGroupStatistics, [ '@?eic_group_statistics.helper' ] ]
+      - [ setStateCache, [ '@?state' ] ]
     tags:
       - { name: eic_search.document_processor, priority: 15 }
   eic_search.document_processor_news_story:
@@ -132,50 +139,70 @@ services:
     arguments: ['@entity_type.manager', '@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 16 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_discussion:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorDiscussion
     arguments: ['@eic_statistics.helper', '@entity_type.manager', '@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 18 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_visibility:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorVisibility
     arguments: ['@oec_group_flex.helper', '@eic_groups.helper']
     tags:
       - { name: eic_search.document_processor, priority: 24 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_user:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorUser
     arguments: ['@group.membership_loader', '@eic_user.helper', '@entity_type.manager', '@database', '@eic_private_message.helper', '@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 26 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_document:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorDocument
     arguments: ['@eic_media_statistics.entity_file_download_count']
     tags:
       - { name: eic_search.document_processor, priority: 20 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_flags:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorFlags
     arguments: ['@database', '@flag.count']
     tags:
       - { name: eic_search.document_processor, priority: 22 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_group_event:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroupEvent
     arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 28 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_global_event:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobalEvent
     arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 30 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_organisation:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_video:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorVideo
     arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.solr_search_manager:
     class: Drupal\eic_search\Service\SolrSearchManager
     arguments: ['@current_user', '@eic_search.sources_collector', '@entity_type.manager', '@group.membership_loader', '@oec_group_flex.group_visibility.storage']

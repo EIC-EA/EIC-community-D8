@@ -1,0 +1,11 @@
+uuid: 8d11254b-de76-42a0-911b-8b3bacaef417
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.story_type
+id: taxonomy_term.story_type
+target_entity_type_id: taxonomy_term
+target_bundle: story_type
+default_langcode: site_default
+language_alterable: false

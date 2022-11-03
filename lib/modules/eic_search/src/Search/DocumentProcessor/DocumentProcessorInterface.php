@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
+use Drupal\Core\State\StateInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -38,5 +39,18 @@ interface DocumentProcessorInterface {
    * @return bool
    */
   public function supports(array $fields): bool;
+
+  /**
+   * Logic that will be triggered after processing a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The document.
+   * @param array $fields
+   *   Array of indexed fields.
+   *
+   * @return bool
+   *   TRUE if something has been processed.
+   */
+  public function postProcess(Document $document, array $fields) : bool;
 
 }
