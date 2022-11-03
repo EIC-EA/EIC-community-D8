@@ -459,10 +459,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
       // Retrieve the operations from the installed content plugins and merges
       // cacheable metadata.
-      if (
-        !is_null($cacheable_metadata) &&
-        $plugin->getEntityTypeId() === 'user'
-      ) {
+      if (!is_null($cacheable_metadata)) {
         // $cacheable_metadata = $cacheable_metadata->merge($plugin->getGroupOperationsCacheableMetadata());
       }
     }

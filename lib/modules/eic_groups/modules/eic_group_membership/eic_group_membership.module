@@ -7,6 +7,7 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -600,5 +601,20 @@ function eic_group_membership_group_operations_alter(array &$operations, GroupIn
   }
   if (isset($operations['group-leave'])) {
     $operations['group-leave']['title'] = t('Leave');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_group_membership_group_content_insert(EntityInterface $entity) {
+  switch ($entity->getContentPlugin()->getPluginId()) {
+    case 'group_membership_request':
+      $current_user = \Drupal::currentUser();
+      // Clears the membership_request cache tag in order to update the
+      // rendered output of the group header block.
+      Cache::invalidateTags(["membership_request:{$current_user->id()}"]);
+      break;
+
   }
 }
