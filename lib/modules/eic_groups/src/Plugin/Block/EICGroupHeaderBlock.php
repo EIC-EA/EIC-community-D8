@@ -264,17 +264,18 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       }
     }
 
-    // Shows the "Request sent" button.
-    if (
-      !$membership &&
-      $this->eicGroupsHelper->getGroupJoiningMethod($group) &&
-      $has_sent_membership_request
-    ) {
-      $operation_links[] = [
-        'title' => $this->t('Request sent', [], ['context' => 'eic_groups']),
-        'url' => Url::fromRoute('<nolink>'),
-        'weight' => 0,
-      ];
+    $joining_method = $this->eicGroupsHelper->getGroupJoiningMethod($group);
+    if ($joining_method === 'tu_group_membership_request') {
+      $cacheable_metadata->addCacheTags(["membership_request:{$this->currentUser->id()}"]);
+
+      // Shows the "Request sent" button if the user already request group membership.
+      if (!$membership && $has_sent_membership_request) {
+        $operation_links[] = [
+          'title' => $this->t('Request sent', [], ['context' => 'eic_groups']),
+          'url' => Url::fromRoute('<nolink>'),
+          'weight' => 0,
+        ];
+      }
     }
 
     // Gather all the group content creation links to create a two dimensional
