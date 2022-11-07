@@ -87,6 +87,7 @@
         "drupal/redirect": "^1.6",
         "drupal/redis": "^1.5",
         "drupal/restui": "^1.19",
+        "drupal/role_delegation": "^1.2",
         "drupal/route_condition": "^2.0",
         "drupal/s3fs": "^3.0@beta",
         "drupal/scheduler": "^1.3",
