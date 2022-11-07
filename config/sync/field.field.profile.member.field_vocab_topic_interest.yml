@@ -11,7 +11,7 @@ field_name: field_vocab_topic_interest
 entity_type: profile
 bundle: member
 label: 'Topics of Interest'
-description: ''
+description: "Select your area(s) of interest.\r\nYou can select maximum 3 topics and an unlimited number of subtopics."
 required: true
 translatable: false
 default_value: {  }
