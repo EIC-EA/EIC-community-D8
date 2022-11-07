@@ -1254,7 +1254,7 @@ field_settings:
     label: 'Body » Processed text'
     datasource_id: 'entity:node'
     property_path: 'field_body:processed'
-    type: string
+    type: text
     dependencies:
       config:
         - field.storage.node.field_body
