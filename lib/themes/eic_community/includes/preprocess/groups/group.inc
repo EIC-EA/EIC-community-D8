@@ -64,13 +64,15 @@ function eic_community_preprocess_group__group(array &$variables) {
           $group->get('field_thumbnail')->entity,
           $group->language()->getId()
         );
-        $image_item = ImageValueObject::fromStyledImageItem(
-          $media->get('oe_media_image')->first(),
+        /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $image */
+        $image = $media->get('oe_media_image')->first();
+        $image_item = $image ? ImageValueObject::fromStyledImageItem(
+          $image,
           'oe_theme_ratio_3_2_medium'
-        );
+        ) : NULL;
         $item['image'] = [
-          'src' => $image_item->getSource(),
-          'alt' => $image_item->getAlt(),
+          'src' => $image_item ? $image_item->getSource() : '',
+          'alt' => $image_item ? $image_item->getAlt() : '',
         ];
       }
 

@@ -158,7 +158,6 @@
 
   &:not(#{$node}--organisation) &__aside-wrapper {
     @include ecl-media-breakpoint-up('md') {
-      position: sticky;
       top: ecl-layout('gutter');
 
       #{$node}--has-static-layout & {

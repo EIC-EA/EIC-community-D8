@@ -214,6 +214,8 @@ class ProcessorGlobal extends DocumentProcessor {
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
         $fullname = $user->getDisplayName();
+        $date = $fields['ds_user_created'];
+        $changed = $fields['ds_user_changed'];
 
         $this->addOrUpdateDocumentField(
           $document,

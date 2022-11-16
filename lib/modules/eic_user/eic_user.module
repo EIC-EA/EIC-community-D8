@@ -8,21 +8,24 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
 use Drupal\eic_user\Hooks\FormAlter;
+use Drupal\eic_user\Hooks\UserTokens;
 use Drupal\eic_user\NotificationFrequencies;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
- * Implements hook_theme.
+ * Implements hook_theme().
  */
 function eic_user_theme() {
   return [
     'account_header_block' => [
       'variables' => [
         'login' => [],
-        'user' => []
+        'user' => [],
       ],
     ],
     'user_header_block' => [
@@ -53,7 +56,8 @@ function eic_user_theme() {
 /**
  * List allowed values for field 'field_notification_frequency'.
  *
- * @return array
+ * @return string[]
+ *   Array of values.
  */
 function eic_user_notification_frequency_allowed_values() {
   $allowed_values = [
@@ -181,6 +185,24 @@ function eic_user_profile_delete(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_token_info().
+ */
+function eic_user_token_info() {
+  /** @var \Drupal\eic_user\Hooks\UserTokens $class */
+  $class = \Drupal::classResolver(UserTokens::class);
+  return $class->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function eic_user_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  /** @var \Drupal\eic_user\Hooks\UserTokens $class */
+  $class = \Drupal::classResolver(UserTokens::class);
+  return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
  * Refreshes user data in Solr and invalidate relate cache tags.
  *
  * @param \Drupal\Core\Session\AccountInterface[] $accounts
@@ -193,7 +215,7 @@ function _eic_user_refresh_user_data(array $accounts) {
   $solr_helper->reIndexEntities($accounts);
 
   foreach ($accounts as $account) {
-    if (!$account instanceof \Drupal\Core\Session\AccountInterface) {
+    if (!$account instanceof AccountInterface) {
       continue;
     }
 

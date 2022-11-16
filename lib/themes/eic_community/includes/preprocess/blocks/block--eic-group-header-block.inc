@@ -8,11 +8,9 @@
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
-use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -259,6 +257,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $tags = [];
   switch ($group->getGroupType()->id()) {
     case 'group':
+    case 'event':
       $visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
       $tags[] = [
         'type' => 'display',
@@ -340,12 +339,8 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   }
 
-  if (in_array($group->bundle(), ['event', 'group']) && !GroupsModerationHelper::isBlocked($group)) {
-    $visibility = \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-    if ($visibility instanceof GroupVisibilityRecordInterface
-      && $visibility->getType() === GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
-      $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
-    }
+  if (_eic_community_can_use_social_share($group)) {
+    $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
   }
 
   // Adds url to navigate back to the list of groups.

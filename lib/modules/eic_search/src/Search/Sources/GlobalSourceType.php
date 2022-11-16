@@ -168,4 +168,13 @@ class GlobalSourceType extends SourceType {
     return ['itm_content_field_vocab_topics'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getFacetsUsingOrCondition(): array {
+    return [
+      'ss_global_content_type',
+    ];
+  }
+
 }

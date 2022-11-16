@@ -45,6 +45,10 @@
   .ecl-menu__link {
     @include ecl-responsive-font('label');
     text-transform: capitalize;
+
+    .ecl-icon {
+      transform: rotate(180deg);
+    }
   }
 
   &__searchform {
@@ -99,6 +103,19 @@
     @include ecl-media-breakpoint-down('md') {
       padding: map-get($ecl-spacing, 's') 0;
     }
+  }
+
+  .ecl-menu__mega {
+    display: block;
+    background-color: map-get($ecl-colors, 'grey-10');
+
+    @include ecl-media-breakpoint-down('md') {
+      margin: 0 #{map-get($ecl-spacing, 'm') * -1};
+    }
+  }
+
+  .ecl-menu__item--has-children + .ecl-menu__item {
+    border-top: 0;
   }
 
   // Fixes margin issue for hamburger menu.

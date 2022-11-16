@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\Token;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_seo\AliasCleaner;
@@ -133,6 +134,12 @@ class GroupTokens implements ContainerInjectionInterface {
         'description' => $this->t('The user entity which is the owner of the group.'),
       ],
     ];
+    $info['tokens']['site'] = [
+      'eic-user-invitations-page-url' => [
+        'name' => $this->t('EIC User invitations page url'),
+        'description' => $this->t('The url of the EIC User group invitations page'),
+      ],
+    ];
 
     // Create tokens to grab list of groups a user belongs to, per group type.
     foreach ($this->groupTypes as $group_type) {
@@ -177,6 +184,11 @@ class GroupTokens implements ContainerInjectionInterface {
         if (!empty($data['user']) && $data['user'] instanceof UserInterface) {
           $replacements = $this->userTokens($tokens, $data, $options, $bubbleable_metadata);
         }
+        break;
+
+      case 'site':
+        // Site tokens.
+        $replacements = $this->siteTokens($tokens, $data, $options, $bubbleable_metadata);
         break;
 
     }
@@ -362,6 +374,38 @@ class GroupTokens implements ContainerInjectionInterface {
       }, $user_memberships);
 
       $replacements[$tokens[$find_token_name]] = Markup::create(implode(', ', $user_groups));
+    }
+
+    return $replacements;
+  }
+
+  /**
+   * Replace site tokens.
+   *
+   * @param mixed $tokens
+   *   An array of tokens to be replaced.
+   * @param array $data
+   *   An associative array of data objects to be used when generating
+   *   replacement values.
+   * @param array $options
+   *   An associative array of options for token replacement.
+   * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
+   *   The bubbleable metadata.
+   *
+   * @return array
+   *   An associative array of replacement values.
+   */
+  private function siteTokens($tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+    $replacements = [];
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'eic-user-invitations-page-url':
+          $replacements[$original] = Url::fromRoute('eic_groups.user.my_invitations', [], ['absolute' => TRUE])
+            ->toString();
+          break;
+
+      }
     }
 
     return $replacements;

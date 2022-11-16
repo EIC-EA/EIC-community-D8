@@ -1,0 +1,5 @@
+services:
+  eic_contact.contact_mail_handler_override.base:
+    class: Drupal\eic_contact\ContactMailHandler
+    decorates: contact.mail_handler
+    arguments: ['@eic_contact.contact_mail_handler_override.base.inner', '@plugin.manager.mail', '@language_manager', '@logger.channel.contact', '@string_translation', '@entity_type.manager']
