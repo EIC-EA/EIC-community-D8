@@ -19,6 +19,11 @@ use Drupal\statistics\NodeStatisticsDatabaseStorage;
 class StatisticsHelper {
 
   /**
+   * State cache name of node ids to update the view counter in SOLR.
+   */
+  const NODE_VIEW_COUNTER_REINDEX_STATE_CACHE =  'eic_statistics_reindex_node_view_counter';
+
+  /**
    * The eic_statistics.storage service.
    *
    * @var \Drupal\eic_statistics\StatisticsStorage

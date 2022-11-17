@@ -115,7 +115,7 @@ class CommentMessageCreator implements ContainerInjectionInterface {
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $commented_entity */
     $commented_entity = $entity->getCommentedEntity();
-    $group_content = $this->contentHelper->getGroupContentByEntity($commented_entity);
+    $group_content = $this->contentHelper->getGroupContentByEntity($commented_entity, [], ["group_node:{$commented_entity->bundle()}"]);
     if (empty($group_content)) {
       return;
     }

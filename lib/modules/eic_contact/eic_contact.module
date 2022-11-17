@@ -197,3 +197,15 @@ function _eic_contact_alter_submit(
     t('Message sent with success.', [], ['context' => 'eic_contact'])
   );
 }
+
+/**
+ * Implements hook_mail_alter().
+ */
+function eic_contact_mail_alter(&$message) {
+  if ($message['id'] == 'contact_page_mail') {
+    /** @var \Drupal\user\UserInterface $sender */
+    $sender = $message['params']['sender'];
+    $message['headers']['Reply-To'] = $sender->getEmail();
+    $message['headers']['Sender'] = $sender->getEmail();
+  }
+}

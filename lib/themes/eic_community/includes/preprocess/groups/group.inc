@@ -231,6 +231,7 @@ function _group_about_group_tab($variables, &$sections) {
   }
 
   $about_items[] = [
+    'id' => 'group-description-full',
     'title' => t('Group description'),
     'content' => $group->hasField('field_body') ? $group->get('field_body')->value : '',
   ];

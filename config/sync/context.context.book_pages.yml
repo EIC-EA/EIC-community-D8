@@ -15,10 +15,10 @@ description: ''
 requireAllConditions: false
 disabled: false
 conditions:
-  node_type:
-    id: node_type
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
     negate: false
-    uuid: 6ece8dd6-40fc-4f4a-b4cc-87351d4cb228
+    uuid: 0408e437-a823-4ac3-99c3-c6f668599b36
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:

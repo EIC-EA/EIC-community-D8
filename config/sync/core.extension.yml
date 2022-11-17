@@ -19,6 +19,7 @@ module:
   breakpoint: 0
   cas: 0
   ckeditor: 0
+  ckeditor_blockimagepaste: 0
   ckeditor_div_manager: 0
   ckeditor_find: 0
   ckeditor_font: 0
@@ -93,6 +94,7 @@ module:
   eic_share_content: 0
   eic_statistics: 0
   eic_subscription_digest: 0
+  eic_taxonomy: 0
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
@@ -125,7 +127,6 @@ module:
   group: 0
   group_content_menu: 0
   group_flex: 0
-  group_outsider_in: 0
   group_permissions: 0
   hal: 0
   image: 0
@@ -183,6 +184,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  role_delegation: 0
   route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0

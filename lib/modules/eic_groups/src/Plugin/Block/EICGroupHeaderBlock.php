@@ -313,7 +313,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     if (!empty($visible_group_operation_links)) {
       $visible_group_operation_links = [
         [
-          'label' => $this->t('Group management'),
+          'label' => $this->t('Manage'),
           'links' => $visible_group_operation_links,
         ],
       ];
@@ -389,7 +389,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         $link['url'] = Url::fromRoute('eic_user_login.member_access', [], $login_link_options);
         switch ($joining_methods[0]['plugin_id']) {
           case 'tu_open_method':
-            $link['title'] = $this->t('Log in to join group');
+            $link['title'] = $this->t('Log in to join');
             break;
 
           case 'tu_group_membership_request':

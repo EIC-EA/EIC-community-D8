@@ -59,7 +59,18 @@ settings:
             - JustifyCenter
             - JustifyRight
             - JustifyBlock
-  plugins: {  }
+  plugins:
+    stylescombo:
+      styles: ''
+    language:
+      language_list: un
+    blockimagepaste:
+      block_image_paste_enabled: true
+    font:
+      font_names: ''
+      font_sizes: ''
+    colorbutton:
+      colors: ''
 image_upload:
   status: false
   scheme: public

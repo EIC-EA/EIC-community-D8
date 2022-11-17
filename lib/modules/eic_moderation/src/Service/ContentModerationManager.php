@@ -45,7 +45,6 @@ class ContentModerationManager {
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moderationInformation = $moderation_information;
-
   }
 
   /**
