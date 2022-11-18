@@ -41,11 +41,13 @@ dependencies:
     - field.storage.node.field_introduction
     - field.storage.node.field_language
     - field.storage.node.field_location_type
+    - field.storage.node.field_vocab_program_type
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_legend
     - field.storage.media.oe_media_file
     - field.storage.paragraph.field_gallery_slide_media
+    - field.storage.node.field_vocab_story_type
     - field.storage.node.field_date_range
     - field.storage.node.field_subtitle
     - field.storage.node.field_video_media
@@ -124,6 +126,7 @@ third_party_settings:
     multilingual:
       limit_to_content_language: false
       include_language_independent: true
+      specific_languages: {  }
 id: global
 name: Global
 description: ''
@@ -369,6 +372,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_location_type
+  content_field_story_type_string:
+    label: 'Type » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_story_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_story_type
+      module:
+        - taxonomy
   content_field_subtitle:
     label: '[Content] Subtitle'
     datasource_id: 'entity:node'
@@ -406,6 +419,32 @@ field_settings:
         - field.storage.node.field_vocab_geo
       module:
         - taxonomy
+  content_field_vocab_program_type:
+    label: '[Content] Program type'
+    datasource_id: 'entity:node'
+    property_path: field_vocab_program_type
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_program_type
+  content_field_vocab_program_type_string:
+    label: 'Program type » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_program_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_program_type
+      module:
+        - taxonomy
+  content_field_vocab_story_type:
+    label: '[Content] Story type'
+    datasource_id: 'entity:node'
+    property_path: field_vocab_story_type
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_story_type
   content_field_vocab_topics:
     label: '[Content] Topics'
     datasource_id: 'entity:node'
@@ -1216,7 +1255,7 @@ field_settings:
     label: 'Body » Processed text'
     datasource_id: 'entity:node'
     property_path: 'field_body:processed'
-    type: string
+    type: text
     dependencies:
       config:
         - field.storage.node.field_body

@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
-use Drupal\Component\Utility\EmailValidator;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\UserInterface;
 use Drupal\rest\Plugin\rest\resource\EntityResource;
@@ -49,6 +48,13 @@ abstract class EicUserResourceBase extends EntityResource {
   protected $casUserManager;
 
   /**
+   * The CAS user manager.
+   *
+   * @var \Drupal\Component\Utility\EmailValidatorInterface
+   */
+  protected $emailValidator;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -63,6 +69,7 @@ abstract class EicUserResourceBase extends EntityResource {
     $instance->wsRestHelper = $container->get('eic_webservices.ws_rest_helper');
     $instance->smedTaxonomyHelper = $container->get('eic_webservices.taxonomy_helper');
     $instance->casUserManager = $container->get('cas.user_manager');
+    $instance->emailValidator = $container->get('email.validator');
     return $instance;
   }
 
@@ -104,7 +111,7 @@ abstract class EicUserResourceBase extends EntityResource {
       return new \Exception("Email address is empty.");
     }
     // Check that the email address is valid.
-    elseif (!EmailValidator::isValid($entity->getEmail())) {
+    elseif (!$this->emailValidator->isValid($entity->getEmail())) {
       return new \Exception("Email address is not valid.");
     }
 

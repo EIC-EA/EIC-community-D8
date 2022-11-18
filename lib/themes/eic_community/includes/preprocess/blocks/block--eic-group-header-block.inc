@@ -69,7 +69,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     // Adds dropdown label if not presented.
     if (empty($variables['group_values']['group_operation_links'][0]['label'])) {
       $variables['group_values']['group_operation_links'][0]['label'] = t(
-        'Group management'
+        'Manage'
       );
     }
     // Adds dropdown icon.

@@ -3,19 +3,29 @@
 namespace Drupal\eic_groups;
 
 /**
- * The goal of this class is to list node bundles
- * which are not allowed to exist without belonging to a group and group content
+ * Defines a list of content types that should not live outside a group.
  *
- * Class ForbiddenOrphanContents
+ * Class ForbiddenOrphanContents.
  */
 final class ForbiddenOrphanContentTypes {
 
+  /**
+   * List of forbidden routes, with their parameters.
+   *
+   * @todo Maybe we should have this dynamic, based on the global permissions.
+   *
+   * @var array
+   */
   const FORBIDDEN_ENTITY_ROUTES = [
     'node.add' => [
       'bundles' => [
-        'wiki_page',
         'discussion',
+        'document',
+        'event',
         'gallery',
+        'news',
+        'video',
+        'wiki_page',
       ],
     ],
   ];

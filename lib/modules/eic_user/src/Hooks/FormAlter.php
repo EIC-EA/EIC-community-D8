@@ -99,7 +99,6 @@ class FormAlter implements ContainerInjectionInterface {
         $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
     }
-
   }
 
   /**
