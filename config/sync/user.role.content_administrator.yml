@@ -95,6 +95,7 @@ permissions:
   - 'administer comments'
   - 'administer menu'
   - 'administer message templates'
+  - 'administer nodes'
   - 'administer users'
   - 'bypass groups transition restrictions'
   - 'close archive request'

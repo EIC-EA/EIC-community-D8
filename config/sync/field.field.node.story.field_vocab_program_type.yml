@@ -1,0 +1,29 @@
+uuid: e71e43c7-b92c-4a82-b668-27035e060745
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vocab_program_type
+    - node.type.story
+    - taxonomy.vocabulary.program_type
+id: node.story.field_vocab_program_type
+field_name: field_vocab_program_type
+entity_type: node
+bundle: story
+label: 'Program type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      program_type: program_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

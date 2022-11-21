@@ -100,7 +100,13 @@ class FormAlter implements ContainerInjectionInterface {
       }
     }
 
-    unset($form['account']['mail']['#description']);
+    // Removes helper text from email field for CAS user.
+    if (
+      \Drupal::moduleHandler()->moduleExists('cas') &&
+      \Drupal::service('cas.user_manager')->getCasUsernameForAccount($this->currentUser->id())
+    ) {
+      unset($form['account']['mail']['#description']);
+    }
   }
 
   /**

@@ -2,12 +2,31 @@
 
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
+use Drupal\Core\State\StateInterface;
 use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_statistics\StatisticsHelper;
 use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 abstract class DocumentProcessor implements DocumentProcessorInterface {
+
+  /**
+   * The state cache.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * Setter method to inject the SolrDocumentProcessor.
+   *
+   * @param \Drupal\Core\State\StateInterface|null $solr_document_processor
+   *   The state cache.
+   */
+  public function setStateCache(?StateInterface $state) {
+    $this->state = $state;
+  }
 
   /**
    * @inerhitDoc
@@ -93,6 +112,31 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
     $text = preg_replace('#(src=".*image/[^;"]+;base64,.*")#iU', '', $text);
     $text = preg_replace('#(src=".*image/[^%3B"]+%3Bbase64%2C.*")#iU', '', $text);
     return $text;
+  }
+
+  /**
+   * {@inerhitdoc}
+   */
+  public function postProcess(Document $document, array $fields): bool {
+    // The node view counter is not re-indexed everytime we view a node page.
+    // Therefore, there is a cron responsible for re-indexing the nodes at a
+    // later stage. Here we reset the state cache used in the cron so that we
+    // avoid re-indexing the entity multiple times.
+    if (isset($fields['its_content_nid'])) {
+      $nid = $fields['its_content_nid'];
+      $node_view_counter_state_cache = $this->state->get(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, []);
+      if (empty($node_view_counter_state_cache)) {
+        return FALSE;
+      }
+
+      $key = array_search($nid, $node_view_counter_state_cache);
+      if ($key !== FALSE) {
+        unset($node_view_counter_state_cache[$key]);
+        $this->state->set(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, $node_view_counter_state_cache);
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }

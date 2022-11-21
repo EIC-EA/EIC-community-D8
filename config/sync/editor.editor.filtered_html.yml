@@ -64,6 +64,8 @@ settings:
       styles: ''
     language:
       language_list: un
+    blockimagepaste:
+      block_image_paste_enabled: true
     font:
       font_names: ''
       font_sizes: ''

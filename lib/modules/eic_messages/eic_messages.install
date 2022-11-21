@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Messages module.
+ */
+
+module_load_include('inc', 'eic_messages', 'eic_messages.install');
+
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
+use Drupal\Core\Batch\BatchBuilder;
+
+/**
+ * Delete messages with references to non-existing content.
+ */
+function eic_messages_update_9001(&$sandbox) {
+  $message_storage = \Drupal::entityTypeManager()->getStorage('message');
+  $activity_stream_templates = ActivityStreamMessageTemplates::getAllowedTemplates();
+
+  $query = \Drupal::database()->select('message_field_data', 'mfd');
+  $query->fields('mfd', ['mid']);
+  $query->condition('template', $activity_stream_templates, 'IN');
+  $query->innerJoin('message__field_referenced_node', 'frn', 'frn.entity_id = mfd.mid');
+  $query->leftJoin('node', 'n', 'n.nid = frn.field_referenced_node_target_id');
+  $query->isNull('n.nid');
+  $results = $query->execute()->fetchAllAssoc('mid');
+
+  if (!$results) {
+    return;
+  }
+
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Processing Batch to delete messages with references to non-existing content.'))
+    ->setFinishCallback('_eic_messages_batch_finished')
+    ->setInitMessage(t('Batch is starting'))
+    ->setProgressMessage(t('Processed @current out of @total.'))
+    ->setErrorMessage(t('Batch has encountered an error'));
+
+  $max_messages = count($results);
+  $messages_per_batch = 100;
+  $message_chunks = array_chunk($results, $messages_per_batch, TRUE);
+  $progress = 0;
+
+  foreach ($message_chunks as $message_chunk) {
+    $batch_builder->addOperation(
+      '_eic_messages_batch_delete_messages_with_empty_references',
+      [
+        array_keys($message_chunk),
+        $progress,
+        $progress + count($message_chunk),
+        $max_messages,
+      ]
+    );
+    $progress += count($message_chunk);
+  }
+
+  batch_set($batch_builder->toArray());
+}

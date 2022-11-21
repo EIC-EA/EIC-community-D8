@@ -19,3 +19,18 @@ function eic_admin_preprocess_views_view_field(&$vars) {
     $vars['field']->last_render = $flag_label;
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function eic_admin_module_implements_alter(&$implementations, $hook) {
+  if (\Drupal::service('module_handler')->moduleExists('oe_authentication')) {
+    switch ($hook) {
+      // OE Authentication module is removing some cancel methods.
+      // Prevent this by removing this implementation.
+      case 'user_cancel_methods_alter':
+        unset($implementations['oe_authentication']);
+        break;
+    }
+  }
+}
