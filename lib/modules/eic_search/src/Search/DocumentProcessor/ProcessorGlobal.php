@@ -9,6 +9,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
@@ -80,6 +81,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $language = t('English', [], ['context' => 'eic_search'])->render();
     $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
     $last_moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
+    $group_last_moderation_state = GroupsModerationHelper::GROUP_PUBLISHED_STATE;
     $is_group_parent_published = 1;
 
     switch ($datasource) {
@@ -125,7 +127,7 @@ class ProcessorGlobal extends DocumentProcessor {
             $language = $language_entity->label();
           }
 
-          $last_moderation_state = $this->getLastRevisionModerationState($node);
+          $group_last_moderation_state = $last_moderation_state = $this->getLastRevisionModerationState($node);
 
           // For News and Stories, the published date should be saved.
           if (in_array($node->bundle(), ['news', 'story'])) {
@@ -137,6 +139,7 @@ class ProcessorGlobal extends DocumentProcessor {
         // The node should not be accessible if the group is not published.
         if ($node_group_contents = GroupContent::loadByEntity($node)) {
           $node_group_content = reset($node_group_contents);
+          $group_last_moderation_state = $this->getLastRevisionModerationState($node_group_content->getGroup());
           $status = $node_group_content->getGroup()->isPublished() ?
             $fields['bs_content_status'] :
             FALSE;
@@ -172,7 +175,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group instanceof GroupInterface) {
-          $last_moderation_state = $this->getLastRevisionModerationState($group);
+          $group_last_moderation_state = $last_moderation_state = $this->getLastRevisionModerationState($group);
           $this->addOrUpdateDocumentField(
             $document,
             'its_content_uid',
@@ -284,6 +287,12 @@ class ProcessorGlobal extends DocumentProcessor {
       'ss_global_last_moderation_state',
       $fields,
       $last_moderation_state
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_global_group_last_moderation_state',
+      $fields,
+      $group_last_moderation_state
     );
 
     // Set by default parent group to TRUE and method processGroupContentData will update it.
