@@ -2,8 +2,8 @@ _core:
   default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
 langcode: en
 uuid: a01abd4a-5998-4549-8d1b-8a9056cd581c
-name: EIC-community-D8
-mail: info@example.org
+name: 'EIC Community'
+mail: noreply@eic.eismea.eu
 slogan: ''
 page:
   403: ''
@@ -12,3 +12,4 @@ page:
 admin_compact_mode: false
 weight_select_max: 100
 default_langcode: en
+mail_notification: ''

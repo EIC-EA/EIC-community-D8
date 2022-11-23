@@ -34,6 +34,7 @@ class StoryGenerator extends NewsGenerator {
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
         'field_vocab_story_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'story_type'], 2),
+        'field_vocab_program_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'program_type'], 2),
         'field_disclaimer' => $disclaimer,
         'moderation_state' => EICContentModeration::STATE_PUBLISHED,
       ];

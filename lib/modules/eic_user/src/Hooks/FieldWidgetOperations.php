@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_user\Hooks;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_helper\SocialLinksFieldHelper;
@@ -78,6 +79,30 @@ class FieldWidgetOperations implements ContainerInjectionInterface {
     }
 
     $form_state->setValue($field_name, $form_state_values);
+  }
+
+  /**
+   * Implements hook_field_widget_entity_tree_form_alter().
+   */
+  public function fieldWidgetEntityTreeFormAlter(&$element, FormStateInterface $form_state, $context) {
+    $form_build_info = $form_state->getBuildInfo();
+
+    switch ($form_build_info['form_id']) {
+      case 'user_form':
+      case 'profile_member_edit_form':
+      case 'profile_member_add_form':
+        $translations = Json::decode($element['#attributes']['data-translations']);
+        // Removes match limit label for entity tree widgets in user profile
+        // form.
+        if (
+          !isset($translations['data-target-bundle']) ||
+          $translations['data-target-bundle'] !== 'user'
+        ) {
+          $translations['match_limit'] = '';
+          $element['#attributes']['data-translations'] = Json::encode($translations);
+        }
+        break;
+    }
   }
 
 }

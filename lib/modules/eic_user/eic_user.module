@@ -203,6 +203,14 @@ function eic_user_tokens($type, $tokens, array $data, array $options, Bubbleable
 }
 
 /**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_user_field_widget_entity_tree_form_alter(&$element, FormStateInterface $form_state, $context) {
+  \Drupal::classResolver(FieldWidgetOperations::class)
+    ->fieldWidgetEntityTreeFormAlter($element, $form_state, $context);
+}
+
+/**
  * Refreshes user data in Solr and invalidate relate cache tags.
  *
  * @param \Drupal\Core\Session\AccountInterface[] $accounts

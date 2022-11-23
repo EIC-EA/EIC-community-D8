@@ -66,6 +66,7 @@ dependencies:
     - node
     - path
     - profile
+    - role_delegation
     - scheduler
     - system
     - taxonomy
@@ -100,6 +101,9 @@ permissions:
   - 'administer message templates'
   - 'administer nodes'
   - 'administer users'
+  - 'assign content_administrator role'
+  - 'assign service_authentication role'
+  - 'assign trusted_user role'
   - 'bypass groups transition restrictions'
   - 'close archive request'
   - 'close delete request'

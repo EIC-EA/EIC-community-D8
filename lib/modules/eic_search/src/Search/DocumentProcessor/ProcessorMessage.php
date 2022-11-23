@@ -201,7 +201,10 @@ class ProcessorMessage extends DocumentProcessor {
         $language instanceof TermInterface ? $language->label() : NULL
       );
 
-      $user_follows = $this->getFollowUidByFlag('follow_user', $message->getOwner());
+      $user_follows = [];
+      if ($message->getOwner()) {
+        $user_follows = $this->getFollowUidByFlag('follow_user', $message->getOwner());
+      }
       $node_follows = $this->getFollowUidByFlag('follow_content', $node);
       $group_follows = [];
       $node_group_id = array_key_exists('its_group_id', $fields) ? $fields['its_group_id'] : NULL;

@@ -28,6 +28,7 @@ use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group\GroupMembership;
@@ -391,6 +392,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
 
       return $group;
+    }
+
+    if ($entity instanceof GroupContentInterface) {
+      return $entity->getGroup();
     }
 
     if ($entity instanceof NodeInterface) {
@@ -1080,6 +1085,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     if ($entity instanceof CommentInterface) {
       $entity = $entity->getCommentedEntity();
+    }
+
+    if ($entity instanceof GroupContentInterface) {
+      $entity = $entity->getGroup();
     }
 
     if ($entity instanceof NodeInterface) {

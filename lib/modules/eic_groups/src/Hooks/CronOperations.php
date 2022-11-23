@@ -206,6 +206,7 @@ class CronOperations implements ContainerInjectionInterface {
 
           $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
           $query->condition('type', $installedContentPluginIds, 'IN');
+          $query->condition('gid', $group->id());
           $results = $query->execute();
 
           if (!empty($results)) {

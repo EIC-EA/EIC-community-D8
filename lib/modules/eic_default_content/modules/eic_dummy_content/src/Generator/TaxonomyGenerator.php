@@ -29,6 +29,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->createTargetMarket();
     $this->createServiceProduct();
     $this->createStoryType();
+    $this->createProgramType();
   }
 
   /**
@@ -46,6 +47,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->unloadEntities('taxonomy_term', ['vid' => 'organisation_types']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'contact_category']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'story_type']);
+    $this->unloadEntities('taxonomy_term', ['vid' => 'program_type']);
   }
 
   /**
@@ -326,6 +328,27 @@ class TaxonomyGenerator extends CoreGenerator {
     ];
     foreach ($terms as $term) {
       $this->createTerm('story_type', ['name' => $term]);
+    }
+  }
+
+  /**
+   * Creates 'program_type' terms.
+   */
+  private function createProgramType() {
+    $terms = [
+      'EIC Corporate Partnership Programme',
+      'EIC Innovation Procurement Programme',
+      'EIC Overseas Trade Fair Programme',
+      'EIC Women Leadership Programme',
+      'EIC Ecosystem Partnership Programme',
+      'EIC Investment Programme',
+      'EIC & EIT',
+      'EIC Scale Up 100',
+      'EIC Tech To Market Services',
+      'EIC Community Activities',
+    ];
+    foreach ($terms as $term) {
+      $this->createTerm('program_type', ['name' => $term]);
     }
   }
 
