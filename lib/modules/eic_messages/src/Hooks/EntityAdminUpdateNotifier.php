@@ -90,8 +90,8 @@ class EntityAdminUpdateNotifier implements ContainerInjectionInterface {
       'field_event_executing_user' => $this->currentUser->id(),
       'field_referenced_node' => $entity,
     ];
-    
-    $group_content = $this->contentHelper->getGroupContentByEntity($entity);
+
+    $group_content = $this->contentHelper->getGroupContentByEntity($entity, [], ["group_node:{$entity->bundle()}"]);
     if (!empty($group_content)) {
       $group_content = reset($group_content);
       if ($group_content instanceof GroupContentInterface) {

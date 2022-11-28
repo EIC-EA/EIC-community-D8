@@ -14,3 +14,7 @@ services:
   plugin.manager.content_metric:
     class: Drupal\eic_content\ContentMetricPluginManager
     parent: default_plugin_manager
+  eic_content.route_subscriber:
+    class: Drupal\eic_content\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

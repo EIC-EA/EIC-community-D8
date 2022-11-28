@@ -1,6 +1,6 @@
 {% set item_title_element = item_title_element|default('span') %}
 
-<div class="ecl-extended-list__item {{ not items or items|length == 0 ? 'ecl-extended-list__item--has-full-layout' }} {{ extra_classes }}">
+<div class="ecl-extended-list__item {{ not items or items|length == 0 ? 'ecl-extended-list__item--has-full-layout' }} {{ extra_classes }}" {{ id ? 'id=' ~ id }}>
   {% if title %}
     <{{ item_title_element }} class="ecl-extended-list__item-title">
       {% if path is not empty %}

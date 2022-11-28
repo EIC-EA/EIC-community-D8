@@ -18,8 +18,8 @@ module:
   book_link_weight: 0
   breakpoint: 0
   cas: 0
-  cas_mock_server: 0
   ckeditor: 0
+  ckeditor_blockimagepaste: 0
   ckeditor_div_manager: 0
   ckeditor_find: 0
   ckeditor_font: 0
@@ -94,6 +94,7 @@ module:
   eic_share_content: 0
   eic_statistics: 0
   eic_subscription_digest: 0
+  eic_taxonomy: 0
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
@@ -154,6 +155,7 @@ module:
   migrate_tools: 0
   migrate_upgrade: 0
   mimemail: 0
+  mysql: 0
   node: 0
   node_read_time: 0
   oe_authentication: 0
@@ -182,6 +184,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  role_delegation: 0
   route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0

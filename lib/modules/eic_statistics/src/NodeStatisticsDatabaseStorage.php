@@ -63,6 +63,15 @@ class NodeStatisticsDatabaseStorage extends CoreNodeStatisticsDatabaseStorage {
     // Dispatch an event.
     $event = new PageViewCountUpdate($id, $page_views);
     $this->eventDispatcher->dispatch($event, PageViewCountUpdate::EVENT_NAME);
+    $node_view_counter_state_cache = $this->state->get(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, []);
+    // The node view counter is not re-indexed everytime we view a node page.
+    // Therefore, there is a cron responsible for re-indexing the nodes at a
+    // later stage. Here we reset the state cache used in the cron so that we
+    // avoid re-indexing the entity multiple times.
+    if (!in_array($id, $node_view_counter_state_cache)) {
+      $node_view_counter_state_cache[] = $id;
+      $this->state->set(StatisticsHelper::NODE_VIEW_COUNTER_REINDEX_STATE_CACHE, $node_view_counter_state_cache);
+    }
     // On each stat update we invalidate the stat cache for the given node and all nodes (this one isn't used for the moment)
     Cache::invalidateTags(["eic_statistics:node:$id"]);
 

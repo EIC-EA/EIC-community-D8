@@ -99,7 +99,7 @@ class EICBookNavigationBlock extends BookNavigationBlock {
     }
 
     // Ignore book page that belongs to a group.
-    if ($this->eicContentHelper->getGroupContentByEntity($node)) {
+    if ($this->eicContentHelper->getGroupContentByEntity($node, [], ["group_node:{$node->bundle()}"])) {
       return [];
     }
 
