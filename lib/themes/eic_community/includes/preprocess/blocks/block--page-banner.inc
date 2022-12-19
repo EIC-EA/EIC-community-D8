@@ -20,6 +20,11 @@ function eic_community_preprocess_block__page_banner(&$variables, &$cache_tags =
 
     switch ($media->bundle()) {
       case 'image':
+        $image = $media->get('oe_media_image')->first();
+
+        if (!$image) {
+          return;
+        }
         $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
         $variables['hero']['image'] = $image_item->getSource();
 
