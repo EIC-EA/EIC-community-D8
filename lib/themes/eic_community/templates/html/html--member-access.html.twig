@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * Theme override for the basic structure of a single Drupal page.
+ *
+ * @see ./core/themes/stable/templates/layout/html.html.twig
+ */
+#}
+{%
+  set body_classes = [
+  'language-' ~ html_attributes.lang,
+  'ecl-typography',
+  logged_in ? 'user-logged-in',
+  not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
+  node_type ? 'page-node-type-' ~ node_type|clean_class,
+  db_offline ? 'db-offline',
+]
+%}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+<head>
+  <head-placeholder token="{{ placeholder_token }}">
+    <title>{{ head_title|safe_join(' | ') }}</title>
+    <css-placeholder token="{{ placeholder_token }}">
+      <js-placeholder token="{{ placeholder_token }}">
+        </head>
+<body{{ attributes.addClass(body_classes) }}>
+
+
+{#
+Keyboard navigation/accessibility link to main content section in
+page.html.twig.
+#}
+{% include '@ecl-twig/skip-link' with {
+  label: 'Skip to main content'|t,
+  href: '#main-content',
+  extra_attributes: [{name: 'id', value: 'skip-id'}]
+} %}
+
+{{ page_top }}
+
+
+<div style="position: fixed;z-index: 1001;background-color: #004494;width: 100%;left: 0;right: 0;padding: 10px 15px 4px 31px;color: #FFD90E;box-sizing: border-box;line-height: 140%;box-shadow: 0 0 20px black;font-size: 0.8rem;" id="banner2FA" onclick="document.getElementById(\'block-eulogin2fabannerinformationblock\').style.visibility=\'hidden\';setCookie(\'banner2FA\');">
+  <script>
+    function linkHandler(event) {
+      event.stopPropagation();
+    }
+    function setCookie(cname) {
+      var d = new Date(); var days = 1; var cvalue = "1";
+      d.setTime(d.getTime() + (days*12*60*60*1000));
+      var expires = "expires="+d.toUTCString();
+      document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/community";
+    }
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+    if (getCookie("banner2FA")) {
+      document.getElementById("block-eulogin2fabannerinformationblock").style.visibility="hidden";
+    }
+  </script>
+  <div>
+    <div>
+      <p><strong>Important upcoming Change.<br/> The EU login</strong> will require a <strong>2 factor authentication</strong> to access this platform from the 20th of December onward. Get ready and activate <b>now</b> the multi-factor authentication for your EU login account. For more details on how to proceed go to the <a onclick="linkHandler(event)" style="color:#FFF" href="https://webgate.ec.europa.eu/cas/manuals/EU_Login_Tutorial.pdf" target="_blank">User Guide</a> or the <a onclick="linkHandler(event)" style="color:#FFF" href="https://webgate.ec.europa.eu/cas/help.html" target="_blank">EU Login help page</a>. Should you require additional assistance you can contact the EU login team directly via the contact form. (Click here to close this message)</p>
+    </div>
+  </div>
+</div>
+
+
+{{ page }}
+{{ page_bottom }}
+<js-bottom-placeholder token="{{ placeholder_token }}">
+</body>
+</html>
