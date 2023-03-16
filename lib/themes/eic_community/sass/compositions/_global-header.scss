@@ -63,6 +63,7 @@
     }
     @include ecl-media-breakpoint-down('xs') {
       font-size: 20px;
+      padding-bottom: 0.6em;
     }
   }
 
