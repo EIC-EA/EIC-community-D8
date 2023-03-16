@@ -36,7 +36,7 @@ $databases['default']['default'] = [
 ];
 
 // Configuration for Redis
-if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')) {
+if (getenv('REDIS_ENABLED') && !\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   // Set Redis as the default backend for any cache bin not otherwise specified.
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['redis.connection']['host'] = getenv('REDIS_HOST');
