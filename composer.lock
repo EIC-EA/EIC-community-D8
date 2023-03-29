@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecd1b0c6cb92dfb5c3fe9c95e3c1fa9b",
+    "content-hash": "ae7eb7da4fd12066f0be6ebedcb915c4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7640,30 +7640,30 @@
         },
         {
             "name": "drupal/search_api_attachments",
-            "version": "1.0.0-beta18",
+            "version": "9.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/search_api_attachments.git",
-                "reference": "8.x-1.0-beta18"
+                "reference": "9.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/search_api_attachments-8.x-1.0-beta18.zip",
-                "reference": "8.x-1.0-beta18",
-                "shasum": "e770ae27a7f5c2f9a7c3064d14a1f110ae98acf0"
+                "url": "https://ftp.drupal.org/files/projects/search_api_attachments-9.0.1.zip",
+                "reference": "9.0.1",
+                "shasum": "cd0a7fa3062f3396ee95d9fdc5c6545e6f2c52f9"
             },
             "require": {
-                "drupal/core": "^8 || ^9",
+                "drupal/core": "^9 || ^10",
                 "drupal/search_api": "*"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-beta18",
-                    "datestamp": "1632333998",
+                    "version": "9.0.1",
+                    "datestamp": "1676994670",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -9099,12 +9099,12 @@
             "version": "2.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ethosce/group_purl.git",
+                "url": "https://github.com/ethosce/drupal-group_purl.git",
                 "reference": "cd3adfbbcae9d19b7afcb6616243cf602d83d35c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ethosce/group_purl/zipball/cd3adfbbcae9d19b7afcb6616243cf602d83d35c",
+                "url": "https://api.github.com/repos/ethosce/drupal-group_purl/zipball/cd3adfbbcae9d19b7afcb6616243cf602d83d35c",
                 "reference": "cd3adfbbcae9d19b7afcb6616243cf602d83d35c",
                 "shasum": ""
             },
