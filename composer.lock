@@ -16554,8 +16554,14 @@
             "version": "8.3.13",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/project/coder.git",
+                "url": "https://github.com/pfrenssen/coder.git",
                 "reference": "d3286d571b19633cc296d438c36b9aed195de43c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pfrenssen/coder/zipball/d3286d571b19633cc296d438c36b9aed195de43c",
+                "reference": "d3286d571b19633cc296d438c36b9aed195de43c",
+                "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
