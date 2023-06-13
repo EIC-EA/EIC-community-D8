@@ -42,7 +42,7 @@
         "drupal/config_split": "^1.7",
         "drupal/content_moderation_bypass": "^1.0@alpha",
         "drupal/context": "^4.0@beta",
-        "drupal/core": "^9.4",
+        "drupal/core": "9.4.*",
         "drupal/core-composer-scaffold": "^9.1",
         "drupal/date_popup": "^1.1",
         "drupal/default_content": "^2.0@alpha",
