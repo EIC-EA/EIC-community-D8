@@ -282,6 +282,7 @@ class ShareManager {
 
     // If user is power user, we get all groups with given visibility types
     // regardless of memberships.
+    // @todo EICNET-2967: filter the sensitive groups.
     if (UserHelper::isPowerUser($account)) {
       foreach ($visibility_types as $visibility_type) {
         foreach ($this->groupsHelper->getGroupsByVisibility($visibility_type) as $group) {

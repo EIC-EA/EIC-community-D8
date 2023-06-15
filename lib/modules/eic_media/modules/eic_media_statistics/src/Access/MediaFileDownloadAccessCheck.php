@@ -83,6 +83,7 @@ class MediaFileDownloadAccessCheck implements AccessInterface {
     }
 
     // Allow access if the user is a power user.
+    // @todo EICNET-2967: need the group info here?
     return AccessResult::allowedIf(UserHelper::isPowerUser($account));
   }
 

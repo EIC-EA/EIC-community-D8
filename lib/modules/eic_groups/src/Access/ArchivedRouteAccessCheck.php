@@ -73,6 +73,7 @@ class ArchivedRouteAccessCheck implements AccessInterface {
       $this->groupsHelper->isGroupArchived($node);
 
     if (UserHelper::isPowerUser($account)) {
+      // @todo EICNET-2967: filter the sensitive groups.
       return AccessResult::allowed()->addCacheableDependency($group);
     }
 

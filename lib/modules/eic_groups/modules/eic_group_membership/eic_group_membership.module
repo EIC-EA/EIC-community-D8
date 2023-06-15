@@ -498,10 +498,17 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
     return $access;
   }
 
+
+  $is_power_user = UserHelper::isPowerUser($account);
+  // Extra check for sensitive groups
+  if (EICGroupsHelper::isSensitive($entity, $account)) {
+    $is_power_user=FALSE;
+  }
+
+
   switch ($operation) {
     case 'edit':
       $group = $entity->getGroup();
-      $is_power_user = UserHelper::isPowerUser($account);
       $deny_moderation_states = [
         GroupsModerationHelper::GROUP_ARCHIVED_STATE,
         GroupsModerationHelper::GROUP_BLOCKED_STATE,
@@ -519,7 +526,6 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       break;
     case 'delete':
       $group = $entity->getGroup();
-      $is_power_user = UserHelper::isPowerUser($account);
       $deny_moderation_states = [
         GroupsModerationHelper::GROUP_ARCHIVED_STATE,
         GroupsModerationHelper::GROUP_BLOCKED_STATE,

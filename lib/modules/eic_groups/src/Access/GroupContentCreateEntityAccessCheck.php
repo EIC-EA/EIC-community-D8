@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Access\GroupContentCreateEntityAccessCheck as GroupContentCreateEntityAccessCheckBase;
 use Drupal\group\Entity\GroupInterface;
@@ -90,6 +91,9 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
     // If access is not allowed, only powerusers can create content in the
     // group.
     if (!$access->isAllowed()) {
+      if (EICGroupsHelper::isSensitive($group, $account)) {
+        return AccessResult::forbidden();
+      }
       return AccessResult::allowedIf(UserHelper::isPowerUser($account))
         ->addCacheableDependency($account)
         ->addCacheableDependency($group);
@@ -102,6 +106,7 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
         // Deny access to the group content node creation form if the group
         // is in pending state and the user is not a "site_admin" or a
         // "content_administrator".
+        // @todo EICNET-2967: filter the sensitive groups.
         if (!UserHelper::isPowerUser($account)) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)

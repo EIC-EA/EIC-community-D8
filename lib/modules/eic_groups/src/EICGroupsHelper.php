@@ -220,8 +220,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     AccountInterface $account,
     GroupMembership $membership = NULL
   ) {
+
     // If user is power user, return TRUE.
     if (UserHelper::isPowerUser($account)) {
+      // Exclude external admins in some internal groups.
+      if (self::isSensitive($group, $account)) {
+        return FALSE;
+      }
       return TRUE;
     }
 
@@ -1184,6 +1189,33 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $label;
+  }
+  /**
+   * Check if a group can be flagged depending on the moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @param \Drupal\group\Entity\AccountInterface $account
+   *   The account entity.
+   *
+   * @return bool
+   *   TRUE if the group is not in Pending or Draft state.
+   */
+  public static function isSensitive(GroupInterface $group, AccountInterface $account, $role = UserHelper::ROLE_SITE_ADMINISTRATOR) {
+    // @todo EICNET-2967: Admin level inputfields to enter data or add field to groups.
+    $sensitive_groups = ['7821'];
+    $external_admin_mail = "xxxxxx.yyy";
+    if ((int) $account->id() === 1) {
+      return FALSE;
+    }
+    if (in_array($group->id(), $sensitive_groups) &&
+       (!in_array($role, $account->getRoles())) || strpos($account->getEmail(), $external_admin_mail) > 0) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
   }
 
 }

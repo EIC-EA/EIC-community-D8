@@ -41,9 +41,15 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
 
     // Allow access to power users.
     if ($is_power_user = UserHelper::isPowerUser($account)) {
-      $access = GroupAccessResult::allowed()
-        ->addCacheableDependency($account)
-        ->addCacheableDependency($entity);
+      // But not in sensitive groups.
+      if (EICGroupsHelper::isSensitive($group, $account)) {
+        $is_power_user = FALSE;
+      }
+      else {
+        $access = GroupAccessResult::allowed()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity);
+      }
     }
 
     switch ($operation) {
