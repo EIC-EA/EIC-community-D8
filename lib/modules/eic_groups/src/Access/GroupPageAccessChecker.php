@@ -126,7 +126,9 @@ class GroupPageAccessChecker implements AccessInterface {
     if (GroupsModerationHelper::isBlocked($group) && !UserHelper::isPowerUser($account)) {
       $access = AccessResult::forbidden();
     }
-
+    if (EICGroupsHelper::groupIsSensitive($group, $account)) {
+      $access = AccessResult::forbidden();
+  }
     return $access;
   }
 
