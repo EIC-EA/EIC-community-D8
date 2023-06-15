@@ -1,0 +1,14 @@
+uuid: be363c38-a7f0-4adc-9500-da7e389acb2e
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.security_admin
+  module:
+    - user
+id: user_remove_role_action.security_admin
+label: 'Remove the security admin role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: security_admin

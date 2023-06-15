@@ -1,0 +1,9 @@
+uuid: 661d77cd-467a-4c92-adab-48afab2be1fe
+langcode: en
+status: true
+dependencies: {  }
+id: security_admin
+label: 'Security Admin'
+weight: -4
+is_admin: null
+permissions: {  }

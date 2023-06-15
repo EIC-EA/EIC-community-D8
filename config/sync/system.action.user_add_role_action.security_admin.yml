@@ -1,0 +1,14 @@
+uuid: 3b7ce5ee-fc59-4cb3-b6bb-7e50a889201a
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.security_admin
+  module:
+    - user
+id: user_add_role_action.security_admin
+label: 'Add the security admin role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: security_admin
