@@ -91,7 +91,7 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
     // If access is not allowed, only powerusers can create content in the
     // group.
     if (!$access->isAllowed()) {
-      if (EICGroupsHelper::isSensitive($group, $account)) {
+      if (EICGroupsHelper::groupIsSensitive($group, $account)) {
         return AccessResult::forbidden();
       }
       return AccessResult::allowedIf(UserHelper::isPowerUser($account))

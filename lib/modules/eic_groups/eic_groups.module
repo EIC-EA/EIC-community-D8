@@ -513,7 +513,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
 
   // Allow access if user is a poweruser.
   if (UserHelper::isPowerUser($account)) {
-    if (EICGroupsHelper::isSensitive($entity, $account)) {
+    if (EICGroupsHelper::groupIsSensitive($entity, $account)) {
       return GroupAccessResult::forbidden();
     }
     return GroupAccessResult::allowed()

@@ -224,7 +224,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     // If user is power user, return TRUE.
     if (UserHelper::isPowerUser($account)) {
       // Exclude external admins in some internal groups.
-      if (self::isSensitive($group, $account)) {
+      if (self::groupIsSensitive($group, $account)) {
         return FALSE;
       }
       return TRUE;
@@ -1202,15 +1202,14 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return bool
    *   TRUE if the group is not in Pending or Draft state.
    */
-  public static function isSensitive(GroupInterface $group, AccountInterface $account, $role = UserHelper::ROLE_SITE_ADMINISTRATOR) {
+  public static function groupIsSensitive(GroupInterface $group, AccountInterface $account, $role = UserHelper::ROLE_SECURITY_ADMINISTRATOR) {
     // @todo EICNET-2967: Admin level inputfields to enter data or add field to groups.
     $sensitive_groups = ['7821'];
-    $external_admin_mail = "xxxxxx.yyy";
     if ((int) $account->id() === 1) {
       return FALSE;
     }
-    if (in_array($group->id(), $sensitive_groups) &&
-       (!in_array($role, $account->getRoles())) || strpos($account->getEmail(), $external_admin_mail) > 0) {
+    // if sensitive and not have the proper role, deny access
+    if (in_array($group->id(), $sensitive_groups) && !in_array($role, $account->getRoles())) {
       return TRUE;
     }
     else {

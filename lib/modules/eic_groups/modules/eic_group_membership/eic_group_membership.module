@@ -501,7 +501,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
 
   $is_power_user = UserHelper::isPowerUser($account);
   // Extra check for sensitive groups
-  if (EICGroupsHelper::isSensitive($entity, $account)) {
+  if (EICGroupsHelper::groupIsSensitive($entity, $account)) {
     $is_power_user=FALSE;
   }
 

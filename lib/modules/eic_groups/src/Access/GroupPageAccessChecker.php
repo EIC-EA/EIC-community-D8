@@ -103,7 +103,7 @@ class GroupPageAccessChecker implements AccessInterface {
     else {
       $access = AccessResult::allowed();
     }
-    if (EICGroupsHelper::isSensitive($group, $account)) {
+    if (EICGroupsHelper::groupIsSensitive($group, $account)) {
       $access = AccessResult::forbidden();
   }
     return $access;

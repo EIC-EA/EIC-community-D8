@@ -38,6 +38,13 @@ class UserHelper {
    *
    * @var string
    */
+  const ROLE_SECURITY_ADMINISTRATOR = 'security_admin';
+
+  /**
+   * Site administrator role.
+   *
+   * @var string
+   */
   const ROLE_SITE_ADMINISTRATOR = 'site_admin';
 
   /**
