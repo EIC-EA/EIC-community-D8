@@ -1045,13 +1045,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
    *
    * @return \Drupal\group\Entity\GroupInterface|null
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getGroupFromContent(EntityInterface $entity): ?GroupInterface {
+  public function getGroupFromContent(?EntityInterface $entity): ?GroupInterface {
     if ($entity instanceof NodeInterface) {
       $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
       if (!empty($group_contents)) {
