@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
@@ -48,18 +49,26 @@ class ProcessorGlobal extends DocumentProcessor {
   private $em;
 
   /**
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper
+   */
+  private $groupStatisticsHelper;
+
+  /**
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $urlGenerator
-   * @param EntityTypeManager $em
+   * @param \Drupal\Core\Entity\EntityTypeManager $em
+   * @param \Drupal\eic_group_statistics\GroupStatisticsHelper $groupStatisticsHelper
    */
   public function __construct(
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
     FileUrlGeneratorInterface $urlGenerator,
-    EntityTypeManager $em
+    EntityTypeManager $em,
+    GroupStatisticsHelper $groupStatisticsHelper
   ) {
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
     $this->urlGenerator = $urlGenerator;
     $this->em = $em;
+    $this->groupStatisticsHelper = $groupStatisticsHelper;
   }
 
   /**
@@ -172,6 +181,13 @@ class ProcessorGlobal extends DocumentProcessor {
         $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group instanceof GroupInterface) {
+          $lastActivityTime = $this->groupStatisticsHelper->getGroupLatestActivity($group);
+
+          // If we have a value for a last activity stream in the group, we replace the default changed time.
+          if ($lastActivityTime) {
+            $changed = $this->groupStatisticsHelper->getGroupLatestActivity($group);
+          }
+
           $last_moderation_state = $this->getLastRevisionModerationState($group);
           $this->addOrUpdateDocumentField(
             $document,
