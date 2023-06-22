@@ -232,5 +232,6 @@ hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_tags: true
   langcode: true
+  node_read_time: true
   published_at: true
   search_api_excerpt: true
