@@ -1,0 +1,17 @@
+uuid: 895ca400-8281-4d5a-9248-311afd512529
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+  enforced:
+    config:
+      - user.role.security_admin
+id: group-ef70a019f
+label: 'Security Admin'
+weight: -3
+internal: true
+audience: outsider
+group_type: group
+permissions_ui: false
+permissions: {  }

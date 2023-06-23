@@ -1,0 +1,17 @@
+uuid: 13059143-48f0-4c37-9353-f107ea3e655f
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.security_admin
+id: organisation-ef70a019f
+label: 'Security Admin'
+weight: -3
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions: {  }

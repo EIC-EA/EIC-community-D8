@@ -1,0 +1,17 @@
+uuid: 0663b4fd-7382-4be2-b269-3428c8e88312
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  enforced:
+    config:
+      - user.role.security_admin
+id: event-ef70a019f
+label: 'Security Admin'
+weight: -3
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: false
+permissions: {  }
