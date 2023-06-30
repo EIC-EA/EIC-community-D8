@@ -20,7 +20,7 @@ dependencies:
     - rest
 id: service_authentication
 label: 'Service authentication'
-weight: -6
+weight: -5
 is_admin: null
 permissions:
   - 'access user profiles'

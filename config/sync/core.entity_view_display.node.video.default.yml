@@ -24,6 +24,11 @@ targetEntityType: node
 bundle: video
 mode: default
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_body:
     type: text_default
     label: hidden
@@ -126,6 +131,7 @@ hidden:
   flag_recommend: true
   langcode: true
   links: true
+  node_read_time: true
   private: true
   published_at: true
   search_api_excerpt: true

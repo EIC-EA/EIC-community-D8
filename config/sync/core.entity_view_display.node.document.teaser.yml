@@ -107,5 +107,6 @@ hidden:
   field_vocab_geo: true
   langcode: true
   links: true
+  node_read_time: true
   published_at: true
   search_api_excerpt: true

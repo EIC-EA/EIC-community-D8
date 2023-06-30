@@ -1,0 +1,14 @@
+uuid: e42d2697-8064-4831-b257-b9aaa3bd6d81
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.sensitive
+  module:
+    - user
+id: user_add_role_action.sensitive
+label: 'Add the Sensitive role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: sensitive

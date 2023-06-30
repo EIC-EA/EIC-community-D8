@@ -81,6 +81,7 @@ hidden:
   flag_like_content: true
   langcode: true
   member_content_edit_access: true
+  node_read_time: true
   private: true
   published_at: true
   reading_time: true
