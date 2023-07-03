@@ -3,18 +3,17 @@
 namespace Drupal\oec_group_flex\Plugin\GroupVisibility;
 
 use Drupal\group\Entity\GroupTypeInterface;
-use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
 
 /**
- * Provides a 'sensitive_members' group visibility.
+ * Provides a 'sensitive' group visibility.
  *
  * @GroupVisibility(
- *  id = "sensitive_members",
+ *  id = "sensitive",
  *  label = @Translation("Sensitive members only"),
  *  weight = -89
  * )
  */
-class SensitiveVisibility extends RestrictedGroupVisibilityBase {
+class SensitiveVisibility extends PrivateVisibility {
 
   /**
    * {@inheritdoc}

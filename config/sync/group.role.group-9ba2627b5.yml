@@ -14,4 +14,8 @@ internal: true
 audience: outsider
 group_type: group
 permissions_ui: false
-permissions: {  }
+permissions:
+  - 'access members management'
+  - 'join group'
+  - 'request group membership'
+  - 'share content between groups'

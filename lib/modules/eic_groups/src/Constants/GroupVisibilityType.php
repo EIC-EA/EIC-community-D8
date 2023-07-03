@@ -13,6 +13,8 @@ final class GroupVisibilityType {
 
   const GROUP_VISIBILITY_PRIVATE = 'private';
 
+  const GROUP_VISIBILITY_SENSITIVE = 'sensitive';
+
   const GROUP_VISIBILITY_COMMUNITY = 'restricted_community_members';
 
   const GROUP_VISIBILITY_CUSTOM_RESTRICTED = 'custom_restricted';
