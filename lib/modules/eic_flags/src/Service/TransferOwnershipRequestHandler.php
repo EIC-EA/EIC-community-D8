@@ -242,7 +242,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       !$owner instanceof UserInterface ||
       !(
       $account->id() === $owner->id() ||
-      UserHelper::isPowerUser($account)
+      UserHelper::isPowerUser($account, $group)
     )) {
       return $access;
     }
@@ -452,7 +452,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     // Allow access to cancel the request if the current account is a power
     // user and the requested user corresponds to a different account.
     if (
-      UserHelper::isPowerUser($account) &&
+      UserHelper::isPowerUser($account, $group) &&
       $entity->getEntity()->id() !== $account->id()
     ) {
       return AccessResult::allowed()

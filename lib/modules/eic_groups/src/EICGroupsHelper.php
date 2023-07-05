@@ -221,7 +221,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     GroupMembership $membership = NULL
   ) {
     // If user is power user, return TRUE.
-    if (UserHelper::isPowerUser($account)) {
+    if (UserHelper::isPowerUser($account, $group)) {
       return TRUE;
     }
 
