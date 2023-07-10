@@ -2,6 +2,7 @@
 
 namespace Drupal\oec_group_flex\Plugin\GroupVisibility;
 
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 
 /**
@@ -27,6 +28,37 @@ class SensitiveVisibility extends PrivateVisibility {
    */
   public function getValueDescription(GroupTypeInterface $groupType): string {
     return $this->t('This means the group will be visible to users allowed to see sensitive content on the platform.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getGroupPermissions(GroupInterface $group): array {
+    $permissions = parent::getGroupPermissions($group);
+
+    $group_ids_to_remove = ['group-a416e6833', 'group-bf4b46c3a', 'group-eca6128ca', 'group-outsider'];
+
+    foreach ($group_ids_to_remove as $group_id) {
+      if (!array_key_exists($group_id, $permissions)) {
+        continue;
+      }
+
+      $permissions[$group_id] = [];
+    }
+    $mappedPerm = [];
+
+    foreach ($group_ids_to_remove as $group_id) {
+      foreach ($permissions as $permission) {
+        $permission = array_merge($permission, ['view any unpublished group']);
+        foreach ($permission as $perm) {
+          $mappedPerm[$group_id][$perm] = FALSE;
+        }
+      }
+    }
+
+    $this->saveMappedPerm($mappedPerm, $group->getGroupType());
+
+    return $permissions;
   }
 
 }

@@ -157,11 +157,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     // plugin.
     if (isset($visibilityPlugins[$groupVisibility])) {
       foreach ($visibilityPlugins[$groupVisibility]->getGroupPermissions($group) as $role => $rolePermissions) {
-        $groupPermission = $this->addRolePermissionsToGroup(
-          $groupPermission,
-          $role,
-          $rolePermissions
-        );
+
       }
     }
 

@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\Entity\Form\GroupForm;
@@ -165,4 +166,50 @@ function oec_group_flex_views_data() {
     ],
   ];
   return $data;
+}
+
+/**
+ * Implements hook_group_flex_visibility_save().
+ */
+function oec_group_flex_group_flex_visibility_save(
+  GroupInterface $group,
+  \Drupal\oec_group_flex\GroupVisibilityRecordInterface $old_group_visibility,
+  \Drupal\oec_group_flex\GroupVisibilityRecordInterface $new_group_visibility
+) {
+  if (GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE !== $new_group_visibility->getType()) {
+    return;
+  }
+
+  $group_ids_to_remove = ['group-a416e6833', 'group-bf4b46c3a', 'group-eca6128ca', 'group-outsider'];
+  $revoke_permissions = [
+    'view any unpublished group',
+    'view any published group',
+    'edit group',
+    'view latest group version',
+    'view group revisions',
+    'delete group',
+  ];
+
+  /** @var \Drupal\group_permissions\GroupPermissionsManager $groupPermissionsManager */
+  $group_permissions_manager = \Drupal::service('group_permission.group_permissions_manager');
+  /** @var \Drupal\group_permissions\Entity\GroupPermission $group_permissions */
+  $group_permissions = $group_permissions_manager->loadByGroup($group);
+
+  $permissions = $group_permissions->getPermissions();
+
+  foreach ($group_ids_to_remove as $group_id) {
+    if (!array_key_exists($group_id, $permissions)) {
+      continue;
+    }
+
+    //$group_role_permissions = $permissions[$group_id];
+
+    $permissions[$group_id] = [];
+  }
+
+  $group_permissions->setPermissions($permissions);
+
+  /** @var \Drupal\eic_groups\EICGroupsHelper $group_helper */
+  $group_helper = \Drupal::service('eic_groups.helper');
+  $group_helper->saveGroupPermissions($group_permissions);
 }
