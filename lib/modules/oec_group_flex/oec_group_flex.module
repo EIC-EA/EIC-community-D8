@@ -68,14 +68,17 @@ function oec_group_flex_entity_access(EntityInterface $entity, $operation, Accou
             ->addCacheableDependency($entity);
         }
 
-        $admin_roles = \Drupal::configFactory()->get('oec_group_flex.settings')->get('oec_group_flex_admin_roles');
-        // Check if user has access to view the group. The access should should
-        // be allowed if the user is a super.
-        foreach ($account->getRoles(TRUE) as $role) {
-          if (in_array($role, $admin_roles)) {
-            return GroupAccessResult::allowed()
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($entity);
+        // If visibility is sensitive do not take that into account.
+        if (GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE !== $group_visibility_record->getType()) {
+          $admin_roles = \Drupal::configFactory()->get('oec_group_flex.settings')->get('oec_group_flex_admin_roles');
+          // Check if user has access to view the group. The access should should
+          // be allowed if the user is a super.
+          foreach ($account->getRoles(TRUE) as $role) {
+            if (in_array($role, $admin_roles)) {
+              return GroupAccessResult::allowed()
+                ->addCacheableDependency($account)
+                ->addCacheableDependency($entity);
+            }
           }
         }
 
