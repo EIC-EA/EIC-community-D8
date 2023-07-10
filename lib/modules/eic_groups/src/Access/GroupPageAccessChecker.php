@@ -96,7 +96,7 @@ class GroupPageAccessChecker implements AccessInterface {
       $access = AccessResult::forbidden();
       // If group is blocked and user is a power user or a group admin, we
       // allow access.
-      if (UserHelper::isPowerUser($account) || EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+      if (UserHelper::isPowerUser($account, $group) || EICGroupsHelper::userIsGroupAdmin($group, $account)) {
         $access = AccessResult::allowed();
       }
     }

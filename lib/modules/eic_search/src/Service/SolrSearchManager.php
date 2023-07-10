@@ -701,6 +701,7 @@ class SolrSearchManager {
 
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+      case GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         if ($strict_private) {
           $query = '(itm_user_group_ids:(' . $group_id . '))';

@@ -73,6 +73,13 @@ class UserGenerator extends CoreGenerator {
         ],
       ],
       [
+        'name' => 'sensitive_user',
+        'pass' => 'secret',
+        'roles' => [
+          'sensitive',
+        ],
+      ],
+      [
         'name' => 'ungrouped_user',
         'pass' => 'secret',
         'roles' => [

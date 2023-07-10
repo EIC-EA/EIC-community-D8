@@ -221,7 +221,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     GroupMembership $membership = NULL
   ) {
     // If user is power user, return TRUE.
-    if (UserHelper::isPowerUser($account)) {
+    if (UserHelper::isPowerUser($account, $group)) {
       return TRUE;
     }
 
@@ -527,6 +527,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         return $this->t('A private @group-type is only visible to people who received an invitation via email and accepted it. No one else can see this @group-type.',
           ['@group-type' => $group_type]);
 
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
+        return $this->t('A sensitive @group-type is only visible to people who received an invitation via email, accepted it and has the role to see sensitive content. No one else can see this @group-type.',
+          ['@group-type' => $group_type]);
+
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
         return $this->t('This means that EIC Community members can join this @group-type immediately by clicking "join group".',
           ['@group-type' => $group_type]);
@@ -604,6 +608,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
         'default' => $this->t('Private @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Private'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE => [
+        'default' => $this->t('Sensitive @group-type', ['@group-type' => $group_type]),
+        'short' => $this->t('Sensitive'),
       ],
       'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
         'default' => $this->t('Open'),

@@ -1,0 +1,17 @@
+uuid: 29458080-d542-4fe6-b77d-9dfd153b0389
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.sensitive
+id: organisation-9ba2627b5
+label: Sensitive
+weight: -3
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions: {  }
