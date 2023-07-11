@@ -6,6 +6,8 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\ginvite\GroupInvitation;
 use Drupal\ginvite\GroupInvitationLoader;
 use Drupal\ginvite\EventSubscriber\GinviteSubscriber as GinviteSubscriberBase;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -34,7 +36,12 @@ class GinviteSubscriber extends GinviteSubscriberBase {
     MessengerInterface $messenger,
     LoggerChannelFactoryInterface $logger_factory
   ) {
-    parent::__construct($invitation_loader, $current_user, $messenger, $logger_factory);
+    parent::__construct(
+      $invitation_loader,
+      $current_user,
+      $messenger,
+      $logger_factory
+    );
     $this->ginviteSubscriber = $ginvite_subscriber_inner_service;
   }
 
@@ -42,6 +49,10 @@ class GinviteSubscriber extends GinviteSubscriberBase {
    * {@inheritdoc}
    */
   public function notifyAboutPendingInvitations(GetResponseEvent $event) {
+    if (!$event->isMasterRequest()) {
+      return;
+    }
+
     // Exclude routes where this info is redundant or will generate a
     // misleading extra message on the next request.
     $route_exclusions = [
@@ -51,6 +62,19 @@ class GinviteSubscriber extends GinviteSubscriberBase {
       'image.style_private',
     ];
     $route = $event->getRequest()->get('_route');
+
+    /** @var \Drupal\ginvite\GroupInvitation[] $invitations */
+    $invitations = $this->groupInvitationLoader->loadByUser();
+
+    //Do not system notify when the group is archived.
+    $disallowed_states = [DefaultContentModerationStates::ARCHIVED_STATE];
+    $invitations = array_filter(
+      $invitations,
+      fn(GroupInvitation $groupInvitation) => !in_array(
+        $groupInvitation->getGroup()->get('moderation_state')->value,
+        $disallowed_states
+      )
+    );
 
     // @todo Doing this should already improve some performance however, we
     // should create a function to query the invitations and limit the results
@@ -63,11 +87,17 @@ class GinviteSubscriber extends GinviteSubscriberBase {
     if (
       !empty($route) &&
       !in_array($route, $route_exclusions) &&
-      $this->groupInvitationLoader->loadByUser()
+      $invitations
     ) {
-      $destination = Url::fromRoute('view.my_invitations.page_1', ['user' => $this->currentUser->id()])->toString();
+      $destination = Url::fromRoute(
+        'view.my_invitations.page_1',
+        ['user' => $this->currentUser->id()]
+      )->toString();
       $replace = ['@url' => $destination];
-      $message = $this->t('You have pending group invitations. <a href="@url">Visit your profile</a> to see them.', $replace);
+      $message = $this->t(
+        'You have pending group invitations. <a href="@url">Visit your profile</a> to see them.',
+        $replace
+      );
       $this->messenger->addMessage($message, 'warning', FALSE);
     }
   }
