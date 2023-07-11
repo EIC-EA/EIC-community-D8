@@ -38,6 +38,7 @@ use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\message\MessageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\GroupVisibilityDatabaseStorage;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibility;
@@ -135,6 +136,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $groupContentPluginManager;
 
   /**
+   * The group visibility storage.
+   *
+   * @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage
+   */
+  protected $groupVisibilityStorage;
+
+  /**
    * Constructs a new EventsHelperService object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -157,6 +165,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The entity type manager service.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $group_content_enabler_manager
    *   The group content enabler manager service.
+   * @param GroupVisibilityDatabaseStorage $group_visibility_storage
+   *   The group visibility storage.
    */
   public function __construct(
     Connection $database,
@@ -168,7 +178,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     GroupVisibilityManager $group_visibility_manager,
     CurrentPathStack $current_path,
     EntityTypeManagerInterface $entity_type_manager,
-    GroupContentEnablerManagerInterface $group_content_enabler_manager
+    GroupContentEnablerManagerInterface $group_content_enabler_manager,
+    GroupVisibilityDatabaseStorage $group_visibility_storage
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
@@ -180,6 +191,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->currentPath = $current_path;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupContentPluginManager = $group_content_enabler_manager;
+    $this->groupVisibilityStorage = $group_visibility_storage;
   }
 
   /**
@@ -1118,6 +1130,31 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Return if the group itself or content from group is archived.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
+   *
+   * @return bool
+   */
+  public function isGroupSensitive(?EntityInterface $entity) {
+    if (!$entity instanceof EntityInterface) {
+      return FALSE;
+    }
+
+    if ($entity instanceof CommentInterface) {
+      $entity = $entity->getCommentedEntity();
+    }
+
+    if ($entity instanceof GroupContentInterface) {
+      $entity = $entity->getGroup();
+    }
+
+    $group_visibility = $this->groupVisibilityStorage->load($entity->id());
+
+    return GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE === $group_visibility->getType();
   }
 
   /**

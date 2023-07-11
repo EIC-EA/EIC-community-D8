@@ -58,6 +58,13 @@ class UserHelper {
   const ROLE_TRUSTED_USER = 'trusted_user';
 
   /**
+   * Sensitive role.
+   *
+   * @var string
+   */
+  const ROLE_SENSITIVE = 'sensitive';
+
+  /**
    * The user storage interface.
    *
    * @var \Drupal\user\UserStorageInterface
