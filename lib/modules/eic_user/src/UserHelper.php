@@ -184,6 +184,11 @@ class UserHelper {
    *   TRUE if user is a power user.
    */
   public static function isPowerUser(AccountInterface $account, GroupInterface $group_related = null) {
+    // User 1 is always considered power user.
+    if ((int) $account->id() === 1) {
+      return TRUE;
+    }
+
     if ($group_related) {
       $group_flex_group = \Drupal::service('group_flex.group');
       $group_visibility = $group_flex_group->getGroupVisibility($group_related);
@@ -191,11 +196,6 @@ class UserHelper {
       if ($group_visibility === GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE) {
         return FALSE;
       }
-    }
-
-    // User 1 is always considered power user.
-    if ((int) $account->id() === 1) {
-      return TRUE;
     }
 
     foreach ($account->getRoles(TRUE) as $role) {
