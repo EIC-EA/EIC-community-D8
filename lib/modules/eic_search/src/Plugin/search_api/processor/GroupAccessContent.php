@@ -118,6 +118,11 @@ class GroupAccessContent extends ProcessorPluginBase {
 
     // Power user can access all groups.
     if (UserHelper::isPowerUser($user)) {
+      // If user has not the role of sensitive, we filter them out.
+      if (!$user->hasRole(UserHelper::ROLE_SENSITIVE)) {
+        return '(ss_group_visibility:* AND !ss_group_visibility:sensitive)';
+      }
+
       return '(ss_group_visibility:*)';
     }
 
