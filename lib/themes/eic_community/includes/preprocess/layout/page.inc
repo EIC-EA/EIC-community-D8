@@ -11,8 +11,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
-use Drupal\eic_groups\Constants\GroupVisibilityType;
 
 /**
  * Implements hook_preprocess_page().
@@ -110,28 +108,7 @@ function eic_community_preprocess_page(array &$variables): void {
 
   _preprocess_page_not_found($variables);
 
-  /** @var \Drupal\eic_groups\EICGroupsHelper $group_helper */
-  $group_helper = \Drupal::service('eic_groups.helper');
-  $group = $group_helper->isGroupPage();
-
-  // Check if group is private and user doesn't have access, set special 403 message.
-  if ($group instanceof \Drupal\group\Entity\GroupInterface) {
-    $group_visibility_storage = \Drupal::service(
-      'oec_group_flex.group_visibility.storage'
-    );
-    /** @var \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_entity */
-    $group_visibility_entity = $group_visibility_storage->load($group->id());
-
-    if (
-      $group_visibility_entity instanceof GroupVisibilityRecordInterface &&
-      $group_visibility_entity->getType() === GroupVisibilityType::GROUP_VISIBILITY_PRIVATE
-    ) {
-      $access = $group->hasPermission('view group', \Drupal::currentUser()->getAccount());
-      if (!$access && isset($variables['page']['content']['system_main']['#markup'])) {
-        $variables['page']['content']['system_main']['#markup'] = t('This content is for members-only. Please log in to access to see and access the content. ');
-      }
-    }
-  }
+  _preprocess_access_denied($variables);
 }
 
 /**
@@ -298,6 +275,30 @@ function _preprocess_page_not_found(&$variables) {
   if (\Drupal::routeMatch()->getRouteName() === 'system.404') {
     // Adds URL to the frontpage.
     $variables['front_url'] = Url::fromRoute('<front>')->toString();
+  }
+}
+
+/**
+ * Preprocess access denied.
+ */
+function _preprocess_access_denied(&$variables) {
+  if (\Drupal::routeMatch()->getRouteName() === 'system.403') {
+    // Anonymous user.
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $options = [
+        'query' => ['destination' => \Drupal::request()->getRequestUri()],
+      ];
+      $login_link = Url::fromRoute('eic_user_login.member_access', [], $options)->toString();
+      $message = t('This content is for members-only. Please <a href="@login_link">log in</a> to see and access the content', [
+        '@login_link' => $login_link,
+      ]);
+    }
+    // Logged-in user.
+    else {
+      $message = t("It seems that you don't have access to this content");
+    }
+
+    $variables['page']['content']['system_main']['#markup'] = $message;
   }
 }
 
