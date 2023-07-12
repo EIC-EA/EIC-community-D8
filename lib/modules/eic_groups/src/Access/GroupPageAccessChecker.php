@@ -96,12 +96,12 @@ class GroupPageAccessChecker implements AccessInterface {
       $access = AccessResult::forbidden();
       // If group is blocked and user is a power user or a group admin, we
       // allow access.
-      if (UserHelper::isPowerUser($account) || EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+      if (UserHelper::isPowerUser($account, $group) || EICGroupsHelper::userIsGroupAdmin($group, $account)) {
         $access = AccessResult::allowed();
       }
     }
     else {
-      $access = AccessResult::allowed();
+      $access = $group->access('view', $account, TRUE);
     }
 
     return $access;
@@ -119,9 +119,9 @@ class GroupPageAccessChecker implements AccessInterface {
    *   Return the access result.
    */
   public function accessGroupEditFormPage(AccountProxy $account, GroupInterface $group) {
-    $access = AccessResult::allowed();
+    $access = $group->access('update', $account, TRUE);
     // GO/GA users cannot edit the group when being blocked.
-    if (GroupsModerationHelper::isBlocked($group) && !UserHelper::isPowerUser($account)) {
+    if (GroupsModerationHelper::isBlocked($group) && !UserHelper::isPowerUser($account, $group)) {
       $access = AccessResult::forbidden();
     }
 

@@ -95,5 +95,6 @@ hidden:
   field_vocab_geo: true
   field_vocab_topics: true
   langcode: true
+  node_read_time: true
   published_at: true
   search_api_excerpt: true

@@ -1,18 +1,22 @@
 oec_group_visibility_setings:
   restricted_community_members:
     internal_roles:
-      - trusted_user
-      - content_administrator
-      - site_admin
+      trusted_user: trusted_user
+      content_administrator: content_administrator
+      site_admin: site_admin
   custom_restricted:
     internal_roles:
-      - trusted_user
-      - content_administrator
-      - site_admin
+      trusted_user: trusted_user
+      content_administrator: content_administrator
+      site_admin: site_admin
   private:
     internal_roles:
       - content_administrator
       - site_admin
+  sensitive:
+    internal_roles:
+      sensitive: sensitive
+      administrator: administrator
 oec_group_flex_admin_roles:
-  - content_administrator
-  - site_admin
+  content_administrator: content_administrator
+  site_admin: site_admin

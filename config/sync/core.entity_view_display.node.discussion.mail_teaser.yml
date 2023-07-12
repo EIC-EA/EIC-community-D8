@@ -61,6 +61,7 @@ hidden:
   flag_recommend: true
   langcode: true
   member_content_edit_access: true
+  node_read_time: true
   private: true
   published_at: true
   search_api_excerpt: true

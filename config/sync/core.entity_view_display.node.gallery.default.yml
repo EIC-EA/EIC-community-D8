@@ -164,4 +164,5 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
+  node_read_time: true
   search_api_excerpt: true

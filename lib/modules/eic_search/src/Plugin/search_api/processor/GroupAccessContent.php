@@ -118,11 +118,21 @@ class GroupAccessContent extends ProcessorPluginBase {
 
     // Power user can access all groups.
     if (UserHelper::isPowerUser($user)) {
+      // If user has not the role of sensitive, we filter them out.
+      if (!$user->hasRole(UserHelper::ROLE_SENSITIVE)) {
+        return '(ss_group_visibility:* AND !ss_group_visibility:sensitive)';
+      }
+
       return '(ss_group_visibility:*)';
     }
 
-    $email = explode('@', $user->getEmail());
-    $domain = array_pop($email) ?: 0;
+    $domain = '';
+
+    if ($email = $user->getEmail()) {
+      $email = explode('@', $email);
+      $domain = array_pop($email) ?: 0;
+    }
+
 
     /** @var \Drupal\group\GroupMembershipLoader $group_membership_service */
     $group_membership_service = \Drupal::service('group.membership_loader');
@@ -152,6 +162,10 @@ class GroupAccessContent extends ProcessorPluginBase {
     // Group members can view their own groups regardless of the group visibility.
     if ($user->isAuthenticated()) {
       $query .= ' OR its_global_group_parent_id:(' . $group_ids_formatted . ')';
+    }
+
+    if ($user->hasRole('sensitive')) {
+      $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE . ')';
     }
 
     // Restricted community group, only trusted_user role can view.

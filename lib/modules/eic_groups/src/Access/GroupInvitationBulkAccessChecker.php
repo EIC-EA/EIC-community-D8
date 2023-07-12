@@ -41,7 +41,7 @@ class GroupInvitationBulkAccessChecker implements AccessInterface {
     $membership = $group->getMember($account);
 
     // Allow access to power users.
-    if (UserHelper::isPowerUser($account)) {
+    if (UserHelper::isPowerUser($account, $group)) {
       return AccessResult::allowed()
         ->addCacheableDependency($account)
         ->addCacheableDependency($group);
