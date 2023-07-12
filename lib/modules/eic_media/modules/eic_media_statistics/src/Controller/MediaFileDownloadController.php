@@ -108,7 +108,11 @@ class MediaFileDownloadController extends DownloadController {
     $user = User::load($this->currentUser()->id());
 
     // Do not allow downloading file if group sensitive and user no role sensitive.
-    if ($this->groupsHelper->isGroupSensitive($group) && !$user->hasRole(UserHelper::ROLE_SENSITIVE)) {
+    if (
+      $this->groupsHelper->isGroupSensitive($group) &&
+      !$user->hasRole(UserHelper::ROLE_SENSITIVE) &&
+      !$group->getMember($user)
+    ) {
       throw new AccessDeniedHttpException(t('You are not allowed to download a sensitive content.'));
     }
 
