@@ -10,8 +10,8 @@ use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
  *
  * @GroupVisibility(
  *  id = "restricted_community_members",
- *  label = @Translation("Community members only"),
- *  weight = -89
+ *  label = @Translation("Community members only (The group can be accessed only by logged in users)"),
+ *  weight = -95
  * )
  */
 class CommunityMembersRestrictedVisibility extends RestrictedGroupVisibilityBase {
@@ -20,7 +20,7 @@ class CommunityMembersRestrictedVisibility extends RestrictedGroupVisibilityBase
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return $this->t('Community members only');
+    return $this->t('Community members only (The group can be accessed only by logged in users)');
   }
 
   /**
