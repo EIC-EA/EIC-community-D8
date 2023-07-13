@@ -8,7 +8,7 @@ dependencies:
     config:
       - user.role.sensitive
 id: organisation-9ba2627b5
-label: Sensitive
+label: 'Sensitive content administrator'
 weight: -3
 internal: true
 audience: outsider

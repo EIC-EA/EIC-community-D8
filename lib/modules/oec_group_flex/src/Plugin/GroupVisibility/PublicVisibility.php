@@ -84,7 +84,7 @@ class PublicVisibility extends PublicVisibilityBase {
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return $this->t('Public (The @group_type_name and all its content will be viewed by non-members of the group)', ['@group_type_name' => $groupType->label()]);
+    return $this->t('Public (The @group_type_name and all its content will be viewed by anonymous users and logged in users)', ['@group_type_name' => strtolower($groupType->label())]);
   }
 
   /**
