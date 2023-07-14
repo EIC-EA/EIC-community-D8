@@ -256,6 +256,7 @@ class SolrSearchManager {
     if (
       NULL !== $sorts &&
       array_key_exists(0, $sorts) &&
+      $this->source->getAvailableSortOptions()[$sorts[0]] &&
       array_key_exists(SourceTypeInterface::SECOND_SORT_KEY, $this->source->getAvailableSortOptions()[$sorts[0]])
     ) {
       $second_sorts = $this->source->getAvailableSortOptions()[$sorts[0]][SourceTypeInterface::SECOND_SORT_KEY];

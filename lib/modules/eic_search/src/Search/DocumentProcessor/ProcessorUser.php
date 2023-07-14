@@ -102,7 +102,11 @@ class ProcessorUser extends DocumentProcessor {
   /**
    * {@inheritdoc}
    */
-  public function process(Document &$document, array $fields, array $items = []): void {
+  public function process(
+    Document &$document,
+    array $fields,
+    array $items = []
+  ): void {
     $user = $this->entityTypeManager->getStorage('user')
       ->load($fields['its_user_id']);
 
@@ -132,7 +136,11 @@ class ProcessorUser extends DocumentProcessor {
     );
 
     if (array_key_exists('its_user_profile', $fields)) {
-      $profile = Profile::load($fields['its_user_profile']);
+      $solr_profile_id = $fields['its_user_profile'];
+      $solr_profile_id = is_array($solr_profile_id) ? reset(
+        $solr_profile_id
+      ) : $solr_profile_id;
+      $profile = Profile::load($solr_profile_id);
       if ($profile instanceof ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();
         $document->addField('ss_profile_socials', json_encode($socials));
@@ -160,7 +168,9 @@ class ProcessorUser extends DocumentProcessor {
       /** @var \Drupal\image\Entity\ImageStyle $image_style */
       $image_style = $this->entityTypeManager->getStorage('image_style')
         ->load('crop_80x80');
-      $teaser_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($user_picture_uri));
+      $teaser_relative = $this->urlGenerator->transformRelative(
+        $image_style->buildUrl($user_picture_uri)
+      );
     }
 
     $this->addOrUpdateDocumentField(
@@ -191,7 +201,11 @@ class ProcessorUser extends DocumentProcessor {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  private function calculateMostActive(UserInterface $user, Document $document, array $fields) {
+  private function calculateMostActive(
+    UserInterface $user,
+    Document $document,
+    array $fields
+  ) {
     $total_groups = 0;
     $total_events = 0;
 
@@ -205,7 +219,10 @@ class ProcessorUser extends DocumentProcessor {
     $total_followers = $this->userHelper->getUserFollowers($user);
 
     // Query to count number of members.
-    $query_content = $this->connection->select('group_content_field_data', 'gc_fd')
+    $query_content = $this->connection->select(
+      'group_content_field_data',
+      'gc_fd'
+    )
       ->fields('gc_fd', ['uid'])
       ->condition('gc_fd.uid', $user->id())
       ->condition('gc_fd.type', '%group_node%', 'LIKE');
@@ -213,38 +230,61 @@ class ProcessorUser extends DocumentProcessor {
     $total_content = (int) $query_content->execute()->fetchAssoc()['count'];
 
     $memberships = $this->groupMembershipLoader->loadByUser($user);
-    $group_ids = array_unique(array_map(function (GroupMembership $membership) {
-      return $membership->getGroup()->id();
-    }, $memberships));
+    $group_ids = array_unique(
+      array_map(function (GroupMembership $membership) {
+        return $membership->getGroup()->id();
+      }, $memberships)
+    );
 
-    $this->addOrUpdateDocumentField($document, 'itm_user_group_ids', $fields, $group_ids);
+    $this->addOrUpdateDocumentField(
+      $document,
+      'itm_user_group_ids',
+      $fields,
+      $group_ids
+    );
     $group_statistics = [];
 
     foreach ($memberships as $membership) {
       $group = $membership->getGroup();
 
-      $query_content = $this->connection->select('group_content_field_data', 'gc_fd')
+      $query_content = $this->connection->select(
+        'group_content_field_data',
+        'gc_fd'
+      )
         ->fields('gc_fd', ['uid'])
         ->condition('gc_fd.uid', $user->id())
         ->condition('gc_fd.gid', $group->id())
         ->condition('gc_fd.type', '%group_node%', 'LIKE');
       $query_content->addExpression('COUNT(gc_fd.entity_id)', 'count');
-      $total_group_content = (int) $query_content->execute()->fetchAssoc()['count'];
+      $total_group_content = (int) $query_content->execute()->fetchAssoc(
+      )['count'];
 
       $query_comments = $this->connection->select('comment_field_data', 'cfd')
         ->fields('gcfd', ['entity_id'])
         ->condition('gcfd.type', '%group_node%', 'LIKE')
         ->condition('gcfd.gid', $group->id());
-      $query_comments->join('group_content_field_data', 'gcfd', 'cfd.entity_id = gcfd.entity_id');
-      $total_group_comments = (int) $query_comments->countQuery()->execute()->fetchAssoc()['expression'];
+      $query_comments->join(
+        'group_content_field_data',
+        'gcfd',
+        'cfd.entity_id = gcfd.entity_id'
+      );
+      $total_group_comments = (int) $query_comments->countQuery()
+        ->execute()
+        ->fetchAssoc()['expression'];
 
-      $group_statistics[$group->id()] = 3 * $total_followers + 2 * $total_group_content + 2 * $total_group_comments;
+      $group_statistics[$group->id(
+      )] = 3 * $total_followers + 2 * $total_group_content + 2 * $total_group_comments;
 
       $roles = array_map(function (GroupRole $group_role) {
         return $group_role->label();
       }, $membership->getRoles());
 
-      $this->addOrUpdateDocumentField($document, self::SOLR_GROUP_ROLES . $group->id(), $fields, array_values($roles));
+      $this->addOrUpdateDocumentField(
+        $document,
+        self::SOLR_GROUP_ROLES . $group->id(),
+        $fields,
+        array_values($roles)
+      );
 
       switch ($group->bundle()) {
         case 'event':
@@ -259,11 +299,21 @@ class ProcessorUser extends DocumentProcessor {
 
     foreach ($group_statistics as $key => $group_statistic) {
       $most_active_total = $group_statistic + $total_groups + $total_events;
-      $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID_GROUP . $key, $fields, $most_active_total);
+      $this->addOrUpdateDocumentField(
+        $document,
+        self::SOLR_MOST_ACTIVE_ID_GROUP . $key,
+        $fields,
+        $most_active_total
+      );
     }
 
     $most_active_total = 3 * $total_followers + 2 * $total_content + 2 * $total_comments + $total_groups + $total_events;
-    $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID, $fields, $most_active_total);
+    $this->addOrUpdateDocumentField(
+      $document,
+      self::SOLR_MOST_ACTIVE_ID,
+      $fields,
+      $most_active_total
+    );
   }
 
 }
