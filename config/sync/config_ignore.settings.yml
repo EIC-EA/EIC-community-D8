@@ -35,3 +35,4 @@ ignored_config_entities:
   - 'matomo.settings:site_id'
   - 'matomo.settings:url_http'
   - 'matomo.settings:url_https'
+  - 'eic_user_login.settings:user_registration_url'
