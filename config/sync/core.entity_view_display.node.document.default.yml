@@ -140,5 +140,6 @@ hidden:
   field_comments: true
   flag_recommend: true
   langcode: true
+  node_read_time: true
   published_at: true
   search_api_excerpt: true

@@ -16,6 +16,11 @@ targetEntityType: node
 bundle: book
 mode: teaser
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_body:
     type: text_trimmed
     label: hidden
@@ -57,5 +62,6 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   langcode: true
+  node_read_time: true
   published_at: true
   search_api_excerpt: true

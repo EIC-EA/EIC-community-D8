@@ -6,12 +6,14 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Drupal\message\Entity\Message;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -58,6 +60,8 @@ class GroupMessageCreator implements ContainerInjectionInterface {
    *   The entity type manager.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user account.
+   * @param \Drupal\eic_groups\EICGroupsHelper $current_user
+   *   The current user account.
    */
   public function __construct(
     MessageBusInterface $message_bus,
@@ -98,8 +102,20 @@ class GroupMessageCreator implements ContainerInjectionInterface {
       'field_group_ref' => ['target_id' => $entity->id()],
     ]);
 
+    // We get visibility from request since new group doesnt have yet a visibility record.
+    $is_group_sensitive =
+      \Drupal::request()->request->get('group_visibility') ===
+      GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE;
+    $uids = $this->userHelper->getSitePowerUsers();
+
+    $uids = array_filter($uids, function ($uid) use ($is_group_sensitive) {
+      $user = User::load($uid);
+
+      return !$is_group_sensitive || $user->hasRole('sensitive');
+    });
+
     // Prepare messages to SA/CA.
-    foreach ($this->userHelper->getSitePowerUsers() as $uid) {
+    foreach ($uids as $uid) {
       $this->messageBus->dispatch([
         'template' => 'notify_group_request_submitted',
         'uid' => $uid,

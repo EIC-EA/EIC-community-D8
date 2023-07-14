@@ -72,7 +72,7 @@ class ArchivedRouteAccessCheck implements AccessInterface {
       $this->groupsHelper->isGroupArchived($group_content) ||
       $this->groupsHelper->isGroupArchived($node);
 
-    if (UserHelper::isPowerUser($account)) {
+    if (UserHelper::isPowerUser($account, $group)) {
       return AccessResult::allowed()->addCacheableDependency($group);
     }
 

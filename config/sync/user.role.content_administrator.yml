@@ -70,7 +70,7 @@ dependencies:
     - toolbar
 id: content_administrator
 label: 'Content administrator'
-weight: -7
+weight: -6
 is_admin: null
 permissions:
   - 'access administration pages'

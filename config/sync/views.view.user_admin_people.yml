@@ -85,45 +85,45 @@ display:
             -
               action_id: eic_change_user_smed_status
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: 'flag_action:follow_user_flag'
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: 'flag_action:follow_user_unflag'
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: realname_update_realname_action
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: user_add_role_action
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: user_unblock_user_action
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: user_remove_role_action
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: user_block_user_action
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: views_bulk_operations_delete_entity
             -
               action_id: vbo_cancel_user_action
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
             -
               action_id: 'entity:save_action:user'
               preconfiguration:
-                add_confirmation: 0
+                add_confirmation: false
         name:
           id: name
           table: users_field_data

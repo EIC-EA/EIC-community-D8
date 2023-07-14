@@ -107,6 +107,7 @@ class ProcessorVisibility extends DocumentProcessor {
 
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+      case GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         $group_visibility = $group_visibility_entity ? $group_visibility_entity->getType() : GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY;
         break;

@@ -90,7 +90,7 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
     // If access is not allowed, only powerusers can create content in the
     // group.
     if (!$access->isAllowed()) {
-      return AccessResult::allowedIf(UserHelper::isPowerUser($account))
+      return AccessResult::allowedIf(UserHelper::isPowerUser($account, $group))
         ->addCacheableDependency($account)
         ->addCacheableDependency($group);
     }

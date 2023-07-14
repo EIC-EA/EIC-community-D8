@@ -73,7 +73,7 @@ dependencies:
     - toolbar
 id: site_admin
 label: 'Site Admin'
-weight: -5
+weight: -4
 is_admin: null
 permissions:
   - 'access administration pages'

@@ -52,7 +52,7 @@ class GroupOverviewsController extends ControllerBase {
 
     // Check if the group is in a blocked state.
     if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_BLOCKED_STATE
-      && !UserHelper::isPowerUser($account)) {
+      && !UserHelper::isPowerUser($account, $group)) {
       return AccessResult::forbidden()
         ->addCacheableDependency($group)
         ->addCacheableDependency($account);

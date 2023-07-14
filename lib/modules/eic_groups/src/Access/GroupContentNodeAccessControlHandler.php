@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
@@ -40,7 +41,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
     }
 
     // Allow access to power users.
-    if ($is_power_user = UserHelper::isPowerUser($account)) {
+    if ($is_power_user = UserHelper::isPowerUser($account, $group)) {
       $access = GroupAccessResult::allowed()
         ->addCacheableDependency($account)
         ->addCacheableDependency($entity);
