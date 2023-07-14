@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "533b30254141388f1163636065983def",
+    "content-hash": "21da4b39453234aeb65d538adbcead9c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2545,6 +2545,10 @@
                     "role": "Maintainer"
                 },
                 {
+                    "name": "FatherShawn",
+                    "homepage": "https://www.drupal.org/user/628748"
+                },
+                {
                     "name": "kwfinken",
                     "homepage": "https://www.drupal.org/user/2514950"
                 }
@@ -4668,12 +4672,20 @@
                     "role": "Maintainer"
                 },
                 {
-                    "name": "bramtenhove",
-                    "homepage": "https://www.drupal.org/user/1549848"
+                    "name": "hernani",
+                    "homepage": "https://www.drupal.org/user/448086"
                 },
                 {
                     "name": "jaapjan",
                     "homepage": "https://www.drupal.org/user/555428"
+                },
+                {
+                    "name": "Kingdutch",
+                    "homepage": "https://www.drupal.org/user/1868952"
+                },
+                {
+                    "name": "msnassar",
+                    "homepage": "https://www.drupal.org/user/1199630"
                 },
                 {
                     "name": "ronaldtebrake",
@@ -5398,6 +5410,81 @@
             "homepage": "https://www.drupal.org/project/matomo",
             "support": {
                 "source": "https://git.drupalcode.org/project/matomo"
+            }
+        },
+        {
+            "name": "drupal/maxlength",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/maxlength.git",
+                "reference": "2.1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/maxlength-2.1.1.zip",
+                "reference": "2.1.1",
+                "shasum": "317f9066cf58284418aedf3f353ef99c956e7255"
+            },
+            "require": {
+                "drupal/core": "^9.2 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.1.1",
+                    "datestamp": "1681722499",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Marius Scurtescu (mariuss)",
+                    "homepage": "https://www.drupal.org/u/mariuss",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Clayton Dewey (cedewey)",
+                    "homepage": "https://www.drupal.org/u/cedewey",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Daniel Wehner (dawehner)",
+                    "homepage": "https://www.drupal.org/u/dawehner",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Paulino Michelazzo (pmichelazzo)",
+                    "homepage": "https://www.drupal.org/u/pmichelazzo",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Jeff Hipp (hipp2bsquare)",
+                    "homepage": "https://www.drupal.org/u/hipp2bsquare",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Steven DuBois (srdtwc)",
+                    "homepage": "https://www.drupal.org/u/srdtwc",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "srdtwc",
+                    "homepage": "https://www.drupal.org/user/3422763"
+                }
+            ],
+            "description": "MaxLength allows a soft or hard character limit to be set on titles, text fields and link fields.",
+            "homepage": "https://www.drupal.org/project/maxlength",
+            "support": {
+                "source": "https://git.drupalcode.org/project/maxlength",
+                "issues": "https://www.drupal.org/project/issues/maxlength"
             }
         },
         {
@@ -7217,8 +7304,8 @@
                     "role": "Maintainer"
                 },
                 {
-                    "name": "benjy",
-                    "homepage": "https://www.drupal.org/user/1852732"
+                    "name": "JeroenT",
+                    "homepage": "https://www.drupal.org/user/2228934"
                 }
             ],
             "description": "Allows site administrators to grant some roles the authority to assign selected roles to users.",
@@ -15861,6 +15948,7 @@
                 "headless",
                 "testing"
             ],
+            "abandoned": "behat/mink-browserkit-driver",
             "time": "2021-10-12T11:35:46+00:00"
         },
         {

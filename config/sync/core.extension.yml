@@ -137,6 +137,7 @@ module:
   mailsystem: 0
   masquerade: 0
   matomo: 0
+  maxlength: 0
   media: 0
   media_entity_download: 0
   media_library: 0
