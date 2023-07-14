@@ -10,7 +10,7 @@ use Drupal\group\Entity\GroupTypeInterface;
  *
  * @GroupVisibility(
  *  id = "sensitive",
- *  label = @Translation("Sensitive members only"),
+ *  label = @Translation("Sensitive (the group contains sensitive data and can be accessed only by group members and users with 'sensitive' access rights)"),
  *  weight = -89
  * )
  */
@@ -20,7 +20,7 @@ class SensitiveVisibility extends PrivateVisibility {
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return $this->t('Sensitive members only');
+    return $this->t('Sensitive (The group contains sensitive data and can be accessed only by group members and users with \'sensitive\' access rights)');
   }
 
   /**
