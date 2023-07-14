@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - views.view.groups_homepage
+    - views.view.latest_news_and_stories
   content:
     - 'block_content:cta_tiles:880aff79-c4fa-416e-9703-0a3119bff5d0'
     - 'block_content:facts_figures:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
@@ -51,7 +52,7 @@ reactions:
         provider: block_content
         label_display: '0'
         region: content
-        weight: '-1'
+        weight: '-2'
         custom_id: homepage_latest_news_stories
         theme: eic_community
         css_class: ''
@@ -68,7 +69,7 @@ reactions:
         provider: block_content
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '1'
         custom_id: homepage_stay_up_to_date
         theme: eic_community
         css_class: ''
@@ -85,7 +86,7 @@ reactions:
         provider: block_content
         label_display: visible
         region: content
-        weight: '1'
+        weight: '2'
         custom_id: homepage_follow_us
         theme: eic_community
         css_class: ''
@@ -102,7 +103,7 @@ reactions:
         provider: eic_blocks
         label_display: '0'
         region: content
-        weight: '2'
+        weight: '3'
         custom_id: eic_social_feed
         theme: eic_community
         css_class: ''
@@ -129,7 +130,7 @@ reactions:
         provider: block_content
         label_display: '0'
         region: content
-        weight: '3'
+        weight: '4'
         custom_id: homepage_facts_figures
         theme: eic_community
         css_class: ''
@@ -146,7 +147,7 @@ reactions:
         provider: eic_content
         label_display: '0'
         region: content
-        weight: '-2'
+        weight: '-4'
         custom_id: eic_content_operations
         theme: eic_community
         css_class: ''
@@ -183,8 +184,25 @@ reactions:
         provider: views
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '-1'
         custom_id: views_block_groups_homepage_block_events_homepage
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      ef3b3ed4-eeef-4095-97b9-b199d8c168ea:
+        uuid: ef3b3ed4-eeef-4095-97b9-b199d8c168ea
+        id: 'views_block:latest_news_and_stories-homepage'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '-3'
+        custom_id: views_block_latest_news_and_stories_homepage
         theme: eic_community
         css_class: ''
         unique: 0
