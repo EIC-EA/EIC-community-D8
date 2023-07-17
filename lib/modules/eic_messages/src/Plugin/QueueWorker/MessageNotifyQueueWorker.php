@@ -106,6 +106,16 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       return;
     }
 
+    if ($message->hasField('field_group_ref')) {
+      $group = $message->get('field_group_ref')->referencedEntities();
+
+      // If group does not exist anymore, do not send notification.
+      if (empty($group)) {
+        $message->delete();
+        return;
+      }
+    }
+
     $options = [];
     if (isset($data['options'])) {
       $options = $data['options'];
