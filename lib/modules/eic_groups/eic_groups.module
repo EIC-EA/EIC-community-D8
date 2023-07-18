@@ -1008,3 +1008,25 @@ function eic_groups_metatags_alter(array &$metatags, array &$context) {
     }
   }
 }
+
+/**
+ * Implements hook_entity_delete.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *
+ * @return void
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function eic_groups_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
+  // We delete only nodes.
+  if (!$entity instanceof \Drupal\group\Entity\GroupContentInterface || !$entity->getEntity() instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+
+  $node = $entity->getEntity();
+  $title = $entity->label();
+  $node->delete();
+
+  \Drupal::messenger()->addMessage('The content: ' . $title . ' has been deleted.');
+}
+
