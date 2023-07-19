@@ -59,6 +59,7 @@ module:
   eic_content: 0
   eic_content_book: 0
   eic_content_discussion: 0
+  eic_content_gallery: 0
   eic_content_story: 0
   eic_content_wiki_page: 0
   eic_deploy: 0
