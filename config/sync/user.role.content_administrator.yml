@@ -47,6 +47,7 @@ dependencies:
     - content_moderation_bypass
     - contextual
     - eic_admin
+    - eic_content_gallery
     - eic_flags
     - eic_overviews
     - eic_private_content
@@ -159,6 +160,7 @@ permissions:
   - 'delete terms in user_types'
   - 'delete video revisions'
   - 'delete wiki_page revisions'
+  - 'download gallery archive'
   - 'edit any book content'
   - 'edit any discussion content'
   - 'edit any document content'
