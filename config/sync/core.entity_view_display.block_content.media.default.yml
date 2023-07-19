@@ -1,0 +1,43 @@
+uuid: 3e2ddf21-fd5d-4fb9-a66f-d97a1473fdef
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.media
+    - field.field.block_content.media.body
+    - field.field.block_content.media.field_media
+    - field.field.block_content.media.field_title
+  module:
+    - text
+id: block_content.media.default
+targetEntityType: block_content
+bundle: media
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_media:
+    type: entity_reference_entity_view
+    label: visually_hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_title:
+    type: string
+    label: visually_hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
