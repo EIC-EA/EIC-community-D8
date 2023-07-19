@@ -1,18 +1,18 @@
-uuid: 5c5b2698-a8a4-4ee1-b8e9-8888e214957b
+uuid: 29411d31-fa0d-4fa0-a8a6-5beec202a0a2
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.media
-    - field.field.block_content.media.body
-    - field.field.block_content.media.field_media
-    - field.field.block_content.media.field_title
+    - block_content.type.video
+    - field.field.block_content.video.body
+    - field.field.block_content.video.field_media
+    - field.field.block_content.video.field_title
   module:
     - media_library
     - text
-id: block_content.media.default
+id: block_content.video.default
 targetEntityType: block_content
-bundle: media
+bundle: video
 mode: default
 content:
   body:

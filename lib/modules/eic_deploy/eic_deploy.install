@@ -324,9 +324,9 @@ function eic_deploy_update_9009() {
 function eic_deploy_update_9010(&$sandbox) {
   $block = BlockContent::create([
     'status' => TRUE,
-    'type' => 'media',
+    'type' => 'video',
     // We keep the same UUIDs since they are referenced in configs.
-    'uuid' => '061ac0ff-b7d0-4460-9273-db5e6125e992',
+    'uuid' => 'a5fbe1ac-d96b-43dd-b690-0fc693a48f29',
     'info' => 'Homepage - Video',
   ]);
   $block->save();

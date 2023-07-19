@@ -1,16 +1,16 @@
-uuid: 271e661e-7fb4-4158-95e0-4ec21d5ff41b
+uuid: 4413446d-f103-439b-bb3c-7145eb811317
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.media
+    - block_content.type.video
     - field.storage.block_content.body
   module:
     - text
-id: block_content.media.body
+id: block_content.video.body
 field_name: body
 entity_type: block_content
-bundle: media
+bundle: video
 label: Body
 description: ''
 required: false

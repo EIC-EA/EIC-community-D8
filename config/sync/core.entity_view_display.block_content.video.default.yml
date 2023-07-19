@@ -1,17 +1,17 @@
-uuid: 3e2ddf21-fd5d-4fb9-a66f-d97a1473fdef
+uuid: 9e11fe3c-b43b-458d-a46b-6f6af1c4887d
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.media
-    - field.field.block_content.media.body
-    - field.field.block_content.media.field_media
-    - field.field.block_content.media.field_title
+    - block_content.type.video
+    - field.field.block_content.video.body
+    - field.field.block_content.video.field_media
+    - field.field.block_content.video.field_title
   module:
     - text
-id: block_content.media.default
+id: block_content.video.default
 targetEntityType: block_content
-bundle: media
+bundle: video
 mode: default
 content:
   body:
@@ -26,7 +26,7 @@ content:
     label: visually_hidden
     settings:
       view_mode: default
-      link: false
+      link: true
     third_party_settings: {  }
     weight: 2
     region: content

@@ -1,18 +1,17 @@
-uuid: 200edb51-1d82-4fcc-9a32-3cf75c796a64
+uuid: 02e8ccbd-ae5d-4888-981e-3a373da2ad47
 langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.media
+    - block_content.type.video
     - field.storage.block_content.field_media
-    - media.type.image
-    - media.type.photo
     - media.type.remote_video
-id: block_content.media.field_media
+    - media.type.video
+id: block_content.video.field_media
 field_name: field_media
 entity_type: block_content
-bundle: media
-label: Media
+bundle: video
+label: Video
 description: ''
 required: true
 translatable: true
@@ -22,12 +21,11 @@ settings:
   handler: 'default:media'
   handler_settings:
     target_bundles:
-      image: image
-      photo: photo
       remote_video: remote_video
+      video: video
     sort:
       field: _none
       direction: ASC
     auto_create: false
-    auto_create_bundle: image
+    auto_create_bundle: remote_video
 field_type: entity_reference
