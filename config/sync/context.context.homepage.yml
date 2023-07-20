@@ -8,8 +8,8 @@ dependencies:
     - 'block_content:cta_tiles:880aff79-c4fa-416e-9703-0a3119bff5d0'
     - 'block_content:facts_figures:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
     - 'block_content:latest_news_stories:844a381c-6076-4279-834e-a75de967cf65'
-    - 'block_content:media:061ac0ff-b7d0-4460-9273-db5e6125e992'
     - 'block_content:social_media:4b678ea5-f56e-45af-8399-7adde0abab77'
+    - 'block_content:video:a5fbe1ac-d96b-43dd-b690-0fc693a48f29'
   module:
     - block_content
     - eic_blocks
@@ -194,15 +194,15 @@ reactions:
         views_label: ''
         items_per_page: none
         third_party_settings: {  }
-      27848b74-183f-4ee5-b778-d0e6e6f73a7a:
-        uuid: 27848b74-183f-4ee5-b778-d0e6e6f73a7a
-        id: 'block_content:061ac0ff-b7d0-4460-9273-db5e6125e992'
+      dfd45903-0549-4ed7-880c-60d0db8ec785:
+        uuid: dfd45903-0549-4ed7-880c-60d0db8ec785
+        id: 'block_content:a5fbe1ac-d96b-43dd-b690-0fc693a48f29'
         label: 'Homepage - Video'
         provider: block_content
         label_display: '0'
         region: content
         weight: '1'
-        custom_id: block_content_061ac0ff_b7d0_4460_9273_db5e6125e992
+        custom_id: homepage_video
         theme: eic_community
         css_class: ''
         unique: 0
