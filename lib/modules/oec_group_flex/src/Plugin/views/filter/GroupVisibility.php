@@ -2,10 +2,11 @@
 
 namespace Drupal\oec_group_flex\Plugin\views\filter;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
-use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\views\Views;
+use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsFilter("group_visibility")
  */
-class GroupVisibility extends FilterPluginBase {
+class GroupVisibility extends InOperator {
 
   /**
    * The Group visibility manager.
@@ -61,6 +62,14 @@ class GroupVisibility extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+    $this->valueTitle = $this->t('Visibility');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['visibility'] = [];
@@ -76,40 +85,17 @@ class GroupVisibility extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $options = [];
-    $default_values = [];
+  public function getValueOptions() {
+    if (isset($this->valueOptions)) {
+      return $this->valueOptions;
+    }
 
     // Build the checkbox options and default values.
     foreach ($this->groupVisibilityManager->getAllAsArrayForGroup() as $key => $plugin) {
-      $options[$key] = $plugin->getLabel();
-      if (!empty($this->options['visibility'][$key])) {
-        $default_values[] = $key;
-      }
+      $this->valueOptions[$key] = $plugin->getLabel();
     }
 
-    $form['visibility'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t('Filter by group visibility'),
-      '#options' => $options,
-      '#default_value' => $default_values,
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function valueSubmit($form, FormStateInterface $form_state) {
-    // Drupal's FAPI system automatically puts '0' in for any checkbox that
-    // was not set, and the key to the checkbox if it is set.
-    // Unfortunately, this means that if the key to that checkbox is 0,
-    // we are unable to tell if that checkbox was set or not.
-
-    // Luckily, the '#value' on the checkboxes form actually contains
-    // *only* a list of checkboxes that were set, and we can use that
-    // instead.
-
-    $form_state->setValue(['options', 'value'], $form['value']['#value']);
+    return $this->valueOptions;
   }
 
   /**
@@ -120,24 +106,20 @@ class GroupVisibility extends FilterPluginBase {
     /** @var \Drupal\views\Plugin\views\query\Sql $query */
     $query = $this->query;
     // Creates new configuration for views join plugin. This will join the
-    // group visibility table with groups field data table in order to filter
+    // group visibility table with groups_field_data table in order to filter
     // the query by the selected group visibilities.
     $definition = [
       'table' => 'oec_group_visibility',
       'field' => 'gid',
-      'left_table' => 'groups_field_data_group_content_field_data',
+      'left_table' => 'groups_field_data',
       'left_field' => 'id',
     ];
     // Instantiates the join plugin.
     $join = Views::pluginManager('join')->createInstance('standard', $definition);
     // Adds the join relationship to the query.
-    $query->addRelationship('group_visibility', $join, 'oec_group_visibility');
-    // Grabs the group visibilities from the selected options.
-    $options = array_filter($this->options['visibility'], function ($value, $key) {
-      return $value != FALSE;
-    }, ARRAY_FILTER_USE_BOTH);
+    $query->addRelationship('oec_group_visibility', $join, 'oec_group_visibility');
     // Filters out the query by the selected group visibilities.
-    $query->addWhere($this->options['group'], 'group_visibility.type', array_values($options), 'IN');
+    $query->addWhere($this->options['group'], 'oec_group_visibility.type', array_values($this->value), 'IN');
   }
 
 }
