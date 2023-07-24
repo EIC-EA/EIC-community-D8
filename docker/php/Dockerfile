@@ -32,9 +32,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 RUN apt-get update -y; \
     apt-get install mariadb-client -y; \
-    pecl install apcu; \
+    pecl install xdebug-3.1.5 apcu; \
     docker-php-ext-install pdo_mysql; \
-    docker-php-ext-enable apcu; \
+    docker-php-ext-enable xdebug apcu; \
     pecl clear-cache;
 
 # Change the fpm user

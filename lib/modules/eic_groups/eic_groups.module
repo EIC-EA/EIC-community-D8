@@ -1024,9 +1024,7 @@ function eic_groups_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
   }
 
   $node = $entity->getEntity();
-  $title = $entity->label();
-  $node->delete();
-
-  \Drupal::messenger()->addMessage('The content: ' . $title . ' has been deleted.');
+  $queue = \Drupal::service('queue')->get(CronOperations::REMOVE_CONTENT_API_QUEUE);
+  $queue->createItem($node->id());
 }
 
