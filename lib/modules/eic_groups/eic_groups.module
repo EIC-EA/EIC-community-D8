@@ -1015,7 +1015,6 @@ function eic_groups_metatags_alter(array &$metatags, array &$context) {
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *
  * @return void
- * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function eic_groups_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
   // We delete only nodes.
