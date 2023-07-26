@@ -5,6 +5,7 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_webservices\Utility\EicWsHelper;
+use Drupal\eic_webservices\Utility\SmedTaxonomyHelper;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\ResourceResponse;
@@ -60,6 +61,13 @@ class MembershipResource extends ResourceBase {
   protected $wsHelper;
 
   /**
+   * The SMED taxonomy helper class.
+   *
+   * @var \Drupal\eic_webservices\Utility\SmedTaxonomyHelper
+   */
+  protected $smedTaxonomyHelper;
+
+  /**
    * Constructs a Drupal\rest\Plugin\ResourceBase object.
    *
    * @param array $configuration
@@ -74,6 +82,8 @@ class MembershipResource extends ResourceBase {
    *   A logger instance.
    * @param \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper
    *   The EIC Webservices helper class.
+   * @param \Drupal\eic_webservices\Utility\SmedTaxonomyHelper $smed_taxonomy_helper
+   *   The SMED taxonomy helper class.
    */
   public function __construct(
     array $configuration,
@@ -81,11 +91,13 @@ class MembershipResource extends ResourceBase {
     $plugin_definition,
     array $serializer_formats,
     LoggerChannelInterface $logger,
-    EicWsHelper $eic_ws_helper
+    EicWsHelper $eic_ws_helper,
+    SmedTaxonomyHelper $smed_taxonomy_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats,
       $logger);
     $this->wsHelper = $eic_ws_helper;
+    $this->smedTaxonomyHelper = $smed_taxonomy_helper;
   }
 
   /**
@@ -103,7 +115,8 @@ class MembershipResource extends ResourceBase {
       $plugin_definition,
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
-      $container->get('eic_webservices.ws_helper')
+      $container->get('eic_webservices.ws_helper'),
+      $container->get('eic_webservices.taxonomy_helper')
     );
   }
 
@@ -148,7 +161,7 @@ class MembershipResource extends ResourceBase {
     if (!$group) {
       // Send custom response.
       $data = [
-        'message' => 'Unprocessable Entity: validation failed. No organisation found.',
+        'message' => 'Unprocessable Entity: validation failed. No group found.',
       ];
 
       return new ResourceResponse($data, 422);
@@ -167,6 +180,21 @@ class MembershipResource extends ResourceBase {
 
     // Get group type label for later use.
     $group_type_label = $group->getGroupType()->label();
+
+    // Get job titles terms.
+    $job_titles = [];
+    if (isset($data['job_title']) && is_array($data['job_title']) && !empty($data['job_title'])) {
+      foreach ($data['job_title'] as $item) {
+        if (!isset($item['target_id']) || !is_numeric($item['target_id'])) {
+          continue;
+        }
+
+        /** @var \Drupal\taxonomy\TermInterface $term */
+        if ($term = $this->smedTaxonomyHelper->getTaxonomyTermIdBySmedId($item['target_id'], 'job_titles')) {
+          $job_titles[] = $term;
+        }
+      }
+    }
 
     switch ($data['action']) {
       case 'add':
@@ -191,9 +219,27 @@ class MembershipResource extends ResourceBase {
           else {
             $group->addMember($user, ['group_roles' => [$role]]);
             $group->save();
+
+            // Load the new membership.
+            /** @var \Drupal\group\GroupMembership $membership */
+            $membership = $group->getMember($user);
           }
 
-          $message = "User has been added to $group_type_label successfully.";
+          // Update the job_title field.
+          if ($membership->getGroupContent()->hasField('field_vocab_job_title')) {
+            /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+            $group_content = $membership->getGroupContent();
+            $group_content->field_vocab_job_title = $job_titles;
+            $group_content->save();
+          }
+
+          if ($data['action'] == 'add') {
+            $message = "User membership to $group_type_label has been added successfully.";
+          }
+          else {
+            $message = "User membership to $group_type_label has been updated successfully.";
+          }
+
           return new ModifiedResourceResponse(['message' => $message]);
         }
         catch (\Exception $exception) {
