@@ -95,7 +95,6 @@ class FormAlter implements ContainerInjectionInterface {
 
       // Disable fields for non power users.
       if (!$current_user_is_admin) {
-        $form['member_profiles']['widget'][0]['entity']['field_vocab_job_title']['#disabled'] = TRUE;
         $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
     }
@@ -254,7 +253,6 @@ class FormAlter implements ContainerInjectionInterface {
 
     // Disable fields for non power users.
     if (!$current_user_is_admin) {
-      $form['field_vocab_job_title']['#disabled'] = TRUE;
       $form['field_vocab_user_type']['#disabled'] = TRUE;
     }
   }

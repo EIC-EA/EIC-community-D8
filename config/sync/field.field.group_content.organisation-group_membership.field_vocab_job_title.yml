@@ -1,0 +1,29 @@
+uuid: 39d98aa4-ca67-406d-96c5-fba507be368e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.field_vocab_job_title
+    - group.content_type.organisation-group_membership
+    - taxonomy.vocabulary.job_titles
+id: group_content.organisation-group_membership.field_vocab_job_title
+field_name: field_vocab_job_title
+entity_type: group_content
+bundle: organisation-group_membership
+label: 'Job title'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      job_titles: job_titles
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
