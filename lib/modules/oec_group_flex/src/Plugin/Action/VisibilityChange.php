@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroupSaver;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,6 +40,13 @@ class VisibilityChange extends ConfigurableActionBase implements ContainerFactor
   protected $groupFlexSaver;
 
   /**
+   * The OEC group_flex helper service.
+   *
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelper
+   */
+  protected $groupFlexHelper;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -46,11 +54,13 @@ class VisibilityChange extends ConfigurableActionBase implements ContainerFactor
     $plugin_id,
     $plugin_definition,
     GroupVisibilityManager $visibility_manager,
-    GroupFlexGroupSaver $group_flex_saver
+    GroupFlexGroupSaver $group_flex_saver,
+    OECGroupFlexHelper $group_flex_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->visibilityManager = $visibility_manager;
     $this->groupFlexSaver = $group_flex_saver;
+    $this->groupFlexHelper = $group_flex_helper;
   }
 
   /**
@@ -62,7 +72,8 @@ class VisibilityChange extends ConfigurableActionBase implements ContainerFactor
       $plugin_id,
       $plugin_definition,
       $container->get('plugin.manager.group_visibility'),
-      $container->get('group_flex.group_saver')
+      $container->get('group_flex.group_saver'),
+      $container->get('oec_group_flex.helper')
     );
   }
 
@@ -95,7 +106,7 @@ class VisibilityChange extends ConfigurableActionBase implements ContainerFactor
         continue;
       }
 
-      $options[$id] = $instance->getLabel();
+      $options[$id] = $this->groupFlexHelper->getVisibilityTagLabel($instance->getPluginId());
     }
 
     $form['visibility'] = [

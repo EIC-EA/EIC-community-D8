@@ -3,6 +3,7 @@
 namespace Drupal\oec_group_flex\Plugin\views\filter;
 
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\views\Views;
@@ -26,6 +27,13 @@ class GroupVisibility extends InOperator {
   protected $groupVisibilityManager;
 
   /**
+   * The OEC group_flex helper service.
+   *
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelper
+   */
+  protected $groupFlexHelper;
+
+  /**
    * Constructs a GroupVisibility object.
    *
    * @param array $configuration
@@ -36,15 +44,19 @@ class GroupVisibility extends InOperator {
    *   The plugin implementation definition.
    * @param \Drupal\group_flex\Plugin\GroupVisibilityManager $group_visibility_manager
    *   The Group visibility manager.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $group_flex_helper
+   *   The OEC group_flex helper service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    GroupVisibilityManager $group_visibility_manager
+    GroupVisibilityManager $group_visibility_manager,
+    OECGroupFlexHelper $group_flex_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupVisibilityManager = $group_visibility_manager;
+    $this->groupFlexHelper = $group_flex_helper;
   }
 
   /**
@@ -55,7 +67,8 @@ class GroupVisibility extends InOperator {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.group_visibility')
+      $container->get('plugin.manager.group_visibility'),
+      $container->get('oec_group_flex.helper')
     );
   }
 
@@ -91,8 +104,9 @@ class GroupVisibility extends InOperator {
     }
 
     // Build the checkbox options and default values.
+    /** @var \Drupal\group_flex\Plugin\GroupVisibilityInterface $plugin */
     foreach ($this->groupVisibilityManager->getAllAsArrayForGroup() as $key => $plugin) {
-      $this->valueOptions[$key] = $plugin->getLabel();
+      $this->valueOptions[$key] = $this->groupFlexHelper->getVisibilityTagLabel($plugin->getPluginId());
     }
 
     return $this->valueOptions;
