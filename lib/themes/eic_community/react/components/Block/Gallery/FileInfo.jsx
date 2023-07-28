@@ -3,6 +3,19 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import ImageIcon from '@material-ui/icons/Image';
 
 const FileInfo = ({file, position, length, isMultiple}) => {
+  if (isMultiple) {
+      return (
+          <>
+              <div className={"ecl-gallery__data"}>
+                  <div className={"ecl-gallery__data__actions"}>
+                      <a className={"ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg"} href={`${window.location.href}/archive-download`} target="_blank" > <GetAppIcon /> Download archive</a>
+                  </div>
+              </div>
+              <p className={"ecl-gallery__data__description"}>{file.description}</p>
+          </>
+      )
+  }
+
   return (
     <>
       <div className={"ecl-gallery__data"}>
