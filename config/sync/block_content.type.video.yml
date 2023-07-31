@@ -1,0 +1,8 @@
+uuid: 47eaf854-f01b-4ec0-b703-2826775b8f74
+langcode: en
+status: true
+dependencies: {  }
+id: video
+label: Video
+revision: 0
+description: 'Displays videos.'

@@ -1,0 +1,30 @@
+uuid: 3e9a6364-3c22-4e82-ba3f-1e721f4a93ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.oe_theme_main_content
+    - field.field.media.video.field_media_video_file
+    - media.type.video
+  module:
+    - file
+id: media.video.oe_theme_main_content
+targetEntityType: media
+bundle: video
+mode: oe_theme_main_content
+content:
+  field_media_video_file:
+    type: file_default
+    label: visually_hidden
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true
