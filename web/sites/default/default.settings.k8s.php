@@ -164,6 +164,12 @@ $config['eic_user_login.settings']['endpoint_url'] = getenv('SMED_USERCHECK_URL'
 $config['eic_user_login.settings']['basic_auth_username'] = getenv('SMED_USERCHECK_USERNAME');
 $config['eic_user_login.settings']['basic_auth_password'] = getenv('SMED_USERCHECK_PASSWORD');
 $config['eic_user_login.settings']['api_key'] = getenv('SMED_USERCHECK_API_KEY');
+/**
+ * SMED User registration .
+ */
+if ($user_registration_url = getenv('SMED_USER_REGISTRATION_URL')) {
+  $config['eic_user_login.settings']['user_registration_url']  = $user_registration_url;
+}
 
 /**
  * SMED API connection information.
