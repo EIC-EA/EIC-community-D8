@@ -1,0 +1,6 @@
+id: oec_group_visibility_change_action
+label: 'Change visibility of group'
+status: true
+langcode: en
+type: group
+plugin: oec_group_visibility_change_action
