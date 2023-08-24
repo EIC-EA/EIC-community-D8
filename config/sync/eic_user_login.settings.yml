@@ -1,3 +1,0 @@
-check_sync_user: false
-allow_user_register: true
-user_registration_url: 'https://eic.eismea.eu/mydashboard/admissions/entry'

@@ -260,6 +260,7 @@ class SolrSearchManager {
     if (
       NULL !== $sorts &&
       array_key_exists(0, $sorts) &&
+      $this->source->getAvailableSortOptions()[$sorts[0]] &&
       array_key_exists(SourceTypeInterface::SECOND_SORT_KEY, $this->source->getAvailableSortOptions()[$sorts[0]])
     ) {
       $second_sorts = $this->source->getAvailableSortOptions()[$sorts[0]][SourceTypeInterface::SECOND_SORT_KEY];
@@ -727,6 +728,9 @@ class SolrSearchManager {
         }
         break;
 
+      case GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
+        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_SENSITIVE . '*)';
+        break;
       // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
       case GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
         $options = $group_visibility_entity->getOptions();

@@ -36,9 +36,11 @@ use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Drupal\views\ViewExecutable;
+use \Drupal\eic_groups\Constants\GroupVisibilityType;
 
 /**
  * Implements hook_theme().
@@ -252,7 +254,7 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
   ];
 
   if (
-    $entity instanceof \Drupal\group\Entity\GroupContentInterface &&
+    $entity instanceof GroupContentInterface &&
     in_array($entity->getEntity()->bundle(), $bundle_resync_group)
   ) {
     /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
@@ -375,6 +377,14 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
 function eic_groups_group_form_submit(array $form, FormStateInterface $form_state) {
   \Drupal::classResolver(FormOperations::class)
     ->formGroupSubmit($form, $form_state);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_groups_form_group_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->groupContentFormAlter($form, $form_state, $form_id);
 }
 
 /**
@@ -512,7 +522,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
   $moderation_state = $entity->get('moderation_state')->value;
 
   // Allow access if user is a poweruser.
-  if (UserHelper::isPowerUser($account)) {
+  if (UserHelper::isPowerUser($account, $entity)) {
     return GroupAccessResult::allowed()
       ->addCacheableDependency($account)
       ->addCacheableDependency($entity);
@@ -855,7 +865,7 @@ function eic_groups_flag_action_access(
         break;
       }
 
-      /** @var EICGroupsHelper $group_helper */
+      /** @var \Drupal\eic_groups\EICGroupsHelper $group_helper */
       $group_helper = \Drupal::service('eic_groups.helper');
 
       // Check access for these different flags if group is archived.
@@ -865,7 +875,7 @@ function eic_groups_flag_action_access(
       ];
 
       if (
-        !UserHelper::isPowerUser($account) &&
+        !UserHelper::isPowerUser($account, $group) &&
         $group_helper->isGroupArchived($commented_entity) &&
         in_array($flag->id(), $forbidden_flag_archived)
       ) {
@@ -1007,3 +1017,25 @@ function eic_groups_metatags_alter(array &$metatags, array &$context) {
     }
   }
 }
+
+/**
+ * Implements hook_entity_delete.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *
+ * @return void
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function eic_groups_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
+  // We delete only nodes.
+  if (!$entity instanceof \Drupal\group\Entity\GroupContentInterface || !$entity->getEntity() instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+
+  $node = $entity->getEntity();
+  $title = $entity->label();
+  $node->delete();
+
+  \Drupal::messenger()->addMessage('The content: ' . $title . ' has been deleted.');
+}
+

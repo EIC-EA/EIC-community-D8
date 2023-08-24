@@ -13,3 +13,10 @@ group_type: group
 permissions_ui: true
 permissions:
   - 'view group'
+  - 'view group_node:book entity'
+  - 'view group_node:discussion entity'
+  - 'view group_node:document entity'
+  - 'view group_node:event entity'
+  - 'view group_node:gallery entity'
+  - 'view group_node:video entity'
+  - 'view group_node:wiki_page entity'

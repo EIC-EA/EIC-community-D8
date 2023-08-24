@@ -96,6 +96,16 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
       '#multiple' => TRUE,
     ];
 
+    $defaultRoles = $config->get('oec_group_visibility_setings.sensitive.internal_roles');
+    $form['sensitive_roles'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Sensitive roles'),
+      '#description' => $this->t('Select roles for sensitive visibility.'),
+      '#options' => $userRoleOptions,
+      '#default_value' => $defaultRoles ?: [],
+      '#multiple' => TRUE,
+    ];
+
     $defaultRoles = $config->get('oec_group_flex_admin_roles');
     $form['admin_roles'] = [
       '#type' => 'select',
@@ -115,6 +125,7 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('oec_group_flex.settings')
       ->set('oec_group_visibility_setings.restricted_community_members.internal_roles', $form_state->getValue('restricted_community_members_roles'))
+      ->set('oec_group_visibility_setings.sensitive.internal_roles', $form_state->getValue('sensitive_roles'))
       ->set('oec_group_visibility_setings.custom_restricted.internal_roles', $form_state->getValue('custom_restricted_roles'))
       ->set('oec_group_flex_admin_roles', $form_state->getValue('admin_roles'))
       ->save();

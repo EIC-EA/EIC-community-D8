@@ -11,9 +11,13 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\eic_user_login\Constants\SmedUserStatuses;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManagerInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group_flex\GroupFlexGroup;
 use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -53,6 +57,13 @@ class UserHelper {
    * @var string
    */
   const ROLE_TRUSTED_USER = 'trusted_user';
+
+  /**
+   * Sensitive role.
+   *
+   * @var string
+   */
+  const ROLE_SENSITIVE = 'sensitive';
 
   /**
    * The user storage interface.
@@ -174,10 +185,22 @@ class UserHelper {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account to check if is a power user.
    *
+   * @param \Drupal\group\Entity\GroupInterface|NULL $group_related
+   *    The group related to the user check.
+   *
    * @return bool
    *   TRUE if user is a power user.
    */
-  public static function isPowerUser(AccountInterface $account) {
+  public static function isPowerUser(AccountInterface $account, GroupInterface $group_related = null) {
+    if ($group_related) {
+      $group_flex_group = \Drupal::service('group_flex.group');
+      $group_visibility = $group_flex_group->getGroupVisibility($group_related);
+
+      if ($group_visibility === GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE) {
+        return FALSE;
+      }
+    }
+
     // User 1 is always considered power user.
     if ((int) $account->id() === 1) {
       return TRUE;
@@ -296,6 +319,20 @@ class UserHelper {
     }
 
     return TRUE;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface $account
+   *
+   * @return bool
+   */
+  public static function isUserBlockedOrUnsubscribed(UserInterface $account): bool {
+    $user_status = $account->get('field_user_status')->value;
+
+    return in_array(
+      $user_status,
+      [SmedUserStatuses::USER_BLOCKED, SmedUserStatuses::USER_UNSUBSCRIBED]
+    );
   }
 
   /**

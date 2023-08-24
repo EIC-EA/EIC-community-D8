@@ -1,0 +1,17 @@
+uuid: cd1e75e1-f05d-4798-8dda-f3fe878d7157
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  enforced:
+    config:
+      - user.role.sensitive
+id: event-9ba2627b5
+label: 'Sensitive content administrator'
+weight: -3
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: false
+permissions: {  }

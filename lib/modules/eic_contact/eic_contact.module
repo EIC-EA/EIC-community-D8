@@ -206,6 +206,7 @@ function eic_contact_mail_alter(&$message) {
     /** @var \Drupal\user\UserInterface $sender */
     $sender = $message['params']['sender'];
     $message['headers']['Reply-To'] = $sender->getEmail();
-    $message['headers']['Sender'] = $sender->getEmail();
+//  The sender cannot be from another domain than the domain/server sending the mail.
+//    $message['headers']['Sender'] = $sender->getEmail();
   }
 }

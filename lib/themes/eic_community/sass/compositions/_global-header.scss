@@ -32,7 +32,7 @@
 
     @include ecl-media-breakpoint-up('md') {
       width: 100%;
-      max-width: map-get($ecl-width, 'form-m');
+      max-width: 14rem;
     }
   }
 
@@ -51,9 +51,19 @@
   }
 
   &__logo-baseline {
+    padding-bottom: 0.5em;
+    padding-left: 0.3em;
+    color: #5439a1;
+    font-size: 36px;
     @include ecl-media-breakpoint-down('sm') {
-      font-size: 11px;
+      font-size: 30px;
+      padding-bottom: 0.2em;
+      padding-left: 0.3em;
       margin-bottom: -3px;
+    }
+    @include ecl-media-breakpoint-down('xs') {
+      font-size: 20px;
+      padding-bottom: 0.6em;
     }
   }
 

@@ -1,0 +1,14 @@
+uuid: 53e51888-a486-46ff-855f-22023198fe19
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.sensitive
+  module:
+    - user
+id: user_remove_role_action.sensitive
+label: 'Remove the Sensitive role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: sensitive

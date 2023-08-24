@@ -116,14 +116,6 @@ class GroupAccessContent extends ProcessorPluginBase {
 
     $user = User::load($user_id);
 
-    // Power user can access all groups.
-    if (UserHelper::isPowerUser($user)) {
-      return '(ss_group_visibility:*)';
-    }
-
-    $email = explode('@', $user->getEmail());
-    $domain = array_pop($email) ?: 0;
-
     /** @var \Drupal\group\GroupMembershipLoader $group_membership_service */
     $group_membership_service = \Drupal::service('group.membership_loader');
     $groups = $group_membership_service->loadByUser($user);
@@ -134,6 +126,19 @@ class GroupAccessContent extends ProcessorPluginBase {
 
     // If group is private, the user needs to be in group to view it.
     $group_ids_formatted = !empty($group_ids) ? implode(' OR ', $group_ids) : 0;
+
+    // Power user can access all groups.
+    if (UserHelper::isPowerUser($user)) {
+
+      return '(ss_group_visibility:*)';
+    }
+
+    $domain = '';
+
+    if ($email = $user->getEmail()) {
+      $email = explode('@', $email);
+      $domain = array_pop($email) ?: 0;
+    }
 
     // Get user organisation types.
     $user_organisation_types = \Drupal::service('eic_organisations.helper')->getUserOrganisationTypes($user);
@@ -152,6 +157,10 @@ class GroupAccessContent extends ProcessorPluginBase {
     // Group members can view their own groups regardless of the group visibility.
     if ($user->isAuthenticated()) {
       $query .= ' OR its_global_group_parent_id:(' . $group_ids_formatted . ')';
+    }
+
+    if ($user->hasRole('sensitive')) {
+      $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE . ')';
     }
 
     // Restricted community group, only trusted_user role can view.

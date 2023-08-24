@@ -117,18 +117,36 @@ class OECGroupFlexHelper {
   }
 
   /**
+   * Returns the short label for visibility for the given group.
+   *
    * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
    *
    * @return string
+   *   The visibility label.
+   *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
   public function getGroupVisibilityTagLabel(GroupInterface $group): string {
     $group_visibility = $this->getGroupVisibilitySettings($group);
-    $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
+    return $this->getVisibilityTagLabel($group_visibility['plugin_id']);
+  }
+
+  /**
+   * Returns the short label for a visibility plugin.
+   *
+   * @param string $plugin_id
+   *   The plugin ID.
+   *
+   * @return string
+   *   The visibility label.
+   */
+  public function getVisibilityTagLabel(string $plugin_id): string {
+    $tag = strpos($plugin_id, '_') !== FALSE ? strstr($plugin_id, '_', TRUE) : $plugin_id;
 
     // Exception for the custom visibility. We need to show the label
     // "Restricted" instead.
-    if ($group_visibility['plugin_id'] === 'custom_restricted') {
+    if ($plugin_id === 'custom_restricted') {
       $tag = 'restricted';
     }
 

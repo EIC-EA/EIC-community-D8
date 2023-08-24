@@ -3,13 +3,11 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\eic_groups\Constants\GroupVisibilityType;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\Group;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -107,6 +105,7 @@ class ProcessorVisibility extends DocumentProcessor {
 
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+      case GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         $group_visibility = $group_visibility_entity ? $group_visibility_entity->getType() : GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY;
         break;

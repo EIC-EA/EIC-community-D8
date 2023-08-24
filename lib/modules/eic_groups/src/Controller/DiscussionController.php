@@ -388,7 +388,7 @@ class DiscussionController extends ControllerBase {
     $group = $this->groupsHelper->getGroupFromContent($discussion);
 
     if (
-      !UserHelper::isPowerUser($this->currentUser()) &&
+      !UserHelper::isPowerUser($this->currentUser(), $group) &&
       ($group) &&
       (
         $this->eicModerationHelper->isArchived($group) ||

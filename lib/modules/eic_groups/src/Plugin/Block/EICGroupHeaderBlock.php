@@ -399,7 +399,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         }
       }
     }
-    return $link;
+
+    // If no title has been set, that means no available join method.
+    return array_key_exists('title', $link) ? $link : [];
   }
 
   /**

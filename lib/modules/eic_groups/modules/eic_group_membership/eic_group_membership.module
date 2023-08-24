@@ -501,7 +501,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
   switch ($operation) {
     case 'edit':
       $group = $entity->getGroup();
-      $is_power_user = UserHelper::isPowerUser($account);
+      $is_power_user = UserHelper::isPowerUser($account, $group);
       $deny_moderation_states = [
         GroupsModerationHelper::GROUP_ARCHIVED_STATE,
         GroupsModerationHelper::GROUP_BLOCKED_STATE,
@@ -519,7 +519,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       break;
     case 'delete':
       $group = $entity->getGroup();
-      $is_power_user = UserHelper::isPowerUser($account);
+      $is_power_user = UserHelper::isPowerUser($account, $group);
       $deny_moderation_states = [
         GroupsModerationHelper::GROUP_ARCHIVED_STATE,
         GroupsModerationHelper::GROUP_BLOCKED_STATE,
@@ -556,7 +556,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       // Admins cannot be removed from SMED groups.
       if (
         $eic_ws_helper->isCreatedThroughSmed($group) &&
-        !UserHelper::isPowerUser($account) &&
+        !UserHelper::isPowerUser($account, $group) &&
         $group_admin_member = EICGroupsHelper::userIsGroupAdmin($group, $group_content_member)
       ) {
         $access = GroupAccessResult::forbidden()
