@@ -147,15 +147,15 @@ function _preprocess_node_page(&$variables) {
         /* @todo Missing follow author flag when user is logged in. */
 
         $publish_date_format = 'd F Y';
-        $is_restricted = $node->private->value === '1';
+        $is_private = $node->private->value === '1';
         $tag = [
           'type' => 'display',
-          'label' => $is_restricted ? t('Restricted') : t('Public'),
+          'label' => $is_private ? t('Private') : t('Public'),
         ];
         $variables['editorial_header'] = [
           'tags' => [
             [
-              'extra_classes' => 'ecl-tag--is-' . ($is_restricted ? 'restricted' : 'public'),
+              'extra_classes' => 'ecl-tag--is-' . ($is_private ? 'private' : 'public'),
               'tag' => $tag,
             ],
           ],
