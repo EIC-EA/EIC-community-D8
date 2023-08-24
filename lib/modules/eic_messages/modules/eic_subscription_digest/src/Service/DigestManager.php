@@ -161,6 +161,10 @@ class DigestManager {
       return;
     }
 
+    if (UserHelper::isUserBlockedOrUnsubscribed($user)) {
+      return;
+    }
+
     $trigger_date = NULL;
     if (isset($data['trigger_date'])) {
       $trigger_date = new \DateTime($data['trigger_date']);
@@ -187,7 +191,7 @@ class DigestManager {
     if (!$send_mail) {
       return;
     }
-    
+
     $this->mailManager->mail(
       'eic_subscription_digest',
       'digest',

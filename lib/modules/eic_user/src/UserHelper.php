@@ -13,6 +13,7 @@ use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\eic_user_login\Constants\SmedUserStatuses;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -318,6 +319,20 @@ class UserHelper {
     }
 
     return TRUE;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface $account
+   *
+   * @return bool
+   */
+  public static function isUserBlockedOrUnsubscribed(UserInterface $account): bool {
+    $user_status = $account->get('field_user_status')->value;
+
+    return in_array(
+      $user_status,
+      [SmedUserStatuses::USER_BLOCKED, SmedUserStatuses::USER_UNSUBSCRIBED]
+    );
   }
 
   /**
