@@ -98,6 +98,14 @@ class FormAlter implements ContainerInjectionInterface {
         $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
     }
+
+    // Removes helper text from email field for CAS user.
+    if (
+      \Drupal::moduleHandler()->moduleExists('cas') &&
+      \Drupal::service('cas.user_manager')->getCasUsernameForAccount($this->currentUser->id())
+    ) {
+      unset($form['account']['mail']['#description']);
+    }
   }
 
   /**
