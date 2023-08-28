@@ -107,6 +107,8 @@ function eic_community_preprocess_page(array &$variables): void {
   _preprocess_group_page($variables);
 
   _preprocess_page_not_found($variables);
+
+  _preprocess_access_denied($variables);
 }
 
 /**
@@ -273,6 +275,30 @@ function _preprocess_page_not_found(&$variables) {
   if (\Drupal::routeMatch()->getRouteName() === 'system.404') {
     // Adds URL to the frontpage.
     $variables['front_url'] = Url::fromRoute('<front>')->toString();
+  }
+}
+
+/**
+ * Preprocess access denied.
+ */
+function _preprocess_access_denied(&$variables) {
+  if (\Drupal::routeMatch()->getRouteName() === 'system.403') {
+    // Anonymous user.
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $options = [
+        'query' => ['destination' => \Drupal::request()->getRequestUri()],
+      ];
+      $login_link = Url::fromRoute('eic_user_login.member_access', [], $options)->toString();
+      $message = t('This content is for members-only. Please <a href="@login_link">log in</a> to see and access the content', [
+        '@login_link' => $login_link,
+      ]);
+    }
+    // Logged-in user.
+    else {
+      $message = t("It seems that you don't have access to this content");
+    }
+
+    $variables['page']['content']['system_main']['#markup'] = $message;
   }
 }
 
