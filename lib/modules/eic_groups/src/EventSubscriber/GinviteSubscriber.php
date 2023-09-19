@@ -42,6 +42,11 @@ class GinviteSubscriber extends GinviteSubscriberBase {
    * {@inheritdoc}
    */
   public function notifyAboutPendingInvitations(GetResponseEvent $event) {
+    // We skip AJAX requests.
+    if ($event->getRequest()->isXmlHttpRequest()) {
+      return;
+    }
+
     // Exclude routes where this info is redundant or will generate a
     // misleading extra message on the next request.
     $route_exclusions = [
