@@ -1,0 +1,20 @@
+uuid: 2434f09f-471c-43cd-a0b6-a17ca8b9cf1e
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - taxonomy
+id: group_content.field_vocab_job_title
+field_name: field_vocab_job_title
+entity_type: group_content
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

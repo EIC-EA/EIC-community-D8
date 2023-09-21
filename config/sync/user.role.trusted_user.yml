@@ -23,6 +23,7 @@ dependencies:
     - book
     - comment
     - content_moderation
+    - eic_content_gallery
     - eic_flags
     - eic_private_content
     - eic_private_message
@@ -57,6 +58,7 @@ permissions:
   - 'delete own news content'
   - 'delete own page content'
   - 'delete own story content'
+  - 'download gallery archive'
   - 'edit own comments'
   - 'edit own eic_document media'
   - 'edit own image media'

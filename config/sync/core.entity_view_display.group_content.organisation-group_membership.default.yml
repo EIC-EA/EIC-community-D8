@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group_content.organisation-group_membership.field_vocab_job_title
     - field.field.group_content.organisation-group_membership.group_roles
     - group.content_type.organisation-group_membership
 id: group_content.organisation-group_membership.default
@@ -10,6 +11,14 @@ targetEntityType: group_content
 bundle: organisation-group_membership
 mode: default
 content:
+  field_vocab_job_title:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: -3
+    region: content
   group_roles:
     type: entity_reference_label
     label: above

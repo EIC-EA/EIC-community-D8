@@ -18,7 +18,7 @@ function eic_share_content_theme() {
 
 /**
  * Implements hook_search_api_solr_documents_alter.
- * 
+ *
  * @param array $documents
  * @param \Drupal\search_api\IndexInterface $index
  * @param array $items
@@ -26,7 +26,7 @@ function eic_share_content_theme() {
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function eic_share_Content_search_api_solr_documents_alter(
+function eic_share_content_search_api_solr_documents_alter(
   array &$documents,
   \Drupal\search_api\IndexInterface $index,
   array $items
