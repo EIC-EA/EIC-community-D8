@@ -153,6 +153,10 @@ function oec_group_flex_views_data() {
       'title' => t('Visibility'),
       'id' => 'group_visibility',
     ],
+    'sort' => [
+      // ID of sort handler plugin to use.
+      'id' => 'group_visibility',
+    ],
   ];
   $data['groups_field_data']['group_visibility_custom_restricted_email_domains'] = [
     'title' => t('Visibility Custom: Restricted email domains'),

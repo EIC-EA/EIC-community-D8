@@ -73,6 +73,7 @@ class ProcessorDiscussion extends DocumentProcessor {
 
     $nid = $fields['its_content_nid'];
 
+    $comment = NULL;
     $results = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
       ->condition('entity_id', $nid)
@@ -80,91 +81,86 @@ class ProcessorDiscussion extends DocumentProcessor {
       ->sort('created', 'DESC')
       ->range(0, 1)
       ->execute();
+    if (!empty($results)) {
+      $comment = Comment::load(reset($results));
+    }
 
+    /** @var \Drupal\node\NodeInterface $discussion */
     $discussion = $this->entityTypeManager->getStorage('node')->load($nid);
+
+    // Handle statistics.
     $likes = 0;
     $follows = 0;
     $total_comments = $discussion->field_comments->comment_count;
-
     if ($discussion instanceof NodeInterface) {
       $statistics = $this->statisticsHelper->getEntityStatistics($discussion);
-
       $likes = $statistics[FlagType::LIKE_CONTENT];
       $follows = $statistics[FlagType::FOLLOW_CONTENT];
     }
-
     $most_active_total = 3 * (int) $total_comments + 2 * (int) $follows + (int) $likes;
 
-    $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID, $fields, $most_active_total);
-    $document->addField('its_discussion_total_comments', $total_comments);
-
-    if (!$results) {
-      $document->addField('ss_discussion_last_comment_text', '');
-      // Since last comment from the comments field always set a timestamp even
-      // when there are no comments, we set it to 0 here.
-      $document->setField('its_last_comment_timestamp', 0);
-      return;
-    }
-
-    $comment = Comment::load(reset($results));
-
-    if (!$comment instanceof CommentInterface) {
-      $document->addField('ss_discussion_last_comment_text', '');
-      return;
-    }
-
+    // Handle Author picture.
     /** @var \Drupal\image\Entity\ImageStyle $image_style */
     $image_style = $this->entityTypeManager->getStorage('image_style')
       ->load('crop_80x80');
-
     $user_picture_uri = array_key_exists('ss_content_author_image_uri', $fields) ?
       $fields['ss_content_author_image_uri'] :
       NULL;
-
     $user_picture_relative = '';
-
     // Generates image style for the author picture.
     if ($user_picture_uri) {
       $user_picture_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($user_picture_uri));
     }
     $this->addOrUpdateDocumentField($document, 'ss_content_author_formatted_image', $fields, $user_picture_relative);
 
-    $image_style = $this->entityTypeManager->getStorage('image_style')
-      ->load('crop_36x36');
+    $this->addOrUpdateDocumentField($document, self::SOLR_MOST_ACTIVE_ID, $fields, $most_active_total);
+    $document->addField('its_discussion_total_comments', $total_comments);
 
-    $author = $comment->get('uid')->referencedEntities();
-    $author = reset($author);
+    if (empty($comment)) {
+      $document->addField('ss_discussion_last_comment_text', '');
+      // Since last comment from the comments field always set a timestamp even
+      // when there are no comments, we set it to 0 here.
+      $document->setField('its_last_comment_timestamp', 0);
+    }
+    else {
+      // Handle last comment.
+      $image_style = $this->entityTypeManager->getStorage('image_style')
+        ->load('crop_36x36');
 
-    /** @var \Drupal\media\MediaInterface|NULL $author_media */
-    $author_media = $author->get('field_media')->entity;
-    /** @var File|NULL $author_file */
-    $author_file = $author_media instanceof MediaInterface ? File::load(
-      $author_media->get('oe_media_image')->target_id
-    ) : NULL;
-    $author_file_url = $author_file ?
-      $this->urlGenerator->transformRelative($image_style->buildUrl($author_file->get('uri')->value)) :
-      NULL;
+      $last_comment_author = $comment->get('uid')->referencedEntities()[0];
 
-    $comment_text = '';
-    if ($comment->get('comment_body')->value) {
-      // Sanitize text before indexing.
-      $comment_text = $this->sanitizeFulltextString($comment->get('comment_body')->value);
+      /** @var \Drupal\media\MediaInterface|NULL $author_media */
+      $author_media = $last_comment_author->get('field_media')->entity;
+      /** @var File|NULL $author_file */
+      $author_file = $author_media instanceof MediaInterface ? File::load(
+        $author_media->get('oe_media_image')->target_id
+      ) : NULL;
+      $author_file_url = $author_file ?
+        $this->urlGenerator->transformRelative($image_style->buildUrl($author_file->get('uri')->value)) :
+        NULL;
+
+      $comment_text = '';
+      if (!empty($comment) && $comment->get('comment_body')->value) {
+        if ($comment->get('comment_body')->value) {
+          // Sanitize text before indexing.
+          $comment_text = $this->sanitizeFulltextString($comment->get('comment_body')->value);
+        }
+        $document->addField('ss_discussion_last_comment_text', $comment_text);
+        $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
+      }
+
+      $document->addField(
+        'ss_discussion_last_comment_author',
+        $last_comment_author instanceof UserInterface ? $last_comment_author->getDisplayName() : ''
+      );
+      $document->addField('ss_discussion_last_comment_author_image', $author_file_url);
+      $document->addField(
+        'ss_discussion_last_comment_url',
+        $last_comment_author instanceof UserInterface ? $last_comment_author->toUrl()
+          ->toString() : ''
+      );
     }
 
-    $document->addField('ss_discussion_last_comment_text', $comment_text);
-    $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
-    $document->addField(
-      'ss_discussion_last_comment_author',
-      $author instanceof UserInterface ? $author->get('field_first_name')->value . ' ' . $author->get(
-          'field_last_name'
-        )->value : ''
-    );
-    $document->addField('ss_discussion_last_comment_author_image', $author_file_url);
-    $document->addField(
-      'ss_discussion_last_comment_url',
-      $author instanceof UserInterface ? $author->toUrl()
-        ->toString() : ''
-    );
   }
 
   /**

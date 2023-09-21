@@ -119,4 +119,18 @@ class PrivateVisibility extends PrivateVisibilityBase implements ContainerFactor
     return $roles;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getGroupLabel(GroupTypeInterface $groupType): string {
+    return $this->t('Private (The @group_type_name can be accessed only by group members, content managers and site admins)', ['@group_type_name' => $groupType->label()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getValueDescription(GroupTypeInterface $groupType): string {
+    return $this->t('The @group_type_name will be viewed by group members, content managers and site admins', ['@group_type_name' => $groupType->label()]);
+  }
+
 }

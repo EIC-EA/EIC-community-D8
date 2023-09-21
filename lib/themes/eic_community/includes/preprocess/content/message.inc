@@ -9,6 +9,7 @@ use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_preprocess_message().
@@ -163,12 +164,21 @@ function _eic_community_preprocess_digest_message(&$variables) {
   $action = $action . ' ' . $suffix;
   $default_avatar = $variables['eic_mail_images_path'] . '/user_circle.png';
 
-  $variables['content'] = [
-    'user' => [
+  $user = NULL;
+
+  if (
+    $user instanceof UserInterface &&
+    !$user->isBlocked()
+  ) {
+    $user = [
       'full_name' => \Drupal::service('eic_user.helper')->getFullName($user),
       'profile_picture' => !$user->get('field_media')->isEmpty() ? UserHelper::getUserAvatar($user) : $default_avatar,
       'url' => $user->toUrl()->toString(),
-    ],
+    ];
+  }
+
+  $variables['content'] = [
+    'user' => $user,
     'group_suffix' => $group_suffix,
     'action' => t($action),
     'entity' => $entity,
