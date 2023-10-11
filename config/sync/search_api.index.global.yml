@@ -53,7 +53,6 @@ dependencies:
     - field.storage.node.field_video_media
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
-    - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_social_links
     - field.storage.profile.field_vocab_geo
