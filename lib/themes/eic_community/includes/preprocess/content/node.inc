@@ -21,6 +21,8 @@ function eic_community_preprocess_node(array &$variables) {
     $variables['#cache']['tags'] = $node->getCacheTags();
   }
 
+  $variables['formatted_date']['label'] = eic_community_get_teaser_formatted_date_display($node->get('changed')->value);
+
   // Adds menu local tasks block to the theme variables.
   $menu_local_tasks_block = \Drupal::entityTypeManager()
     ->getStorage('block')
@@ -90,6 +92,9 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
     'flags' => $flags,
     'timestamp' => [
       'label' => eic_community_get_teaser_time_display($node->get('changed')->value),
+    ],
+    'formatted_date' => [
+      'label' => eic_community_get_teaser_formatted_date_display($node->get('changed')->value),
     ],
     'stats' => _eic_community_get_entity_stats($node),
   ];
