@@ -75,6 +75,7 @@ function eic_community_preprocess_user(array &$variables) {
         'title' => \Drupal::service('eic_user.helper')->getFullName($user),
         'description' => _eic_community_get_user_profile_body($user, $member_profile),
         'type' => _eic_community_get_user_type($user, $member_profile),
+        'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
         'image' => _get_profile_image_array($user),
         'meta' => [],
       ];
@@ -493,6 +494,47 @@ function _eic_community_get_user_profile_body(UserInterface $account, ProfileInt
       'description' => $member_profile->get('field_body')->value,
     ],
   ];
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user job titles.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the job titles.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_job_titles(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have job titles, skip.
+  if ($member_profile->get('field_vocab_job_title')->isEmpty()) {
+    return [];
+  }
+
+  $job_titles = [];
+  /** @var \Drupal\taxonomy\Entity\Term[] $job_titles */
+  $job_titles_terms = $member_profile->get('field_vocab_job_title')->referencedEntities();
+  // Adds each fact and figure to the theme variables.
+  foreach ($job_titles_terms as $job_title) {
+    $job_title_translation = \Drupal::service('entity.repository')
+      ->getTranslationFromContext($job_title, $account->language()->getId());
+    // @todo Add missing organisations.
+    $job_titles[] = [
+      'label' => $job_title_translation->getName(),
+      'items' => [],
+    ];
+  }
+
+  return $job_titles;
 }
 
 /**
