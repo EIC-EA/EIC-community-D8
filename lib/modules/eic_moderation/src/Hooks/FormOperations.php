@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_moderation\Service\ContentModerationManager;
@@ -109,6 +110,23 @@ class FormOperations implements ContainerInjectionInterface {
     if (isset($form['revision_information'])) {
       unset($form['revision_information']['#group']);
       $form['revision_information']['#weight'] = 100;
+    }
+
+    if (isset($form['revision_log'])) {
+      $form['changes'] = [
+        '#type' => 'details',
+        '#title' => new TranslatableMarkup('Explain your submission'),
+        '#group' => 'advanced',
+        '#attached' => [
+          'library' => [
+            0 => 'node/drupal.node',
+          ],
+        ],
+        '#weight' => 100,
+        '#open' => TRUE,
+      ];
+      $form['revision_log']['#group'] = 'changes';
+      unset($form['revision_log']['widget'][0]['value']['#title']);
     }
 
     // If we are in a group context.
