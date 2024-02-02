@@ -95,10 +95,66 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Implements hook_ENTITY_TYPE_presave().
+   */
+  public function nodePresave(NodeInterface $node) {
+    $this->revisionLogUpdate($node);
+  }
+
+  /**
    * Implements hook_node_update().
    */
   public function nodeUpdate(NodeInterface $node) {
     $this->sendNotification($node);
+  }
+
+  /**
+   * Sets the revision log message automatically.
+   */
+  public function revisionLogUpdate(NodeInterface $node) {
+    $allowed_content_types = [
+      'book',
+      'document',
+      'event',
+      'gallery',
+      'news',
+      'page',
+      'story',
+      'video',
+      'wiki_page',
+    ];
+    $bundle = $node->bundle();
+    if (in_array($bundle, $allowed_content_types, TRUE)) {
+      if (!$this->contentModerationManager->isSupportedByWorkflow($node, EICContentModeration::MACHINE_NAME)) {
+        return;
+      }
+
+      if (!$this->contentModerationManager->isTransitioned($node)) {
+        return;
+      }
+
+      $workflow_state_action_map = [
+        EICContentModeration::STATE_DRAFT => 'draft created',
+        EICContentModeration::STATE_WAITING_APPROVAL => 'sent for approval',
+        EICContentModeration::STATE_NEEDS_REVIEW => 'rejected',
+        EICContentModeration::STATE_PUBLISHED => 'approved and published',
+        EICContentModeration::STATE_UNPUBLISHED => 'unpublished',
+      ];
+
+      $current_user = $this->userHelper->getCurrentUser();
+      $user_message = ((string) $current_user->getDisplayName());
+      $roles = $current_user->getRoles(TRUE);
+      if (in_array('content_administrator', $roles, TRUE)) {
+        $user_message .= ' - Content Administrator';
+      }
+      $message = ucfirst($bundle) . ' ' . $workflow_state_action_map[$node->get('moderation_state')->value] . ' by ' . $user_message;
+      if (!$node->get('revision_log')->isEmpty()) {
+        $message = $node->get('revision_log')
+          ->getValue()[0]['value'] . ' - ' . $message;
+      }
+      $node->set('revision_log', $message);
+
+    }
   }
 
   /**
