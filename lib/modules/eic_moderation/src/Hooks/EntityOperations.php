@@ -134,11 +134,11 @@ class EntityOperations implements ContainerInjectionInterface {
       }
 
       $workflow_state_action_map = [
-        EICContentModeration::STATE_DRAFT => 'draft created',
-        EICContentModeration::STATE_WAITING_APPROVAL => 'sent for approval',
-        EICContentModeration::STATE_NEEDS_REVIEW => 'rejected',
-        EICContentModeration::STATE_PUBLISHED => 'approved and published',
-        EICContentModeration::STATE_UNPUBLISHED => 'unpublished',
+        EICContentModeration::STATE_DRAFT => $this->t('draft created', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_WAITING_APPROVAL => $this->t('sent for approval', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_NEEDS_REVIEW => $this->t('rejected', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_PUBLISHED => $this->t('approved and published', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_UNPUBLISHED => $this->t('unpublished', [], ['context' => 'eic_moderation'])->render(),
       ];
 
       $current_user = $this->userHelper->getCurrentUser();
@@ -147,10 +147,14 @@ class EntityOperations implements ContainerInjectionInterface {
       if (in_array('content_administrator', $roles, TRUE)) {
         $user_message .= ' - Content Administrator';
       }
-      $message = ucfirst($bundle) . ' ' . $workflow_state_action_map[$node->get('moderation_state')->value] . ' by ' . $user_message;
+      $message = $this->t("@bundle @action by @display_name", [
+        '@bundle' => ucfirst($bundle),
+        '@action' => $workflow_state_action_map[$node->get('moderation_state')->value],
+        '@display_name' => $user_message,
+      ]);
       if (!$node->get('revision_log')->isEmpty()) {
         $message = $node->get('revision_log')
-          ->getValue()[0]['value'] . ' - ' . $message;
+          ->getValue()[0]['value'] . ' - ' . $message->render();
       }
       $node->set('revision_log', $message);
 
