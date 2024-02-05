@@ -5,6 +5,9 @@
  * Primary module hooks for EIC Administration module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityFormInterface;
+
 /**
  * Implements template_preprocess_views_view_field().
  */
@@ -54,5 +57,19 @@ function eic_admin_module_implements_alter(&$implementations, $hook) {
         unset($implementations['oe_authentication']);
         break;
     }
+  }
+}
+
+/**
+ * Implements hook_module_form_alter().
+ */
+function eic_admin_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof EntityFormInterface) {
+    return;
+  }
+  $entity = $form_object->getEntity();
+  if ($entity->getEntityTypeId() == 'node') {
+    $form['#attached']['library'][] = 'eic_admin/admin_ux';
   }
 }

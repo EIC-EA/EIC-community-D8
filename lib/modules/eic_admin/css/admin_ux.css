@@ -1,0 +1,7 @@
+/* Sticky advanced (sidebar) in node edit. */
+@media screen and (min-width: 768px) {
+  .node-form .layout-region-node-secondary {
+    position: sticky;
+    top: 125px;
+  }
+}

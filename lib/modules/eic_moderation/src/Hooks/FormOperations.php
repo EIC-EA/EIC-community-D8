@@ -120,7 +120,6 @@ class FormOperations implements ContainerInjectionInterface {
         '#attached' => [
           'library' => [
             0 => 'node/drupal.node',
-            1 => 'eic_moderation/admin-advanced-sticky',
           ],
         ],
         '#weight' => 100,
