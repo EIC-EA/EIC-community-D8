@@ -64,12 +64,14 @@ function eic_admin_module_implements_alter(&$implementations, $hook) {
  * Implements hook_module_form_alter().
  */
 function eic_admin_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  $currentTheme = \Drupal::service('theme.manager')->getActiveTheme();
+  $adminThemeName = \Drupal::config('system.theme')->get('admin');
   $form_object = $form_state->getFormObject();
   if (!$form_object instanceof EntityFormInterface) {
     return;
   }
   $entity = $form_object->getEntity();
-  if ($entity->getEntityTypeId() == 'node') {
+  if ($entity->getEntityTypeId() == 'node' && $currentTheme->getName() == $adminThemeName) {
     $form['#attached']['library'][] = 'eic_admin/admin_ux';
   }
 }
