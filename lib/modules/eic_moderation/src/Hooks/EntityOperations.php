@@ -125,10 +125,6 @@ class EntityOperations implements ContainerInjectionInterface {
     ];
     $bundle = $node->bundle();
     if (in_array($bundle, $allowed_content_types, TRUE)) {
-      if (!$this->contentModerationManager->isSupportedByWorkflow($node, EICContentModeration::MACHINE_NAME)) {
-        return;
-      }
-
       if (!$this->contentModerationManager->isTransitioned($node)) {
         return;
       }
