@@ -38,6 +38,7 @@ function eic_community_preprocess_node__wiki_page(array &$variables) {
     case 'mail_teaser':
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
+      //  TODO:
       $teaser['description'] = Unicode::truncate(strip_tags($node->get('field_body')->value), 300, TRUE, TRUE);
       $teaser['type'] = [
         'label' => $node->type->entity->label(),
@@ -49,6 +50,11 @@ function eic_community_preprocess_node__wiki_page(array &$variables) {
 
       // Remove unwanted items.
       $teaser['stats'] = [];
+
+      // Privacy information. If current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $teaser['author'] =  NULL;
+      }
 
       $variables['story_item'] = $teaser;
       break;
