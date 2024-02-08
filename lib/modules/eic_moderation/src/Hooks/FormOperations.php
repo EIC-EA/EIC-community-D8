@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_moderation\Hooks;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -11,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_moderation\Service\ContentModerationManager;
@@ -58,6 +60,19 @@ class FormOperations implements ContainerInjectionInterface {
   protected $currentUser;
 
   /**
+   * The theme manager service.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
+   * The configuration object for system.theme config.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $themeConfig;
+  /**
    * Constructs a new FormOperations object.
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
@@ -67,18 +82,27 @@ class FormOperations implements ContainerInjectionInterface {
    * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
    *   The EIC Groups helper service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current suer account.
+   *   The current user account.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *
    */
   public function __construct(
     ModerationInformationInterface $moderation_information,
     ContentModerationManager $content_moderation_manager,
     EICGroupsHelper $groups_helper,
-    AccountProxyInterface $current_user
+    AccountProxyInterface $current_user,
+    ThemeManagerInterface $theme_manager,
+    ConfigFactory $config_factory
     ) {
     $this->moderationInformation = $moderation_information;
     $this->contentModerationManager = $content_moderation_manager;
     $this->groupsHelper = $groups_helper;
     $this->currentUser = $current_user;
+    $this->themeManager = $theme_manager;
+    $this->themeConfig = $config_factory->get('system.theme');
+
   }
 
   /**
@@ -89,7 +113,9 @@ class FormOperations implements ContainerInjectionInterface {
       $container->get('content_moderation.moderation_information'),
       $container->get('eic_moderation.content_moderation_manager'),
       $container->get('eic_groups.helper'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('theme.manager'),
+      $container->get('config.factory'),
     );
   }
 
@@ -98,6 +124,35 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public function formNodeFormAlter(&$form, FormStateInterface $form_state, $form_id) {
     $entity = $form_state->getFormObject()->getEntity();
+
+    if (isset($form['revision_log'])) {
+      // Override title for all nodes in all themes.
+      $form['revision_log']['widget'][0]['value']['#title'] = new TranslatableMarkup('Explain your submission');
+
+      $currentTheme = $this->themeManager->getActiveTheme();
+      $adminThemeName = $this->themeConfig->get('admin');
+      if ($entity->getEntityTypeId() == 'node' && $currentTheme->getName() == $adminThemeName) {
+        // Move the position of the revision log textarea when on admin theme.
+        $form['changes'] = [
+          '#type' => 'container',
+          '#group' => 'advanced',
+          '#attributes' => [
+            'class' => [
+              'entity-meta__header', //add this class in order to add padding around the textarea.
+            ],
+          ],
+          '#attached' => [
+            'library' => [
+              'node/drupal.node',
+            ],
+          ],
+          '#weight' => 100,
+          '#open' => TRUE,
+        ];
+        $form['revision_log']['#group'] = 'changes';
+      }
+    }
+
     if (!$this->moderationInformation->isModeratedEntity($entity)) {
       return;
     }
@@ -110,23 +165,6 @@ class FormOperations implements ContainerInjectionInterface {
     if (isset($form['revision_information'])) {
       unset($form['revision_information']['#group']);
       $form['revision_information']['#weight'] = 100;
-    }
-
-    if (isset($form['revision_log'])) {
-      $form['changes'] = [
-        '#type' => 'details',
-        '#title' => new TranslatableMarkup('Explain your submission'),
-        '#group' => 'advanced',
-        '#attached' => [
-          'library' => [
-            0 => 'node/drupal.node',
-          ],
-        ],
-        '#weight' => 100,
-        '#open' => TRUE,
-      ];
-      $form['revision_log']['#group'] = 'changes';
-      unset($form['revision_log']['widget'][0]['value']['#title']);
     }
 
     // If we are in a group context.
