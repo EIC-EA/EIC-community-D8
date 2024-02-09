@@ -127,20 +127,16 @@ class FormOperations implements ContainerInjectionInterface {
 
     if (isset($form['revision_log'])) {
       // Override title for all nodes in all themes.
-      $form['revision_log']['widget'][0]['value']['#title'] = new TranslatableMarkup('Explain your submission');
+      $form['revision_log']['widget'][0]['value']['#title'] = $this->t('Explain your submission');
 
       $currentTheme = $this->themeManager->getActiveTheme();
       $adminThemeName = $this->themeConfig->get('admin');
       if ($entity->getEntityTypeId() == 'node' && $currentTheme->getName() == $adminThemeName) {
         // Move the position of the revision log textarea when on admin theme.
         $form['changes'] = [
-          '#type' => 'container',
+          '#type' => 'details',
           '#group' => 'advanced',
-          '#attributes' => [
-            'class' => [
-              'entity-meta__header', //add this class in order to add padding around the textarea.
-            ],
-          ],
+          '#title' => $this->t('Explain your submission'),
           '#attached' => [
             'library' => [
               'node/drupal.node',
@@ -151,6 +147,8 @@ class FormOperations implements ContainerInjectionInterface {
         ];
         $form['revision_log']['#group'] = 'changes';
       }
+      $form['revision_log']['widget'][0]['value']['#title'] = $this->t('Revision message');
+      $form['revision_log']['widget'][0]['value']['#description'] = $this->t('Briefly describe the changes you made to the content. This message will be stored in the content\'s history, allowing for a better review of its changes.');
     }
 
     if (!$this->moderationInformation->isModeratedEntity($entity)) {
