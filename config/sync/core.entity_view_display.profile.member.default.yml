@@ -12,7 +12,6 @@ dependencies:
     - field.field.profile.member.field_location_address
     - field.field.profile.member.field_social_links
     - field.field.profile.member.field_vocab_geo
-    - field.field.profile.member.field_vocab_job_title
     - field.field.profile.member.field_vocab_language
     - field.field.profile.member.field_vocab_topic_expertise
     - field.field.profile.member.field_vocab_topic_interest
@@ -70,14 +69,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 3
-    region: content
-  field_vocab_job_title:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 8
     region: content
   field_vocab_language:
     type: entity_reference_label

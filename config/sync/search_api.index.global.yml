@@ -53,7 +53,6 @@ dependencies:
     - field.storage.node.field_video_media
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
-    - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_social_links
     - field.storage.profile.field_vocab_geo
@@ -1594,17 +1593,6 @@ field_settings:
       module:
         - file
         - media
-  user_profile_job_string:
-    label: 'Member profiles » Profile » Job title » Taxonomy term » Name'
-    datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_vocab_job_title:entity:name'
-    type: string
-    dependencies:
-      config:
-        - field.storage.profile.field_vocab_job_title
-      module:
-        - profile
-        - taxonomy
   user_profile_role_array:
     label: '[User] Roles'
     datasource_id: 'entity:user'
