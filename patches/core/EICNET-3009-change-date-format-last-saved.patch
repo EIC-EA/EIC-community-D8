@@ -1,0 +1,13 @@
+diff --git a/core/modules/node/src/NodeForm.php b/core/modules/node/src/NodeForm.php
+index ef167c82bd..3ddd69676d 100644
+--- a/core/modules/node/src/NodeForm.php
++++ b/core/modules/node/src/NodeForm.php
+@@ -146,7 +146,7 @@ public function form(array $form, FormStateInterface $form_state) {
+     $form['meta']['changed'] = [
+       '#type' => 'item',
+       '#title' => $this->t('Last saved'),
+-      '#markup' => !$node->isNew() ? $this->dateFormatter->format($node->getChangedTime(), 'short') : $this->t('Not saved yet'),
++      '#markup' => !$node->isNew() ? $this->dateFormatter->format($node->getChangedTime(), 'eu_short_date_hour') : $this->t('Not saved yet'),
+       '#wrapper_attributes' => ['class' => ['entity-meta__last-saved']],
+     ];
+     $form['meta']['author'] = [
