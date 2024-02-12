@@ -7,15 +7,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drush\Commands\DrushCommands;
 
 /**
- * A Drush commandfile.
- *
- * In addition to this file, you need a drush.services.yml
- * in root of your module, and a composer.json file that provides the name
- * of the services file to use.
- *
- * See these files for an example of injecting Drupal services:
- *   - http://cgit.drupalcode.org/devel/tree/src/Commands/DevelCommands.php
- *   - http://cgit.drupalcode.org/devel/tree/drush.services.yml
+ * Drush command class that contains a command to find and remove
+ * nodes that are no longer part of a group.
  */
 class OrphanedNodesCommands extends DrushCommands {
 
@@ -40,6 +33,7 @@ class OrphanedNodesCommands extends DrushCommands {
    */
   public function actionOrphanedNodes() {
     $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple();
+    $nodes_to_remove = [];
     foreach ($nodes as $node) {
       $url = $node->toUrl()->toString();
       $parts = explode('/', $url);
@@ -53,13 +47,25 @@ class OrphanedNodesCommands extends DrushCommands {
           ->condition('pa.alias', $group_url)
           ->execute()->fetchAssoc();
         if (empty($q)) {
-          //$node->delete();
-          //$node->setUnpublished();
-          $this->io()->writeln($url);
+          $nodes_to_remove[] = $node;
         }
       }
     }
-    $this->io()->success('Ran.');
+    $count = count($nodes_to_remove);
+    if ($this->confirm("$count orphaned nodes will be removed. Proceed?")) {
+      $this->io()->progressStart($count);
+      foreach ($nodes_to_remove as $item) {
+        $this->io()->progressAdvance();
+//        $item->delete();
+//        $item->setUnpublished();
+      }
+      $this->io()->progressFinish();
+      $this->io()->success("$count orphaned nodes were removed.");
+    }
+    else  {
+      $this->io()->warning('No action has taken place.');
+    }
+
   }
 
 }
