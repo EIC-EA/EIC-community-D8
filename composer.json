@@ -167,6 +167,9 @@
                 }
             }
         },
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
         "composer-exit-on-patch-failure": true,
         "patches-file": "composer.patches.json",
         "enable-patching": true,
