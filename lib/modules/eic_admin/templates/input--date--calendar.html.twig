@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ *
+ * @ingroup themeable
+ */
+#}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+{#<input type="text" id="datepicker">#}
+{#{{ dd(attributes) }}#}
+<input{{ attributes }} />{{ children }}
+<script>
+  var picker = new Pikaday({ field: document.getElementById('{{ attributes.id }}') });
+</script>
