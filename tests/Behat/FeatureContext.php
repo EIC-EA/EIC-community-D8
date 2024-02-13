@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace OpenEuropa\Site\Tests\Behat;
 
 use Drupal\DrupalExtension\Context\RawDrupalContext;
-use InvalidArgumentException;
 
 /**
  * Defines step definitions that are generally useful for the project.
@@ -47,34 +46,42 @@ class FeatureContext extends RawDrupalContext {
     if (!$is_session) {
       $this->getMink()->getSession()->start();
     }
-    $this->getSession()->resizeWindow(1024, 1400, 'current');
+    $this->getSession()->resizeWindow(1024, 2100, 'current');
   }
 
   /**
-   * @When I click on the text :arg1
-   *
-   * @param $arg1
+   * @When I switch to tab :index
    * @return void
    */
-  public function iClickOnTheText2($arg1)
+  public function iSwitchTabs($index)
   {
-    $session = $this->getSession();
-    $element = $session->getPage()->findLink("Your profile");
-    if (null == $element) {
-      throw new InvalidArgumentException(sprintf('Cannot find text: "%s"', $arg1));
-    }
-
-    $element->click();
+    $this->getSession()->getPage()->find('css', 'li.horizontal-tab-button-' . $index)->click();
   }
 
   /**
-   * Sets the specified multi-line value to the field
-   *
-   * @Given I fill the textarea :field with :value
+   * @When I switch to the CKEditor iframe and fill it with :text
    */
-  public function iFillTextarea($field, $value) {
-    $session = $this->getSession();
-    $element = $session->getPage()->findById($field);
-    $element->setValue($value);
+  public function iSwitchToCKEditorIframe($text)
+  {
+    // Switch to the CKEditor iframe.
+    $this->getSession()->switchToIFrame(0);
+    $bodyElement = $this->getSession()->getPage()->find('css', 'body.cke_editable');
+    // Fill it with the text given.
+    $bodyElement->setValue($text);
+    // Switch back.
+    $this->getSession()->switchToIFrame();
   }
+
+  /**
+   * @Then I should not see the :content author info
+   * @return void
+   */
+  public function iShouldNotSeeTheAuthorInfo($content) {
+    // Find the author elements on the page
+    $author = $this->getSession()->getPage()->find('css', '.ecl-author');
+    if ($author->isVisible()) {
+      throw new \exception('Author name is visible to anonymous user');
+    }
+  }
+
 }

@@ -1,24 +1,31 @@
 @api
 @javascript
 
-Feature: Make sure user information is not accessible to anonymous users
+Feature: Author information should not be visible to anonymous users.
 
-  Scenario: Create a wiki page
+  Scenario: Create a wiki page.
     Given I am logged in as a user with the "administrator" role
     And I fill in "First name" with "behat_user"
     And I fill in "Last name" with "programmatically_created"
-    When I click on the text "Your profile"
+    When I switch to tab "1"
     And I select "Greece" from "Country"
-    And I fill the textarea "cke_189_contents" with "This is The bio of .."
+    When I switch to the CKEditor iframe and fill it with "Behat User's content"
     And I fill in "City" with "Thessaloniki"
-    And I check the box "Administrator"
-    And I check the box "English"
+    When I switch to tab "0"
     And I press "Save"
+    When I visit "http://eic-community.ddev.site/node/add/wiki_page"
+    And I fill in "Title" with "Behat Wiki Page"
+    When I switch to the CKEditor iframe and fill it with "Wiki page Content"
+    And I select "Published" from "Save as"
+    And I press "Save"
+
+  Scenario: Wiki page author's info should not be accessible to anonymous users.
+    Given I am an anonymous user
+    And I visit "http://eic-community.ddev.site/topics/business-development"
+    Then I should see the text "Related wiki pages"
     And I save screenshot
-#    Given I am not logged in
-    And I click "Manage"
-    When I visit "Content"
-    And I press "Add content"
-    And I visit "Wiki Page"
+    Then I should not see the "wiki page" author info
+
+
 
 
