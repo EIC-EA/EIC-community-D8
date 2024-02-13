@@ -25,6 +25,15 @@ theme:
   dependencies:
     - core/drupal
 
+pikaday:
+  remote: https://github.com/Pikaday/Pikaday
+  version: 1.8.2
+  js:
+    https://cdn.jsdelivr.net/npm/pikaday/pikaday.js: {type: external, minified: true }
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css: { type: external, minified: true }
+
 react-video-stream:
   js:
     dist/react/custom/manifest.js: { minified: true }
