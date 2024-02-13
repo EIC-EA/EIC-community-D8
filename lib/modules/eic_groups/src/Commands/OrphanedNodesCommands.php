@@ -56,8 +56,7 @@ class OrphanedNodesCommands extends DrushCommands {
       $this->io()->progressStart($count);
       foreach ($nodes_to_remove as $item) {
         $this->io()->progressAdvance();
-//        $item->delete();
-//        $item->setUnpublished();
+        $item->setUnpublished()->save();
       }
       $this->io()->progressFinish();
       $this->io()->success("$count orphaned nodes were removed.");
