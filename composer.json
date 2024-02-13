@@ -123,6 +123,7 @@
         "wikimedia/composer-merge-plugin": "^2.0"
     },
     "require-dev": {
+        "drevops/behat-screenshot": "^1.2",
         "drupal/data_fixtures": "^1.7",
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
@@ -132,6 +133,7 @@
         "openeuropa/code-review": "^1.0",
         "openeuropa/task-runner": "^0.6",
         "phpspec/prophecy-phpunit": "^2",
+        "rdx/behat-variables": "^1.2",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "scripts": {
