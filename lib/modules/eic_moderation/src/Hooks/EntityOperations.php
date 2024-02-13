@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_moderation\Service\ContentModerationManager;
@@ -135,6 +136,7 @@ class EntityOperations implements ContainerInjectionInterface {
         EICContentModeration::STATE_NEEDS_REVIEW => $this->t('rejected', [], ['context' => 'eic_moderation'])->render(),
         EICContentModeration::STATE_PUBLISHED => $this->t('approved and published', [], ['context' => 'eic_moderation'])->render(),
         EICContentModeration::STATE_UNPUBLISHED => $this->t('unpublished', [], ['context' => 'eic_moderation'])->render(),
+        DefaultContentModerationStates::ARCHIVED_STATE => $this->t('archived', [], ['context' => 'eic_moderation'])->render(),
       ];
 
       $current_user = $this->userHelper->getCurrentUser();
