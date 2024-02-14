@@ -5,6 +5,7 @@
  * Primary module hooks for EIC Administration module.
  */
 
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 
@@ -95,8 +96,11 @@ function eic_admin_theme_suggestions_input_alter(array &$suggestions, array $var
  * Implements hook_preprocess_HOOK().
  */
 function eic_admin_preprocess_input__date__calendar(&$variables) {
-  $variables['#element']['#attached']['library'][] = 'eic_community/pikaday';
+  $eu_short_date_pattern = DateFormat::load('eu_short_date')->getPattern();
+  $variables['element']['#attached']['library'][] = 'eic_community/pikaday';
+  $variables['element']['#date_date_format']= $eu_short_date_pattern;
   $variables['attributes']['type'] = 'text';
+  $variables['eu_short_date'] = $eu_short_date_pattern;
 }
 
 /**
