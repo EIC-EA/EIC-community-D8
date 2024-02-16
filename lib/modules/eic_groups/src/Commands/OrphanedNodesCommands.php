@@ -32,11 +32,14 @@ class OrphanedNodesCommands extends DrushCommands {
    * @aliases eic-orphaned
    */
   public function actionOrphanedNodes() {
-    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple();
+    $aliases = $this->database->select('path_alias', 'pa')
+      ->fields('pa', ['path', 'alias'])
+      ->condition('pa.path', '%node/%', 'LIKE')
+      ->condition('pa.alias', '%/groups/%', 'LIKE')
+      ->execute()->fetchAllKeyed();
     $nodes_to_remove = [];
-    foreach ($nodes as $node) {
-      $url = $node->toUrl()->toString();
-      $parts = explode('/', $url);
+    foreach ($aliases as $path => $alias) {
+      $parts = explode('/', $alias);
       $group_url = array_slice($parts, 0, 3);
 
       // Let's make sure the node is/was indeed part of a group.
@@ -47,19 +50,24 @@ class OrphanedNodesCommands extends DrushCommands {
           ->condition('pa.alias', $group_url)
           ->execute()->fetchAssoc();
         if (empty($q)) {
-          $nodes_to_remove[] = $node;
+          $node_id = explode('/', $path);
+          $nodes_to_remove[] = $node_id[2];
         }
       }
     }
+
     $count = count($nodes_to_remove);
-    if ($this->confirm("$count orphaned nodes will be removed. Proceed?")) {
+    if ($this->confirm("$count orphaned nodes will be unpublished. Proceed?")) {
       $this->io()->progressStart($count);
-      foreach ($nodes_to_remove as $item) {
+      foreach ($nodes_to_remove as $item_node_id) {
+        $node = $this->entityTypeManager->getStorage('node')->load($item_node_id);
+        if ($node->isPublished()) {
+          $node->setUnpublished()->save();
+        }
         $this->io()->progressAdvance();
-        $item->setUnpublished()->save();
       }
       $this->io()->progressFinish();
-      $this->io()->success("$count orphaned nodes were removed.");
+      $this->io()->success("$count orphaned nodes were unpublished.");
     }
     else  {
       $this->io()->warning('No action has taken place.');
