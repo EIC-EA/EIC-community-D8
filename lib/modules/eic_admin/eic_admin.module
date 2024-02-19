@@ -78,14 +78,14 @@ function eic_admin_form_alter(array &$form, FormStateInterface $form_state, $for
 }
 
 /**
- * Implements hook_theme_suggestions_HOOK().
+ * Implements hook_theme_suggestions_HOOK_alter().
  */
 function eic_admin_theme_suggestions_input_alter(array &$suggestions, array $variables) {
   $currentTheme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
   $adminThemeName = \Drupal::config('system.theme')->get('admin');
   if ($currentTheme == $adminThemeName) {
-    // check if in node-edit form
-    if ($variables['theme_hook_original'] === 'input__date' && $variables['element']['#attributes']['type'] === 'date') {
+    // Check if in node-edit form and element is date and not in custom fields.
+    if ($variables['theme_hook_original'] === 'input__date' && $variables['element']['#attributes']['type'] === 'date' && substr($variables['element']['#name'], 0, 5) !== "field") {
       $suggestions[] = 'input__date__calendar';
     }
   }
