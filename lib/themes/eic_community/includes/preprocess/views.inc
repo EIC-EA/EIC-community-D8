@@ -327,6 +327,11 @@ function _eic_community_preprocess_views__latest_news_and_stories__homepage(&$va
       'stats' => $stats,
     ];
 
+    // Privacy information, if current user is anonymous remove the author.
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $item['author'] =  NULL;
+    }
+
     if (!$node_translation->get('field_image')->isEmpty()) {
       /** @var \Drupal\media\Entity\Media $media */
       $media = \Drupal::service('entity.repository')->getTranslationFromContext($node_translation->get('field_image')->entity, $current_langcode);
