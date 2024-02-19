@@ -12,3 +12,12 @@ pickadate:
     theme:
       /libraries/pickadate_js/lib/themes/classic.css: {}
       /libraries/pickadate_js/lib/themes/classic.date.css: {}
+
+custom_datepicker:
+  js:
+    js/customDatepicker.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - eic_admin/pickadate
