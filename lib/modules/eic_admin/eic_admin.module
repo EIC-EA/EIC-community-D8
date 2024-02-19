@@ -97,7 +97,8 @@ function eic_admin_theme_suggestions_input_alter(array &$suggestions, array $var
  */
 function eic_admin_preprocess_input__date__calendar(&$variables) {
   $eu_short_date_pattern = DateFormat::load('eu_short_date')->getPattern();
-  $variables['element']['#attached']['library'][] = 'eic_community/pikaday';
+  $variables['#attached']['drupalSettings']['elementId'] = '#'.$variables['element']['#id'];
+  $variables['#attached']['library'][] = 'eic_admin/custom_datepicker';
   $variables['element']['#date_date_format']= $eu_short_date_pattern;
   $variables['attributes']['type'] = 'text';
   $variables['eu_short_date'] = $eu_short_date_pattern;
