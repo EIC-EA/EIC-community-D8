@@ -12,32 +12,9 @@
  * @ingroup themeable
  */
 #}
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
-<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-{#{{ dd() }}#}
-<input{{ attributes }} />{{ children }}
-<script>
-  var picker = new Pikaday({
-    field: document.getElementById('{{ attributes.id }}'),
-    format: '{{ eu_short_date }}',
-    minDate: new Date(),
-    defaultDate: '{{ attributes.value }}',
-    setDefaultDate: true,
-    toString(date, format = '{{ eu_short_date }}') {
-      // you should do formatting based on the passed format,
-      // but we will just return 'D/M/YYYY' for simplicity
-      const day = date.getDate();
-      const month = date.getMonth() + 1;
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    },
-    parse(dateString, format = 'Y-m-d') {
-      // dateString is the result of `toString` method
-      const parts = dateString.split('/');
-      const day = parseInt(parts[0], 10);
-      const month = parseInt(parts[1], 10) - 1;
-      const year = parseInt(parts[2], 10);
-      return new Date(year, month, day);
-    }
-  });
-</script>
+<input{{ attributes }} data-value="{{ attributes.value }}"/>{{ children }}
+<style>
+  #{{ attributes.id }}_table td{
+    text-align: center;
+  }
+</style>
