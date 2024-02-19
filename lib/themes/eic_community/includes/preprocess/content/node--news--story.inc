@@ -115,7 +115,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 
     // Privacy information, if current user is anonymous remove the author.
     if (\Drupal::currentUser()->isAnonymous()) {
-      $item['author'] =  NULL;
+      $item['author'] = NULL;
     }
   }
 
