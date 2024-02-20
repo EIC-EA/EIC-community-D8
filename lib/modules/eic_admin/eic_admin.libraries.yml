@@ -22,5 +22,5 @@ custom_datepicker:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/drupalSettings
+    - core/once
     - eic_admin/pickadate
