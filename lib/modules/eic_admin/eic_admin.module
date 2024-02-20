@@ -8,6 +8,7 @@
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\eic_admin\Constants\Datepicker;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -80,11 +81,20 @@ function eic_admin_form_alter(array &$form, FormStateInterface $form_state, $for
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_admin_preprocess_input__date__calendar(&$variables) {
-  $eu_short_date_pattern = DateFormat::load('eu_short_date')->getPattern();
-  $variables['#attached']['drupalSettings']['elementId'] = '#'.$variables['element']['#id'];
-  $variables['#attached']['library'][] = 'eic_admin/custom_datepicker';
-  $variables['element']['#date_date_format']= $eu_short_date_pattern;
-  $variables['attributes']['type'] = 'text';
-  $variables['eu_short_date'] = $eu_short_date_pattern;
+function eic_admin_preprocess_input(&$variables) {
+
+  if ($variables['theme_hook_original'] === 'input__date' && $variables['element']['#attributes']['type'] === 'date' && in_array($variables['element']['#name'], Datepicker::FIELDS_OVERRIDE_DATEPICKER)) {
+    // class js-datepicker-custom or sth
+    $eu_short_date_pattern = DateFormat::load('eu_short_date')->getPattern();
+
+    $variables['#attached']['library'][] = 'eic_admin/custom_datepicker';
+    $variables['#attached']['drupalSettings']['elementId'][] = '#'.$variables['element']['#id'];
+    $variables["attributes"]["class"][] = 'js-datepicker-custom';
+    $variables['element']['#date_date_format']= $eu_short_date_pattern;
+    $variables['attributes']['type'] = 'text';
+    $variables['attributes']['placeholder'] = 'DD/MM/YYYY';
+    $variables['attributes']['data-value'] = $variables['attributes']['value'];
+    $variables['eu_short_date'] = $eu_short_date_pattern;
+  }
+
 }
