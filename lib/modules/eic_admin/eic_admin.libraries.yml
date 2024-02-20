@@ -14,6 +14,9 @@ pickadate:
       /libraries/pickadate_js/lib/themes/classic.date.css: {}
 
 custom_datepicker:
+  css:
+    theme:
+      css/customDatepicker.css: {}
   js:
     js/customDatepicker.js: {}
   dependencies:
