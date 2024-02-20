@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a29ad163f11d189487fa56b3b97664e1",
+    "content-hash": "b1cf99ff94a4cd2392f31eb34ddd7d45",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6868,7 +6868,8 @@
                     }
                 },
                 "patches_applied": {
-                    "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch"
+                    "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
+                    "EICNET-3009: Change date format on \"Published on\" description": "patches/publication_date/EICNET-3009-change-date-format-published-on-description.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
