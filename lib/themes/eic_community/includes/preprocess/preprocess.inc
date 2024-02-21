@@ -25,7 +25,7 @@ function eic_community_preprocess(&$variables) {
 }
 
 /**
- * Transform a timestamp for a storybook template.
+ * Transform a timestamp as time ago.
  *
  * @param int $timestamp
  *   The timestamp.
@@ -37,4 +37,17 @@ function eic_community_get_teaser_time_display(int $timestamp) {
   $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($timestamp, ['granularity' => 1]);
 
   return t('@time ago', ['@time' => $time_ago]);
+}
+
+/**
+ * Transform a timestamp as formatted date.
+ *
+ * @param int $timestamp
+ *   The timestamp.
+ *
+ * @return string
+ *   The date.
+ */
+function eic_community_get_teaser_formatted_date_display(int $timestamp) {
+  return strtoupper(date('d F Y'));
 }

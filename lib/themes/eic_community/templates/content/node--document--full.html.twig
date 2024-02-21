@@ -1,6 +1,10 @@
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
+      {% include "@theme/patterns/components/timestamp.html.twig" with {
+        label: formatted_date.label,
+        icon_file_path: eic_icon_path
+      }|default({}) %}
       {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
     {% endblock %}
 
