@@ -1,0 +1,4 @@
+/* Fix admin theme table.css override. */
+.picker__table td {
+  text-align: center;
+}

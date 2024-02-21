@@ -1,7 +1,7 @@
 admin_ux:
   css:
     theme:
-      css/admin_ux.css: {}
+      css/admin-ux.css: {}
 
 pickadate:
   version: 3.6.4
@@ -16,9 +16,9 @@ pickadate:
 custom_datepicker:
   css:
     theme:
-      css/customDatepicker.css: {}
+      css/custom-datepicker.css: {}
   js:
-    js/customDatepicker.js: {}
+    js/custom-datepicker.js: {}
   dependencies:
     - core/jquery
     - core/drupal
