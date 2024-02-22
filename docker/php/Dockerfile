@@ -49,10 +49,10 @@ RUN echo 'pm.max_children = 10' >> /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY --from=composer /usr/bin/composer /usr/local/bin/
 
 RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}') \
-  && echo ${latest_drush_version}
+  && echo ${latest_drush_version} \
   && curl -s -L https://github.com/drush-ops/drush/releases/download/${latest_drush_version}/drush.phar -o /usr/local/bin/drush \
   && chmod +x /usr/local/bin/drush \
-  && cat drush
+  && cat drush \
   # smoke test
   && drush version
 
