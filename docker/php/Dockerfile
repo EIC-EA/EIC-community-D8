@@ -9,6 +9,12 @@ ARG GID=1000
 ENV DEBIAN_FRONTEND noninteractive
 ARG DRUSH_LAUNCHER_VERSION=8
 
+RUN curl -s https://api.github.com/repos/drush-ops/drush/releases
+RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name
+RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.'
+RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 
+RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}')
+
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
   && apt-get -y install apt-transport-https apt-utils build-essential xorg \
     libssl-dev libxrender-dev wget gdebi \
