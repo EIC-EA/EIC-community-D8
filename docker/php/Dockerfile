@@ -8,12 +8,7 @@ ARG UID=1000
 ARG GID=1000
 ENV DEBIAN_FRONTEND noninteractive
 ARG DRUSH_LAUNCHER_VERSION=8
-
-RUN curl -s https://api.github.com/repos/drush-ops/drush/releases
-RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name
-RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.'
-RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 
-RUN curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}')
+ARG DRUSH_VERSION=8.4.12
 
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
   && apt-get -y install apt-transport-https apt-utils build-essential xorg \
@@ -54,11 +49,10 @@ RUN echo 'pm.max_children = 10' >> /usr/local/etc/php-fpm.d/zz-docker.conf
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/
 
-RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}') \
-  && echo ${latest_drush_version} \
+#RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}') \
+RUN latest_drush_version=${DRUSH_VERSION} \
   && curl -s -L https://github.com/drush-ops/drush/releases/download/${latest_drush_version}/drush.phar -o /usr/local/bin/drush \
   && chmod +x /usr/local/bin/drush \
-  && cat drush \
   # smoke test
   && drush version
 
