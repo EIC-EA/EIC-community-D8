@@ -199,7 +199,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OpenEuropa\\Site\\Tests\\": "./tests/"
+            "OpenEuropa\\Site\\Tests\\": "./tests/",
+            "Drupal\\Tests\\oe_media\\": "./web/modules/contrib/oe_media/tests/src/"
         }
     },
     "conflict": {

@@ -1,31 +1,83 @@
 @api
 @javascript
 
-Feature: Author information should not be visible to anonymous users.
+Feature: Personal user information should not be visible to not logged in users.
 
-  Scenario: Create a wiki page.
-    Given I am logged in as a user with the "administrator" role
-    And I fill in "First name" with "behat_user"
-    And I fill in "Last name" with "programmatically_created"
-    When I switch to tab "1"
-    And I select "Greece" from "Country"
-    When I switch to the CKEditor iframe and fill it with "Behat User's content"
-    And I fill in "City" with "Thessaloniki"
-    When I switch to tab "0"
-    And I press "Save"
-    When I visit "http://eic-community.ddev.site/node/add/wiki_page"
-    And I fill in "Title" with "Behat Wiki Page"
-    When I switch to the CKEditor iframe and fill it with "Wiki page Content"
-    And I select "Published" from "Save as"
-    And I press "Save"
-
-  Scenario: Wiki page author's info should not be accessible to anonymous users.
+  Scenario: Check if information of "Wiki Page" author is visible to authorised and anonymous users.
+    Given users:
+      |name      | field_first_name         | field_last_name             |mail                   | roles         |
+      |behat     | behat_user               | wiki_page_author_testing    |member@behat.localhost | administrator |
+    Given the user "behat" has profile with data:
+      |field_body         | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  | field_vocab_language |
+      |behat profile body | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      | 402                  |
+    Given I am logged in as "behat"
+    Given "wiki_page" content:
+      |title             | field_body     | field_vocab_topics    | moderation_state | author | sticky | promote |
+      |Behat Wiki Page   | wiki page body | Business development  | published        | behat  | 1      | 1       |
+    And I run cron
+    And I visit the "Business development" overview page
+    And I should see the link "behat_user wiki_page_author_testing" in the "content" region
+    Given I am not logged in
     Given I am an anonymous user
-    And I visit "http://eic-community.ddev.site/topics/business-development"
-    Then I should see the text "Related wiki pages"
-    And I save screenshot
-    Then I should not see the "wiki page" author info
+    And I visit the "Business development" overview page
+    And I should not see the text "behat_user wiki_page_author_testing" in the "content" region
 
+  Scenario: Check if information of "Document" author is visible to authorised and anonymous users.
+    Given users:
+      |name      | field_first_name         | field_last_name           |mail                   | roles         |
+      |behat     | behat_user               | document_author_testing   |member@behat.localhost | administrator |
+    Given the user "behat" has profile with data:
+      |field_body           | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  | field_vocab_language |
+      |behat profile body   | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      | 402                  |
+    Given I am logged in as "behat"
+    Given "document" content:
+      | name              | file       | author | title             |
+      | My Behat Document | sample.pdf | behat  | My Behat Document |
+    Given "document" content:
+      | title          | field_body       | field_document_media    | field_vocab_topics    | author   | sticky | promote | moderation_state |
+      | Behat Document | document body    | sample.pdf              | Business development  | behat    | 1      | 1       | published        |
+    And I run cron
+    And I visit the "Business development" overview page
+    And I should see the link "behat_user document_author_testing" in the "content" region
+    Given I am not logged in
+    Given I am an anonymous user
+    And I visit the "Business development" overview page
+    And I should not see the text "behat_user document_author_testing" in the "content" region
 
+  Scenario: Check if information of "Discussion" author is visible to authorised and anonymous users.
+    Given users:
+      |name      | field_first_name         | field_last_name             |mail                   | roles         |
+      |behat     | behat_user               | discussion_author_testing   |member@behat.localhost | administrator |
+    Given the user "behat" has profile with data:
+      |field_body           | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  | field_vocab_language |
+      |behat profile body   | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      | 402                  |
+    Given I am logged in as "behat"
+    Given "discussion" content:
+      | title            | field_body       | field_vocab_topics    | field_discussion_type | author   | moderation_state | sticky | promote |
+      | Behat Discussion | discussion body  | Business development  | Information           | behat    | published        | 1      | 1       |
+    And I run cron
+    And I visit the "Business development" overview page
+    And I should see the link "behat_user discussion_author_testing" in the "content" region
+    Given I am not logged in
+    Given I am an anonymous user
+    And I visit the "Business development" overview page
+    And I should not see the text "behat_user discussion_author_testing" in the "content" region
 
-
+  Scenario: Check if information of "Group" author is visible to authorised and anonymous users.
+    Given users:
+      |name      | field_first_name         | field_last_name         |mail                   | roles         |
+      |behat     | behat_user               | group_author_testing    |member@behat.localhost | administrator |
+    Given the user "behat" has profile with data:
+      |field_body         | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  |
+      |behat profile body | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      |
+    Given I am logged in as "behat"
+    Given the user "behat" has group with data:
+      |title        | field_body    | field_vocab_topics   | author   | moderation_state | visibility |
+      |Behat Group  | group body    | Business development | behat    | published        | Public (The group and all its content will be viewed by anonymous users and logged in users) |
+    And I run cron
+    And I visit the "Business development" overview page
+    And I should see the link "behat_user group_author_testing" in the "content" region
+    Given I am not logged in
+    Given I am an anonymous user
+    And I visit the "Business development" overview page
+    And I should not see the text "behat_user group_author_testing" in the "content" region
