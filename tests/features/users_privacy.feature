@@ -8,8 +8,8 @@ Feature: Personal user information should not be visible to not logged in users.
       |name      | field_first_name         | field_last_name             |mail                   | roles         |
       |behat     | behat_user               | wiki_page_author_testing    |member@behat.localhost | administrator |
     Given the user "behat" has profile with data:
-      |field_body         | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  | field_vocab_language |
-      |behat profile body | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      | 402                  |
+      |field_body         | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  |
+      |behat profile body | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      |
     Given I am logged in as "behat"
     Given "wiki_page" content:
       |title             | field_body     | field_vocab_topics    | moderation_state | author | sticky | promote |
@@ -27,8 +27,8 @@ Feature: Personal user information should not be visible to not logged in users.
       |name      | field_first_name         | field_last_name           |mail                   | roles         |
       |behat     | behat_user               | document_author_testing   |member@behat.localhost | administrator |
     Given the user "behat" has profile with data:
-      |field_body           | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  | field_vocab_language |
-      |behat profile body   | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      | 402                  |
+      |field_body           | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  |
+      |behat profile body   | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      |
     Given I am logged in as "behat"
     Given "document" content:
       | name              | file       | author | title             |
@@ -49,8 +49,8 @@ Feature: Personal user information should not be visible to not logged in users.
       |name      | field_first_name         | field_last_name             |mail                   | roles         |
       |behat     | behat_user               | discussion_author_testing   |member@behat.localhost | administrator |
     Given the user "behat" has profile with data:
-      |field_body           | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  | field_vocab_language |
-      |behat profile body   | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      | 402                  |
+      |field_body           | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  |
+      |behat profile body   | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      |
     Given I am logged in as "behat"
     Given "discussion" content:
       | title            | field_body       | field_vocab_topics    | field_discussion_type | author   | moderation_state | sticky | promote |
@@ -71,7 +71,7 @@ Feature: Personal user information should not be visible to not logged in users.
       |field_body         | field_vocab_topic_expertise    | field_vocab_topic_interest       |field_vocab_geo  |
       |behat profile body | Biotechnology,Energy,Finance   | Biotechnology,Energy,Finance     |203,204,205      |
     Given I am logged in as "behat"
-    Given the user "behat" has group with data:
+    Given there is a group with data:
       |title        | field_body    | field_vocab_topics   | author   | moderation_state | visibility |
       |Behat Group  | group body    | Business development | behat    | published        | Public (The group and all its content will be viewed by anonymous users and logged in users) |
     And I run cron

@@ -91,9 +91,9 @@ class FeatureContext extends RawDrupalContext {
   /**
    * Create group with given author.
    *
-   * @Given the user :name has group with data:
+   * @Given there is a group with data:
    */
-  public function createGroup($name, TableNode $usersTable) {
+  public function createGroup(TableNode $usersTable) {
 
     // Get all values from table.
     $fields = $usersTable->getRow(0);
