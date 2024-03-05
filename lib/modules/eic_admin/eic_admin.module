@@ -37,9 +37,7 @@ function eic_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
       // Filters out the query by the selected group visibilities.
       $query->addWhere($group, 'oec_group_visibility.type', ['sensitive'], 'NOT IN');
     }
-
   }
-
 }
 
 /**
