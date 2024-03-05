@@ -126,6 +126,7 @@
         "drupal/data_fixtures": "^1.8",
         "drupal/devel": "^5.1",
         "drupal/drupal-extension": "~4.0",
+        "mglaman/phpstan-drupal": "^0.12.13",
         "phpspec/prophecy-phpunit": "^2"
     },
     "scripts": {
