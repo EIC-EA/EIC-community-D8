@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b65f05358027c6b98338f031fe745b4f",
+    "content-hash": "8da7ec98c82c20d034157bde24014dac",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -16762,6 +16762,28 @@
                 }
             ],
             "time": "2022-04-26T19:55:44+00:00"
+        },
+        {
+            "name": "ec-europa/toolkit",
+            "version": "4.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ec-europa/toolkit.git",
+                "reference": "1ac964a6df92b868e9ba27cb86054dd3aa777b03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ec-europa/toolkit/zipball/1ac964a6df92b868e9ba27cb86054dd3aa777b03",
+                "reference": "1ac964a6df92b868e9ba27cb86054dd3aa777b03",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "EUPL-1.1"
+            ],
+            "description": "NextEuropa Toolkit packaged for composer",
+            "time": "2020-10-19T08:08:44+00:00"
         },
         {
             "name": "fabpot/goutte",
