@@ -58,6 +58,11 @@ class CronOperations implements ContainerInjectionInterface {
   /**
    * Reindex content search api queue name.
    */
+  const REMOVE_CONTENT_API_QUEUE = 'eic_group_remove_content';
+
+  /**
+   * Reindex content search api queue name.
+   */
   const LAST_TIME_REINDEX_STATE_ID = 'eic_groups_last_time_reindex';
 
   /**
@@ -192,6 +197,7 @@ class CronOperations implements ContainerInjectionInterface {
     $this->processGroupWaitingApprovalReminder();
     $this->processGroupInvitationsReminder();
     $this->processContentSolrReindex();
+    $this->processGroupContentRemove();
   }
 
   /**
@@ -456,6 +462,26 @@ class CronOperations implements ContainerInjectionInterface {
 
       \Drupal::state()->set(self::LAST_TIME_REINDEX_STATE_ID, $now);
     }
+  }
+
+  /**
+   * Trigger queue each minutes to remove content in the background.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  private function processGroupContentRemove() {
+      $queue = $this->queueFactory->get(self::REMOVE_CONTENT_API_QUEUE);
+      $queue_worker = $this->queueManager->createInstance(self::REMOVE_CONTENT_API_QUEUE);
+
+      while ($item = $queue->claimItem()) {
+        try {
+          $queue_worker->processItem($item->data);
+          $queue->deleteItem($item);
+        } catch (SuspendQueueException $e) {
+          $queue->releaseItem($item);
+          break;
+        }
+      }
   }
 
 }
