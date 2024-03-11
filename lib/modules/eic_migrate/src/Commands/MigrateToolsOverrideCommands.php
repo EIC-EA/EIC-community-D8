@@ -8,7 +8,7 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManager;
-use Drupal\migrate_tools\Commands\MigrateToolsCommands;
+use Drupal\migrate_tools\Drush\Commands\MigrateToolsCommands;
 use Drupal\migrate_tools\MigrateTools;
 
 /**
@@ -117,7 +117,7 @@ class MigrateToolsOverrideCommands extends MigrateToolsCommands {
       'skip-progress-bar' => FALSE,
       'sync' => FALSE,
     ]
-  ) {
+  ): void {
     $this->logger()->notice('Migrations import started.');
     $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, TRUE);
 
@@ -163,7 +163,7 @@ class MigrateToolsOverrideCommands extends MigrateToolsCommands {
   /**
    * {@inheritdoc}
    */
-  protected function executeMigration(MigrationInterface $migration, $migration_id, array $options = []) {
+  protected function executeMigration(MigrationInterface $migration, $migration_id, array $options = []): void {
     $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, self::MIGRATION_ID_MESSAGES === $migration_id);
     parent::executeMigration($migration, $migration_id, $options);
     $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, FALSE);
@@ -172,7 +172,7 @@ class MigrateToolsOverrideCommands extends MigrateToolsCommands {
   /**
    * @inheritDoc
    */
-  public function resetStatus($migration_id = '') {
+  public function resetStatus($migration_id = ''): void {
     $this->logger()->notice('Reseting status for migration: ' . $migration_id);
     $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, FALSE);
     parent::resetStatus($migration_id);
