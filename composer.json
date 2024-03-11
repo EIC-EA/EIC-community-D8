@@ -209,7 +209,8 @@
             "cweagans/composer-patches": true,
             "php-http/discovery": true,
             "drupal/core-composer-scaffold": true,
-            "wikimedia/composer-merge-plugin": true
+            "wikimedia/composer-merge-plugin": true,
+            "zaporylie/composer-drupal-optimizations": true
         }
     }
 }
