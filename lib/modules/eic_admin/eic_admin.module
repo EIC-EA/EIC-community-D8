@@ -7,6 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\eic_admin\Constants\Datepicker;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -53,6 +54,28 @@ function eic_admin_preprocess_views_view_field(&$vars) {
     $vars['output'] = $flag_label;
     $vars['field']->last_render = $flag_label;
   }
+
+  if ($vars['view']->current_display === 'page_admin_groups') {
+    $group = $vars['row']->_entity;
+
+    if (!$group instanceof \Drupal\group\Entity\GroupInterface) {
+      return;
+    }
+
+    $is_group_sensitive = \Drupal::service('eic_groups.helper')->isGroupSensitive($group);
+    //We only alter on sensitive group which user has no permissions.
+    if ($group->access('view') || !$is_group_sensitive) {
+      return;
+    }
+
+    if ($vars['field']->field === 'label') {
+      $vars['output'] = t('Access denied: sensitive group with no access.');
+      $vars['field']->last_render = t('Access denied: sensitive group with no access.');
+    } else {
+      $vars['output'] = '';
+      $vars['field']->last_render = '';
+    }
+  }
 }
 
 /**
@@ -84,4 +107,25 @@ function eic_admin_form_alter(array &$form, FormStateInterface $form_state, $for
   if ($entity->getEntityTypeId() == 'node' && $currentTheme->getName() == $adminThemeName) {
     $form['#attached']['library'][] = 'eic_admin/admin_ux';
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_admin_preprocess_input(&$variables) {
+
+  if ($variables['theme_hook_original'] === 'input__date'
+    && $variables['element']['#attributes']['type'] === 'date'
+    && in_array($variables['element']['#name'], Datepicker::FIELDS_OVERRIDE_DATEPICKER)) {
+
+    // Attach custom library and add class identifier to element.
+    $variables['#attached']['library'][] = 'eic_admin/custom_datepicker';
+    $variables["attributes"]["class"][] = 'js-datepicker-custom';
+
+    // Set custom values for the library.
+    $variables['attributes']['type'] = 'text';
+    $variables['attributes']['placeholder'] = 'DD/MM/YYYY';
+    $variables['attributes']['data-value'] = $variables['attributes']['value'];
+  }
+
 }

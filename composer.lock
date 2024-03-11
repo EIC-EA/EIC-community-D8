@@ -6799,6 +6799,15 @@
             }
         },
         {
+            "name": "drupal/pickadate_js",
+            "version": "3.6.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/amsul/pickadate.js/archive/refs/tags/3.6.4.zip"
+            },
+            "type": "drupal-library"
+        },
+        {
             "name": "drupal/profile",
             "version": "1.7.0",
             "source": {

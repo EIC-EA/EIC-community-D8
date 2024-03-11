@@ -2,3 +2,25 @@ admin_ux:
   css:
     theme:
       css/admin_ux.css: {}
+
+pickadate:
+  version: 3.6.4
+  js:
+    /libraries/pickadate_js/lib/picker.js: {}
+    /libraries/pickadate_js/lib/picker.date.js: {}
+  css:
+    theme:
+      /libraries/pickadate_js/lib/themes/classic.css: {}
+      /libraries/pickadate_js/lib/themes/classic.date.css: {}
+
+custom_datepicker:
+  css:
+    theme:
+      css/customDatepicker.css: {}
+  js:
+    js/customDatepicker.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - eic_admin/pickadate

@@ -81,6 +81,7 @@
         "drupal/paragraph_view_mode": "^2.0",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.8",
+        "drupal/pickadate_js": "^3.6",
         "drupal/profile": "^1.2",
         "drupal/publication_date": "^2.0@beta",
         "drupal/raven": "^3.2",
@@ -177,7 +178,7 @@
             "web/libraries/{$name}": [
                 "type:drupal-library"
             ],
-            "web/libraries/ckeditor/plugins/{$name}" : [
+            "web/libraries/ckeditor/plugins/{$name}": [
                 "type:ckeditor-plugin"
             ],
             "web/modules/contrib/{$name}": [
