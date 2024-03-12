@@ -6,6 +6,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "amsul/pickadate_js": "^3.6",
         "php": ">=7.4",
         "ext-json": "*",
         "ckeditor/colorbutton": "^4.18",
@@ -177,7 +178,7 @@
             "web/libraries/{$name}": [
                 "type:drupal-library"
             ],
-            "web/libraries/ckeditor/plugins/{$name}" : [
+            "web/libraries/ckeditor/plugins/{$name}": [
                 "type:ckeditor-plugin"
             ],
             "web/modules/contrib/{$name}": [

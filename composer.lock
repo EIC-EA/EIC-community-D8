@@ -4,8 +4,17 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e38d924aa0d6759870cb70e187444e08",
+    "content-hash": "cc32eeba5ece1cf58fa257bcab3e1dcf",
     "packages": [
+        {
+            "name": "amsul/pickadate_js",
+            "version": "3.6.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/amsul/pickadate.js/archive/refs/tags/3.6.4.zip"
+            },
+            "type": "drupal-library"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "1.3.0",
