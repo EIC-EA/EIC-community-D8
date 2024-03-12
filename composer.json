@@ -20,6 +20,7 @@
         "composer/installers": "^1.9",
         "composer/semver": "^3.3",
         "cweagans/composer-patches": "^1.7",
+        "drevops/behat-screenshot": "^1.2",
         "drupal/address": "^1.9",
         "drupal/admin_toolbar": "^3.0",
         "drupal/allowed_formats": "^1.5",
@@ -116,6 +117,7 @@
         "openeuropa/oe_media": "^1.13",
         "openeuropa/oe_time_caching": "^1.1",
         "openeuropa/oe_webtools": "^1.13",
+        "rdx/behat-variables": "^1.2",
         "softcreatr/jsonpath": "^0.7.5",
         "twig/twig": "2.15.3 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
@@ -194,7 +196,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OpenEuropa\\Site\\Tests\\": "./tests/"
+            "OpenEuropa\\Site\\Tests\\": "./tests/",
+            "Drupal\\Tests\\oe_media\\": "./web/modules/contrib/oe_media/tests/src/"
         }
     },
     "conflict": {
