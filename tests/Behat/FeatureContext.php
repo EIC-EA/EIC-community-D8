@@ -13,7 +13,6 @@ use Drupal\profile\Entity\Profile;
  * Defines step definitions that are generally useful for the project.
  */
 class FeatureContext extends RawDrupalContext {
-
   /**
    * Checks that a 403 Access Denied error occurred.
    *
@@ -62,6 +61,7 @@ class FeatureContext extends RawDrupalContext {
         'type' => 'member',
         'uid' => key($user),
       ]);
+      
       // Set field values for profile.
       $term_ids = [];
       foreach ($table as $key => $value) {
@@ -77,6 +77,7 @@ class FeatureContext extends RawDrupalContext {
           $profile->set($key, $term_ids);
         }
       }
+      
       // Set the country and city values.
       $address_values = [
         'locality' => 'Mountain View',
@@ -94,7 +95,6 @@ class FeatureContext extends RawDrupalContext {
    * @Given there is a group with data:
    */
   public function createGroup(TableNode $usersTable) {
-
     // Get all values from table.
     $fields = $usersTable->getRow(0);
     $values = $usersTable->getRow(1);
@@ -106,6 +106,7 @@ class FeatureContext extends RawDrupalContext {
       $term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $topic]);
       $term_ids[] = key($term);
     }
+    
     // Create group.
     $group = Group::create([
       'label' => $table['title'],
@@ -117,6 +118,7 @@ class FeatureContext extends RawDrupalContext {
       'moderation_state' => $table['moderation_state'],
       'author' => $table['author']
     ]);
+    
     // Save the group entity.
     $group->save();
   }
