@@ -42,8 +42,7 @@ class FeatureContext extends RawDrupalContext {
    *
    * @Given the user :name has profile with data:
    */
-  public function createProfile($name, TableNode $usersTable)
-  {
+  public function createProfile($name, TableNode $usersTable) {
     $user = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['name' => $name]);
     $profile = \Drupal::entityTypeManager()
       ->getStorage('profile')
