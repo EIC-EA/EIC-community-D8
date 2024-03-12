@@ -4,3 +4,8 @@ services:
     arguments: ['@entity_type.manager', '@database']
     tags:
       - { name: drush.command }
+  eic_groups.commands.update_organisations_ownership:
+    class: Drupal\eic_groups\Commands\UpdateOrganisationsOwnership
+    arguments: ['@entity_type.manager', '@eic_flags.transfer_ownership_request_handler']
+    tags:
+      - { name: drush.command }
