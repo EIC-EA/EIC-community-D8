@@ -5,8 +5,8 @@ Feature: Add contributors when creating content
 
   Scenario: Admins can be added as contributors when creating content.
     Given users:
-      |name      | field_first_name         | field_last_name             |mail                   | roles         |
-      |behat     | behat_user               | contributor_testing         |member@behat.localhost | administrator |
+      |name      | field_first_name         | field_last_name             |mail                   | roles                       |
+      |behat     | behat_user               | contributor_testing         |member@behat.localhost | administrator, trusted_user |
     And I get the "behat" uid
     And I save that into "USER"
     Given the user "behat" has profile with data:
@@ -26,4 +26,15 @@ Feature: Add contributors when creating content
     And I fill in "field_story_paragraphs[0][subform][field_user_ref][0][target_id]" with "behat_user contributor_testing (<<USER>>)"
     And I fill in "Revision message" with "revision message"
     And I press the "Publish the content" button
+    And I should not see the text "This entity (user: <<USER>>) cannot be referenced."
+    Given "gallery" content:
+      | title         | field_body      | field_language  | field_gallery_slide_media-media-library-update-field_gallery_slides-0-subform | field_vocab_topics    | author   | moderation_state |
+      | Behat Gallery | galllery body   | English         | Cat Image                                                                     | Business development  | behat    | published        |
+    And I visit "/library/behat-gallery/edit"
+    And I follow "Related contributors"
+    And I press the "Add Contributor" button
+    And I select "Platform member" from "field_related_contributors[0][subform][paragraph_view_mode][0][value]"
+    And I fill in "field_related_contributors[0][subform][field_user_ref][0][target_id]" with "behat_user contributor_testing (<<USER>>)"
+    And I fill in "Revision message" with "revision message"
+    And I press the "Save" button
     And I should not see the text "This entity (user: <<USER>>) cannot be referenced."
