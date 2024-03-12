@@ -14,6 +14,7 @@ settings:
     twitter: Twitter
     facebook: Facebook
     linkedin: LinkedIn
+    youtube: Youtube
   allowed_values_function: ''
 module: typed_link
 locked: false

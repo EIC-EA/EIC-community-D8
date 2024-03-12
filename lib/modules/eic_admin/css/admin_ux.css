@@ -1,0 +1,19 @@
+/* Sticky advanced (sidebar) in node edit. */
+@media screen and (min-width: 768px) {
+  .node-form .layout-region-node-secondary {
+    position: sticky;
+    top: 125px;
+  }
+}
+
+/* Fix form submission buttons layout. */
+.node-form .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.node-form .form-actions input {
+  margin: 0;
+}
