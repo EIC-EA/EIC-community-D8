@@ -124,12 +124,14 @@
         "wikimedia/composer-merge-plugin": "^2.0"
     },
     "require-dev": {
+        "drevops/behat-screenshot": "^1.2",
         "drupal/data_fixtures": "^1.8",
         "drupal/devel": "^5.1",
         "drupal/drupal-extension": "~4.0",
         "ec-europa/toolkit": "^4.1",
         "mglaman/phpstan-drupal": "^0.12.13",
-        "phpspec/prophecy-phpunit": "^2"
+        "phpspec/prophecy-phpunit": "^2",
+        "rdx/behat-variables": "^1.2"
     },
     "scripts": {
         "post-install-cmd": [
@@ -194,7 +196,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OpenEuropa\\Site\\Tests\\": "./tests/"
+            "OpenEuropa\\Site\\Tests\\": "./tests/",
+            "Drupal\\Tests\\oe_media\\": "./web/modules/contrib/oe_media/tests/src/"
         }
     },
     "conflict": {

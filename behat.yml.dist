@@ -2,31 +2,54 @@ default:
   suites:
     default:
       paths:
-        - %paths.base%/tests/features
+        - '%paths.base%/tests/features'
       contexts:
         - Drupal\DrupalExtension\Context\MarkupContext
         - Drupal\DrupalExtension\Context\MessageContext
         - Drupal\DrupalExtension\Context\MinkContext
         - OpenEuropa\Site\Tests\Behat\DrupalContext
         - OpenEuropa\Site\Tests\Behat\FeatureContext
+        - DrevOps\BehatScreenshotExtension\Context\ScreenshotContext
+        - rdx\behatvars\BehatVariablesContext
+        - Drupal\Tests\oe_media\Behat\MediaContext
       filters:
-        tags: "${behat.tags}"
+        tags: "~@wip"
   extensions:
+    rdx\behatvars\BehatVariablesExtension: ~
+    DrevOps\BehatScreenshotExtension:
+      dir: '%paths.base%/tests/screenshots'
+      fail: true
+      fail_prefix: 'failed_'
+      purge: true
     Drupal\MinkExtension:
+      files_path: '%paths.base%/tests/fixtures/'
       goutte: ~
       ajax_timeout: 10
-      browser_name: '${selenium.browser}'
+      browser_name: 'chrome'
       javascript_session: 'selenium2'
       selenium2:
-        wd_host: '${selenium.host}:${selenium.port}/wd/hub'
-        capabilities: { "browser": '${selenium.browser}', "version": "*" }
-      base_url: "${drupal.base_url}"
+        wd_host: 'http://selenium-chrome:4444/wd/hub'
+        capabilities:
+          browser: 'chrome'
+          marionette: true
+          chrome:
+            switches:
+              - "--headless"
+              - "--disable-gpu"
+              - "--no-sandbox"
+              - "--disable-dev-shm-usage"
+          extra_capabilities:
+            unexpectedAlertBehaviour: accept
+            goog:chromeOptions:
+              w3c: false
+      base_url: "http://eic-community.ddev.site"
     Drupal\DrupalExtension:
       api_driver: "drupal"
       drupal:
-        drupal_root: "${drupal.root}"
+        drupal_root: "web"
       region_map:
         page: "body"
+        content: ".ecl-editorial-article"
         header: ".ecl-site-header"
         page header: ".ecl-page-header__body"
         navigation: ".ecl-navigation-menu"
