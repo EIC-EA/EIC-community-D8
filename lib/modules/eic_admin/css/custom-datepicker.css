@@ -1,9 +1,0 @@
-/* Fix admin theme table.css override. */
-.picker__table td {
-  text-align: center;
-}
-
-/* Fix small screens overflow bug. */
-#edit-advanced {
-  position: relative;
-}

@@ -77,24 +77,3 @@ function eic_admin_form_alter(array &$form, FormStateInterface $form_state, $for
     $form['#attached']['library'][] = 'eic_admin/admin_ux';
   }
 }
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function eic_admin_preprocess_input(&$variables) {
-
-  if ($variables['theme_hook_original'] === 'input__date'
-    && $variables['element']['#attributes']['type'] === 'date'
-    && in_array($variables['element']['#name'], Datepicker::FIELDS_OVERRIDE_DATEPICKER)) {
-
-    // Attach custom library and add class identifier to element.
-    $variables['#attached']['library'][] = 'eic_admin/custom_datepicker';
-    $variables["attributes"]["class"][] = 'js-datepicker-custom';
-
-    // Set custom values for the library.
-    $variables['attributes']['type'] = 'text';
-    $variables['attributes']['placeholder'] = 'DD/MM/YYYY';
-    $variables['attributes']['data-value'] = $variables['attributes']['value'];
-  }
-
-}
