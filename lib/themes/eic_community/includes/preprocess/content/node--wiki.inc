@@ -50,6 +50,11 @@ function eic_community_preprocess_node__wiki_page(array &$variables) {
       // Remove unwanted items.
       $teaser['stats'] = [];
 
+      // Privacy information, if current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $teaser['author'] =  NULL;
+      }
+
       $variables['story_item'] = $teaser;
       break;
 

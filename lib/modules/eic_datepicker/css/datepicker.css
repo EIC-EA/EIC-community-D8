@@ -1,0 +1,42 @@
+#edit-published-at-0-value {
+  display: flex;
+  gap: 10px;
+}
+
+#edit-published-at-0-value-date {
+  height: 100%;
+}
+
+td.presentation > .picker__day {
+  text-align: center;
+}
+
+/* Override pickadate library styling with Seven's theme form styling for dates.*/
+.form-disabled input.picker__input.form-date {
+  border-color: #d4d4d4;
+  background-color: hsla(0, 0%, 0%, 0.08);
+  box-shadow: none;
+}
+
+input.picker__input.form-date {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 0.3em 0.4em 0.3em 0.5em; /* LTR */
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  color: #595959;
+  border: 1px solid #b8b8b8;
+  border-top-color: #999;
+  border-radius: 2px;
+  background: #fcfcfa;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.125);
+  font-size: 1em;
+}
+
+input.picker__input.form-date:focus,
+input.picker__input--target.form-date {
+  border-color: #40b6ff;
+  outline: 0;
+  background-color: #fff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
+}

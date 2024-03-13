@@ -287,8 +287,11 @@ function _get_profile_image_array(EntityInterface $user, $relative_url = TRUE): 
  * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
 function eic_community_get_teaser_user_display(UserInterface $user, $picture_image_style = 'crop_36x36') {
+  $current_user = \Drupal::currentUser();
+
+  // Privacy information. If current user is anonymous set user to 'Someone'.
   $author = [
-    'name' => $user->getDisplayName(),
+    'name' => $current_user->isAnonymous() ? t('Someone') : $user->getDisplayName(),
   ];
 
   // We add the user profile page URL if the current user has access to it.
@@ -296,7 +299,6 @@ function eic_community_get_teaser_user_display(UserInterface $user, $picture_ima
     $author['path'] = $user->toUrl()->toString();
   }
 
-  $current_user = \Drupal::currentUser();
   if (!$user->get('field_media')->isEmpty() && !$current_user->isAnonymous()) {
     $media_entity = $user->get('field_media')->entity;
     if ($media_entity) {

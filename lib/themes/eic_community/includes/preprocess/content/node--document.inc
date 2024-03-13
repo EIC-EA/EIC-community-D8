@@ -43,6 +43,11 @@ function eic_community_preprocess_node__document(array &$variables) {
         $variables['#attached']['library'][] = 'flag/flag.link_ajax';
       }
 
+      // Privacy information, if current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $teaser['author'] =  NULL;
+      }
+
       $variables['document_item'] = $teaser;
       break;
 

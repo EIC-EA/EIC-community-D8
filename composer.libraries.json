@@ -148,7 +148,7 @@
     {
       "type": "package",
       "package": {
-        "name": "drupal/pickadate_js",
+        "name": "amsul/pickadate_js",
         "version": "3.6.4",
         "type": "drupal-library",
         "dist": {

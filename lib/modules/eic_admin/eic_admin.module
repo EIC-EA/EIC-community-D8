@@ -7,6 +7,38 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function eic_admin_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'admin_groups' && $view->current_display === 'page_admin_groups') {
+    $current_user_roles = \Drupal::currentUser()->getRoles(TRUE);
+    if (!in_array('sensitive', $current_user_roles, TRUE)) {
+      /** @var \Drupal\views\Plugin\views\query\Sql $query */
+      $group = count($query->where);
+
+      while (isset($query->where[$group])) {
+        $group++;
+      }
+
+      $definition = [
+        'table' => 'oec_group_visibility',
+        'field' => 'gid',
+        'left_table' => 'groups_field_data',
+        'left_field' => 'id',
+      ];
+      // Instantiates the join plugin.
+      $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
+      // Adds the join relationship to the query.
+      $query->addRelationship('oec_group_visibility', $join, 'oec_group_visibility');
+      // Filters out the query by the selected group visibilities.
+      $query->addWhere($group, 'oec_group_visibility.type', ['sensitive'], 'NOT IN');
+    }
+  }
+}
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -20,28 +52,6 @@ function eic_admin_preprocess_views_view_field(&$vars) {
     $flag_label = $flagging->getFlag()->label();
     $vars['output'] = $flag_label;
     $vars['field']->last_render = $flag_label;
-  }
-
-  if ($vars['view']->current_display === 'page_admin_groups') {
-    $group = $vars['row']->_entity;
-
-    if (!$group instanceof \Drupal\group\Entity\GroupInterface) {
-      return;
-    }
-
-    $is_group_sensitive = \Drupal::service('eic_groups.helper')->isGroupSensitive($group);
-    //We only alter on sensitive group which user has no permissions.
-    if ($group->access('view') || !$is_group_sensitive) {
-      return;
-    }
-
-    if ($vars['field']->field === 'label') {
-      $vars['output'] = t('Access denied: sensitive group with no access.');
-      $vars['field']->last_render = t('Access denied: sensitive group with no access.');
-    } else {
-      $vars['output'] = '';
-      $vars['field']->last_render = '';
-    }
   }
 }
 
