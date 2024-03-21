@@ -1719,6 +1719,7 @@ processor_settings:
     all_fields: false
   aggregated_field: {  }
   auto_aggregated_fulltext_field: {  }
+  eic_search_exclude_draft_entities: {  }
   entity_type: {  }
   event_weight_state: {  }
   file_attachments:
