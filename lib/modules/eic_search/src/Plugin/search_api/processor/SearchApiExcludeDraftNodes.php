@@ -11,7 +11,7 @@ use Drupal\search_api\Processor\ProcessorPluginBase;
  *
  * @SearchApiProcessor(
  *   id = "eic_search_exclude_draft_entities",
- *   label = @Translation("Search API Exclude entities in Draft state"),
+ *   label = @Translation("Exclude entities in Draft state"),
  *   description = @Translation("Excludes content in draft state from being indexed."),
  *   stages = {
  *     "alter_items" = 0
