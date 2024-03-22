@@ -1,0 +1,29 @@
+uuid: 164d4566-3683-4bbe-9625-8533f7e21753
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_vocab_job_title
+    - profile.type.member
+    - taxonomy.vocabulary.job_titles
+id: profile.member.field_vocab_job_title
+field_name: field_vocab_job_title
+entity_type: profile
+bundle: member
+label: 'Job title'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      job_titles: job_titles
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

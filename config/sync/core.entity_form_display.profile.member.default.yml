@@ -12,6 +12,7 @@ dependencies:
     - field.field.profile.member.field_location_address
     - field.field.profile.member.field_social_links
     - field.field.profile.member.field_vocab_geo
+    - field.field.profile.member.field_vocab_job_title
     - field.field.profile.member.field_vocab_language
     - field.field.profile.member.field_vocab_topic_expertise
     - field.field.profile.member.field_vocab_topic_interest
@@ -76,6 +77,12 @@ content:
       target_bundles: {  }
       is_required: false
       has_error: 0
+    third_party_settings: {  }
+  field_vocab_job_title:
+    type: options_select
+    weight: 26
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_vocab_language:
     type: options_buttons
