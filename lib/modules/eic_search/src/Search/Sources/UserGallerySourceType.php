@@ -15,6 +15,11 @@ class UserGallerySourceType extends SourceType {
   use StringTranslationTrait;
 
   /**
+   * This is used as a token for the team sort machine name.
+   */
+  const TEAM_DEFAULT_SORT = 'team_default_sort';
+
+  /**
    * @inheritDoc
    */
   public function getSourcesId(): array {
@@ -55,6 +60,10 @@ class UserGallerySourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      self::TEAM_DEFAULT_SORT => [
+        'label' => $this->t('Organisation team default sort', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Default', [], ['context' => 'eic_search']),
+      ],
       DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => [
         'label' => $this->t('Most active', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most active', [], ['context' => 'eic_search']),
@@ -83,7 +92,7 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return [DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID, 'DESC'];
+    return ['team_default_sort', 'ASC'];
   }
 
   /**

@@ -10,6 +10,8 @@ use Drupal\Core\Url;
 use Drupal\eic_comments\Constants\Comments;
 use Drupal\eic_private_message\PrivateMessageHelper;
 use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\GroupContentInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupRole;
 use Drupal\group\GroupMembership;
 use Drupal\group\GroupMembershipLoaderInterface;
@@ -161,6 +163,18 @@ class ProcessorUser extends DocumentProcessor {
       $fields['ss_user_profile_image_uri'] :
       NULL;
 
+    // Add user memberships to organisations.
+    /** @var \Drupal\group\Entity\GroupContentInterface[] $user_memberships */
+    $user_memberships = $this->entityTypeManager->getStorage('group_content')
+      ->loadByProperties([
+        'type' => 'organisation-group_membership',
+        'entity_id' => $user->id(),
+      ]);
+    foreach ($user_memberships as $user_membership) {
+      $document->addField($this->getMembershipSortFieldName($user_membership->getGroup()),
+        $this->getOrganisationMembershipSortOrder($user_membership));
+    }
+
     $teaser_relative = '';
 
     // Generates image style for the user picture.
@@ -179,6 +193,50 @@ class ProcessorUser extends DocumentProcessor {
       $fields,
       $teaser_relative
     );
+  }
+
+  /**
+   * Returns the field name of membership sort for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return string
+   *   The field name.
+   */
+  protected function getMembershipSortFieldName(GroupInterface $group) {
+    return 'its_team_default_sort_' . $group->id();
+  }
+
+  /**
+   * Returns the sort order for the membership.
+   *
+   * @param \Drupal\group\Entity\GroupContentInterface $user_membership
+   *   The user membership object.
+   *
+   * @return int
+   *   The sort order.
+   */
+  protected function getOrganisationMembershipSortOrder(GroupContentInterface $user_membership) {
+    // We want CEO and CFO to appear first, then members by order of
+    // membership date.
+    switch ($user_membership->field_vocab_job_title->target_id) {
+      // General management / CEO.
+      case 20:
+        $membership_sort = -10;
+        break;
+
+      // Accounting / Finance / CFO.
+      case 21:
+        $membership_sort = -5;
+        break;
+
+      default:
+        $membership_sort = $user_membership->getCreatedTime();
+        break;
+    }
+
+    return $membership_sort;
   }
 
   /**

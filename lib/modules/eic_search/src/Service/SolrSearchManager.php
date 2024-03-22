@@ -242,6 +242,10 @@ class SolrSearchManager {
     if ($sort_value) {
       $sorts = explode('__', $sort_value);
 
+      if ($this->source instanceof UserGallerySourceType && $sorts[0] == $this->source::TEAM_DEFAULT_SORT) {
+        $sorts[0] = 'its_team_default_sort_' . $this->currentGroup;
+      }
+
       //Normally sort key have this structure 'FIELD__ASC' but add double check
       if (2 === count($sorts)) {
         // Check if sort needs a group injection before sending to solr.
