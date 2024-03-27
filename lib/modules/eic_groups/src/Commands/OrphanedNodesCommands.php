@@ -52,33 +52,28 @@ class OrphanedNodesCommands extends DrushCommands {
           ->execute()->fetchAssoc();
         if (empty($q)) {
           $node_id = explode('/', $path);
-          $q1 = $this->database->select('node_field_data', 'nfd')
-            ->fields('nfd', ['nid', 'status'])
-            ->condition('nfd.status', '0')
-            ->condition('nfd.nid', $node_id[2])
-            ->execute()->fetchAssoc();
-          if (empty($q1)) {
-            $nodes_to_remove[$node_id[2]] = $alias;
-          }
+          $nodes_to_remove[$node_id[2]] = $alias;
         }
       }
     }
 
     $count = count($nodes_to_remove);
-    if ($this->confirm("$count orphaned nodes will be unpublished. Proceed?")) {
+    if ($this->confirm("$count orphaned nodes will be deleted. Proceed?")) {
+      $count_final = 0;
       $this->io()->progressStart($count);
       foreach ($nodes_to_remove as $item_node_id => $alias) {
         $node = $this->entityTypeManager->getStorage('node')->load($item_node_id);
         if (is_null($node)) {
-          $this->io()->warning("No node found for $alias");
+          $this->io()->note("No node found for $alias");
         }
         elseif ($node instanceof NodeInterface && $node->isPublished()) {
+          $count_final++;
           $node->delete();
         }
         $this->io()->progressAdvance();
       }
       $this->io()->progressFinish();
-      $this->io()->success("$count orphaned nodes were unpublished.");
+      $this->io()->success("$count_final/$count orphaned nodes were deleted.");
     }
     else {
       $this->io()->note('No action has taken place.');
