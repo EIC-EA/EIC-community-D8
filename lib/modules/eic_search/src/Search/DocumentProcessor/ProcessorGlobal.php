@@ -151,12 +151,19 @@ class ProcessorGlobal extends DocumentProcessor {
 
           // For News and Stories, the published date should be saved.
           if (in_array($node->bundle(), ['news', 'story'])) {
-            $date = \Drupal::service('date.formatter')
-              ->format(
-                $node->get('published_at')->published_at_or_created,
-                'custom',
-                DateTimeItemInterface::DATETIME_STORAGE_FORMAT
-              );
+            // Ensure that the value is set as it might not be when in
+            // Draft state.
+            if (
+              $node->hasField('published_at') &&
+              !$node->get('published_at')->isEmpty()
+            ) {
+              $date = \Drupal::service('date.formatter')
+                ->format(
+                  $node->get('published_at')->published_at_or_created,
+                  'custom',
+                  DateTimeItemInterface::DATETIME_STORAGE_FORMAT
+                );
+            }
           }
         }
 
