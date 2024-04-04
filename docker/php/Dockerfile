@@ -1,5 +1,5 @@
-ARG PHP_VERSION=7.4
-ARG COMPOSER_VERSION=1
+ARG PHP_VERSION=8.1
+ARG COMPOSER_VERSION=2
 
 FROM composer:${COMPOSER_VERSION} AS composer
 FROM php:${PHP_VERSION}-fpm
@@ -8,6 +8,7 @@ ARG UID=1000
 ARG GID=1000
 ENV DEBIAN_FRONTEND noninteractive
 ARG DRUSH_LAUNCHER_VERSION=8
+ARG DRUSH_VERSION=8.4.12
 
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
   && apt-get -y install apt-transport-https apt-utils build-essential xorg \
@@ -48,7 +49,8 @@ RUN echo 'pm.max_children = 10' >> /usr/local/etc/php-fpm.d/zz-docker.conf
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/
 
-RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}') \
+#RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}') \
+RUN latest_drush_version=${DRUSH_VERSION} \
   && curl -s -L https://github.com/drush-ops/drush/releases/download/${latest_drush_version}/drush.phar -o /usr/local/bin/drush \
   && chmod +x /usr/local/bin/drush \
   # smoke test

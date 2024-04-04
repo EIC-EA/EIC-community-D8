@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_moderation\Service\ContentModerationManager;
@@ -95,10 +96,67 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Implements hook_ENTITY_TYPE_presave().
+   */
+  public function nodePresave(NodeInterface $node) {
+    $this->revisionLogUpdate($node);
+  }
+
+  /**
    * Implements hook_node_update().
    */
   public function nodeUpdate(NodeInterface $node) {
     $this->sendNotification($node);
+  }
+
+  /**
+   * Sets the revision log message automatically.
+   */
+  public function revisionLogUpdate(NodeInterface $node) {
+    $allowed_content_types = [
+      'book',
+      'document',
+      'event',
+      'gallery',
+      'news',
+      'page',
+      'story',
+      'video',
+      'wiki_page',
+    ];
+    $bundle = $node->bundle();
+    if (in_array($bundle, $allowed_content_types, TRUE)) {
+      if (!$this->contentModerationManager->isTransitioned($node)) {
+        return;
+      }
+
+      $workflow_state_action_map = [
+        EICContentModeration::STATE_DRAFT => $this->t('draft created', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_WAITING_APPROVAL => $this->t('sent for approval', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_NEEDS_REVIEW => $this->t('rejected', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_PUBLISHED => $this->t('approved and published', [], ['context' => 'eic_moderation'])->render(),
+        EICContentModeration::STATE_UNPUBLISHED => $this->t('unpublished', [], ['context' => 'eic_moderation'])->render(),
+        DefaultContentModerationStates::ARCHIVED_STATE => $this->t('archived', [], ['context' => 'eic_moderation'])->render(),
+      ];
+
+      $current_user = $this->userHelper->getCurrentUser();
+      $user_message = ((string) $current_user->getDisplayName());
+      $roles = $current_user->getRoles(TRUE);
+      if (in_array('content_administrator', $roles, TRUE)) {
+        $user_message .= ' - Content Administrator';
+      }
+      $message = $this->t("@bundle @action by @display_name", [
+        '@bundle' => ucfirst($bundle),
+        '@action' => $workflow_state_action_map[$node->get('moderation_state')->value],
+        '@display_name' => $user_message,
+      ]);
+      if (!$node->get('revision_log')->isEmpty()) {
+        $message = $node->get('revision_log')
+          ->getValue()[0]['value'] . ' - ' . $message->render();
+      }
+      $node->set('revision_log', $message);
+
+    }
   }
 
   /**

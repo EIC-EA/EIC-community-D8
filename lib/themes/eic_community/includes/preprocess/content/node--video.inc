@@ -69,6 +69,11 @@ function eic_community_preprocess_node__video(array &$variables) {
         $teaser['flags'] = [];
       }
 
+      // Privacy information, if current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $teaser['author'] =  NULL;
+      }
+
       // If we have flags, attach the js library.
       if (!empty($teaser['flags'])) {
         $variables['#attached']['library'][] = 'flag/flag.link_ajax';

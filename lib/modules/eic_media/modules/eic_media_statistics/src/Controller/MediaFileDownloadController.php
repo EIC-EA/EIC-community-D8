@@ -3,10 +3,14 @@
 namespace Drupal\eic_media_statistics\Controller;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\eic_user\UserHelper;
 use Drupal\media\MediaInterface;
 use Drupal\media_entity_download\Controller\DownloadController;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -43,6 +47,13 @@ class MediaFileDownloadController extends DownloadController {
   protected $solrDocumentProcessor;
 
   /**
+   * The EIC groups helper.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  protected $groupsHelper;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -52,6 +63,7 @@ class MediaFileDownloadController extends DownloadController {
     $controller->fileStatisticsStorage = $container->get('eic_media_statistics.storage.file');
     $controller->cacheBackend = $container->get('cache.default');
     $controller->solrDocumentProcessor = $container->get('eic_search.solr_document_processor');
+    $controller->groupsHelper = $container->get('eic_groups.helper');
     return $controller;
   }
 
@@ -90,9 +102,23 @@ class MediaFileDownloadController extends DownloadController {
     }
 
     $success = $this->fileStatisticsStorage->recordView($fid);
+    $node_id = $request_query->get('node_id');
+    $node = Node::load($node_id);
+    $group = $this->groupsHelper->getGroupFromContent($node);
+    $user = User::load($this->currentUser()->id());
 
-    if ($success && $node_id = $request_query->get('node_id')) {
+    // Do not allow downloading file if group sensitive and user no role sensitive.
+    if (
+      $this->groupsHelper->isGroupSensitive($group) &&
+      !$user->hasRole(UserHelper::ROLE_SENSITIVE) &&
+      !$group->getMember($user)
+    ) {
+      throw new AccessDeniedHttpException(t('You are not allowed to download a sensitive content.'));
+    }
+
+    if ($success && $node instanceof NodeInterface) {
       $node = Node::load($node_id);
+
       $messages = $this->entityTypeManager->getStorage('message')->loadByProperties([
         'field_referenced_node' => $node_id,
       ]);

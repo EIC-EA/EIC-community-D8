@@ -1,0 +1,9 @@
+uuid: 407fd309-54a2-49ba-95ca-9007b80c8a2e
+langcode: en
+status: true
+dependencies: {  }
+id: oec_group_visibility_change_action
+label: 'Change visibility of group'
+type: group
+plugin: oec_group_visibility_change_action
+configuration: {  }

@@ -177,7 +177,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     foreach ($conditions as $field => $value) {
       $query->condition($field, $value);
     }
-    $query->sort('entity_id.entity:node.created', 'DESC');
+    $query->sort('entity_id.entity:node.changed', 'DESC');
     $query->range(0, 1);
     $results = $query->execute();
 
@@ -186,7 +186,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       $group_content = $this->entityTypeManager->getStorage('group_content')->load(reset($results));
       /** @var \Drupal\node\NodeInterface $node */
       $node = $group_content->getEntity();
-      return $node->getCreatedTime();
+      return $node->getChangedTime();
     }
 
     return NULL;

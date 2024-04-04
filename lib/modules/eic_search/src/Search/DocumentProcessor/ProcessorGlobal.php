@@ -8,7 +8,9 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
@@ -33,7 +35,8 @@ use Solarium\QueryType\Update\Query\Document;
 class ProcessorGlobal extends DocumentProcessor {
 
   /**
-   * @var \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
+   * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
+   *   $nodeStatisticsDatabaseStorage
    */
   private $nodeStatisticsDatabaseStorage;
 
@@ -48,24 +51,36 @@ class ProcessorGlobal extends DocumentProcessor {
   private $em;
 
   /**
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper
+   */
+  private $groupStatisticsHelper;
+
+  /**
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $urlGenerator
-   * @param EntityTypeManager $em
+   * @param \Drupal\Core\Entity\EntityTypeManager $em
+   * @param \Drupal\eic_group_statistics\GroupStatisticsHelper $groupStatisticsHelper
    */
   public function __construct(
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
     FileUrlGeneratorInterface $urlGenerator,
-    EntityTypeManager $em
+    EntityTypeManager $em,
+    GroupStatisticsHelper $groupStatisticsHelper
   ) {
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
     $this->urlGenerator = $urlGenerator;
     $this->em = $em;
+    $this->groupStatisticsHelper = $groupStatisticsHelper;
   }
 
   /**
    * @inheritDoc
    */
-  public function process(Document &$document, array $fields, array $items = []): void {
+  public function process(
+    Document &$document,
+    array $fields,
+    array $items = []
+  ): void {
     $title = '';
     $type = '';
     $type_label = '';
@@ -80,6 +95,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $language = t('English', [], ['context' => 'eic_search'])->render();
     $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
     $last_moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
+    $group_last_moderation_state = GroupsModerationHelper::GROUP_PUBLISHED_STATE;
     $is_group_parent_published = 1;
 
     switch ($datasource) {
@@ -94,13 +110,19 @@ class ProcessorGlobal extends DocumentProcessor {
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
         $moderation_state = $fields['ss_content_moderation_state'];
-        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists(
+        $fullname = array_key_exists(
+          'ss_content_first_name',
+          $fields
+        ) && array_key_exists(
           'ss_content_last_name',
           $fields
         ) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
           t('No name', [], ['context' => 'eic_search']);
-        $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
+        $topics = array_key_exists(
+          'sm_content_field_vocab_topics_string',
+          $fields
+        ) ?
           $fields['sm_content_field_vocab_topics_string'] :
           [];
         $geo = array_key_exists('sm_content_field_vocab_geo_string', $fields) ?
@@ -125,18 +147,30 @@ class ProcessorGlobal extends DocumentProcessor {
             $language = $language_entity->label();
           }
 
-          $last_moderation_state = $this->getLastRevisionModerationState($node);
+          $group_last_moderation_state = $last_moderation_state = $this->getLastRevisionModerationState($node);
 
           // For News and Stories, the published date should be saved.
           if (in_array($node->bundle(), ['news', 'story'])) {
-            $date = \Drupal::service('date.formatter')
-              ->format($node->get('published_at')->published_at_or_created, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+            // Ensure that the value is set as it might not be when in
+            // Draft state.
+            if (
+              $node->hasField('published_at') &&
+              !$node->get('published_at')->isEmpty()
+            ) {
+              $date = \Drupal::service('date.formatter')
+                ->format(
+                  $node->get('published_at')->published_at_or_created,
+                  'custom',
+                  DateTimeItemInterface::DATETIME_STORAGE_FORMAT
+                );
+            }
           }
         }
 
         // The node should not be accessible if the group is not published.
         if ($node_group_contents = GroupContent::loadByEntity($node)) {
           $node_group_content = reset($node_group_contents);
+          $group_last_moderation_state = $this->getLastRevisionModerationState($node_group_content->getGroup());
           $status = $node_group_content->getGroup()->isPublished() ?
             $fields['bs_content_status'] :
             FALSE;
@@ -172,7 +206,18 @@ class ProcessorGlobal extends DocumentProcessor {
         $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group instanceof GroupInterface) {
-          $last_moderation_state = $this->getLastRevisionModerationState($group);
+          $lastActivityTime = $this->groupStatisticsHelper->getGroupLatestActivity(
+            $group
+          );
+
+          // If we have a value for a last activity stream in the group, we replace the default changed time.
+          if ($lastActivityTime) {
+            $changed = $lastActivityTime;
+          }
+
+          $group_last_moderation_state = $last_moderation_state = $this->getLastRevisionModerationState(
+            $group
+          );
           $this->addOrUpdateDocumentField(
             $document,
             'its_content_uid',
@@ -233,30 +278,38 @@ class ProcessorGlobal extends DocumentProcessor {
       $slides_id = is_array($slides_id) ? $slides_id : [$slides_id];
       $image_style = ImageStyle::load('crop_50x50');
       $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');
-      $slides = array_map(function ($slide_id) use ($image_style, $image_style_160) {
-        $slide = Paragraph::load($slide_id);
-        $media = $slide->get('field_gallery_slide_media')->referencedEntities();
+      $slides = array_map(
+        function($slide_id) use ($image_style, $image_style_160) {
+          $slide = Paragraph::load($slide_id);
+          $media = $slide->get('field_gallery_slide_media')->referencedEntities(
+          );
 
-        if (empty($media)) {
-          return [];
-        }
+          if (empty($media)) {
+            return [];
+          }
 
-        /** @var \Drupal\media\MediaInterface $media */
-        $media = $media[0];
-        $file = File::load($media->get('oe_media_image')->target_id);
-        $image_uri = $file->getFileUri();
+          /** @var \Drupal\media\MediaInterface $media */
+          $media = $media[0];
+          $file = File::load($media->get('oe_media_image')->target_id);
+          $image_uri = $file->getFileUri();
 
-        $destination_uri = $image_style->buildUrl($image_uri);
-        $destination_uri_160 = $image_style_160->buildUrl($image_uri);
+          $destination_uri = $image_style->buildUrl($image_uri);
+          $destination_uri_160 = $image_style_160->buildUrl($image_uri);
 
-        return json_encode([
-          'id' => $slide->id(),
-          'size' => $file->getSize(),
-          'uri' => $this->urlGenerator->transformRelative(file_create_url($destination_uri)),
-          'uri_160' => $this->urlGenerator->transformRelative(file_create_url($destination_uri_160)),
-          'legend' => $slide->get('field_gallery_slide_legend')->value,
-        ]);
-      }, $slides_id);
+          return json_encode([
+            'id' => $slide->id(),
+            'size' => $file->getSize(),
+            'uri' => $this->urlGenerator->transformRelative(
+              file_create_url($destination_uri)
+            ),
+            'uri_160' => $this->urlGenerator->transformRelative(
+              file_create_url($destination_uri_160)
+            ),
+            'legend' => $slide->get('field_gallery_slide_legend')->value,
+          ]);
+        },
+        $slides_id
+      );
 
       $document->setField('sm_content_gallery_slide_id_array', $slides);
     }
@@ -272,18 +325,44 @@ class ProcessorGlobal extends DocumentProcessor {
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
-    $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
+    $document->addField(
+      'ss_drupal_changed_timestamp',
+      is_numeric($changed) && (int) $changed == $changed ?
+        $changed :
+        strtotime($changed)
+    );
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('tm_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
-    $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
-    $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
-    $this->addOrUpdateDocumentField($document, 'ss_global_moderation_state', $fields, $moderation_state);
+    $this->addOrUpdateDocumentField(
+      $document,
+      'sm_content_field_vocab_topics_string',
+      $fields,
+      $topics
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'sm_content_field_vocab_geo_string',
+      $fields,
+      $geo
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_global_moderation_state',
+      $fields,
+      $moderation_state
+    );
     $this->addOrUpdateDocumentField(
       $document,
       'ss_global_last_moderation_state',
       $fields,
       $last_moderation_state
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_global_group_last_moderation_state',
+      $fields,
+      $group_last_moderation_state
     );
 
     // Set by default parent group to TRUE and method processGroupContentData will update it.
@@ -336,7 +415,8 @@ class ProcessorGlobal extends DocumentProcessor {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  private function getLastRevisionModerationState(EntityInterface $entity): string {
+  private function getLastRevisionModerationState(EntityInterface $entity
+  ): string {
     $entity_type = $entity->getEntityTypeId();
     if ('group' === $entity_type) {
       $last_revision_id = $entity->getRevisionId();
@@ -348,7 +428,9 @@ class ProcessorGlobal extends DocumentProcessor {
 
     $last_revision = $entity->getRevisionId() !== $last_revision_id ?
       $this->em->getStorage($entity_type)->loadRevision($last_revision_id) :
-      $this->em->getStorage($entity_type)->loadRevision($entity->getRevisionId());
+      $this->em->getStorage($entity_type)->loadRevision(
+        $entity->getRevisionId()
+      );
 
     return $last_revision->get('moderation_state')->value;
   }

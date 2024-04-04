@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @GroupVisibility(
  *  id = "custom_restricted",
  *  label = @Translation("Custom restriction"),
- *  weight = -88
+ *  weight = -80
  * )
  */
 class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implements GroupVisibilityOptionsInterface {

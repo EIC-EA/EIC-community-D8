@@ -968,8 +968,9 @@ display:
           admin_label: ''
           entity_type: group
           plugin_id: group_visibility
-          operator: '='
-          value: null
+          operator: in
+          value:
+            public: public
           group: 2
           exposed: false
           expose:
@@ -986,6 +987,7 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -1202,6 +1204,65 @@ display:
             field_publication_date: field_publication_date
           separator: ' - '
           hide_empty: true
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.field_header_visual'
+  homepage:
+    id: homepage
+    display_title: Homepage
+    display_plugin: block
+    position: 3
+    display_options:
+      title: 'All News & Stories'
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 4
+      sorts:
+        sticky:
+          id: sticky
+          table: node_field_data
+          field: sticky
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: sticky
+          plugin_id: standard
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: created
+          exposed: false
+          granularity: second
+      defaults:
+        title: false
+        pager: false
+        sorts: false
+      display_description: ''
       display_extenders: {  }
     cache_metadata:
       max-age: -1
