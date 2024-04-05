@@ -10,6 +10,7 @@ use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -267,15 +268,7 @@ class ActionFormsManager {
     $parts['query'] = UrlHelper::buildQuery($query_params);
 
     // Build the url and handle the parameters of UrlHelper::parse (path, query, fragment)
-    $url = $parts['path'];
-    if (!empty($parts['query'])) {
-      $url .= '?' . $parts['query'];
-    }
-    if (!empty($parts['fragment'])) {
-      $url .= '#' . $parts['fragment'];
-    }
-
-    return $url;
+    return Url::fromUri('internal:' . $parts['path'], ['query' => $parts['query'], 'fragment' => $parts['fragment']])->toString();
   }
 
   /**
