@@ -275,8 +275,6 @@ class ActionFormsManager {
       $url .= '#' . $parts['fragment'];
     }
 
-    dump($parts);
-
     return $url;
   }
 
