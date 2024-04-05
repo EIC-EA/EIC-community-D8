@@ -119,8 +119,8 @@ function eic_community_preprocess_group__event(&$variables) {
         $event_start_date = strtotime($group->get('field_date_range')->value);
         $event_end_date = strtotime($group->get('field_date_range')->end_value);
         $event_date_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_date_range');
-        $registration_start_date = strtotime($group->get('field_event_registration_date')->value);
-        $registration_end_date = strtotime($group->get('field_event_registration_date')->end_value);
+        $registration_start_date = $group->get('field_event_registration_date')->value ? strtotime($group->get('field_event_registration_date')->value) : NULL;
+        $registration_end_date = $group->get('field_event_registration_date')->end_value ? strtotime($group->get('field_event_registration_date')->end_value) : NULL;
         $registration_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus(
           $group,
           'field_event_registration_date'

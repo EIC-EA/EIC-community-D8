@@ -36,12 +36,7 @@ class GinviteSubscriber extends GinviteSubscriberBase {
     MessengerInterface $messenger,
     LoggerChannelFactoryInterface $logger_factory
   ) {
-    parent::__construct(
-      $invitation_loader,
-      $current_user,
-      $messenger,
-      $logger_factory
-    );
+    parent::__construct($invitation_loader, $current_user, $messenger, $logger_factory);
     $this->ginviteSubscriber = $ginvite_subscriber_inner_service;
   }
 
@@ -49,6 +44,11 @@ class GinviteSubscriber extends GinviteSubscriberBase {
    * {@inheritdoc}
    */
   public function notifyAboutPendingInvitations(GetResponseEvent $event) {
+    // We skip AJAX requests.
+    if ($event->getRequest()->isXmlHttpRequest()) {
+      return;
+    }
+
     if (!$event->isMasterRequest()) {
       return;
     }
@@ -89,15 +89,9 @@ class GinviteSubscriber extends GinviteSubscriberBase {
       !in_array($route, $route_exclusions) &&
       $invitations
     ) {
-      $destination = Url::fromRoute(
-        'view.my_invitations.page_1',
-        ['user' => $this->currentUser->id()]
-      )->toString();
+      $destination = Url::fromRoute('view.my_invitations.page_1', ['user' => $this->currentUser->id()])->toString();
       $replace = ['@url' => $destination];
-      $message = $this->t(
-        'You have pending group invitations. <a href="@url">Visit your profile</a> to see them.',
-        $replace
-      );
+      $message = $this->t('You have pending group invitations. <a href="@url">Visit your profile</a> to see them.', $replace);
       $this->messenger->addMessage($message, 'warning', FALSE);
     }
   }

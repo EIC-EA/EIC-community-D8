@@ -13,6 +13,8 @@ use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Plugin\GroupContentEnabler\GroupInvitation as GroupContentEnablerGroupInvitation;
 use Drupal\eic_messages\Service\MessageBus;
@@ -21,6 +23,7 @@ use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
+use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -115,6 +118,13 @@ class CronOperations implements ContainerInjectionInterface {
   private $eicGroupSettings;
 
   /**
+   * The EIC groups helper.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  private $groupsHelper;
+
+  /**
    * Constructs a CronOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -133,6 +143,7 @@ class CronOperations implements ContainerInjectionInterface {
    *   The database service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
+   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -142,7 +153,8 @@ class CronOperations implements ContainerInjectionInterface {
     StateInterface $state,
     MessageBus $bus,
     Connection $database,
-    ConfigFactoryInterface $config_factory
+    ConfigFactoryInterface $config_factory,
+    EICGroupsHelper $groups_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->pathautoGenerator = $pathauto_generator;
@@ -152,6 +164,7 @@ class CronOperations implements ContainerInjectionInterface {
     $this->messageBus = $bus;
     $this->database = $database;
     $this->eicGroupSettings = $config_factory->get('eic_groups.settings');
+    $this->groupsHelper = $groups_helper;
   }
 
   /**
@@ -166,7 +179,8 @@ class CronOperations implements ContainerInjectionInterface {
       $container->get('state'),
       $container->get('eic_messages.message_bus'),
       $container->get('database'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -292,7 +306,18 @@ class CronOperations implements ContainerInjectionInterface {
         'field_event_executing_user' => ['target_id' => $group->getOwnerId()],
       ];
 
-      foreach ($uids as $uid) {
+      $is_group_sensitive = $this->groupsHelper->isGroupSensitive($group);
+
+      // Remove all uids that has no access to sensitive group.
+      $group_uids = array_filter($uids, function(int $uid) use ($is_group_sensitive) {
+        $user = User::load($uid);
+
+        return
+          $user instanceof UserInterface &&
+          (!$is_group_sensitive || $user->hasRole('sensitive'));
+      });
+
+      foreach ($group_uids as $uid) {
         $this->messageBus->dispatch($template + ['uid' => $uid]);
       }
     }

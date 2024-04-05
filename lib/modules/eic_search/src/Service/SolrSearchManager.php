@@ -9,7 +9,11 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface;
+use Drupal\eic_search\Search\Sources\GlobalSourceType;
+use Drupal\eic_search\Search\Sources\GroupEventSourceType;
+use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
+use Drupal\eic_search\Search\Sources\OrganisationSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
 use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
@@ -256,6 +260,7 @@ class SolrSearchManager {
     if (
       NULL !== $sorts &&
       array_key_exists(0, $sorts) &&
+      $this->source->getAvailableSortOptions()[$sorts[0]] &&
       array_key_exists(SourceTypeInterface::SECOND_SORT_KEY, $this->source->getAvailableSortOptions()[$sorts[0]])
     ) {
       $second_sorts = $this->source->getAvailableSortOptions()[$sorts[0]][SourceTypeInterface::SECOND_SORT_KEY];
@@ -644,9 +649,26 @@ class SolrSearchManager {
 
     $status_query = ' AND (bs_global_status:true';
 
-    // User can see their group if status false but he is owner.
-    if ('group' === $this->source->getEntityBundle()) {
-      $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
+    if (
+      $this->source->getEntityBundle() === 'group' ||
+      $this->source->getEntityBundle() === 'global'
+    ) {
+      $status_query = ' AND (((bs_global_status:true AND -ss_global_group_last_moderation_state:archived)';
+      // User can see their group if status false but he is owner.
+      $status_query .= ' OR (its_group_owner_id:' . $user_id . '))';
+
+      $grps = $this->membershipLoader->loadByUser($this->currentUser);
+
+      $grp_ids = array_map(function (GroupMembership $grp_membership) {
+        return $grp_membership->getGroup()->id();
+      }, $grps);
+
+      $group_filters_id = $this->source->getPrefilteredGroupFieldId();
+
+      // User can see their own archived groups.
+      if ($group_filters_id && $grp_ids) {
+        $status_query .= ' OR (bs_global_status:true AND ss_global_group_last_moderation_state:archived AND ' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
+      }
     }
 
     $query_bundle = [
@@ -660,10 +682,6 @@ class SolrSearchManager {
       case 'news':
         // Show own content even if it's in draft, archived, ...
         $query_bundle[] = "its_content_uid:$user_id";
-        break;
-
-      case 'group':
-        $query_bundle[] = 'its_global_group_parent_published:1';
         break;
 
       case 'activity_stream':
@@ -701,7 +719,6 @@ class SolrSearchManager {
 
     switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-      case GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         if ($strict_private) {
           $query = '(itm_user_group_ids:(' . $group_id . '))';
@@ -711,6 +728,9 @@ class SolrSearchManager {
         }
         break;
 
+      case GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE:
+        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_SENSITIVE . '*)';
+        break;
       // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
       case GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
         $options = $group_visibility_entity->getOptions();

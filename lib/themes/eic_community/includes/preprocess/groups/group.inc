@@ -95,6 +95,11 @@ function eic_community_preprocess_group__group(array &$variables) {
       // @todo Get the real last activity.
       $item['timestamp']['label'] = eic_community_get_teaser_time_display($group->get('changed')->value);
 
+      // Privacy information, if current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $item['owner'] =  NULL;
+      }
+
       // Get group statistics.
       $group_statistics = \Drupal::service('eic_group_statistics.helper')->loadGroupStatistics($group);
       $item['stats'] = [

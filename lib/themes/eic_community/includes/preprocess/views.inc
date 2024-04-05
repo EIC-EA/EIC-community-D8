@@ -5,10 +5,12 @@
  * Contains Views preprocess functions.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Url;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\node\NodeInterface;
 use Drupal\views\Views;
 
@@ -200,6 +202,10 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['extra_classes'] = 'ecl-teaser-overview--has-compact-layout';
       break;
 
+    case 'latest_news_and_stories-homepage':
+      _eic_community_preprocess_views__latest_news_and_stories__homepage($variables);
+      break;
+
   }
 
   // Add the read more link if there is one.
@@ -239,4 +245,106 @@ function _eic_community_get_rendered_view($view_id, $display_id, array $args = [
   }
 
   return $view->preview($display_id, $args);
+}
+
+/**
+ * Implements hook_preprocess_views() for latest_news_and_stories.
+ */
+function _eic_community_preprocess_views__latest_news_and_stories__homepage(&$variables) {
+  $current_langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $nodes = [];
+
+  foreach ($variables['rows'][0]['#rows'] as $item) {
+    $nodes[] = $item['#row']->_entity;
+  }
+
+  // Process the array of nodes and add it to the theme variables.
+  foreach ($nodes as $node) {
+    if (!$node instanceof NodeInterface) {
+      continue;
+    }
+
+    // We need to check the node access otherwise private nodes will always be
+    // visible.
+    if (!$node->access('view')) {
+      continue;
+    }
+
+    $node_translation = $node;
+    if ($node->hasTranslation($current_langcode)) {
+      $node_translation = $node->getTranslation($current_langcode);
+    }
+    $node_author = eic_community_get_teaser_user_display($node_translation->getOwner());
+    $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($node_translation->get('published_at')->value, ['granularity' => 1]);
+
+    if (isset($variables['content']['node_stats'][$node->id()])) {
+      $node_stats = $variables['content']['node_stats'][$node->id()];
+    }
+
+    // Add node statistics.
+    $stats = [
+      [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'comment',
+        ],
+        'label' => t('Comments'),
+        'value' => isset($node_stats) ? $node_stats['comments_count']['#value'] : 0,
+      ],
+      [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'views',
+        ],
+        'label' => t('Views'),
+        'value' => isset($node_stats) ? $node_stats['page_views']['#value'] : 0,
+      ],
+      [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'like',
+        ],
+        'label' => t('Likes'),
+        'value' => isset($node_stats['flag_counts']['#items']['like_content']) ? $node_stats['flag_counts']['#items']['like_content'] : 0,
+      ],
+    ];
+
+    $item = [
+      'title' => $node_translation->label(),
+      'description' => Xss::filter($node_translation->get('field_introduction')->value),
+      'path' => $node_translation->toUrl()->toString(),
+      'type' => [
+        'label' => $node_translation->type->entity->label(),
+        'icon' => [
+          'name' => $node_translation->bundle(),
+          'type' => 'custom',
+        ],
+      ],
+      'timestamp' => [
+        'label' => t('@time ago', ['@time' => $time_ago]),
+      ],
+      'author' => $node_author,
+      'stats' => $stats,
+    ];
+
+    // Privacy information, if current user is anonymous remove the author.
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $item['author'] = NULL;
+    }
+
+    if (!$node_translation->get('field_image')->isEmpty()) {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::service('entity.repository')->getTranslationFromContext($node_translation->get('field_image')->entity, $current_langcode);
+      $file_entity = $media->get('oe_media_image')->first()->entity;
+      $file_uri = $file_entity ? $file_entity->getFileUri() : NULL;
+      $item['media'] = [
+        'image' => $file_uri ? ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($file_uri) : NULL,
+      ];
+    }
+
+    $variables['news_stories_items'][] = $item;
+
+    // Add link to the overview.
+    $variables['news_stories_overview_url'] = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::NEWS_STORIES)->getUrl();
+  }
 }

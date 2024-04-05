@@ -1,15 +1,15 @@
-uuid: ae361fda-e4dc-43c3-827c-cf7f3173cf69
+uuid: 39d98aa4-ca67-406d-96c5-fba507be368e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.profile.field_vocab_job_title
-    - profile.type.member
+    - field.storage.group_content.field_vocab_job_title
+    - group.content_type.organisation-group_membership
     - taxonomy.vocabulary.job_titles
-id: profile.member.field_vocab_job_title
+id: group_content.organisation-group_membership.field_vocab_job_title
 field_name: field_vocab_job_title
-entity_type: profile
-bundle: member
+entity_type: group_content
+bundle: organisation-group_membership
 label: 'Job title'
 description: ''
 required: false

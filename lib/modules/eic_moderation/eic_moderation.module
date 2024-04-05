@@ -35,6 +35,14 @@ function eic_moderation_form_node_form_alter(&$form, FormStateInterface $form_st
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function eic_moderation_node_presave(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodePresave($entity);
+}
+
+/**
  * Implements hook_module_implements_alter().
  */
 function eic_moderation_module_implements_alter(&$implementations, $hook) {

@@ -153,6 +153,10 @@ function oec_group_flex_views_data() {
       'title' => t('Visibility'),
       'id' => 'group_visibility',
     ],
+    'sort' => [
+      // ID of sort handler plugin to use.
+      'id' => 'group_visibility',
+    ],
   ];
   $data['groups_field_data']['group_visibility_custom_restricted_email_domains'] = [
     'title' => t('Visibility Custom: Restricted email domains'),
@@ -184,13 +188,29 @@ function oec_group_flex_group_flex_visibility_save(
   }
 
   $group_ids_to_remove = ['group-a416e6833', 'group-bf4b46c3a', 'group-eca6128ca', 'group-outsider'];
-  $revoke_permissions = [
-    'view any unpublished group',
-    'view any published group',
-    'edit group',
-    'view latest group version',
-    'view group revisions',
-    'delete group',
+  $sensitive_group_id = 'group-9ba2627b5';
+
+  $grant_permissions = [
+    'view group',
+    'access discussions overview',
+    'access events overview',
+    'access files overview',
+    'access group search overview',
+    'access group_node overview',
+    'access latest activity stream',
+    'access members overview',
+    'access news overview',
+    'access wiki overview',
+    'join group',
+    'view group_node:discussion entity',
+    'view group_node:document entity',
+    'view group_node:event entity',
+    'view group_node:gallery entity',
+    'view group_node:video entity',
+    'view group_node:wiki_page entity',
+    'view group_membership entity',
+    'view group_content_menu:group_main_menu entity',
+    'highlight group content',
   ];
 
   /** @var \Drupal\group_permissions\GroupPermissionsManager $groupPermissionsManager */
@@ -205,9 +225,15 @@ function oec_group_flex_group_flex_visibility_save(
       continue;
     }
 
-    //$group_role_permissions = $permissions[$group_id];
-
     $permissions[$group_id] = [];
+  }
+
+  foreach ($grant_permissions as $permission) {
+    if (in_array($permission, $permissions[$sensitive_group_id])) {
+      continue;
+    }
+
+    $permissions[$sensitive_group_id][] = $permission;
   }
 
   $group_permissions->setPermissions($permissions);

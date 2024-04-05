@@ -1,0 +1,13 @@
+eic_content_gallery.archive_download:
+  path: '/node/{node}/archive-download'
+  defaults:
+    _controller: '\Drupal\eic_content_gallery\Controller\ArchiveDownloadController::downloadGallery'
+  requirements:
+    _custom_access:  '\Drupal\eic_content_gallery\Controller\ArchiveDownloadController::access'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+        bundle:
+          - gallery

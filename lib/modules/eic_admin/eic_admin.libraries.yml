@@ -1,0 +1,4 @@
+admin_ux:
+  css:
+    theme:
+      css/admin-ux.css: {}
