@@ -266,7 +266,7 @@ class ActionFormsManager {
     // Rebuild the query string.
     $parts['query'] = UrlHelper::buildQuery($query_params);
 
-    // Build the url and handle the parameters of UrlHelper::parse (path, query, fragments)
+    // Build the url and handle the parameters of UrlHelper::parse (path, query, fragment)
     $url = $parts['path'];
     if (!empty($parts['query'])) {
       $url .= '?' . $parts['query'];
@@ -274,6 +274,8 @@ class ActionFormsManager {
     if (!empty($parts['fragment'])) {
       $url .= '#' . $parts['fragment'];
     }
+
+    dump($parts);
 
     return $url;
   }
