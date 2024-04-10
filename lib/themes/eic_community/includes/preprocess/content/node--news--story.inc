@@ -341,7 +341,7 @@ function _eic_community_display_topics(&$variables) {
   }
 
   $variables['topics'] = [
-    'title' => $variables['elements']['field_vocab_topics']['#title'],
+    'title' => $variables['elements']['field_vocab_topics']['#title'] ?? t('Topics', [], ['context' => 'eic_community']),
     'items' => $topics,
   ];
 }
