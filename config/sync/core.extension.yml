@@ -81,6 +81,7 @@ module:
   eic_messages: 0
   eic_migrate: 0
   eic_moderation: 0
+  eic_non_required_on_draft: 0
   eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0

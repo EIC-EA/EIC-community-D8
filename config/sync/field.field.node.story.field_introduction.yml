@@ -6,7 +6,14 @@ dependencies:
     - field.storage.node.field_introduction
     - node.type.story
   module:
+    - allowed_formats
+    - eic_non_required_on_draft
     - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 _core:
   default_config_hash: A7pNl5Asda5EL_kX2TEgS-iky-UI09D1YupvV5lnL-M
 id: node.story.field_introduction
@@ -15,7 +22,7 @@ entity_type: node
 bundle: story
 label: Introduction
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

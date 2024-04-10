@@ -6,13 +6,18 @@ dependencies:
     - field.storage.node.field_image
     - media.type.image
     - node.type.news
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 id: node.news.field_image
 field_name: field_image
 entity_type: node
 bundle: news
 label: Image
 description: 'This field will be used for the teaser view.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

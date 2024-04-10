@@ -6,14 +6,21 @@ dependencies:
     - field.storage.node.field_body
     - node.type.news
   module:
+    - allowed_formats
+    - eic_non_required_on_draft
     - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 id: node.news.field_body
 field_name: field_body
 entity_type: node
 bundle: news
 label: Body
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''

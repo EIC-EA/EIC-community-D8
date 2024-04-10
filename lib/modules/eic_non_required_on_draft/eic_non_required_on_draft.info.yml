@@ -1,0 +1,5 @@
+name: Non required on Draft state
+type: module
+description: Adds ability to designate fields as non required on draft state.
+core_version_requirement: ^9.2 || ^10
+package: European Innovation Council

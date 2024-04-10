@@ -1,0 +1,3 @@
+config-form:
+  js:
+    js/config-form.js: {}
