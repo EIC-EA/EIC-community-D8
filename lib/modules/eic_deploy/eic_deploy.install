@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install().
@@ -282,9 +283,12 @@ function eic_deploy_update_9008(&$sandbox) {
 }
 
 /**
- * Create default terms for story_type and program_type vocabularies.
+ * Update hook.
  */
 function eic_deploy_update_9009() {
+  /**
+   * Create default terms for story_type and program_type vocabularies.
+   */
   $terms = [
     'story_type' => [
       'News',
@@ -316,4 +320,34 @@ function eic_deploy_update_9009() {
       ])->save();
     }
   }
+
+  /**
+   * Removes 'join group' permission role.
+   */
+  $roles = [
+    'organisation-bf4b46c3a',
+  ];
+
+  $permissions_to_remove = [
+    'join group',
+  ];
+
+  foreach ($roles as $role_id) {
+    $changed = FALSE;
+
+    $role = Role::load($role_id);
+    if ($role) {
+      foreach ($permissions_to_remove as $permission) {
+        if ($role->hasPermission($permission)) {
+          $role->revokePermission($permission);
+          $changed = TRUE;
+        }
+      }
+
+      if ($changed) {
+        $role->save();
+      }
+    }
+  }
 }
+
