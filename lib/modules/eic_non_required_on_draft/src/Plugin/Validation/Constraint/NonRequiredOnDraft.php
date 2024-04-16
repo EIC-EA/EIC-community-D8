@@ -22,6 +22,6 @@ class NonRequiredOnDraft extends Constraint {
    *
    * @var string
    */
-  public string $message = '@field_label field is required in non draft state.';
+  public string $message = '@field_label field is required in non draft states.';
 
 }

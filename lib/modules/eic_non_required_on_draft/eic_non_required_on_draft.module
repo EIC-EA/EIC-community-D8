@@ -5,7 +5,10 @@
  * Module file for the Non require on Draft module.
  */
 
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -78,4 +81,166 @@ function _eic_non_required_on_draft_entity_is_publishable($entity_class) {
   }
 
   return TRUE;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_non_required_on_draft_preprocess_datetime_wrapper(&$variables) {
+  $element = $variables['element'];
+  if (isset($element['#eic_non_required_on_draft']) && $element['#eic_non_required_on_draft']) {
+    $variables['title_attributes']['class'][] = 'form-non-required-on-draft';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_non_required_on_draft_preprocess_field_multiple_value_form(&$variables) {
+  $element = $variables['element'];
+  $variables['multiple'] = $element['#cardinality_multiple'];
+  if ($variables['multiple']) {
+    $header_attributes = new Attribute(['class' => ['label']]);
+    if (!empty($element['#required'])) {
+      $header_attributes['class'][] = 'js-form-required';
+      $header_attributes['class'][] = 'form-required';
+    }
+
+    if (isset($element['#eic_non_required_on_draft']) && $element['#eic_non_required_on_draft']) {
+      $header_attributes['class'][] = 'form-non-required-on-draft';
+    }
+
+    $header = [
+      [
+        'data' => [
+          '#prefix' => '<h4' . $header_attributes . '>',
+          '#markup' => $element['#title'],
+          '#suffix' => '</h4>',
+        ],
+        'colspan' => 2,
+        'class' => ['field-label'],
+      ],
+      t('Order', [], ['context' => 'Sort order']),
+    ];
+
+    // On Drupal 10.2 or later, we must insert an empty array for the th tag to
+    // resolve a button rendering issue.
+    // @see https://www.drupal.org/project/require_on_publish/issues/3410535
+    if (version_compare(\Drupal::VERSION, '10.2', '>=')) {
+      array_splice($header, 1, 0, [[]]);
+    }
+
+    $variables['table']['#header'] = $header;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_non_required_on_draft_preprocess_fieldset(&$variables) {
+  $element = $variables['element'];
+  if (isset($element['#eic_non_required_on_draft']) && $element['#eic_non_required_on_draft']) {
+    $variables['legend_span']['attributes'] = new Attribute(['class' => ['form-non-required-on-draft']]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_non_required_on_draft_preprocess_form_element(&$variables) {
+  $element = $variables['element'];
+  if (isset($element['#eic_non_required_on_draft']) && $element['#eic_non_required_on_draft']) {
+    $variables['label']['#attributes']['class'][] = 'form-non-required-on-draft';
+  }
+}
+
+/**
+ * Implements hook_field_widget_entity_reference_paragraphs_form_alter().
+ */
+function eic_non_required_on_draft_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  _eic_non_required_on_draft_add_indicator_to_paragraph($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_widget_single_element_WIDGET_TYPE_form_alter().
+ */
+function eic_non_required_on_draft_field_widget_single_element_paragraphs_form_alter(array &$element, FormStateInterface $form_state, array $context) {
+  _eic_non_required_on_draft_add_indicator_to_paragraph($element, $form_state, $context);
+}
+
+/**
+ * Helper function that adds an indicator to paragraph elements.
+ */
+function _eic_non_required_on_draft_add_indicator_to_paragraph(&$element, FormStateInterface $form_state, $context) {
+  $paragraph_type = $element['#paragraph_type'];
+  $fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('paragraph', $paragraph_type);
+  foreach ($fields as $field_config) {
+    if (!($field_config instanceof FieldConfigInterface)) {
+      continue;
+    }
+    if ($field_config->getThirdPartySetting('eic_non_required_on_draft', 'non_required_on_draft', FALSE)) {
+      $field_name = $field_config->getName();
+      $element['#attached']['library'][] = 'eic_non_required_on_draft/non_required_on_draft';
+      if (isset($element['subform'][$field_name]['widget'])) {
+        eic_non_required_on_draft_add_indicator($element['subform'][$field_name]['widget']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_non_required_on_draft_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof EntityFormInterface) {
+    return;
+  }
+  $entity = $form_object->getEntity();
+  if (!_eic_non_required_on_draft_entity_is_publishable(get_class($entity))) {
+    return;
+  }
+  foreach ($entity->getFields() as $field) {
+    $field_config = $field->getFieldDefinition();
+    if (!($field_config instanceof FieldConfigInterface)) {
+      continue;
+    }
+    if ($field_config->getThirdPartySetting('eic_non_required_on_draft', 'non_required_on_draft', FALSE)) {
+      $field_name = $field_config->getName();
+      if (!isset($form[$field_name])) {
+        continue;
+      }
+      $form['#attached']['library'][] = 'eic_non_required_on_draft/non_required_on_draft';
+      eic_non_required_on_draft_add_indicator($form[$field_name]['widget']);
+    }
+  }
+}
+
+/**
+ * Adds an indicator to fields that are required on publish.
+ *
+ * @param array $widget
+ *   The widget array.
+ */
+function eic_non_required_on_draft_add_indicator(array &$widget) {
+  $widget['#eic_non_required_on_draft'] = TRUE;
+
+  if (array_key_exists('target_id', $widget)) {
+    $widget['target_id']['#eic_non_required_on_draft'] = TRUE;
+  }
+  elseif (array_key_exists('value', $widget)) {
+    $widget['value']['#eic_non_required_on_draft'] = TRUE;
+
+    if (array_key_exists('title', $widget['value']) && is_array($widget['value']['title'])) {
+      $widget['value']['title']['#eic_non_required_on_draft'] = TRUE;
+    }
+  }
+  elseif (array_key_exists(0, $widget)) {
+    $widget[0]['#eic_non_required_on_draft'] = TRUE;
+
+    if (array_key_exists('value', $widget[0])) {
+      $widget[0]['value']['#eic_non_required_on_draft'] = TRUE;
+    }
+  }
 }
