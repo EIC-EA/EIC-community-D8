@@ -320,34 +320,25 @@ function eic_deploy_update_9009() {
       ])->save();
     }
   }
+}
 
-  /**
-   * Removes 'join group' permission role.
-   */
+/**
+ * Removes organisation group permission 'join group' to SA/SCM.
+ */
+function eic_deploy_update_9010() {
   $roles = [
     'organisation-bf4b46c3a',
+    'organisation-9ba2627b5'
   ];
 
-  $permissions_to_remove = [
+  $new_permissions = [
     'join group',
   ];
 
-  foreach ($roles as $role_id) {
-    $changed = FALSE;
+  $group_visibilities = ['public'];
 
-    $role = Role::load($role_id);
-    if ($role) {
-      foreach ($permissions_to_remove as $permission) {
-        if ($role->hasPermission($permission)) {
-          $role->revokePermission($permission);
-          $changed = TRUE;
-        }
-      }
+  $allowed_group_types = ['organisation'];
 
-      if ($changed) {
-        $role->save();
-      }
-    }
-  }
+  eic_deploy_remove_group_permissions_to_role($new_permissions, $roles, $group_visibilities, $allowed_group_types);
 }
 
