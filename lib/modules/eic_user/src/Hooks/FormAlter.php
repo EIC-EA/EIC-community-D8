@@ -95,9 +95,16 @@ class FormAlter implements ContainerInjectionInterface {
 
       // Disable fields for non power users.
       if (!$current_user_is_admin) {
-        $form['member_profiles']['widget'][0]['entity']['field_vocab_job_title']['#disabled'] = TRUE;
         $form['member_profiles']['widget'][0]['entity']['field_vocab_user_type']['#disabled'] = TRUE;
       }
+    }
+
+    // Removes helper text from email field for CAS user.
+    if (
+      \Drupal::moduleHandler()->moduleExists('cas') &&
+      \Drupal::service('cas.user_manager')->getCasUsernameForAccount($this->currentUser->id())
+    ) {
+      unset($form['account']['mail']['#description']);
     }
   }
 
@@ -254,7 +261,6 @@ class FormAlter implements ContainerInjectionInterface {
 
     // Disable fields for non power users.
     if (!$current_user_is_admin) {
-      $form['field_vocab_job_title']['#disabled'] = TRUE;
       $form['field_vocab_user_type']['#disabled'] = TRUE;
     }
   }

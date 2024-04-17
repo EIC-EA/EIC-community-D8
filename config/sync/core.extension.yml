@@ -59,8 +59,10 @@ module:
   eic_content: 0
   eic_content_book: 0
   eic_content_discussion: 0
+  eic_content_gallery: 0
   eic_content_story: 0
   eic_content_wiki_page: 0
+  eic_datepicker: 0
   eic_deploy: 0
   eic_events: 0
   eic_flags: 0
@@ -134,9 +136,11 @@ module:
   language: 0
   link: 0
   locale: 0
+  log_stdout: 0
   mailsystem: 0
   masquerade: 0
   matomo: 0
+  maxlength: 0
   media: 0
   media_entity_download: 0
   media_library: 0

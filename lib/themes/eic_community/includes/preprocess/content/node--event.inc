@@ -45,6 +45,11 @@ function eic_community_preprocess_node__event(array &$variables) {
         }
       }
 
+      // Privacy information, if current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $teaser['author'] =  NULL;
+      }
+
       // Get the start date of the event.
       $start_date = 0;
       $end_date = 0;

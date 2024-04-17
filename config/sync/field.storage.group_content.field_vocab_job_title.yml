@@ -1,13 +1,13 @@
-uuid: 0b9255d7-c8d0-4fcf-9f0f-090774f4254b
+uuid: 2434f09f-471c-43cd-a0b6-a17ca8b9cf1e
 langcode: en
 status: true
 dependencies:
   module:
-    - profile
+    - group
     - taxonomy
-id: profile.field_vocab_job_title
+id: group_content.field_vocab_job_title
 field_name: field_vocab_job_title
-entity_type: profile
+entity_type: group_content
 type: entity_reference
 settings:
   target_type: taxonomy_term

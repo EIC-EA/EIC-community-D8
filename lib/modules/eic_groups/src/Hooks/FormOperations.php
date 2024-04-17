@@ -6,11 +6,13 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_user\UserHelper;
 use Drupal\grequest\MembershipRequestManager;
 use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest;
 use Drupal\group\Entity\Group;
@@ -72,6 +74,13 @@ class FormOperations implements ContainerInjectionInterface {
   protected $requestStack;
 
   /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\grequest\MembershipRequestManager $membership_request_manager
@@ -86,6 +95,8 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user service.
    */
   public function __construct(
     MembershipRequestManager $membership_request_manager,
@@ -93,7 +104,8 @@ class FormOperations implements ContainerInjectionInterface {
     GroupFeaturePluginManager $group_feature_plugin_manager,
     EICGroupsHelperInterface $eic_groups_helper,
     RouteMatchInterface $route_match,
-    RequestStack $request_stack
+    RequestStack $request_stack,
+    AccountProxyInterface $current_user
   ) {
     $this->membershipRequestManager = $membership_request_manager;
     $this->configFactory = $config_factory;
@@ -101,6 +113,7 @@ class FormOperations implements ContainerInjectionInterface {
     $this->eicGroupsHelper = $eic_groups_helper;
     $this->routeMatch = $route_match;
     $this->requestStack = $request_stack;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -113,7 +126,8 @@ class FormOperations implements ContainerInjectionInterface {
       $container->get('plugin.manager.group_feature'),
       $container->get('eic_groups.helper'),
       $container->get('current_route_match'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('current_user')
     );
   }
 
@@ -184,6 +198,24 @@ class FormOperations implements ContainerInjectionInterface {
       ->setOption('query', $query->all());
     $redirect = new RedirectResponse($redirect_url->toString());
     $redirect->send();
+  }
+
+  /**
+   * Implements hook_form_alter() for group_content form.
+   */
+  public function groupContentFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $form_state->getFormObject()->getEntity();
+
+    switch ($group_content->getContentPlugin()->getBaseId()) {
+      case 'group_membership':
+        // Hide some fields for non power-users.
+        if (!UserHelper::isPowerUser($this->currentUser->getAccount())) {
+          $form['field_vocab_job_title']['#disabled'] = TRUE;
+        }
+        break;
+
+    }
   }
 
   /**

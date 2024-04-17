@@ -33,7 +33,11 @@
 %}
 
 {# Attach flag count. #}
-{% set count = ' (' ~ flagcount(flag, flaggable) ~ ')' %}
+{% if flag is not null %}
+  {% set count = ' (' ~ flagcount(flag, flaggable) ~ ')' %}
+{% else %}
+  {% set count = '(0)' %}
+{% endif %}
 
 {# Set nofollow to prevent search bots from crawling anonymous flag links #}
 {% set attributes = attributes.setAttribute('rel', 'nofollow') %}

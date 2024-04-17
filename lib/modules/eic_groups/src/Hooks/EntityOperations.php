@@ -623,7 +623,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
           // If invited user is not anonymous and current user does not have
           // permission to see email addresses, we deny access.
-          if (!$user->isAnonymous() && !$account->hasPermission('view user email addresses')) {
+          if ($user && !$user->isAnonymous() && !$account->hasPermission('view user email addresses')) {
             $access = AccessResult::forbidden();
           }
         }

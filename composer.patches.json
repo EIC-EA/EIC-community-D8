@@ -11,7 +11,9 @@
       "2329253 - Allow the ChangedItem to skip updating the entity's \"changed\" timestamp when synchronizing (f.e. when migrating)": "https://www.drupal.org/files/issues/2022-12-07/2329253-97.patch",
       "3052115 - Mark an entity as 'syncing' during a migration update": "https://www.drupal.org/files/issues/2022-06-16/3052115-53.patch",
       "2907760 - Notice: Undefined index: default in Drupal\\views\\Plugin\\views\\PluginBase->setOptionDefaults()": "https://www.drupal.org/files/issues/2022-05-26/2907760-11-9.3.x.patch",
-      "3183509 - Use the user display name instead of the username on the user authoring information in the node edit form": "https://git.drupalcode.org/project/drupal/-/merge_requests/352.patch"
+      "3183509 - Use the user display name instead of the username on the user authoring information in the node edit form": "https://git.drupalcode.org/project/drupal/-/merge_requests/352.patch",
+      "Content moderation does not sanity check original entity moderate state is present / exists": "https://www.drupal.org/files/issues/2022-06-09/add-sanity-checking-to-content-moderation-original-value-checks.patch",
+      "EICNET-3009 - Change advanced sidebar \"Last saved\" datetime to EU format": "patches/core/EICNET-3009-change-date-format-last-saved.patch"
     },
     "drupal/address": {
       "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch",
@@ -87,7 +89,8 @@
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
     },
     "drupal/publication_date": {
-      "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch"
+      "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
+      "EICNET-3009: Change date format on \"Published on\" description": "patches/publication_date/EICNET-3009-change-date-format-published-on-description.patch"
     },
     "drupal/scheduler_content_moderation_integration": {
       "3285808 - Scheduler breaks ajax requests when content moderation is enabled": "https://www.drupal.org/files/issues/2022-06-15/scheduler-content-moderation-state-values-breaks-node-form-3285808-2.patch"

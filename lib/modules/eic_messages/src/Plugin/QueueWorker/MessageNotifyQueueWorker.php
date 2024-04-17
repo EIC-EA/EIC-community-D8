@@ -5,6 +5,7 @@ namespace Drupal\eic_messages\Plugin\QueueWorker;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\eic_messages\Stamps\PersistentMessageStamp;
+use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\message_notify\MessageNotifier;
 use Drupal\user\UserInterface;
@@ -102,7 +103,14 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
     }
 
     $owner = $message->getOwner();
-    if (!$owner instanceof UserInterface || !filter_var($owner->getEmail(), FILTER_VALIDATE_EMAIL)) {
+    if (!$owner instanceof UserInterface || !filter_var(
+        $owner->getEmail(),
+        FILTER_VALIDATE_EMAIL
+      )) {
+      return;
+    }
+
+    if (UserHelper::isUserBlockedOrUnsubscribed($owner)) {
       return;
     }
 

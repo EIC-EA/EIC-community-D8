@@ -11,3 +11,6 @@ services:
     arguments: [ '@settings' ]
     tags:
       - { name: http_middleware, priority: 301 }
+  eic_helper.file_archiver:
+    class: Drupal\eic_helper\FileArchiver
+    arguments: [ '@file_system' ]

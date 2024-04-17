@@ -1,9 +1,12 @@
 uuid: c207ace2-906e-43d0-8350-fb9078cf494d
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - eic_content_gallery
 id: sensitive
 label: 'Sensitive content administrator'
 weight: -7
 is_admin: null
-permissions: {  }
+permissions:
+  - 'download gallery archive'
