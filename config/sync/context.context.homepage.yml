@@ -4,10 +4,10 @@ status: true
 dependencies:
   config:
     - views.view.groups_homepage
-    - views.view.latest_news_and_stories
   content:
     - 'block_content:cta_tiles:880aff79-c4fa-416e-9703-0a3119bff5d0'
     - 'block_content:facts_figures:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
+    - 'block_content:latest_news_stories:844a381c-6076-4279-834e-a75de967cf65'
     - 'block_content:social_media:4b678ea5-f56e-45af-8399-7adde0abab77'
   module:
     - block_content
@@ -129,7 +129,7 @@ reactions:
         provider: eic_content
         label_display: '0'
         region: content
-        weight: '-4'
+        weight: '-3'
         custom_id: eic_content_operations
         theme: eic_community
         css_class: ''
@@ -176,22 +176,23 @@ reactions:
         views_label: ''
         items_per_page: none
         third_party_settings: {  }
-      ef3b3ed4-eeef-4095-97b9-b199d8c168ea:
-        uuid: ef3b3ed4-eeef-4095-97b9-b199d8c168ea
-        id: 'views_block:latest_news_and_stories-homepage'
-        label: ''
-        provider: views
+      814db212-d669-41a5-99fb-56e134c6fe1b:
+        uuid: 814db212-d669-41a5-99fb-56e134c6fe1b
+        id: 'block_content:844a381c-6076-4279-834e-a75de967cf65'
+        label: 'Homepage - Latest News & Stories'
+        provider: block_content
         label_display: '0'
         region: content
-        weight: '-3'
-        custom_id: views_block_latest_news_and_stories_homepage
+        weight: '-2'
+        custom_id: block_content_844a381c_6076_4279_834e_a75de967cf65
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage
         context_mapping: {  }
-        views_label: ''
-        items_per_page: none
+        status: true
+        info: ''
+        view_mode: full
         third_party_settings: {  }
     include_default_blocks: 1
     saved: false
