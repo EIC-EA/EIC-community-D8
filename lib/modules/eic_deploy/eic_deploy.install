@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install().
@@ -282,9 +283,12 @@ function eic_deploy_update_9008(&$sandbox) {
 }
 
 /**
- * Create default terms for story_type and program_type vocabularies.
+ * Update hook.
  */
 function eic_deploy_update_9009() {
+  /**
+   * Create default terms for story_type and program_type vocabularies.
+   */
   $terms = [
     'story_type' => [
       'News',
@@ -319,9 +323,30 @@ function eic_deploy_update_9009() {
 }
 
 /**
+ * Removes organisation group permission 'join group' to SA/SCM.
+ */
+function eic_deploy_update_9010() {
+  $roles = [
+    'organisation-bf4b46c3a',
+    'organisation-9ba2627b5'
+  ];
+
+  $new_permissions = [
+    'join group',
+  ];
+
+  $group_visibilities = ['public'];
+
+  $allowed_group_types = ['organisation'];
+
+  eic_deploy_remove_group_permissions_to_role($new_permissions, $roles, $group_visibilities, $allowed_group_types);
+}
+
+
+/**
  * Creates the video block for the homepage.
  */
-function eic_deploy_update_9010(&$sandbox) {
+function eic_deploy_update_9011(&$sandbox) {
   $block = BlockContent::create([
     'status' => TRUE,
     'type' => 'video',

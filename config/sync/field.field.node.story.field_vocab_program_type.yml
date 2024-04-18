@@ -6,13 +6,18 @@ dependencies:
     - field.storage.node.field_vocab_program_type
     - node.type.story
     - taxonomy.vocabulary.program_type
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 id: node.story.field_vocab_program_type
 field_name: field_vocab_program_type
 entity_type: node
 bundle: story
 label: 'Program type'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''

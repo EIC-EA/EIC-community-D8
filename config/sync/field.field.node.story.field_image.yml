@@ -6,6 +6,11 @@ dependencies:
     - field.storage.node.field_image
     - media.type.image
     - node.type.story
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 _core:
   default_config_hash: sWKnuskz5kIwIdWBwnGWpZ555x5CpNZGiBOBVJRjdPg
 id: node.story.field_image
@@ -14,7 +19,7 @@ entity_type: node
 bundle: story
 label: Image
 description: 'This field will be used for the teaser view.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
