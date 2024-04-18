@@ -968,9 +968,8 @@ display:
           admin_label: ''
           entity_type: group
           plugin_id: group_visibility
-          operator: in
-          value:
-            public: public
+          operator: =
+          value: null
           group: 2
           exposed: false
           expose:
@@ -987,7 +986,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
           is_grouped: false
           group_info:
             label: ''
