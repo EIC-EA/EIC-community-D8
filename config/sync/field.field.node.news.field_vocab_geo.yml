@@ -6,13 +6,18 @@ dependencies:
     - field.storage.node.field_vocab_geo
     - node.type.news
     - taxonomy.vocabulary.geo
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 id: node.news.field_vocab_geo
 field_name: field_vocab_geo
 entity_type: node
 bundle: news
 label: 'Regions & Countries'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
