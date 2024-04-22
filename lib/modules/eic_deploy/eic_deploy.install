@@ -342,3 +342,17 @@ function eic_deploy_update_9010() {
   eic_deploy_remove_group_permissions_to_role($new_permissions, $roles, $group_visibilities, $allowed_group_types);
 }
 
+
+/**
+ * Creates the video block for the homepage.
+ */
+function eic_deploy_update_9011(&$sandbox) {
+  $block = BlockContent::create([
+    'status' => TRUE,
+    'type' => 'video',
+    // We keep the same UUIDs since they are referenced in configs.
+    'uuid' => 'a5fbe1ac-d96b-43dd-b690-0fc693a48f29',
+    'info' => 'Homepage - Video',
+  ]);
+  $block->save();
+}

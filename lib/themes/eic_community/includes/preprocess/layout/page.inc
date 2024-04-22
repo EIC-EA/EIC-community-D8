@@ -224,6 +224,7 @@ function _preprocess_front_page(&$variables) {
     if (isset($section['#id'])) {
       switch ($section['#id']) {
         case 'homepage_stay_up_to_date':
+        case 'homepage_video':
           $front['middle_left'][] = $section;
           break;
 

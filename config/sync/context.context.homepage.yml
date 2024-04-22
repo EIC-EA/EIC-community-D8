@@ -9,6 +9,7 @@ dependencies:
     - 'block_content:facts_figures:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
     - 'block_content:latest_news_stories:844a381c-6076-4279-834e-a75de967cf65'
     - 'block_content:social_media:4b678ea5-f56e-45af-8399-7adde0abab77'
+    - 'block_content:video:a5fbe1ac-d96b-43dd-b690-0fc693a48f29'
   module:
     - block_content
     - eic_blocks
@@ -44,6 +45,23 @@ reactions:
     id: blocks
     uuid: 1172ee8b-57fe-4611-b929-3d99b1b469d8
     blocks:
+      e7d5db3e-755d-49bf-88fb-0bee9cbb256e:
+        uuid: e7d5db3e-755d-49bf-88fb-0bee9cbb256e
+        id: 'block_content:844a381c-6076-4279-834e-a75de967cf65'
+        label: 'Homepage - Latest News & Stories'
+        provider: block_content
+        label_display: '0'
+        region: content
+        weight: '-1'
+        custom_id: homepage_latest_news_stories
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       74a049cb-f4c8-48e3-875a-8070112eddb0:
         uuid: 74a049cb-f4c8-48e3-875a-8070112eddb0
         id: 'block_content:880aff79-c4fa-416e-9703-0a3119bff5d0'
@@ -149,7 +167,7 @@ reactions:
         provider: views
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '-1'
         custom_id: views_block_groups_homepage_block_groups_homepage
         theme: eic_community
         css_class: ''
@@ -185,6 +203,24 @@ reactions:
         region: content
         weight: '-2'
         custom_id: block_content_844a381c_6076_4279_834e_a75de967cf65
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+        third_party_settings: {  }
+      dfd45903-0549-4ed7-880c-60d0db8ec785:
+        uuid: dfd45903-0549-4ed7-880c-60d0db8ec785
+        id: 'block_content:a5fbe1ac-d96b-43dd-b690-0fc693a48f29'
+        label: 'Homepage - Video'
+        provider: block_content
+        label_display: '0'
+        region: content
+        weight: '1'
+        custom_id: homepage_video
         theme: eic_community
         css_class: ''
         unique: 0
