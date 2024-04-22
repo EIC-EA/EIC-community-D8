@@ -12,6 +12,7 @@ use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
@@ -398,7 +399,8 @@ class CronOperations implements ContainerInjectionInterface {
       if (
         !$group instanceof GroupInterface ||
         !$invitee instanceof UserInterface ||
-        !$group_content instanceof GroupContent
+        !$group_content instanceof GroupContent ||
+        $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE
       ) {
         continue;
       }

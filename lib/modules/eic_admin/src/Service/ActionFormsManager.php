@@ -10,6 +10,7 @@ use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -249,11 +250,13 @@ class ActionFormsManager {
    */
   protected function stripOutUnwantedQueryParams(string $path, array $allowed_params) {
     $parts = UrlHelper::parse($path);
-    // If the are no params, we return the URL.
+
+    // If there are no params, we return the URL.
     if (!$parts['query']) {
       return $path;
     }
 
+    // Remove parameters that are not allowed.
     $query_params = $parts['query'];
     foreach ($query_params as $query_param => $value) {
       if (!in_array($query_param, $allowed_params)) {
@@ -264,7 +267,8 @@ class ActionFormsManager {
     // Rebuild the query string.
     $parts['query'] = UrlHelper::buildQuery($query_params);
 
-    return http_build_url($parts);
+    // Build the url and handle the parameters of UrlHelper::parse (path, query, fragment)
+    return Url::fromUri('internal:' . $parts['path'], ['query' => $parts['query'], 'fragment' => $parts['fragment']])->toString();
   }
 
   /**
