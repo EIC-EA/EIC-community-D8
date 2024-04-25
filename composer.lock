@@ -206,7 +206,7 @@
             "version": "4.18.0",
             "dist": {
                 "type": "zip",
-                "url": "https://download.ckeditor.com/div/releases/div_4.18.0.zip"
+                "url": "https://download.ckeditor.com/pagebreak/releases/pagebreak_4.18.0.zip"
             },
             "type": "drupal-library"
         },
