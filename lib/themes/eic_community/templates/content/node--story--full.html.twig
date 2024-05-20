@@ -23,9 +23,13 @@
 
 			{% include "@theme/patterns/components/flags.html.twig" with editorial_actions|default({}) %}
 
-			{% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
+      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
 
 			{% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({})|merge({
+        title_extra_classes: "ecl-featured-list__title"
+      }) %}
+
+      {% include "@theme/patterns/compositions/featured-geo.html.twig" with geo|default({})|merge({
         title_extra_classes: "ecl-featured-list__title"
       }) %}
 

@@ -1,0 +1,25 @@
+<div class="ecl-featured-list">
+  {% if title is not empty %}
+    <h3 class="ecl-u-type-heading-3 {{ title_extra_classes }}">{{ title }}</h3>
+  {% endif %}
+
+  <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+    {% for item in items %}
+      <li class="ecl-unordered-list__item">
+        {% if item.path is not empty %}
+          <a class="ecl-link ecl-link--standalone" href="{{ item.path }}">{{ item.label }}</a>
+        {% else %}
+          {{ item.label }}
+        {% endif %}
+
+        {# Case 1: If item is a parent open a list. #}
+        {% if item.is_parent %}
+          <ul class="ecl-unordered-list">
+        {# Case 2: If you are a child item and the next item is a parent then close the previously opened list #}
+        {% elseif loop.index < items|length and items[loop.index].is_parent %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
