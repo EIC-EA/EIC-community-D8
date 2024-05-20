@@ -29,9 +29,7 @@
         title_extra_classes: "ecl-featured-list__title"
       }) %}
 
-      {% include "@theme/patterns/compositions/featured-geo.html.twig" with geo|default({})|merge({
-        title_extra_classes: "ecl-featured-list__title"
-      }) %}
+      {% include "@theme/patterns/compositions/featured-geo.html.twig" with geo|default({})|merge({}) %}
 
 			{% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({})|merge({}) %}
 		{% endblock %}
