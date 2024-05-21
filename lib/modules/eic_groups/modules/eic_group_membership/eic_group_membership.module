@@ -610,11 +610,20 @@ function eic_group_membership_group_operations_alter(array &$operations, GroupIn
 function eic_group_membership_group_content_insert(EntityInterface $entity) {
   switch ($entity->getContentPlugin()->getPluginId()) {
     case 'group_membership_request':
-      $current_user = \Drupal::currentUser();
+      // Get the ID of the user that requested a membership.
+      $uid = $entity->getEntity()->id();
+
       // Clears the membership_request cache tag in order to update the
       // rendered output of the group header block.
-      Cache::invalidateTags(["membership_request:{$current_user->id()}"]);
+      Cache::invalidateTags(["membership_request:$uid"]);
       break;
 
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_group_membership_group_content_update(EntityInterface $entity) {
+  eic_group_membership_group_content_insert($entity);
 }
