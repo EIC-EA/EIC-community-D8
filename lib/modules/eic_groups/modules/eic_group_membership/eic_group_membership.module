@@ -612,10 +612,11 @@ function eic_group_membership_group_content_insert(EntityInterface $entity) {
     case 'group_membership_request':
       // Get the ID of the user that requested a membership.
       $uid = $entity->getEntity()->id();
+      $gid = $entity->getGroup()->id();
 
       // Clears the membership_request cache tag in order to update the
       // rendered output of the group header block.
-      Cache::invalidateTags(["membership_request:$uid"]);
+      Cache::invalidateTags(["membership_request:$uid:$gid"]);
       break;
 
   }

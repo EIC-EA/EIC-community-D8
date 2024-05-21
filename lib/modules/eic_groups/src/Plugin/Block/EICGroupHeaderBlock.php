@@ -266,7 +266,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $joining_method = $this->eicGroupsHelper->getGroupJoiningMethod($group);
     if ($joining_method === 'tu_group_membership_request') {
-      $cacheable_metadata->addCacheTags(["membership_request:{$this->currentUser->id()}"]);
+      $cacheable_metadata->addCacheTags(["membership_request:{$this->currentUser->id()}:{$group->id()}"]);
 
       // Shows the "Request sent" button if the user already request group membership.
       if (!$membership && $has_sent_membership_request) {
