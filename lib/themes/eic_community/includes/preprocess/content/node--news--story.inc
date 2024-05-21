@@ -135,6 +135,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 
     _eic_community_display_contributors($variables);
     _eic_community_display_topics($variables);
+    _eic_community_display_geo($variables);
     _eic_community_story_related_stories($variables);
   }
 }
@@ -345,6 +346,42 @@ function _eic_community_display_topics(&$variables) {
     'items' => $topics,
   ];
 }
+
+/**
+ * Preproccess Countries and Regions for full news/story.
+ */
+function _eic_community_display_geo(&$variables) {
+  $geo = [];
+
+  foreach ($variables['elements']['field_vocab_geo'] as $key => $value) {
+    if (is_int($key)) {
+      /** @var \Drupal\taxonomy\Entity\Term $term */
+      $term = $value['#options']['entity'];
+      $is_parent = $term->get('parent')->target_id == 0 ?? FALSE;
+
+      if (isset($value['#plain_text'])) {
+        $geo[] = [
+          'label' => $value['#plain_text'],
+          'is_parent' => $is_parent,
+        ];
+      }
+      else {
+        $geo[] = [
+          'path' => $value['#url'],
+          'label' => $value['#title'],
+          'is_parent' => $is_parent,
+        ];
+      }
+    }
+  }
+
+  $variables['geo'] = [
+    'title' => $variables['elements']['field_vocab_geo']['#title'] ?? t('Regions & Countries', [], ['context' => 'eic_community']),
+    'items' => $geo,
+  ];
+}
+
+
 
 /**
  * Preprocess related stories full news/story.
