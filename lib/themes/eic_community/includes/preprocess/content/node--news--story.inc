@@ -357,7 +357,7 @@ function _eic_community_display_geo(&$variables) {
     if (is_int($key)) {
       /** @var \Drupal\taxonomy\Entity\Term $term */
       $term = $value['#options']['entity'];
-      $is_parent = $term->get('parent')->target_id == 0 ?? false;
+      $is_parent = $term->get('parent')->target_id == 0 ?? FALSE;
 
       if (isset($value['#plain_text'])) {
         $geo[] = [
