@@ -274,6 +274,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           'title' => $this->t('Pending approval', [], ['context' => 'eic_groups']),
           'url' => Url::fromRoute('<nolink>'),
           'weight' => 0,
+          'variant' => 'ghost',
+          'extra_attributes' => [
+            [
+            'name' => 'disabled',
+            'value' => 'disabled',
+            ],
+          ],
+          'disabled' => TRUE,
         ];
       }
     }

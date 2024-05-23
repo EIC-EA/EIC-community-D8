@@ -121,8 +121,12 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         'link' => [
           'label' => $link['title'],
           'path' => $link['url'],
+          'variant' => $link['variant'] ?? NULL,
+          'extra_attributes' => $link['extra_attributes'] ?? NULL,
         ],
       ];
+
+
 
       if (isset($link['action'])) {
         $tmp = array_merge($tmp, $link['action']);
