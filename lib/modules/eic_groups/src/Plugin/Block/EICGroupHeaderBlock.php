@@ -281,7 +281,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
             'value' => 'disabled',
             ],
           ],
-          'disabled' => TRUE,
         ];
       }
     }
