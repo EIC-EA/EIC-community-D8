@@ -236,6 +236,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    $has_sent_membership_request = TRUE;
     // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
       if (in_array($action['url']->getRouteName(),
@@ -247,6 +248,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         unset($user_operation_links[$key]);
         // We discard the operation link if user doesn't have access to it.
         if ($action['url']->access($this->currentUser)) {
+          if ($action['url']->getRouteName() === 'entity.group.group_request_membership') {
+            $has_sent_membership_request = FALSE;
+          }
           // We add the current page URL as destination so that the user will
           // be redirected back to the current page after joining the group.
           $action['url']->setOption('query',
@@ -257,6 +261,27 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           );
           $operation_links[$key] = $action;
         }
+      }
+    }
+
+    $joining_method = $this->eicGroupsHelper->getGroupJoiningMethod($group);
+    if ($joining_method === 'tu_group_membership_request') {
+      $cacheable_metadata->addCacheTags(["membership_request:{$this->currentUser->id()}:{$group->id()}"]);
+
+      // Shows the "Pending approval" button if the user already request group membership.
+      if (!$membership && $has_sent_membership_request) {
+        $operation_links[] = [
+          'title' => $this->t('Pending approval', [], ['context' => 'eic_groups']),
+          'url' => Url::fromRoute('<nolink>'),
+          'weight' => 0,
+          'variant' => 'ghost',
+          'extra_attributes' => [
+            [
+            'name' => 'disabled',
+            'value' => 'disabled',
+            ],
+          ],
+        ];
       }
     }
 
