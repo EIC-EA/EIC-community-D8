@@ -268,8 +268,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($joining_method === 'tu_group_membership_request') {
       $cacheable_metadata->addCacheTags(["membership_request:{$this->currentUser->id()}:{$group->id()}"]);
 
-      // Shows the "Pending approval" button if the user already request group membership.
-      if (!$membership && $has_sent_membership_request) {
+      // Shows the "Pending approval" button if the user is authenticated,
+      // not a group member and already has requested group membership.
+      if ($this->currentUser->isAuthenticated() && !$membership && $has_sent_membership_request) {
         $operation_links[] = [
           'title' => $this->t('Pending approval', [], ['context' => 'eic_groups']),
           'url' => Url::fromRoute('<nolink>'),
