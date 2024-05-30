@@ -5,8 +5,6 @@
  * Contains implementation for hook_preprocess_page().
  */
 
-use Drupal\Core\Template\Attribute;
-
 /**
  * Implements hook_preprocess_page().
  */
