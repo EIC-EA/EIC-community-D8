@@ -369,18 +369,38 @@ function _eic_community_display_geo(&$variables) {
       $term = $value['#options']['entity'];
       $is_parent = $term->get('parent')->target_id == 0 ?? FALSE;
 
-      if (isset($value['#plain_text'])) {
-        $geo[] = [
-          'label' => $value['#plain_text'],
-          'is_parent' => $is_parent,
-        ];
+      if ($is_parent) {
+        /** @var int $term_id */
+        $term_id = $term->id();
+        if (!isset($geo[$term_id])) {
+          $geo[$term_id] = [
+            'label' => $term->label(),
+            'path' => $term->toUrl()->toString(),
+            'countries' => []
+          ];
+        }
       }
       else {
-        $geo[] = [
-          'path' => $value['#url'],
-          'label' => $value['#title'],
-          'is_parent' => $is_parent,
-        ];
+        /** @var int $parent_id */
+        $parent_id = $term->get('parent')->target_id;
+        if (isset($geo[$parent_id])) {
+          $geo[$parent_id]['countries'][] = [
+            'label' => $term->label(),
+            'path' => $term->toUrl()->toString(),
+          ];
+        }
+        else {
+          $geo[$parent_id] = [
+            'label' => $term->get('parent')->entity->label(),
+            'path' => $term->get('parent')->entity->toUrl()->toString(),
+            'countries' => [
+              0 => [
+                'label' => $term->label(),
+                'path' => $term->toUrl()->toString(),
+              ]
+            ]
+          ];
+        }
       }
     }
   }
