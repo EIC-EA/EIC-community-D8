@@ -351,6 +351,16 @@ function _eic_community_display_topics(&$variables) {
  * Preproccess Countries and Regions for full news/story.
  */
 function _eic_community_display_geo(&$variables) {
+  /**
+  $geo['142'] = [
+    'label' => $term->name,
+    'path' => $term->entityURL(),
+    'coutries' => [
+      'label' =>  $child_term->name,
+      'path' => $child_term->entityURL(),
+    ]
+  ]
+  */
   $geo = [];
 
   foreach ($variables['elements']['field_vocab_geo'] as $key => $value) {
