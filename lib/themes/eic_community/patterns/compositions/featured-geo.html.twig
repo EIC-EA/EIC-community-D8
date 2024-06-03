@@ -3,58 +3,30 @@
     <h3 class="ecl-u-type-heading-3 {{ title_extra_classes }}">{{ title }}</h3>
   {% endif %}
 
-{#  <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">#}
-
-    <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
-      {% for region in items %}
-        <li class="ecl-unordered-list__item">
-          {% if region.path is not empty %}
-            <a class="ecl-link ecl-link--standalone" href="{{ region.path }}">{{ region.label }}</a>
-          {% else %}
-            {{ region.label }}
-          {% endif %}
-          {% if not region.countries %}
-            <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
-          {% endif %}
-          {% for country in region.countries %}
-            <li class="ecl-unordered-list__item">
-              {% if country.path is not empty %}
-                <a class="ecl-link ecl-link--standalone" href="{{ country.path }}">{{ country.label }}</a>
-              {% else %}
-                {{ country.label }}
-              {% endif %}
-            </li>
-          {% endfor %}
-          {% if not region.countries %}
-            </ul>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-
-
-
-{#    {% for item in items %}#}
-{#      <li class="ecl-unordered-list__item">#}
-{#        {% if item.path is not empty %}#}
-{#          <a class="ecl-link ecl-link--standalone" href="{{ item.path }}">{{ item.label }}</a>#}
-{#        {% else %}#}
-{#          {{ item.label }}#}
-{#        {% endif %}#}
-
-{#        #}{# Case 1: If item is a parent and the next item is not a parent, open a new list. #}
-{#        {% if item.is_parent and (loop.index >= items|length or not items[loop.index].is_parent) %}#}
-{#          <ul class="ecl-unordered-list">#}
-{#          #}{# Case 2: If the current item is not a parent and the next item is a parent, close the current list. #}
-{#        {% elseif not item.is_parent and loop.index < items|length and items[loop.index].is_parent %}#}
-{#          </ul>#}
-{#          #}{# Case 3: If the current item is a parent and the next item is also a parent, do nothing. #}
-{#        {% endif %}#}
-{#      </li>#}
-{#    {% endfor %}#}
-{#    #}{# Close the last open <ul> if the loop ends on a parent item without children #}
-{#    {% if items|last.is_parent %}#}
-{#  </>#}
-{#  {% endif %}#}
-{#  </ul>#}
+  <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+    {% for region in items %}
+      <li class="ecl-unordered-list__item">
+        {% if region.path is not empty %}
+          <a class="ecl-link ecl-link--standalone" href="{{ region.path }}">{{ region.label }}</a>
+        {% else %}
+          {{ region.label }}
+        {% endif %}
+        {% if region.countries.0 %}
+          <ul class="ecl-unordered-list">
+        {% endif %}
+        {% for country in region.countries %}
+          <li class="ecl-unordered-list__item">
+            {% if country.path is not empty %}
+              <a class="ecl-link ecl-link--standalone" href="{{ country.path }}">{{ country.label }}</a>
+            {% else %}
+              {{ country.label }}
+            {% endif %}
+          </li>
+        {% endfor %}
+        {% if region.countries.0 %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
 </div>
