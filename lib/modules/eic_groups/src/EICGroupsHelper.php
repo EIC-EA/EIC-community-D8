@@ -1231,4 +1231,19 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return $label;
   }
 
+  /**
+   * Gets the enabled joining method for a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return string
+   *   The joining method plugin id.
+   */
+  public function getGroupJoiningMethod(GroupInterface $group) {
+    $joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group);
+    $joining_method = reset($joining_methods);
+    return $joining_method['plugin_id'];
+  }
+
 }
