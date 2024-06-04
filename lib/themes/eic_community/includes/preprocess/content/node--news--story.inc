@@ -395,6 +395,14 @@ function _eic_community_display_geo(&$variables) {
     }
   }
 
+  //Sort regions alphabetically
+  usort($geo, function($a, $b){ return strcmp($a['label'], $b['label']); });
+
+  //Sort countries alphabetically
+  foreach ($geo as &$region) {
+    usort($region['countries'], function($a, $b){ return strcmp($a['label'], $b['label']); });
+  }
+
   $variables['geo'] = [
     'title' => $variables['elements']['field_vocab_geo']['#title'] ?? t('Regions & Countries', [], ['context' => 'eic_community']),
     'items' => array_values($geo),
