@@ -397,7 +397,7 @@ function _eic_community_display_geo(&$variables) {
 
   $variables['geo'] = [
     'title' => $variables['elements']['field_vocab_geo']['#title'] ?? t('Regions & Countries', [], ['context' => 'eic_community']),
-    'items' => $geo,
+    'items' => array_values($geo),
   ];
 }
 
