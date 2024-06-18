@@ -23,8 +23,6 @@ permissions:
   - 'access content'
   - 'access site-wide contact form'
   - 'download media'
-  - 'flag like_media'
-  - 'unflag like_media'
   - 'use text format basic_text'
   - 'view banner fragments'
   - 'view bookmark_media'
