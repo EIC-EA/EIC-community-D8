@@ -28,14 +28,16 @@
 
 <div class="{{classes|join(' ')}}">
   <span class="ecl-u-mr-xs">
-    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-      icon: {
-        size: "s",
-        path: "/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg",
-        type: "custom",
-        name: "like",
-      }
-    } only %}
+    {% if eic_icon_path %}
+      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        icon: {
+          size: "s",
+          path: eic_icon_path,
+          type: "custom",
+          name: "like",
+        }
+      } only %}
+    {% endif %}
   </span>
   <span> {{ 'Like'|t }} ({{ flag_count }})</span>
 </div>
