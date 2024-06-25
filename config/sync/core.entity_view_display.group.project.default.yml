@@ -1,0 +1,45 @@
+uuid: 8bb71db8-53c7-4a41-b334-2de6d9067780
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.project.field_body
+    - group.type.project
+  module:
+    - text
+id: group.project.default
+targetEntityType: group
+bundle: project
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  flag_follow_group:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  flag_recommend_group:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden:
+  changed: true
+  created: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

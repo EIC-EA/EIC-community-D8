@@ -1,0 +1,17 @@
+uuid: e6dadbcf-af1e-44b7-8457-e0b9d792e29e
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  enforced:
+    config:
+      - user.role.sensitive
+id: project-9ba2627b5
+label: 'Sensitive content administrator'
+weight: -7
+internal: true
+audience: outsider
+group_type: project
+permissions_ui: false
+permissions: {  }
