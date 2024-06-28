@@ -14,6 +14,4 @@ internal: true
 audience: outsider
 group_type: project
 permissions_ui: false
-permissions:
-  - 'join group'
-  - 'request group membership'
+permissions: {  }
