@@ -1,0 +1,62 @@
+{% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      {% include "@theme/patterns/components/event.html.twig" with {
+        body: full_body
+      } %}
+      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+
+      {% if agenda_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Agenda and information', files: agenda_files} %}
+      {% endif %}
+
+      {% if presentation_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Presentation', files: presentation_files} %}
+      {% endif %}
+
+      {% if additional_files is not empty %}
+        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Additional', files: additional_files} %}
+      {% endif %}
+
+      {% if related_groups is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_groups|default({})|merge({
+          icon_file_path: icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
+          title_extra_classes: "ecl-filelist__title",
+          no_container: true
+        }) only %}
+      {% endif %}
+    {% endblock %}
+
+    {% block sidebar %}
+      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+
+      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+        extra_classes: 'ecl-featured-list',
+      }) %}
+
+      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+      {% if event_infos %}
+        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}
+      {% endif %}
+
+      {% if additional_sidebar_infos %}
+        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
+      {% endif %}
+
+    {% endblock %}
+  {% endembed %}
+
+  {% if not user %}
+    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
+      title: common.login_title,
+      icon_file_path: common.icon_file_path,
+      login: common.login,
+      register: common.register,
+      extra_classes: 'ecl-auth-banner--is-compact',
+    } only %}
+    {% endembed %}
+  {% endif %}
+
+{% endblock %}

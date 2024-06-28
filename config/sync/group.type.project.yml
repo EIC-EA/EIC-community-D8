@@ -7,7 +7,7 @@ dependencies:
 third_party_settings:
   group_flex:
     group_flex_enabler: true
-    group_type_visibility: public
+    group_type_visibility: flex
     group_type_joining_method:
       tu_open_method: tu_open_method
       tu_group_membership_request: tu_group_membership_request
@@ -20,4 +20,5 @@ description: ''
 new_revision: true
 creator_membership: true
 creator_wizard: false
-creator_roles: {  }
+creator_roles:
+  - project-owner

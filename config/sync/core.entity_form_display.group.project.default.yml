@@ -16,13 +16,13 @@ mode: default
 content:
   features:
     type: options_buttons
-    weight: -10
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
   field_body:
     type: text_textarea
-    weight: 121
+    weight: 2
     region: content
     settings:
       rows: 5
@@ -30,7 +30,7 @@ content:
     third_party_settings: {  }
   label:
     type: string_textfield
-    weight: -5
+    weight: 1
     region: content
     settings:
       size: 60
@@ -38,27 +38,27 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 3
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: workflow_buttons
-    weight: 5
+    weight: 4
     region: content
     settings:
       show_current_state: false
     third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 120
+    weight: 6
     region: content
     settings:
       display_label: true

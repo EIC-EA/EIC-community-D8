@@ -1,0 +1,14 @@
+uuid: 68726dd0-a974-4cdf-944a-8930b386b420
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+id: project-admin
+label: Admin
+weight: 11
+internal: false
+audience: member
+group_type: project
+permissions_ui: true
+permissions: {  }
