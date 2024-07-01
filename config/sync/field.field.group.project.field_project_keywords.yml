@@ -1,0 +1,19 @@
+uuid: 4aeccb08-b96a-4d29-8e39-13499089809e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_keywords
+    - group.type.project
+id: group.project.field_project_keywords
+field_name: field_project_keywords
+entity_type: group
+bundle: project
+label: 'Project keywords'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

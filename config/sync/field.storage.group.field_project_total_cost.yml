@@ -1,0 +1,20 @@
+uuid: e353592c-b855-4581-b1bc-fd7d06bf5cec
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_project_total_cost
+field_name: field_project_total_cost
+entity_type: group
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

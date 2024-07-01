@@ -1,0 +1,28 @@
+uuid: b4104d90-9fe8-45a3-ae2c-cb2b48df60c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_total_cost
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_total_cost
+field_name: field_project_total_cost
+entity_type: group
+bundle: project
+label: 'Total cost'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

@@ -1,0 +1,19 @@
+uuid: 69b47391-4158-45fb-9c82-a93b858ff456
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - link
+id: group.field_project_funding_programme
+field_name: field_project_funding_programme
+entity_type: group
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
