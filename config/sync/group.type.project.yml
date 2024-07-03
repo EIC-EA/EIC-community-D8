@@ -6,13 +6,13 @@ dependencies:
     - group_flex
 third_party_settings:
   group_flex:
-    group_flex_enabler: true
+    group_flex_enabler: false
     group_type_visibility: public
     group_type_joining_method:
+      tu_open_method: tu_open_method
+      tu_group_membership_request: tu_group_membership_request
+      group_invitation: group_invitation
       tu_close_method: tu_close_method
-      tu_open_method: '0'
-      tu_group_membership_request: '0'
-      group_invitation: '0'
     group_type_joining_method_override: true
 id: project
 label: Project
