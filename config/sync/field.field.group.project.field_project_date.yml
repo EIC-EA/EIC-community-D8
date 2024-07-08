@@ -1,19 +1,21 @@
-uuid: 4aeccb08-b96a-4d29-8e39-13499089809e
+uuid: e80b1032-4df5-4742-acb5-2cf1d8f3b4fe
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.group.field_project_keywords
+    - field.storage.group.field_project_date
     - group.type.project
-id: group.project.field_project_keywords
-field_name: field_project_keywords
+  module:
+    - datetime_range
+id: group.project.field_project_date
+field_name: field_project_date
 entity_type: group
 bundle: project
-label: Keywords
+label: Date
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: daterange

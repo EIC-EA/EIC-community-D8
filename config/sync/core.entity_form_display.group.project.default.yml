@@ -6,17 +6,21 @@ dependencies:
     - field.field.group.project.field_body
     - field.field.group.project.field_project_acronym
     - field.field.group.project.field_project_call_for_proposal
+    - field.field.group.project.field_project_date
+    - field.field.group.project.field_project_duration
     - field.field.group.project.field_project_ecmax_contributio
     - field.field.group.project.field_project_funding_programme
     - field.field.group.project.field_project_grant_agreement_id
     - field.field.group.project.field_project_keywords
     - field.field.group.project.field_project_objective
+    - field.field.group.project.field_project_related_topic
     - field.field.group.project.field_project_status
     - field.field.group.project.field_project_sub_call
     - field.field.group.project.field_project_teaser
     - field.field.group.project.field_project_total_cost
     - group.type.project
   module:
+    - datetime_range
     - link
     - path
     - text
@@ -56,6 +60,19 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+  field_project_date:
+    type: daterange_default
+    weight: 38
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_project_duration:
+    type: number
+    weight: 39
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   field_project_ecmax_contributio:
     type: number
     weight: 31
@@ -92,6 +109,14 @@ content:
     region: content
     settings:
       rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_related_topic:
+    type: string_textfield
+    weight: 40
+    region: content
+    settings:
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_project_status:
