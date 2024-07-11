@@ -18,6 +18,7 @@ dependencies:
     - field.field.group.project.field_project_sub_call
     - field.field.group.project.field_project_teaser
     - field.field.group.project.field_project_total_cost
+    - field.field.group.project.field_project_website
     - group.type.project
   module:
     - datetime_range
@@ -147,6 +148,14 @@ content:
     region: content
     settings:
       placeholder: ''
+    third_party_settings: {  }
+  field_project_website:
+    type: link_default
+    weight: 41
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   label:
     type: string_textfield

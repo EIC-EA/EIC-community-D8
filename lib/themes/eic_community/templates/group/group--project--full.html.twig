@@ -1,62 +1,122 @@
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
-      {% include "@theme/patterns/components/event.html.twig" with {
-        body: full_body
-      } %}
-      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+      <section id="organisation-and-people">
+        <h2>{{ "Organisations and people"|t({}, {'context': 'eic_community'}) }}</h2>
+        <div>{{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}</div>
+      </section>
 
-      {% if agenda_files is not empty %}
-        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Agenda and information', files: agenda_files} %}
-      {% endif %}
+      {#      {% if block_enabled.announcements %}#}
+      {#        {% if announcements is not empty %}#}
+      {#          {{ attach_library('eic_community/react-block-announcements') }}#}
+      {#          <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">#}
+      {#            <h2>{{ announcements.title }}</h2>#}
+      {#            <div id="react-announcements" data-items="{{ announcements.items | json_encode }}"></div>#}
+      {#          </section>#}
+      {#        {% elseif can_add_announcement %}#}
+      {#          <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">#}
+      {#            <h2>{{ 'Announcements' | t }}</h2>#}
+      {#            <p>{{ 'No offers or needs for the moment.' }}</p>#}
+      {#            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with empty_announcements|default({})|merge({#}
+      {#              icon_path: icon_file_path,#}
+      {#            }) %}#}
+      {#          </section>#}
+      {#        {% endif %}#}
+      {#      {% endif %}#}
 
-      {% if presentation_files is not empty %}
-        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Presentation', files: presentation_files} %}
-      {% endif %}
+      {#      {% if block_enabled.news %}#}
+      {#        {{ news }}#}
+      {#      {% endif %}#}
 
-      {% if additional_files is not empty %}
-        {% include "@eic_community/group/group-attachments.html.twig" with {title: 'Additional', files: additional_files} %}
-      {% endif %}
+      {#      {% if teams is not empty and block_enabled.members %}#}
+      {#        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({#}
+      {#          icon_file_path: icon_file_path,#}
+      {#          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",#}
+      {#          no_container: true,#}
+      {#          extra_id: 'members',#}
+      {#          call_to_action: teams.call_to_action#}
+      {#        }) only %}#}
+      {#      {% endif %}#}
 
-      {% if related_groups is not empty %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_groups|default({})|merge({
-          icon_file_path: icon_file_path,
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
-          title_extra_classes: "ecl-filelist__title",
-          no_container: true
-        }) only %}
-      {% endif %}
+      {#      {% if block_enabled.events %}#}
+      {#        {{ events }}#}
+      {#      {% endif %}#}
+
     {% endblock %}
 
     {% block sidebar %}
-      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+      <div class="ecl-u-pa-l ecl-u-bg-grey-10">
+        {% if content.field_project_acronym.0 %}
+          <div class="ecl-u-mb-l">
+            <h3>{{ content.field_project_acronym.0 }}</h3>
+            <strong class="ecl-u-mb-l">{{ "ID" }}: </strong>
+            {{ content.field_project_grant_agreement_id.0 }}
+          </div>
+        {% endif %}
 
-      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
-        extra_classes: 'ecl-featured-list',
-      }) %}
+        {% if content.field_project_date.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "From"|t({}, {'context': 'eic_community'}) }}</strong>
+            {{ content.field_project_date.0.start_date }}
+            <strong>{{ "to"|t({}, {'context': 'eic_community'}) }}</strong>
+            {{ content.field_project_date.0.end_date }}
+          </div>
+        {% endif %}
 
-      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+        {% if content.field_project_status.0 %}
+          <div class="ecl-u-mb-l">
+            {% include "@ecl-twig/ec-component-label/ecl-label.html.twig" with {
+              label: content.field_project_status.0|render ~ ' PROJECT'|t({}, {'context': 'eic_community'}),
+              variant: content.field_project_status.0|render|lower == 'closed' ? 'medium' : 'low',
+            } %}
+          </div>
+        {% endif %}
 
-      {% if event_infos %}
-        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}
-      {% endif %}
+        {% if content.field_project_funding_programme.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "Funded under"|t({}, {'context': 'eic_community'}) }}:</strong>
+            {{ content.field_project_funding_programme.0 }}
+          </div>
+        {% endif %}
 
-      {% if additional_sidebar_infos %}
-        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
-      {% endif %}
+        {% if content.field_project_total_cost.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "Total cost"|t({}, {'context': 'eic_community'}) }}:</strong>
+            € {{ content.field_project_total_cost.0['#markup']|number_format(2, ',', '.') }}
+          </div>
+        {% endif %}
 
+        {% if content.field_project_ecmax_contributio.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "EU contribution"|t({}, {'context': 'eic_community'}) }}:</strong>
+            € {{ content.field_project_ecmax_contributio.0['#markup']|number_format(2, ',', '.') }}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_website.0 %}
+          <div class="ecl-u-mb-l">
+            <a href="{{ content.field_project_website.0['#url_title'] }}" target="_blank">{{ 'view project website' }}</a>
+          </div>
+        {% endif %}
+
+        {% if content.field_project_grant_agreement_id.0 %}
+          {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ content.field_project_grant_agreement_id.0 %}
+          <div class="ecl-u-mb-l">
+            <a href="{{ cordis_url }}" target="_blank">view on cordis</a>
+          </div>
+        {% endif %}
+
+        {% if content.field_project_fields_of_science.0 %}
+          <div class="ecl-u-mb-2xs">
+            <strong>{{ content.field_project_fields_of_science['#title'] }}</strong>
+          </div>
+          <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+            {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
     {% endblock %}
   {% endembed %}
-
-  {% if not user %}
-    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
-      title: common.login_title,
-      icon_file_path: common.icon_file_path,
-      login: common.login,
-      register: common.register,
-      extra_classes: 'ecl-auth-banner--is-compact',
-    } only %}
-    {% endembed %}
-  {% endif %}
-
 {% endblock %}
