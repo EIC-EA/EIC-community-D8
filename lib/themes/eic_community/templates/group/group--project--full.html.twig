@@ -105,6 +105,17 @@
             <a href="{{ cordis_url }}" target="_blank">view on cordis</a>
           </div>
         {% endif %}
+
+        {% if content.field_project_fields_of_science.0 %}
+          <div class="ecl-u-mb-2xs">
+            <strong>{{ content.field_project_fields_of_science['#title'] }}</strong>
+          </div>
+          <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+            {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
       </div>
     {% endblock %}
   {% endembed %}
