@@ -18,6 +18,7 @@ dependencies:
     - field.field.group.project.field_project_sub_call
     - field.field.group.project.field_project_teaser
     - field.field.group.project.field_project_total_cost
+    - field.field.group.project.field_project_website
     - group.type.project
   module:
     - datetime_range
@@ -66,7 +67,7 @@ content:
     label: above
     settings:
       timezone_override: ''
-      format_type: medium
+      format_type: day_month_full_and_year
       separator: '-'
     third_party_settings: {  }
     weight: 24
@@ -170,6 +171,18 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 16
+    region: content
+  field_project_website:
+    type: link_separate
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 27
     region: content
   flag_follow_group:
     settings: {  }
