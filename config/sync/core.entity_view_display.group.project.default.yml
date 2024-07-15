@@ -9,6 +9,7 @@ dependencies:
     - field.field.group.project.field_project_date
     - field.field.group.project.field_project_duration
     - field.field.group.project.field_project_ecmax_contributio
+    - field.field.group.project.field_project_fields_of_science
     - field.field.group.project.field_project_funding_programme
     - field.field.group.project.field_project_grant_agreement_id
     - field.field.group.project.field_project_keywords
@@ -91,6 +92,14 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 17
+    region: content
+  field_project_fields_of_science:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 28
     region: content
   field_project_funding_programme:
     type: link
