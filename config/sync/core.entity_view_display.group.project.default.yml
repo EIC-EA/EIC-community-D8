@@ -94,10 +94,11 @@ content:
     weight: 17
     region: content
   field_project_fields_of_science:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
+      view_mode: teaser
+      link: false
     third_party_settings: {  }
     weight: 28
     region: content

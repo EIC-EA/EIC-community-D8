@@ -1,0 +1,22 @@
+.ecl-field-of-science {
+  $node: &;
+
+  display: inline-block;
+
+  &__icon {
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    max-width: map-get($ecl-media, '4xs');
+  }
+
+  &__label {
+    #{$node}__icon ~ & {
+      @include visually-hidden();
+    }
+  }
+
+  &--medical-and-health-science {
+    background-color: red;
+  }
+}

@@ -4,3 +4,40 @@
  * @file
  * Install, update and uninstall functions for the EIC Taxonomy module.
  */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Generate terms for taxonomy.
+ */
+function eic_taxonomy_update_9001() {
+  /**
+   * Creates "Fields of science" terms.
+   */
+  $terms = [
+    [
+      'name' => 'Medical and health sciences',
+      'vid' => 'fields_of_science',
+      'uuid' => '30072bf7-5ed1-464a-b328-33534d4d28dbweb',
+    ],
+    [
+      'name' => 'Engineering and technology',
+      'vid' => 'fields_of_science',
+      'uuid' => 'bb5a173b-7bf5-4917-b423-09151c8f9775',
+    ],
+  ];
+  foreach ($terms as $term) {
+    $term_exists = Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'uuid' => $term['uuid'],
+      ]);
+    if (!$term_exists) {
+      $term = Term::create([
+        'name' => $term['name'],
+        'vid' => $term['vid'],
+        'uuid' => $term['uuid'],
+      ])->save();
+    }
+  }
+}
