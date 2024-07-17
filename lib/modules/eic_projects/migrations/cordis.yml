@@ -1,0 +1,71 @@
+id: cordis_xml
+migration_group: cordis
+label: XML feed of CORDIS projects
+source:
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: xml
+  urls:
+    - /project-rcn-215504_en.xml
+  item_selector: /project
+  fields:
+    -
+      name: project_id
+      selector: id
+    -
+      name: teaser
+      selector: teaser
+    -
+      name: objective
+      selector: objective
+    -
+      name: title
+      selector: title
+    -
+      name: categories
+      selector: relations/categories
+    -
+      name: organizations
+      selector: relations/associations
+    -
+      name: acronym
+      selector: acronym
+    -
+      name: status
+      selector: status
+    -
+      name: eu_max_contribution
+      selector: ecMaxContribution
+    -
+      name: start_date
+      selector: startDate
+    -
+      name: end_date
+      selector: endDate
+    -
+      name: total_cost
+      selector: totalCost
+    -
+      name: duration
+      selector: duration
+
+  ids:
+    project_id:
+      type: integer
+process:
+  type:
+    plugin: default_value
+    default_value: project
+  field_body/value: objective
+  field_body/format: 'basic_html'
+  label: title
+  field_project_acronym: acronym
+  field_project_status: status
+  field_project_teaser: teaser
+  field_project_grant_agreement_id: project_id
+  field_project_ecmax_contributio: eu_max_contribution
+  field_project_total_cost: total_cost
+  field_project_duration: duration
+destination:
+  plugin: 'entity:group'
+
