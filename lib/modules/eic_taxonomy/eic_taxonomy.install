@@ -11,19 +11,38 @@ use Drupal\taxonomy\Entity\Term;
  * Generate terms for taxonomy.
  */
 function eic_taxonomy_update_9001() {
-  /**
-   * Creates "Fields of science" terms.
-   */
+
+  // Creates "Fields of science" terms.
   $terms = [
     [
-      'name' => 'Medical and health sciences',
+      'name' => 'Social sciences',
       'vid' => 'fields_of_science',
-      'uuid' => '30072bf7-5ed1-464a-b328-33534d4d28dbweb',
+      'uuid' => 'bed7011f-e1bc-4e64-82f6-d5c7c005b945',
+    ],
+    [
+      'name' => 'Natural sciences',
+      'vid' => 'fields_of_science',
+      'uuid' => '885fe589-b98d-44a9-ac65-2438c91d527b',
     ],
     [
       'name' => 'Engineering and technology',
       'vid' => 'fields_of_science',
-      'uuid' => 'bb5a173b-7bf5-4917-b423-09151c8f9775',
+      'uuid' => '2976d993-3ddb-43bc-ae8f-295632d7e1e8',
+    ],
+    [
+      'name' => 'Humanities',
+      'vid' => 'fields_of_science',
+      'uuid' => '5b633204-256a-4ea4-a516-7179ba3c0f1d',
+    ],
+    [
+      'name' => 'Agricultural sciences',
+      'vid' => 'fields_of_science',
+      'uuid' => '850ce6cb-5044-4135-9180-06b4f43fb610',
+    ],
+    [
+      'name' => 'Medical and health sciences',
+      'vid' => 'fields_of_science',
+      'uuid' => 'ff8b5564-fcde-4406-a91d-65485f11d0b3',
     ],
   ];
   foreach ($terms as $term) {
