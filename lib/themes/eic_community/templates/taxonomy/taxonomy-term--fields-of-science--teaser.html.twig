@@ -29,5 +29,7 @@
   {% include "@theme/patterns/components/field-of-science.html.twig" with {
     id: term.id,
     label: name,
+    modifier: machine_readable_name,
+    filename: machine_readable_name,
   } %}
 {% endblock %}

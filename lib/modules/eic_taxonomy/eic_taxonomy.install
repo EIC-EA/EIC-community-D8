@@ -10,53 +10,18 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Generate terms for taxonomy.
  */
-function eic_taxonomy_update_9001() {
-
-  // Creates "Fields of science" terms.
-  $terms = [
-    [
-      'name' => 'Social sciences',
-      'vid' => 'fields_of_science',
-      'uuid' => 'bed7011f-e1bc-4e64-82f6-d5c7c005b945',
-    ],
-    [
-      'name' => 'Natural sciences',
-      'vid' => 'fields_of_science',
-      'uuid' => '885fe589-b98d-44a9-ac65-2438c91d527b',
-    ],
-    [
-      'name' => 'Engineering and technology',
-      'vid' => 'fields_of_science',
-      'uuid' => '2976d993-3ddb-43bc-ae8f-295632d7e1e8',
-    ],
-    [
-      'name' => 'Humanities',
-      'vid' => 'fields_of_science',
-      'uuid' => '5b633204-256a-4ea4-a516-7179ba3c0f1d',
-    ],
-    [
-      'name' => 'Agricultural sciences',
-      'vid' => 'fields_of_science',
-      'uuid' => '850ce6cb-5044-4135-9180-06b4f43fb610',
-    ],
-    [
-      'name' => 'Medical and health sciences',
-      'vid' => 'fields_of_science',
-      'uuid' => 'ff8b5564-fcde-4406-a91d-65485f11d0b3',
-    ],
-  ];
-  foreach ($terms as $term) {
-    $term_exists = Drupal::entityTypeManager()
+function eic_taxonomy_update_9002() {
+  foreach (EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS as $uuid => $term_data) {
+    $term_exists = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
-      ->loadByProperties([
-        'uuid' => $term['uuid'],
-      ]);
+      ->loadByProperties(['uuid' => $uuid]);
     if (!$term_exists) {
       $term = Term::create([
-        'name' => $term['name'],
-        'vid' => $term['vid'],
-        'uuid' => $term['uuid'],
-      ])->save();
+        'uuid' => $uuid,
+        'name' => $term_data['name'],
+        'vid' => $term_data['vid'],
+      ]);
+      $term->save();
     }
   }
 }

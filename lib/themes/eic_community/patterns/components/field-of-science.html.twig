@@ -1,20 +1,4 @@
-{% set modifier =
-  [
-    id == 1265 ? 'ecl-field-of-science--medical-and-health-science',
-    id == 1266 ? 'ecl-field-of-science--engineering-and-technology',
-  ]|join(' ')|trim
-%}
-
-<div class="ecl-field-of-science {{ modifier }}">
+<div class="ecl-field-of-science {{ modifier ? 'ecl-field-of-science--' ~ modifier }}">
+  <div class="ecl-field-of-science__icon">{{ source(eic_images_path ~ '/fields-of-science/' ~ filename ~ '.svg', ignore_missing = true) }}</div>
   <div class="ecl-field-of-science__label">{{ label }}</div>
-  <div class="ecl-field-of-science__icon">
-    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-      icon: {
-        path: eic_icon_path,
-        name: 'medical-and-health-sciences',
-        size: 'm',
-        type: 'field-of-science'
-      }
-    } %}
-  </div>
 </div>
