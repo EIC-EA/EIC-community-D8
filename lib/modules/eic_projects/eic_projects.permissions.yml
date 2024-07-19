@@ -1,0 +1,11 @@
+administer extraction request:
+  title: 'Administer extraction request settings'
+  restrict access: true
+delete extraction request:
+  title: Delete extraction request
+create extraction request:
+  title: Create extraction request
+view extraction request:
+  title: View extraction request
+edit extraction request:
+  title: Edit extraction request
