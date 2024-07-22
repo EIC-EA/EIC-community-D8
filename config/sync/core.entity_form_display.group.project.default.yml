@@ -127,6 +127,22 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+  field_project_horizon_results:
+    type: link_default
+    weight: 44
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_project_innovations:
+    type: link_default
+    weight: 43
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   field_project_keywords:
     type: string_textarea
     weight: 17
