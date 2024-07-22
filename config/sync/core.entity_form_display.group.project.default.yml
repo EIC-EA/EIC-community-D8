@@ -12,6 +12,8 @@ dependencies:
     - field.field.group.project.field_project_fields_of_science
     - field.field.group.project.field_project_funding_programme
     - field.field.group.project.field_project_grant_agreement_id
+    - field.field.group.project.field_project_horizon_results
+    - field.field.group.project.field_project_innovations
     - field.field.group.project.field_project_keywords
     - field.field.group.project.field_project_objective
     - field.field.group.project.field_project_related_topic
@@ -106,6 +108,22 @@ content:
     region: content
     settings:
       placeholder: ''
+    third_party_settings: {  }
+  field_project_horizon_results:
+    type: link_default
+    weight: 44
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_project_innovations:
+    type: link_default
+    weight: 43
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_project_keywords:
     type: string_textarea

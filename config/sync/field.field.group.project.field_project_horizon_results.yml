@@ -1,0 +1,23 @@
+uuid: bf0946d3-9729-44c2-a90a-2ef73797a872
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_horizon_results
+    - group.type.project
+  module:
+    - link
+id: group.project.field_project_horizon_results
+field_name: field_project_horizon_results
+entity_type: group
+bundle: project
+label: 'Project horizon results'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 16
+field_type: link
