@@ -1,7 +1,7 @@
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
-      <section id="organisation-and-people">
+      <section id="organisation-and-people" class="ecl-u-mb-l">
         <h2>{{ "Organisations and people"|t({}, {'context': 'eic_community'}) }}</h2>
         <div>{{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}</div>
       </section>
@@ -21,30 +21,48 @@
             'size': "xs"
           }
         } -%}
-        <section id="innovations">
+        <section id="innovations" class="ecl-u-mb-l">
           <h2>{{ "Innovations"|t({}, {'context': 'eic_community'}) }}</h2>
           {% include '@ecl-twig/page-banner' with {
             title: "This project has recognised innovations!"|t,
             link: _link,
-            image: base_path ~ active_theme_path() ~ '/images/other/project-banner.png',
-            type: 'image',
-            centered: alignment == 'left'
+            image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
+            type: 'image-gradient',
+            extra_classes: 'ecl-u-pv-xl',
+            centered: alignment == 'left',
           } only %}
         </section>
       {% endif %}
 
-{#      {% if content.field_project_horizon_results.0 %}#}
-{#        <section id="horizon-results">#}
-{#          <h2>{{ "Horizon Results"|t({}, {'context': 'eic_community'}) }}</h2>#}
-{#          {% include '@ecl-twig/page-banner' with {#}
-{#            title: "This project has published deliverables in Horizon Results Platform",#}
-{#            link: content.field_project_horizon_results.0['#title'],#}
-{#            image: 'images/other/project-banner.png',#}
-{#            type: 'image',#}
-{#            centered: alignment == 'left'#}
-{#          } only %}#}
-{#        </section>#}
-{#      {% endif %}#}
+      {% if content.field_project_horizon_results.0 %}
+        <section id="horizon-results" class="ecl-u-mb-l">
+          {% set _link = {
+            'link': {
+              'path': content.field_project_innovations.0['#title'],
+              'label': 'View in HRP'|t,
+              'icon_position': 'after'
+            },
+            'icon': {
+              'path': eic_icon_path,
+              'type': "ui",
+              'name': "corner-arrow",
+              'transform': "rotate-90",
+              'size': "xs"
+            }
+          } -%}
+          <section id="horizon-results">
+            <h2>{{ "Horizon Results"|t({}, {'context': 'eic_community'}) }}</h2>
+            {% include '@ecl-twig/page-banner' with {
+              title: "This project has published deliverables in Horizon Results Platform!",
+              link: _link,
+              image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
+              type: 'image-gradient',
+              extra_classes: 'ecl-u-pv-xl',
+              centered: alignment == 'left',
+            } only %}
+          </section>
+        </section>
+      {% endif %}
 
       {#      {% if block_enabled.announcements %}#}
       {#        {% if announcements is not empty %}#}
