@@ -1,0 +1,5 @@
+stakeholder.add_form:
+  title: 'Add stakeholder'
+  route_name: entity.stakeholder.add_form
+  appears_on:
+    - entity.stakeholder.collection

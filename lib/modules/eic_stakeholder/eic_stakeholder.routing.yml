@@ -1,0 +1,7 @@
+entity.stakeholder.settings:
+  path: 'admin/structure/stakeholder'
+  defaults:
+    _form: '\Drupal\eic_stakeholder\Form\StakeholderSettingsForm'
+    _title: 'Stakeholder'
+  requirements:
+    _permission: 'administer stakeholder'

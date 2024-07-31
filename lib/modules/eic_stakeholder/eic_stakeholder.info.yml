@@ -1,0 +1,5 @@
+name: 'Eic stakeholder'
+type: module
+description: '@todo Add description.'
+package: '@todo Add package'
+core_version_requirement: ^9 | ^10

@@ -1,0 +1,17 @@
+administer stakeholder:
+  title: 'Administer stakeholders'
+  restrict access: true
+view stakeholder:
+  title: 'View stakeholder'
+edit stakeholder:
+  title: 'Edit stakeholder'
+delete stakeholder:
+  title: 'Delete stakeholder'
+create stakeholder:
+  title: 'Create stakeholder'
+view stakeholder revision:
+  title: 'View stakeholder revision'
+revert stakeholder revision:
+  title: 'Revert stakeholder revision'
+delete stakeholder revision:
+  title: 'Delete stakeholder revision'

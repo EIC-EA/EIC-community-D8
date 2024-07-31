@@ -1,0 +1,22 @@
+entity.stakeholder.settings:
+  title: 'Settings'
+  route_name: entity.stakeholder.settings
+  base_route: entity.stakeholder.settings
+entity.stakeholder.view:
+  title: 'View'
+  route_name: entity.stakeholder.canonical
+  base_route: entity.stakeholder.canonical
+entity.stakeholder.edit_form:
+  title: 'Edit'
+  route_name: entity.stakeholder.edit_form
+  base_route: entity.stakeholder.canonical
+entity.stakeholder.delete_form:
+  title: 'Delete'
+  route_name: entity.stakeholder.delete_form
+  base_route: entity.stakeholder.canonical
+  weight: 10
+entity.stakeholder.collection:
+  title: 'Stakeholders'
+  route_name: entity.stakeholder.collection
+  base_route: system.admin_content
+  weight: 10

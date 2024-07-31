@@ -1,0 +1,11 @@
+entity.stakeholder.settings:
+  title: 'Stakeholder'
+  description: 'Configure a Stakeholder entity type.'
+  route_name:  entity.stakeholder.settings
+  parent: system.admin_structure
+
+entity.stakeholder.collection:
+  title: 'Stakeholders'
+  description: 'List of stakeholders.'
+  route_name: entity.stakeholder.collection
+  parent: system.admin_content
