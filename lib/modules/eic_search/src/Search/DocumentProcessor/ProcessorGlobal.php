@@ -251,7 +251,7 @@ class ProcessorGlobal extends DocumentProcessor {
           $fullname = 'undefined';
         }
         $status = TRUE;
-        $type = $fields['ss_type'];
+        $type = $fields['ss_type'] ?? '';
         $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];
         $date = $fields['ds_created'];
         $title = $fields['ss_title'] ?? '';
@@ -266,7 +266,7 @@ class ProcessorGlobal extends DocumentProcessor {
           $document,
           'tm_user_mail',
           $fields,
-          $fields['ss_user_mail']
+          $fields['ss_user_mail'] ?? ''
         );
 
         $status = TRUE;
@@ -274,7 +274,7 @@ class ProcessorGlobal extends DocumentProcessor {
     }
 
     if ('gallery' === $type) {
-      $slides_id = $fields['sm_content_gallery_slide_id_array'] ?: [];
+      $slides_id = $fields['sm_content_gallery_slide_id_array'] ?? [];
       $slides_id = is_array($slides_id) ? $slides_id : [$slides_id];
       $image_style = ImageStyle::load('crop_50x50');
       $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');

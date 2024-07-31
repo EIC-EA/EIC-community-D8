@@ -18,10 +18,27 @@
 {# Set the remaining Flag CSS classes. #}
 {%
   set classes = [
-    'flag',
-    'flag-' ~ flag_id|clean_class,
-  ]
+  'flag',
+  'flag-' ~ flag_id|clean_class,
+  'ecl-u-d-inline-flex',
+  'ecl-u-align-items-center',
+  'ecl-u-type-color-grey-75',
+]
 %}
 
-<div class="{{classes|join(' ')}}">{{ title }}: <span>{{ flag_count }}</span></div>
+<div class="{{classes|join(' ')}}">
+  <span class="ecl-u-mr-xs">
+    {% if eic_icon_path %}
+      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        icon: {
+          size: "s",
+          path: eic_icon_path,
+          type: "custom",
+          name: "like",
+        }
+      } only %}
+    {% endif %}
+  </span>
+  <span> {{ 'Like'|t }} ({{ flag_count }})</span>
+</div>
 {% endspaceless %}

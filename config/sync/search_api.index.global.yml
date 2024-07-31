@@ -17,8 +17,8 @@ dependencies:
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_services_products
     - field.storage.group.field_vocab_target_markets
-    - field.storage.group.field_thumbnail
     - field.storage.group.field_image
+    - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.message.field_entity_type
@@ -679,16 +679,6 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
-  event_funding_source_string:
-    label: 'Funding source » Taxonomy term » Name'
-    datasource_id: 'entity:group'
-    property_path: 'field_funding_source:entity:name'
-    type: string
-    dependencies:
-      config:
-        - field.storage.group.field_funding_source
-      module:
-        - taxonomy
   event_registration_date_end:
     label: 'Event registration date » End date value'
     datasource_id: 'entity:group'
@@ -945,6 +935,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
+  group_funding_source_string:
+    label: 'Funding source » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_funding_source:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_funding_source
+      module:
+        - taxonomy
   group_id:
     label: 'Group » Group » ID'
     datasource_id: 'entity:message'
@@ -1266,32 +1266,12 @@ field_settings:
       roles:
         - anonymous
       view_mode:
-        'entity:content_moderation_state':
-          content_moderation_state: ''
-        'entity:flagging':
-          bookmark_content: ''
-          follow_content: ''
-          follow_group: ''
-          follow_taxonomy_term: ''
-          follow_user: ''
-          highlight_content: ''
-          like_comment: ''
-          like_content: ''
-          recommend: ''
-          recommend_group: ''
-          request_archive_comment: ''
-          request_archive_content: ''
-          request_archive_group: ''
-          request_block_group: ''
-          request_delete_comment: ''
-          request_delete_content: ''
-          request_delete_group: ''
-          transfer_owner_request_group: ''
         'entity:group':
           event: ''
           group: no_html
           organisation: ''
         'entity:group_content':
+          event-group_invitation: ''
           event-group_membership: ''
           event-group_membership_request: ''
           event-group_node-book: ''
@@ -1299,12 +1279,12 @@ field_settings:
           event-group_node-document: ''
           event-group_node-gallery: ''
           event-group_node-news: ''
-          event-group_node-page: ''
           event-group_node-story: ''
           event-group_node-video: ''
           event-group_node-wiki_page: ''
           event-group_request_archival: ''
           event-group_request_delete: ''
+          event-group_shared_content: ''
           group-group_invitation: ''
           group-group_membership: ''
           group-group_membership_request: ''
@@ -1318,14 +1298,19 @@ field_settings:
           group-group_request_archival: ''
           group-group_request_block: ''
           group-group_request_delete: ''
+          group-group_shared_content: ''
+          group_content_type_4a2cdf9ed8847: ''
+          group_content_type_544ffa9c3791b: ''
           group_content_type_7f62828e3a84b: ''
+          group_content_type_b47cbb19c399d: ''
           group_content_type_dd4142e7f0cf7: ''
           group_content_type_ddd92dce39526: ''
+          organisation-group_invitation: ''
           organisation-group_membership: ''
+          organisation-group_node-document: ''
           organisation-group_node-event: ''
+          organisation-group_node-gallery: ''
           organisation-group_node-news: ''
-        'entity:group_permission':
-          group_permission: ''
         'entity:message':
           stream_article_insert_update: ''
           stream_comment_insert_update: ''
