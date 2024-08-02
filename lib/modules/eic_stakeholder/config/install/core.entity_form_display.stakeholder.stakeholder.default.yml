@@ -1,0 +1,45 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.stakeholder.stakeholder.field_stakeholder_organisation
+    - field.field.stakeholder.stakeholder.field_stakeholder_related_people
+  module:
+    - eic_stakeholder
+id: stakeholder.stakeholder.default
+targetEntityType: stakeholder
+bundle: stakeholder
+mode: default
+content:
+  field_stakeholder_organisation:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_stakeholder_related_people:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  langcode: true
+  uid: true

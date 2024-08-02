@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_stakeholder
+id: stakeholder_delete_action
+label: 'Delete stakeholders'
+type: stakeholder
+plugin: entity:delete_action:stakeholder
+configuration: {  }

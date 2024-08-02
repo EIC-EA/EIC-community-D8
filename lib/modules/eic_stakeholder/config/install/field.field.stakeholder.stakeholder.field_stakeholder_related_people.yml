@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.stakeholder.field_stakeholder_related_people
+  module:
+    - eic_stakeholder
+id: stakeholder.stakeholder.field_stakeholder_related_people
+field_name: field_stakeholder_related_people
+entity_type: stakeholder
+bundle: stakeholder
+label: 'Related people'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: entity_reference_user
+      display_name: full_name_trusted
+      arguments: {  }
+field_type: entity_reference

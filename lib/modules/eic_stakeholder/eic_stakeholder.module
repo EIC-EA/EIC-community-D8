@@ -1,0 +1,81 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Provides a stakeholder entity type.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function eic_stakeholder_theme(): array {
+  return [
+    'stakeholder' => ['render element' => 'elements'],
+  ];
+}
+
+/**
+ * Prepares variables for stakeholder templates.
+ *
+ * Default template: stakeholder.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the stakeholder information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_stakeholder(array &$variables): void {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function eic_stakeholder_user_cancel($edit, UserInterface $account, $method): void {
+  switch ($method) {
+    case 'user_cancel_reassign':
+      // Anonymize stakeholders.
+      $storage = \Drupal::entityTypeManager()->getStorage('stakeholder');
+      $stakeholder_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($stakeholder_ids) as $stakeholder) {
+        $stakeholder->setOwnerId(0)->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function eic_stakeholder_user_predelete(UserInterface $account): void {
+  // Delete stakeholders that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('stakeholder');
+  $stakeholder_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($stakeholder_ids)
+  );
+  // Delete old revisions.
+  $stakeholder_ids = $storage->getQuery()
+    ->allRevisions()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  foreach (array_keys($stakeholder_ids) as $revision_id) {
+    $storage->deleteRevision($revision_id);
+  }
+}

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_stakeholder
+id: stakeholder_save_action
+label: 'Save stakeholders'
+type: stakeholder
+plugin: entity:save_action:stakeholder
+configuration: {  }
