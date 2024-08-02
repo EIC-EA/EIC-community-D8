@@ -1,0 +1,15 @@
+uuid: 25e7d923-90da-433f-bcb2-3f681125c6c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+id: project-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: project
+permissions_ui: true
+permissions:
+  - 'view group'

@@ -1,0 +1,27 @@
+uuid: a8075455-7455-45c2-a4b3-af6cbae69c6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_website
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+    - link
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_website
+field_name: field_project_website
+entity_type: group
+bundle: project
+label: Website
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 17
+field_type: link

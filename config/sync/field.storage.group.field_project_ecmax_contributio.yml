@@ -1,0 +1,20 @@
+uuid: e1e2091a-22c7-4eea-89b0-3e014993a5d4
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_project_ecmax_contributio
+field_name: field_project_ecmax_contributio
+entity_type: group
+type: decimal
+settings:
+  precision: 10
+  scale: 2
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,20 @@
+uuid: 142d1f38-06e2-43b9-b498-0ff1892b6e01
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime_range
+    - group
+id: group.field_project_date
+field_name: field_project_date
+entity_type: group
+type: daterange
+settings:
+  datetime_type: allday
+module: datetime_range
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

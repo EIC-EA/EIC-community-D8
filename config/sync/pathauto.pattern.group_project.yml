@@ -1,0 +1,22 @@
+uuid: 770974a9-d2f1-44af-8362-6899f41a59fe
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group_project
+label: 'Group - Project'
+type: 'canonical_entities:group'
+pattern: 'projects/[group:group_truncated_title:40]'
+selection_criteria:
+  dc6989aa-8ba2-4fa8-bab0-0c6286c33387:
+    id: 'entity_bundle:group'
+    negate: false
+    uuid: dc6989aa-8ba2-4fa8-bab0-0c6286c33387
+    context_mapping:
+      group: group
+    bundles:
+      project: project
+selection_logic: and
+weight: -5
+relationships: {  }

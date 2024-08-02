@@ -1,0 +1,18 @@
+uuid: 7d10ee1d-d0b6-4b50-9037-3c85a2d66aee
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  module:
+    - grequest
+    - user
+id: project-group_membership_request
+label: 'Project: Group membership request'
+description: 'Adds users as requesters for the group.'
+group_type: project
+content_plugin: group_membership_request
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

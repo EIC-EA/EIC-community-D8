@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.group.field_date_range
+    - field.storage.group.field_project_ecmax_contributio
     - field.storage.group.field_location
     - field.storage.group.field_event_registration_date
     - field.storage.group.field_vocab_event_type
@@ -12,14 +13,18 @@ dependencies:
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
+    - field.storage.group.field_project_grant_agreement_id
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
+    - field.storage.group.field_project_keywords
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_services_products
+    - field.storage.group.field_project_status
     - field.storage.group.field_vocab_target_markets
     - field.storage.group.field_image
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
+    - field.storage.group.field_project_total_cost
     - field.storage.group.field_body
     - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
@@ -63,8 +68,8 @@ dependencies:
     - core.entity_view_mode.node.no_html
   module:
     - search_api_solr
-    - taxonomy
     - group
+    - taxonomy
     - user
     - file
     - media
@@ -998,6 +1003,30 @@ field_settings:
         - field.storage.group.field_organisation_type
       module:
         - taxonomy
+  group_project_ecmax_contribution:
+    label: 'EU contribution'
+    datasource_id: 'entity:group'
+    property_path: field_project_ecmax_contributio
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_ecmax_contributio
+  group_project_status:
+    label: Status
+    datasource_id: 'entity:group'
+    property_path: field_project_status
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_status
+  group_project_total_cost:
+    label: 'Total cost'
+    datasource_id: 'entity:group'
+    property_path: field_project_total_cost
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_total_cost
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments
@@ -1258,6 +1287,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_body
+  project_grant_agreement_id:
+    label: ID
+    datasource_id: 'entity:group'
+    property_path: field_project_grant_agreement_id
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_project_grant_agreement_id
+  project_keywords:
+    label: 'Project keywords'
+    datasource_id: 'entity:group'
+    property_path: field_project_keywords
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_project_keywords
   rendered_item:
     label: 'Rendered HTML output'
     property_path: rendered_item
@@ -1338,6 +1383,14 @@ field_settings:
           wiki_page: no_html
         'entity:user':
           user: default
+  revision_default:
+    label: 'Default revision'
+    datasource_id: 'entity:group'
+    property_path: revision_default
+    type: boolean
+    dependencies:
+      module:
+        - group
   saa_field_document_media:
     label: 'Search api attachments: Document'
     property_path: saa_field_document_media
