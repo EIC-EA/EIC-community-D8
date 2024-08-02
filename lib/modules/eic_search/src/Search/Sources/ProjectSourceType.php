@@ -105,7 +105,7 @@ class ProjectSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS_COMPACT;
+    return self::LAYOUT_COMPACT;
   }
 
   /**

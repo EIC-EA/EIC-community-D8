@@ -1,0 +1,80 @@
+.ecl-field-of-science {
+  $node: &;
+
+  display: inline-flex;
+  align-items: stretch;
+  border: 3px solid;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 260px;
+  margin-bottom: 20px;
+
+  &__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    margin: 0 15px;
+    max-width: map-get($ecl-media, '2xs');
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    line-height: 20px;
+    width: 100%;
+    min-height: 45px;
+    color: #fff;
+    padding: 0 10px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+
+  &--social-sciences {
+    border-color: #EE813C;
+
+    #{$node}__label {
+      background-color: #EE813C;
+    }
+  }
+
+  &--natural-sciences {
+    border-color: #26AD61;
+
+    #{$node}__label {
+      background-color: #26AD61;
+    }
+  }
+
+  &--engineering-and-technology {
+    border-color: #E2007A;
+
+    #{$node}__label {
+      background-color: #E2007A;
+    }
+  }
+
+  &--humanities {
+    border-color: #227691;
+
+    #{$node}__label {
+      background-color: #227691;
+    }
+  }
+
+  &--agricultural-sciences {
+    border-color: #5E501C;
+
+    #{$node}__label {
+      background-color: #5E501C;
+    }
+  }
+
+  &--medical-and-health-sciences {
+    border-color: #BF0D0D;
+
+    #{$node}__label {
+      background-color: #BF0D0D;
+    }
+  }
+}

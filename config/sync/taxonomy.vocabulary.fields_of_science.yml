@@ -1,0 +1,8 @@
+uuid: dc144d1e-114c-4f81-8f4e-ea74b5785d26
+langcode: en
+status: true
+dependencies: {  }
+name: 'Fields of science'
+vid: fields_of_science
+description: ''
+weight: 0
