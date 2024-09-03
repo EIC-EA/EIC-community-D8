@@ -6,6 +6,7 @@ dependencies:
     - field.storage.group.field_date_range
     - field.storage.group.field_project_ecmax_contributio
     - field.storage.group.field_location
+    - field.storage.group.field_project_date
     - field.storage.group.field_event_registration_date
     - field.storage.group.field_vocab_event_type
     - field.storage.group.field_funding_source
@@ -914,6 +915,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_organisation_type
+  group_field_project_date:
+    label: 'Project Date'
+    datasource_id: 'entity:group'
+    property_path: field_project_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_project_date
+  group_field_project_date_end_value:
+    label: 'Project Date » End date value'
+    datasource_id: 'entity:group'
+    property_path: 'field_project_date:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_project_date
   group_field_vocab_geo:
     label: '[Group] Regions & Countries'
     datasource_id: 'entity:group'
