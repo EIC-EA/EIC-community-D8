@@ -200,6 +200,12 @@ services:
       - { name: eic_search.document_processor, priority: 32 }
     calls:
       - [ setStateCache, [ '@?state' ] ]
+  eic_search.document_processor_project:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorProject
+    tags:
+      - { name: eic_search.document_processor, priority: 34 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_video:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorVideo
     arguments: ['@file_url_generator']
