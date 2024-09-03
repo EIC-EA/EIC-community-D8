@@ -16,6 +16,14 @@ class ProjectSourceType extends SourceType {
 
   use StringTranslationTrait;
 
+  const PROJECT_START_DATE_SOLR_FIELD_ID = 'its_group_project_date_start_value';
+
+  const PROJECT_END_DATE_SOLR_FIELD_ID = 'its_group_project_date_end_value';
+
+  const PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID = 'zs_group_project_funding_programme';
+
+  const PROJECT_FIELDS_OF_SCIENCE_SOLR_FIELD_ID = 'zs_group_project_fields_of_science';
+
   /**
    * @inheritDoc
    */
@@ -42,6 +50,7 @@ class ProjectSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
+      'sm_group_project_fields_of_science_string' => $this->t('Fields of science', [], ['context' => 'eic_search']),
       'ss_group_project_status' => $this->t('Project status', [], ['context' => 'eic_search']),
       'ss_group_project_total_cost' => $this->t('Total Cost', [], ['context' => 'eic_search']),
     ];
