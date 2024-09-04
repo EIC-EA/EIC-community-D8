@@ -6,9 +6,9 @@ dependencies:
     - field.storage.group.field_date_range
     - field.storage.group.field_project_ecmax_contributio
     - field.storage.group.field_location
-    - field.storage.group.field_project_date
     - field.storage.group.field_event_registration_date
     - field.storage.group.field_vocab_event_type
+    - field.storage.group.field_project_fields_of_science
     - field.storage.group.field_funding_source
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
@@ -17,17 +17,18 @@ dependencies:
     - field.storage.group.field_project_grant_agreement_id
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
+    - field.storage.group.field_project_date
     - field.storage.group.field_project_keywords
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_services_products
     - field.storage.group.field_project_status
     - field.storage.group.field_vocab_target_markets
+    - field.storage.group.field_project_teaser
     - field.storage.group.field_image
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_project_total_cost
     - field.storage.group.field_body
-    - field.storage.group.field_project_fields_of_science
     - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
     - field.storage.message.field_operation_type
@@ -1055,6 +1056,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_project_status
+  group_project_teaser:
+    label: Teaser
+    datasource_id: 'entity:group'
+    property_path: field_project_teaser
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_project_teaser
   group_project_total_cost:
     label: 'Total cost'
     datasource_id: 'entity:group'
