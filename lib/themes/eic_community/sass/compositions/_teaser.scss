@@ -1300,5 +1300,16 @@
     }
   }
 
-  &--project {}
+  &--project {
+    gap: 20px;
+
+    #{$node}__sidebar {
+      min-width: 200px;
+    }
+
+    .ecl-link--button {
+      font-size: 13px;
+      line-height: 15px;
+    }
+  }
 }
