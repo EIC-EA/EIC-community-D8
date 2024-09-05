@@ -98,7 +98,7 @@ class ProjectSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return [DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID, 'DESC'];
+    return [self::PROJECT_START_DATE_SOLR_FIELD_ID, 'DESC'];
   }
 
   /**
@@ -107,6 +107,7 @@ class ProjectSourceType extends SourceType {
   public function getSearchFieldsId(): array {
     return [
       'tm_global_title',
+      'tm_X3b_en_group_project_teaser',
     ];
   }
 

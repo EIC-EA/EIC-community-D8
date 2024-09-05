@@ -27,6 +27,7 @@ dependencies:
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_project_total_cost
     - field.storage.group.field_body
+    - field.storage.group.field_project_teaser
     - field.storage.group.field_project_fields_of_science
     - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
@@ -68,6 +69,9 @@ dependencies:
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
+    - field.storage.group.field_project_horizon_results
+    - field.storage.group.field_project_innovations
+    - field.storage.group.field_project_website
   module:
     - search_api_solr
     - group
@@ -884,6 +888,38 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_body
+  group_project_teaser:
+    label: 'Project teaser'
+    datasource_id: 'entity:group'
+    property_path: field_project_teaser
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_project_teaser
+  group_project_horizon_results:
+    label: 'Project horizon results'
+    datasource_id: 'entity:group'
+    property_path: field_project_horizon_results
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_horizon_results
+  group_project_innovations:
+    label: 'Project innovations'
+    datasource_id: 'entity:group'
+    property_path: field_project_innovations
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_innovations
+  group_project_website:
+    label: 'Project website'
+    datasource_id: 'entity:group'
+    property_path: field_project_website
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_website
   group_field_date_range:
     label: Date
     datasource_id: 'entity:group'

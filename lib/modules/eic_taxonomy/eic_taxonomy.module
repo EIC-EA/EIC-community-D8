@@ -46,6 +46,9 @@ const EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS = [
     ],
   ];
 
+// The base path to a CORDIS project, to be followed by its ID.
+const EIC_TAXONOMY_CORDIS_BASE_URL = 'https://cordis.europa.eu/project/id/';
+
 /**
  * Implements hook_preprocess_HOOK() for taxonomy term templates.
  */
