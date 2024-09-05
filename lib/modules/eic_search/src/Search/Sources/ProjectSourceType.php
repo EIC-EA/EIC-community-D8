@@ -20,9 +20,9 @@ class ProjectSourceType extends SourceType {
 
   const PROJECT_END_DATE_SOLR_FIELD_ID = 'its_group_project_date_end_value';
 
-  const PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID = 'zs_group_project_funding_programme';
+  const PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID = 'ss_group_project_funding_programme';
 
-  const PROJECT_FIELDS_OF_SCIENCE_SOLR_FIELD_ID = 'zs_group_project_fields_of_science';
+  const PROJECT_FIELDS_OF_SCIENCE_SOLR_FIELD_ID = 'ss_group_project_fields_of_science';
 
   /**
    * @inheritDoc
