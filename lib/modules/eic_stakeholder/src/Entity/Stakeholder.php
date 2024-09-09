@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\eic_stakeholder\Entity;
 
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -25,6 +23,7 @@ use Drupal\user\EntityOwnerTrait;
  *     singular = "@count stakeholders",
  *     plural = "@count stakeholders",
  *   ),
+ *   bundle_label = @Translation("Stakeholder type"),
  *   handlers = {
  *     "list_builder" = "Drupal\eic_stakeholder\StakeholderListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
@@ -33,12 +32,10 @@ use Drupal\user\EntityOwnerTrait;
  *       "add" = "Drupal\eic_stakeholder\Form\StakeholderForm",
  *       "edit" = "Drupal\eic_stakeholder\Form\StakeholderForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
- *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm", *
  *     },
  *     "route_provider" = {
- *        "html" = "\Drupal\entity\Routing\DefaultHtmlRouteProvider",
- *        "revision" = "\Drupal\entity\Routing\RevisionRouteProvider",
- *     },
+ *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *     }
  *   },
  *   base_table = "stakeholder",
  *   data_table = "stakeholder_field_data",
@@ -46,11 +43,12 @@ use Drupal\user\EntityOwnerTrait;
  *   revision_data_table = "stakeholder_field_revision",
  *   show_revision_ui = TRUE,
  *   translatable = TRUE,
- *   admin_permission = "administer stakeholder",
+ *   admin_permission = "administer stakeholder types",
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",
  *     "langcode" = "langcode",
+ *     "bundle" = "bundle",
  *     "label" = "label",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
@@ -62,20 +60,17 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/content/stakeholder",
- *     "add-form" = "/stakeholder/add",
+ *     "add-form" = "/stakeholder/add/{stakeholder_type}",
+ *     "add-page" = "/stakeholder/add",
  *     "canonical" = "/stakeholder/{stakeholder}",
  *     "edit-form" = "/stakeholder/{stakeholder}/edit",
  *     "delete-form" = "/stakeholder/{stakeholder}/delete",
- *     "delete-multiple-form" = "/admin/content/stakeholder/delete-multiple",
- *     "revision" = "/stakeholder/{stakeholder}/revision/{stakeholder_revision}/view",
- *     "revision-delete-form" = "/stakeholder/{stakeholder}/revision/{stakeholder_revision}/delete",
- *     "revision-revert-form" = "/stakeholder/{stakeholder}/revision/{stakeholder_revision}/revert",
- *     "version-history" = "/stakeholder/{stakeholder}/revisions",
  *   },
- *   field_ui_base_route = "entity.stakeholder.settings",
+ *   bundle_entity_type = "stakeholder_type",
+ *   field_ui_base_route = "entity.stakeholder_type.edit_form",
  * )
  */
-final class Stakeholder extends RevisionableContentEntityBase implements StakeholderInterface {
+class Stakeholder extends RevisionableContentEntityBase implements StakeholderInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -83,7 +78,7 @@ final class Stakeholder extends RevisionableContentEntityBase implements Stakeho
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageInterface $storage): void {
+  public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
     if (!$this->getOwnerId()) {
       // If no owner has been set explicitly, make the anonymous user the owner.
@@ -94,7 +89,7 @@ final class Stakeholder extends RevisionableContentEntityBase implements Stakeho
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
 
     $fields = parent::baseFieldDefinitions($entity_type);
 
@@ -103,7 +98,7 @@ final class Stakeholder extends RevisionableContentEntityBase implements Stakeho
       ->setTranslatable(TRUE)
       ->setLabel(t('Organisation name'))
       ->setRequired(TRUE)
-      ->setSetting('max_length', 512)
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -5,
@@ -116,12 +111,35 @@ final class Stakeholder extends RevisionableContentEntityBase implements Stakeho
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['status'] = BaseFieldDefinition::create('boolean')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Status'))
+      ->setDefaultValue(TRUE)
+      ->setSetting('on_label', 'Enabled')
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => FALSE,
+        ],
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'boolean',
+        'label' => 'above',
+        'weight' => 0,
+        'settings' => [
+          'format' => 'enabled-disabled',
+        ],
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
-      ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
+      ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'settings' => [

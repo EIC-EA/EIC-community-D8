@@ -1,5 +1,5 @@
-name: 'Eic stakeholder'
+name: 'EIC stakeholder'
 type: module
-description: '@todo Add description.'
-package: '@todo Add package'
+description: 'The stakeholder entity type.'
+package: European Innovation Council
 core_version_requirement: ^9 | ^10
