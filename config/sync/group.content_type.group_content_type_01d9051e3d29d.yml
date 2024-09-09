@@ -1,0 +1,18 @@
+uuid: 6ba126ee-6d76-4489-bfbc-5a601765f950
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+    - stakeholder.type.coordinator
+  module:
+    - eic_stakeholder
+id: group_content_type_01d9051e3d29d
+label: 'Project: Group stakeholder (Coordinator)'
+description: 'Adds <em class="placeholder">Coordinator</em> content to groups both publicly and privately.'
+group_type: project
+content_plugin: 'group_stakeholder:coordinator'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false
