@@ -1304,12 +1304,23 @@
     gap: 20px;
 
     #{$node}__sidebar {
-      min-width: 200px;
+      min-width: 212px;
     }
 
     .ecl-link--button {
       font-size: 13px;
       line-height: 15px;
+      justify-content: space-between;
+    }
+
+    .ecl-link--external {
+      height: 15px;
+    }
+
+    #{$node}__meta-footer {
+      flex-direction: column;
+      align-items: start;
+      gap: 10px;
     }
   }
 }
