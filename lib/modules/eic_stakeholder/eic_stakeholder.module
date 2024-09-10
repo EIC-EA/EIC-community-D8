@@ -5,7 +5,15 @@
  * Provides a stakeholder entity type.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_stakeholder_stakeholder_type_insert(EntityInterface $entity) {
+  \Drupal::service('plugin.manager.group_content_enabler')->clearCachedDefinitions();
+}
 
 /**
  * Implements hook_theme().
