@@ -1,0 +1,3 @@
+access group_stakeholder overview:
+  title: 'Access group stakeholder overview'
+  description: 'Access the overview of all group stakeholders, regardless of stakeholder type'

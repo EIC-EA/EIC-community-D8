@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\eic_stakeholder;
 
 use Drupal\Core\Entity\ContentEntityInterface;

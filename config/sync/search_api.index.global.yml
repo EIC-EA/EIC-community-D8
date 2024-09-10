@@ -1059,6 +1059,22 @@ field_settings:
         - field.storage.group.field_project_fields_of_science
       module:
         - taxonomy
+  group_project_horizon_results:
+    label: 'Project horizon results'
+    datasource_id: 'entity:group'
+    property_path: field_project_horizon_results
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_horizon_results
+  group_project_innovations:
+    label: 'Project innovations'
+    datasource_id: 'entity:group'
+    property_path: field_project_innovations
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_innovations
   group_project_status:
     label: Status
     datasource_id: 'entity:group'
@@ -1067,6 +1083,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_project_status
+  group_project_teaser:
+    label: 'Project teaser'
+    datasource_id: 'entity:group'
+    property_path: field_project_teaser
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_project_teaser
   group_project_total_cost:
     label: 'Total cost'
     datasource_id: 'entity:group'
@@ -1075,6 +1099,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_project_total_cost
+  group_project_website:
+    label: 'Project website'
+    datasource_id: 'entity:group'
+    property_path: field_project_website
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_project_website
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments

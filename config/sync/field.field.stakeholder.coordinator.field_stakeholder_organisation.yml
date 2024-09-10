@@ -1,15 +1,15 @@
+uuid: e8d6febf-825e-4b11-ba66-6d23287daf3a
 langcode: en
 status: true
 dependencies:
   config:
+    - eic_stakeholder.stakeholder_type.coordinator
     - field.storage.stakeholder.field_stakeholder_organisation
     - group.type.organisation
-  module:
-    - eic_stakeholder
-id: stakeholder.stakeholder.field_stakeholder_organisation
+id: stakeholder.coordinator.field_stakeholder_organisation
 field_name: field_stakeholder_organisation
 entity_type: stakeholder
-bundle: stakeholder
+bundle: coordinator
 label: Organisation
 description: ''
 required: false

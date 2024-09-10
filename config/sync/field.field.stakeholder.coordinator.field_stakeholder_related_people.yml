@@ -1,14 +1,14 @@
+uuid: 1f97a7d9-9c59-4c84-9d23-70d8ddd63a24
 langcode: en
 status: true
 dependencies:
   config:
+    - eic_stakeholder.stakeholder_type.coordinator
     - field.storage.stakeholder.field_stakeholder_related_people
-  module:
-    - eic_stakeholder
-id: stakeholder.stakeholder.field_stakeholder_related_people
+id: stakeholder.coordinator.field_stakeholder_related_people
 field_name: field_stakeholder_related_people
 entity_type: stakeholder
-bundle: stakeholder
+bundle: coordinator
 label: 'Related people'
 description: ''
 required: false
