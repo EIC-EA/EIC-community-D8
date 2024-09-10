@@ -1,0 +1,19 @@
+uuid: 37852535-e464-45dc-b3de-13a9fa9b76ae
+langcode: en
+status: true
+dependencies:
+  module:
+    - address
+    - eic_stakeholder
+id: stakeholder.field_stakeholder_address
+field_name: field_stakeholder_address
+entity_type: stakeholder
+type: address
+settings: {  }
+module: address
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
