@@ -5,10 +5,7 @@
  * Provides a stakeholder entity type.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Url;
-use Drupal\user\UserInterface;
 
 /**
  * Implements hook_theme().
@@ -36,81 +33,5 @@ function template_preprocess_stakeholder(array &$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
-  }
-}
-
-/**
- * Implements hook_entity_operation().
- */
-function eic_stakeholder_entity_operation(EntityInterface $entity) {
-  $operations = [];
-
-  if ($entity->getEntityTypeId() == 'group'
-    && \Drupal::moduleHandler()->moduleExists('views')
-    && $entity->hasPermission('access group_stakeholder overview', \Drupal::currentUser())
-  ) {
-    /** @var \Symfony\Component\Routing\RouterInterface $router */
-    $router = \Drupal::service('router.no_access_checks');
-    if ($router->getRouteCollection()->get('view.project_stakeholders.page_1') !== NULL) {
-      $operations['stakeholders'] = [
-        'title' => t('Stakeholders'),
-        'weight' => 20,
-        'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $entity->id()]),
-      ];
-    }
-  }
-  return $operations;
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function eic_stakeholder_user_cancel($edit, UserInterface $account, $method) {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish stakeholders.
-      $storage = \Drupal::entityTypeManager()->getStorage('stakeholder');
-      $stakeholder_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->condition('status', 1)
-        ->execute();
-      foreach ($storage->loadMultiple($stakeholder_ids) as $stakeholder) {
-        $stakeholder->set('status', FALSE);
-        $stakeholder->save();
-      }
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize stakeholders.
-      $storage = \Drupal::entityTypeManager()->getStorage('stakeholder');
-      $stakeholder_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->execute();
-      foreach ($storage->loadMultiple($stakeholder_ids) as $stakeholder) {
-        $stakeholder->setOwnerId(0);
-        $stakeholder->save();
-      }
-      break;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function eic_stakeholder_user_predelete(UserInterface $account) {
-  // Delete stakeholders.
-  $storage = \Drupal::entityTypeManager()->getStorage('stakeholder');
-  $stakeholder_ids = $storage->getQuery()
-    ->condition('uid', $account->id())
-    ->execute();
-  $stakeholders = $storage->loadMultiple($stakeholder_ids);
-  $storage->delete($stakeholders);
-  // Delete old revisions.
-  $stakeholder_ids = $storage->getQuery()
-    ->allRevisions()
-    ->condition('uid', $account->id())
-    ->execute();
-  foreach (array_keys($stakeholder_ids) as $revision_id) {
-    $storage->deleteRevision($revision_id);
   }
 }

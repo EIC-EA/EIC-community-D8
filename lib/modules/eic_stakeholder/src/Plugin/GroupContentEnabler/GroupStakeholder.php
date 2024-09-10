@@ -89,7 +89,7 @@ class GroupStakeholder extends GroupContentEnablerBase {
    */
   public function calculateDependencies() {
     $dependencies = parent::calculateDependencies();
-    $dependencies['config'][] = 'stakeholder.type.' . $this->getEntityBundle();
+    $dependencies['config'][] = 'eic_stakeholder.stakeholder_type.' . $this->getEntityBundle();
     return $dependencies;
   }
 
