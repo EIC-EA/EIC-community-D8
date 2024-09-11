@@ -6,9 +6,9 @@ dependencies:
     - field.storage.group.field_date_range
     - field.storage.group.field_project_ecmax_contributio
     - field.storage.group.field_location
-    - field.storage.group.field_project_date
     - field.storage.group.field_event_registration_date
     - field.storage.group.field_vocab_event_type
+    - field.storage.group.field_project_fields_of_science
     - field.storage.group.field_funding_source
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
@@ -17,7 +17,12 @@ dependencies:
     - field.storage.group.field_project_grant_agreement_id
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
+    - field.storage.group.field_project_date
+    - field.storage.group.field_project_horizon_results
+    - field.storage.group.field_project_innovations
     - field.storage.group.field_project_keywords
+    - field.storage.group.field_project_teaser
+    - field.storage.group.field_project_website
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_services_products
     - field.storage.group.field_project_status
@@ -27,8 +32,6 @@ dependencies:
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_project_total_cost
     - field.storage.group.field_body
-    - field.storage.group.field_project_teaser
-    - field.storage.group.field_project_fields_of_science
     - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
     - field.storage.message.field_operation_type
@@ -69,9 +72,6 @@ dependencies:
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
-    - field.storage.group.field_project_horizon_results
-    - field.storage.group.field_project_innovations
-    - field.storage.group.field_project_website
   module:
     - search_api_solr
     - group
@@ -86,6 +86,7 @@ dependencies:
     - eic_private_content
     - path
     - paragraphs
+    - eic_stakeholder
     - profile
     - search_api
     - address
@@ -136,7 +137,8 @@ third_party_settings:
     multilingual:
       limit_to_content_language: false
       include_language_independent: true
-      specific_languages: {  }
+      specific_languages:
+        en: '0'
 id: global
 name: Global
 description: ''
@@ -1477,6 +1479,35 @@ field_settings:
         - field.storage.message.field_source_group
       module:
         - group
+  stakeholder__group_content__entity_id_gid:
+    label: 'Reverse reference: Group content using Stakeholder » Parent group'
+    datasource_id: 'entity:stakeholder'
+    property_path: id
+    type: integer
+  stakeholder_bundle:
+    label: '[Stakeholder] bundle'
+    datasource_id: 'entity:stakeholder'
+    property_path: bundle
+    type: string
+    dependencies:
+      module:
+        - eic_stakeholder
+  stakeholder_id:
+    label: '[Stakeholder] ID'
+    datasource_id: 'entity:stakeholder'
+    property_path: id
+    type: integer
+    dependencies:
+      module:
+        - eic_stakeholder
+  stakeholder_label:
+    label: '[Stakeholder] Organisation name'
+    datasource_id: 'entity:stakeholder'
+    property_path: label
+    type: string
+    dependencies:
+      module:
+        - eic_stakeholder
   status:
     label: '[User] Status'
     datasource_id: 'entity:user'
@@ -1791,6 +1822,13 @@ datasource_settings:
       default: true
       selected: {  }
   'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:stakeholder':
     bundles:
       default: true
       selected: {  }
