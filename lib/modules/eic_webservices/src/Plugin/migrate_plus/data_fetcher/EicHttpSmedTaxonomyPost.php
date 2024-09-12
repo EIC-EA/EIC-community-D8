@@ -6,7 +6,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate_plus\Plugin\migrate_plus\data_fetcher\Http;
 use GuzzleHttp\Exception\RequestException;
-
+use Psr\Http\Message\ResponseInterface;
 /**
  * Retrieve data over a SMED API HTTP connection for migration.
  *
@@ -34,7 +34,7 @@ class EicHttpSmedTaxonomyPost extends Http implements ContainerFactoryPluginInte
   /**
    * {@inheritdoc}
    */
-  public function getResponse($url) {
+  public function getResponse($url): ResponseInterface {
     try {
       // First check if we have vocabulary ID to query on.
       if (empty($this->configuration['taxonomy_vocabulary_smed_id'])) {
