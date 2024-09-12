@@ -21,6 +21,8 @@ dependencies:
     - field.storage.group.field_project_horizon_results
     - field.storage.group.field_project_innovations
     - field.storage.group.field_project_keywords
+    - field.storage.group.field_project_teaser
+    - field.storage.group.field_project_website
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_services_products
     - field.storage.group.field_project_status
@@ -86,6 +88,7 @@ dependencies:
     - eic_private_content
     - path
     - paragraphs
+    - eic_stakeholder
     - profile
     - search_api
     - address
@@ -136,7 +139,8 @@ third_party_settings:
     multilingual:
       limit_to_content_language: false
       include_language_independent: true
-      specific_languages: {  }
+      specific_languages:
+        en: '0'
 id: global
 name: Global
 description: ''
@@ -1509,6 +1513,35 @@ field_settings:
         - field.storage.message.field_source_group
       module:
         - group
+  stakeholder__group_content__entity_id_gid:
+    label: 'Reverse reference: Group content using Stakeholder » Parent group'
+    datasource_id: 'entity:stakeholder'
+    property_path: id
+    type: integer
+  stakeholder_bundle:
+    label: '[Stakeholder] bundle'
+    datasource_id: 'entity:stakeholder'
+    property_path: bundle
+    type: string
+    dependencies:
+      module:
+        - eic_stakeholder
+  stakeholder_id:
+    label: '[Stakeholder] ID'
+    datasource_id: 'entity:stakeholder'
+    property_path: id
+    type: integer
+    dependencies:
+      module:
+        - eic_stakeholder
+  stakeholder_label:
+    label: '[Stakeholder] Organisation name'
+    datasource_id: 'entity:stakeholder'
+    property_path: label
+    type: string
+    dependencies:
+      module:
+        - eic_stakeholder
   status:
     label: '[User] Status'
     datasource_id: 'entity:user'
@@ -1823,6 +1856,13 @@ datasource_settings:
       default: true
       selected: {  }
   'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:stakeholder':
     bundles:
       default: true
       selected: {  }

@@ -251,6 +251,8 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     'gallery',
     'video',
     'news',
+    'coordinator',
+    'participant',
   ];
 
   if (
