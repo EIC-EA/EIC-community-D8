@@ -12781,29 +12781,28 @@
         },
         {
             "name": "softcreatr/jsonpath",
-            "version": "0.7.6",
+            "version": "0.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SoftCreatR/JSONPath.git",
-                "reference": "e04c02cb78bcc242c69d17dac5b29436bf3e1076"
+                "reference": "fc12dee0b46f3fa3a175c4051dbab60984acef4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SoftCreatR/JSONPath/zipball/e04c02cb78bcc242c69d17dac5b29436bf3e1076",
-                "reference": "e04c02cb78bcc242c69d17dac5b29436bf3e1076",
+                "url": "https://api.github.com/repos/SoftCreatR/JSONPath/zipball/fc12dee0b46f3fa3a175c4051dbab60984acef4b",
+                "reference": "fc12dee0b46f3fa3a175c4051dbab60984acef4b",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.1,<8.0"
+                "php": ">=8.0"
             },
             "replace": {
                 "flow/jsonpath": "*"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=7.0",
-                "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.5"
+                "phpunit/phpunit": "^9.6",
+                "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "autoload": {
@@ -12846,7 +12845,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-09-27T09:27:12+00:00"
+            "time": "2023-08-17T20:14:00+00:00"
         },
         {
             "name": "solarium/solarium",
@@ -20342,12 +20341,12 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-json": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.4"
+        "php": "8.0"
     },
     "plugin-api-version": "2.6.0"
 }
