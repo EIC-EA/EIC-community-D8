@@ -45,6 +45,40 @@ class ProcessorProject extends DocumentProcessor {
       return $map;
     }, $fields_of_science);
 
+    $stakeholder_coordinators = [];
+    $stakeholder_participants = [];
+
+    /** @var \Drupal\eic_stakeholder\Entity\Stakeholder[] $stakeholder_coord_entities */
+    $stakeholder_coord_entities = $group->getContentEntities('group_stakeholder:coordinator');
+    foreach ($stakeholder_coord_entities as $stakeholder_coord_entity) {
+      $country_code = $stakeholder_coord_entity->get('field_stakeholder_address')->getValue()[0]['country_code'];
+      $country_name = (string) \Drupal::service('country_manager')->getList()[$country_code];
+      $stakeholder_coordinators[] = [
+        'country_code' => $country_code,
+        'name' => "$country_name (coordinator)",
+      ];
+    }
+
+    $stakeholder_partic_entities = $group->getContentEntities('group_stakeholder:participant');
+    foreach ($stakeholder_partic_entities as $stakeholder_partic_entity) {
+      $country_code = $stakeholder_partic_entity->get('field_stakeholder_address')->getValue()[0]['country_code'];
+      $country_name = (string) \Drupal::service('country_manager')->getList()[$country_code];
+      $stakeholder_participants[] = [
+        'country_code' => $country_code,
+        'name' => $country_name,
+      ];
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      ProjectSourceType::PROJECT_PARTICIPATING_COUNTRIES_SOLR_FIELD_ID,
+      $fields,
+      json_encode([
+        'coordinators' => $stakeholder_coordinators,
+        'participants' => $stakeholder_participants,
+      ])
+    );
+
     $total_cost = (float) $group->get('field_project_total_cost')->value;
 
     $ranges = [
