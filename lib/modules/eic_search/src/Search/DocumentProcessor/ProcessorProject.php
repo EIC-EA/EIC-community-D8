@@ -77,6 +77,9 @@ class ProcessorProject extends DocumentProcessor {
 
     $document->addField('ss_group_project_field_total_cost', $total_cost_solr_field);
 
+    $start_year = explode('-', $fields['ds_group_field_project_date'])[0];
+    $document->addField('ss_project_start_year', $start_year);
+
     $document->addField('ss_project_cordis_url', EIC_TAXONOMY_CORDIS_BASE_URL . $fields['its_project_grant_agreement_id']);
 
     $this->addOrUpdateDocumentField(
