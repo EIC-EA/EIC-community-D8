@@ -220,32 +220,13 @@ display:
         type: search_api
         options:
           view_modes:
-            'entity:content_moderation_state':
-              content_moderation_state: default
-            'entity:flagging':
-              bookmark_content: default
-              follow_content: default
-              follow_group: default
-              follow_taxonomy_term: default
-              follow_user: default
-              highlight_content: default
-              like_comment: default
-              like_content: default
-              recommend: default
-              recommend_group: default
-              request_archive_comment: default
-              request_archive_content: default
-              request_archive_group: default
-              request_block_group: default
-              request_delete_comment: default
-              request_delete_content: default
-              request_delete_group: default
-              transfer_owner_request_group: default
             'entity:group':
               event: default
               group: default
               organisation: default
+              project: default
             'entity:group_content':
+              event-group_invitation: default
               event-group_membership: default
               event-group_membership_request: default
               event-group_node-book: default
@@ -253,12 +234,12 @@ display:
               event-group_node-document: default
               event-group_node-gallery: default
               event-group_node-news: default
-              event-group_node-page: default
               event-group_node-story: default
               event-group_node-video: default
               event-group_node-wiki_page: default
               event-group_request_archival: default
               event-group_request_delete: default
+              event-group_shared_content: default
               group-group_invitation: default
               group-group_membership: default
               group-group_membership_request: default
@@ -272,25 +253,40 @@ display:
               group-group_request_archival: default
               group-group_request_block: default
               group-group_request_delete: default
+              group-group_shared_content: default
+              group_content_type_01d9051e3d29d: teaser
+              group_content_type_4a2cdf9ed8847: default
+              group_content_type_544ffa9c3791b: default
               group_content_type_7f62828e3a84b: default
+              group_content_type_b47cbb19c399d: default
+              group_content_type_d6e8b1199e53e: default
               group_content_type_dd4142e7f0cf7: default
               group_content_type_ddd92dce39526: default
+              group_content_type_fb16873f4db83: teaser
+              organisation-group_invitation: default
               organisation-group_membership: default
+              organisation-group_node-document: default
               organisation-group_node-event: default
+              organisation-group_node-gallery: default
               organisation-group_node-news: default
-            'entity:group_permission':
-              group_permission: default
+              project-group_invitation: default
+              project-group_membership: default
+              project-group_membership_request: default
+              project-group_node-wiki_page: default
+              project-group_shared_content: default
             'entity:message':
               stream_article_insert_update: default
               stream_comment_insert_update: default
               stream_discussion_insert_update: default
               stream_document_insert_update: default
               stream_event_insert_update: default
+              stream_gallery_insert_update: default
               stream_news_insert_update: default
               stream_photo_album_insert_update: default
               stream_photo_insert_update: default
               stream_share_content: default
               stream_share_insert_update: default
+              stream_video_insert_update: default
               stream_wiki_page_insert_update: default
             'entity:node':
               book: default
@@ -303,6 +299,9 @@ display:
               story: default
               video: default
               wiki_page: default
+            'entity:stakeholder':
+              coordinator: default
+              participant: default
             'entity:user':
               user: default
       query:
@@ -312,7 +311,20 @@ display:
           skip_access: false
           preserve_facet_query_args: false
       relationships: {  }
-      header: {  }
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<div class="ecl-u-type-heading-4">[view:title] ([view:total-rows])</div>'
+            format: full_html
+          tokenize: false
       footer: {  }
       display_extenders: {  }
     cache_metadata:
@@ -334,7 +346,22 @@ display:
       sorts: {  }
       defaults:
         sorts: false
+        header: false
       display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<div class="ecl-u-type-heading-4">[view:title]</div>'
+            format: full_html
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -352,7 +379,7 @@ display:
     display_plugin: block
     position: 1
     display_options:
-      title: Participants
+      title: 'Participant organisations'
       sorts: {  }
       filters:
         search_api_datasource:

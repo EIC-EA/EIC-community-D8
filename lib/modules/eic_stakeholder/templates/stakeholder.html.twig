@@ -19,6 +19,19 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
-    {{- content -}}
+    <strong>
+      {% if content.field_stakeholder_organisation.0 %}
+        <a href="{{ content.field_stakeholder_organisation.0['#url'] }}">{{ content.label }}</a>
+      {% else %}
+        {{ content.label }}
+      {% endif %}
+    </strong>
+    {{ content.field_stakeholder_address }}
+    {% if content.field_stakeholder_related_people.0 %}
+      <div>{{ "Related people in the EIC Community" }}</div>
+      {{ content.field_stakeholder_related_people }}
+    {% else %}
+      <div>{{ "No related people in the EIC Community" }}</div>
+    {% endif %}
   {% endif %}
 </article>

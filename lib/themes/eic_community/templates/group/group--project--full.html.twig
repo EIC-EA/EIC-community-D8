@@ -65,43 +65,6 @@
           </section>
         </section>
       {% endif %}
-
-      {#      {% if block_enabled.announcements %}#}
-      {#        {% if announcements is not empty %}#}
-      {#          {{ attach_library('eic_community/react-block-announcements') }}#}
-      {#          <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">#}
-      {#            <h2>{{ announcements.title }}</h2>#}
-      {#            <div id="react-announcements" data-items="{{ announcements.items | json_encode }}"></div>#}
-      {#          </section>#}
-      {#        {% elseif can_add_announcement %}#}
-      {#          <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">#}
-      {#            <h2>{{ 'Announcements' | t }}</h2>#}
-      {#            <p>{{ 'No offers or needs for the moment.' }}</p>#}
-      {#            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with empty_announcements|default({})|merge({#}
-      {#              icon_path: icon_file_path,#}
-      {#            }) %}#}
-      {#          </section>#}
-      {#        {% endif %}#}
-      {#      {% endif %}#}
-
-      {#      {% if block_enabled.news %}#}
-      {#        {{ news }}#}
-      {#      {% endif %}#}
-
-      {#      {% if teams is not empty and block_enabled.members %}#}
-      {#        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({#}
-      {#          icon_file_path: icon_file_path,#}
-      {#          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",#}
-      {#          no_container: true,#}
-      {#          extra_id: 'members',#}
-      {#          call_to_action: teams.call_to_action#}
-      {#        }) only %}#}
-      {#      {% endif %}#}
-
-      {#      {% if block_enabled.events %}#}
-      {#        {{ events }}#}
-      {#      {% endif %}#}
-
     {% endblock %}
 
     {% block sidebar %}

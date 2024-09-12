@@ -1,0 +1,132 @@
+{% set title_element = title_element|default('h2') %}
+
+{% set defaults = {
+  name: 'star_circle',
+  type: 'custom',
+} %}
+
+{% set _is_default_type = false %}
+{% if type is empty or type is same as(false) %}
+  {% set _is_default_type = true %}
+{% endif %}
+
+<div class="ecl-teaser ecl-teaser--member {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+  {% if top_contributor is not empty%}
+    {% include "@theme/patterns/components/content-type-indicator.html.twig" with top_contributor|default({})|merge({
+      extra_classes: 'ecl-teaser__status',
+      icon: top_contributor.icon|default(defaults)|merge({
+        size: 's',
+      }),
+      icon_file_path: icon_file_path,
+    }) only %}
+  {% endif %}
+  <div class="ecl-teaser__main-wrapper ecl-teaser--member__main-wrapper">
+    <a href="{{ path }}">
+      {% if image is not empty %}
+        <figure class="ecl-teaser__image-wrapper">
+          <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        </figure>
+      {% else %}
+        <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
+          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            icon: {
+              size: 'm',
+              path: icon_file_path,
+              type: "custom",
+              name: "user"
+            }
+          } only %}
+        </figure>
+      {% endif %}
+    </a>
+
+    <div>
+      <div class="ecl-teaser__meta-header {{ _is_default_type ? 'ecl-teaser__meta-header--is-hidden' }}"
+           aria-hidden="{{ _is_default_type ? 'true' : 'false'}}"
+      >
+        {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+          extra_classes: 'ecl-teaser__type',
+          icon: type.icon|default(defaults)|merge({
+            size: 's',
+          }),
+          icon_file_path: icon_file_path,
+        }) only %}
+      </div>
+
+
+
+      <div class="ecl-teaser__content">
+        <{{ title_element }} class="ecl-teaser__title" title="{{ title }}">
+        {% if path is not empty %}
+          <a href="{{ path }}">
+            {% if title_before %}
+              <span class="ecl-teaser__title-before">{{ title_before }}</span>
+            {% endif %}
+
+            <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+            {% if title_after %}
+              <span class="ecl-teaser__title-after">{{ title_after }}</span>
+            {% endif %}
+          </a>
+        {% else %}
+          {% if title_before %}
+            <span class="ecl-teaser__title-before">{{ title_before }}</span>
+          {% endif %}
+
+          <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+          {% if title_after %}
+            <span class="ecl-teaser__title-after">{{ title_after }}</span>
+          {% endif %}
+        {% endif %}
+      </{{ title_element }}>
+
+      {% if description is not empty %}
+        <p class="ecl-teaser__description">{{ description }}</p>
+      {% endif %}
+      {% if organisations is not empty %}
+        <div class="ecl-teaser__links">
+          {% for organisation in organisations %}
+            <a class="ecl-teaser__link" href="{{ organisation.path }}">{{ organisation.label }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if location is not empty %}
+        <address class="ecl-teaser__description">{{ location.label }}</address>
+      {% endif %}
+    </div>
+
+    <div class="ecl-teaser__meta-footer">
+      {% if actions is not empty %}
+        <div class="ecl-teaser__actions">
+          {% for action in actions %}
+            <div class="ecl-teaser__action">
+              {% set _icon = {} %}
+
+              {% if icon_file_path and action.icon %}
+                {% set _icon = action.icon|default({})|merge({
+                  path: icon_file_path,
+                  size: 'm',
+                }) %}
+              {% endif %}
+
+              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                icon: _icon,
+                link: {
+                  path: action.path,
+                  label: action.label,
+                  icon_position: 'before',
+                  type: 'standalone',
+                },
+                extra_classes: 'ecl-link--action ecl-teaser__action-icon ecl-teaser__action-icon-' ~ _icon.name,
+              } only %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</div>

@@ -1,6 +1,6 @@
 uuid: b499948f-cacd-4cb2-843d-a65bddbf82ff
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_view_mode.stakeholder.teaser
