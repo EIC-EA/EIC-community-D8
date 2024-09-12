@@ -43,3 +43,19 @@ function template_preprocess_stakeholder(array &$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function eic_stakeholder_theme_suggestions_stakeholder(array $variables) {
+  $suggestions = [];
+
+  $stakeholder = $variables['elements']['#stakeholder'];
+  $stakeholder_view_mode = $variables['elements']['#view_mode'];
+
+  $suggestions[] = 'stakeholder__' . $stakeholder->bundle();
+  $suggestions[] = 'stakeholder__' . $stakeholder->id();
+  $suggestions[] = 'stakeholder__' . $stakeholder_view_mode;
+
+  return $suggestions;
+}

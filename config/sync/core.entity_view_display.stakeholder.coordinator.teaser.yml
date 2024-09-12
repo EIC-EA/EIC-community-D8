@@ -1,0 +1,54 @@
+uuid: b499948f-cacd-4cb2-843d-a65bddbf82ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.stakeholder.teaser
+    - eic_stakeholder.stakeholder_type.coordinator
+    - field.field.stakeholder.coordinator.field_stakeholder_address
+    - field.field.stakeholder.coordinator.field_stakeholder_organisation
+    - field.field.stakeholder.coordinator.field_stakeholder_related_people
+  module:
+    - address
+id: stakeholder.coordinator.teaser
+targetEntityType: stakeholder
+bundle: coordinator
+mode: teaser
+content:
+  field_stakeholder_address:
+    type: address_plain
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_stakeholder_organisation:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_stakeholder_related_people:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  search_api_excerpt: true
+  status: true
+  uid: true
