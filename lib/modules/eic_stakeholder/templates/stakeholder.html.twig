@@ -29,7 +29,17 @@
     {{ content.field_stakeholder_address }}
     {% if content.field_stakeholder_related_people.0 %}
       <div>{{ "Related people in the EIC Community" }}</div>
-      {{ content.field_stakeholder_related_people }}
+
+      {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+        amount_options: amount_options,
+        active_filters: active_filters,
+        sort_options: sort_options,
+        items: items,
+        no_items_available: no_items_available,
+        no_items_available_header: no_items_available_header,
+        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns',
+        icon_file_path: common.icon_file_path,
+      } only %}
     {% else %}
       <div>{{ "No related people in the EIC Community" }}</div>
     {% endif %}

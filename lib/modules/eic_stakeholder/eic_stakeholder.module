@@ -42,7 +42,30 @@ function template_preprocess_stakeholder(array &$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+
+  // Prepares 'field_stakeholder_related_people' data for overview template.
+  if (!empty($variables['content']['field_stakeholder_related_people']) && is_array($variables['content']['field_stakeholder_related_people'])) {
+    // Filter to get only numeric keys (e.g., 0, 1) and ignore keys starting with '#'.
+    $items = array_filter($variables['content']['field_stakeholder_related_people'], function ($key) {
+      return strpos($key, '#') === FALSE;
+    }, ARRAY_FILTER_USE_KEY);
+
+    // Loop through the filtered items and wrap each in a 'content' key.
+    foreach ($items as $delta => &$item) {
+      // Wrap the content in a 'content' key if it's an array and contains the '#user' key.
+      if (is_array($item) && isset($item['#user'])) {
+        $item = [
+          'content' => $item,
+        ];
+        $item['content']['#is_card'] = TRUE;
+      }
+    }
+
+    // Store the modified items back into the variables array for use in the template.
+    $variables['items'] = $items;
+  }
 }
+
 
 /**
  * Implements hook_theme_suggestions_HOOK().
