@@ -19,7 +19,7 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
-    <div class="ecl-u-mb-m">
+    <div class="ecl-u-mb-m ecl-u-type-paragraph-m">
       {% if content.field_stakeholder_organisation.0 %}
         <div class="ecl-u-d-inline-flex ecl-u-align-items-center">
           <a href="{{ content.field_stakeholder_organisation.0['#url'] }}" class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</a>
@@ -37,7 +37,7 @@
     </div>
 
     {% if content.field_stakeholder_related_people.0 %}
-      <div>{{ "Related people in the EIC Community" }}</div>
+      <div>{{ "Related people in the EIC Community:"|t }}</div>
 
       {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
         amount_options: amount_options,
@@ -46,11 +46,11 @@
         items: items,
         no_items_available: no_items_available,
         no_items_available_header: no_items_available_header,
-        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-mb-l',
+        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-mb-2xl ecl-u-pt-2xs',
         icon_file_path: common.icon_file_path,
       } only %}
     {% else %}
-      <div>{{ "No related people in the EIC Community" }}</div>
+      <div>{{ "No related people in the EIC Community"|t }}</div>
     {% endif %}
   {% endif %}
 </article>
