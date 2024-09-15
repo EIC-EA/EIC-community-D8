@@ -54,7 +54,7 @@ function eic_community_preprocess_user(array &$variables) {
         [_eic_community_get_user_contact_link($user)],
         _eic_community_get_user_social_links($user)
       );
-      $teaser['extra_classes'] = $variables['elements']['#is_card'] ? 'ecl-teaser--as-card ecl-teaser--as-card-grey' : '';
+      $teaser['extra_classes'] = $variables['elements']['#is_card'] ? 'ecl-teaser--project-member ecl-teaser--as-card ecl-teaser--as-card-grey' : '';
 
       $variables['user_item'] = $teaser;
       break;

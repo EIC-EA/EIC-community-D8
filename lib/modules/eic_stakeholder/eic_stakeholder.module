@@ -45,7 +45,6 @@ function template_preprocess_stakeholder(array &$variables) {
 
   // Prepares 'field_stakeholder_related_people' data for overview template.
   if (!empty($variables['content']['field_stakeholder_related_people']) && is_array($variables['content']['field_stakeholder_related_people'])) {
-    // Filter to get only numeric keys (e.g., 0, 1) and ignore keys starting with '#'.
     $items = array_filter($variables['content']['field_stakeholder_related_people'], function ($key) {
       return strpos($key, '#') === FALSE;
     }, ARRAY_FILTER_USE_KEY);
@@ -65,7 +64,6 @@ function template_preprocess_stakeholder(array &$variables) {
     $variables['items'] = $items;
   }
 }
-
 
 /**
  * Implements hook_theme_suggestions_HOOK().

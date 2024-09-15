@@ -19,14 +19,23 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
-    <strong>
+    <div class="ecl-u-mb-m">
       {% if content.field_stakeholder_organisation.0 %}
-        <a href="{{ content.field_stakeholder_organisation.0['#url'] }}">{{ content.label }}</a>
+        <div class="ecl-u-d-inline-flex ecl-u-align-items-center">
+          <a href="{{ content.field_stakeholder_organisation.0['#url'] }}" class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</a>
+          <div class="ecl-u-d-flex ecl-u-align-items-center ecl-u-mh-xs">
+            <img class="ecl-u-mh-2xs" src="{{ eic_images_path ~ '/flags/24/' ~ content.field_stakeholder_address.0["#country"]["code"] ~ '.png' }}"/>
+            <span>{{ content.field_stakeholder_address.0["#country"]["name"] }}</span>
+          </div>
+        </div>
       {% else %}
-        {{ content.label }}
+        <div class="ecl-u-d-inline-flex">
+          <div class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</div>
+          {{ content.field_stakeholder_address.0 }}
+        </div>
       {% endif %}
-    </strong>
-    {{ content.field_stakeholder_address }}
+    </div>
+
     {% if content.field_stakeholder_related_people.0 %}
       <div>{{ "Related people in the EIC Community" }}</div>
 
@@ -37,7 +46,7 @@
         items: items,
         no_items_available: no_items_available,
         no_items_available_header: no_items_available_header,
-        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns',
+        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-mb-l',
         icon_file_path: common.icon_file_path,
       } only %}
     {% else %}
