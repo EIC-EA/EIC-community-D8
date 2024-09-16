@@ -964,6 +964,11 @@
     }
   }
 
+  &__participating-countries {
+    display: flex;
+    align-items: center;
+  }
+
   &__actions {
     margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
     margin-right: #{0 - ecl-box-model('margin', 'controls')};
@@ -1119,6 +1124,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  &__participating-countries {
+    display: inline-flex;
+    align-items: center;
   }
 
   &--search {
