@@ -19,8 +19,7 @@ class ProjectsCordisSource extends SourcePluginBase {
    * {@inheritdoc}
    */
   public function __toString() {
-    // @DCG You may return something meaningful here.
-    return '';
+    return (string) $this->t('Importing CORDIS Data');
   }
 
   /**
@@ -28,38 +27,61 @@ class ProjectsCordisSource extends SourcePluginBase {
    */
   protected function initializeIterator() {
 
+    /** @var \Drupal\eic_projects\Entity\ExtractionRequest[] $requests */
     $requests = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')
       ->loadByProperties(['extraction_status' => 'pending_migration']);
 
-    // @DCG
-    // In this example we return a hardcoded set of records.
-    //
-    // For large sets of data consider using generators like follows:
-    // @code
-    // foreach ($foo->nextRecord() as $record) {
-    //  yield $record;
-    // }
-    // @endcode
-    $records = [
-      [
-        'id' => 1,
-        'name' => 'Alpha',
-        'status' => TRUE,
-      ],
-      [
-        'id' => 2,
-        'name' => 'Beta',
-        'status' => FALSE,
-      ],
-      [
-        'id' => 3,
-        'name' => 'Gamma',
-        'status' => TRUE,
-      ],
-    ];
+    $private_dir_path = \Drupal::service('file_system')->realpath("private://");
+    $records = [];
+
+//    foreach ($requests as $request) {
+      /** @var \Drupal\file\FileInterface $zip_file */
+//      $zip_file = $request->get('extraction_file')->entity;
+//      $filepath = \Drupal::service('file_system')->realpath($zip_file->getFileUri());
+//      $filename = pathinfo($filepath, PATHINFO_FILENAME);
+      $filename = 'EXTRACTION_699495820_20240715123650901';
+
+      // todo load XMLs from this path "$private_dir_path/cordis-xml/export/$filename/xml"
+      $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename/xml", \FilesystemIterator::KEY_AS_PATHNAME);
+      $files = new \RecursiveIteratorIterator($directory_iterator);
+      // -1 max_depth is for no-limit
+      $files->setMaxDepth(-1);
+
+      $file_mask = '/(.*\.(xml)$)/i';
+
+      $files = new \RegexIterator($files, $file_mask, \RegexIterator::MATCH, \RegexIterator::USE_KEY);
+
+      foreach ($files as $file) {
+        $doc = new \DOMDocument();
+        $doc->load($file->getPathname());
+        $xpath = new \DOMXPath($doc);
+        $records[] = [
+          'id' => $this->getXmlValue($xpath, '/project/id') ?? 0,
+          'title' => $this->getXmlValue($xpath, '/project/title'),
+          'acronym' => $this->getXmlValue($xpath, '/project/acronym'),
+          'startDate' => $this->getXmlValue($xpath, '/project/startDate'),
+          'endDate' => $this->getXmlValue($xpath, '/project/endDate'),
+          'totalCost' => $this->getXmlValue($xpath, '/project/totalCost')  ?? 0,
+          'ecMaxContribution' => $this->getXmlValue($xpath, '/project/ecMaxContribution')  ?? 0,
+          'objective' => $this->getXmlValue($xpath, '/project/objective'),
+          'status' => ucfirst(strtolower($this->getXmlValue($xpath, '/project/status'))) ?? 'Closed',
+          'teaser' => $this->getXmlValue($xpath, '/project/teaser'),
+        ];
+      }
+//    }
 
     return new \ArrayIterator($records);
+  }
+
+  private function getXmlValue(\DOMXPath $xpath, $query): ?string {
+    $q = $xpath->query($query)->item(0);
+    if (is_null($q)) {
+      return FALSE;
+    }
+    else {
+      return $q->nodeValue;
+    }
   }
 
   /**
@@ -67,9 +89,13 @@ class ProjectsCordisSource extends SourcePluginBase {
    */
   public function fields() {
     return [
-      'id' => $this->t('The record ID.'),
-      'name' => $this->t('The record name.'),
-      'status' => $this->t('The record status'),
+      'id' => $this->t('Project Identifier'),
+      'acronym' => $this->t('Project acronym'),
+      'startDate' => $this->t('Start date of the project'),
+      'endDate' => $this->t('End date of the project'),
+      'totalCost' => $this->t('Total cost of the project'),
+      'ecMaxContribution' => $this->t('Maximum contribution of the European Commission regarding the total cost'),
+      'objective' => $this->t('Objective of the project'),
     ];
   }
 
