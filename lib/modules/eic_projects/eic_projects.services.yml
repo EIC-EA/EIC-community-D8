@@ -1,0 +1,4 @@
+services:
+  eic_projects.data_extraction:
+    class: Drupal\eic_projects\CordisExtractionService
+    arguments: ['@http_client', '@state']
