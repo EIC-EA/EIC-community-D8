@@ -22,3 +22,5 @@
 /.gitattributes
 .env
 **/.DS_Store
+
+*.sql
