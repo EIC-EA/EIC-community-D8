@@ -2,55 +2,9 @@ id: cordis_xml
 migration_group: cordis
 label: XML feed of CORDIS projects
 source:
-  plugin: url
-  data_fetcher_plugin: http
-  data_parser_plugin: xml
-  urls:
-    - /project-rcn-215504_en.xml
-  item_selector: /project
-  fields:
-    -
-      name: project_id
-      selector: id
-    -
-      name: teaser
-      selector: teaser
-    -
-      name: objective
-      selector: objective
-    -
-      name: title
-      selector: title
-    -
-      name: categories
-      selector: relations/categories
-    -
-      name: organizations
-      selector: relations/associations
-    -
-      name: acronym
-      selector: acronym
-    -
-      name: status
-      selector: status
-    -
-      name: eu_max_contribution
-      selector: ecMaxContribution
-    -
-      name: start_date
-      selector: startDate
-    -
-      name: end_date
-      selector: endDate
-    -
-      name: total_cost
-      selector: totalCost
-    -
-      name: duration
-      selector: duration
-
+  plugin: projects_cordis
   ids:
-    project_id:
+    id:
       type: integer
 process:
   type:
@@ -62,10 +16,17 @@ process:
   field_project_acronym: acronym
   field_project_status: status
   field_project_teaser: teaser
-  field_project_grant_agreement_id: project_id
-  field_project_ecmax_contributio: eu_max_contribution
-  field_project_total_cost: total_cost
-  field_project_duration: duration
+  field_project_grant_agreement_id: id
+  field_project_ecmax_contributio: ecMaxContribution
+  field_project_total_cost: totalCost
+  field_project_objective/value: objective
+  field_project_objective/format: 'basic_html'
+  field_project_website:
+    - plugin: field_link
+      uri_scheme: 'https://'
+      source: 'eic.eismea.eu/community/'
+  moderation_state: 'published'
+
 destination:
   plugin: 'entity:group'
 
