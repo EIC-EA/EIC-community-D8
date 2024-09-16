@@ -150,6 +150,23 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
+    $fields['task_id'] = BaseFieldDefinition::create('string')
+      ->setRevisionable(TRUE)
+      ->setLabel(t('Task ID'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['query'] = BaseFieldDefinition::create('text_long')
       ->setRevisionable(TRUE)
       ->setLabel(t('Query requested to CORDIS Data Extraction API'))
@@ -185,6 +202,25 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
         'type' => 'author',
         'weight' => 15,
       ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['extraction_file'] = BaseFieldDefinition::create('file')
+      ->setLabel('Extraction file')
+      ->setSettings([
+        'uri_scheme' => 'private',
+        'file_directory' => 'extraction_files',
+        'file_extensions' => 'zip',
+      ])
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'file',
+        'weight' => -3,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'file',
+        'weight' => -1,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
