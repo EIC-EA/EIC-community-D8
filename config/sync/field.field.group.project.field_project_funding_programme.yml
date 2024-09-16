@@ -1,23 +1,34 @@
-uuid: 6186937d-b3c2-44e1-bc73-b164f3597622
+uuid: f9861402-ef07-403d-874a-3b73e910db52
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.group.field_project_funding_programme
     - group.type.project
+    - taxonomy.vocabulary.funding_programme
   module:
-    - link
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 id: group.project.field_project_funding_programme
 field_name: field_project_funding_programme
 entity_type: group
 bundle: project
-label: 'Funding Programme'
+label: 'Project funding programme'
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  title: 1
-  link_type: 17
-field_type: link
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      funding_programme: funding_programme
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

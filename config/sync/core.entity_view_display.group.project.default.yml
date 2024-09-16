@@ -105,16 +105,12 @@ content:
     weight: 28
     region: content
   field_project_funding_programme:
-    type: link
+    type: entity_reference_label
     label: above
     settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
+      link: false
     third_party_settings: {  }
-    weight: 20
+    weight: 31
     region: content
   field_project_grant_agreement_id:
     type: number_integer

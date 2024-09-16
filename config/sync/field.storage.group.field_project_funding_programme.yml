@@ -1,16 +1,17 @@
-uuid: 69b47391-4158-45fb-9c82-a93b858ff456
+uuid: c2f4ea9d-2f3d-4718-a8af-e5f4f6c6d96f
 langcode: en
 status: true
 dependencies:
   module:
     - group
-    - link
+    - taxonomy
 id: group.field_project_funding_programme
 field_name: field_project_funding_programme
 entity_type: group
-type: link
-settings: {  }
-module: link
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
 locked: false
 cardinality: 1
 translatable: true

@@ -50,7 +50,7 @@ content:
     third_party_settings: {  }
   field_project_acronym:
     type: string_textfield
-    weight: 27
+    weight: 8
     region: content
     settings:
       size: 60
@@ -58,7 +58,7 @@ content:
     third_party_settings: {  }
   field_project_call_for_proposal:
     type: link_default
-    weight: 35
+    weight: 15
     region: content
     settings:
       placeholder_url: ''
@@ -66,27 +66,27 @@ content:
     third_party_settings: {  }
   field_project_date:
     type: daterange_default
-    weight: 38
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   field_project_duration:
     type: number
-    weight: 39
+    weight: 19
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_project_ecmax_contributio:
     type: number
-    weight: 31
+    weight: 13
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_project_fields_of_science:
     type: entity_reference_autocomplete
-    weight: 42
+    weight: 22
     region: content
     settings:
       match_operator: CONTAINS
@@ -95,23 +95,25 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_project_funding_programme:
-    type: link_default
-    weight: 34
+    type: entity_reference_autocomplete
+    weight: 12
     region: content
     settings:
-      placeholder_url: ''
-      placeholder_title: ''
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_project_grant_agreement_id:
     type: number
-    weight: 26
+    weight: 7
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_project_horizon_results:
     type: link_default
-    weight: 44
+    weight: 24
     region: content
     settings:
       placeholder_url: ''
@@ -119,7 +121,7 @@ content:
     third_party_settings: {  }
   field_project_innovations:
     type: link_default
-    weight: 43
+    weight: 23
     region: content
     settings:
       placeholder_url: ''
@@ -127,7 +129,7 @@ content:
     third_party_settings: {  }
   field_project_keywords:
     type: string_textarea
-    weight: 37
+    weight: 17
     region: content
     settings:
       rows: 5
@@ -135,7 +137,7 @@ content:
     third_party_settings: {  }
   field_project_objective:
     type: text_textarea
-    weight: 29
+    weight: 10
     region: content
     settings:
       rows: 5
@@ -143,7 +145,7 @@ content:
     third_party_settings: {  }
   field_project_related_topic:
     type: string_textfield
-    weight: 40
+    weight: 20
     region: content
     settings:
       size: 60
@@ -151,13 +153,13 @@ content:
     third_party_settings: {  }
   field_project_status:
     type: options_select
-    weight: 33
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   field_project_sub_call:
     type: link_default
-    weight: 36
+    weight: 16
     region: content
     settings:
       placeholder_url: ''
@@ -165,7 +167,7 @@ content:
     third_party_settings: {  }
   field_project_teaser:
     type: string_textarea
-    weight: 28
+    weight: 9
     region: content
     settings:
       rows: 5
@@ -173,14 +175,14 @@ content:
     third_party_settings: {  }
   field_project_total_cost:
     type: number
-    weight: 30
+    weight: 11
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_project_website:
     type: link_default
-    weight: 41
+    weight: 21
     region: content
     settings:
       placeholder_url: ''
