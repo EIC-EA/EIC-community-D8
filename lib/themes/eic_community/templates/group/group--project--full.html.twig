@@ -3,9 +3,18 @@
     {% block content %}
       <section id="organisation-and-people" class="ecl-u-mb-4xl">
         <h2>{{ "Organisations and people"|t({}, {'context': 'eic_community'}) }}</h2>
-        <div class="ecl-u-mb-l">{{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}</div>
-        {{ project_coordinators_view }}
-        {{ project_participants_view }}
+        {% if project_coordinators_view['#rows'].0 %}
+          <div class="ecl-u-mb-l">
+            {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}
+          </div>
+          {{ project_coordinators_view }}
+          {{ project_participants_view }}
+        {% else %}
+          <div class="ecl-u-mb-l">
+            {{ "No organizations are currently associated with this project. It looks like there are no active participants from the EIC Community involved in this project at the moment. You might want to check back later or explore other projects for potential collaboration opportunities."|t }}
+          </div>
+        {% endif %}
+
       </section>
 
       {% if content.field_project_innovations.0 %}
