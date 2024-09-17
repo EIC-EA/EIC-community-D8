@@ -2,3 +2,6 @@ services:
   eic_projects.data_extraction:
     class: Drupal\eic_projects\CordisExtractionService
     arguments: ['@http_client', '@state']
+  eic_projects.project_migration:
+    class: Drupal\eic_projects\PostMigrationCordisProject
+    arguments: ['@file_system']
