@@ -59,6 +59,11 @@ class ProcessorProject extends DocumentProcessor {
         'name' => "$country_name (coordinator)",
       ];
     }
+    $coordinator_country_name_facet = (string) \Drupal::service('country_manager')
+      ->getList()[
+        $stakeholder_coord_entities[0]->get('field_stakeholder_address')
+          ->getValue()[0]['country_code']
+    ] ?? '';
 
     $stakeholder_partic_entities = $group->getContentEntities('group_stakeholder:participant');
     foreach ($stakeholder_partic_entities as $stakeholder_partic_entity) {
@@ -84,7 +89,7 @@ class ProcessorProject extends DocumentProcessor {
       $document,
       ProjectSourceType::PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID,
       $fields,
-      $stakeholder_coordinators[0]['name']
+      $coordinator_country_name_facet,
     );
 
     $total_cost = (float) $group->get('field_project_total_cost')->value;
