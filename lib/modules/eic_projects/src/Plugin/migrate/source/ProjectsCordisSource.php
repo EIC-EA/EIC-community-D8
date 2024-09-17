@@ -3,7 +3,6 @@
 namespace Drupal\eic_projects\Plugin\migrate\source;
 
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
-use Drupal\migrate\Row;
 
 /**
  * The 'projects_cordis' source plugin.
@@ -70,12 +69,13 @@ class ProjectsCordisSource extends SourcePluginBase {
           'duration' => $this->getXmlValue($xpath, 'project/duration'),
         ];
       }
+//      $request->set('extraction_status', 'migrating')->save();
 //    }
 
     return new \ArrayIterator($records);
   }
 
-  private function getXmlValue(\DOMXPath $xpath, $query): ?string {
+  private function getXmlValue(\DOMXPath $xpath, string $query): ?string {
     $q = $xpath->query($query)->item(0);
     if (is_null($q)) {
       return FALSE;
@@ -114,22 +114,6 @@ class ProjectsCordisSource extends SourcePluginBase {
       'size' => 'big',
     ];
     return $ids;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareRow(Row $row) {
-
-    // @DCG
-    // Extend/modify the row here if needed.
-    //
-    // Example:
-    // @code
-    // $name = $row->getSourceProperty('name');
-    // $row->setSourceProperty('name', Html::escape('$name');
-    // @endcode
-    return parent::prepareRow($row);
   }
 
 }
