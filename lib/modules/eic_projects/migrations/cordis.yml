@@ -21,12 +21,13 @@ process:
   field_project_total_cost: totalCost
   field_project_objective/value: objective
   field_project_objective/format: 'basic_html'
-  field_project_website:
-    - plugin: field_link
-      uri_scheme: 'https://'
-      source: 'eic.eismea.eu/community/'
-  moderation_state: 'published'
-
+  field_project_date/value: startDate
+  field_project_date/end_value: endDate
+  field_project_duration: duration
+  status: 'published'
+  moderation_state:
+    plugin: default_value
+    default_value: 'published'
 destination:
   plugin: 'entity:group'
 

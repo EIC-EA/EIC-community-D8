@@ -60,13 +60,14 @@ class ProjectsCordisSource extends SourcePluginBase {
           'id' => $this->getXmlValue($xpath, '/project/id') ?? 0,
           'title' => $this->getXmlValue($xpath, '/project/title'),
           'acronym' => $this->getXmlValue($xpath, '/project/acronym'),
-          'startDate' => $this->getXmlValue($xpath, '/project/startDate'),
-          'endDate' => $this->getXmlValue($xpath, '/project/endDate'),
-          'totalCost' => $this->getXmlValue($xpath, '/project/totalCost')  ?? 0,
-          'ecMaxContribution' => $this->getXmlValue($xpath, '/project/ecMaxContribution')  ?? 0,
+          'startDate' => $this->getXmlValue($xpath, '/project/startDate') . 'T00:00:00',
+          'endDate' => $this->getXmlValue($xpath, '/project/endDate') . 'T00:00:00',
+          'totalCost' => $this->getXmlValue($xpath, '/project/totalCost'),
+          'ecMaxContribution' => $this->getXmlValue($xpath, '/project/ecMaxContribution'),
           'objective' => $this->getXmlValue($xpath, '/project/objective'),
-          'status' => ucfirst(strtolower($this->getXmlValue($xpath, '/project/status'))) ?? 'Closed',
+          'status' => $this->getXmlValue($xpath, '/project/status') ?? 'CLOSED',
           'teaser' => $this->getXmlValue($xpath, '/project/teaser'),
+          'duration' => $this->getXmlValue($xpath, 'project/duration'),
         ];
       }
 //    }
@@ -90,12 +91,16 @@ class ProjectsCordisSource extends SourcePluginBase {
   public function fields() {
     return [
       'id' => $this->t('Project Identifier'),
+      'title' => $this->t('Project title'),
       'acronym' => $this->t('Project acronym'),
       'startDate' => $this->t('Start date of the project'),
       'endDate' => $this->t('End date of the project'),
       'totalCost' => $this->t('Total cost of the project'),
       'ecMaxContribution' => $this->t('Maximum contribution of the European Commission regarding the total cost'),
       'objective' => $this->t('Objective of the project'),
+      'status' => $this->t('Project status'),
+      'teaser' => $this->t('Project teaser'),
+      'duration' => $this->t('Project duration'),
     ];
   }
 
