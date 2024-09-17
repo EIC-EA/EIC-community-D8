@@ -23,7 +23,10 @@ class ProjectSourceType extends SourceType {
   const PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID = 'ss_group_project_funding_programme';
 
   const PROJECT_FIELDS_OF_SCIENCE_SOLR_FIELD_ID = 'ss_group_project_fields_of_science';
+
   const PROJECT_PARTICIPATING_COUNTRIES_SOLR_FIELD_ID = 'ss_group_project_participating_countries';
+
+  const PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID = 'ss_group_project_coordinating_country_code';
 
   /**
    * @inheritDoc
@@ -55,6 +58,7 @@ class ProjectSourceType extends SourceType {
       'ss_group_project_status' => $this->t('Project status', [], ['context' => 'eic_search']),
       'ss_project_start_year' => $this->t('Start year', [], ['context' => 'eic_search']),
       'ss_group_project_field_total_cost' => $this->t('Budget Range', [], ['context' => 'eic_search']),
+      self::PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID => $this->t('Coordinating country', options: ['context' => 'eic_search'] )
     ];
   }
 

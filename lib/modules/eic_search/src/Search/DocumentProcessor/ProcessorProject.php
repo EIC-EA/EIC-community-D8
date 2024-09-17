@@ -79,6 +79,13 @@ class ProcessorProject extends DocumentProcessor {
       ])
     );
 
+    $this->addOrUpdateDocumentField(
+      $document,
+      ProjectSourceType::PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID,
+      $fields,
+      $stakeholder_coordinators[0]['name']
+    );
+
     $total_cost = (float) $group->get('field_project_total_cost')->value;
 
     $ranges = [
