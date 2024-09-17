@@ -29,11 +29,12 @@ class ProcessorProject extends DocumentProcessor {
     $start_date = new DrupalDateTime($fields['ds_group_field_project_date']);
     $end_date = new DrupalDateTime($fields['ds_group_field_project_date_end_value']);
 
-    $group_project_funding = $group->get('field_project_funding_programme')->getValue()[0];
-    $project_funding = [
-      'url' => $group_project_funding['uri'],
-      'title' => $group_project_funding['title'] ?? '',
-    ];
+    $project_funding = '';
+    /** @var \Drupal\taxonomy\Entity\Term $group_project_funding */
+    $group_project_funding = $group->get('field_project_funding_programme')->entity;
+    if ($group_project_funding instanceof TermInterface) {
+      $project_funding = $group_project_funding->label();
+    }
 
     $fields_of_science = $group->get('field_project_fields_of_science')->referencedEntities();
     $fields_of_science_terms = array_map(function(TermInterface $term) {
@@ -77,6 +78,13 @@ class ProcessorProject extends DocumentProcessor {
         'coordinators' => $stakeholder_coordinators,
         'participants' => $stakeholder_participants,
       ])
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      ProjectSourceType::PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID,
+      $fields,
+      $stakeholder_coordinators[0]['name']
     );
 
     $total_cost = (float) $group->get('field_project_total_cost')->value;
@@ -134,7 +142,7 @@ class ProcessorProject extends DocumentProcessor {
       $document,
       ProjectSourceType::PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID,
       $fields,
-      json_encode($project_funding)
+      $project_funding,
     );
 
     $this->addOrUpdateDocumentField(
