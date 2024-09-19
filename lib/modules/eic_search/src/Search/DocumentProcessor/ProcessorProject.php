@@ -56,7 +56,7 @@ class ProcessorProject extends DocumentProcessor {
       $country_name = (string) \Drupal::service('country_manager')->getList()[$country_code];
       $stakeholder_coordinators[] = [
         'country_code' => $country_code,
-        'name' => "$country_name (coordinator)",
+        'name' => "$country_name",
       ];
     }
 
