@@ -1311,10 +1311,17 @@
   }
 
   &--project {
+    padding-bottom: $ecl-spacing-2-xl;
+    margin-bottom: $ecl-spacing-3-xl;
     gap: 20px;
+    border-bottom: 1px solid $ecl-color-grey-20;
 
     #{$node}__sidebar {
       width: 212px;
+
+      @include ecl-media-breakpoint-up('md') {
+        width: 260px;
+      }
     }
 
     .ecl-link--button {
