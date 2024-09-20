@@ -22,7 +22,7 @@
     <div class="ecl-u-mb-m ecl-u-type-paragraph-m">
       {% if content.field_stakeholder_organisation.0 %}
         <div class="ecl-u-d-inline-flex ecl-u-align-items-center">
-          <a href="{{ content.field_stakeholder_organisation.0['#url'] }}" class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</a>
+            <a href="{{ content.field_stakeholder_organisation.0['#url'] }}" class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</a>
           <div class="ecl-u-d-flex ecl-u-align-items-center ecl-u-mh-xs">
             <img class="ecl-u-mh-2xs" src="{{ eic_images_path ~ '/flags/24/' ~ content.field_stakeholder_address.0["#country"]["code"] ~ '.png' }}"/>
             <span>{{ content.field_stakeholder_address.0["#country"]["name"] }}</span>
@@ -31,7 +31,10 @@
       {% else %}
         <div class="ecl-u-d-inline-flex">
           <div class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</div>
-          {{ content.field_stakeholder_address.0 }}
+          <div class="ecl-u-d-flex ecl-u-align-items-center ecl-u-mh-xs">
+            <img class="ecl-u-mh-2xs" src="{{ eic_images_path ~ '/flags/24/' ~ content.field_stakeholder_address.0["#country"]["code"] ~ '.png' }}"/>
+            <span>{{ content.field_stakeholder_address.0["#country"]["name"] }}</span>
+          </div>
         </div>
       {% endif %}
     </div>
