@@ -966,7 +966,14 @@
 
   &__participating-countries {
     display: flex;
+    align-items: start;
+    gap: 5px;
+  }
+
+  &__participating-countries-items {
+    display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   &__actions {
@@ -1311,17 +1318,20 @@
   }
 
   &--project {
-    padding-bottom: $ecl-spacing-2-xl;
-    margin-bottom: $ecl-spacing-3-xl;
-    gap: 20px;
+    padding-bottom: $ecl-spacing-m;
+    margin-bottom: $ecl-spacing-xl;
     border-bottom: 1px solid $ecl-color-grey-20;
+    gap: 20px;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      padding-bottom: $ecl-spacing-2-xl;
+      margin-bottom: $ecl-spacing-3-xl;
+      flex-direction: row;
+    }
 
     #{$node}__sidebar {
-      width: 212px;
-
-      @include ecl-media-breakpoint-up('md') {
-        width: 260px;
-      }
+      width: 260px;
     }
 
     .ecl-link--button {
@@ -1338,6 +1348,10 @@
       flex-direction: column;
       align-items: start;
       gap: 10px;
+    }
+
+    #{$node}__programme {
+      margin-bottom: $ecl-spacing-m;
     }
   }
 
