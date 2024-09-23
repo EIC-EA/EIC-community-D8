@@ -23,5 +23,10 @@ function eic_community_preprocess_group__project(&$variables) {
     case 'mail_teaser':
       // Get event description.
   }
+
+  // About page preprocessing.
+  if (isset($variables['elements']['owners'])) {
+    _preprocess_about_page($variables);
+  }
 }
 
