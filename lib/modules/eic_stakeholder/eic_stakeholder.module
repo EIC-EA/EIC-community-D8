@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Provides a stakeholder entity type.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_stakeholder_stakeholder_type_insert(EntityInterface $entity) {
+  \Drupal::service('plugin.manager.group_content_enabler')->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function eic_stakeholder_theme() {
+  return [
+    'stakeholder' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for stakeholder templates.
+ *
+ * Default template: stakeholder.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the stakeholder information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_stakeholder(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  // Prepares 'field_stakeholder_related_people' data for overview template.
+  if (!empty($variables['content']['field_stakeholder_related_people']) && is_array($variables['content']['field_stakeholder_related_people'])) {
+    $items = array_filter($variables['content']['field_stakeholder_related_people'], function ($key) {
+      return strpos($key, '#') === FALSE;
+    }, ARRAY_FILTER_USE_KEY);
+
+    // Loop through the filtered items and wrap each in a 'content' key.
+    foreach ($items as $delta => &$item) {
+      // Wrap the content in a 'content' key if it's an array and contains the '#user' key.
+      if (is_array($item) && isset($item['#user'])) {
+        $item = [
+          'content' => $item,
+        ];
+        $item['content']['#is_card'] = TRUE;
+      }
+    }
+
+    // Store the modified items back into the variables array for use in the template.
+    $variables['items'] = $items;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function eic_stakeholder_theme_suggestions_stakeholder(array $variables) {
+  $suggestions = [];
+
+  $stakeholder = $variables['elements']['#stakeholder'];
+  $stakeholder_view_mode = $variables['elements']['#view_mode'];
+
+  $suggestions[] = 'stakeholder__' . $stakeholder->bundle();
+  $suggestions[] = 'stakeholder__' . $stakeholder->id();
+  $suggestions[] = 'stakeholder__' . $stakeholder_view_mode;
+
+  return $suggestions;
+}

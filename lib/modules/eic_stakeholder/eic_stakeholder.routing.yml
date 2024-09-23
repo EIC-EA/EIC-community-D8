@@ -1,0 +1,2 @@
+route_callbacks:
+  - '\Drupal\eic_stakeholder\Routing\GroupStakeholderRouteProvider::getRoutes'

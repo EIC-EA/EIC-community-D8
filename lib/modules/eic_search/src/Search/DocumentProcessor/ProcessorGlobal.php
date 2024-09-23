@@ -99,6 +99,10 @@ class ProcessorGlobal extends DocumentProcessor {
     $is_group_parent_published = 1;
 
     switch ($datasource) {
+      case 'entity:stakeholder':
+        $title = $fullname = $fields['ss_stakeholder_label'];
+        $type = $fields['ss_stakeholder_bundle'] ?? '';
+        break;
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];

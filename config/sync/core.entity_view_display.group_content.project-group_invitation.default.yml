@@ -1,0 +1,47 @@
+uuid: 3b3f2a5f-b700-4889-ba0b-a8e2bab1df6f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group_content.project-group_invitation.field_invitation_reminder_count
+    - field.field.group_content.project-group_invitation.field_invitation_reminder_date
+    - field.field.group_content.project-group_invitation.group_roles
+    - field.field.group_content.project-group_invitation.invitation_status
+    - field.field.group_content.project-group_invitation.invitee_mail
+    - group.content_type.project-group_invitation
+id: group_content.project-group_invitation.default
+targetEntityType: group_content
+bundle: project-group_invitation
+mode: default
+content:
+  group_roles:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: -4
+    region: content
+  invitation_status:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: -2
+    region: content
+  invitee_mail:
+    type: email_mailto
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: -3
+    region: content
+hidden:
+  entity_id: true
+  field_invitation_reminder_count: true
+  field_invitation_reminder_date: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

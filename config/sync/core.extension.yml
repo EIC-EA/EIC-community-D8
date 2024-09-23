@@ -95,6 +95,7 @@ module:
   eic_search: 0
   eic_seo: 0
   eic_share_content: 0
+  eic_stakeholder: 0
   eic_statistics: 0
   eic_subscription_digest: 0
   eic_taxonomy: 0

@@ -1,0 +1,29 @@
+uuid: b6ed5599-ba4b-4cbf-8eae-3bd9bea22d92
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_fields_of_science
+    - group.type.project
+    - taxonomy.vocabulary.fields_of_science
+id: group.project.field_project_fields_of_science
+field_name: field_project_fields_of_science
+entity_type: group
+bundle: project
+label: 'Fields of science'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      fields_of_science: fields_of_science
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

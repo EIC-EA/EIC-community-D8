@@ -11,6 +11,10 @@ services:
     class: Drupal\eic_search\Search\Sources\OrganisationSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_project:
+    class: Drupal\eic_search\Search\Sources\ProjectSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_user_list:
     class: Drupal\eic_search\Search\Sources\UserListSourceType
     tags:
@@ -194,6 +198,12 @@ services:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
+  eic_search.document_processor_project:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorProject
+    tags:
+      - { name: eic_search.document_processor, priority: 34 }
     calls:
       - [ setStateCache, [ '@?state' ] ]
   eic_search.document_processor_video:

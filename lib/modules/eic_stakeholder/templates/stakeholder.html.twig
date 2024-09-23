@@ -1,0 +1,59 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a stakeholder entity.
+ *
+ * This template is used when viewing a canonical stakeholder page,
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.label'.
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_stakeholder()
+ */
+#}
+<article{{ attributes }}>
+  {% if view_mode != 'full' %}
+    {{ title_prefix }}
+    {{ title_suffix }}
+  {% endif %}
+  {% if content %}
+    <div class="ecl-u-mb-m ecl-u-type-paragraph-m">
+      {% if content.field_stakeholder_organisation.0 %}
+        <div class="ecl-u-d-inline-flex ecl-u-align-items-center">
+            <a href="{{ content.field_stakeholder_organisation.0['#url'] }}" class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</a>
+          <div class="ecl-u-d-flex ecl-u-align-items-center ecl-u-mh-xs">
+            <img class="ecl-u-mh-2xs" src="{{ eic_images_path ~ '/flags/24/' ~ content.field_stakeholder_address.0["#country"]["code"] ~ '.png' }}"/>
+            <span>{{ content.field_stakeholder_address.0["#country"]["name"] }}</span>
+          </div>
+        </div>
+      {% else %}
+        <div class="ecl-u-d-inline-flex">
+          <div class="ecl-u-type-uppercase ecl-u-type-bold">{{ content.label }}</div>
+          <div class="ecl-u-d-flex ecl-u-align-items-center ecl-u-mh-xs">
+            <img class="ecl-u-mh-2xs" src="{{ eic_images_path ~ '/flags/24/' ~ content.field_stakeholder_address.0["#country"]["code"] ~ '.png' }}"/>
+            <span>{{ content.field_stakeholder_address.0["#country"]["name"] }}</span>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if content.field_stakeholder_related_people.0 %}
+      <div>{{ "Related people in the EIC Community:"|t }}</div>
+
+      {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+        amount_options: amount_options,
+        active_filters: active_filters,
+        sort_options: sort_options,
+        items: items,
+        no_items_available: no_items_available,
+        no_items_available_header: no_items_available_header,
+        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-mb-2xl ecl-u-pt-2xs',
+        icon_file_path: common.icon_file_path,
+      } only %}
+    {% else %}
+      <div>{{ "No related people in the EIC Community."|t }}</div>
+    {% endif %}
+  {% endif %}
+</article>

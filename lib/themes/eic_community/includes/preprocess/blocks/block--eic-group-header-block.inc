@@ -336,6 +336,11 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       $overview_label = t('All organisations', [], ['context' => 'eic_community']);
       break;
 
+    case 'project':
+      $overview_id = GlobalOverviewPages::PROJECTS;
+      $overview_label = t('All projects', [], ['context' => 'eic_community']);
+      break;
+
     default:
       $overview_id = GlobalOverviewPages::GROUPS;
       $overview_label = t('All groups', [], ['context' => 'eic_community']);

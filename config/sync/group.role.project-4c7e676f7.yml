@@ -1,0 +1,17 @@
+uuid: a58ea362-3aa1-4fce-8cd8-7e20b51017c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  enforced:
+    config:
+      - user.role.service_authentication
+id: project-4c7e676f7
+label: 'Service authentication'
+weight: -5
+internal: true
+audience: outsider
+group_type: project
+permissions_ui: false
+permissions: {  }

@@ -1,0 +1,12 @@
+administer stakeholder types:
+  title: 'Administer stakeholder types'
+  description: 'Maintain the types of stakeholder entity.'
+  restrict access: true
+delete stakeholder:
+  title: Delete stakeholder
+create stakeholder:
+  title: Create stakeholder
+view stakeholder:
+  title: View stakeholder
+edit stakeholder:
+  title: Edit stakeholder

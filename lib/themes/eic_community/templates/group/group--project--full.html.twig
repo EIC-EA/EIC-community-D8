@@ -1,0 +1,179 @@
+{% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      <section id="organisation-and-people" class="ecl-u-mb-4xl">
+        <h2>{{ "Organisations and people"|t({}, {'context': 'eic_community'}) }}</h2>
+        {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
+          <div class="ecl-u-mb-l">
+            {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}
+          </div>
+          {{ project_coordinators_view }}
+          {{ project_participants_view }}
+        {% else %}
+          <div class="ecl-u-mb-l">
+            {{ "No organizations are currently associated with this project. It looks like there are no active participants from the EIC Community involved in this project at the moment. You might want to check back later or explore other projects for potential collaboration opportunities."|t }}
+          </div>
+        {% endif %}
+
+      </section>
+
+      {% if content.field_project_innovations.0 %}
+        {% set _link = {
+          'link': {
+            'path': content.field_project_innovations.0['#title'],
+            'label': 'View in Innovation Radar'|t,
+            'icon_position': 'after'
+          },
+          'icon': {
+            'path': eic_icon_path,
+            'type': "ui",
+            'name': "corner-arrow",
+            'transform': "rotate-90",
+            'size': "xs"
+          }
+        } -%}
+        <section id="innovations" class="ecl-u-mb-l">
+          <h2>{{ "Innovations"|t({}, {'context': 'eic_community'}) }}</h2>
+          {% include '@ecl-twig/page-banner' with {
+            title: "This project has recognised innovations!"|t,
+            link: _link,
+            image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
+            type: 'image-gradient',
+            extra_classes: 'ecl-u-pv-xl',
+            centered: alignment == 'left',
+          } only %}
+        </section>
+      {% endif %}
+
+      {% if content.field_project_horizon_results.0 %}
+        <section id="horizon-results" class="ecl-u-mb-l">
+          {% set _link = {
+            'link': {
+              'path': content.field_project_innovations.0['#title'],
+              'label': 'View in HRP'|t,
+              'icon_position': 'after'
+            },
+            'icon': {
+              'path': eic_icon_path,
+              'type': "ui",
+              'name': "corner-arrow",
+              'transform': "rotate-90",
+              'size': "xs"
+            }
+          } -%}
+          <section id="horizon-results">
+            <h2>{{ "Horizon Results"|t({}, {'context': 'eic_community'}) }}</h2>
+            {% include '@ecl-twig/page-banner' with {
+              title: "This project has published deliverables in Horizon Results Platform!",
+              link: _link,
+              image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
+              type: 'image-gradient',
+              extra_classes: 'ecl-u-pv-xl',
+              centered: alignment == 'left',
+            } only %}
+          </section>
+        </section>
+      {% endif %}
+    {% endblock %}
+
+    {% block sidebar %}
+      <div class="ecl-u-pa-l ecl-u-bg-grey-10">
+        {% if content.field_project_acronym.0 %}
+          <div class="ecl-u-mb-l">
+            <h3>{{ content.field_project_acronym.0 }}</h3>
+            <strong class="ecl-u-mb-l">{{ "ID" }}: </strong>
+            {{ content.field_project_grant_agreement_id.0 }}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_date.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "From"|t({}, {'context': 'eic_community'}) }}</strong>
+            {{ content.field_project_date.0.start_date }}
+            <strong>{{ "to"|t({}, {'context': 'eic_community'}) }}</strong>
+            {{ content.field_project_date.0.end_date }}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_status.0 %}
+          <div class="ecl-u-mb-l">
+            {% include "@ecl-twig/ec-component-label/ecl-label.html.twig" with {
+              label: content.field_project_status.0|render ~ ' PROJECT'|t({}, {'context': 'eic_community'}),
+              variant: content.field_project_status.0|render|lower == 'closed' ? 'medium' : 'low',
+            } %}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_funding_programme.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "Funded under"|t({}, {'context': 'eic_community'}) }}:</strong>
+            {{ content.field_project_funding_programme.0 }}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_total_cost.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "Total cost"|t({}, {'context': 'eic_community'}) }}:</strong>
+            € {{ content.field_project_total_cost.0['#markup']|number_format(2, ',', '.') }}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_ecmax_contributio.0 %}
+          <div class="ecl-u-mb-l">
+            <strong>{{ "EU contribution"|t({}, {'context': 'eic_community'}) }}:</strong>
+            € {{ content.field_project_ecmax_contributio.0['#markup']|number_format(2, ',', '.') }}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_website.0 %}
+          <div class="ecl-u-mb-l">
+            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+              icon: {
+                path: eic_icon_path,
+                type: 'general',
+                name: 'spreadsheet',
+              },
+              link: {
+                type: 'standalone',
+                icon_position: 'before',
+                path: content.field_project_website.0['#url_title'],
+                label: 'view project website',
+              },
+              extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+            } only %}
+          </div>
+        {% endif %}
+        {% if content.field_project_grant_agreement_id.0 %}
+          {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ content.field_project_grant_agreement_id.0|render %}
+          <div class="ecl-u-mb-l">
+            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+              icon: {
+                path: eic_icon_path,
+                type: 'custom',
+                name: 'star_circle',
+              },
+              link: {
+                type: 'standalone',
+                icon_position: 'before',
+                path: cordis_url,
+                label: 'view on cordis',
+              },
+              extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+            } only %}
+          </div>
+        {% endif %}
+
+        {% if content.field_project_fields_of_science.0 %}
+          <div class="ecl-u-mb-xs">
+            <strong>{{ content.field_project_fields_of_science['#title'] }}</strong>
+          </div>
+          <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+            {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endblock %}
+  {% endembed %}
+{% endblock %}

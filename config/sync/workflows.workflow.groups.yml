@@ -6,6 +6,7 @@ dependencies:
     - group.type.event
     - group.type.group
     - group.type.organisation
+    - group.type.project
   module:
     - content_moderation_bypass
 id: groups
@@ -112,4 +113,5 @@ type_settings:
       - event
       - group
       - organisation
+      - project
   default_moderation_state: pending

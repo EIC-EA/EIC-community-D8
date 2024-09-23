@@ -1,0 +1,25 @@
+uuid: 7ed3eab0-7e03-4c7e-89f6-8bc7ec98c424
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.invitation_status
+    - group.content_type.project-group_invitation
+id: group_content.project-group_invitation.invitation_status
+field_name: invitation_status
+entity_type: group_content
+bundle: project-group_invitation
+label: 'Invitation status'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

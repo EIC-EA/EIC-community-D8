@@ -1,0 +1,25 @@
+uuid: 1f97a7d9-9c59-4c84-9d23-70d8ddd63a24
+langcode: en
+status: true
+dependencies:
+  config:
+    - eic_stakeholder.stakeholder_type.coordinator
+    - field.storage.stakeholder.field_stakeholder_related_people
+id: stakeholder.coordinator.field_stakeholder_related_people
+field_name: field_stakeholder_related_people
+entity_type: stakeholder
+bundle: coordinator
+label: 'Related people'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: entity_reference_user
+      display_name: full_name_trusted
+      arguments: {  }
+field_type: entity_reference

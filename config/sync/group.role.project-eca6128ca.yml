@@ -1,0 +1,17 @@
+uuid: 77b72b78-f069-4a11-947d-e931a9bf3c32
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  enforced:
+    config:
+      - user.role.content_administrator
+id: project-eca6128ca
+label: 'Content administrator'
+weight: -6
+internal: true
+audience: outsider
+group_type: project
+permissions_ui: false
+permissions: {  }

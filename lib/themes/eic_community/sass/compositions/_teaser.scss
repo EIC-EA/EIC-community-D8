@@ -964,6 +964,18 @@
     }
   }
 
+  &__participating-countries {
+    display: flex;
+    align-items: start;
+    gap: 5px;
+  }
+
+  &__participating-countries-items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
   &__actions {
     margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
     margin-right: #{0 - ecl-box-model('margin', 'controls')};
@@ -1119,6 +1131,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  &__participating-countries {
+    display: inline-flex;
+    align-items: center;
   }
 
   &--search {
@@ -1297,6 +1314,51 @@
         width: 100%;
         margin-bottom: $ecl-spacing-l;
       }
+    }
+  }
+
+  &--project {
+    padding-bottom: $ecl-spacing-m;
+    margin-bottom: $ecl-spacing-xl;
+    border-bottom: 1px solid $ecl-color-grey-20;
+    gap: 20px;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      padding-bottom: $ecl-spacing-2-xl;
+      margin-bottom: $ecl-spacing-3-xl;
+      flex-direction: row;
+    }
+
+    #{$node}__sidebar {
+      width: 260px;
+    }
+
+    .ecl-link--button {
+      font-size: 13px;
+      line-height: 15px;
+      justify-content: space-between;
+    }
+
+    .ecl-link--external {
+      height: 15px;
+    }
+
+    #{$node}__meta-footer {
+      flex-direction: column;
+      align-items: start;
+      gap: 10px;
+    }
+
+    #{$node}__programme {
+      margin-bottom: $ecl-spacing-m;
+    }
+  }
+
+  &--project-member {
+    #{$node}__title span {
+      font-size: 14px;
+      line-height: 20px;
     }
   }
 }

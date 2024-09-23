@@ -1,0 +1,25 @@
+uuid: 191ec97c-9ff2-48ee-a9f7-cfd94142ff1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_status
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+    - options
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_status
+field_name: field_project_status
+entity_type: group
+bundle: project
+label: Status
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

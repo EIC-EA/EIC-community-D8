@@ -4,3 +4,24 @@
  * @file
  * Install, update and uninstall functions for the EIC Taxonomy module.
  */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Generate terms for taxonomy.
+ */
+function eic_taxonomy_update_9002() {
+  foreach (EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS as $uuid => $term_data) {
+    $term_exists = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties(['uuid' => $uuid]);
+    if (!$term_exists) {
+      $term = Term::create([
+        'uuid' => $uuid,
+        'name' => $term_data['name'],
+        'vid' => $term_data['vid'],
+      ]);
+      $term->save();
+    }
+  }
+}
