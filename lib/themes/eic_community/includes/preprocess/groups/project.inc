@@ -19,6 +19,9 @@ function eic_community_preprocess_group__project(&$variables) {
       break;
 
     case 'teaser':
+      _eic_community_render_project_teaser($variables, $group);
+      break;
+
     case 'small_teaser':
     case 'mail_teaser':
       // Get event description.
