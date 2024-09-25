@@ -12,7 +12,7 @@
   <div {{ attributes }}>
     {{ title_prefix }}
     {{ title_suffix }}
-    {% include "@theme/patterns/compositions/project/project.teaser.html.twig" with event_item|default({})|merge({
+    {% include "@theme/patterns/compositions/project/project.teaser.html.twig" with project_item|default({})|merge({
       title: label|default(''),
       path: url,
       extra_classes: extra_classes,

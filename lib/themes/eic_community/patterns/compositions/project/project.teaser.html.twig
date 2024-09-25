@@ -1,121 +1,122 @@
-<div class="ecl-teaser-overview__item">
-  <div class="ecl-teaser ecl-teaser--group ecl-teaser--project">
-    <div class="ecl-teaser__main-wrapper">
-      <div class="ecl-teaser__content-wrapper">
-        <div class="ecl-teaser__content">
-          <h2 class="ecl-teaser__title">
-            <a href="{{ url }}"><span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span></a>
-          </h2>
-          <div class="ecl-teaser__meta-header">
-            {% if content.field_project_grant_agreement_id.0 %}
-              <span class="ecl-u-mr-l"><strong>ID: </strong>{{ content.field_project_grant_agreement_id.0 }}</span>
-            {% endif %}
-            {% if content.field_project_date.0.start_date and content.field_project_date.0.end_date %}
-              <span><strong>From&nbsp;</strong>{{ content.field_project_date.0.start_date['#text'] }}<strong>&nbsp;to&nbsp;</strong>{{ content.field_project_date.0.end_date['#text'] }}</span>
-            {% endif %}
-          </div>
-          {% if content.field_project_teaser.0 %}
-            <div class="ecl-teaser__body">{{ content.field_project_teaser.0 }}</div>
+{#{{ dump(project_item) }}#}
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-teaser ecl-teaser--group ecl-teaser--project {{ extra_classes }}">
+  <div class="ecl-teaser__main-wrapper">
+    <div class="ecl-teaser__content-wrapper">
+      <div class="ecl-teaser__content">
+        <h2 class="ecl-teaser__title">
+          <a href="{{ url }}"><span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span></a>
+        </h2>
+        <div class="ecl-teaser__meta-header">
+          {% if project_grant_agreement %}
+            <span class="ecl-u-mr-l"><strong>ID: </strong>{{ project_grant_agreement }}</span>
           {% endif %}
-          <div class="ecl-teaser__meta-footer">
-            {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
-              <div class="ecl-u-mb-l">
-                {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}
-              </div>
-              {{ project_coordinators_view }}
-              {{ project_participants_view }}
-            {% endif %}
-            {% if content.field_project_funding_programme.0 %}
-              <div class="ecl-teaser__programme">
-                <strong>Programme: </strong><span>{{ content.field_project_funding_programme.0 }}</span>
-              </div>
-            {% endif %}
-          </div>
+          {% if project_date.start_date and project_date.end_date %}
+            <span><strong>From&nbsp;</strong>{{ content.field_project_date.0.start_date['#text'] }}<strong>&nbsp;to&nbsp;</strong>{{ content.field_project_date.0.end_date['#text'] }}</span>
+          {% endif %}
+        </div>
+        {% if content.field_project_teaser.0 %}
+          <div class="ecl-teaser__body">{{ content.field_project_teaser.0 }}</div>
+        {% endif %}
+        <div class="ecl-teaser__meta-footer">
+          {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
+            <div class="ecl-u-mb-l">
+              {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}
+            </div>
+            {{ project_coordinators_view }}
+            {{ project_participants_view }}
+          {% endif %}
+          {% if content.field_project_funding_programme.0 %}
+            <div class="ecl-teaser__programme">
+              <strong>Programme: </strong><span>{{ content.field_project_funding_programme.0 }}</span>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
-    <div class="ecl-teaser__sidebar">
-      {% if content.field_project_fields_of_science.0 %}
-        <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
-          {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
-            <li>{{ item }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      {% if content.field_project_horizon_results.0 %}
-        <div class="ecl-u-mb-s">
-          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-            icon: {
-              path: eic_icon_path,
-              type: 'general',
-              name: 'growth',
-            },
-            link: {
-              type: 'standalone',
-              icon_position: 'before',
-              path: content.field_project_horizon_results.0['#url_title'],
-              label: 'view project website',
-            },
-            extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
-          } only %}
-        </div>
-      {% endif %}
-      {% if content.field_project_innovations.0 %}
-        <div class="ecl-u-mb-s">
-          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-            icon: {
-              path: eic_icon_path,
-              type: 'custom',
-              name: 'check_circle',
-            },
-            link: {
-              type: 'standalone',
-              icon_position: 'before',
-              path: content.field_project_innovations.0['#url_title'],
-              label: 'view project website',
-            },
-            extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
-          } only %}
-        </div>
-      {% endif %}
-      {% if content.field_project_grant_agreement_id.0 %}
-        {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ content.field_project_grant_agreement_id.0|render %}
-        <div class="ecl-u-mb-s">
-          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-            icon: {
-              path: eic_icon_path,
-              type: 'general',
-              name: 'spreadsheet',
-            },
-            link: {
-              type: 'standalone',
-              icon_position: 'before',
-              path: cordis_url,
-              label: 'view on cordis',
-            },
-            extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
-          } only %}
-        </div>
-      {% endif %}
+  </div>
+  <div class="ecl-teaser__sidebar">
+    {% if content.field_project_fields_of_science.0 %}
+      <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+        {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if content.field_project_horizon_results.0 %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'general',
+            name: 'growth',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: content.field_project_horizon_results.0['#url_title'],
+            label: 'view project website',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
+    {% endif %}
+    {% if content.field_project_innovations.0 %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'custom',
+            name: 'check_circle',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: content.field_project_innovations.0['#url_title'],
+            label: 'view project website',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
+    {% endif %}
+    {% if content.field_project_grant_agreement_id.0 %}
+      {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ content.field_project_grant_agreement_id.0|render %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'general',
+            name: 'spreadsheet',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: cordis_url,
+            label: 'view on cordis',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
+    {% endif %}
 
-      {% if content.field_project_website.0 %}
-        <div class="ecl-u-mb-s">
-          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-            icon: {
-              path: eic_icon_path,
-              type: 'custom',
-              name: 'star_circle',
-            },
-            link: {
-              type: 'standalone',
-              icon_position: 'before',
-              path: content.field_project_website.0['#url_title'],
-              label: 'view project website',
-            },
-            extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
-          } only %}
-        </div>
-      {% endif %}
-    </div>
+    {% if content.field_project_website.0 %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'custom',
+            name: 'star_circle',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: content.field_project_website.0['#url_title'],
+            label: 'view project website',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
+    {% endif %}
   </div>
 </div>
