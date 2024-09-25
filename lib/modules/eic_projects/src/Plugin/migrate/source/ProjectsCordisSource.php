@@ -34,14 +34,12 @@ class ProjectsCordisSource extends SourcePluginBase {
     $private_dir_path = \Drupal::service('file_system')->realpath("private://");
     $records = [];
 
-//    foreach ($requests as $request) {
+    foreach ($requests as $request) {
       /** @var \Drupal\file\FileInterface $zip_file */
-//      $zip_file = $request->get('extraction_file')->entity;
-//      $filepath = \Drupal::service('file_system')->realpath($zip_file->getFileUri());
-//      $filename = pathinfo($filepath, PATHINFO_FILENAME);
-      $filename = 'EXTRACTION_699495820_20240715123650901';
+      $zip_file = $request->get('extraction_file')->entity;
+      $filepath = \Drupal::service('file_system')->realpath($zip_file->getFileUri());
+      $filename = pathinfo($filepath, PATHINFO_FILENAME);
 
-      // todo load XMLs from this path "$private_dir_path/cordis-xml/export/$filename/xml"
       $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename/xml", \FilesystemIterator::KEY_AS_PATHNAME);
       $files = new \RecursiveIteratorIterator($directory_iterator);
       // -1 max_depth is for no-limit
@@ -70,7 +68,7 @@ class ProjectsCordisSource extends SourcePluginBase {
         ];
       }
 //      $request->set('extraction_status', 'migrating')->save();
-//    }
+    }
 
     return new \ArrayIterator($records);
   }
