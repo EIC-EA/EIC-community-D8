@@ -10,6 +10,16 @@ use Drupal\eic_projects\Entity\ExtractionRequest;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_entity_insert().
+ */
+function eic_projects_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof ExtractionRequest) {
+    $queue = \Drupal::service('queue')->get('eic_projects_cordis_extraction_worker');
+    $queue->createItem($entity->id());
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function eic_projects_theme() {
