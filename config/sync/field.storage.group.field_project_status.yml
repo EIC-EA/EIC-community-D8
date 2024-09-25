@@ -15,8 +15,14 @@ settings:
       value: Active
       label: Active
     -
-      value: Closed
+      value: CLOSED
       label: Closed
+    -
+      value: SIGNED
+      label: Signed
+    -
+      value: TERMINATED
+      label: Terminated
   allowed_values_function: ''
 module: options
 locked: false
