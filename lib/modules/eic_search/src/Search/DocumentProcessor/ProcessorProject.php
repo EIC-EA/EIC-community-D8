@@ -36,12 +36,13 @@ class ProcessorProject extends DocumentProcessor {
       $project_funding = $group_project_funding->label();
     }
 
-    $fields_of_science = $group->get('field_project_fields_of_science')->referencedEntities();
+    $fields_of_science = $group->get('field_project_fields_of_science')
+      ->referencedEntities();
     $fields_of_science_terms = array_map(function(TermInterface $term) {
       $map = [];
       $uuid = $term->uuid();
       if (isset(EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid])) {
-        $map =  EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid];
+        $map = EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid];
       }
       return $map;
     }, $fields_of_science);
@@ -52,27 +53,33 @@ class ProcessorProject extends DocumentProcessor {
     /** @var \Drupal\eic_stakeholder\Entity\Stakeholder[] $stakeholder_coord_entities */
     $stakeholder_coord_entities = $group->getContentEntities('group_stakeholder:coordinator');
     foreach ($stakeholder_coord_entities as $stakeholder_coord_entity) {
-      $country_code = $stakeholder_coord_entity->get('field_stakeholder_address')->getValue()[0]['country_code'];
-      $country_name = (string) \Drupal::service('country_manager')->getList()[$country_code];
+      $country_code = $stakeholder_coord_entity->get('field_stakeholder_address')
+        ->getValue()[0]['country_code'];
+      $country_name = (string) \Drupal::service('country_manager')
+        ->getList()[$country_code];
       $stakeholder_coordinators[] = [
         'country_code' => $country_code,
         'name' => "$country_name",
       ];
     }
-    $coordinator_country_name_facet = (string) \Drupal::service('country_manager')
-      ->getList()[
-        $stakeholder_coord_entities[0]->get('field_stakeholder_address')
-          ->getValue()[0]['country_code']
-    ] ?? '';
+
+    if ($stakeholder_coord_entities) {
+      $coordinator_country_name_facet = (string) \Drupal::service('country_manager')
+        ->getList()[$stakeholder_coord_entities[0]->get('field_stakeholder_address')
+        ->getValue()[0]['country_code']] ?? '';
+    }
 
     $stakeholder_partic_entities = $group->getContentEntities('group_stakeholder:participant');
     foreach ($stakeholder_partic_entities as $stakeholder_partic_entity) {
-      $country_code = $stakeholder_partic_entity->get('field_stakeholder_address')->getValue()[0]['country_code'];
-      $country_name = (string) \Drupal::service('country_manager')->getList()[$country_code];
-      $stakeholder_participants[] = [
-        'country_code' => $country_code,
-        'name' => $country_name,
-      ];
+      $country_code = $stakeholder_partic_entity?->get('field_stakeholder_address')->first()->getValue()['country_code'];
+      if ($country_code) {
+        $country_name = (string) \Drupal::service('country_manager')
+          ->getList()[$country_code];
+        $stakeholder_participants[] = [
+          'country_code' => $country_code,
+          'name' => $country_name,
+        ];
+      }
     }
 
     $this->addOrUpdateDocumentField(
