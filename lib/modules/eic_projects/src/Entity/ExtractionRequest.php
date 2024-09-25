@@ -153,7 +153,6 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
     $fields['task_id'] = BaseFieldDefinition::create('string')
       ->setRevisionable(TRUE)
       ->setLabel(t('Task ID'))
-      ->setRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
@@ -167,11 +166,11 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['query'] = BaseFieldDefinition::create('text_long')
+    $fields['query'] = BaseFieldDefinition::create('string_long')
       ->setRevisionable(TRUE)
       ->setLabel(t('Query requested to CORDIS Data Extraction API'))
       ->setDisplayOptions('form', [
-        'type' => 'text_textfield',
+        'type' => 'string_textarea',
         'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE)
