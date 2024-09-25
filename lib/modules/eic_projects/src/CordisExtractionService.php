@@ -3,29 +3,33 @@
 namespace Drupal\eic_projects;
 
 use Drupal\Core\State\StateInterface;
+use Drupal\eic_projects\Entity\ExtractionRequest;
 use GuzzleHttp\Client;
 
 
 class CordisExtractionService {
 
-  public Client $http_client;
+  public Client $httpClient;
 
   public StateInterface $state;
 
-  public string $api_key;
+  public string $apiKey;
 
-  public string $base_domain;
+  public string $baseDomain;
 
-  public string $request_url;
+  public string $requestUrl;
 
-  public string $status_url;
+  public string $statusUrl;
+
+  public string $deleteUrl;
 
   public function __construct(Client $httpClient) {
-    $this->http_client = $httpClient;
-    $this->api_key = '';
-    $this->base_domain = 'https://cordis.europa.eu';
-    $this->request_url = '/api/dataextractions/getExtraction';
-    $this->status_url = '/api/dataextractions/getExtractionStatus';
+    $this->httpClient = $httpClient;
+    $this->apiKey = '';
+    $this->baseDomain = 'https://cordis.europa.eu';
+    $this->requestUrl = '/api/dataextractions/getExtraction';
+    $this->statusUrl = '/api/dataextractions/getExtractionStatus';
+    $this->deleteUrl = 'api/dataextractions/deleteExtraction';
   }
 
   public function requestExtraction($request_entity_id): void {
@@ -34,23 +38,20 @@ class CordisExtractionService {
     $extraction_options = [
       'query' => [
         'outputFormat' => 'xml',
-        'key' => $this->api_key,
+        'key' => $this->apiKey,
         'query' => $request_entity->get('query')->value, //agricultural sciences
       ],
     ];
 
-    $result = $this->http_client->get($this->base_domain . $this->request_url, $extraction_options);
+    $result = $this->httpClient->get($this->baseDomain . $this->requestUrl, $extraction_options);
     $body = json_decode($result->getBody()
       ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
     if ($body['status'] === TRUE) {
       $task_id = $body['payload']['taskID'];
-      $request_entity = \Drupal::entityTypeManager()
-        ->getStorage('extraction_request')->load($request_entity_id);
       $request_entity
         ->set('task_id', $task_id)
         ->set('extraction_status', 'pending_extraction')
         ->save();
-      \Drupal::state()->set('eic_projects.running_task_id', $task_id);
     }
 
   }
@@ -62,16 +63,30 @@ class CordisExtractionService {
     $request_options = [
       'query' => [
         'taskId' => $task_id,
-        'key' => $this->api_key,
+        'key' => $this->apiKey,
       ],
     ];
-    $result = $this->http_client->get($this->base_domain . $this->status_url, $request_options);
+    $result = $this->httpClient->get($this->baseDomain . $this->statusUrl, $request_options);
     $body = json_decode($result->getBody()
       ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
     if ($body['status']) {
       return $body['payload'];
     }
     return FALSE;
+  }
+
+  public function deleteExtraction($request_entity_id) {
+    $task_id = \Drupal::entityTypeManager()
+      ->getStorage('extraction_request')->load($request_entity_id)
+      ->get('task_id')->value;
+    $extraction_options = [
+      'query' => [
+        'key' => $this->apiKey,
+        'taskId' => $task_id,
+      ],
+    ];
+
+    $this->httpClient->delete($this->baseDomain . $this->deleteUrl, $extraction_options);
   }
 
 }
