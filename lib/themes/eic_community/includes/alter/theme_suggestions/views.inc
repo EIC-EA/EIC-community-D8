@@ -21,6 +21,7 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
     case 'group_discussions':
     case 'group_documents':
     case 'group_events':
+    case 'organisation_projects':
     case 'group_related_groups':
     case 'taxonomy_related_content':
 
