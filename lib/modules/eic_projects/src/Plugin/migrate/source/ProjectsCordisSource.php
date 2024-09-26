@@ -65,12 +65,34 @@ class ProjectsCordisSource extends SourcePluginBase {
           'status' => $this->getXmlValue($xpath, '/project/status') ?? 'CLOSED',
           'teaser' => $this->getXmlValue($xpath, '/project/teaser'),
           'duration' => $this->getXmlValue($xpath, 'project/duration'),
+          'euroscivocCode' => $this->getEuroSciVocCode($xpath),
         ];
       }
 //      $request->set('extraction_status', 'migrating')->save();
     }
 
     return new \ArrayIterator($records);
+  }
+
+  private function getEuroSciVocCode(\DOMXPath $xpath) {
+    $query = $xpath->query("/project/relations/categories/category[@classification='euroSciVoc' and @type='isInFieldOfScience']/code");
+    $nodeValue = '';
+    $count = $query->count();
+    for ($i = 0; $i < $count; $i++) {
+      $value = $query->item($i);
+      if (!is_null($value)) {
+        $code = explode('/', $value->nodeValue)[1];
+        if (!str_contains($nodeValue, ",$code,")) {
+          $nodeValue .= "$code,";
+        }
+      }
+    }
+
+    if (!empty($nodeValue)) {
+      $nodeValue = rtrim($nodeValue, ',');
+    }
+
+    return $nodeValue;
   }
 
   private function getXmlValue(\DOMXPath $xpath, string $query): ?string {
@@ -99,6 +121,7 @@ class ProjectsCordisSource extends SourcePluginBase {
       'status' => $this->t('Project status'),
       'teaser' => $this->t('Project teaser'),
       'duration' => $this->t('Project duration'),
+      'euroscivocCode' => $this->t('Project field of science')
     ];
   }
 

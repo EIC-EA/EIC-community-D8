@@ -24,6 +24,18 @@ process:
   field_project_date/value: startDate
   field_project_date/end_value: endDate
   field_project_duration: duration
+  field_project_fields_of_science:
+    -
+      plugin: explode
+      source: euroscivocCode
+      delimiter: ,
+    -
+      plugin: entity_lookup
+      value_key: field_euroscivoc_code
+      bundle_key: vid
+      bundle: fields_of_science
+      entity_type: taxonomy_term
+
   status: 'published'
   moderation_state:
     plugin: default_value
