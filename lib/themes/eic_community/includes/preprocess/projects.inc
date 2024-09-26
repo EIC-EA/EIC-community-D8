@@ -17,6 +17,18 @@ function _eic_community_render_project_detail_page(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK() for group--project--teaser.html.twig.
+ */
+//function _eic_community_render_project_teaser(&$variables) {
+//  $view_id = 'project_content';
+//  $group_id = $variables['elements']['#group']->id();
+//
+//  // Render and set project coordinators and paricipants view.
+//  $variables['project_coordinators_view'] = _eic_community_get_rendered_view($view_id, 'project_coordinators_teaser', [$group_id]);
+//  $variables['project_participants_view'] = _eic_community_get_rendered_view($view_id, 'project_participants_teaser', [$group_id]);
+//}
+
+/**
  * Helper function to load and render a view.
  *
  * @param string $view_id
