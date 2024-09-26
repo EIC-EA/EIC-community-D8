@@ -14,6 +14,7 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
 
   switch ($variables['view']->id()) {
     case 'organisation_content':
+    case 'organisation_projects':
       $suggestions[] = 'views_view__organisation_featured_content_collection';
       break;
 
@@ -21,7 +22,6 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
     case 'group_discussions':
     case 'group_documents':
     case 'group_events':
-    case 'organisation_projects':
     case 'group_related_groups':
     case 'taxonomy_related_content':
 
