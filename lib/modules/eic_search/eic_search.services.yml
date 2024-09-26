@@ -95,6 +95,10 @@ services:
     class: Drupal\eic_search\Search\Sources\UserProfile\MyOrganisationsSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_user_profile_projects:
+    class: Drupal\eic_search\Search\Sources\UserProfile\MyProjectsSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_my_profile_events:
     class: Drupal\eic_search\Search\Sources\Profile\MyEventsSourceType
     tags:
