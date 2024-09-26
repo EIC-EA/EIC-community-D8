@@ -71,7 +71,7 @@ class MyProjectsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS;
+    return self::DEFAULT;
   }
 
   /**
