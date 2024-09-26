@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
+use Drupal\eic_stakeholder\Service\StakeholderManager;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupContentInterface;
 use Solarium\QueryType\Update\Query\Document;
@@ -28,10 +29,11 @@ class ProcessorGroupContent extends DocumentProcessor {
       case 'entity:stakeholder':
         $id = $fields['its_stakeholder_id'];
 
+        $group_type_conditions = StakeholderManager::defineGroupContentType('project');
         $group_content_ids = \Drupal::entityQuery('group_content')
           ->condition('entity_id', $id)
-          ->condition('type', ['group_content_type_01d9051e3d29d', 'group_content_type_fb16873f4db83'], 'IN')
           ->range(0, 1)
+          ->condition('type', $group_type_conditions, 'IN')
           ->execute();
         break;
       case 'entity:node':

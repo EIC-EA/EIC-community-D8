@@ -330,6 +330,16 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     }
   }
 
+  $stakeholder_manager = \Drupal::service('eic_stakeholder.stakeholder_manager');
+  $participating_project_group = $stakeholder_manager->getOrganisationParticipatedProjects($group);
+  $participating_project_group_ids = implode('+', array_keys($participating_project_group));
+
+  $variables['projects'] = _eic_community_get_rendered_view(
+    'organisation_projects',
+    'projects_content',
+    [$participating_project_group_ids]
+  );
+
   $variables['details'] = [
     'title' => t('Organisation details', [], ['context' => 'eic_community']),
     'items' => [
