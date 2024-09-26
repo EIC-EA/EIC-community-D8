@@ -13,3 +13,8 @@ eic_admin.groups.events:
   description: 'Manage all Community Events.'
   route_name: view.admin_groups.page_admin_events
   base_route: eic_admin.groups
+eic_admin.groups.projects:
+  title: 'Events'
+  description: 'Manage all Community Projects.'
+  route_name: view.admin_groups.page_admin_projects
+  base_route: eic_admin.groups
