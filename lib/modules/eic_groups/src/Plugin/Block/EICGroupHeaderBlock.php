@@ -304,12 +304,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     // Adds stakeholder URL to the project group operation links.
-    if ($group->bundle() === 'project') {
-      $group_operation_links['stakeholder-collection'] = [
-        'title' => $this->t('Manage stakeholders'),
-        'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $group->id()]),
-      ];
-    }
+    $group_operation_links['stakeholder-collection'] = [
+      'title' => $this->t('Manage stakeholders'),
+      'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $group->id()]),
+    ];
 
     // Adds pending membership requests URL to the group operation links.
     $group_operation_links['edit-membership-requests'] = [

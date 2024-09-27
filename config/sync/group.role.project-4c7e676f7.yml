@@ -14,4 +14,15 @@ internal: true
 audience: outsider
 group_type: project
 permissions_ui: false
-permissions: {  }
+permissions:
+  - 'access group content menu overview'
+  - 'administer members'
+  - 'update any group_stakeholder:coordinator content'
+  - 'update any group_stakeholder:participant content'
+  - 'view group'
+  - 'view group_stakeholder:coordinator content'
+  - 'view group_stakeholder:coordinator entity'
+  - 'view group_stakeholder:participant content'
+  - 'view group_stakeholder:participant entity'
+  - 'view latest group version'
+  - 'view unpublished group_stakeholder:coordinator entity'
