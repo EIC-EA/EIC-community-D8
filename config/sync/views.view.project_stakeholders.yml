@@ -2,6 +2,9 @@ uuid: bd273e05-a6b8-46bb-8d15-161eb2d2345a
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.storage.stakeholder.field_stakeholder_organisation
+    - field.storage.stakeholder.field_stakeholder_related_people
   module:
     - eic_stakeholder
     - group
@@ -31,7 +34,7 @@ display:
           entity_type: null
           entity_field: label
           plugin_id: field
-          label: ''
+          label: 'Organisation name'
           exclude: false
           alter:
             alter_text: false
@@ -86,6 +89,183 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_stakeholder_organisation:
+          id: field_stakeholder_organisation
+          table: stakeholder__field_stakeholder_organisation
+          field: field_stakeholder_organisation
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'EIC Organisation'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_stakeholder_related_people:
+          id: field_stakeholder_related_people
+          table: stakeholder__field_stakeholder_related_people
+          field: field_stakeholder_related_people
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Related people'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: false
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: ol
+          separator: ', '
+          field_api_classes: false
+        operations:
+          id: operations
+          table: stakeholder
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: stakeholder
+          plugin_id: entity_operations
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: 'views-field views-field-dropbutton'
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: true
       pager:
         type: full
         options:
@@ -124,7 +304,18 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: 'No stakeholders available.'
+          tokenize: false
       sorts: {  }
       arguments:
         gid:
@@ -185,7 +376,7 @@ display:
           override: true
           sticky: false
           summary: ''
-          empty_table: false
+          empty_table: true
           caption: ''
           description: ''
       row:
@@ -229,7 +420,9 @@ display:
         - url
         - url.query_args
         - user.group_permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.stakeholder.field_stakeholder_organisation'
+        - 'config:field.storage.stakeholder.field_stakeholder_related_people'
   page_1:
     id: page_1
     display_title: Page
@@ -238,6 +431,15 @@ display:
     display_options:
       display_extenders: {  }
       path: group/%group/stakeholders
+      menu:
+        type: tab
+        title: Stakeholders
+        description: ''
+        weight: 22
+        expanded: false
+        menu_name: main
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
@@ -247,4 +449,6 @@ display:
         - url
         - url.query_args
         - user.group_permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.stakeholder.field_stakeholder_organisation'
+        - 'config:field.storage.stakeholder.field_stakeholder_related_people'
