@@ -178,6 +178,16 @@ class Stakeholder extends RevisionableContentEntityBase implements StakeholderIn
       ->setTranslatable(TRUE)
       ->setDescription(t('The time that the stakeholder was last edited.'));
 
+    $fields['path'] = BaseFieldDefinition::create('path')
+      ->setLabel(t('URL alias'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'path',
+        'weight' => 30,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setComputed(TRUE);
+
     return $fields;
   }
 

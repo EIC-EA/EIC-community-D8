@@ -237,42 +237,42 @@ class GroupTokens implements ContainerInjectionInterface {
     $replacements = [];
     $base_url = $this->requestStack->getCurrentRequest()->getBaseUrl();
 
-    if ($type == 'stakeholder' && !empty($data[$type])) {
-      /** @var \Drupal\eic_stakeholder\StakeholderInterface $stakeholder */
-      $stakeholder = $data['stakeholder'];
+    if (($stakeholder = $data['stakeholder']) && !$stakeholder instanceof StakeholderInterface) {
+      return $replacements;
+    }
 
-      foreach ($tokens as $name => $original) {
-        switch ($name) {
-          case 'title':
-            $replacements[$original] = $stakeholder->label();
-            break;
-          case 'stakeholder_group_url':
-            // If stakeholder belongs to a group.
-            if ($group_contents = $this->entityTypeManager->getStorage('group_content')
-              ->loadByEntity($stakeholder)) {
-              /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-              $group_content = reset($group_contents);
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'title':
+          $replacements[$original] = $stakeholder->label();
+          break;
+        case 'stakeholder_group_url':
+          // If stakeholder belongs to a group.
+          if ($group_contents = $this->entityTypeManager->getStorage('group_content')
+            ->loadByEntity($stakeholder)) {
+            /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+            $group_content = reset($group_contents);
 
-              $has_translation = $group_content->hasTranslation($stakeholder->language()
-                ->getId());
-              $group = $has_translation
-                ? $group_content->getGroup()
-                  ->getTranslation($stakeholder->language()->getId())
-                : $group_content->getGroup();
+            $has_translation = $group_content->hasTranslation($stakeholder->language()
+              ->getId());
+            $group = $has_translation
+              ? $group_content->getGroup()
+                ->getTranslation($stakeholder->language()->getId())
+              : $group_content->getGroup();
 
-              $group_url = $group->toUrl()->toString();
+            $group_url = $group->toUrl()->toString();
 
-              // If base path is presented in group URL, we need to remove
-              // it in order to avoid duplicated base paths.
-              $has_base_path = substr($group_url, 0, strlen($base_url)) === $base_url;
-              $replacements[$original] = $has_base_path
-                ? substr_replace($group_url, '', 0, strlen($base_url))
-                : $group_url;
-            }
-            break;
-        }
+            // If base path is presented in group URL, we need to remove
+            // it in order to avoid duplicated base paths.
+            $has_base_path = substr($group_url, 0, strlen($base_url)) === $base_url;
+            $replacements[$original] = $has_base_path
+              ? substr_replace($group_url, '', 0, strlen($base_url))
+              : $group_url;
+          }
+          break;
       }
     }
+
 
     return $replacements;
   }
