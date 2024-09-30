@@ -91,6 +91,7 @@ module:
   eic_paragraphs: 0
   eic_private_content: 0
   eic_private_message: 0
+  eic_projects: 0
   eic_recommend_content: 0
   eic_search: 0
   eic_seo: 0

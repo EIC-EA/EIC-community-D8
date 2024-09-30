@@ -29,7 +29,7 @@ class ProcessorProject extends DocumentProcessor {
     $start_date = new DrupalDateTime($fields['ds_group_field_project_date']);
     $end_date = new DrupalDateTime($fields['ds_group_field_project_date_end_value']);
 
-    $project_funding = '';
+    $project_funding = NULL;
     /** @var \Drupal\taxonomy\Entity\Term $group_project_funding */
     $group_project_funding = $group->get('field_project_funding_programme')->entity;
     if ($group_project_funding instanceof TermInterface) {
@@ -63,6 +63,7 @@ class ProcessorProject extends DocumentProcessor {
       ];
     }
 
+    $coordinator_country_name_facet = NULL;
     if ($stakeholder_coord_entities) {
       $coordinator_country_name_facet = (string) \Drupal::service('country_manager')
         ->getList()[$stakeholder_coord_entities[0]->get('field_stakeholder_address')
