@@ -66,12 +66,31 @@ class ProjectsCordisSource extends SourcePluginBase {
           'teaser' => $this->getXmlValue($xpath, '/project/teaser'),
           'duration' => $this->getXmlValue($xpath, 'project/duration'),
           'euroscivocCode' => $this->getEuroSciVocCode($xpath),
+          'fundingProgramme' => $this->getFundingProgramme($xpath),
         ];
       }
 //      $request->set('extraction_status', 'migrating')->save();
     }
 
     return new \ArrayIterator($records);
+  }
+
+  private function getFundingProgramme(\DOMXPath $xpath) {
+    //  $query->item(0)->getElementsByTagName('id')->item(0)->nodeValue
+    //  $query->item(0)->getElementsByTagName('title')->item(0)->nodeValue
+    $query = $xpath->query("/project/relations/associations/programme[@type='relatedLegalBasis']");
+    $count = $query->count();
+    $programmes = [];
+    for ($i = 0; $i < $count; $i++) {
+      $value = $query->item($i);
+      if (!is_null($value)) {
+        $id = $value->getElementsByTagName('id')->item(0)->nodeValue;
+        $title = $value->getElementsByTagName('title')->item(0)->nodeValue;
+        $programmes[] = "$id - $title";
+      }
+    }
+
+    return $programmes;
   }
 
   private function getEuroSciVocCode(\DOMXPath $xpath) {
@@ -121,7 +140,8 @@ class ProjectsCordisSource extends SourcePluginBase {
       'status' => $this->t('Project status'),
       'teaser' => $this->t('Project teaser'),
       'duration' => $this->t('Project duration'),
-      'euroscivocCode' => $this->t('Project field of science')
+      'euroscivocCode' => $this->t('Project field of science'),
+      'fundingProgramme' => $this->t('Project funding programme'),
     ];
   }
 
