@@ -18,5 +18,5 @@ selection_criteria:
     bundles:
       story: story
 selection_logic: and
-weight: -6
+weight: -4
 relationships: {  }

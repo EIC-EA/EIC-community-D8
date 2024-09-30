@@ -13,6 +13,7 @@ dependencies:
   module:
     - comment
     - content_moderation_bypass
+    - eic_stakeholder
     - filter
     - group
     - node
@@ -42,4 +43,5 @@ permissions:
   - 'use text format filtered_html'
   - 'use text format full_html'
   - 'view own unpublished content'
+  - 'view stakeholder'
   - 'view user email addresses'
