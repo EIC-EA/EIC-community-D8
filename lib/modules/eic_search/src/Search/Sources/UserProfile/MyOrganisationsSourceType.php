@@ -9,7 +9,7 @@ use Drupal\eic_search\Search\Sources\SourceType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
- * Class MyEventsSourceType
+ * Class MyOrganisationsSourceType
  *
  * @package Drupal\eic_groups\Search\Sources\UserProfile
  */

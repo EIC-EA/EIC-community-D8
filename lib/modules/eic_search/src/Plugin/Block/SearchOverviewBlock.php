@@ -22,6 +22,7 @@ use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
+use Drupal\eic_search\Search\Sources\ProjectSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
@@ -288,6 +289,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         LibrarySourceType::class,
         DiscussionSourceType::class,
         GroupEventSourceType::class,
+        ProjectSourceType::class,
       ];
       foreach ($enabled_post_action_sources as $source_type_class) {
         if ($source instanceof $source_type_class) {

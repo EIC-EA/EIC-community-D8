@@ -48,6 +48,12 @@ eic_admin.groups.events:
   route_name: view.admin_groups.page_admin_events
   parent: eic_admin.groups
   weight: 3
+eic_admin.groups.projects:
+  title: 'Projects'
+  description: 'Manage all Community Projects.'
+  route_name: view.admin_groups.page_admin_projects
+  parent: eic_admin.groups
+  weight: 4
 eic_admin.actions_config:
   title: 'Action forms configuration'
   description: 'Configure labels and description for various action forms.'

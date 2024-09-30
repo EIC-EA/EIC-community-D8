@@ -9,15 +9,3 @@ eic_stakeholder.add_page:
   route_name: entity.stakeholder.add_page
   appears_on:
     - entity.stakeholder.collection
-
-eic_stakeholder.eic_stakeholder_add_term:
-  route_name: 'entity.group_content.eic_stakeholder_add_page'
-  title: 'Add new stakeholder'
-  appears_on:
-    - 'view.project_stakeholders.page_1'
-
-eic_stakeholder.eic_stakeholder_relate_page:
-  route_name: 'entity.group_content.eic_stakeholder_relate_page'
-  title: 'Add existing stakeholder'
-  appears_on:
-    - 'view.project_stakeholders.page_1'

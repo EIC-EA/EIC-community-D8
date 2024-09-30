@@ -1,8 +1,9 @@
-uuid: 8bb71db8-53c7-4a41-b334-2de6d9067780
+uuid: 95d574b2-83b0-4414-b6a9-a7aeade9c835
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.group.teaser
     - field.field.group.project.field_body
     - field.field.group.project.field_project_acronym
     - field.field.group.project.field_project_call_for_proposal
@@ -28,30 +29,18 @@ dependencies:
     - link
     - options
     - text
-id: group.project.default
+id: group.project.teaser
 targetEntityType: group
 bundle: project
-mode: default
+mode: teaser
 content:
-  content_moderation_control:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  field_body:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
   field_project_acronym:
     type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 6
+    weight: 4
     region: content
   field_project_call_for_proposal:
     type: link
@@ -63,7 +52,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 12
+    weight: 10
     region: content
   field_project_date:
     type: daterange_default
@@ -73,7 +62,7 @@ content:
       format_type: day_month_full_and_year
       separator: '-'
     third_party_settings: {  }
-    weight: 15
+    weight: 13
     region: content
   field_project_duration:
     type: number_integer
@@ -82,7 +71,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 16
+    weight: 14
     region: content
   field_project_ecmax_contributio:
     type: number_decimal
@@ -93,7 +82,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 10
+    weight: 8
     region: content
   field_project_fields_of_science:
     type: entity_reference_entity_view
@@ -102,7 +91,7 @@ content:
       view_mode: teaser
       link: false
     third_party_settings: {  }
-    weight: 19
+    weight: 17
     region: content
   field_project_funding_programme:
     type: entity_reference_label
@@ -110,7 +99,7 @@ content:
     settings:
       link: false
     third_party_settings: {  }
-    weight: 22
+    weight: 20
     region: content
   field_project_grant_agreement_id:
     type: number_integer
@@ -119,7 +108,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 5
+    weight: 3
     region: content
   field_project_horizon_results:
     type: link
@@ -131,7 +120,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 21
+    weight: 19
     region: content
   field_project_innovations:
     type: link
@@ -143,21 +132,21 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 20
+    weight: 18
     region: content
   field_project_keywords:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 14
+    weight: 12
     region: content
   field_project_objective:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 8
+    weight: 6
     region: content
   field_project_related_topic:
     type: string
@@ -165,14 +154,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 17
+    weight: 15
     region: content
   field_project_status:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 11
+    weight: 9
     region: content
   field_project_sub_call:
     type: link
@@ -184,14 +173,14 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 13
+    weight: 11
     region: content
   field_project_teaser:
     type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 7
+    weight: 5
     region: content
   field_project_total_cost:
     type: number_decimal
@@ -202,7 +191,7 @@ content:
       scale: 2
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 9
+    weight: 7
     region: content
   field_project_website:
     type: link_separate
@@ -214,17 +203,17 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 18
+    weight: 16
     region: content
   flag_follow_group:
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   flag_recommend_group:
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   label:
     type: string
@@ -232,11 +221,13 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 1
+    weight: 0
     region: content
 hidden:
   changed: true
+  content_moderation_control: true
   created: true
+  field_body: true
   langcode: true
   search_api_excerpt: true
   uid: true

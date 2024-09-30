@@ -956,6 +956,7 @@ function eic_groups_overview_page_access(EntityInterface $entity, $operation, Ac
   $overview_type_forbidden_anonymous = [
     GlobalOverviewPages::ORGANISATIONS,
     GlobalOverviewPages::MEMBERS,
+    GlobalOverviewPages::PROJECTS,
   ];
   $access = AccessResult::neutral();
 

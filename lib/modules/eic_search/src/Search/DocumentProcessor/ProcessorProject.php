@@ -36,12 +36,13 @@ class ProcessorProject extends DocumentProcessor {
       $project_funding = $group_project_funding->label();
     }
 
-    $fields_of_science = $group->get('field_project_fields_of_science')->referencedEntities();
+    $fields_of_science = $group->get('field_project_fields_of_science')
+      ->referencedEntities();
     $fields_of_science_terms = array_map(function(TermInterface $term) {
       $map = [];
       $uuid = $term->uuid();
       if (isset(EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid])) {
-        $map =  EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid];
+        $map = EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid];
       }
       return $map;
     }, $fields_of_science);

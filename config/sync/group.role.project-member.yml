@@ -13,3 +13,5 @@ group_type: project
 permissions_ui: true
 permissions:
   - 'view group'
+  - 'view group_stakeholder:coordinator entity'
+  - 'view group_stakeholder:participant entity'

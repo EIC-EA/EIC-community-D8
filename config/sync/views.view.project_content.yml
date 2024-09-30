@@ -81,7 +81,7 @@ display:
         type: some
         options:
           offset: 0
-          items_per_page: 3
+          items_per_page: 10
       exposed_form:
         type: basic
         options:
@@ -216,6 +216,10 @@ display:
           reduce_duplicates: false
       style:
         type: default
+        options:
+          row_class: ''
+          default_row_class: false
+          uses_fields: false
       row:
         type: search_api
         options:
@@ -373,9 +377,144 @@ display:
       tags:
         - 'config:search_api.index.global'
         - 'search_api_list:global'
+  project_coordinators_teaser:
+    id: project_coordinators_teaser
+    display_title: 'Coordinator (Teaser)'
+    display_plugin: block
+    position: 1
+    display_options:
+      sorts: {  }
+      defaults:
+        sorts: false
+        header: false
+      display_description: ''
+      header: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - route
+        - url
+        - 'user.node_grants:view'
+      tags:
+        - 'config:search_api.index.global'
+        - 'search_api_list:global'
   project_participants:
     id: project_participants
     display_title: Participants
+    display_plugin: block
+    position: 1
+    display_options:
+      title: 'Participant organisations'
+      sorts: {  }
+      filters:
+        search_api_datasource:
+          id: search_api_datasource
+          table: search_api_index_global
+          field: search_api_datasource
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_datasource
+          operator: or
+          value:
+            'entity:stakeholder': 'entity:stakeholder'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+        stakeholder_bundle:
+          id: stakeholder_bundle
+          table: search_api_index_global
+          field: stakeholder_bundle
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api_options
+          operator: or
+          value:
+            participant: participant
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      defaults:
+        title: false
+        sorts: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - route
+        - url
+        - 'user.node_grants:view'
+      tags:
+        - 'config:search_api.index.global'
+        - 'search_api_list:global'
+  project_participants_teaser:
+    id: project_participants_teaser
+    display_title: 'Participants (Teaser)'
     display_plugin: block
     position: 1
     display_options:
