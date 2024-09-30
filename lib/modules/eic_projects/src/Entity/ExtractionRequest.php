@@ -107,11 +107,7 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ->setDefaultValue(TRUE)
       ->setSetting('on_label', 'Enabled')
       ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => FALSE,
-        ],
-        'weight' => 0,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
@@ -136,16 +132,15 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
           'pending_migration' => 'Data is extracted and waiting for migration',
           'migrating' => 'Data is being migrated to site',
           'completed' => 'Data has been migrated to site',
-        ]
+        ],
       ])
       ->setDisplayOptions('view', [
         'label' => 'visible',
         'type' => 'list_default',
-        'weight' => 5
+        'weight' => 5,
       ])
       ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => 5,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
@@ -155,8 +150,7 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ->setLabel(t('Task ID'))
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
-        'type' => 'string_textfield',
-        'weight' => -5,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
@@ -187,13 +181,7 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ->setSetting('target_type', 'user')
       ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
       ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => 15,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
@@ -207,18 +195,17 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ->setLabel('Extraction file')
       ->setSettings([
         'uri_scheme' => 'private',
-        'file_directory' => 'extraction_files',
+        'file_directory' => 'cordis-xml',
         'file_extensions' => 'zip',
       ])
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'file',
         'weight' => -3,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'file',
-        'weight' => -1,
-      ))
+      ])
+      ->setDisplayOptions('form', [
+        'region' => 'hidden',
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
@@ -232,8 +219,7 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'datetime_timestamp',
-        'weight' => 20,
+        'region' => 'hidden',
       ])
       ->setDisplayConfigurable('view', TRUE);
 
