@@ -67,39 +67,11 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
    */
   public function processItem($data) {
     $running_entity_id = $data;
-    $extraction_entity_ids = $this->entityTypeManager
-      ->getStorage('extraction_request')->getQuery()
-      ->condition('extraction_status', 'pending_extraction')
-      ->execute();
-    // todo also get 'extracted' requests to retry the file download.
-    if (count($extraction_entity_ids) > 0) {
-      foreach ($extraction_entity_ids as $extraction_entity_id) {
-        if ($extraction_entity_id === $running_entity_id) {
-          $status = $this->cordisExtractionService->getStatus($running_entity_id);
-          if ($status) {
-            switch ($status['progress']) {
-              case 'Ongoing':
-                // still waiting for the extraction to be completed.
-                throw new DelayedRequeueException();
-              case 'Finished':
-                $url = 'https://cordis.europa.eu' . $status['destinationFileUri'];
-                $extr_file = system_retrieve_file($url, destination: 'private://cordis-xml/', managed: TRUE);
-                $extraction_entity = $this->entityTypeManager->getStorage('extraction_request')->load($extraction_entity_id);
-                if ($extr_file instanceof FileInterface) {
-                  // Download successful.
-                  $extraction_entity
-                    ->set('extraction_file', $extr_file->id())
-                    ->set('extraction_status', 'pending_migration')
-                    ->save();
-                  $filepath = $this->fileSystem->realpath($extr_file->getFileUri());
-                  $filename = pathinfo($filepath, PATHINFO_FILENAME);
-                  $private_dir_path = $this->fileSystem->realpath("private://");
     if ($extraction_entity = $this->entityTypeManager->getStorage('extraction_request')->load($running_entity_id)) {
       $extraction_entity_ids = $this->entityTypeManager
         ->getStorage('extraction_request')->getQuery()
         ->condition('extraction_status', 'pending_extraction')
         ->execute();
-      // todo also get 'extracted' requests to retry the file download.
       if (count($extraction_entity_ids) > 0) {
         foreach ($extraction_entity_ids as $extraction_entity_id) {
           if ($extraction_entity_id === $running_entity_id) {
@@ -108,7 +80,7 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
               switch ($status['progress']) {
                 case 'Ongoing':
                   // still waiting for the extraction to be completed.
-                  throw new DelayedRequeueException(20, 'Waiting for CORDIS API to finish');
+                  throw new DelayedRequeueException(20, 'Waiting for CORDIS API to finish extraction');
                 case 'Finished':
                   $url = 'https://cordis.europa.eu' . $status['destinationFileUri'];
                   $extr_file = system_retrieve_file($url, destination: 'private://cordis-xml/', managed: TRUE);
