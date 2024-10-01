@@ -94,46 +94,74 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
                   $filepath = $this->fileSystem->realpath($extr_file->getFileUri());
                   $filename = pathinfo($filepath, PATHINFO_FILENAME);
                   $private_dir_path = $this->fileSystem->realpath("private://");
+    if ($extraction_entity = $this->entityTypeManager->getStorage('extraction_request')->load($running_entity_id)) {
+      $extraction_entity_ids = $this->entityTypeManager
+        ->getStorage('extraction_request')->getQuery()
+        ->condition('extraction_status', 'pending_extraction')
+        ->execute();
+      // todo also get 'extracted' requests to retry the file download.
+      if (count($extraction_entity_ids) > 0) {
+        foreach ($extraction_entity_ids as $extraction_entity_id) {
+          if ($extraction_entity_id === $running_entity_id) {
+            $status = $this->cordisExtractionService->getStatus($running_entity_id);
+            if ($status) {
+              switch ($status['progress']) {
+                case 'Ongoing':
+                  // still waiting for the extraction to be completed.
+                  throw new DelayedRequeueException(20, 'Waiting for CORDIS API to finish');
+                case 'Finished':
+                  $url = 'https://cordis.europa.eu' . $status['destinationFileUri'];
+                  $extr_file = system_retrieve_file($url, destination: 'private://cordis-xml/', managed: TRUE);
+                  if ($extr_file instanceof FileInterface) {
+                    // Download successful.
+                    $extraction_entity
+                      ->set('extraction_file', $extr_file->id())
+                      ->set('extraction_status', 'pending_migration')
+                      ->save();
+                    $filepath = $this->fileSystem->realpath($extr_file->getFileUri());
+                    $filename = pathinfo($filepath, PATHINFO_FILENAME);
+                    $private_dir_path = $this->fileSystem->realpath("private://");
 
-                  $zip = new \Drupal\Core\Archiver\Zip($filepath);
-                  $zip->extract("$private_dir_path/cordis-xml/export/$filename");
-                  $export_zip = new \Drupal\Core\Archiver\Zip("$private_dir_path/cordis-xml/export/$filename/xml.zip");
-                  $export_zip->extract("$private_dir_path/cordis-xml/export/$filename");
+                    $zip = new \Drupal\Core\Archiver\Zip($filepath);
+                    $zip->extract("$private_dir_path/cordis-xml/export/$filename");
+                    $export_zip = new \Drupal\Core\Archiver\Zip("$private_dir_path/cordis-xml/export/$filename/xml.zip");
+                    $export_zip->extract("$private_dir_path/cordis-xml/export/$filename");
 
-                  // Delete extraction from API.
-                  $this->cordisExtractionService->deleteExtraction($extraction_entity_id);
-                }
-                elseif (!$extr_file) {
-                  // For some reason we couldn't download the file, so we have to
-                  // retry the download
-                  $extraction_entity
-                    ->set('extraction_status', 'extracted')
-                    ->save();
-                }
-                break;
-              case 'Failed':
-                $this->logger->error("Extraction with ID $extraction_entity_id could not take place due to an error.");
+                    // Delete extraction from API.
+                    $this->cordisExtractionService->deleteExtraction($extraction_entity_id);
+                  }
+                  elseif (!$extr_file) {
+                    // For some reason we couldn't download the file, so we have to
+                    // retry the download
+                    $extraction_entity
+                      ->set('extraction_status', 'extracted')
+                      ->save();
+                  }
+                  break;
+                case 'Failed':
+                  $this->logger->error("Extraction with ID $extraction_entity_id could not take place due to an error.");
+              }
             }
+            else {
+              $this->logger->error("Extraction with ID $extraction_entity_id could not take place due to an error.");
+            }
+
           }
           else {
-            $this->logger->error("Extraction with ID $extraction_entity_id could not take place due to an error.");
-          }
+            // todo if status extracted, re-download the file
+            // This means there is already an extraction going on, so we cannot
+            //  request another one due to CORDIS Data Extraction requirements.
 
-        }
-        else {
-          // todo if status extracted, re-download the file
-          // This means there is already an extraction going on, so we cannot
-          //  request another one due to CORDIS Data Extraction requirements.
-          throw new DelayedRequeueException();
+            throw new DelayedRequeueException();
+          }
         }
       }
+      else {
+        // No extraction is pending, proceed with a new one.
+        $this->cordisExtractionService->requestExtraction($data);
+        throw new DelayedRequeueException(20, 'Requested new extraction from CORDIS');
+      }
     }
-    else {
-      // No extraction is pending, proceed with a new one.
-      $this->cordisExtractionService->requestExtraction($data);
-      throw new DelayedRequeueException();
-    }
-
   }
 
 
