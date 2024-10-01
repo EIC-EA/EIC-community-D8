@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-json": "*",
         "amsul/pickadate_js": "^3.6",
         "ckeditor/colorbutton": "^4.18",
@@ -118,7 +118,7 @@
         "openeuropa/oe_media": "^1.13",
         "openeuropa/oe_time_caching": "^1.1",
         "openeuropa/oe_webtools": "^1.13",
-        "softcreatr/jsonpath": "^0.7.5",
+        "softcreatr/jsonpath": "^0.8",
         "twig/twig": "2.15.3 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
         "webmozart/path-util": "^2.3",

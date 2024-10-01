@@ -86,7 +86,8 @@
       "3134245 - Run drush imports as user=1" : "https://www.drupal.org/files/issues/2020-05-06/3134245.patch"
     },
     "drupal/migrate_plus": {
-      "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
+      "3007709 - Add XPath-style filtering ability in JSON data parser plugin (up to date with version ^6.0.x)" : "https://www.drupal.org/files/issues/2022-10-28/migrate_plus-json-xpath-filtering-3007709-40.patch"
+
     },
     "drupal/publication_date": {
       "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
