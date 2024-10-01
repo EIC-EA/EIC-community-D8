@@ -29,7 +29,7 @@ class CordisExtractionService {
     $this->baseDomain = 'https://cordis.europa.eu';
     $this->requestUrl = '/api/dataextractions/getExtraction';
     $this->statusUrl = '/api/dataextractions/getExtractionStatus';
-    $this->deleteUrl = 'api/dataextractions/deleteExtraction';
+    $this->deleteUrl = '/api/dataextractions/deleteExtraction';
   }
 
   public function requestExtraction($request_entity_id): void {
