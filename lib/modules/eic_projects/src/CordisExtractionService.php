@@ -25,7 +25,7 @@ class CordisExtractionService {
 
   public function __construct(Client $httpClient) {
     $this->httpClient = $httpClient;
-    $this->apiKey = '';
+    $this->apiKey = \Drupal::config('eic_projects.settings')->get('api_key');
     $this->baseDomain = 'https://cordis.europa.eu';
     $this->requestUrl = '/api/dataextractions/getExtraction';
     $this->statusUrl = '/api/dataextractions/getExtractionStatus';
@@ -45,7 +45,7 @@ class CordisExtractionService {
         'query' => [
           'outputFormat' => 'xml',
           'key' => $this->apiKey,
-          'query' => $request_entity->get('query')->value, //agricultural sciences
+          'query' => $request_entity->get('query')->value,
         ],
       ];
 
