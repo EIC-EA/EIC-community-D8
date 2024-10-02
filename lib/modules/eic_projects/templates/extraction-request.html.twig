@@ -13,7 +13,8 @@
  * @see template_preprocess_extraction_request()
  */
 #}
-<article{{ attributes }}>
+<article{{ attributes.addClass('ecl-container') }}>
+  <h1>{{ content.label }}</h1>
   {% if view_mode != 'full' %}
     {{ title_prefix }}
     {{ title_suffix }}
