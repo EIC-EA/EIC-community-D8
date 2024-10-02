@@ -29,7 +29,7 @@ class CordisExtractionService {
     $this->baseDomain = 'https://cordis.europa.eu';
     $this->requestUrl = '/api/dataextractions/getExtraction';
     $this->statusUrl = '/api/dataextractions/getExtractionStatus';
-    $this->deleteUrl = 'api/dataextractions/deleteExtraction';
+    $this->deleteUrl = '/api/dataextractions/deleteExtraction';
   }
 
   public function requestExtraction($request_entity_id): void {
@@ -64,20 +64,22 @@ class CordisExtractionService {
   }
 
   public function getStatus($request_entity_id) {
-    $task_id = \Drupal::entityTypeManager()
-      ->getStorage('extraction_request')->load($request_entity_id)
-      ->get('task_id')->value;
-    $request_options = [
-      'query' => [
-        'taskId' => $task_id,
-        'key' => $this->apiKey,
-      ],
-    ];
-    $result = $this->httpClient->get($this->baseDomain . $this->statusUrl, $request_options);
-    $body = json_decode($result->getBody()
-      ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
-    if ($body['status']) {
-      return $body['payload'];
+    $entity = \Drupal::entityTypeManager()
+      ->getStorage('extraction_request')->load($request_entity_id);
+    if ($entity) {
+      $task_id = $entity->get('task_id')->value;
+      $request_options = [
+        'query' => [
+          'taskId' => $task_id,
+          'key' => $this->apiKey,
+        ],
+      ];
+      $result = $this->httpClient->get($this->baseDomain . $this->statusUrl, $request_options);
+      $body = json_decode($result->getBody()
+        ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
+      if ($body['status']) {
+        return $body['payload'];
+      }
     }
     return FALSE;
   }
