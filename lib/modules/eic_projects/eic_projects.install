@@ -1,0 +1,12 @@
+<?php
+
+use Drupal\Core\File\FileSystemInterface;
+
+
+/**
+ * Implements hook_install().
+ */
+function eic_projects_install($is_syncing) {
+  $path = 'private://cordis-xml/export';
+  \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface:: CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+}

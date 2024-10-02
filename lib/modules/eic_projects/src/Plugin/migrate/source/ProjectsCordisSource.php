@@ -84,9 +84,8 @@ class ProjectsCordisSource extends SourcePluginBase {
     for ($i = 0; $i < $count; $i++) {
       $value = $query->item($i);
       if (!is_null($value)) {
-        $id = $value->getElementsByTagName('id')->item(0)->nodeValue;
-        $title = $value->getElementsByTagName('title')->item(0)->nodeValue;
-        $programmes[] = "$id - $title";
+        $id = $value->getElementsByTagName('frameworkProgramme')->item(0)->nodeValue;
+        $programmes[] = $id;
       }
     }
 

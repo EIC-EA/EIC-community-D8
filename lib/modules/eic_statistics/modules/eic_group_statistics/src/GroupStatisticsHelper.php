@@ -170,23 +170,25 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     $content_plugins = $this->groupsHelper->getGroupTypeEnabledContentPlugins($group->getGroupType());
     $group_content_storage = $this->entityTypeManager->getStorage('group_content');
 
-    // We need to query on group_content entities to get the latest node.
-    $query = $group_content_storage->getQuery();
-    $query->condition('type', $content_plugins, 'IN');
-    $query->condition('gid', $group->id());
-    foreach ($conditions as $field => $value) {
-      $query->condition($field, $value);
-    }
-    $query->sort('entity_id.entity:node.changed', 'DESC');
-    $query->range(0, 1);
-    $results = $query->execute();
+    if (!empty($content_plugins)) {
+      // We need to query on group_content entities to get the latest node.
+      $query = $group_content_storage->getQuery();
+      $query->condition('type', $content_plugins, 'IN');
+      $query->condition('gid', $group->id());
+      foreach ($conditions as $field => $value) {
+        $query->condition($field, $value);
+      }
+      $query->sort('entity_id.entity:node.changed', 'DESC');
+      $query->range(0, 1);
+      $results = $query->execute();
 
-    if (!empty($results)) {
-      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-      $group_content = $this->entityTypeManager->getStorage('group_content')->load(reset($results));
-      /** @var \Drupal\node\NodeInterface $node */
-      $node = $group_content->getEntity();
-      return $node->getChangedTime();
+      if (!empty($results)) {
+        /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+        $group_content = $this->entityTypeManager->getStorage('group_content')->load(reset($results));
+        /** @var \Drupal\node\NodeInterface $node */
+        $node = $group_content->getEntity();
+        return $node->getChangedTime();
+      }
     }
 
     return NULL;
@@ -282,42 +284,44 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     $content_plugins = $this->groupsHelper->getGroupTypeEnabledContentPlugins($group->getGroupType());
     $group_content_storage = $this->entityTypeManager->getStorage('group_content');
 
-    // We need to query on group_content entities to get the list of nodes that
-    // may contain comments.
-    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
-    $query = $group_content_storage->getQuery();
-    $query->condition('type', $content_plugins, 'IN');
-    $query->condition('gid', $group->id());
-    $query->exists('entity_id.entity:node.' . Comments::DEFAULT_NODE_COMMENTS_FIELD);
-    $results = $query->execute();
-
-    // Get the list of related nodes.
-    $node_ids = [];
-    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-    foreach ($group_content_storage->loadMultiple($results) as $group_content) {
-      $node_ids[] = $group_content->getEntity()->id();
-    }
-
-    // Now we can query comments based on the list of nodes.
-    if (!empty($node_ids)) {
-      $comment_storage = $this->entityTypeManager->getStorage('comment');
-      $query = $comment_storage->getQuery();
-      $query->condition('entity_id', $node_ids, 'IN');
-      $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
-      $query->condition('field_name', Comments::DEFAULT_NODE_COMMENTS_FIELD);
-      $query->condition('status', CommentInterface::PUBLISHED);
-      foreach ($conditions as $field => $value) {
-        $query->condition($field, $value);
-      }
-      $query->sort('created', 'DESC');
-      $query->range(0, 1);
+    if (!empty($content_plugins)) {
+      // We need to query on group_content entities to get the list of nodes that
+      // may contain comments.
+      /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+      $query = $group_content_storage->getQuery();
+      $query->condition('type', $content_plugins, 'IN');
+      $query->condition('gid', $group->id());
+      $query->exists('entity_id.entity:node.' . Comments::DEFAULT_NODE_COMMENTS_FIELD);
       $results = $query->execute();
 
-      // Return the created date of the last comment.
-      if (!empty($results)) {
-        /** @var \Drupal\comment\CommentInterface $comment */
-        $comment = $this->entityTypeManager->getStorage('comment')->load(reset($results));
-        return $comment->getCreatedTime();
+      // Get the list of related nodes.
+      $node_ids = [];
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      foreach ($group_content_storage->loadMultiple($results) as $group_content) {
+        $node_ids[] = $group_content->getEntity()->id();
+      }
+
+      // Now we can query comments based on the list of nodes.
+      if (!empty($node_ids)) {
+        $comment_storage = $this->entityTypeManager->getStorage('comment');
+        $query = $comment_storage->getQuery();
+        $query->condition('entity_id', $node_ids, 'IN');
+        $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
+        $query->condition('field_name', Comments::DEFAULT_NODE_COMMENTS_FIELD);
+        $query->condition('status', CommentInterface::PUBLISHED);
+        foreach ($conditions as $field => $value) {
+          $query->condition($field, $value);
+        }
+        $query->sort('created', 'DESC');
+        $query->range(0, 1);
+        $results = $query->execute();
+
+        // Return the created date of the last comment.
+        if (!empty($results)) {
+          /** @var \Drupal\comment\CommentInterface $comment */
+          $comment = $this->entityTypeManager->getStorage('comment')->load(reset($results));
+          return $comment->getCreatedTime();
+        }
       }
     }
 
