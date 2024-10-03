@@ -52,6 +52,7 @@ dependencies:
     - eic_overviews
     - eic_private_content
     - eic_private_message
+    - eic_stakeholder
     - eic_topics
     - entity_browser
     - file
@@ -110,6 +111,7 @@ permissions:
   - 'create news content'
   - 'create page content'
   - 'create remote_video media'
+  - 'create stakeholder'
   - 'create story content'
   - 'create terms in contact_category'
   - 'create terms in document_types'
@@ -189,6 +191,7 @@ permissions:
   - 'edit own story content'
   - 'edit own video content'
   - 'edit own wiki_page content'
+  - 'edit stakeholder'
   - 'edit terms in contact_category'
   - 'edit terms in document_types'
   - 'edit terms in event_type'
@@ -280,6 +283,7 @@ permissions:
   - 'view own unpublished media'
   - 'view page revisions'
   - 'view private content'
+  - 'view stakeholder'
   - 'view story revisions'
   - 'view the administration theme'
   - 'view user email addresses'

@@ -1243,7 +1243,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   public function getGroupJoiningMethod(GroupInterface $group) {
     $joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group);
     $joining_method = reset($joining_methods);
-    return $joining_method['plugin_id'];
+    // Check if the method is a valid array.
+    if (is_array($joining_method) && isset($joining_method['plugin_id'])) {
+      return $joining_method['plugin_id'];
+    }
+    return NULL;
   }
 
 }

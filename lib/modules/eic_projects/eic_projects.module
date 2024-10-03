@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @file
+ * Provides an extraction request entity type.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\eic_projects\Entity\ExtractionRequest;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_projects_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof ExtractionRequest) {
+    $queue = \Drupal::service('queue')->get('eic_projects_cordis_extraction_worker');
+    $queue->createItem($entity->id());
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function eic_projects_theme() {
+  return [
+    'extraction_request' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for extraction request templates.
+ *
+ * Default template: extraction-request.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the extraction request information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_extraction_request(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function eic_projects_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish extraction requests.
+      $storage = \Drupal::entityTypeManager()->getStorage('extraction_request');
+      $extraction_request_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->execute();
+      foreach ($storage->loadMultiple($extraction_request_ids) as $extraction_request) {
+        $extraction_request->set('status', FALSE);
+        $extraction_request->save();
+      }
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize extraction requests.
+      $storage = \Drupal::entityTypeManager()->getStorage('extraction_request');
+      $extraction_request_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->execute();
+      foreach ($storage->loadMultiple($extraction_request_ids) as $extraction_request) {
+        $extraction_request->setOwnerId(0);
+        $extraction_request->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function eic_projects_user_predelete(UserInterface $account) {
+  // Delete extraction requests.
+  $storage = \Drupal::entityTypeManager()->getStorage('extraction_request');
+  $extraction_request_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->execute();
+  $extraction_requests = $storage->loadMultiple($extraction_request_ids);
+  $storage->delete($extraction_requests);
+  // Delete old revisions.
+  $extraction_request_ids = $storage->getQuery()
+    ->allRevisions()
+    ->condition('uid', $account->id())
+    ->execute();
+  foreach (array_keys($extraction_request_ids) as $revision_id) {
+    $storage->deleteRevision($revision_id);
+  }
+}

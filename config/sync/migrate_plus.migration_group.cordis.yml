@@ -1,0 +1,10 @@
+uuid: 9ec17e69-c934-46ed-8c5f-745eb25dc5bb
+langcode: en
+status: true
+dependencies: {  }
+id: cordis
+label: cordis
+description: ''
+source_type: null
+module: null
+shared_configuration: null

@@ -1,0 +1,7 @@
+eic_projects.cordis_api_settings:
+  path: '/admin/config/system/cordis-api-settings'
+  defaults:
+    _title: 'CORDIS Data Extraction API Settings'
+    _form: 'Drupal\eic_projects\Form\CordisApiSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

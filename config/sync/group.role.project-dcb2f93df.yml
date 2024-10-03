@@ -15,5 +15,12 @@ audience: outsider
 group_type: project
 permissions_ui: false
 permissions:
-  - 'join group'
+  - 'access group content menu overview'
   - 'request group membership'
+  - 'view group'
+  - 'view group_membership content'
+  - 'view group_stakeholder:coordinator content'
+  - 'view group_stakeholder:coordinator entity'
+  - 'view group_stakeholder:participant content'
+  - 'view group_stakeholder:participant entity'
+  - 'view latest group version'

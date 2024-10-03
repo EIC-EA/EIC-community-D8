@@ -12,5 +12,6 @@ audience: outsider
 group_type: project
 permissions_ui: true
 permissions:
-  - 'request group membership'
   - 'view group'
+  - 'view group_stakeholder:coordinator content'
+  - 'view group_stakeholder:participant content'

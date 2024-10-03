@@ -13,36 +13,42 @@ const EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS = [
       'name' => 'Social sciences',
       'vid' => 'fields_of_science',
       'machine_readable_name' => 'social-sciences',
+      'field_euroscivoc_code' => 29,
     ],
   '885fe589-b98d-44a9-ac65-2438c91d527b' =>
     [
       'name' => 'Natural sciences',
       'vid' => 'fields_of_science',
       'machine_readable_name' => 'natural-sciences',
+      'field_euroscivoc_code' => 23,
     ],
   '2976d993-3ddb-43bc-ae8f-295632d7e1e8' =>
     [
       'name' => 'Engineering and technology',
       'vid' => 'fields_of_science',
       'machine_readable_name' => 'engineering-and-technology',
+      'field_euroscivoc_code' => 25,
     ],
   '5b633204-256a-4ea4-a516-7179ba3c0f1d' =>
     [
       'name' => 'Humanities',
       'vid' => 'fields_of_science',
       'machine_readable_name' => 'humanities',
+      'field_euroscivoc_code' => 31,
     ],
   '850ce6cb-5044-4135-9180-06b4f43fb610' =>
     [
       'name' => 'Agricultural sciences',
       'vid' => 'fields_of_science',
       'machine_readable_name' => 'agricultural-sciences',
+      'field_euroscivoc_code' => 27,
     ],
   'ff8b5564-fcde-4406-a91d-65485f11d0b3' =>
     [
       'name' => 'Medical and health sciences',
       'vid' => 'fields_of_science',
       'machine_readable_name' => 'medical-and-health-sciences',
+      'field_euroscivoc_code' => 21,
     ],
   ];
 

@@ -211,7 +211,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ->getOperations($group);
 
     // Get group content operation links.
-    $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
+    $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node', 'stakeholder'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
     $operation_links = [];
@@ -303,6 +303,12 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    // Adds stakeholder URL to the project group operation links.
+    $group_operation_links['stakeholder-collection'] = [
+      'title' => $this->t('Manage stakeholders'),
+      'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $group->id()]),
+    ];
+
     // Adds pending membership requests URL to the group operation links.
     $group_operation_links['edit-membership-requests'] = [
       'title' => $this->t('Membership requests'),
@@ -328,6 +334,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           'edit-members',
           'edit-membership-requests',
           'edit-invitations',
+          'stakeholder-collection',
         ]
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
@@ -442,7 +449,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getGroupFlagLinks(GroupInterface $group) {
     $group_flags = [];
 
-    $group_flag_ids = self::getGroupHeaderFlagsIds();
+    $group_flag_ids = self::getGroupHeaderFlagsIds($group);
 
     // Loops through each group flag ID and add only the ones the user has
     // access to.
@@ -521,12 +528,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Gets list of flags IDs used in the group header.
+   * Gets list of flags IDs used in the group header by type.
    *
    * @return array
    *   Array of Flag machine names.
    */
-  public static function getGroupHeaderFlagsIds() {
+  public static function getGroupHeaderFlagsIds(GroupInterface $group) {
+    if ($group->bundle() == 'project') {
+      return [
+        FlagType::LIKE_GROUP,
+      ];
+    }
     return [
       FlagType::FOLLOW_GROUP,
       FlagType::LIKE_GROUP,

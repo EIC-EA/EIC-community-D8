@@ -23,7 +23,6 @@ class ProjectSourceType extends SourceType {
   const PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID = 'ss_group_project_funding_programme';
 
   const PROJECT_FIELDS_OF_SCIENCE_SOLR_FIELD_ID = 'ss_group_project_fields_of_science';
-
   const PROJECT_PARTICIPATING_COUNTRIES_SOLR_FIELD_ID = 'ss_group_project_participating_countries';
 
   const PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID = 'ss_group_project_coordinating_country_code';
@@ -122,7 +121,7 @@ class ProjectSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COMPACT;
+    return self::DEFAULT;
   }
 
   /**

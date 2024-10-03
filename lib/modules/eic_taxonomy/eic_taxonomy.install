@@ -20,6 +20,7 @@ function eic_taxonomy_update_9002() {
         'uuid' => $uuid,
         'name' => $term_data['name'],
         'vid' => $term_data['vid'],
+        'field_euroscivoc_code' => $term_data['field_euroscivoc_code']
       ]);
       $term->save();
     }
