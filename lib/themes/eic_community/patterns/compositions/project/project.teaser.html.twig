@@ -22,7 +22,7 @@
         <div class="ecl-teaser__meta-footer">
           {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
             <div class="ecl-u-mb-l">
-              {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}
+              {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together." }}
             </div>
             {{ project_coordinators_view }}
             {{ project_participants_view }}
@@ -80,8 +80,8 @@
         } only %}
       </div>
     {% endif %}
-    {% if content.field_project_grant_agreement_id.0 %}
-      {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ content.field_project_grant_agreement_id.0|render %}
+    {% if project_grant_agreement %}
+      {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ project_grant_agreement %}
       <div class="ecl-u-mb-s">
         {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
           icon: {
