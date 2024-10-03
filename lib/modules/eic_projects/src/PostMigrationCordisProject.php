@@ -13,8 +13,6 @@ class PostMigrationCordisProject {
     $this->fileSystem = $fileSystem;
   }
 
-  //todo add fn to take group, set it as extracted
-  //  go to directory, delete all extracted files
   public function handlePostMigration() {
     $private_dir_path = $this->fileSystem->realpath("private://");
 
