@@ -154,7 +154,6 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
-        'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
       ])
