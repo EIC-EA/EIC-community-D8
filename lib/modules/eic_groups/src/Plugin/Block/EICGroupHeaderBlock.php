@@ -449,7 +449,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getGroupFlagLinks(GroupInterface $group) {
     $group_flags = [];
 
-    $group_flag_ids = self::getGroupHeaderFlagsIds();
+    $group_flag_ids = self::getGroupHeaderFlagsIds($group);
 
     // Loops through each group flag ID and add only the ones the user has
     // access to.
@@ -528,12 +528,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Gets list of flags IDs used in the group header.
+   * Gets list of flags IDs used in the group header by type.
    *
    * @return array
    *   Array of Flag machine names.
    */
-  public static function getGroupHeaderFlagsIds() {
+  public static function getGroupHeaderFlagsIds(GroupInterface $group) {
+    if ($group->bundle() == 'project') {
+      return [
+        FlagType::LIKE_GROUP,
+      ];
+    }
     return [
       FlagType::FOLLOW_GROUP,
       FlagType::LIKE_GROUP,
