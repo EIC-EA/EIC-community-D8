@@ -17,52 +17,56 @@
 
       </section>
 
-      {% if content.field_project_innovations.0 %}
-        {% set _link = {
-          'link': {
-            'path': content.field_project_innovations.0['#title'],
-            'label': 'View in Innovation Radar'|t,
-            'icon_position': 'after'
-          },
-          'icon': {
-            'path': eic_icon_path,
-            'type': "ui",
-            'name': "corner-arrow",
-            'transform': "rotate-90",
-            'size': "xs"
-          }
-        } -%}
+      {% if elements['#group'].features.0.value %}
         <section id="innovations" class="ecl-u-mb-l">
-          <h2>{{ "Innovations"|t({}, {'context': 'eic_community'}) }}</h2>
-          {% include '@ecl-twig/page-banner' with {
-            title: "This project has recognised innovations!"|t,
-            link: _link,
-            image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
-            type: 'image-gradient',
-            extra_classes: 'ecl-u-pv-xl',
-            centered: alignment == 'left',
-          } only %}
+          <h2 class="ecl-u-mb-l">{{ "Innovations"|t({}, {'context': 'eic_community'}) }}</h2>
+          {% if content.field_project_innovations.0 %}
+            {% set _link = {
+              'link': {
+                'path': content.field_project_innovations.0['#title'],
+                'label': 'View in Innovation Radar'|t,
+                'icon_position': 'after'
+              },
+              'icon': {
+                'path': eic_icon_path,
+                'type': "ui",
+                'name': "corner-arrow",
+                'transform': "rotate-90",
+                'size': "xs"
+              }
+            } -%}
+            {% include '@ecl-twig/page-banner' with {
+              title: "This project has recognised innovations!"|t,
+              link: _link,
+              image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
+              type: 'image-gradient',
+              extra_classes: 'ecl-u-pv-xl',
+              centered: alignment == 'left',
+            } only %}
+          {% else %}
+            {{ "No recognized innovations have been found."|t }}
+          {% endif %}
         </section>
       {% endif %}
 
-      {% if content.field_project_horizon_results.0 %}
+      {% if elements['#group'].features.1.value %}
         <section id="horizon-results" class="ecl-u-mb-l">
-          {% set _link = {
-            'link': {
-              'path': content.field_project_innovations.0['#title'],
-              'label': 'View in HRP'|t,
-              'icon_position': 'after'
-            },
-            'icon': {
-              'path': eic_icon_path,
-              'type': "ui",
-              'name': "corner-arrow",
-              'transform': "rotate-90",
-              'size': "xs"
-            }
-          } -%}
-          <section id="horizon-results">
-            <h2>{{ "Horizon Results"|t({}, {'context': 'eic_community'}) }}</h2>
+          <h2 class="ecl-u-mb-l">{{ "Horizon Results"|t({}, {'context': 'eic_community'}) }}</h2>
+          {% if content.field_project_horizon_results.0 %}
+            {% set _link = {
+              'link': {
+                'path': content.field_project_innovations.0['#title'],
+                'label': 'View in HRP'|t,
+                'icon_position': 'after'
+              },
+              'icon': {
+                'path': eic_icon_path,
+                'type': "ui",
+                'name': "corner-arrow",
+                'transform': "rotate-90",
+                'size': "xs"
+              }
+            } -%}
             {% include '@ecl-twig/page-banner' with {
               title: "This project has published deliverables in Horizon Results Platform!",
               link: _link,
@@ -71,7 +75,9 @@
               extra_classes: 'ecl-u-pv-xl',
               centered: alignment == 'left',
             } only %}
-          </section>
+          {% else %}
+            {{ "No published deliverables have been found in Horizon Results Platform." }}
+          {% endif %}
         </section>
       {% endif %}
     {% endblock %}
