@@ -203,7 +203,8 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
         'weight' => -3,
       ])
       ->setDisplayOptions('form', [
-        'region' => 'hidden',
+        'type' => 'file',
+        'weight' => -1,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
