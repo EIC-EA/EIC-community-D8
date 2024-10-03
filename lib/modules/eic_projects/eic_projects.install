@@ -10,3 +10,48 @@ function eic_projects_install($is_syncing) {
   $path = 'private://cordis-xml/export';
   \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface:: CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 }
+
+/**
+ * Update field_project_total_cost and field_project_ecmax_contributio to match config field storage settings
+ */
+function eic_projects_update_9000(&$sandbox) {
+  $db = \Drupal::database();
+  $numeric_fields = [
+    [
+      'table' => 'group__field_project_total_cost',
+      'field' => 'field_project_total_cost_value'
+    ],
+    [
+      'table' => 'group__field_project_ecmax_contributio',
+      'field' => 'field_project_ecmax_contributio_value'
+    ]
+  ];
+  foreach ($numeric_fields as $num_field) {
+    $transaction = $db->startTransaction();
+    $schema = $db->schema();
+    try {
+      // Define the schema object.
+
+      $spec = [
+        'type' => 'numeric',
+        'precision' => 14,
+        'scale' => 2,
+        'not null' => TRUE,
+      ];
+      $schema->changeField($num_field['table'], $num_field['field'], $num_field['field'], $spec);
+
+      // You can add other schema updates here if needed.
+
+    } catch (\Exception $e) {
+      // If there is an error, rollback the transaction.
+      $transaction->rollback();
+      // Log the error for debugging purposes.
+      \Drupal::logger('eic_projects')->error($e->getMessage());
+      // Rethrow the exception to stop further execution.
+      throw $e;
+    }
+
+  }
+
+
+}

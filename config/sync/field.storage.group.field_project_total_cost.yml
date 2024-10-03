@@ -9,7 +9,7 @@ field_name: field_project_total_cost
 entity_type: group
 type: decimal
 settings:
-  precision: 10
+  precision: 14
   scale: 2
 module: core
 locked: false
