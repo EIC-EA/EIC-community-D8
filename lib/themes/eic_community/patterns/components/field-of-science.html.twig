@@ -1,4 +1,4 @@
 <div class="ecl-field-of-science {{ modifier ? 'ecl-field-of-science--' ~ modifier }}">
-  <div class="ecl-field-of-science__icon">{{ source(eic_images_path ~ '/fields-of-science/' ~ filename ~ '.svg', ignore_missing = true) }}</div>
+  <div class="ecl-field-of-science__icon">{{ source(directory ~ '/dist/images/fields-of-science/' ~ filename ~ '.svg', ignore_missing = true) }}</div>
   <div class="ecl-field-of-science__label">{{ label }}</div>
 </div>
