@@ -140,7 +140,8 @@ class ExtractionRequest extends RevisionableContentEntityBase implements Extract
         'weight' => 5,
       ])
       ->setDisplayOptions('form', [
-        'region' => 'hidden',
+        'type' => 'options_select',
+        'weight' => 5,
       ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
