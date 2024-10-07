@@ -1318,16 +1318,15 @@
   }
 
   &--project {
-    padding-bottom: $ecl-spacing-m;
-    margin-bottom: $ecl-spacing-xl;
-    border-bottom: 1px solid $ecl-color-grey-20;
     gap: 20px;
     flex-direction: column;
 
     @include ecl-media-breakpoint-up('md') {
-      padding-bottom: $ecl-spacing-2-xl;
-      margin-bottom: $ecl-spacing-3-xl;
       flex-direction: row;
+    }
+
+    #{$node}__title {
+      @include ecl-responsive-font('h2');
     }
 
     #{$node}__sidebar {

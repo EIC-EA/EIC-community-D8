@@ -1,7 +1,7 @@
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
-      <section id="organisation-and-people" class="ecl-u-mb-4xl">
+      <section id="organisation-and-people" class="ecl-u-mb-l">
         <h2>{{ "Organisations and people"|t({}, {'context': 'eic_community'}) }}</h2>
         {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
           <div class="ecl-u-mb-l">
