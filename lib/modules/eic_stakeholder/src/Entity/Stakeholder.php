@@ -188,6 +188,33 @@ class Stakeholder extends RevisionableContentEntityBase implements StakeholderIn
       ->setDisplayConfigurable('form', TRUE)
       ->setComputed(TRUE);
 
+    $fields['pic'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('PIC Number'))
+      ->setDescription(t('Set the PIC number of organisation.'))
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'number_integer',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 20,
+      ]);
+
+    $fields['project_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Project ID'))
+      ->setDescription(t('Set the Grant Agreement ID of the project associated with this stakeholder.'))
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'number_integer',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 20,
+      ]);
+
+
     return $fields;
   }
 
