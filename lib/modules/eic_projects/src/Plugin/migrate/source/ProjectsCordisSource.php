@@ -67,6 +67,8 @@ class ProjectsCordisSource extends SourcePluginBase {
           'duration' => $this->getXmlValue($xpath, 'project/duration'),
           'euroscivocCode' => $this->getEuroSciVocCode($xpath),
           'fundingProgramme' => $this->getFundingProgramme($xpath),
+          'stakeholder_coordinators' => $this->getOrganisation($xpath, 'coordinator'),
+          'stakeholder_participants' => $this->getOrganisation($xpath, 'participant'),
         ];
       }
 //      $request->set('extraction_status', 'migrating')->save();
@@ -74,10 +76,30 @@ class ProjectsCordisSource extends SourcePluginBase {
 
     return new \ArrayIterator($records);
   }
+  private function getOrganisation(\DOMXPath $xpath, string $type) {
+    $query = $xpath->query("/project/relations/associations/organization[@type='$type']");
+    $count = $query->count();
+    $organisations = [];
+    for ($i = 0; $i < $count; $i++) {
+      $value = $query->item($i);
+      if (!is_null($value)) {
+        $name = $value->getElementsByTagName('legalName')->item(0)->nodeValue;
+        $country_code = $xpath->query("relations/regions/region/euCode", $value)->item(0)->nodeValue;
+        $country_name = $xpath->query("relations/regions/region[@type='relatedRegion']/name", $value)->item(0)->nodeValue;
+        $pic = $value->getElementsByTagName('id')->item(0)->nodeValue;
+        $organisations[] = [
+          'name' => $name,
+          'country_code' => $country_code,
+          'country_name' => $country_name,
+          'pic' => $pic,
+        ];
+      }
+    }
+
+    return $organisations;
+  }
 
   private function getFundingProgramme(\DOMXPath $xpath) {
-    //  $query->item(0)->getElementsByTagName('id')->item(0)->nodeValue
-    //  $query->item(0)->getElementsByTagName('title')->item(0)->nodeValue
     $query = $xpath->query("/project/relations/associations/programme[@type='relatedLegalBasis']");
     $count = $query->count();
     $programmes = [];
@@ -141,6 +163,8 @@ class ProjectsCordisSource extends SourcePluginBase {
       'duration' => $this->t('Project duration'),
       'euroscivocCode' => $this->t('Project field of science'),
       'fundingProgramme' => $this->t('Project funding programme'),
+      'stakeholder_coordinators' => $this->t('Project Organisation coordinators'),
+      'stakeholder_participants' => $this->t('Project Organisation participants'),
     ];
   }
 

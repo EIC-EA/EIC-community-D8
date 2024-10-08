@@ -5,3 +5,7 @@ services:
   eic_projects.project_migration:
     class: Drupal\eic_projects\PostMigrationCordisProject
     arguments: ['@file_system']
+  eic_projects.post_row_migration_subscriber:
+    class: Drupal\eic_projects\EventSubscriber\ProjectStakeholderMigrateSubscriber
+    tags:
+      - { name: 'event_subscriber' }
