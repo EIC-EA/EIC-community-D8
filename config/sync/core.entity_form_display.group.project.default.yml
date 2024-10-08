@@ -23,13 +23,14 @@ dependencies:
     - field.field.group.project.field_project_total_cost
     - field.field.group.project.field_project_website
     - group.type.project
+    - workflows.workflow.groups
   module:
+    - content_moderation
     - datetime_range
     - field_group
     - link
     - path
     - text
-    - workflow_buttons
 third_party_settings:
   field_group:
     group_project:
@@ -306,11 +307,10 @@ content:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
-    type: workflow_buttons
+    type: moderation_state_default
     weight: 7
     region: content
-    settings:
-      show_current_state: false
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
