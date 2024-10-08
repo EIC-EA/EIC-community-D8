@@ -440,6 +440,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
             'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
             'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
+            'project' => $this->t('Search for a project', [], ['context' => 'eic_group']),
           ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
