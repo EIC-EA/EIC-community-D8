@@ -23,7 +23,7 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
     $project_id = $row->getSourceProperty('id');
     $project_group = \Drupal::entityTypeManager()->getStorage('group')
       ->loadByProperties([
-        'field_project_grant_agreement_id' => $project_id
+        'field_project_grant_agreement_id' => $project_id,
       ]);
     $project_group = reset($project_group);
     /** @var \Drupal\group\Entity\GroupInterface $project_group */
@@ -36,7 +36,7 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
           'label' => $coordinator['name'],
           'pic' => $coordinator['pic'],
           'project_id' => $project_id,
-          'bundle' => 'coordinator'
+          'bundle' => 'coordinator',
         ]);
 
       if (empty($entity_coordinator)) {
@@ -47,8 +47,8 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
             'pic' => $coordinator['pic'],
             'project_id' => $project_id,
             'field_stakeholder_address' => [
-              'country_code' => $coordinator['country']
-            ]
+              'country_code' => $this->getValidCountryCode($coordinator['country_code'], $coordinator['country_name']),
+            ],
           ]);
         $entity_coordinator->save();
       }
@@ -66,7 +66,7 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
           'label' => $participant['name'],
           'pic' => $participant['pic'],
           'project_id' => $project_id,
-          'bundle' => 'participant'
+          'bundle' => 'participant',
         ]);
       if (empty($entity_participant)) {
         $entity_participant = \Drupal::entityTypeManager()->getStorage('stakeholder')
@@ -76,8 +76,8 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
             'pic' => $participant['pic'],
             'project_id' => $project_id,
             'field_stakeholder_address' => [
-              'country_code' => $participant['country']
-            ]
+              'country_code' => $this->getValidCountryCode($participant['country_code'], $participant['country_name']),
+            ],
           ]);
         $entity_participant->save();
       }
@@ -87,6 +87,23 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
       $project_group->addContent($entity_participant, 'group_stakeholder:participant');
     }
 
+  }
+
+  private function getValidCountryCode($country_code, $country_name) {
+    $countries = \Drupal::service('country_manager')->getList();
+    if (array_key_exists($country_code,$countries)) {
+      return $country_code;
+    }
+    else {
+      // Filter the array for matches in the object's __toString() output
+      $result = array_filter($countries, function($object) use ($country_name) {
+        return str_contains((string) $object, $country_name);
+      });
+      if (!empty($result)) {
+        return array_keys($result)[0];
+      }
+      return NULL;
+    }
   }
 
 }
