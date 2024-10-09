@@ -50,6 +50,16 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
               'country_code' => $this->getValidCountryCode($coordinator['country_code'], $coordinator['country_name']),
             ],
           ]);
+        // query if organisation exists in EIC.
+        $organisation = \Drupal::entityTypeManager()->getStorage('group')
+          ->loadByProperties([
+            'type' => 'organisation',
+            'label' => $coordinator['name']
+          ]);
+        if (!empty($organisation)) {
+          $organisation_id = array_keys($organisation)[0];
+          $entity_coordinator->set('field_stakeholder_organisation', $organisation_id);
+        }
         $entity_coordinator->save();
       }
       else {
@@ -79,6 +89,16 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
               'country_code' => $this->getValidCountryCode($participant['country_code'], $participant['country_name']),
             ],
           ]);
+        // query if organisation exists in EIC.
+        $organisation = \Drupal::entityTypeManager()->getStorage('group')
+          ->loadByProperties([
+            'type' => 'organisation',
+            'label' => $participant['name']
+          ]);
+        if (!empty($organisation)) {
+          $organisation_id = array_keys($organisation)[0];
+          $entity_participant->set('field_stakeholder_organisation', $organisation_id);
+        }
         $entity_participant->save();
       }
       else {
