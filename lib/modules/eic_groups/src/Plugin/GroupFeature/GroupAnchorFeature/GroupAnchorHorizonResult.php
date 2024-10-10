@@ -18,6 +18,6 @@ class GroupAnchorHorizonResult extends GroupNews {
   /**
    * {@inheritdoc}
    */
-  const ANCHOR_ID = 'horizon-platform-result';
+  const ANCHOR_ID = 'horizon-results';
 
 }
