@@ -1,4 +1,3 @@
-{#{{ dump(project_item) }}#}
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--group ecl-teaser--project {{ extra_classes }}">
@@ -13,7 +12,7 @@
             <span class="ecl-u-mr-l"><strong>ID: </strong>{{ project_grant_agreement }}</span>
           {% endif %}
           {% if project_date.start_date and project_date.end_date %}
-            <span><strong>From&nbsp;</strong>{{ content.field_project_date.0.start_date['#text'] }}<strong>&nbsp;to&nbsp;</strong>{{ content.field_project_date.0.end_date['#text'] }}</span>
+            <span><strong>From&nbsp;</strong>{{ project_date.start_date }}<strong>&nbsp;to&nbsp;</strong>{{ project_date.end_date }}</span>
           {% endif %}
         </div>
         {% if content.field_project_teaser.0 %}

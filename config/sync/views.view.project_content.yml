@@ -363,7 +363,7 @@ display:
           plugin_id: text
           empty: false
           content:
-            value: '<div class="ecl-u-type-heading-4">[view:title]</div>'
+            value: '<div class="ecl-u-type-heading-4 ecl-u-mb-2xs">[view:title]</div>'
             format: full_html
           tokenize: false
       display_extenders: {  }
@@ -500,7 +500,22 @@ display:
         sorts: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<div class="ecl-u-type-heading-4 ecl-u-mb-2xs">[view:title] ([view:total-rows])</div>'
+            format: full_html
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -612,7 +627,22 @@ display:
         sorts: false
         filters: false
         filter_groups: false
+        header: false
       display_description: ''
+      header:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<div class="ecl-u-type-heading-4 ecl-u-mb-2xs">[view:title] ([view:total-rows])</div>'
+            format: full_html
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1

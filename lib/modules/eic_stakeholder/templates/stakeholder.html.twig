@@ -13,7 +13,7 @@
  * @see template_preprocess_stakeholder()
  */
 #}
-<article{{ attributes }}>
+<article{{ attributes.addClass('ecl-u-mb-2xl') }}>
   {% if view_mode != 'full' %}
     {{ title_prefix }}
     {{ title_suffix }}
@@ -49,7 +49,7 @@
         items: items,
         no_items_available: no_items_available,
         no_items_available_header: no_items_available_header,
-        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-mb-2xl ecl-u-pt-2xs',
+        extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-pt-2xs',
         icon_file_path: common.icon_file_path,
       } only %}
     {% else %}

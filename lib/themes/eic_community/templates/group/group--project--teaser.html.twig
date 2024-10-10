@@ -1,21 +1,18 @@
 {#
 /**
  * @file
- * Theme override to display a group event.
+ * Theme override to display a project.
  *
- * @see ./themes/custom/eic_community/templates/content/group.html.twig
+ * @see ./modules/contrib/group/templates/group.html.twig
  */
 #}
-{#% extends "@eic_community/content/node.html.twig" %#}
 
-{% block content %}
-  <div {{ attributes }}>
-    {{ title_prefix }}
-    {{ title_suffix }}
-    {% include "@theme/patterns/compositions/project/project.teaser.html.twig" with project_item|default({})|merge({
-      title: label|default(''),
-      path: url,
-      extra_classes: extra_classes,
-    }) %}
-  </div>
-{% endblock %}
+<div{{ attributes }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% include "@theme/patterns/compositions/project/project.teaser.html.twig" with project_item|default({})|merge({
+    title: label|default(''),
+    path: url,
+    extra_classes: extra_classes,
+  }) %}
+</div>
