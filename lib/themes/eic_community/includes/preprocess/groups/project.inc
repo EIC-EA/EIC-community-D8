@@ -43,16 +43,17 @@ function eic_community_preprocess_group__project(&$variables) {
 
 /**
  * Fill variables for project teaser.
+ * TODO: Prepare the rest of the fields.
+ *       Check /themes/custom/eic_community/patterns/compositions/project/project.teaser.html.twig
  */
 function _eic_community_render_project_teaser(&$variables, GroupInterface $group) {
   $teaser['description'] = $group->hasField('field_project_teaser') ? Markup::create(Xss::filter($group->get('field_project_teaser')->value)) : '';
   $teaser['project_grant_agreement'] = $group->hasField('field_project_grant_agreement_id') ? $group->get('field_project_grant_agreement_id')->value : '';
 
   if ($group->hasField('field_project_date')) {
-    $date_range = $group->get('field_project_date')->first();
     $teaser['project_date'] = [
-      'start_date' => $date_range->get('value')->getValue(),
-      'end_date' => $date_range->get('end_value')->getValue(),
+      'start_date' => $variables['content']['field_project_date'][0]['start_date'],
+      'end_date' => $variables['content']['field_project_date'][0]['end_date'],
     ];
   }
 
