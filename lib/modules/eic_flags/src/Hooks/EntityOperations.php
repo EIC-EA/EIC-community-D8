@@ -16,6 +16,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -408,6 +409,12 @@ class EntityOperations implements ContainerInjectionInterface {
 
         // Get the group entity to be flagged later.
         $flag_entity = $entity->getGroup();
+
+        // We also skip project groups bundles.
+        if ($flag_entity->bundle() === Projects::GROUP_PROJECT_BUNDLE) {
+          break;
+        }
+
         $flag_type = FlagType::FOLLOW_GROUP;
         break;
 
