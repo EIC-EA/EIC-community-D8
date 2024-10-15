@@ -43,6 +43,9 @@ function template_preprocess_stakeholder(array &$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
+  $stakeholder = $variables['elements']['#stakeholder'];
+  $variables['bundle'] = $stakeholder->bundle();
+
   // Prepares 'field_stakeholder_related_people' data for overview template.
   if (!empty($variables['content']['field_stakeholder_related_people']) && is_array($variables['content']['field_stakeholder_related_people'])) {
     $items = array_filter($variables['content']['field_stakeholder_related_people'], function ($key) {

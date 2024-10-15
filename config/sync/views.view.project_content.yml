@@ -377,29 +377,6 @@ display:
       tags:
         - 'config:search_api.index.global'
         - 'search_api_list:global'
-  project_coordinators_teaser:
-    id: project_coordinators_teaser
-    display_title: 'Coordinator (Teaser)'
-    display_plugin: block
-    position: 1
-    display_options:
-      sorts: {  }
-      defaults:
-        sorts: false
-        header: false
-      display_description: ''
-      header: {  }
-      display_extenders: {  }
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_interface'
-        - route
-        - url
-        - 'user.node_grants:view'
-      tags:
-        - 'config:search_api.index.global'
-        - 'search_api_list:global'
   project_participants:
     id: project_participants
     display_title: Participants
@@ -527,13 +504,12 @@ display:
       tags:
         - 'config:search_api.index.global'
         - 'search_api_list:global'
-  project_participants_teaser:
-    id: project_participants_teaser
-    display_title: 'Participants (Teaser)'
+  project_participating_countries:
+    id: project_participating_countries
+    display_title: 'Participating countries (Teaser)'
     display_plugin: block
     position: 1
     display_options:
-      title: 'Participant organisations'
       sorts: {  }
       filters:
         search_api_datasource:
@@ -587,6 +563,7 @@ display:
           plugin_id: search_api_options
           operator: or
           value:
+            coordinator: coordinator
             participant: participant
           group: 1
           exposed: false
@@ -623,26 +600,12 @@ display:
         groups:
           1: AND
       defaults:
-        title: false
         sorts: false
         filters: false
         filter_groups: false
         header: false
       display_description: ''
-      header:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: text
-          empty: false
-          content:
-            value: '<div class="ecl-u-type-heading-4 ecl-u-mb-2xs">[view:title] ([view:total-rows])</div>'
-            format: full_html
-          tokenize: false
+      header: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1

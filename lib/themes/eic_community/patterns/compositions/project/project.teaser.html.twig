@@ -19,9 +19,8 @@
           <div class="ecl-teaser__body">{{ project_teaser }}</div>
         {% endif %}
         <div class="ecl-teaser__meta-footer">
-          {% if project_coordinators_view_results or project_participants_view_results %}
-            {{ project_coordinators_view }}
-            {{ project_participants_view }}
+          {% if project_participating_countries_view %}
+            {{ project_participating_countries_view }}
           {% endif %}
           {% if project_funding_programme %}
             <div class="ecl-teaser__programme">

@@ -60,11 +60,22 @@ function _eic_community_render_project_teaser(&$variables, GroupInterface $group
   $teaser['project_innovations'] = $group->hasField('field_project_innovations') ? $group->get('field_project_innovations')->uri : '';
   $teaser['project_website'] = $group->hasField('field_project_website') ? $group->get('field_project_website')->uri : '';
   $view_id = 'project_content';
-  $teaser['project_coordinators_view'] = _eic_community_get_rendered_view($view_id, 'project_coordinators_teaser');
-  $teaser['project_participants_view'] = _eic_community_get_rendered_view($view_id, 'project_coordinators_teaser');
-  $teaser['project_coordinators_view_results'] = $teaser['project_coordinators_view'];
-  $teaser['project_participants_view_results'] = $teaser['project_participants_view'];
-//  dump($teaser['project_coordinators_view']);
+  $group_id = $group->id();
+  // Retrieve the view object once and check if it exists.
+  $view = \Drupal\views\Views::getView($view_id);
+
+  if ($view) {
+    // Get all available display IDs from the view's storage.
+    $available_displays = array_keys($view->storage->get('display'));
+    $display_id = 'project_participating_countries';
+    if (in_array($display_id, $available_displays)) {
+      // Retrieve the result for the specific view mode and render it if exists.
+      $view_result = views_get_view_result($view_id, $display_id, $group_id);
+      $teaser['project_participating_countries_view'] = $view_result ? _eic_community_get_rendered_view($view_id, $display_id, [$group_id]) : '';
+    }
+  }
+
+
   // TODO: Get dates from group object.
   if ($group->hasField('field_project_date')) {
     $teaser['project_date'] = [
@@ -75,3 +86,4 @@ function _eic_community_render_project_teaser(&$variables, GroupInterface $group
 
   $variables['project_item'] = $teaser;
 }
+
