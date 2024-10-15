@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\eic_search\Search\Sources\ProjectSourceType;
@@ -41,8 +42,8 @@ class ProcessorProject extends DocumentProcessor {
     $fields_of_science_terms = array_map(function(TermInterface $term) {
       $map = [];
       $uuid = $term->uuid();
-      if (isset(EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid])) {
-        $map = EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid];
+      if (isset(Projects::EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid])) {
+        $map = Projects::EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS[$uuid];
       }
       return $map;
     }, $fields_of_science);
@@ -135,7 +136,7 @@ class ProcessorProject extends DocumentProcessor {
     $start_year = explode('-', $fields['ds_group_field_project_date'])[0];
     $document->addField('ss_project_start_year', $start_year);
 
-    $document->addField('ss_project_cordis_url', EIC_TAXONOMY_CORDIS_BASE_URL . $fields['its_project_grant_agreement_id']);
+    $document->addField('ss_project_cordis_url', Projects::EIC_TAXONOMY_CORDIS_BASE_URL . $fields['its_project_grant_agreement_id']);
 
     $this->addOrUpdateDocumentField(
       $document,
