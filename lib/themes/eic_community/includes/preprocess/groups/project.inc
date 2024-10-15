@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\eic_helper\DateTimeHelper;
 
 /**
  * Implements hook_preprocess_group__TYPE().
