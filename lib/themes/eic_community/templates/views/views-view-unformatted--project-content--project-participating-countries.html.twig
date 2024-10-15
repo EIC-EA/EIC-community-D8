@@ -1,0 +1,12 @@
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+
+<div class="ecl-teaser__participating-countries">
+  <strong>Participating countries:</strong>
+  <div class="ecl-teaser__participating-countries-items">
+    {% for row in rows %}
+      {{- row.content -}}
+    {% endfor %}
+  </div>
+</div>
