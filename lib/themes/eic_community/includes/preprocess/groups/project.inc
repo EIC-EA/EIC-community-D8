@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\eic_search\SearchHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\paragraphs\ParagraphInterface;
@@ -34,6 +35,9 @@ function eic_community_preprocess_group__project(&$variables) {
     case 'mail_teaser':
       // Get event description.
   }
+
+  // Add Cordis base path.
+  $variables['cordis_base_path'] = Projects::EIC_TAXONOMY_CORDIS_BASE_URL;
 
   // About page preprocessing.
   if (isset($variables['elements']['owners'])) {
