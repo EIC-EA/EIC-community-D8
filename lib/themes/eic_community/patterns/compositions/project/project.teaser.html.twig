@@ -15,20 +15,16 @@
             <span><strong>From&nbsp;</strong>{{ project_date.start_date }}<strong>&nbsp;to&nbsp;</strong>{{ project_date.end_date }}</span>
           {% endif %}
         </div>
-        {% if content.field_project_teaser.0 %}
-          <div class="ecl-teaser__body">{{ content.field_project_teaser.0 }}</div>
+        {% if project_teaser %}
+          <div class="ecl-teaser__body">{{ project_teaser }}</div>
         {% endif %}
         <div class="ecl-teaser__meta-footer">
-          {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
-            <div class="ecl-u-mb-l">
-              {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together." }}
-            </div>
-            {{ project_coordinators_view }}
-            {{ project_participants_view }}
+          {% if project_participating_countries_view %}
+            {{ project_participating_countries_view }}
           {% endif %}
-          {% if content.field_project_funding_programme.0 %}
+          {% if project_funding_programme %}
             <div class="ecl-teaser__programme">
-              <strong>Programme: </strong><span>{{ content.field_project_funding_programme.0 }}</span>
+              <strong>Programme: </strong><span>{{ project_funding_programme }}</span>
             </div>
           {% endif %}
         </div>
@@ -36,14 +32,14 @@
     </div>
   </div>
   <div class="ecl-teaser__sidebar">
-    {% if content.field_project_fields_of_science.0 %}
+    {% if project_fields_of_science %}
       <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
-        {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
+        {% for item in project_fields_of_science %}
           <li>{{ item }}</li>
         {% endfor %}
       </ul>
     {% endif %}
-    {% if content.field_project_horizon_results.0 %}
+    {% if project_horizon_results %}
       <div class="ecl-u-mb-s">
         {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
           icon: {
@@ -54,14 +50,14 @@
           link: {
             type: 'standalone',
             icon_position: 'before',
-            path: content.field_project_horizon_results.0['#url_title'],
-            label: 'view project website',
+            path: project_horizon_results,
+            label: 'view Horizon results',
           },
           extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
         } only %}
       </div>
     {% endif %}
-    {% if content.field_project_innovations.0 %}
+    {% if project_innovations %}
       <div class="ecl-u-mb-s">
         {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
           icon: {
@@ -72,8 +68,8 @@
           link: {
             type: 'standalone',
             icon_position: 'before',
-            path: content.field_project_innovations.0['#url_title'],
-            label: 'view project website',
+            path: project_innovations,
+            label: 'view on InnoRadar',
           },
           extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
         } only %}
@@ -92,14 +88,14 @@
             type: 'standalone',
             icon_position: 'before',
             path: cordis_url,
-            label: 'view on cordis',
+            label: 'view on CORDIS',
           },
           extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
         } only %}
       </div>
     {% endif %}
 
-    {% if content.field_project_website.0 %}
+    {% if project_website %}
       <div class="ecl-u-mb-s">
         {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
           icon: {
@@ -110,7 +106,7 @@
           link: {
             type: 'standalone',
             icon_position: 'before',
-            path: content.field_project_website.0['#url_title'],
+            path: project_website,
             label: 'view project website',
           },
           extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
