@@ -76,7 +76,7 @@
       </div>
     {% endif %}
     {% if project_grant_agreement %}
-      {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ project_grant_agreement %}
+      {% set cordis_url = cordis_base_path ~ project_grant_agreement %}
       <div class="ecl-u-mb-s">
         {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
           icon: {

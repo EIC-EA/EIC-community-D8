@@ -150,7 +150,7 @@
           </div>
         {% endif %}
         {% if content.field_project_grant_agreement_id.0 %}
-          {% set cordis_url = "https://cordis.europa.eu/project/id/" ~ content.field_project_grant_agreement_id.0|render %}
+          {% set cordis_url = cordis_base_path ~ content.field_project_grant_agreement_id.0|render %}
           <div class="ecl-u-mb-l">
             {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
               icon: {

@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -30,6 +31,9 @@ function eic_community_preprocess_group__project(&$variables) {
     case 'mail_teaser':
       // Get event description.
   }
+
+  // Add Cordis base path.
+  $variables['cordis_base_path'] = Projects::EIC_TAXONOMY_CORDIS_BASE_URL;
 
   // About page preprocessing.
   if (isset($variables['elements']['owners'])) {
@@ -85,4 +89,3 @@ function _eic_community_render_project_teaser(&$variables, GroupInterface $group
 
   $variables['project_item'] = $teaser;
 }
-

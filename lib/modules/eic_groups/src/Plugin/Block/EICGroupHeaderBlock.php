@@ -18,6 +18,7 @@ use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\Service\SolrSearchManager;
 use Drupal\flag\FlagServiceInterface;
@@ -534,7 +535,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   Array of Flag machine names.
    */
   public static function getGroupHeaderFlagsIds(GroupInterface $group) {
-    if ($group->bundle() == 'project') {
+    if ($group->bundle() == Projects::GROUP_PROJECT_BUNDLE) {
       return [
         FlagType::LIKE_GROUP,
       ];
