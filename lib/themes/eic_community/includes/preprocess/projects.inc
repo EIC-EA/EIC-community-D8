@@ -3,6 +3,9 @@
 /**
  * @file
  * Contains Projects (node and group) related functions.
+ *
+ * @param array $variables
+ *
  */
 
 /**
@@ -12,8 +15,8 @@ function _eic_community_render_project_detail_page(&$variables) {
   $view_id = 'project_content';
 
   // Render and set project coordinators and paricipants view.
-  $variables['project_coordinators_view'] = _eic_community_get_rendered_view($view_id, 'project_coordinators');
-  $variables['project_participants_view'] = _eic_community_get_rendered_view($view_id, 'project_participants');
+  $variables['project_coordinators_view'] = _eic_community_get_rendered_view($view_id, 'project_coordinators')['#rows'] ?? _eic_community_get_rendered_view($view_id, 'project_coordinators');
+  $variables['project_participants_view'] = _eic_community_get_rendered_view($view_id, 'project_participants')['#rows'] ?? _eic_community_get_rendered_view($view_id, 'project_participants');
 }
 
 /**
