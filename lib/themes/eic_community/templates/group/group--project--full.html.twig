@@ -3,7 +3,7 @@
     {% block content %}
       <section id="organisation-and-people" class="ecl-u-mb-l">
         <h2>{{ "Organisations and people"|t({}, {'context': 'eic_community'}) }}</h2>
-        {% if project_coordinators_view['#rows'].0 or project_participants_view['#rows'].0 %}
+        {% if project_coordinators_view or project_participants_view %}
           <div class="ecl-u-mb-l">
             {{ "Explore the list of all organisations involved in this project. Any EIC Community members who are active participants in this project are listed below. You are encouraged to connect and explore potential collaboration opportunities together."|t }}
           </div>
