@@ -87,7 +87,13 @@ class ProjectsCordisSource extends SourcePluginBase {
         $name = $value->getElementsByTagName('legalName')->item(0)->nodeValue;
         $country_code = $xpath->query("relations/regions/region/euCode", $value)->item(0)->nodeValue;
         $country_name = $xpath->query("relations/regions/region[@type='relatedRegion']/name", $value)->item(0)->nodeValue;
-        $pic = $value->getElementsByTagName('id')->item(0)->nodeValue;
+        $pic = $value->getElementsByTagName('id')->item(0);
+        if (!is_null($pic)) {
+          $pic = $pic->nodeValue;
+        }
+        else {
+          $pic = 0;
+        }
         $organisations[] = [
           'name' => $name,
           'country_code' => $country_code,
