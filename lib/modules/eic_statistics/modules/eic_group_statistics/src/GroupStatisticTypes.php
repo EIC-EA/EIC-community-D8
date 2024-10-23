@@ -38,7 +38,7 @@ final class GroupStatisticTypes {
    */
   public static function getOptionsArray() {
     return [
-      self::STAT_TYPE_MEMBERS => t('Members'),
+      self::STAT_TYPE_MEMBERS => t('Participants'),
       self::STAT_TYPE_COMMENTS => t('Comments'),
       self::STAT_TYPE_FILES => t('Files'),
       self::STAT_TYPE_EVENTS => t('Events'),

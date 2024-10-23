@@ -104,7 +104,7 @@ function eic_community_preprocess_group__group(array &$variables) {
       $group_statistics = \Drupal::service('eic_group_statistics.helper')->loadGroupStatistics($group);
       $item['stats'] = [
         'members' => [
-          'label' => t('Members'),
+          'label' => t('Participants'),
           'value' => $group_statistics->getMembersCount(),
           'icon' => [
             'type' => 'custom',

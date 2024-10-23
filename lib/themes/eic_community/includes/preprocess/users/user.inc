@@ -69,7 +69,7 @@ function eic_community_preprocess_user(array &$variables) {
           'icon_file_path' => $variables['eic_icon_path'],
           'parent' => [
             'link' => [
-              'label' => t('All members'),
+              'label' => t('All participants'),
               'path' => GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::MEMBERS)->getUrl(),
             ],
           ],

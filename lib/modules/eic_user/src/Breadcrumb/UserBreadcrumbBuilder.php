@@ -74,7 +74,7 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // Add link to Members overview page.
     $links[] = Link::fromTextAndUrl(
-      $this->t('Members'),
+      $this->t('Participants'),
       GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::MEMBERS
       )->getUrl()
