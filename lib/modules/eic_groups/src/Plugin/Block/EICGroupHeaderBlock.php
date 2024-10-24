@@ -583,25 +583,20 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $has_read_more = TRUE;
     }
 
-    // Truncates the output.
-    $output = Unicode::truncate($output, $limit, TRUE, TRUE);
+    // Truncate the text to the desired limit.
+    $preview_text = Unicode::truncate($output, $limit, TRUE);
 
-    // Adds link to the group about page.
+    // Get the part of the text that has been truncated.
+    $truncated_text = mb_substr($output, mb_strlen($preview_text));
+
+    // Return HTML with the truncated part stored as data for later use.
     if ($has_read_more) {
-      $link = Link::createFromRoute(
-        $this->t('Read more'),
-        'eic_groups.about_page',
-        [
-          'group' => $group->id(),
-        ],
-        [
-          'fragment' => 'group-description-full',
-        ],
-      );
-      $output .= ' ' . $link->toString();
+      return Markup::create("<p class='preview-text state-preview'>$preview_text <span class='ellipsis'>...</span><span class='truncated-text ecl-u-d-none'>" . htmlspecialchars($truncated_text, ENT_QUOTES) . "</span> <a class='js-readmore' style='cursor: pointer'>" . t('Read more') . "</a></p>");
     }
-
-    return Markup::create("<p>$output</p>");
+    else {
+      return Markup::create("<p>$preview_text</p>");
+    }
   }
 
 }
+
