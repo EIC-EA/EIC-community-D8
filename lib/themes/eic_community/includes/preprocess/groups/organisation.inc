@@ -664,7 +664,7 @@ function _eic_community_render_organisation_teaser(&$variables, GroupInterface $
   $organisation_statistics = \Drupal::service('eic_group_statistics.helper')->loadGroupStatistics($group);
   $teaser['stats'] = [
     'members' => [
-      'label' => t('Participants'),
+      'label' => t('Members'),
       'value' => $organisation_statistics->getMembersCount(),
       'icon' => [
         'type' => 'custom',
