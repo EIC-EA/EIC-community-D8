@@ -437,7 +437,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'date_filter_label' => $this->t('Dates', [], ['context' => 'eic_group']),
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
-            'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
+            'user_gallery' => $this->getUserGallerySearchBoxLabel($current_group_route),
             'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
             'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
             'project' => $this->t('Search for a project', [], ['context' => 'eic_group']),
@@ -496,11 +496,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
           'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
           'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
-          'invite_member' => $this->t(
-            'Invite a member',
-            [],
-            ['context' => 'eic_group']
-          ),
+          'invite_member' => $this->getActionLinkTextLabel($current_group_route),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
           'collapse' => $this->t('Show less', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
@@ -821,6 +817,46 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     return $available_sorts;
+  }
+
+  /**
+   * Get the user gallery search box label per group type.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *    The translated string search box label.
+   */
+  private function getUserGallerySearchBoxLabel($group) {
+    if (!$group instanceof GroupInterface) {
+      return $this->t('Search for a member', [], ['context' => 'eic_group']);
+    }
+
+    switch ($group->bundle()) {
+      case 'event':
+        return $this->t('Search for a participant', [], ['context' => 'eic_group']);
+      case 'organisation':
+        return $this->t('Search the team', [], ['context' => 'eic_group']);
+      default:
+        return $this->t('Search for a member', [], ['context' => 'eic_group']);
+    }
+  }
+
+  /**
+   * Get the action link text per group type.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *    The translated string search box label.
+   */
+  private function getActionLinkTextLabel($group) {
+    if (!$group instanceof GroupInterface) {
+      return $this->t('Invite a member', [], ['context' => 'eic_group']);
+    }
+
+    switch ($group->bundle()) {
+      case 'event':
+        return $this->t('Invite a participant', [], ['context' => 'eic_group']);
+      default:
+        return $this->t('Invite a member', [], ['context' => 'eic_group']);
+    }
   }
 
 }
