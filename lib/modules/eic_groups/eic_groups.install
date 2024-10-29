@@ -765,7 +765,7 @@ function eic_groups_update_9016(&$sandbox) {
 /**
  * Rename old menu link "Members" to "Participants" in Events.
  */
-function eic_groups_update_9017(&$sandbox) {
+function eic_groups_update_9017() {
   /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
   $em = \Drupal::service('entity_type.manager');
   $events = $em->getStorage('group')->loadByProperties([
@@ -795,40 +795,6 @@ function eic_groups_update_9017(&$sandbox) {
       }
     }
   }
-}
-
-/**
- * Rename Members overview page and change path alias.
- */
-function eic_groups_update_9018(&$sandbox) {
-   $page = 
- $overview_entities = \Drupal::entityQuery('overview_page')
-      ->condition('field_overview_id', GlobalOverviewPages::MEMBERS)
-      ->execute();
-    
-
-    if (empty($overview_entities)) {
-      return $default_link;
-    }
-
-    /** @var \Drupal\eic_overviews\Entity\OverviewPage $overview_entity */
-    $overview_entity = OverviewPage::load(reset($overview_entities));
-
-    if (!$overview_entity instanceof OverviewPage) {
-      return;
-    }
-$overview_entity->setTitle('Participants');
-$overview_entity->save();
-
-$redirect = Redirect::create();
-        $redirect->setSource($overview_entity->get('path')->alias);
-        $redirect->setRedirect('participants');
-        $redirect->setLanguage($new_alias['langcode']);
-        $redirect->setStatusCode(301);
-        $redirect->save();
-
-    
-   
 }
 
 /**
