@@ -127,12 +127,6 @@ class GroupAccessContent extends ProcessorPluginBase {
     // If group is private, the user needs to be in group to view it.
     $group_ids_formatted = !empty($group_ids) ? implode(' OR ', $group_ids) : 0;
 
-    // Power user can access all groups.
-    if (UserHelper::isPowerUser($user)) {
-
-      return '(ss_group_visibility:*)';
-    }
-
     $domain = '';
 
     if ($email = $user->getEmail()) {
@@ -172,6 +166,11 @@ class GroupAccessContent extends ProcessorPluginBase {
     if (!$user->isAnonymous()) {
       $username = $user->getAccountName();
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ':*' . "$user_id|$username" . '*)';
+    }
+
+    // A Poweruser can access/view all other groups, except sensitive.
+    if (UserHelper::isPowerUser($user)) {
+     $query .= 'OR (ss_group_visibility:* AND !ss_group_visibility:sensitive)';
     }
 
     return "($query)";
