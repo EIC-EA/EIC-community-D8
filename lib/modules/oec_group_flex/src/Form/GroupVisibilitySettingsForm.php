@@ -90,6 +90,11 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
       '#options' => $userRoleOptions,
       '#default_value' => $defaultRoles ?: [],
       '#multiple' => TRUE,
+      '#states' => [
+        'invisible' => [
+          ':input[name="enable_restricted_community_members_plugin"]' => ['checked' => FALSE]
+        ]
+      ]
     ];
 
     $defaultRoles = $config->get('oec_group_visibility_setings.custom_restricted.internal_roles');
