@@ -9,8 +9,8 @@ use Drupal\Core\Url;
  *
  * @GroupFeature(
  *   id = "eic_groups_members",
- *   label = @Translation("Members"),
- *   description = @Translation("Group members features.")
+ *   label = @Translation("Participants"),
+ *   description = @Translation("Group participants features.")
  * )
  */
 class GroupMembers extends EicGroupsGroupFeaturePluginBase {
