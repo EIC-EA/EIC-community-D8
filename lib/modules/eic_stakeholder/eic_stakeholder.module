@@ -128,4 +128,6 @@ function eic_stakeholder_stakeholder_update(\Drupal\Core\Entity\EntityInterface 
     $project->removeMember($user);
   }
 
+  $project->save();
+
 }
