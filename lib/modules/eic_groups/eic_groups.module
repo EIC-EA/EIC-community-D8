@@ -525,7 +525,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
   $moderation_state = $entity->get('moderation_state')->value;
 
   // Allow access if user is a poweruser.
-  if (UserHelper::isPowerUser($account, $entity)) {
+  if ($operation !== 'delete' && UserHelper::isPowerUser($account, $entity)) {
     return GroupAccessResult::allowed()
       ->addCacheableDependency($account)
       ->addCacheableDependency($entity);
