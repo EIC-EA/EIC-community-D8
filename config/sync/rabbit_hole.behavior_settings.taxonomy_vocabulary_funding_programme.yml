@@ -1,0 +1,14 @@
+uuid: 87c58d28-dc83-4cd1-9077-57d52a58f34c
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.funding_programme
+id: taxonomy_vocabulary_funding_programme
+entity_type_id: taxonomy_vocabulary
+entity_id: funding_programme
+action: access_denied
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied
