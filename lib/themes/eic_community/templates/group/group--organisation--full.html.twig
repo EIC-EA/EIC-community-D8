@@ -75,7 +75,7 @@
 				{{ events }}
 			{% endif %}
 
-      {% if projects is not empty %}
+      {% if block_enabled.projects %}
         {{ projects }}
       {% endif %}
 		{% endblock %}

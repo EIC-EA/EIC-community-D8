@@ -74,6 +74,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     'events' => in_array('eic_groups_anchor_group_events', $features),
     'members' => in_array('eic_groups_anchor_members', $features),
     'announcements' => in_array('eic_groups_announcements', $features),
+    'projects' => in_array('eic_groups_anchor_projects', $features),
   ];
 
   $organisation_link = $group->get('field_organisation_link')->getValue();
