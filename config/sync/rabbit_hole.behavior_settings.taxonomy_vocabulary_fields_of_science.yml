@@ -1,0 +1,14 @@
+uuid: 3f90a6f6-166d-4e8a-930e-a9351c74480b
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.fields_of_science
+id: taxonomy_vocabulary_fields_of_science
+entity_type_id: taxonomy_vocabulary
+entity_id: fields_of_science
+action: access_denied
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied
