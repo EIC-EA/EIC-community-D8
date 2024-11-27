@@ -356,3 +356,23 @@ function eic_deploy_update_9011(&$sandbox) {
   ]);
   $block->save();
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function eic_deploy_update_9012(&$sandbox) {
+  // Specify the module(s) to enable.
+  $modules_to_enable = ['eic_projects'];
+
+  // Check if the module is already enabled to avoid redundancy.
+  $module_handler = \Drupal::service('module_handler');
+  foreach ($modules_to_enable as $module) {
+    if (!$module_handler->moduleExists($module)) {
+      \Drupal::service('module_installer')->install([$module]);
+      \Drupal::messenger()->addMessage(t('The module "@module" has been enabled.', ['@module' => $module]));
+    }
+    else {
+      \Drupal::messenger()->addMessage(t('The module "@module" is already enabled.', ['@module' => $module]));
+    }
+  }
+}
