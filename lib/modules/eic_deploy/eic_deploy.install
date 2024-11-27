@@ -358,7 +358,7 @@ function eic_deploy_update_9011(&$sandbox) {
 }
 
 /**
- * Implements hook_update_N().
+ * Install EIC Projects module.
  */
 function eic_deploy_update_9012(&$sandbox) {
   // Specify the module(s) to enable.
