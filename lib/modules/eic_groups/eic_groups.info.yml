@@ -12,3 +12,4 @@ dependencies:
   - eic_user:eic_user
   - eic_content:eic_content_wiki_page
   - eic_flags:eic_flags
+  - eic_projects:eic_projects
