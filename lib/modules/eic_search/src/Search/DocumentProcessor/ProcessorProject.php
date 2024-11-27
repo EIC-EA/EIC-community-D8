@@ -77,7 +77,7 @@ class ProcessorProject extends DocumentProcessor {
 
     $stakeholder_partic_entities = $group->getContentEntities('group_stakeholder:participant');
     foreach ($stakeholder_partic_entities as $stakeholder_partic_entity) {
-      $country_code = $stakeholder_partic_entity?->get('field_stakeholder_address')->first()->getValue()['country_code'];
+      $country_code = $stakeholder_partic_entity?->get('field_stakeholder_address')->first()?->getValue()['country_code'];
       if ($country_code) {
         $country_name = (string) \Drupal::service('country_manager')
           ->getList()[$country_code];
