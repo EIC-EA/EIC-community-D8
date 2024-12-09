@@ -1,0 +1,21 @@
+uuid: e80b1032-4df5-4742-acb5-2cf1d8f3b4fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_date
+    - group.type.project
+  module:
+    - datetime_range
+id: group.project.field_project_date
+field_name: field_project_date
+entity_type: group
+bundle: project
+label: Date
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

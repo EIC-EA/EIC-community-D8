@@ -1,119 +1,117 @@
 {% set title_element = title_element|default('h2') %}
 
-<div class="ecl-teaser ecl-teaser--project {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  {% if image is not empty %}
-  <a href="{{ path }}">
-    <figure class="ecl-teaser__image-wrapper">
-      {% if path is not empty %}
-        <a href="{{ path }}">
-          <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-        </a>
-      {% else %}
-        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-      {% endif %}
-    </figure>
-  </a>
-  {% endif %}
+<div class="ecl-teaser ecl-teaser--group ecl-teaser--project {{ extra_classes }}">
   <div class="ecl-teaser__main-wrapper">
-    {% if type or status is not empty %}
-      <div class="ecl-teaser__meta-header">
-        <div class="ecl-teaser__tags">
-          {% if type %}
-            <div class="ecl-teaser__tag">
-              {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with type|merge({
-                tag: type|merge({
-                  type: status.path ? "link" : "display"
-                })
-              }) only %}
-            </div>
+    <div class="ecl-teaser__content-wrapper">
+      <div class="ecl-teaser__content">
+        <h2 class="ecl-teaser__title">
+          <a href="{{ url }}"><span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span></a>
+        </h2>
+        <div class="ecl-teaser__meta-header">
+          {% if project_grant_agreement %}
+            <span class="ecl-u-mr-l"><strong>ID: </strong>{{ project_grant_agreement }}</span>
           {% endif %}
-
-          {% if status %}
-            <div class="ecl-teaser__tag">
-              {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
-                tag: status|merge({
-                  type: status.path ? "link" : "display"
-                })
-              } only %}
+          {% if project_date.start_date and project_date.end_date %}
+            <span><strong>From&nbsp;</strong>{{ project_date.start_date }}<strong>&nbsp;to&nbsp;</strong>{{ project_date.end_date }}</span>
+          {% endif %}
+        </div>
+        {% if project_teaser %}
+          <div class="ecl-teaser__body">{{ project_teaser }}</div>
+        {% endif %}
+        <div class="ecl-teaser__meta-footer">
+          {% if project_participating_countries_view %}
+            {{ project_participating_countries_view }}
+          {% endif %}
+          {% if project_funding_programme %}
+            <div class="ecl-teaser__programme">
+              <strong>Programme: </strong><span>{{ project_funding_programme }}</span>
             </div>
           {% endif %}
         </div>
       </div>
+    </div>
+  </div>
+  <div class="ecl-teaser__sidebar">
+    {% if project_fields_of_science %}
+      <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+        {% for item in project_fields_of_science %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if project_horizon_results %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'general',
+            name: 'growth',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: project_horizon_results,
+            label: 'view Horizon results',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
+    {% endif %}
+    {% if project_innovations %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'custom',
+            name: 'check_circle',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: project_innovations,
+            label: 'view on InnoRadar',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
+    {% endif %}
+    {% if project_grant_agreement %}
+      {% set cordis_url = cordis_base_path ~ project_grant_agreement %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'general',
+            name: 'spreadsheet',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: cordis_url,
+            label: 'view on CORDIS',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
+      </div>
     {% endif %}
 
-    <div class="ecl-teaser__content-wrapper">
-      <div class="ecl-teaser__content">
-        <{{ title_element }} class="ecl-teaser__title">
-          {% if path is not empty %}
-            <a href="{{ path }}">
-              {% if title_before %}
-                <span class="ecl-teaser__title-before">{{ title_before }}</span>
-              {% endif %}
-
-              <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
-
-              {% if title_after %}
-                <span class="ecl-teaser__title-after">{{ title_after }}</span>
-              {% endif %}
-            </a>
-          {% else %}
-            {% if title_before %}
-              <span class="ecl-teaser__title-before">{{ title_before }}</span>
-            {% endif %}
-
-            <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
-
-            {% if title_after %}
-              <span class="ecl-teaser__title-after">{{ title_after }}</span>
-            {% endif %}
-          {% endif %}
-        </{{ title_element }}>
-
-        {% if coordinator %}
-          {% include "@theme/patterns/components/author.html.twig" with {
-            image: coordinator.image,
-            author: coordinator.name,
-            size: 'tiny',
-          } only %}
-        {% endif %}
-
-        {% if partners is not empty %}
-          <div class="ecl-teaser__meta-fields">
-            {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                icon: {
-                  path: icon_file_path,
-                  name: 'handshake',
-                  type: 'custom',
-                  size: 's',
-                },
-                extra_classes: 'ecl-teaser__meta-fields-icon'
-              } only %}
-            {% endif %}
-            <span class="ecl-teaser__meta-fields-label">{{ partners_label|default('Partners')}}</span>
-            <div class="ecl-teaser__meta-fields-items">
-              {% for partner in partners %}
-                {% if partner.link and partner.link.path %}
-                  {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                    link: partner.link,
-                    extra_classes: 'ecl-teaser__meta-fields-item',
-                  } only %}
-                {% else %}
-                  <div class="ecl-teaser__meta-fields-item">{{ partner.link.label|default(partner.label) }}</div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-
-        {% if investments is not empty %}
-          {% for investment in investments %}
-            {% include "@theme/patterns/components/investment.html.twig" with investment|default({})|merge({
-              icon_file_path: icon_file_path
-            }) only %}
-          {% endfor %}
-        {% endif %}
+    {% if project_website %}
+      <div class="ecl-u-mb-s">
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'custom',
+            name: 'star_circle',
+          },
+          link: {
+            type: 'standalone',
+            icon_position: 'before',
+            path: project_website,
+            label: 'view project website',
+          },
+          extra_classes: 'ecl-link--button ecl-link--button-primary ecl-u-width-100 ',
+        } only %}
       </div>
-    </div>
+    {% endif %}
   </div>
 </div>

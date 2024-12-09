@@ -22,6 +22,7 @@ conditions:
       event: event
       group: group
       organisation: organisation
+      project: project
     negate: 0
     uuid: dbdc709b-c8e7-40ed-aea8-338920304ee4
     context_mapping:

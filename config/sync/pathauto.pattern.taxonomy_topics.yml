@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - ctools
     - taxonomy
 id: taxonomy_topics
 label: 'Taxonomy - Topics'
@@ -19,5 +18,5 @@ selection_criteria:
     bundles:
       topics: topics
 selection_logic: and
-weight: -5
+weight: 2
 relationships: {  }

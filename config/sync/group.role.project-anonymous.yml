@@ -1,0 +1,14 @@
+uuid: 3e214f88-1084-4e4a-b00c-158250ca2e38
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+id: project-anonymous
+label: Anonymous
+weight: -102
+internal: true
+audience: anonymous
+group_type: project
+permissions_ui: true
+permissions: {  }

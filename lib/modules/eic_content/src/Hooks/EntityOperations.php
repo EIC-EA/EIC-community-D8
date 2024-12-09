@@ -75,10 +75,10 @@ class EntityOperations implements ContainerInjectionInterface {
     ];
     if ($view_mode === 'full' && in_array($entity->get('moderation_state')->value, array_keys($state_map))) {
       if ($entity->get('moderation_state')->value === EICContentModeration::STATE_PUBLISHED ) {
-        $this->messenger->addStatus($this->t('Node state is: @state', ['@state' => $state_map[$entity->get('moderation_state')->value]]));
+        $this->messenger->addStatus($this->t('Node state is: @state', ['@state' => $state_map[$entity->get('moderation_state')->value]]), TRUE);
       }
       else {
-        $this->messenger->addWarning($this->t('Node state is: @state', ['@state' => $state_map[$entity->get('moderation_state')->value]]));
+        $this->messenger->addWarning($this->t('Node state is: @state', ['@state' => $state_map[$entity->get('moderation_state')->value]]), TRUE);
       }
 
     }

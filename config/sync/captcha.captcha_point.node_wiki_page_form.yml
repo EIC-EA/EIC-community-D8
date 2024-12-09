@@ -1,0 +1,7 @@
+uuid: 764a6a75-d293-4f05-b48a-7bc5ec6f47ad
+langcode: en
+status: false
+dependencies: {  }
+formId: node_wiki_page_form
+captchaType: default
+label: node_wiki_page_form

@@ -9,6 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_organisations\Constants\Organisations;
+use Drupal\eic_projects\PostMigrationCordisProject;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroupSaver;
 use Drupal\group_flex\Plugin\GroupVisibilityInterface;
@@ -105,6 +106,12 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $groupFeatureHelper;
 
   /**
+   *
+   * @var \Drupal\eic_projects\PostMigrationCordisProject
+   */
+  protected $postMigrationCordis;
+
+  /**
    * Constructs a new MessageCreatorBase object.
    *
    * @param \Drupal\migrate\MigrateLookup $migrate_lookup
@@ -120,7 +127,8 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     MigrateLookup $migrate_lookup,
     EntityTypeManagerInterface $entity_type_manager,
     GroupFlexGroupSaver $group_flex_group_saver,
-    GroupFeatureHelper $group_feature_helper
+    GroupFeatureHelper $group_feature_helper,
+    PostMigrationCordisProject $postMigrationCordisProject,
   ) {
     $connection = Database::getConnection('default', 'migrate');
 
@@ -129,6 +137,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->entityTypeManager = $entity_type_manager;
     $this->groupFlexGroupSaver = $group_flex_group_saver;
     $this->groupFeatureHelper = $group_feature_helper;
+    $this->postMigrationCordis = $postMigrationCordisProject;
   }
 
   /**
@@ -155,6 +164,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
       case 'upgrade_d7_node_complete_article':
         $this->completeRelatedStories($event);
+        break;
+      case 'cordis_xml':
+        $this->postMigrationCordis->handlePostMigration();
         break;
 
     }

@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * Theme override to display a single Drupal page while offline.
+ *
+ * All available variables are mirrored in page.html.twig.
+ * Some may be blank but they are provided for consistency.
+ *
+ * @see template_preprocess_maintenance_page()
+ */
+#}
+<div class="ecl-viewport">
+  <div class="ecl-viewport__top ecl-u-pt-xs">
+    {% block site_header %}
+      {% if site_header %}
+        {% include "@theme/patterns/compositions/global-header.html.twig" with site_header only %}
+      {% endif %}
+
+      <section class="ecl-mainmenu">
+        <div class="ecl-container">
+          <div class="ecl-mainmenu__wrapper">
+            {% include "@ecl-twig/ec-component-menu/ecl-menu.html.twig" with mainmenu|default({})|merge({
+              site_name: '',
+              menu_link: '',
+              title: '',
+            }) %}
+          </div>
+        </div>
+      </section>
+
+    {% endblock %}
+  </div>
+
+  <div class="ecl-viewport__middle ecl-u-bg-blue ecl-u-d-flex ecl-u-justify-content-center ecl-u-align-items-center">
+    <div class="ecl-base-layout__content ecl-u-width-100">
+      <div class="ecl-base-layout__main">
+        <main{{main_attributes}}>
+          {% block content %}
+            {% include '@ecl-twig/page-banner' with {
+              title: title,
+              baseline: page.content,
+              type: 'primary',
+              centered: true,
+            } only %}
+          {% endblock %}
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="ecl-viewport__bottom">
+    {% block footer %}
+      {% if site_footer %}
+        {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
+      {% endif %}
+    {% endblock %}
+  </div>
+</div>

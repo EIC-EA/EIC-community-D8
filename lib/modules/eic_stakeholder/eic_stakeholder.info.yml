@@ -1,0 +1,7 @@
+name: 'EIC stakeholder'
+type: module
+description: 'The stakeholder entity type.'
+package: European Innovation Council
+core_version_requirement: ^9 | ^10
+dependencies:
+  - eic_groups:eic_groups

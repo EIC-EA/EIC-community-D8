@@ -20,6 +20,7 @@ use Drupal\user\UserInterface;
 use Drupal\eic_search\Search\Sources\UserProfile\MyGroupsSourceType;
 use Drupal\eic_search\Search\Sources\UserProfile\MyEventsSourceType;
 use Drupal\eic_search\Search\Sources\UserProfile\MyOrganisationsSourceType;
+use Drupal\eic_search\Search\Sources\UserProfile\MyProjectsSourceType;
 
 /**
  * Implements hook_preprocess_user().
@@ -54,6 +55,10 @@ function eic_community_preprocess_user(array &$variables) {
         [_eic_community_get_user_contact_link($user)],
         _eic_community_get_user_social_links($user)
       );
+      if (!empty($variables['elements']['#is_card'])) {
+        $teaser['extra_classes'] = 'ecl-teaser--project-member ecl-teaser--as-card ecl-teaser--as-card-grey';
+      }
+
       $variables['user_item'] = $teaser;
       break;
 
@@ -199,9 +204,14 @@ function eic_community_preprocess_user(array &$variables) {
         'content' => _get_render_block_search_overview(MyEventsSourceType::class),
       ];
 
-      $user_item['flagged_projects'] = [
+      $user_item['flagged_organisations'] = [
         'title' => $current_user->id() === $user->id() ? t('My organisations') : t('Organisations'),
         'content' => _get_render_block_search_overview(MyOrganisationsSourceType::class),
+      ];
+
+      $user_item['flagged_projects'] = [
+        'title' => $current_user->id() === $user->id() ? t('My projects') : t('Projects'),
+        'content' => _get_render_block_search_overview(MyProjectsSourceType::class),
       ];
 
       $variables['user_item'] = $user_item;

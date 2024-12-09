@@ -1,0 +1,19 @@
+uuid: cfbb195f-0537-45b9-888a-6fe4239c8082
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - link
+id: group.field_project_website
+field_name: field_project_website
+entity_type: group
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

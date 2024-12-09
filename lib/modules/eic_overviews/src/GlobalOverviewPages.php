@@ -48,6 +48,11 @@ class GlobalOverviewPages {
   const ORGANISATIONS = 6;
 
   /**
+   * ID of the Projects overview page.
+   */
+  const PROJECTS = 7;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -121,6 +126,10 @@ class GlobalOverviewPages {
 
       case 'organisation':
         $overview_id = GlobalOverviewPages::ORGANISATIONS;
+        break;
+
+      case 'project':
+        $overview_id = GlobalOverviewPages::PROJECTS;
         break;
 
       default:

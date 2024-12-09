@@ -1,0 +1,50 @@
+id: cordis_xml
+migration_group: cordis
+label: XML feed of CORDIS projects
+source:
+  plugin: projects_cordis
+  ids:
+    id:
+      type: integer
+process:
+  type:
+    plugin: default_value
+    default_value: project
+  field_body/value: objective
+  field_body/format: 'basic_html'
+  label: title
+  field_project_acronym: acronym
+  field_project_status: status
+  field_project_teaser: teaser
+  field_project_grant_agreement_id: id
+  field_project_ecmax_contributio: ecMaxContribution
+  field_project_total_cost: totalCost
+  field_project_objective/value: objective
+  field_project_objective/format: 'basic_html'
+  field_project_date/value: startDate
+  field_project_date/end_value: endDate
+  field_project_duration: duration
+  field_project_fields_of_science:
+    -
+      plugin: explode
+      source: euroscivocCode
+      delimiter: ,
+    -
+      plugin: entity_lookup
+      value_key: field_euroscivoc_code
+      bundle_key: vid
+      bundle: fields_of_science
+      entity_type: taxonomy_term
+  field_project_funding_programme:
+    plugin: entity_generate
+    source: fundingProgramme
+    values:
+      label: fundingProgramme
+
+  status: 'published'
+  moderation_state:
+    plugin: default_value
+    default_value: 'published'
+destination:
+  plugin: 'entity:group'
+

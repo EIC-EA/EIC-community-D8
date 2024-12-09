@@ -1,0 +1,24 @@
+uuid: 09346a85-82a0-4b49-a4de-8fa38b4cfaa0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_acronym
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_acronym
+field_name: field_project_acronym
+entity_type: group
+bundle: project
+label: Acronym
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

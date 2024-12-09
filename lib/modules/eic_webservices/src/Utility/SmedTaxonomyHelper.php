@@ -20,6 +20,7 @@ class SmedTaxonomyHelper {
    * @var string[]
    */
   protected const SMED_VOCABULARIES = [
+    'funding_source',
     'geo',
     'global_event_type',
     'job_titles',

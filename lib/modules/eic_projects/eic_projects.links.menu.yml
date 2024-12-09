@@ -1,0 +1,5 @@
+eic_projects.cordis_api_settings:
+  title: CORDIS Data Extraction API Settings
+  parent: system.admin_config_system
+  route_name: eic_projects.cordis_api_settings
+  weight: 10

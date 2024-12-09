@@ -1,0 +1,10 @@
+uuid: 22bb2bb8-aa1f-4685-ae02-992f1de4e245
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_stakeholder
+id: stakeholder.teaser
+label: Teaser
+targetEntityType: stakeholder
+cache: true

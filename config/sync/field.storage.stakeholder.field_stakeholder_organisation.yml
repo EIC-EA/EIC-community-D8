@@ -1,0 +1,20 @@
+uuid: f920a879-af58-4eb3-8b94-99636981fa90
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_stakeholder
+    - group
+id: stakeholder.field_stakeholder_organisation
+field_name: field_stakeholder_organisation
+entity_type: stakeholder
+type: entity_reference
+settings:
+  target_type: group
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

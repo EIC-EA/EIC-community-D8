@@ -2,6 +2,8 @@
 
 namespace Drupal\oec_group_flex;
 
+use Drupal\Core\Session\AccountInterface;
+use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroup;
 use Drupal\group_flex\Plugin\GroupJoiningMethodManager;
@@ -233,6 +235,41 @@ class OECGroupFlexHelper {
       self::GROUP_TYPE_OWNER_ROLE,
       self::GROUP_TYPE_MEMBER_ROLE,
     ]) ? $group_type . '-' . $role : NULL;
+  }
+
+  /**
+   * Get membership request.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   User.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   Group.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   Group content.
+   */
+  public function getMembershipRequest(AccountInterface $user, GroupInterface $group) {
+    // If no responsible group content types were found, we return nothing.
+    $group_content_type_storage = \Drupal::entityTypeManager()->getStorage('group_content_type');
+    $group_content_types = $group_content_type_storage->loadByContentPluginId('group_membership_request');
+    if (!empty($group_content_types)) {
+      $group_content_storage = \Drupal::entityTypeManager()->getStorage('group_content');
+      $group_content_items = $group_content_storage->loadByProperties([
+        'type' => array_keys($group_content_types),
+        'entity_id' => $user->id(),
+        'gid' => $group->id(),
+        GroupMembershipRequest::STATUS_FIELD => [
+          GroupMembershipRequest::REQUEST_PENDING,
+          GroupMembershipRequest::REQUEST_APPROVED,
+        ],
+      ]);
+
+      if (!empty($group_content_items)) {
+        return reset($group_content_items);
+      }
+    }
+
+    return NULL;
   }
 
 }

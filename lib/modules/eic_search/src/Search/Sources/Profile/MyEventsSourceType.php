@@ -51,7 +51,7 @@ class MyEventsSourceType extends SourceType {
       'ss_group_visibility' => $this->t('Visibility', [], ['context' => 'eic_search']),
       'sm_group_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
       Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => $this->t('Event status', [], ['context' => 'eic_search']),
-      'sm_event_funding_source_string' => $this->t('Funding source', [], ['context' => 'eic_search']),
+      'sm_group_funding_source_string' => $this->t('Funding source', [], ['context' => 'eic_search']),
       'ss_group_event_country' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }

@@ -31,7 +31,6 @@ permissions:
   - 'administer membership requests'
   - 'delete activity item'
   - 'delete any invitation'
-  - 'delete group'
   - 'delete memberships'
   - 'delete own invitations'
   - 'edit all comments'

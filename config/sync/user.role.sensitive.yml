@@ -4,9 +4,11 @@ status: true
 dependencies:
   module:
     - eic_content_gallery
+    - eic_stakeholder
 id: sensitive
 label: 'Sensitive content administrator'
 weight: -7
 is_admin: null
 permissions:
   - 'download gallery archive'
+  - 'view stakeholder'

@@ -27,6 +27,7 @@ dependencies:
     - eic_flags
     - eic_private_content
     - eic_private_message
+    - eic_stakeholder
     - eic_topics
     - filter
     - flag
@@ -97,3 +98,4 @@ permissions:
   - 'view own unpublished media'
   - 'view private content'
   - 'view recommend_group'
+  - 'view stakeholder'

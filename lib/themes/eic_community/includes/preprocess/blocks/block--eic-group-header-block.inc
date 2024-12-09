@@ -121,8 +121,12 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         'link' => [
           'label' => $link['title'],
           'path' => $link['url'],
+          'variant' => $link['variant'] ?? NULL,
+          'extra_attributes' => $link['extra_attributes'] ?? NULL,
         ],
       ];
+
+
 
       if (isset($link['action'])) {
         $tmp = array_merge($tmp, $link['action']);
@@ -242,7 +246,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         break;
     }
 
-    $stats[] = [
+    $stats[$stat_type] = [
       'icon' => [
         'name' => $icon_name,
         'type' => 'custom',
@@ -256,6 +260,15 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $tags = [];
   switch ($group->getGroupType()->id()) {
+    case 'project':
+      // Projects do not have content statistics.
+      foreach ($variables['group_values']['stats'] as $type => $statistic) {
+        if ($type !== 'members') {
+          unset($variables['group_values']['stats'][$type]);
+        }
+      }
+      break;
+
     case 'group':
     case 'event':
       $visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
@@ -330,6 +343,11 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     case 'organisation':
       $overview_id = GlobalOverviewPages::ORGANISATIONS;
       $overview_label = t('All organisations', [], ['context' => 'eic_community']);
+      break;
+
+    case 'project':
+      $overview_id = GlobalOverviewPages::PROJECTS;
+      $overview_label = t('All projects', [], ['context' => 'eic_community']);
       break;
 
     default:

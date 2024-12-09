@@ -1,0 +1,10 @@
+entity.extraction_request.edit_form:
+  route_name: entity.extraction_request.edit_form
+  group: extraction_request
+  title: Edit
+
+entity.extraction_request.delete_form:
+  route_name: entity.extraction_request.delete_form
+  group: extraction_request
+  title: Delete
+  weight: 10

@@ -1,0 +1,6 @@
+uuid: 65b8fc8b-b88c-4374-b086-ed9066f87c90
+langcode: en
+status: true
+dependencies: {  }
+id: coordinator
+label: Coordinator

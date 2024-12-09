@@ -1,0 +1,24 @@
+uuid: 9ac66ff5-0e59-4827-816f-d45bab2b9947
+langcode: en
+status: true
+dependencies:
+  module:
+    - group_flex
+third_party_settings:
+  group_flex:
+    group_flex_enabler: false
+    group_type_visibility: public
+    group_type_joining_method:
+      tu_open_method: tu_open_method
+      tu_group_membership_request: tu_group_membership_request
+      group_invitation: group_invitation
+      tu_close_method: tu_close_method
+    group_type_joining_method_override: true
+id: project
+label: Project
+description: ''
+new_revision: true
+creator_membership: true
+creator_wizard: false
+creator_roles:
+  - project-owner

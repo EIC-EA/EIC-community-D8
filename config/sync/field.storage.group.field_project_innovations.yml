@@ -1,0 +1,19 @@
+uuid: 6f7707a9-0be7-4eba-9479-167e004bf3c0
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - link
+id: group.field_project_innovations
+field_name: field_project_innovations
+entity_type: group
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

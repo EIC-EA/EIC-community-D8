@@ -1,0 +1,18 @@
+entity.extraction_request.view:
+  title: 'View'
+  route_name: entity.extraction_request.canonical
+  base_route: entity.extraction_request.canonical
+entity.extraction_request.edit_form:
+  title: 'Edit'
+  route_name: entity.extraction_request.edit_form
+  base_route: entity.extraction_request.canonical
+entity.extraction_request.delete_form:
+  title: 'Delete'
+  route_name: entity.extraction_request.delete_form
+  base_route: entity.extraction_request.canonical
+  weight: 10
+entity.extraction_request.collection:
+  title: 'Extraction requests'
+  route_name: entity.extraction_request.collection
+  base_route: system.admin_content
+  weight: 10

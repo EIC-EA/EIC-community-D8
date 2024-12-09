@@ -176,6 +176,11 @@ function eic_community_preprocess_views_view(&$variables) {
         ];
       }
       break;
+    case 'organisation_projects-projects_content':
+      $variables['title'] = t('Projects', [], ['context' => 'eic_community']);
+      $variables['extra_id'] = 'projects';
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      break;
 
     case 'taxonomy_related_content-files':
     case 'taxonomy_related_content-news_stories':

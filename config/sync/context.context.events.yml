@@ -48,7 +48,7 @@ reactions:
           ss_group_field_vocab_geo_string: ss_group_field_vocab_geo_string
           ss_group_visibility: ss_group_visibility
           ss_event_weight_state_label: ss_event_weight_state_label
-          sm_event_funding_source_string: sm_event_funding_source_string
+          sm_group_funding_source_string: sm_group_funding_source_string
           sm_group_field_location_type: 0
           ss_group_event_country: 0
         sort_options:

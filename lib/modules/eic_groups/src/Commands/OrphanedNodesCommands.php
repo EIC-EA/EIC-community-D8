@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Commands;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\node\NodeInterface;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -51,28 +52,31 @@ class OrphanedNodesCommands extends DrushCommands {
           ->execute()->fetchAssoc();
         if (empty($q)) {
           $node_id = explode('/', $path);
-          $nodes_to_remove[] = $node_id[2];
+          $nodes_to_remove[$node_id[2]] = $alias;
         }
       }
     }
 
     $count = count($nodes_to_remove);
-    if ($this->confirm("$count orphaned nodes will be unpublished. Proceed?")) {
+    if ($this->confirm("$count orphaned nodes will be deleted. Proceed?")) {
+      $count_final = 0;
       $this->io()->progressStart($count);
-      foreach ($nodes_to_remove as $item_node_id) {
+      foreach ($nodes_to_remove as $item_node_id => $alias) {
         $node = $this->entityTypeManager->getStorage('node')->load($item_node_id);
-        if ($node->isPublished()) {
-          $node->setUnpublished()->save();
+        if (is_null($node)) {
+          $this->io()->note("No node found for $alias");
+        }
+        elseif ($node instanceof NodeInterface && $node->isPublished()) {
+          $count_final++;
+          $node->delete();
         }
         $this->io()->progressAdvance();
       }
       $this->io()->progressFinish();
-      $this->io()->success("$count orphaned nodes were unpublished.");
+      $this->io()->success("$count_final/$count orphaned nodes were deleted.");
     }
-    else  {
-      $this->io()->warning('No action has taken place.');
+    else {
+      $this->io()->note('No action has taken place.');
     }
-
   }
-
 }

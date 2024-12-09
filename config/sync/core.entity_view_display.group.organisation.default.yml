@@ -8,6 +8,7 @@ dependencies:
     - field.field.group.organisation.field_contact_label
     - field.field.group.organisation.field_date_establishement
     - field.field.group.organisation.field_email
+    - field.field.group.organisation.field_funding_source
     - field.field.group.organisation.field_header_visual
     - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_needs
@@ -51,6 +52,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_funding_source:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 12
     region: content
   field_locations:
     type: entity_reference_revisions_entity_view

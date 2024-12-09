@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present an extraction request entity.
+ *
+ * This template is used when viewing a canonical extraction request page,
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.label'.
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_extraction_request()
+ */
+#}
+<article{{ attributes.addClass('ecl-container') }}>
+  <h1>Extraction Request: {{ content.label.0 }}</h1>
+  {% if view_mode != 'full' %}
+    {{ title_prefix }}
+    {{ title_suffix }}
+  {% endif %}
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</article>

@@ -1,0 +1,41 @@
+<?php
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Add PIC and Project ID field for stakeholder.
+ */
+function eic_stakeholder_update_9000(&$sandbox) {
+
+  $pic_field = BaseFieldDefinition::create('integer')
+    ->setLabel(t('PIC Number'))
+    ->setDescription(t('Set the PIC number of organisation.'))
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'type' => 'number_integer',
+      'weight' => 0,
+    ])
+    ->setDisplayOptions('form', [
+      'type' => 'number',
+      'weight' => 20,
+    ]);
+
+  $project_id_field = BaseFieldDefinition::create('integer')
+    ->setLabel(t('Project ID'))
+    ->setDescription(t('Set the Grant Agreement ID of the project associated with this stakeholder.'))
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'type' => 'number_integer',
+      'weight' => 0,
+    ])
+    ->setDisplayOptions('form', [
+      'type' => 'number',
+      'weight' => 20,
+    ]);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('pic', 'stakeholder', 'eic_stakeholder', $pic_field);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('project_id', 'stakeholder', 'eic_stakeholder', $project_id_field);
+}

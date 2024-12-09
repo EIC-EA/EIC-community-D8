@@ -1,0 +1,61 @@
+uuid: 4da38b9c-eb9f-4bd8-8e4d-7cbfb1732b45
+langcode: en
+status: true
+dependencies:
+  config:
+    - eic_stakeholder.stakeholder_type.participant
+    - field.field.stakeholder.participant.field_stakeholder_address
+    - field.field.stakeholder.participant.field_stakeholder_organisation
+    - field.field.stakeholder.participant.field_stakeholder_related_people
+  module:
+    - address
+id: stakeholder.participant.default
+targetEntityType: stakeholder
+bundle: participant
+mode: default
+content:
+  field_stakeholder_address:
+    type: address_default
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_stakeholder_organisation:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_stakeholder_related_people:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  langcode: true
+  status: true
+  uid: true

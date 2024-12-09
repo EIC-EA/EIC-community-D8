@@ -1,0 +1,18 @@
+uuid: d3e651a6-bdcd-488e-96f8-8ffc90b0e46b
+langcode: en
+status: true
+dependencies:
+  config:
+    - eic_stakeholder.stakeholder_type.participant
+    - group.type.project
+  module:
+    - eic_stakeholder
+id: group_content_type_fb16873f4db83
+label: 'Project: Group stakeholder (Participant)'
+description: 'Adds <em class="placeholder">Participant</em> content to groups both publicly and privately.'
+group_type: project
+content_plugin: 'group_stakeholder:participant'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

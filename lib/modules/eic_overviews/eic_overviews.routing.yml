@@ -37,10 +37,10 @@ eic_overviews.groups.overview_page.news:
   requirements:
     _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
 eic_overviews.groups.overview_page.members:
-  path: '/group/{group}/people'
+  path: '/group/{group}/participants'
   defaults:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
-    _title: 'Members'
+    _title: 'Participants'
   requirements:
     _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
 eic_overviews.groups.overview_page.team:

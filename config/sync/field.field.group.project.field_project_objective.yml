@@ -1,0 +1,28 @@
+uuid: d7168b52-ce14-46d1-b75a-74f3abf6f658
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_objective
+    - group.type.project
+  module:
+    - allowed_formats
+    - eic_non_required_on_draft
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats: {  }
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_objective
+field_name: field_project_objective
+entity_type: group
+bundle: project
+label: Objective
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

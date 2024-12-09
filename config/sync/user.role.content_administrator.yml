@@ -52,6 +52,7 @@ dependencies:
     - eic_overviews
     - eic_private_content
     - eic_private_message
+    - eic_stakeholder
     - eic_topics
     - entity_browser
     - file
@@ -280,6 +281,7 @@ permissions:
   - 'view own unpublished media'
   - 'view page revisions'
   - 'view private content'
+  - 'view stakeholder'
   - 'view story revisions'
   - 'view the administration theme'
   - 'view user email addresses'

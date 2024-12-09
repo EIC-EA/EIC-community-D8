@@ -1,0 +1,29 @@
+uuid: e8d6febf-825e-4b11-ba66-6d23287daf3a
+langcode: en
+status: true
+dependencies:
+  config:
+    - eic_stakeholder.stakeholder_type.coordinator
+    - field.storage.stakeholder.field_stakeholder_organisation
+    - group.type.organisation
+id: stakeholder.coordinator.field_stakeholder_organisation
+field_name: field_stakeholder_organisation
+entity_type: stakeholder
+bundle: coordinator
+label: Organisation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      organisation: organisation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

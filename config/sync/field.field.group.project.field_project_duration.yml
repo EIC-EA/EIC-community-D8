@@ -1,0 +1,23 @@
+uuid: 1db39c01-e046-4cbe-a200-a7120a6de145
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_duration
+    - group.type.project
+id: group.project.field_project_duration
+field_name: field_project_duration
+entity_type: group
+bundle: project
+label: Duration
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

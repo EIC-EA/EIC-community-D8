@@ -1,0 +1,4 @@
+services:
+  eic_stakeholder.stakeholder_manager:
+    class: 'Drupal\eic_stakeholder\Service\StakeholderManager'
+    arguments: [ '@eic_groups.helper', '@entity_type.manager', '@plugin.manager.group_content_enabler', '@group.membership_loader', '@current_user' ]
