@@ -5,6 +5,8 @@
  * Prepares variables for node News and Story templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_media\MediaHelper;
@@ -71,6 +73,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 
   if ('mail_teaser' === $view_mode) {
     $item = _eic_community_prepare_node_teaser_array($node);
+    $item['description'] = $node->hasField('field_introduction') ? Markup::create(Xss::filter($node->get('field_introduction')->value)) : $item['description'];
     /** @var \Drupal\media\MediaInterface $media */
     $media = \Drupal::service('entity.repository')
       ->getTranslationFromContext(
