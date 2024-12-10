@@ -150,10 +150,12 @@ function _preprocess_node_page(&$variables) {
 
         $publish_date_format = 'd F Y';
         $is_private = $node->private->value === '1';
+
         $tag = [
           'type' => 'display',
           'label' => $is_private ? t('Private') : t('Public'),
         ];
+
         $variables['editorial_header'] = [
           'tags' => [
             [
@@ -172,6 +174,7 @@ function _preprocess_node_page(&$variables) {
             ],
           ],
           'title' => $node->label(),
+          'moderation_state' => str_replace("_", "-",$node->get('moderation_state')->value),
         ];
 
         $words_per_minute = \Drupal::config('node_read_time.settings')
