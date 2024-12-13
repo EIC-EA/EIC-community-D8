@@ -130,7 +130,7 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   }
   if (!$entity->get('field_date_range')->isEmpty()) {
     $items[] = [
-      'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
+      'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi') . ' (The timezone is in UTC)',
       'icon' => [
         'type' => 'custom',
         'name' => 'calendar',

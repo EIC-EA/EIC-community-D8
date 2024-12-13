@@ -187,6 +187,7 @@ module:
   path: 0
   path_alias: 0
   profile: 0
+  rabbit_hole: 0
   raven: 0
   realname: 0
   redirect: 0
@@ -194,6 +195,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  rh_taxonomy: 0
   role_delegation: 0
   route_condition: 0
   scheduler: 0
