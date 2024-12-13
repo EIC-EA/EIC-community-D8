@@ -15,6 +15,7 @@ dependencies:
     - field.field.group.organisation.field_offers
     - field.field.group.organisation.field_organisation_employees
     - field.field.group.organisation.field_organisation_link
+    - field.field.group.organisation.field_organisation_pic
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_smed_id
@@ -308,6 +309,13 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
+    third_party_settings: {  }
+  field_organisation_pic:
+    type: number
+    weight: 29
+    region: content
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   field_organisation_turnover:
     type: string_textfield

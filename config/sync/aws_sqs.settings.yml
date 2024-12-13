@@ -1,0 +1,8 @@
+_core:
+  default_config_hash: rM9EAPAe3DicdzuOYqkT2vCG7B88GZIyXaNVP3xuc34
+aws_sqs_aws_key: ''
+aws_sqs_aws_secret: ''
+aws_sqs_waittimeseconds: 1
+aws_sqs_claimtimeout: 60
+aws_sqs_region: us-east-1
+aws_sqs_version: latest
