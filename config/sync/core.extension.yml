@@ -9,6 +9,7 @@ module:
   allowed_formats: 0
   anchor_link: 0
   antibot: 0
+  aws_sqs: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -93,6 +94,7 @@ module:
   eic_private_content: 0
   eic_private_message: 0
   eic_projects: 0
+  eic_queue: 0
   eic_recommend_content: 0
   eic_search: 0
   eic_seo: 0
