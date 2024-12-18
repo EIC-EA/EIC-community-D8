@@ -255,6 +255,20 @@ field_settings:
         - profile
         - taxonomy
         - user
+  author_topic_interest_name:
+    label: 'Referenced node » Content » Authored by » User » Member profiles » Profile » Topics of Interest » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:uid:entity:member_profiles:entity:field_vocab_topic_interest:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.profile.field_vocab_topic_interest
+      module:
+        - node
+        - profile
+        - taxonomy
+        - user
   changed:
     label: Changed
     datasource_id: 'entity:node'
