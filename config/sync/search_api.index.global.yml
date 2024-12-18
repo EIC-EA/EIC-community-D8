@@ -241,6 +241,20 @@ field_settings:
         - media
         - message
         - user
+  author_topic_expertise_name:
+    label: 'Referenced node » Content » Authored by » User » Member profiles » Profile » Topics of Expertise » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:uid:entity:member_profiles:entity:field_vocab_topic_expertise:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.profile.field_vocab_topic_expertise
+      module:
+        - node
+        - profile
+        - taxonomy
+        - user
   changed:
     label: Changed
     datasource_id: 'entity:node'
