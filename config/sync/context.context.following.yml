@@ -45,6 +45,7 @@ reactions:
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           ss_content_language_label: ss_content_language_label
           sm_author_topic_expertise_name: sm_author_topic_expertise_name
+          sm_author_topic_interest_name: sm_author_topic_interest_name
         sort_options: {  }
         enable_search: 1
         prefilter_group: 0
