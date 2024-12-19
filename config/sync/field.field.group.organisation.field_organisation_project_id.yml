@@ -1,15 +1,15 @@
-uuid: 0dddb6ec-18d3-4c02-a9f6-8c1859c1fc43
+uuid: 60803970-acc3-42ab-a9ea-512bcd4361d8
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.group.field_organisation_pic
+    - field.storage.group.field_organisation_project_id
     - group.type.organisation
-id: group.organisation.field_organisation_pic
-field_name: field_organisation_pic
+id: group.organisation.field_organisation_project_id
+field_name: field_organisation_project_id
 entity_type: group
 bundle: organisation
-label: 'Organisation Pic'
+label: 'Organisation Project Id'
 description: ''
 required: false
 translatable: false
