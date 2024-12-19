@@ -21,7 +21,11 @@ use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Session\AccountSwitcherInterface;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+
 use Symfony\Component\HttpFoundation\Session\Session;
+
+use Drupal\Core\Queue\QueueInterface;
 
 /**
  * @QueueWorker(
@@ -83,7 +87,8 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
         ResourcePluginManager $resourcePluginManager,
         AccountSwitcherInterface $accountSwitcher,
         Session $session,
-        ConfigFactoryInterface $config
+        ConfigFactoryInterface $config,
+        QueueInterface $project_id_queue
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->logger = $logger;
@@ -91,7 +96,9 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     $this->httpKernel = $httpKernel;
     $this->resourcePluginManager = $resourcePluginManager;   
     $this->accountSwitcher = $accountSwitcher;
+    $this->session = $session;
     $this->config = $config;
+    $this->project_id_queue = $project_id_queue;
   }
 
   /**
@@ -108,7 +115,8 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
       $container->get('plugin.manager.rest'),
       $container->get('account_switcher'),
       $container->get('session'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('queue')->get('extraction_request_project_id')
     );
   }
 
@@ -131,9 +139,9 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
 
     // Force session start if we don't already have a session.
     if (!$this->session->isStarted()) {
-      $session->migrate();
+      $this->session->migrate();
     }
-    $current_request->setSession($session);
+    $current_request->setSession($this->session);
 
     // Because of 
     // https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Routing%21ContentTypeHeaderMatcher.php/8.9.x
@@ -142,7 +150,7 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     $current_request->setFormat('hal_json', array('application/hal+json'));
 
     // Authenticate
-    $api_key = $this->configFactory->get('eic_webservices.settings')->get('api_key');
+    $api_key = $this->config->get('eic_webservices.settings')->get('api_key');
     $current_request->headers->set('X-EIC-Auth-Token', $api_key);
         
     // Get the parent resource endpoint URI.
@@ -150,7 +158,23 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     $uri = $current_request->getBasePath();
     $uri .= str_replace('{group}', $data['detail']['Id'][0], $parent_resource['uri_paths']['canonical']);
 
-    $data = json_encode(array("_links" => array("type" => array("href" => "http://default/rest/type/group/organisation")), "field_organisation_pic" => array(array("value" => $data['detail']["EnterpriseId"][0]))));
+    $project_ids = [];
+    if (is_array($data['detail']["Projects"][0])) {  
+      foreach ($data['detail']["Projects"][0]["ProjectId"] as $project_id) {
+          $project_ids[] = array("value" => $project_id);
+          // Enqueue project Id to get data from CORDIS
+          $extraction_queue_item = new \stdClass();
+          $extraction_queue_item->project_id = $project_id;
+          $this->project_id_queue->createItem($extraction_queue_item);      
+      }
+    }
+
+    $data = json_encode(array("_links" => array("type" => array(
+      "href" => $current_request->getSchemeAndHttpHost()."/rest/type/group/organisation")), 
+      "field_organisation_pic" => array(array("value" => $data['detail']["EnterpriseId"][0])),
+      "field_organisation_project_id" => $project_ids,
+      )
+    );
 
     $sub_request = new SubRequestController($this->httpKernel, $this->requestStack);
 
