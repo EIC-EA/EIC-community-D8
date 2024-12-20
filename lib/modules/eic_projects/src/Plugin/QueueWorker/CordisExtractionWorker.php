@@ -82,8 +82,7 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
                   // still waiting for the extraction to be completed.
                   throw new DelayedRequeueException(20, 'Waiting for CORDIS API to finish extraction');
                 case 'Finished':
-                  $url = 'https://cordis.europa.eu' . $status['destinationFileUri'];
-                  $extr_file = system_retrieve_file($url, destination: 'private://cordis-xml/', managed: TRUE);
+                  $extr_file = system_retrieve_file($status['destinationFileUri'], destination: 'private://cordis-xml/', managed: TRUE);
                   if ($extr_file instanceof FileInterface) {
                     // Download successful.
                     $extraction_entity
