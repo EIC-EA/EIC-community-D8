@@ -58,7 +58,7 @@ class ProjectSourceType extends SourceType {
       self::PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID => $this->t('Coordinating country', options: ['context' => 'eic_search']),
       'ss_group_project_status' => $this->t('Project status', [], ['context' => 'eic_search']),
       'ss_group_project_field_total_cost' => $this->t('Budget Range', [], ['context' => 'eic_search']),
-      'ss_project_start_year' => $this->t('Start year', [], ['context' => 'eic_search']),
+      'sm_project_year' => $this->t('Year', [], ['context' => 'eic_search']),
     ];
   }
 

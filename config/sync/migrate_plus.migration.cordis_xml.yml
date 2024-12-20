@@ -1,6 +1,14 @@
+uuid: 47930764-3b06-46ec-8381-db65620d9f0d
+langcode: en
+status: true
+dependencies: {  }
 id: cordis_xml
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
 migration_group: cordis
-label: XML feed of CORDIS projects
+label: 'XML feed of CORDIS projects'
 source:
   plugin: projects_cordis
   ids:
@@ -11,7 +19,7 @@ process:
     plugin: default_value
     default_value: project
   field_body/value: objective
-  field_body/format: 'basic_html'
+  field_body/format: basic_html
   label: title
   field_project_acronym: acronym
   field_project_status: status
@@ -20,7 +28,7 @@ process:
   field_project_ecmax_contributio: ecMaxContribution
   field_project_total_cost: totalCost
   field_project_objective/value: objective
-  field_project_objective/format: 'basic_html'
+  field_project_objective/format: basic_html
   field_project_date/value: startDate
   field_project_date/end_value: endDate
   field_project_duration: duration
@@ -29,7 +37,7 @@ process:
     -
       plugin: explode
       source: euroscivocCode
-      delimiter: ,
+      delimiter: ','
     -
       plugin: entity_lookup
       value_key: field_euroscivoc_code
@@ -41,11 +49,10 @@ process:
     source: fundingProgramme
     values:
       label: fundingProgramme
-
-  status: 'published'
+  status: published
   moderation_state:
     plugin: default_value
-    default_value: 'published'
+    default_value: published
 destination:
   plugin: 'entity:group'
-
+migration_dependencies: null
