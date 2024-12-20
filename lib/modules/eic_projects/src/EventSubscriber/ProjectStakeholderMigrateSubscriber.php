@@ -54,7 +54,7 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
         $organisation = \Drupal::entityTypeManager()->getStorage('group')
           ->loadByProperties([
             'type' => 'organisation',
-            'label' => $coordinator['name']
+            'field_organisation_pic' => $coordinator['pic'],
           ]);
         if (!empty($organisation)) {
           $organisation_id = array_keys($organisation)[0];
@@ -93,7 +93,7 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
         $organisation = \Drupal::entityTypeManager()->getStorage('group')
           ->loadByProperties([
             'type' => 'organisation',
-            'label' => $participant['name']
+            'field_organisation_pic' => $participant['pic'],
           ]);
         if (!empty($organisation)) {
           $organisation_id = array_keys($organisation)[0];
