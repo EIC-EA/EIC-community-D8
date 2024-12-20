@@ -83,8 +83,8 @@ class StakeholderManager {
   /**
    * Returns the list of stakeholder group_content entities.
    *
-   * @param int $stakeholder_id
-   *   The stakeholder id for which we're looking.
+   * @param array $stakeholder_ids
+   *   The stakeholder ids for which we're looking.
    * @param \Drupal\group\Entity\GroupInterface|null $target_group
    *   The group to filter on. If null, stakeholder entities will be returned for all
    *   groups.
@@ -95,9 +95,9 @@ class StakeholderManager {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getStakeholderGroupContentEntities(int $stakeholder_id, GroupInterface $target_group = NULL): array {
+  public function getStakeholderGroupContentEntities(array $stakeholder_ids, GroupInterface $target_group = NULL): array {
     $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
-    $query->condition('entity_id', $stakeholder_id);
+    $query->condition('entity_id', $stakeholder_ids, 'IN');
     if ($target_group) {
       $query->condition('type', $this->defineGroupContentType($target_group->bundle()), 'LIKE');
       $query->condition('gid', $target_group->id());
@@ -144,10 +144,9 @@ class StakeholderManager {
     }
 
     $stakeholder_ids = array_keys($ids);
-    $stakeholder_id = reset($stakeholder_ids);
 
     $projects = [];
-    foreach ($this->getStakeholderGroupContentEntities($stakeholder_id) as $group_content) {
+    foreach ($this->getStakeholderGroupContentEntities($stakeholder_ids) as $group_content) {
       $group = $group_content->getGroup();
       $projects[$group->id()] = $group;
     }
