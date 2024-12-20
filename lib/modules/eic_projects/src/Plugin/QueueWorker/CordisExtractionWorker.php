@@ -5,8 +5,8 @@ namespace Drupal\eic_projects\Plugin\QueueWorker;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\Core\Queue\RequeueException;
 use Drupal\eic_projects\CordisExtractionService;
 use Drupal\file\FileInterface;
 use Psr\Log\LoggerInterface;
@@ -80,10 +80,9 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
               switch ($status['progress']) {
                 case 'Ongoing':
                   // still waiting for the extraction to be completed.
-                  throw new DelayedRequeueException(20, 'Waiting for CORDIS API to finish extraction');
+                  throw new RequeueException('Waiting for CORDIS API to finish extraction');
                 case 'Finished':
-                  $url = 'https://cordis.europa.eu' . $status['destinationFileUri'];
-                  $extr_file = system_retrieve_file($url, destination: 'private://cordis-xml/', managed: TRUE);
+                  $extr_file = system_retrieve_file($status['destinationFileUri'], destination: 'private://cordis-xml/', managed: TRUE);
                   if ($extr_file instanceof FileInterface) {
                     // Download successful.
                     $extraction_entity
@@ -124,14 +123,14 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
             // This means there is already an extraction going on, so we cannot
             //  request another one due to CORDIS Data Extraction requirements.
 
-            throw new DelayedRequeueException();
+            throw new RequeueException();
           }
         }
       }
       else {
         // No extraction is pending, proceed with a new one.
         $this->cordisExtractionService->requestExtraction($data);
-        throw new DelayedRequeueException(20, 'Requested new extraction from CORDIS');
+        throw new RequeueException('Requested new extraction from CORDIS');
       }
     }
   }
