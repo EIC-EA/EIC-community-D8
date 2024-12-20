@@ -40,7 +40,7 @@ class ProjectsCordisSource extends SourcePluginBase {
       $filepath = \Drupal::service('file_system')->realpath($zip_file->getFileUri());
       $filename = pathinfo($filepath, PATHINFO_FILENAME);
 
-      $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename/xml", \FilesystemIterator::KEY_AS_PATHNAME);
+      $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename", \FilesystemIterator::KEY_AS_PATHNAME);
       $files = new \RecursiveIteratorIterator($directory_iterator);
       // -1 max_depth is for no-limit
       $files->setMaxDepth(-1);
