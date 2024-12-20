@@ -16,27 +16,27 @@ mode: default
 content:
   field_stakeholder_address:
     type: address_plain
-    label: hidden
+    label: above
     settings: {  }
     third_party_settings: {  }
     weight: 1
     region: content
   field_stakeholder_organisation:
     type: entity_reference_label
-    label: hidden
+    label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   field_stakeholder_related_people:
     type: entity_reference_entity_view
-    label: hidden
+    label: above
     settings:
       view_mode: teaser
       link: false
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
   label:
     type: string
