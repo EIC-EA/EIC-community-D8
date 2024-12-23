@@ -29,7 +29,7 @@ use Drupal\Core\Queue\QueueInterface;
 
 /**
  * @QueueWorker(
- *   id = "CommonInfraDev-MessagesStack-OrgQueue6332299D-vJ8I8epTKl3x.fifo",
+ *   id = "EIC_ORG_QUEUE",
  *   title = @Translation("Organisation queue worker"),
  *   cron = {"time" = 60}
  * )
@@ -170,7 +170,7 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     }
 
     $data = json_encode(array("_links" => array("type" => array(
-      "href" => $current_request->getSchemeAndHttpHost()."/rest/type/group/organisation")), 
+      "href" => $current_request->getSchemeAndHttpHost().$current_request->getBaseUrl()."/rest/type/group/organisation")), 
       "field_organisation_pic" => array(array("value" => $data['detail']["EnterpriseId"][0])),
       "field_organisation_project_id" => $project_ids,
       )
