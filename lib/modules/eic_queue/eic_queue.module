@@ -15,8 +15,11 @@
  *
  */
 function eic_queue_queue_info_alter(&$queues) {
-    $org_queue_name = \Drupal::config('eic_queue')->get('org_queue_name');
-    $queues['EIC_ORG_QUEUE']['id'] = $org_queue_name;
-    $queues[$org_queue_name] = $queues['EIC_ORG_QUEUE'];
-    unset($queues['EIC_ORG_QUEUE']);
+    $org_queue_name = \Drupal::config('eic_queue.settings')->get('org_queue_name');
+    if ($org_queue_name != '')
+    {
+        $queues['EIC_ORG_QUEUE']['id'] = $org_queue_name;
+        $queues[$org_queue_name] = $queues['EIC_ORG_QUEUE'];
+        unset($queues['EIC_ORG_QUEUE']);
+    }
 }
