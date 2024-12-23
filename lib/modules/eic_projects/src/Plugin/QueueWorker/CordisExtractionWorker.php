@@ -2,9 +2,11 @@
 
 namespace Drupal\eic_projects\Plugin\QueueWorker;
 
+use Drupal\Core\Archiver\Zip;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\Core\Queue\RequeueException;
 use Drupal\eic_projects\CordisExtractionService;
@@ -74,15 +76,25 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
         ->execute();
       if (count($extraction_entity_ids) > 0) {
         foreach ($extraction_entity_ids as $extraction_entity_id) {
+          // Only a single item can be in the "pending_extraction" state in CORDIS
+          // so skip any other that are also "pending_extraction".
           if ($extraction_entity_id === $running_entity_id) {
-            $status = $this->cordisExtractionService->getStatus($running_entity_id);
+            $status = $this->cordisExtractionService->getStatus($extraction_entity_id);
             if ($status) {
               switch ($status['progress']) {
                 case 'Ongoing':
                   // still waiting for the extraction to be completed.
-                  throw new RequeueException('Waiting for CORDIS API to finish extraction');
+                  throw new DelayedRequeueException(180);
                 case 'Finished':
-                  $extr_file = system_retrieve_file($status['destinationFileUri'], destination: 'private://cordis-xml/', managed: TRUE);
+                  $cordis_xml_directory_path = 'private://cordis-xml';
+                  // Get the real path for the directory using the public file scheme.
+                  $cordis_xml_real_path = $this->fileSystem->realpath($cordis_xml_directory_path);
+                  if (!file_exists($cordis_xml_real_path)) {
+                    // Use the file system service to create the directory.
+                    $this->fileSystem->prepareDirectory($cordis_xml_directory_path, FileSystemInterface::CREATE_DIRECTORY);
+                  }
+
+                  $extr_file = system_retrieve_file($status['destinationFileUri'], destination: $cordis_xml_directory_path, managed: TRUE);
                   if ($extr_file instanceof FileInterface) {
                     // Download successful.
                     $extraction_entity
@@ -91,12 +103,11 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
                       ->save();
                     $filepath = $this->fileSystem->realpath($extr_file->getFileUri());
                     $filename = pathinfo($filepath, PATHINFO_FILENAME);
-                    $private_dir_path = $this->fileSystem->realpath("private://");
 
-                    $zip = new \Drupal\Core\Archiver\Zip($filepath);
-                    $zip->extract("$private_dir_path/cordis-xml/export/$filename");
-                    $export_zip = new \Drupal\Core\Archiver\Zip("$private_dir_path/cordis-xml/export/$filename/xml.zip");
-                    $export_zip->extract("$private_dir_path/cordis-xml/export/$filename");
+                    $zip = new Zip($filepath);
+                    $zip->extract("$cordis_xml_real_path/export/$filename");
+                    $export_zip = new Zip("$cordis_xml_real_path/export/$filename/xml.zip");
+                    $export_zip->extract("$cordis_xml_real_path/export/$filename");
 
                     // Delete extraction from API.
                     $this->cordisExtractionService->deleteExtraction($extraction_entity_id);
@@ -121,9 +132,8 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
           else {
             // todo if status extracted, re-download the file
             // This means there is already an extraction going on, so we cannot
-            //  request another one due to CORDIS Data Extraction requirements.
-
-            throw new RequeueException();
+            // request another one due to CORDIS Data Extraction requirements.
+            throw new DelayedRequeueException(60);
           }
         }
       }
