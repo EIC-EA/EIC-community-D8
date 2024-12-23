@@ -165,9 +165,6 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
       case 'upgrade_d7_node_complete_article':
         $this->completeRelatedStories($event);
         break;
-      case 'cordis_xml':
-        $this->migrationCordisProject->handlePostMigration();
-        break;
 
     }
   }

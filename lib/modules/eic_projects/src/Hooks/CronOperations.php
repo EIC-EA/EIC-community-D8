@@ -59,7 +59,7 @@ class CronOperations implements ContainerInjectionInterface {
         $extraction_request->save();
 
         // Reset query string to start over.
-        $query = "/project/id==";
+        $query = '';
       }
 
       $queue->deleteItem($item);
