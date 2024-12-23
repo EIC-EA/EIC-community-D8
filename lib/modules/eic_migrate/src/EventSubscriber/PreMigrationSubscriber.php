@@ -35,23 +35,7 @@ class PreMigrationSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[MigrateEvents::PRE_IMPORT][] = ['onMigratePreImport'];
-    return $events;
-  }
-
-  /**
-   * Run tasks on pre-migration event.
-   *
-   * @param \Drupal\migrate\Event\MigrateImportEvent $event
-   *   The import event object.
-   */
-  public function onMigratePreImport(MigrateImportEvent $event) {
-    switch ($event->getMigration()->getBaseId()) {
-      case 'cordis_xml':
-        $this->migrationCordisProject->handlePreMigration();
-        break;
-
-    }
+    return [];
   }
 
 }

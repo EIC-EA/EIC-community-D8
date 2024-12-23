@@ -25,7 +25,7 @@ class MigrationCordisProject {
 
     /** @var \Drupal\eic_projects\Entity\ExtractionRequest[] $requests */
     $requests = $this->entityTypeManager->getStorage('extraction_request')
-      ->loadByProperties(['extraction_status' => 'migrating']);
+      ->loadByProperties(['extraction_status' => 'pending_migration']);
 
     foreach ($requests as $request) {
       /** @var \Drupal\file\FileInterface $zip_file */
@@ -33,8 +33,8 @@ class MigrationCordisProject {
       $filepath = $this->fileSystem->realpath($zip_file->getFileUri());
       $filename = pathinfo($filepath, PATHINFO_FILENAME);
 
-      $request->set('extraction_status', 'completed')->save();
-      $this->fileSystem->deleteRecursive("$private_dir_path/cordis-xml/export/$filename");
+//      $request->set('extraction_status', 'completed')->save();
+//      $this->fileSystem->deleteRecursive("$private_dir_path/cordis-xml/export/$filename");
 
     }
 
