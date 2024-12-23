@@ -27,8 +27,12 @@ class ProcessorProject extends DocumentProcessor {
       return;
     }
 
-    $start_date = new DrupalDateTime($fields['ds_group_field_project_date']);
-    $end_date = new DrupalDateTime($fields['ds_group_field_project_date_end_value']);
+    $start_date = array_key_exists('ds_group_field_project_date', $fields) ?
+      new DrupalDateTime($fields['ds_group_field_project_date']) :
+      NULL;
+    $end_date = array_key_exists('ds_group_field_project_date_end_value', $fields) ?
+      new DrupalDateTime($fields['ds_group_field_project_date_end_value']) :
+      NULL;
 
     $project_funding = NULL;
     /** @var \Drupal\taxonomy\Entity\Term $group_project_funding */
@@ -133,12 +137,20 @@ class ProcessorProject extends DocumentProcessor {
 
     $document->addField('ss_group_project_field_total_cost', $total_cost_solr_field);
 
-    $start_year = explode('-', $fields['ds_group_field_project_date'])[0];
-    $end_year = explode('-', $fields['ds_group_field_project_date_end_value'])[0];
+    $start_year = array_key_exists('ds_group_field_project_date', $fields) ?
+      explode('-', $fields['ds_group_field_project_date'])[0] :
+      NULL;
+
+    $end_year = array_key_exists('ds_group_field_project_date_end_value', $fields) ?
+      explode('-', $fields['ds_group_field_project_date_end_value'])[0] :
+      NULL;
 
     $years = [];
-    for ($i = $start_year; $i <= $end_year; $i++) {
-      $years[] = (int) $i;
+    // Get the all years in between the start and end.
+    if ($start_year && $end_year) {
+      for ($i = $start_year; $i <= $end_year; $i++) {
+        $years[] = (int) $i;
+      }
     }
     $this->addOrUpdateDocumentField(
       $document,
