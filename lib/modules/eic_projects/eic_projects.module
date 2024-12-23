@@ -7,7 +7,15 @@
 
 use Drupal\Core\Render\Element;
 use Drupal\eic_projects\Entity\ExtractionRequest;
+use Drupal\eic_projects\Hooks\CronOperations;
 use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_cron().
+ */
+function eic_projects_cron() {
+  \Drupal::classResolver(CronOperations::class)->cron();
+}
 
 /**
  * Implements hook_entity_insert().
