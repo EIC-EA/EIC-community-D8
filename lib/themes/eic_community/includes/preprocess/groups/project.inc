@@ -79,8 +79,9 @@ function _eic_community_render_project_teaser(&$variables, GroupInterface $group
   }
 
 
-  // TODO: Get dates from group object.
-  if ($group->hasField('field_project_date')) {
+  // Get dates of the project is they exist.
+  if ($group->hasField('field_project_date')
+    && !$group->get('field_project_date')->isEmpty()) {
     $teaser['project_date'] = [
       'start_date' => $variables['content']['field_project_date'][0]['start_date'],
       'end_date' => $variables['content']['field_project_date'][0]['end_date'],
