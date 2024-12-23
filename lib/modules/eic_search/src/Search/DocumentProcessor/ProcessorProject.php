@@ -27,12 +27,8 @@ class ProcessorProject extends DocumentProcessor {
       return;
     }
 
-    $start_date = array_key_exists('ds_group_field_project_date', $fields) ?
-      new DrupalDateTime($fields['ds_group_field_project_date']) :
-      NULL;
-    $end_date = array_key_exists('ds_group_field_project_date_end_value', $fields) ?
-      new DrupalDateTime($fields['ds_group_field_project_date_end_value']) :
-      NULL;
+    $start_date = new DrupalDateTime($fields['ds_group_field_project_date']);
+    $end_date = new DrupalDateTime($fields['ds_group_field_project_date_end_value']);
 
     $project_funding = NULL;
     /** @var \Drupal\taxonomy\Entity\Term $group_project_funding */
@@ -77,7 +73,7 @@ class ProcessorProject extends DocumentProcessor {
 
     $stakeholder_partic_entities = $group->getContentEntities('group_stakeholder:participant');
     foreach ($stakeholder_partic_entities as $stakeholder_partic_entity) {
-      $country_code = $stakeholder_partic_entity?->get('field_stakeholder_address')->first()->getValue()['country_code'];
+      $country_code = $stakeholder_partic_entity?->get('field_stakeholder_address')->first()?->getValue()['country_code'];
       if ($country_code) {
         $country_name = (string) \Drupal::service('country_manager')
           ->getList()[$country_code];
@@ -137,12 +133,19 @@ class ProcessorProject extends DocumentProcessor {
 
     $document->addField('ss_group_project_field_total_cost', $total_cost_solr_field);
 
-    // Get the year only.
-    $start_year = array_key_exists('ds_group_field_project_date', $fields) ?
-      explode('-', $fields['ds_group_field_project_date'])[0] :
-      NULL;
+    $start_year = explode('-', $fields['ds_group_field_project_date'])[0];
+    $end_year = explode('-', $fields['ds_group_field_project_date_end_value'])[0];
 
-    $document->addField('ss_project_start_year', $start_year);
+    $years = [];
+    for ($i = $start_year; $i <= $end_year; $i++) {
+      $years[] = (int) $i;
+    }
+    $this->addOrUpdateDocumentField(
+      $document,
+      'sm_project_year',
+      $fields,
+      $years
+    );
 
     $document->addField('ss_project_cordis_url', Projects::EIC_TAXONOMY_CORDIS_BASE_URL . $fields['its_project_grant_agreement_id']);
 
