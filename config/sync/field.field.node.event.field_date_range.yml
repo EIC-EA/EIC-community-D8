@@ -12,7 +12,7 @@ field_name: field_date_range
 entity_type: node
 bundle: event
 label: Date
-description: 'Start and end date of the Event.'
+description: "Start and end date of the Event.\r\nTime is shown in Brussels timezone."
 required: true
 translatable: false
 default_value:

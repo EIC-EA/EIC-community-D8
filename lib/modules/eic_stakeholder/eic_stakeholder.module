@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -16,6 +17,16 @@ function eic_stakeholder_stakeholder_type_insert(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_base_field_info().
+ */
+function eic_stakeholder_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'stakeholder') {
+    return \Drupal::service('rabbit_hole.entity_extender')
+      ->getRabbitHoleFields('stakeholder');
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function eic_stakeholder_theme() {
@@ -23,7 +34,21 @@ function eic_stakeholder_theme() {
     'stakeholder' => [
       'render element' => 'elements',
     ],
+    'stakeholder__view__project_content__project_participating_countries' => [
+      'render element' => 'elements',
+    ],
   ];
+}
+
+/**
+ * Prepares variables for stakeholder templates.
+ *
+ * Default template: stakeholder--view--project-content--project-participating-countries.html.twig.
+ */
+function eic_stakeholder_preprocess_stakeholder__view__project_content__project_participating_countries(array &$variables) {
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
 }
 
 /**
@@ -69,6 +94,19 @@ function template_preprocess_stakeholder(array &$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function eic_stakeholder_theme_suggestions_stakeholder_alter(array &$suggestions, array $variables) {
+  $stakeholder = $variables['elements']['#stakeholder'];
+  if (!empty($stakeholder->view) && $stakeholder->view->storage->id()) {
+    $suggestions[] = 'stakeholder__view__' . $stakeholder->view->storage->id();
+    if (!empty($stakeholder->view->current_display)) {
+      $suggestions[] = 'stakeholder__view__' . $stakeholder->view->storage->id() . '__' . $stakeholder->view->current_display;
+    }
+  }
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK().
  */
 function eic_stakeholder_theme_suggestions_stakeholder(array $variables) {
@@ -76,14 +114,53 @@ function eic_stakeholder_theme_suggestions_stakeholder(array $variables) {
   $stakeholder = $variables['elements']['#stakeholder'];
   $stakeholder_view_mode = $variables['elements']['#view_mode'];
 
-  if (isset($stakeholder->view)) {
-    $stakeholder_view_display_id = $stakeholder->view->current_display;
-    $suggestions[] = 'stakeholder__' . $stakeholder_view_display_id;
-  }
-
   $suggestions[] = 'stakeholder__' . $stakeholder->bundle();
   $suggestions[] = 'stakeholder__' . $stakeholder->id();
   $suggestions[] = 'stakeholder__' . $stakeholder_view_mode;
 
   return $suggestions;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_stakeholder_stakeholder_update(\Drupal\Core\Entity\EntityInterface $entity) {
+  $entity_orig = $entity->original;
+  /** @var \Drupal\eic_stakeholder\Entity\Stakeholder $entity */
+
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+
+  $project_id = $entity->get('project_id')->value;
+  $project = \Drupal::entityTypeManager()->getStorage('group')
+    ->loadByProperties([
+      'type' => 'project',
+      'field_project_grant_agreement_id' => $project_id
+    ]);
+  $project = reset($project);
+  /** @var \Drupal\group\Entity\GroupInterface $project */
+
+
+  $people_new = array_map(function($user) {
+    return $user['target_id'];
+  }, $entity->get('field_stakeholder_related_people')->getValue());
+
+  $people_orig = array_map(function($user) {
+    return $user['target_id'];
+  }, $entity_orig->get('field_stakeholder_related_people')->getValue());
+
+  $people_add = array_diff($people_new, $people_orig);
+  $people_remove = array_diff($people_orig, $people_new);
+
+  foreach ($people_add as $person_add) {
+    $user = $user_storage->load($person_add);
+    $project->addMember($user);
+  }
+
+  foreach ($people_remove as $person_remove) {
+    $user = $user_storage->load($person_remove);
+    $project->removeMember($user);
+  }
+
+  $project->save();
+
 }

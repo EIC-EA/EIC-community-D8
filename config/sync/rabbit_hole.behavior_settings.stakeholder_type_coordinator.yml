@@ -1,0 +1,14 @@
+uuid: f968645b-95a4-4b26-a3cb-b2e8e1c45041
+langcode: en
+status: true
+dependencies:
+  config:
+    - eic_stakeholder.stakeholder_type.coordinator
+id: stakeholder_type_coordinator
+entity_type_id: stakeholder_type
+entity_id: coordinator
+action: access_denied
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

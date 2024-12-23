@@ -24,6 +24,7 @@ process:
   field_project_date/value: startDate
   field_project_date/end_value: endDate
   field_project_duration: duration
+  field_project_website/uri: website
   field_project_fields_of_science:
     -
       plugin: explode
