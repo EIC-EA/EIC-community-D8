@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_organisations\Constants\Organisations;
-use Drupal\eic_projects\PostMigrationCordisProject;
+use Drupal\eic_projects\MigrationCordisProject;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroupSaver;
 use Drupal\group_flex\Plugin\GroupVisibilityInterface;
@@ -107,9 +107,9 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
 
   /**
    *
-   * @var \Drupal\eic_projects\PostMigrationCordisProject
+   * @var \Drupal\eic_projects\MigrationCordisProject
    */
-  protected $postMigrationCordis;
+  protected $migrationCordisProject;
 
   /**
    * Constructs a new MessageCreatorBase object.
@@ -128,7 +128,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     EntityTypeManagerInterface $entity_type_manager,
     GroupFlexGroupSaver $group_flex_group_saver,
     GroupFeatureHelper $group_feature_helper,
-    PostMigrationCordisProject $postMigrationCordisProject,
+    MigrationCordisProject $migration_cordis_project,
   ) {
     $connection = Database::getConnection('default', 'migrate');
 
@@ -137,7 +137,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     $this->entityTypeManager = $entity_type_manager;
     $this->groupFlexGroupSaver = $group_flex_group_saver;
     $this->groupFeatureHelper = $group_feature_helper;
-    $this->postMigrationCordis = $postMigrationCordisProject;
+    $this->migrationCordisProject = $migration_cordis_project;
   }
 
   /**
@@ -166,7 +166,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         $this->completeRelatedStories($event);
         break;
       case 'cordis_xml':
-        $this->postMigrationCordis->handlePostMigration();
+        $this->migrationCordisProject->handlePostMigration();
         break;
 
     }

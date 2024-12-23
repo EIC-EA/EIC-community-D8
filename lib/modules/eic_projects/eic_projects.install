@@ -55,3 +55,11 @@ function eic_projects_update_9000(&$sandbox) {
 
 
 }
+
+/**
+ * Rebuild the container to get the new service and class name for eic_projects.project_migration
+ */
+function eic_projects_update_9001(&$sandbox) {
+  // Rebuild the Drupal container during the update.
+  \Drupal::service('kernel')->rebuildContainer();
+}
