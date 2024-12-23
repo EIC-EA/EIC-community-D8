@@ -33,6 +33,7 @@ class ProjectsCordisSource extends SourcePluginBase {
 
     $private_dir_path = \Drupal::service('file_system')->realpath("private://");
     $records = [];
+    $runningExtractions = [];
 
     foreach ($requests as $request) {
       /** @var \Drupal\file\FileInterface $zip_file */
@@ -72,9 +73,9 @@ class ProjectsCordisSource extends SourcePluginBase {
           'website' => $this->getXmlValue($xpath, "/project/relations/associations/result/relations/associations/webLink[@type='relatedWebsite']/physUrl")
         ];
       }
-//      $request->set('extraction_status', 'migrating')->save();
+      $runningExtractions[] = $request->id();
     }
-
+    \Drupal::state()->set('eic_projects.cordis_running_extractions', $runningExtractions);
     return new \ArrayIterator($records);
   }
   private function getOrganisation(\DOMXPath $xpath, string $type) {
