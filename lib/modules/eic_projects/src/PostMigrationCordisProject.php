@@ -19,7 +19,7 @@ class PostMigrationCordisProject {
     /** @var \Drupal\eic_projects\Entity\ExtractionRequest[] $requests */
     $requests = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')
-      ->loadByProperties(['extraction_status' => 'migrating']);
+      ->loadByProperties(['extraction_status' => 'pending_migration']);
 
     foreach ($requests as $request) {
       /** @var \Drupal\file\FileInterface $zip_file */

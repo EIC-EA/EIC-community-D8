@@ -5,7 +5,7 @@ namespace Drupal\eic_projects;
 use Drupal\Core\State\StateInterface;
 use Drupal\eic_projects\Entity\ExtractionRequest;
 use GuzzleHttp\Client;
-
+use GuzzleHttp\Exception\ClientException;
 
 class CordisExtractionService {
 
@@ -32,7 +32,7 @@ class CordisExtractionService {
     $this->deleteUrl = '/api/dataextractions/deleteExtraction';
   }
 
-  public function requestExtraction($request_entity_id): void {
+  public function requestExtraction($request_entity_id) {
     $count_entities = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')->getQuery()
       ->condition('extraction_status', 'pending_extraction')
@@ -49,18 +49,28 @@ class CordisExtractionService {
         ],
       ];
 
-      $result = $this->httpClient->get($this->baseDomain . $this->requestUrl, $extraction_options);
-      $body = json_decode($result->getBody()
-        ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
-      if ($body['status'] === "true") {
-        $task_id = $body['payload']['taskID'];
-        $request_entity
-          ->set('task_id', $task_id)
-          ->set('extraction_status', 'pending_extraction')
-          ->save();
+      try {
+        $result = $this->httpClient->get($this->baseDomain . $this->requestUrl, $extraction_options);
+        $body = json_decode($result->getBody()
+          ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
+
+        if ($body['status'] === "true") {
+          $task_id = $body['payload']['taskID'];
+          $request_entity
+            ->set('task_id', $task_id)
+            ->set('extraction_status', 'pending_extraction')
+            ->save();
+        }
+        elseif ($body['status'] === FALSE) {
+          throw new \Exception($body['payload']['error']);
+        }
+      }
+      catch (ClientException $e) {
+        $response = $e->getResponse();
+        $responseBodyAsString = $response->getBody()->getContents();
+        throw new \Exception($responseBodyAsString);
       }
     }
-
   }
 
   public function getStatus($request_entity_id) {
@@ -74,11 +84,16 @@ class CordisExtractionService {
           'key' => $this->apiKey,
         ],
       ];
-      $result = $this->httpClient->get($this->baseDomain . $this->statusUrl, $request_options);
-      $body = json_decode($result->getBody()
-        ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
-      if ($body['status']) {
-        return $body['payload'];
+      try {
+        $result = $this->httpClient->get($this->baseDomain . $this->statusUrl, $request_options);
+        $body = json_decode($result->getBody()
+          ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
+        if ($body['status']) {
+          return $body['payload'];
+        }
+      }
+      catch (ClientException $e) {
+        return FALSE;
       }
     }
     return FALSE;
@@ -94,8 +109,12 @@ class CordisExtractionService {
         'taskId' => $task_id,
       ],
     ];
-
-    $this->httpClient->delete($this->baseDomain . $this->deleteUrl, $extraction_options);
+    try {
+      $this->httpClient->delete($this->baseDomain . $this->deleteUrl, $extraction_options);
+    }
+    catch (ClientException $e) {
+      return FALSE;
+    }
   }
 
 }
