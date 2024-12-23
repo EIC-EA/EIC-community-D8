@@ -11,6 +11,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\FlagType;
@@ -304,11 +305,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
-    // Adds stakeholder URL to the project group operation links.
-    $group_operation_links['stakeholder-collection'] = [
-      'title' => $this->t('Manage stakeholders'),
-      'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $group->id()]),
-    ];
+    if (Settings::get('cordis_project_status', FALSE)) {
+      // Adds stakeholder URL to the project group operation links.
+      $group_operation_links['stakeholder-collection'] = [
+        'title' => $this->t('Manage stakeholders'),
+        'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $group->id()]),
+      ];
+    }
 
     // Adds pending membership requests URL to the group operation links.
     $group_operation_links['edit-membership-requests'] = [

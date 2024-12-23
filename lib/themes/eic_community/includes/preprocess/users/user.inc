@@ -7,6 +7,7 @@
 
 use CommerceGuys\Addressing\Country\CountryRepository;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_flags\FlagType;
@@ -209,10 +210,12 @@ function eic_community_preprocess_user(array &$variables) {
         'content' => _get_render_block_search_overview(MyOrganisationsSourceType::class),
       ];
 
-      $user_item['flagged_projects'] = [
-        'title' => $current_user->id() === $user->id() ? t('My projects') : t('Projects'),
-        'content' => _get_render_block_search_overview(MyProjectsSourceType::class),
-      ];
+      if (Settings::get('cordis_project_status', FALSE)) {
+        $user_item['flagged_projects'] = [
+          'title' => $current_user->id() === $user->id() ? t('My projects') : t('Projects'),
+          'content' => _get_render_block_search_overview(MyProjectsSourceType::class),
+        ];
+      }
 
       $variables['user_item'] = $user_item;
       break;

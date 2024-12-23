@@ -1,6 +1,6 @@
 uuid: b499948f-cacd-4cb2-843d-a65bddbf82ff
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.stakeholder.teaser
@@ -24,7 +24,7 @@ content:
     region: content
   field_stakeholder_organisation:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }

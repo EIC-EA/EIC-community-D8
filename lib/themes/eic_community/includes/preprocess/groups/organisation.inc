@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -334,11 +335,13 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   $participating_project_group = $stakeholder_manager->getOrganisationParticipatedProjects($group);
   $participating_project_group_ids = implode('+', array_keys($participating_project_group));
 
-  $variables['projects'] = _eic_community_get_rendered_view(
-    'organisation_projects',
-    'projects_content',
-    [$participating_project_group_ids]
-  );
+  if (Settings::get('cordis_project_status', FALSE)) {
+    $variables['projects'] = _eic_community_get_rendered_view(
+      'organisation_projects',
+      'projects_content',
+      [$participating_project_group_ids]
+    );
+  }
 
   $variables['details'] = [
     'title' => t('Organisation details', [], ['context' => 'eic_community']),

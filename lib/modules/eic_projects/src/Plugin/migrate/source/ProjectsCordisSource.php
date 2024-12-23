@@ -40,7 +40,7 @@ class ProjectsCordisSource extends SourcePluginBase {
       $filepath = \Drupal::service('file_system')->realpath($zip_file->getFileUri());
       $filename = pathinfo($filepath, PATHINFO_FILENAME);
 
-      $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename/xml", \FilesystemIterator::KEY_AS_PATHNAME);
+      $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename", \FilesystemIterator::KEY_AS_PATHNAME);
       $files = new \RecursiveIteratorIterator($directory_iterator);
       // -1 max_depth is for no-limit
       $files->setMaxDepth(-1);
@@ -69,6 +69,7 @@ class ProjectsCordisSource extends SourcePluginBase {
           'fundingProgramme' => $this->getFundingProgramme($xpath),
           'stakeholder_coordinators' => $this->getOrganisation($xpath, 'coordinator'),
           'stakeholder_participants' => $this->getOrganisation($xpath, 'participant'),
+          'website' => $this->getXmlValue($xpath, "/project/relations/associations/result/relations/associations/webLink[@type='relatedWebsite']/physUrl")
         ];
       }
 //      $request->set('extraction_status', 'migrating')->save();
@@ -86,7 +87,13 @@ class ProjectsCordisSource extends SourcePluginBase {
         $name = $value->getElementsByTagName('legalName')->item(0)->nodeValue;
         $country_code = $xpath->query("relations/regions/region/euCode", $value)->item(0)->nodeValue;
         $country_name = $xpath->query("relations/regions/region[@type='relatedRegion']/name", $value)->item(0)->nodeValue;
-        $pic = $value->getElementsByTagName('id')->item(0)->nodeValue;
+        $pic = $value->getElementsByTagName('id')->item(0);
+        if (!is_null($pic)) {
+          $pic = $pic->nodeValue;
+        }
+        else {
+          $pic = 0;
+        }
         $organisations[] = [
           'name' => $name,
           'country_code' => $country_code,
@@ -165,6 +172,7 @@ class ProjectsCordisSource extends SourcePluginBase {
       'fundingProgramme' => $this->t('Project funding programme'),
       'stakeholder_coordinators' => $this->t('Project Organisation coordinators'),
       'stakeholder_participants' => $this->t('Project Organisation participants'),
+      'website' => $this->t('Project website')
     ];
   }
 

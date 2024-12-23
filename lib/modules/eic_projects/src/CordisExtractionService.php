@@ -52,7 +52,7 @@ class CordisExtractionService {
       $result = $this->httpClient->get($this->baseDomain . $this->requestUrl, $extraction_options);
       $body = json_decode($result->getBody()
         ->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
-      if ($body['status'] === TRUE) {
+      if ($body['status'] === "true") {
         $task_id = $body['payload']['taskID'];
         $request_entity
           ->set('task_id', $task_id)
