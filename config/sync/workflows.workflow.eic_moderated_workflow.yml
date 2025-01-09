@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.book
     - node.type.news
     - node.type.story
   module:
@@ -80,6 +81,7 @@ type_settings:
       weight: 2
   entity_types:
     node:
+      - book
       - news
       - story
   default_moderation_state: draft
