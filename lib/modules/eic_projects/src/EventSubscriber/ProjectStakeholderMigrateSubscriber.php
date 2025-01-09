@@ -65,7 +65,10 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
       else {
         $entity_coordinator = reset($entity_coordinator);
       }
-      $project_group->addContent($entity_coordinator, 'group_stakeholder:coordinator');
+      // Make sure we don't have the same stakeholder added in the project.
+      if (empty($project_group->getContentByEntityId('group_stakeholder:coordinator', $entity_coordinator->id()))) {
+        $project_group->addContent($entity_coordinator, 'group_stakeholder:coordinator');
+      }
     }
 
     $participants = $row->getSourceProperty('stakeholder_participants');
@@ -104,7 +107,10 @@ class ProjectStakeholderMigrateSubscriber implements EventSubscriberInterface {
       else {
         $entity_participant = reset($entity_participant);
       }
-      $project_group->addContent($entity_participant, 'group_stakeholder:participant');
+      // Make sure we don't have the same stakeholder added in the project.
+      if (empty($project_group->getContentByEntityId('group_stakeholder:participant', $entity_participant->id()))) {
+        $project_group->addContent($entity_participant, 'group_stakeholder:participant');
+      }
     }
 
   }
