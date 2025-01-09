@@ -106,7 +106,7 @@
         "drupal/search_api_spellcheck": "^4.0",
         "drupal/smart_trim": "^2.0",
         "drupal/smtp": "1.0",
-        "drupal/social_link_field": "^1.1@alpha",
+        "drupal/social_link_field": "^2.1",
         "drupal/subpathauto": "^1.1",
         "drupal/twig_field_value": "^2.0",
         "drupal/typed_link": "^2.0",
