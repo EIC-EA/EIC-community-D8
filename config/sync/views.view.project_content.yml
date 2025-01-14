@@ -273,11 +273,7 @@ display:
               organisation-group_node-event: default
               organisation-group_node-gallery: default
               organisation-group_node-news: default
-              project-group_invitation: default
               project-group_membership: default
-              project-group_membership_request: default
-              project-group_node-wiki_page: default
-              project-group_shared_content: default
             'entity:message':
               stream_article_insert_update: default
               stream_comment_insert_update: default
@@ -510,6 +506,7 @@ display:
     display_plugin: block
     position: 1
     display_options:
+      enabled: true
       sorts: {  }
       filters:
         search_api_datasource:
@@ -599,7 +596,99 @@ display:
         operator: AND
         groups:
           1: AND
+      style:
+        type: default
+        options:
+          row_class: ''
+          default_row_class: false
+          uses_fields: false
+      row:
+        type: search_api
+        options:
+          view_modes:
+            'entity:group':
+              event: default
+              group: default
+              organisation: default
+              project: default
+            'entity:group_content':
+              event-group_invitation: default
+              event-group_membership: default
+              event-group_membership_request: default
+              event-group_node-book: default
+              event-group_node-discussion: default
+              event-group_node-document: default
+              event-group_node-gallery: default
+              event-group_node-news: default
+              event-group_node-story: default
+              event-group_node-video: default
+              event-group_node-wiki_page: default
+              event-group_request_archival: default
+              event-group_request_delete: default
+              event-group_shared_content: default
+              group-group_invitation: default
+              group-group_membership: default
+              group-group_membership_request: default
+              group-group_node-book: default
+              group-group_node-discussion: default
+              group-group_node-document: default
+              group-group_node-event: default
+              group-group_node-gallery: default
+              group-group_node-video: default
+              group-group_node-wiki_page: default
+              group-group_request_archival: default
+              group-group_request_block: default
+              group-group_request_delete: default
+              group-group_shared_content: default
+              group_content_type_01d9051e3d29d: teaser
+              group_content_type_4a2cdf9ed8847: default
+              group_content_type_544ffa9c3791b: default
+              group_content_type_7f62828e3a84b: default
+              group_content_type_b47cbb19c399d: default
+              group_content_type_d6e8b1199e53e: default
+              group_content_type_dd4142e7f0cf7: default
+              group_content_type_ddd92dce39526: default
+              group_content_type_fb16873f4db83: teaser
+              organisation-group_invitation: default
+              organisation-group_membership: default
+              organisation-group_node-document: default
+              organisation-group_node-event: default
+              organisation-group_node-gallery: default
+              organisation-group_node-news: default
+              project-group_membership: default
+            'entity:message':
+              stream_article_insert_update: default
+              stream_comment_insert_update: default
+              stream_discussion_insert_update: default
+              stream_document_insert_update: default
+              stream_event_insert_update: default
+              stream_gallery_insert_update: default
+              stream_news_insert_update: default
+              stream_photo_album_insert_update: default
+              stream_photo_insert_update: default
+              stream_share_content: default
+              stream_share_insert_update: default
+              stream_video_insert_update: default
+              stream_wiki_page_insert_update: default
+            'entity:node':
+              book: default
+              discussion: default
+              document: default
+              event: teaser
+              gallery: default
+              news: teaser
+              page: default
+              story: default
+              video: default
+              wiki_page: default
+            'entity:stakeholder':
+              coordinator: teaser
+              participant: teaser
+            'entity:user':
+              user: default
       defaults:
+        style: false
+        row: false
         sorts: false
         filters: false
         filter_groups: false
