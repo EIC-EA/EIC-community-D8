@@ -39,3 +39,19 @@ function eic_taxonomy_update_9002() {
     }
   }
 }
+
+/**
+ * Add field_euroscivoc_code to terms.
+ */
+function eic_taxonomy_update_9003() {
+  foreach (Projects::EIC_TAXONOMY_FIELDS_OF_SCIENCE_TERMS as $uuid => $term_data) {
+    $term_exists = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties(['uuid' => $uuid]);
+    if ($term = array_shift($term_exists)) {
+      $term->set('field_euroscivoc_code', $term_data['field_euroscivoc_code']);
+      $term->save();
+    }
+  }
+}
+
