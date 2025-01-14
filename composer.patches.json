@@ -96,6 +96,9 @@
     "drupal/scheduler_content_moderation_integration": {
       "3285808 - Scheduler breaks ajax requests when content moderation is enabled": "https://www.drupal.org/files/issues/2022-06-15/scheduler-content-moderation-state-values-breaks-node-form-3285808-2.patch"
     },
+    "drupal/social_link_field": {
+      "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
+    },
     "drupal/smtp": {
       "#3316049 - Some custom headers (Reply-To/Sender/Return-Path) are overriden by the module": "https://www.drupal.org/files/issues/2022-10-19/3316049-4-some-custom-headers-are-overriden.patch"
     },
@@ -111,7 +114,7 @@
       "7f697ba - Make OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::findTemplate($name) compatible with Twig\\Loader\\FilesystemLoader::findTemplate($name, $throw = true)": "patches/ecl-twig-loader/7f697ba-make-ecl-loader-findtemplate-function-compatible-with-parent-function.patch"
     },
     "drupal/aws_sqs" : {
-      "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch"
+      "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch" 
     }
   }
 }
