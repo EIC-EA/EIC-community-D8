@@ -4,6 +4,7 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_webservices\Utility\EicWsHelper;
 use Drupal\eic_webservices\Utility\SmedTaxonomyHelper;
@@ -228,6 +229,15 @@ class MembershipResource extends ResourceBase {
             }
           }
           else {
+            if ($role === Event::GROUP_OWNER_ROLE) {
+              foreach ($group->getMembers($role) as $membership) {
+                $webservice_user_account_id = $this->configEicwebservices->get('webservice_user_account');
+                $uid = $membership->getUser()->id();
+                if ($uid === $webservice_user_account_id && $user->id() !== $webservice_user_account_id) {
+                  $membership->removeRole($role);
+                }
+              }
+            }
             $group->addMember($user, ['group_roles' => [$role]]);
             $group->save();
 
