@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8fdf2e0695b7270b1be3fdd2a7c412d",
+    "content-hash": "c345ba6ab9a3246e52df934f3e45bba5",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -8578,29 +8578,29 @@
         },
         {
             "name": "drupal/social_link_field",
-            "version": "1.1.0-alpha1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/social_link_field.git",
-                "reference": "8.x-1.1-alpha1"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/social_link_field-8.x-1.1-alpha1.zip",
-                "reference": "8.x-1.1-alpha1",
-                "shasum": "9c9d6d1225f8cdcce4212ad4746dbec395b7ff03"
+                "url": "https://ftp.drupal.org/files/projects/social_link_field-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "65348f339564c47057e16e312ee7c296cfbf0fbe"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.1-alpha1",
-                    "datestamp": "1590232338",
+                    "version": "2.1.0",
+                    "datestamp": "1729288139",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -8614,11 +8614,11 @@
                     "homepage": "https://www.drupal.org/u/romixua"
                 },
                 {
-                    "name": "NickDickinsonWilde",
+                    "name": "nickdickinsonwilde",
                     "homepage": "https://www.drupal.org/user/3094661"
                 },
                 {
-                    "name": "Romixua",
+                    "name": "romixua",
                     "homepage": "https://www.drupal.org/user/3516201"
                 },
                 {
@@ -11691,33 +11691,33 @@
             },
             "type": "drupal-module",
             "extra": {
-                "composer-exit-on-patch-failure": true,
-                "enable-patching": true,
-                "installer-paths": {
-                    "build/core": [
-                        "type:drupal-core"
-                    ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
-                    "build/modules/contrib/{$name}": [
-                        "type:drupal-module"
-                    ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
-                    ]
-                },
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "./build"
-                    }
-                },
                 "_readme": [
                     "Explicit requirement of drupal/token module due to PHP8 compatbility.",
                     "Explicit requirement of behat module due to PHP8 compatibility.",
                     "Explicit lower version requirement of drupal/ctools due to Drupal core 9.3 compatibility.",
                     "Explicit minimum version requirement of fabpot/goutte due to Drupal 9.3 compatbility."
-                ]
+                ],
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                },
+                "enable-patching": true,
+                "installer-paths": {
+                    "build/core": [
+                        "type:drupal-core"
+                    ],
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
+                    ],
+                    "build/modules/contrib/{$name}": [
+                        "type:drupal-module"
+                    ],
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
+                    ]
+                },
+                "composer-exit-on-patch-failure": true
             },
             "autoload": {
                 "psr-4": {
@@ -20875,7 +20875,6 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "drupal/realname": 10,
-        "drupal/social_link_field": 15,
         "drupal/workflow_buttons": 10,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15

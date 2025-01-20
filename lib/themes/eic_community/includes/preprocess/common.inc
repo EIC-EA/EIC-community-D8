@@ -81,16 +81,7 @@ function _eic_community_can_use_social_share(EntityInterface $entity) {
 function _eic_community_get_social_share_block() {
   $social_share_json = [
     'service' => 'share',
-    'popup' => TRUE,
-    'selection' => TRUE,
-    'to' => [
-      'more',
-      'twitter',
-      'facebook',
-      'linkedin',
-      'e-mail',
-    ],
-    'stats' => TRUE,
+    'version' => '2.0',
   ];
 
   return [

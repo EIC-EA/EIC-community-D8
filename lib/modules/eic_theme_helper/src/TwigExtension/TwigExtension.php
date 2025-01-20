@@ -309,7 +309,7 @@ class TwigExtension extends \Twig_Extension {
         'name' => 'branded--skype',
       ],
       'twitter' => [
-        'name' => 'branded--twitter',
+        'name' => 'eic-branded--x',
       ],
       'youtube' => [
         'name' => 'branded--youtube',
