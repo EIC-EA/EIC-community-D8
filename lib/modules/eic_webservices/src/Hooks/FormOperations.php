@@ -37,6 +37,11 @@ class FormOperations implements ContainerInjectionInterface {
     'field_date_range',
   ];
 
+  /**
+   * The list of fields to disable if organisation has been created through SMED.
+   *
+   * @var string[]
+   */
   protected const ORGANISATION_SMED_FIELDS = [
     'label',
     'field_social_links'
