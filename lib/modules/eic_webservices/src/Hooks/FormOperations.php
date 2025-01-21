@@ -132,10 +132,12 @@ class FormOperations implements ContainerInjectionInterface {
     $entity = $form_state->getFormObject()->getEntity();
 
     $is_disabled = FALSE;
-    foreach ($this->smedFields[$entity->bundle()] as $field_name) {
-      if (isset($form[$field_name])) {
-        $form[$field_name]['#disabled'] = TRUE;
-        $is_disabled = TRUE;
+    if (isset($this->smedFields[$entity->bundle()])) {
+      foreach ($this->smedFields[$entity->bundle()] as $field_name) {
+        if (isset($form[$field_name])) {
+          $form[$field_name]['#disabled'] = TRUE;
+          $is_disabled = TRUE;
+        }
       }
     }
 
