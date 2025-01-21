@@ -130,7 +130,7 @@ eic_groups.user.my_invitations:
   requirements:
     _user_is_logged_in: 'TRUE'
 
-eic_groups.organisatio_edit_description:
+eic_groups.organisation_edit_description:
   path: '/group/{group}/edit-description'
   defaults:
     _title_callback: '\Drupal\eic_groups\Form\OrganisationEditDescriptionForm::getFormTitle'
