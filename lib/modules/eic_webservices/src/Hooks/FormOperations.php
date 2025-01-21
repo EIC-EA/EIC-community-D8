@@ -44,8 +44,6 @@ class FormOperations implements ContainerInjectionInterface {
     ],
   ];
 
-
-
   /**
    * The current user.
    *
