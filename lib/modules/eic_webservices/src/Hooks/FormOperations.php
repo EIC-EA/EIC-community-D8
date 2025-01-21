@@ -37,6 +37,11 @@ class FormOperations implements ContainerInjectionInterface {
     'field_date_range',
   ];
 
+  protected const ORGANISATION_SMED_FIELDS = [
+    'label',
+    'field_social_links'
+  ];
+
   /**
    * The current user.
    *
@@ -119,11 +124,22 @@ class FormOperations implements ContainerInjectionInterface {
     $entity = $form_state->getFormObject()->getEntity();
 
     $is_disabled = FALSE;
-    foreach ($this::EVENT_SMED_FIELDS as $field_name) {
-      if (isset($form[$field_name])) {
-        $form[$field_name]['#disabled'] = TRUE;
-        $is_disabled = TRUE;
-      }
+    switch ($entity->bundle()) {
+      case 'event':
+        foreach ($this::EVENT_SMED_FIELDS as $field_name) {
+          if (isset($form[$field_name])) {
+            $form[$field_name]['#disabled'] = TRUE;
+            $is_disabled = TRUE;
+          }
+        }
+        break;
+      case 'organisation':
+        foreach ($this::ORGANISATION_SMED_FIELDS as $field_name) {
+          if (isset($form[$field_name])) {
+            $form[$field_name]['#disabled'] = TRUE;
+            $is_disabled = TRUE;
+          }
+        }
     }
 
     // Add a message to inform users why fields are disabled and point them to
