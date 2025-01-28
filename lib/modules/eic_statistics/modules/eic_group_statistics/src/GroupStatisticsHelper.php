@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\eic_comments\Constants\Comments;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_share_content\Service\ShareManager;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
@@ -166,10 +167,12 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function queryGroupLatestContentActivity(GroupInterface $group, array $conditions = []) {
+  protected function queryGroupLatestContentActivity(GroupInterface $group, array $conditions = [], bool $addSharedContent = FALSE) {
     $content_plugins = $this->groupsHelper->getGroupTypeEnabledContentPlugins($group->getGroupType());
     $group_content_storage = $this->entityTypeManager->getStorage('group_content');
-
+    if ($addSharedContent) {
+      $content_plugins[] = 'group-' . ShareManager::GROUP_CONTENT_SHARED_PLUGIN_ID;
+    }
     if (!empty($content_plugins)) {
       // We need to query on group_content entities to get the latest node.
       $query = $group_content_storage->getQuery();
@@ -355,7 +358,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     $conditions = [
       'entity_id.entity:node.status' => NodeInterface::PUBLISHED,
     ];
-    $activities[] = $this->queryGroupLatestContentActivity($group, $conditions);
+    $activities[] = $this->queryGroupLatestContentActivity($group, $conditions, TRUE);
     $activities[] = $this->queryGroupLatestCommentActivity($group);
     $latest_activity = max($activities);
 
