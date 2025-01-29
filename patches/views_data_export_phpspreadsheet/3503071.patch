@@ -1,0 +1,13 @@
+diff --git a/src/Encoder/XlsEncoder.php b/src/Encoder/XlsEncoder.php
+index 3cda503e7dfd3f371e33af6ba8693b5528ce6faa..db716b15527c545955476e19c78b8ddd1689e5af 100644
+--- a/src/Encoder/XlsEncoder.php
++++ b/src/Encoder/XlsEncoder.php
+@@ -75,7 +75,7 @@ class XlsEncoder implements EncoderInterface, DecoderInterface {
+   /**
+    * {@inheritdoc}
+    */
+-  public function encode(mixed $data, string $format, array $context = []): string {
++  public function encode(mixed $data, $format, array $context = []): string {
+     switch (gettype($data)) {
+       case 'array':
+         break;
