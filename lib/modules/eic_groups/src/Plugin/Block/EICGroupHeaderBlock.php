@@ -325,6 +325,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url' => Url::fromRoute('view.eic_group_invitations.page_1', ['group' => $group->id()]),
     ];
 
+    $group_operation_links['edit-organisation-description'] = [
+      'title' => $this->t('Edit description'),
+      'url' => Url::fromRoute('eic_groups.organisation_edit_description', ['group' => $group->id()])
+    ];
+
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
@@ -339,6 +344,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           'edit-membership-requests',
           'edit-invitations',
           'stakeholder-collection',
+          'edit-organisation-description',
         ]
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
