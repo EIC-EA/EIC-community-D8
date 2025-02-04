@@ -41,25 +41,29 @@ class CronOperations implements ContainerInjectionInterface {
 
     $total_items = $queue->numberOfItems();
     $query = '';
-    for ($i = 0; $i <= $total_items; $i++) {
+    for ($i = 0; $i < $total_items; $i++) {
       $item = $queue->claimItem();
-      $project_id = $item->data->project_id;
-      $query .= "'$project_id',";
+      if ($item) {
+        $project_id = $item->data->project_id;
+        if (!empty($project_id)) {
+          $query .= "'$project_id',";
 
-      if (($i != 0) && ($i % 10 === 0)) {
-        $query = rtrim($query, ',');
-        $values = [
-          'label' => $query,
-          'extraction_status' => 'requested',
-          'query' => "/project/id==" . $query,
-          'uid' => 1
-        ];
-        $extraction_request = $this->entityTypeManager
-          ->getStorage('extraction_request')->create($values);
-        $extraction_request->save();
+          if (($i != 0) && ($i % 10 === 0)) {
+            $query = rtrim($query, ',');
+            $values = [
+              'label' => $query,
+              'extraction_status' => 'requested',
+              'query' => "/project/id==" . $query,
+              'uid' => 1
+            ];
+            $extraction_request = $this->entityTypeManager
+              ->getStorage('extraction_request')->create($values);
+            $extraction_request->save();
 
-        // Reset query string to start over.
-        $query = '';
+            // Reset query string to start over.
+            $query = '';
+          }
+        }
       }
 
       $queue->deleteItem($item);
