@@ -10,6 +10,7 @@
         "ext-dom": "*",
         "ext-json": "*",
         "ext-zip": "*",
+        "abouolia/sticky-sidebar": "^3.2",
         "amsul/pickadate_js": "^3.6",
         "aws/aws-sdk-php": "^3.328",
         "ckeditor/colorbutton": "^4.18",

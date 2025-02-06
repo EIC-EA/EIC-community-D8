@@ -4,8 +4,17 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de1e6cae39b420231c1605ff135da77c",
+    "content-hash": "d32e17991f874aa92ec2087568943c0d",
     "packages": [
+        {
+            "name": "abouolia/sticky-sidebar",
+            "version": "3.2.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/abouolia/sticky-sidebar/archive/refs/tags/3.2.0.zip"
+            },
+            "type": "drupal-library"
+        },
         {
             "name": "amsul/pickadate_js",
             "version": "3.6.4",

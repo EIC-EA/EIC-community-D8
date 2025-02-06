@@ -25,6 +25,7 @@ theme:
     dist/scripts/common/overides.js: { minified: true }
   dependencies:
     - core/drupal
+    - eic_community/sticky-sidebar
 
 react-video-stream:
   js:
@@ -122,3 +123,9 @@ react-recommend-content-block:
     dist/react/block/recommendcontent/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
+
+sticky-sidebar:
+  version: 3.2.0
+  js:
+    /libraries/sticky-sidebar/dist/jquery.sticky-sidebar.js: {}
+    /libraries/sticky-sidebar/dist/sticky-sidebar.js: {}
