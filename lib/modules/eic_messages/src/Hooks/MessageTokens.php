@@ -139,7 +139,9 @@ class MessageTokens implements ContainerInjectionInterface {
         continue;
       }
 
-      $replacements[$original] = Markup::create(Xss::filter($entity->get($field)->value));
+      if (!$entity->get($field)->isEmpty()) {
+        $replacements[$original] = Markup::create(Xss::filter($entity->get($field)->value));
+      }
     }
 
     return $replacements;
