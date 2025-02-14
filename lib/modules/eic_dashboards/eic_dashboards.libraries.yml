@@ -1,0 +1,4 @@
+cta_card:
+  css:
+    theme:
+      css/cta-card.css: {}

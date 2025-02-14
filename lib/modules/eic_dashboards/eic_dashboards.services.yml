@@ -1,0 +1,3 @@
+services:
+  eic_dashboards.builder:
+    class: Drupal\eic_dashboards\Services\DashboardsBuilder
