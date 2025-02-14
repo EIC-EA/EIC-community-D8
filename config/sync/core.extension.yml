@@ -64,6 +64,7 @@ module:
   eic_content_gallery: 0
   eic_content_story: 0
   eic_content_wiki_page: 0
+  eic_dashboards: 0
   eic_datepicker: 0
   eic_deploy: 0
   eic_events: 0
