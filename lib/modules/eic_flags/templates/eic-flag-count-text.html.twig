@@ -39,6 +39,10 @@
       } only %}
     {% endif %}
   </span>
-  <span> {{ 'Like'|t }} ({{ flag_count }})</span>
+  {% if flag_anonymous_href_link %}
+    <a href="{{ flag_anonymous_href_link }}" class="use-ajax" data-dialog-options="{&quot;width&quot;:800}" data-dialog-type="modal"> {{ 'Like'|t }} ({{ flag_count }})</a>
+  {% else %}
+    <span> {{ 'Like'|t }} ({{ flag_count }})</span>
+  {% endif %}
 </div>
 {% endspaceless %}
