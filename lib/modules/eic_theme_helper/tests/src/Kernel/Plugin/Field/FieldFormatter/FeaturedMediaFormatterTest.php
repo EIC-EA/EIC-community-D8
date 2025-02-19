@@ -20,7 +20,7 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'field',
     'node',
     'media',
