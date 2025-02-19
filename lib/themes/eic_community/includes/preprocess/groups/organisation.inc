@@ -5,6 +5,7 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\views\Views;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Site\Settings;
@@ -321,7 +322,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   }
   else {
     // Get items from automatic view.
-    $view = \Drupal\views\Views::getView('eic_group_members');
+    $view = Views::getView('eic_group_members');
     $view->setDisplay('block_group_members');
     $view->setArguments([$group->id()]);
     $view->execute();
