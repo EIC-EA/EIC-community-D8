@@ -17,6 +17,11 @@ class PageHeaderBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'block',
     'entity_test',
@@ -27,7 +32,7 @@ class PageHeaderBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Enable oe_theme and set it as default.
