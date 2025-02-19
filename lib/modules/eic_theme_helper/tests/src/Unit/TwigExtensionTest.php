@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\eic_theme_helper\Unit;
 
+use Twig\Environment;
+use Twig\Error\RuntimeError;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Renderer;
@@ -44,14 +46,14 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * The Twig environment containing the extension being tested.
    *
-   * @var \Twig_Environment
+   * @var \Twig\Environment
    */
   protected $twig;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // It is expected that some filters will request the list of languages. In
@@ -79,7 +81,7 @@ class TwigExtensionTest extends UnitTestCase {
     // For convenience, make a version of the Twig environment available that
     // has the tested extension preloaded.
     $loader = new StringLoader();
-    $this->twig = new \Twig_Environment($loader);
+    $this->twig = new Environment($loader);
     $this->twig->addExtension($this->extension);
   }
 
@@ -110,7 +112,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testToLanguageName()
    */
-  public function toLanguageNameProvider(): array {
+  public static function toLanguageNameProvider(): array {
     return [
       ['bg', 'Bulgarian'],
       ['cs', 'Czech'],
@@ -166,7 +168,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testToNativeLanguageName()
    */
-  public function toNativeLanguageNameProvider(): array {
+  public static function toNativeLanguageNameProvider(): array {
     return [
       ['bg', 'български'],
       ['cs', 'čeština'],
@@ -211,7 +213,7 @@ class TwigExtensionTest extends UnitTestCase {
       $this->twig->render("{{ '$invalid_language_code'|to_native_language }}");
       $this->fail('The expected exception was not thrown.');
     }
-    catch (\Twig_Error_Runtime $e) {
+    catch (RuntimeError $e) {
       // Twig wraps any exception that occurs during rendering with its own
       // runtime exception. Rethrow the original exception so we can verify that
       // the correct one is being thrown.
@@ -228,7 +230,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testPassingInvalidLanguageCodesToNativeLanguageName()
    */
-  public function invalidLanguageCodesProvider(): array {
+  public static function invalidLanguageCodesProvider(): array {
     return [
       [NULL],
       [TRUE],
@@ -292,7 +294,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testToEclIcon()
    */
-  public function toEclIconProvider(): array {
+  public static function toEclIconProvider(): array {
     return [
       [
         'right',

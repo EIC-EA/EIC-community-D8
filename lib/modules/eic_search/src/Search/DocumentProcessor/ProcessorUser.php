@@ -230,11 +230,16 @@ class ProcessorUser extends DocumentProcessor {
     $total_content = (int) $query_content->execute()->fetchAssoc()['count'];
 
     $memberships = $this->groupMembershipLoader->loadByUser($user);
-    $group_ids = array_unique(
-      array_map(function (GroupMembership $membership) {
-        return $membership->getGroup()->id();
-      }, $memberships)
-    );
+    if (!empty($memberships)) {
+      $group_ids = array_unique(
+        array_map(function (GroupMembership $membership) {
+          return $membership->getGroup()->id();
+        }, $memberships)
+      );
+    }
+    else {
+      $group_ids = [0];
+    }
 
     $this->addOrUpdateDocumentField(
       $document,

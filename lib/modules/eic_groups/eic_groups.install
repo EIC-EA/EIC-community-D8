@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for the EIC Statistics module.
  */
 
-module_load_include('inc', 'eic_groups', 'eic_groups.install');
+\Drupal::moduleHandler()->loadInclude('eic_groups', 'inc', 'eic_groups.install');
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;

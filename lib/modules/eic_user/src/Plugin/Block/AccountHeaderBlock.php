@@ -3,7 +3,7 @@
 namespace Drupal\eic_user\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Http\RequestStack;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -51,7 +51,7 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
    * @param $plugin_id
    * @param $plugin_definition
    * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
-   * @param \Drupal\Core\Http\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    * @param \Drupal\masquerade\Masquerade $masquerade
    */
   public function __construct(
