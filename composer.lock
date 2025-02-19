@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0012b9b0b292154ada54d44795a4911",
+    "content-hash": "adecbd144c2261a24727c522dc411861",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -2570,109 +2570,6 @@
             }
         },
         {
-            "name": "drupal/cas_mock_server",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/cas_mock_server.git",
-                "reference": "8.x-1.4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/cas_mock_server-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "2f21bc0c878ee1219b598e1dc8348cd514f32aa0"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "require-dev": {
-                "composer/installers": "^1.6",
-                "drupal/cas": "~1.7",
-                "drupal/coder": "~8.2",
-                "drupal/core-composer-scaffold": "^9.0",
-                "drupal/core-recommended": "^9.0",
-                "drupal/drupal-extension": "~4.0",
-                "drush/drush": "~10.4",
-                "mikey179/vfsstream": "^1.6.7",
-                "phpspec/prophecy-phpunit": "^1.0 || ^2.0",
-                "phpunit/phpunit": "*",
-                "symfony/phpunit-bridge": "^5.2",
-                "zaporylie/composer-drupal-optimizations": "^1.1"
-            },
-            "suggest": {
-                "drupal/config_override_warn": "Shows a warning on the CAS configuration form when the mock server is active."
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1651515347",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                },
-                "drush": {
-                    "services": {
-                        "drush.services.yml": "^10"
-                    }
-                },
-                "installer-paths": {
-                    "../cas_mock_server_build/core": [
-                        "type:drupal-core"
-                    ],
-                    "../cas_mock_server_build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
-                    "../cas_mock_server_build/modules/contrib/{$name}": [
-                        "type:drupal-module"
-                    ],
-                    "../cas_mock_server_build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
-                    ]
-                },
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "../cas_mock_server_build/"
-                    },
-                    "file-mapping": {
-                        "[project-root]/.editorconfig": false,
-                        "[project-root]/.gitattributes": false
-                    }
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\cas_mock_server\\": "../cas_mock_server_build/modules/contrib/cas_mock_server/tests/src"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Pieter Frenssen",
-                    "homepage": "https://www.drupal.org/u/pfrenssen",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "pfrenssen",
-                    "homepage": "https://www.drupal.org/user/382067"
-                }
-            ],
-            "description": "A mocked CAS server for testing purposes.",
-            "homepage": "https://www.drupal.org/project/cas_mock_server",
-            "keywords": [
-                "Drupal"
-            ],
-            "support": {
-                "source": "http://cgit.drupalcode.org/cas_mock_server",
-                "issues": "https://www.drupal.org/project/issues/cas_mock_server"
-            }
-        },
-        {
             "name": "drupal/ckeditor",
             "version": "1.0.2",
             "source": {
@@ -4897,28 +4794,31 @@
         },
         {
             "name": "drupal/flag_search_api",
-            "version": "dev-1.x",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/flag_search_api.git",
-                "reference": "3ffb747090f79e32943ebcc6a1b5fa01976e29c2"
+                "reference": "2.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/flag_search_api-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "59cbad24ed6e0d97c279c6999c61094c3c1dc8d0"
             },
             "require": {
-                "drupal/core": "^8 || ^9 || ^10",
+                "drupal/core": "^9.4 || ^10 || ^11",
                 "drupal/flag": "*",
                 "drupal/search_api": "*"
             },
             "type": "drupal-module",
             "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
                 "drupal": {
-                    "version": "8.x-1.5+3-dev",
-                    "datestamp": "1700234378",
+                    "version": "2.0.1",
+                    "datestamp": "1714487855",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Dev releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -4942,14 +4842,17 @@
                 {
                     "name": "xSDx",
                     "homepage": "https://www.drupal.org/user/3273632"
+                },
+                {
+                    "name": "MilosR",
+                    "homepage": "https://www.drupal.org/user/3613218"
                 }
             ],
             "description": "Search API support for flag module.",
             "homepage": "https://www.drupal.org/project/flag_search_api",
             "support": {
                 "source": "https://git.drupalcode.org/project/flag_search_api"
-            },
-            "time": "2019-10-31T09:25:15+00:00"
+            }
         },
         {
             "name": "drupal/fragments",
@@ -5372,54 +5275,6 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/group_flex",
                 "issues": "https://www.drupal.org/project/issues/group_flex"
-            }
-        },
-        {
-            "name": "drupal/group_outsider_in",
-            "version": "1.0.0-beta1",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/group_outsider_in.git",
-                "reference": "8.x-1.0-beta1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/group_outsider_in-8.x-1.0-beta1.zip",
-                "reference": "8.x-1.0-beta1",
-                "shasum": "f0b4546141f8f724139fb9beb46233d59e49aaf5"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9",
-                "drupal/group": "*"
-            },
-            "require-dev": {
-                "vijaycs85/drupal-quality-checker": "^1.3"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-beta1",
-                    "datestamp": "1612774634",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "GaëlG",
-                    "homepage": "https://www.drupal.org/user/431210"
-                }
-            ],
-            "description": "Also apply the 'advanced outsider permissions' to group members",
-            "homepage": "https://www.drupal.org/project/group_outsider_in",
-            "support": {
-                "source": "https://git.drupalcode.org/project/group_outsider_in"
             }
         },
         {
@@ -9719,37 +9574,6 @@
             "time": "2023-11-17T07:53:29+00:00"
         },
         {
-            "name": "ethosce/group_purl",
-            "version": "2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ethosce/drupal-group_purl.git",
-                "reference": "29d776a270be80a33fb6c5471285983032a4a292"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ethosce/drupal-group_purl/zipball/29d776a270be80a33fb6c5471285983032a4a292",
-                "reference": "29d776a270be80a33fb6c5471285983032a4a292",
-                "shasum": ""
-            },
-            "default-branch": true,
-            "type": "drupal-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "description": "Purl provider for Group",
-            "homepage": "https://github.com/ethosce/drupal-group_purl",
-            "keywords": [
-                "drupal"
-            ],
-            "support": {
-                "issues": "https://github.com/ethosce/drupal-group_purl/issues",
-                "source": "https://github.com/ethosce/drupal-group_purl"
-            },
-            "time": "2022-12-12T23:29:26+00:00"
-        },
-        {
             "name": "grasmash/expander",
             "version": "2.0.3",
             "source": {
@@ -10676,28 +10500,6 @@
                 "source": "https://github.com/laminas/laminas-diactoros"
             },
             "time": "2024-09-11T14:26:18+00:00"
-        },
-        {
-            "name": "lramarojaona/purl",
-            "version": "1.0.0-alpha2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lramarojaona/purl-d8.git",
-                "reference": "e6b41ba9e3d9d504f1c58ae05eeee257d772f90b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lramarojaona/purl-d8/zipball/e6b41ba9e3d9d504f1c58ae05eeee257d772f90b",
-                "reference": "e6b41ba9e3d9d504f1c58ae05eeee257d772f90b",
-                "shasum": ""
-            },
-            "type": "drupal-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Persistent URL module for Drupal 8+",
-            "support": {
-                "source": "https://github.com/lramarojaona/purl-d8/tree/1.0.0-alpha2"
-            },
-            "time": "2021-04-15T14:59:53+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -19140,6 +18942,91 @@
             "time": "2025-02-12T12:17:51+00:00"
         },
         {
+            "name": "palantirnet/drupal-rector",
+            "version": "0.20.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/palantirnet/drupal-rector.git",
+                "reference": "50c742a34f89e4202056e433bbb476ca1fdf3797"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/palantirnet/drupal-rector/zipball/50c742a34f89e4202056e433bbb476ca1fdf3797",
+                "reference": "50c742a34f89e4202056e433bbb476ca1fdf3797",
+                "shasum": ""
+            },
+            "require": {
+                "rector/rector": "^1.0",
+                "webflo/drupal-finder": "^1.2"
+            },
+            "replace": {
+                "drupal8-rector/drupal8-rector": "*",
+                "palantirnet/drupal8-rector": "*"
+            },
+            "require-dev": {
+                "cweagans/composer-patches": "^1.7.2",
+                "friendsofphp/php-cs-fixer": "^3.58",
+                "php": "^8.2",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpunit/phpunit": "^10.0",
+                "symfony/yaml": "^5 || ^6 || ^7",
+                "symplify/vendor-patches": "^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "enable-patching": true
+            },
+            "autoload": {
+                "psr-4": {
+                    "DrupalRector\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dezső Biczó",
+                    "email": "mxr576@gmail.com"
+                },
+                {
+                    "name": "Ofer Shaal",
+                    "email": "shaal@palantir.net"
+                },
+                {
+                    "name": "Daniel Montgomery",
+                    "email": "montgomery@palantir.net"
+                },
+                {
+                    "name": "Matt Glaman",
+                    "email": "nmd.matt@gmail.com"
+                },
+                {
+                    "name": "Björn Brala",
+                    "email": "drupal@bjorn.dev"
+                },
+                {
+                    "name": "Ken Rickard",
+                    "email": "agentrickard@gmail.com"
+                }
+            ],
+            "description": "Instant fixes for your Drupal code by using Rector.",
+            "keywords": [
+                "Code style",
+                "Drupal 8",
+                "ast",
+                "drupal 9",
+                "rector"
+            ],
+            "support": {
+                "source": "https://github.com/palantirnet/drupal-rector/tree/0.20.3"
+            },
+            "time": "2024-06-10T19:18:13+00:00"
+        },
+        {
             "name": "phar-io/manifest",
             "version": "2.0.4",
             "source": {
@@ -20242,6 +20129,65 @@
                 }
             ],
             "time": "2023-11-16T16:16:50+00:00"
+        },
+        {
+            "name": "rector/rector",
+            "version": "1.2.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rectorphp/rector.git",
+                "reference": "40f9cf38c05296bd32f444121336a521a293fa61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/40f9cf38c05296bd32f444121336a521a293fa61",
+                "reference": "40f9cf38c05296bd32f444121336a521a293fa61",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0",
+                "phpstan/phpstan": "^1.12.5"
+            },
+            "conflict": {
+                "rector/rector-doctrine": "*",
+                "rector/rector-downgrade-php": "*",
+                "rector/rector-phpunit": "*",
+                "rector/rector-symfony": "*"
+            },
+            "suggest": {
+                "ext-dom": "To manipulate phpunit.xml via the custom-rule command"
+            },
+            "bin": [
+                "bin/rector"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Instant Upgrade and Automated Refactoring of any PHP code",
+            "keywords": [
+                "automation",
+                "dev",
+                "migration",
+                "refactoring"
+            ],
+            "support": {
+                "issues": "https://github.com/rectorphp/rector/issues",
+                "source": "https://github.com/rectorphp/rector/tree/1.2.10"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-11-08T13:59:10+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -22121,10 +22067,8 @@
         "drupal/default_content": 15,
         "drupal/entity_usage": 10,
         "drupal/flag": 10,
-        "drupal/flag_search_api": 20,
         "drupal/gcontent_moderation": 10,
         "drupal/group_flex": 10,
-        "drupal/group_outsider_in": 10,
         "drupal/group_permissions": 15,
         "drupal/masquerade": 10,
         "drupal/mimemail": 15,
@@ -22132,9 +22076,7 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "drupal/realname": 10,
-        "drupal/workflow_buttons": 10,
-        "ethosce/group_purl": 20,
-        "lramarojaona/purl": 15
+        "drupal/workflow_buttons": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
