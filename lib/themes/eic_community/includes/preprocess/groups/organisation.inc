@@ -530,7 +530,7 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
   $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
-    file_create_url($file->get('uri')->value)
+    \Drupal::service('file_url_generator')->generateAbsoluteString($file->get('uri')->value)
   ) : NULL;
 
   $location = $paragraph->get('field_location')->referencedEntities();
