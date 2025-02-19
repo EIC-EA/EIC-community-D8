@@ -9365,26 +9365,26 @@
         },
         {
             "name": "drupal/workflow_buttons",
-            "version": "1.0.0-beta4",
+            "version": "1.0.0-beta6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/workflow_buttons.git",
-                "reference": "8.x-1.0-beta4"
+                "reference": "8.x-1.0-beta6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/workflow_buttons-8.x-1.0-beta4.zip",
-                "reference": "8.x-1.0-beta4",
-                "shasum": "d564b269501b3f5d6ffaa9ab43d3f2d45057e5d0"
+                "url": "https://ftp.drupal.org/files/projects/workflow_buttons-8.x-1.0-beta6.zip",
+                "reference": "8.x-1.0-beta6",
+                "shasum": "3becb7ccfd7946cfd6448caae32a6f8aa8d89d33"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-beta4",
-                    "datestamp": "1623112116",
+                    "version": "8.x-1.0-beta6",
+                    "datestamp": "1702440893",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
@@ -9405,17 +9405,27 @@
                     "homepage": "https://www.drupal.org/user/992990"
                 },
                 {
+                    "name": "lelkneralfaro",
+                    "homepage": "https://www.drupal.org/user/3577260"
+                },
+                {
                     "name": "mlncn",
                     "homepage": "https://www.drupal.org/user/64383"
+                },
+                {
+                    "name": "ultrabob",
+                    "homepage": "https://www.drupal.org/user/110463"
                 }
             ],
-            "description": "Provide workflow buttons for content moderation instead of a select dropdown of states.",
+            "description": "Provide workflow buttons for content moderation instead of a select dropdown of states.  Button labels are taken from the transition names.",
             "homepage": "https://www.drupal.org/project/workflow_buttons",
             "keywords": [
+                "buttons",
                 "content",
                 "content moderation",
                 "drupal",
                 "editor",
+                "form",
                 "workflow"
             ],
             "support": {
