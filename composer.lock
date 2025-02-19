@@ -5002,27 +5002,27 @@
         },
         {
             "name": "drupal/gcontent_moderation",
-            "version": "1.0.0-beta2",
+            "version": "1.0.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/gcontent_moderation.git",
-                "reference": "1.0.0-beta2"
+                "reference": "1.0.0-beta3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/gcontent_moderation-1.0.0-beta2.zip",
-                "reference": "1.0.0-beta2",
-                "shasum": "91dff6587cce11818c9fef0fceee71455fed7a37"
+                "url": "https://ftp.drupal.org/files/projects/gcontent_moderation-1.0.0-beta3.zip",
+                "reference": "1.0.0-beta3",
+                "shasum": "be193db65435971e1b68b0271d1f467991d250b1"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9",
+                "drupal/core": "^9.1 || ^10",
                 "drupal/group": "^1.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "1.0.0-beta2",
-                    "datestamp": "1620140037",
+                    "version": "1.0.0-beta3",
+                    "datestamp": "1693904701",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
