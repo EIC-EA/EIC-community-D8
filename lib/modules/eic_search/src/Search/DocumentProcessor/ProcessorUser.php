@@ -210,7 +210,7 @@ class ProcessorUser extends DocumentProcessor {
     $total_events = 0;
 
     $comment_storage = $this->entityTypeManager->getStorage('comment');
-    $query = $comment_storage->getQuery();
+    $query = $comment_storage->getQuery()->accessCheck(TRUE);
     $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
     $query->condition('status', CommentInterface::PUBLISHED);
     $query->condition('uid', $user->id());

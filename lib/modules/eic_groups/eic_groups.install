@@ -703,6 +703,7 @@ function eic_groups_update_9015() {
   $menu_link_ids = \Drupal::entityQuery('menu_link_content')
     ->condition('link__uri', 'internal:/group/%/news', 'LIKE')
     ->condition('menu_name', 'group_menu_link_content-%', 'LIKE')
+    ->accessCheck(FALSE)
     ->execute();
 
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $menu_links */

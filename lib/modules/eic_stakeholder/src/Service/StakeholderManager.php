@@ -96,7 +96,9 @@ class StakeholderManager {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getStakeholderGroupContentEntities(array $stakeholder_ids, GroupInterface $target_group = NULL): array {
-    $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
+    $query = $this->entityTypeManager->getStorage('group_content')
+      ->getQuery()
+      ->accessCheck(FALSE);
     $query->condition('entity_id', $stakeholder_ids, 'IN');
     if ($target_group) {
       $query->condition('type', $this->defineGroupContentType($target_group->bundle()), 'LIKE');

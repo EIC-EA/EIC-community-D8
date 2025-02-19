@@ -40,6 +40,7 @@ class GroupCollector implements CollectorInterface {
 
     $flag_ids = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('flag_id', FlagType::FOLLOW_GROUP)
       ->condition('uid', $user->id())
       ->execute();
@@ -61,6 +62,7 @@ class GroupCollector implements CollectorInterface {
     foreach ($group_types as $type) {
       $message_ids = $this->entityTypeManager->getStorage('message')
         ->getQuery()
+        ->accessCheck(FALSE)
         ->condition('template', $supported_templates, 'IN')
         ->condition('field_group_ref', $entity_ids, 'IN')
         ->condition('field_group_ref.entity:group.type', $type->id())

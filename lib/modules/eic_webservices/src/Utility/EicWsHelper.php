@@ -165,6 +165,7 @@ class EicWsHelper {
   public function getUserBySmedId(int $smed_id) {
     // Find if a user account matches the given SMED ID.
     $entity_query = $this->entityTypeManager->getStorage('user')->getQuery();
+    $entity_query->accessCheck(FALSE);
     $entity_query->condition($this->getSmedIdFieldName(), $smed_id);
     $entity_query->range(NULL, 1);
     $uids = $entity_query->execute();
@@ -191,6 +192,7 @@ class EicWsHelper {
   public function getGroupBySmedId(int $smed_id, string $group_type) {
     // Find if a user account matches the given SMED ID.
     $entity_query = $this->entityTypeManager->getStorage('group')->getQuery();
+    $entity_query->accessCheck(FALSE);
     $entity_query->condition('type', $group_type);
     $entity_query->condition($this->getSmedIdFieldName(), $smed_id);
     $entity_query->range(NULL, 1);

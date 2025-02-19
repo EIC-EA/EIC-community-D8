@@ -416,7 +416,9 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
     $book_content_plugin_id = $group->getGroupType()->getContentPlugin('group_node:book')->getContentTypeConfigId();
-    $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
+    $query = $this->entityTypeManager->getStorage('group_content')
+      ->getQuery()
+      ->accessCheck(FALSE);
     $query->condition('type', $book_content_plugin_id);
     $query->condition('gid', $group->id());
     $query->range(0, 1);
