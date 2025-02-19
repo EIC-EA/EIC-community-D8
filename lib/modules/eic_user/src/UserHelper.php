@@ -166,6 +166,7 @@ class UserHelper {
    */
   public function getSitePowerUsers(bool $active_only = TRUE) {
     $query = $this->userStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('status', (int) $active_only)
       ->condition('roles', [
         static::ROLE_SITE_ADMINISTRATOR,
@@ -358,6 +359,7 @@ class UserHelper {
     // @see https://www.drupal.org/project/drupal/issues/2975750
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = $this->entityTypeManager->getStorage('profile')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', ProfileConst::MEMBER_PROFILE_TYPE_NAME)
       ->condition('status', 1)
       ->condition('field_vocab_topic_expertise', [$term->id()], 'IN');
