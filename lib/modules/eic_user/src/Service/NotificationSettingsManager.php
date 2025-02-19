@@ -201,6 +201,7 @@ class NotificationSettingsManager {
 
     $entity_ids = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('flag_id', self::$flags[$type], 'IN')
       ->condition('uid', $user->id())
       ->execute();
@@ -229,6 +230,7 @@ class NotificationSettingsManager {
 
     $flagging_ids = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('flag_id', self::$flags[$type], 'IN')
       ->condition('uid', $user->id())
       ->condition('entity_type', $entity->getEntityTypeId())

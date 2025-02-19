@@ -90,6 +90,7 @@ class SmedTaxonomyHelper {
     $smed_id_field = $this->configFactory->get('eic_webservices.settings')->get('smed_id_field');
 
     $query = $this->entityTypeManager->getStorage('taxonomy_term')->getQuery();
+    $query->accessCheck(FALSE);
     $query->condition($smed_id_field, $smed_id);
     $query->condition('vid', $vocabulary_name);
     $ids = $query->execute();

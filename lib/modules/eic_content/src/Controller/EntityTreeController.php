@@ -96,6 +96,7 @@ class EntityTreeController extends ControllerBase {
       'total' => \Drupal::entityTypeManager()
         ->getStorage($target_entity)
         ->getQuery()
+        ->accessCheck(FALSE)
         ->condition('vid', $target_bundle)
         ->count()
         ->execute(),
@@ -182,6 +183,7 @@ class EntityTreeController extends ControllerBase {
     $results = $this->entityTypeManager()
       ->getStorage('taxonomy_term')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('vid', $target_bundle)
       ->condition('name', $name, '= BINARY')
       ->execute();

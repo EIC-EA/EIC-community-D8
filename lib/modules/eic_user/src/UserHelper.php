@@ -166,6 +166,7 @@ class UserHelper {
    */
   public function getSitePowerUsers(bool $active_only = TRUE) {
     $query = $this->userStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('status', (int) $active_only)
       ->condition('roles', [
         static::ROLE_SITE_ADMINISTRATOR,
