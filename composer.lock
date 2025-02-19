@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1557c41d6859c177e4ecb3dbb1b99e2",
+    "content-hash": "b0012b9b0b292154ada54d44795a4911",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -4953,20 +4953,20 @@
         },
         {
             "name": "drupal/fragments",
-            "version": "2.0.2",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/fragments.git",
-                "reference": "2.0.2"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/fragments-2.0.2.zip",
-                "reference": "2.0.2",
-                "shasum": "914847e443ba9fa63a2fa9720f8c270facc135eb"
+                "url": "https://ftp.drupal.org/files/projects/fragments-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "00eb5fbacfbdf9361c8eeb2289f0a782eba59087"
             },
             "require": {
-                "drupal/core": "^8.7.7 || ^9"
+                "drupal/core": "^9 || ^10"
             },
             "suggest": {
                 "drupal/auto_entitylabel": "Automatically create a title for fragments based on other fields.",
@@ -4976,8 +4976,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.0.2",
-                    "datestamp": "1641484769",
+                    "version": "2.1.0",
+                    "datestamp": "1698393249",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
