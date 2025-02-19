@@ -81,7 +81,6 @@ permissions:
   - 'use default transition publish'
   - 'use eic_moderated_workflow transition create_new_draft'
   - 'use eic_moderated_workflow transition submit_for_approval'
-  - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
   - 'use groups transition keep_blocked'
   - 'use groups transition keep_in_draft'
