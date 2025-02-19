@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "457e000d4332ac413e653663174b51d4",
+    "content-hash": "a4fcdd993fe9e6e2106c250e06bb4777",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -2500,30 +2500,30 @@
         },
         {
             "name": "drupal/cas",
-            "version": "1.7.0",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/cas.git",
-                "reference": "8.x-1.7"
+                "reference": "2.3.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/cas-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "a8f7689f1e610bf3d9390d5a2a97eaa6911842d1"
+                "url": "https://ftp.drupal.org/files/projects/cas-2.3.2.zip",
+                "reference": "2.3.2",
+                "shasum": "b2f908a554f7a90217f7f70ed00f646982433a45"
             },
             "require": {
-                "drupal/core": "^8 || ^9",
-                "drupal/externalauth": "^1.2"
+                "drupal/core": "^9 || ^10",
+                "drupal/externalauth": "^2.0"
             },
             "require-dev": {
-                "drupal/cas_mock_server": "^1.0||dev-0.x"
+                "drupal/cas_mock_server": "^2.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1592250922",
+                    "version": "2.3.2",
+                    "datestamp": "1717055658",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2531,13 +2531,13 @@
                 },
                 "drush": {
                     "services": {
-                        "drush.services.yml": "^9"
+                        "drush.services.yml": "^11"
                     }
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -4453,26 +4453,26 @@
         },
         {
             "name": "drupal/externalauth",
-            "version": "1.4.0",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/externalauth.git",
-                "reference": "8.x-1.4"
+                "reference": "2.0.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/externalauth-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "caea7d2d5a890adad9e6b5beaa2cf139727266d6"
+                "url": "https://ftp.drupal.org/files/projects/externalauth-2.0.7.zip",
+                "reference": "2.0.7",
+                "shasum": "93c2b15f21172f931bb81cc365c828c12be377c3"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9.5 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1624457496",
+                    "version": "2.0.7",
+                    "datestamp": "1735897906",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4485,8 +4485,9 @@
             ],
             "authors": [
                 {
-                    "name": "rgristroph",
-                    "homepage": "https://www.drupal.org/user/516442"
+                    "name": "Sven Decabooter",
+                    "homepage": "https://www.drupal.org/u/svendecabooter",
+                    "role": "Maintainer"
                 },
                 {
                     "name": "snufkin",
@@ -4498,9 +4499,10 @@
                 }
             ],
             "description": "Helper module to authenticate users using an external site / service and storing identification details",
-            "homepage": "https://www.drupal.org/project/externalauth",
+            "homepage": "https://drupal.org/project/externalauth",
             "support": {
-                "source": "https://git.drupalcode.org/project/externalauth"
+                "source": "https://git.drupalcode.org/project/externalauth",
+                "issues": "https://www.drupal.org/project/issues/externalauth"
             }
         },
         {
@@ -11258,72 +11260,68 @@
         },
         {
             "name": "openeuropa/oe_authentication",
-            "version": "1.9.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openeuropa/oe_authentication.git",
-                "reference": "34879ad8d343e272254266a56d0007214f4b00e1"
+                "reference": "998742753172ff474d33ebc33be01344847f976e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/oe_authentication/zipball/34879ad8d343e272254266a56d0007214f4b00e1",
-                "reference": "34879ad8d343e272254266a56d0007214f4b00e1",
+                "url": "https://api.github.com/repos/openeuropa/oe_authentication/zipball/998742753172ff474d33ebc33be01344847f976e",
+                "reference": "998742753172ff474d33ebc33be01344847f976e",
                 "shasum": ""
             },
             "require": {
-                "cweagans/composer-patches": "~1.4",
-                "drupal/cas": "^1.7",
-                "drupal/core": "^9.3",
-                "php": ">=7.4"
+                "drupal/cas": "^2.2",
+                "drupal/core": "^9.4 || ^10",
+                "php": ">=8.0"
             },
             "require-dev": {
                 "composer/installers": "^1.11",
-                "drupal/cas_mock_server": "^1.1",
-                "drupal/config_devel": "^1.2",
-                "drupal/core-composer-scaffold": "^9.3",
-                "drupal/core-dev": "^9.3",
-                "drupal/drupal-extension": "^4.0",
-                "drush/drush": "^10.3",
-                "fabpot/goutte": "^3.3",
-                "nikic/php-parser": "^4.12.0",
-                "openeuropa/behat-transformation-context": "^0.1",
-                "openeuropa/code-review": "^2.0",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0.0-beta5",
+                "drupal/cas_mock_server": "^2.0.1",
+                "drupal/core-composer-scaffold": "^9.4 || ^10",
+                "drupal/drupal-extension": "^5.0",
+                "drush/drush": "^11.1 || ^12",
+                "mikey179/vfsstream": "^1.6.10",
+                "openeuropa/behat-transformation-context": "^0.2",
+                "openeuropa/code-review": "^2.0.0-alpha6",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta6",
                 "phpspec/prophecy-phpunit": "^2",
-                "symfony/dom-crawler": "^4.4.12"
+                "symfony/phpunit-bridge": "^6.2"
             },
             "type": "drupal-module",
             "extra": {
-                "composer-exit-on-patch-failure": true,
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^11"
+                    }
+                },
+                "_readme": [
+                    "Explicit minimum version requirement of symfony/phpunit-bridge to replace drupal/core-dev testing classes and traits.",
+                    "Explicit requirement of mikey179/vfsstream to remove when drupal/core-dev is reinstated."
+                ],
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                },
                 "enable-patching": true,
                 "installer-paths": {
                     "build/core": [
                         "type:drupal-core"
                     ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
                     ],
                     "build/modules/contrib/{$name}": [
                         "type:drupal-module"
                     ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
                     ]
                 },
-                "_readme": [
-                    "Explicit minimum version requirement for symfony/dom-crawler due to its lower versions using the deprecated function libxml_disable_entity_loader() in PHP8.",
-                    "Explicit minimum version requirement for fabpot/goutte due to lower Drupal 9.3 compatibility."
-                ],
-                "patches": {
-                    "drupal/cas": {
-                        "https://www.drupal.org/project/cas/issues/3221111": "https://www.drupal.org/files/issues/2021-11-22/3221111-allow-setting-reason-20.diff"
-                    }
-                },
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "./build"
-                    }
-                }
+                "composer-exit-on-patch-failure": true
             },
             "autoload": {
                 "psr-4": {
@@ -11337,9 +11335,9 @@
             "description": "Authentication against the OpenEuropa Authentication service.",
             "support": {
                 "issues": "https://github.com/openeuropa/oe_authentication/issues",
-                "source": "https://github.com/openeuropa/oe_authentication/tree/1.9.0"
+                "source": "https://github.com/openeuropa/oe_authentication/tree/1.13.0"
             },
-            "time": "2022-09-16T12:52:18+00:00"
+            "time": "2023-09-18T08:58:12+00:00"
         },
         {
             "name": "openeuropa/oe_media",
