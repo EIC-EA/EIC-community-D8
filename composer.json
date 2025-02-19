@@ -120,7 +120,7 @@
         "ethosce/group_purl": "2.x-dev",
         "lramarojaona/purl": "^1.0@alpha",
         "openeuropa/ecl-twig-loader": "^2.12",
-        "openeuropa/oe_authentication": "^1.5",
+        "openeuropa/oe_authentication": "^1.13",
         "openeuropa/oe_media": "^1.13",
         "openeuropa/oe_time_caching": "^1.1",
         "openeuropa/oe_webtools": "^1.26.0",
