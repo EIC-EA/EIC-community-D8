@@ -4001,26 +4001,29 @@
         },
         {
             "name": "drupal/embed",
-            "version": "1.6.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/embed.git",
-                "reference": "8.x-1.6"
+                "reference": "8.x-1.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/embed-8.x-1.6.zip",
-                "reference": "8.x-1.6",
-                "shasum": "6d2964775c3228d122cd61904786b3640fa83045"
+                "url": "https://ftp.drupal.org/files/projects/embed-8.x-1.9.zip",
+                "reference": "8.x-1.9",
+                "shasum": "e6b4875e2b245ddf1a68a8615cbb4c5a378a0e9f"
             },
             "require": {
-                "drupal/core": "^9.3 | ^10"
+                "drupal/core": "^9.5 | ^10"
+            },
+            "require-dev": {
+                "drupal/ckeditor": "^1.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.6",
-                    "datestamp": "1661298150",
+                    "version": "8.x-1.9",
+                    "datestamp": "1723283819",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4037,11 +4040,11 @@
                     "homepage": "https://www.drupal.org/user/2828287"
                 },
                 {
-                    "name": "Dave Reid",
+                    "name": "dave reid",
                     "homepage": "https://www.drupal.org/user/53892"
                 },
                 {
-                    "name": "Devin Carlson",
+                    "name": "devin carlson",
                     "homepage": "https://www.drupal.org/user/290182"
                 },
                 {
@@ -4134,35 +4137,39 @@
         },
         {
             "name": "drupal/entity_browser",
-            "version": "2.9.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/entity_browser.git",
-                "reference": "8.x-2.9"
+                "reference": "8.x-2.10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity_browser-8.x-2.9.zip",
-                "reference": "8.x-2.9",
-                "shasum": "251afad80cde9fa547501a8d9de5d94b9f5bacff"
+                "url": "https://ftp.drupal.org/files/projects/entity_browser-8.x-2.10.zip",
+                "reference": "8.x-2.10",
+                "shasum": "d52548ea66dc56108c2e211aeaff6e1cc0522e85"
             },
             "require": {
-                "drupal/core": "^9.2 || ^10"
+                "drupal/core": "^9.5 || ^10"
+            },
+            "conflict": {
+                "drupal/media_entity": "1.*"
             },
             "require-dev": {
-                "drupal/embed": "~1.0",
-                "drupal/entity_embed": "1.x-dev",
-                "drupal/entity_reference_revisions": "1.x-dev",
-                "drupal/entityqueue": "1.x-dev",
-                "drupal/inline_entity_form": "1.x-dev",
-                "drupal/paragraphs": "1.x-dev",
-                "drupal/token": "1.x-dev"
+                "drupal/ckeditor": "^1.0",
+                "drupal/embed": "^1.0",
+                "drupal/entity_embed": "^1.0",
+                "drupal/entity_reference_revisions": "^1.0",
+                "drupal/entityqueue": "^1.0",
+                "drupal/inline_entity_form": "^1.0@rc",
+                "drupal/paragraphs": "^1.0",
+                "drupal/token": "^1.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.9",
-                    "datestamp": "1674070933",
+                    "version": "8.x-2.10",
+                    "datestamp": "1702325310",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4202,7 +4209,7 @@
                     "homepage": "https://www.drupal.org/user/471638"
                 },
                 {
-                    "name": "Primsi",
+                    "name": "primsi",
                     "homepage": "https://www.drupal.org/user/282629"
                 },
                 {
@@ -4215,7 +4222,7 @@
                 }
             ],
             "description": "Entity browsing and selecting component.",
-            "homepage": "http://drupal.org/project/entity_browser",
+            "homepage": "https://drupal.org/project/entity_browser",
             "support": {
                 "source": "https://git.drupalcode.org/project/entity_browser",
                 "issues": "https://www.drupal.org/project/issues/entity_browser",
@@ -5326,17 +5333,17 @@
         },
         {
             "name": "drupal/inline_entity_form",
-            "version": "1.0.0-rc15",
+            "version": "1.0.0-rc17",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/inline_entity_form.git",
-                "reference": "8.x-1.0-rc15"
+                "reference": "8.x-1.0-rc17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/inline_entity_form-8.x-1.0-rc15.zip",
-                "reference": "8.x-1.0-rc15",
-                "shasum": "7702801f7e599956fc3d10cff8257809f53ac3ec"
+                "url": "https://ftp.drupal.org/files/projects/inline_entity_form-8.x-1.0-rc17.zip",
+                "reference": "8.x-1.0-rc17",
+                "shasum": "626622e01cf7a2d2977fdc06ae09afd5a814e09b"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9 || ^10",
@@ -5348,8 +5355,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0-rc15",
-                    "datestamp": "1678126675",
+                    "version": "8.x-1.0-rc17",
+                    "datestamp": "1703020130",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -5750,42 +5757,38 @@
         },
         {
             "name": "drupal/media_avportal",
-            "version": "1.1.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/media_avportal.git",
-                "reference": "8.x-1.1"
+                "reference": "8.x-1.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/media_avportal-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "c48f82fdaea807a0b306a8c6522c6058cf24c27b"
+                "url": "https://ftp.drupal.org/files/projects/media_avportal-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "6c57413fea11d3d113ee9618b8dcc241fd1e99c0"
             },
             "require": {
                 "cweagans/composer-patches": "~1.4",
-                "drupal/core": "^9.3",
+                "drupal/core": "^9.4 || ^10",
                 "drupal/remote_stream_wrapper": "^2.0",
-                "php": ">=7.4"
+                "php": ">=8.0"
             },
             "require-dev": {
-                "composer/installers": "~1.5",
-                "drupal/config_devel": "~1.2",
-                "drupal/core-composer-scaffold": "^9.3",
-                "drupal/core-dev": "^9.3",
-                "drupal/drupal-extension": "~4.0",
-                "drush/drush": "~10.3",
-                "guzzlehttp/guzzle": "^6.3",
-                "nikic/php-parser": "^4.12.0",
-                "openeuropa/code-review": "^2.0",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta5",
+                "composer/installers": "^1.11",
+                "drupal/core-composer-scaffold": "^9.4 || ^10",
+                "drupal/core-dev": "^9.4 || ^10",
+                "drush/drush": "^11.1",
+                "openeuropa/code-review": "^2.0.0-alpha6",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta6",
                 "phpspec/prophecy-phpunit": "^2"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1659424413",
+                    "version": "8.x-1.3",
+                    "datestamp": "1678454052",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -5878,7 +5881,7 @@
                     "homepage": "https://www.drupal.org/user/956840"
                 },
                 {
-                    "name": "Upchuk",
+                    "name": "upchuk",
                     "homepage": "https://www.drupal.org/user/1885838"
                 }
             ],
@@ -11170,75 +11173,68 @@
         },
         {
             "name": "openeuropa/oe_media",
-            "version": "1.21.2",
+            "version": "1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openeuropa/oe_media.git",
-                "reference": "ff4f81897005a6af0e3037488d85250b6245c461"
+                "reference": "1f645be391ab81a904fef3de2ce3967034f75eab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/oe_media/zipball/ff4f81897005a6af0e3037488d85250b6245c461",
-                "reference": "ff4f81897005a6af0e3037488d85250b6245c461",
+                "url": "https://api.github.com/repos/openeuropa/oe_media/zipball/1f645be391ab81a904fef3de2ce3967034f75eab",
+                "reference": "1f645be391ab81a904fef3de2ce3967034f75eab",
                 "shasum": ""
             },
             "require": {
-                "drupal/core": "^9.3",
-                "drupal/embed": "^1.3",
-                "drupal/entity_browser": "^2.9",
-                "drupal/file_link": "^2.0.4",
+                "cweagans/composer-patches": "^1.7",
+                "drupal/core": "^9.4 || ^10",
+                "drupal/embed": "^1.5",
+                "drupal/entity_browser": "^2.5",
+                "drupal/file_link": "^2.1",
                 "drupal/inline_entity_form": "~1.0-rc12",
-                "drupal/media_avportal": "^1.0-beta13",
-                "php": ">=7.4"
+                "drupal/media_avportal": "^1.2",
+                "php": ">=8.0"
             },
             "require-dev": {
-                "behat/behat": "^3.10",
-                "behat/mink-extension": "^2.3.1",
                 "composer/installers": "~1.5",
-                "drupal/composite_reference": "^1.0@alpha",
-                "drupal/config_devel": "^1.7",
-                "drupal/core-composer-scaffold": "^9.3",
-                "drupal/core-dev": "^9.3",
-                "drupal/ctools": "3.9.0",
-                "drupal/drupal-extension": "~4.0",
+                "drupal/ckeditor": "^1.0",
+                "drupal/composite_reference": "^2.2",
+                "drupal/config_devel": "^1.9",
+                "drupal/core-composer-scaffold": "^9.4 || ^10",
+                "drupal/drupal-extension": "^5.0",
                 "drupal/entity_reference_revisions": "^1.7",
-                "drupal/json_field": "1.0-rc4",
-                "drupaltest/behat-traits": "^0.3",
-                "drush/drush": "~10.3",
-                "fabpot/goutte": "^3.3",
-                "guzzlehttp/guzzle": "~6.3",
-                "instaclick/php-webdriver": "^1.4.7",
-                "nikic/php-parser": "^4.12.0",
-                "openeuropa/behat-transformation-context": "~0.1",
-                "openeuropa/code-review": "^2.0",
-                "openeuropa/oe_link_lists": "~0.16",
-                "openeuropa/oe_oembed": "~0.1",
-                "openeuropa/oe_webtools": "^1.19",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta5",
+                "drupal/json_field": "^1.1",
+                "drush/drush": "^11.1",
+                "mikey179/vfsstream": "^1.6",
+                "openeuropa/behat-transformation-context": "^0.2",
+                "openeuropa/code-review": "^2.0.0-alpha6",
+                "openeuropa/oe_link_lists": "^0.22",
+                "openeuropa/oe_oembed": "~0.7.0",
+                "openeuropa/oe_webtools": "^1.23",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta6",
                 "phpspec/prophecy-phpunit": "^2",
-                "twig/twig": "^1.40 || ^2.12"
+                "symfony/phpunit-bridge": "^6.2"
             },
             "type": "drupal-module",
             "extra": {
-                "composer-exit-on-patch-failure": true,
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                },
                 "enable-patching": true,
                 "installer-paths": {
                     "build/core": [
                         "type:drupal-core"
                     ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
                     "build/modules/contrib/{$name}": [
                         "type:drupal-module"
+                    ],
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
                     ]
                 },
-                "patches": [],
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "./build"
-                    }
-                }
+                "composer-exit-on-patch-failure": true
             },
             "autoload": {
                 "psr-4": {
@@ -11252,9 +11248,9 @@
             "description": "Media features for the OpenEuropa project.",
             "support": {
                 "issues": "https://github.com/openeuropa/oe_media/issues",
-                "source": "https://github.com/openeuropa/oe_media/tree/1.21.2"
+                "source": "https://github.com/openeuropa/oe_media/tree/1.24.0"
             },
-            "time": "2023-01-31T13:04:33+00:00"
+            "time": "2023-06-30T13:14:57+00:00"
         },
         {
             "name": "openeuropa/oe_time_caching",
