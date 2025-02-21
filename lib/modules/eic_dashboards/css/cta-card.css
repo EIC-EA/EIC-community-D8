@@ -12,7 +12,11 @@
 }
 
 .cta-card__icon {
- padding: 30px;
+  min-height: 172px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 30px;
 }
 
 .cta-card__title {
