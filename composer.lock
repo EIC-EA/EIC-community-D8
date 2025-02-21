@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a637f16cbd193ba88ea0c98803e23b29",
+    "content-hash": "5c23e6aea5d7f000479040e4f1207715",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -2666,27 +2666,27 @@
         },
         {
             "name": "drupal/ckeditor_blockimagepaste",
-            "version": "1.4.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/ckeditor_blockimagepaste.git",
-                "reference": "8.x-1.4"
+                "reference": "2.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ckeditor_blockimagepaste-8.x-1.4.zip",
-                "reference": "8.x-1.4",
-                "shasum": "bdcfc77bfc7bf3af0a17898e7633a3e209fd50b2"
+                "url": "https://ftp.drupal.org/files/projects/ckeditor_blockimagepaste-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "cced821b6fd419b9421d0b0897691d6ca4f1c55e"
             },
             "require": {
                 "drupal/ckeditor": "*",
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9.3 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.4",
-                    "datestamp": "1608640688",
+                    "version": "2.0.1",
+                    "datestamp": "1694072707",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
