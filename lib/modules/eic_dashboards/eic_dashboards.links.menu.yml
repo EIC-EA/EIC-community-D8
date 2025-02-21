@@ -1,0 +1,86 @@
+system.eic_dashboards:
+  title: 'Dashboards'
+  description: 'EIC Community Management statistics for platform.'
+  parent: system.admin
+  route_name: eic_dashboards.homepage
+  weight: -16
+  options:
+      attributes:
+        class: ['menu-icon-dashboard']
+
+eic_dashboards.members_dashboard:
+  title: 'Members dashboard'
+  description: 'Platform members statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.members_dashboard
+  weight: 1
+
+eic_dashboards.organisations_dashboard:
+  title: 'Organisations dashboard'
+  description: 'Platform organisations statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.organisations_dashboard
+  weight: 2
+
+eic_dashboards.projects_dashboard:
+  title: 'Projects dashboard'
+  description: 'Platform projects statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.projects_dashboard
+  weight: 3
+
+eic_dashboards.content_dashboard:
+  title: 'Content dashboard'
+  description: 'Platform content statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.content_dashboard
+  weight: 4
+
+eic_dashboards.events_dashboard:
+  title: 'Events dashboard'
+  description: 'Platform events statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.events_dashboard
+  weight: 5
+
+eic_dashboards.groups_dashboard:
+  title: 'Groups dashboard'
+  description: 'Platform groups statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.groups_dashboard
+  weight: 6
+
+eic_dashboards.members_list:
+  title: 'Members list'
+  description: 'List of platform members'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.members_list
+  weight: 7
+
+eic_dashboards.organisations_list:
+  title: 'Organisations list'
+  description: 'List of platform organisations'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.organisations_list
+  weight: 8
+
+eic_dashboards.projects_list:
+  title: 'Projects list'
+  description: 'List of platform projects'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.projects_list
+  weight: 9
+
+eic_dashboards.content_list:
+  title: 'Content list'
+  description: 'List of platform content'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.content_list
+  weight: 10
+
+eic_dashboards.activity_report:
+  title: 'Activity report'
+  description: 'Platform activity report'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.activity_report
+  weight: 11
