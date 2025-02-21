@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Extension\ExtensionPathResolver;
+
 /**
  * Implements hook_theme().
  */
@@ -18,6 +20,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'link' => '',
         'icon' => '',
         'variant' => '',
+        'path' => '',
       ],
     ]
   ];
