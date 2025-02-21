@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c23e6aea5d7f000479040e4f1207715",
+    "content-hash": "5685862b5bde4545156b40a04e7ae11a",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -2903,28 +2903,28 @@
         },
         {
             "name": "drupal/ckeditor_iframe",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/ckeditor_iframe.git",
-                "reference": "8.x-2.1"
+                "reference": "8.x-2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ckeditor_iframe-8.x-2.1.zip",
-                "reference": "8.x-2.1",
-                "shasum": "a6e315348eb2cc26a6c845d956b1716810b0edff"
+                "url": "https://ftp.drupal.org/files/projects/ckeditor_iframe-8.x-2.2.zip",
+                "reference": "8.x-2.2",
+                "shasum": "7b97014233b3a2e59480acf997ccf7087cd55c77"
             },
             "require": {
                 "drupal/ckeditor": "*",
-                "drupal/core": "^8 || ^9",
+                "drupal/core": "^8 || ^9 || ^10",
                 "drupal/fakeobjects": "^1.0"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.1",
-                    "datestamp": "1592830028",
+                    "version": "8.x-2.2",
+                    "datestamp": "1693917802",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
