@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b94ba4acf3ebaf3ba1196a38bd367695",
+    "content-hash": "c410dee0da44dc9c96090966ee398066",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -3386,29 +3386,29 @@
         },
         {
             "name": "drupal/context",
-            "version": "4.1.0",
+            "version": "5.0.0-rc1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/context.git",
-                "reference": "8.x-4.1"
+                "reference": "5.0.0-rc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/context-8.x-4.1.zip",
-                "reference": "8.x-4.1",
-                "shasum": "5cfee680f7299d82b584502479c85566bb4285c1"
+                "url": "https://ftp.drupal.org/files/projects/context-5.0.0-rc1.zip",
+                "reference": "5.0.0-rc1",
+                "shasum": "ae1549bc5e5c75c0c6799b7b737d7391cfc5be73"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9.3 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-4.1",
-                    "datestamp": "1628187190",
+                    "version": "5.0.0-rc1",
+                    "datestamp": "1677054769",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -11251,57 +11251,55 @@
         },
         {
             "name": "openeuropa/oe_time_caching",
-            "version": "1.3.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openeuropa/oe_time_caching.git",
-                "reference": "e6bf19e3a36b8f1ad65b8dfc24126a323cff7eb0"
+                "reference": "8bc99ba2c70da331b3647dc2fad8636bba242df5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/oe_time_caching/zipball/e6bf19e3a36b8f1ad65b8dfc24126a323cff7eb0",
-                "reference": "e6bf19e3a36b8f1ad65b8dfc24126a323cff7eb0",
+                "url": "https://api.github.com/repos/openeuropa/oe_time_caching/zipball/8bc99ba2c70da331b3647dc2fad8636bba242df5",
+                "reference": "8bc99ba2c70da331b3647dc2fad8636bba242df5",
                 "shasum": ""
             },
             "require": {
-                "drupal/core": "^9.3",
-                "nesbot/carbon": "^2.29",
-                "php": ">=7.4"
+                "drupal/core": "^9.4 || ^10",
+                "nesbot/carbon": "^2.55",
+                "php": ">=8.0"
             },
             "require-dev": {
                 "composer/installers": "~1.5",
-                "drupal/config_devel": "^1.8",
-                "drupal/core-composer-scaffold": "^9.3",
-                "drupal/core-dev": "^9.3",
-                "drupal/drupal-extension": "~4.0",
-                "drush/drush": "~10.3",
-                "openeuropa/code-review": "~2.0",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0.0-beta5",
+                "drupal/core-composer-scaffold": "^9.4 || ^10",
+                "drupal/core-dev": "^9.4 || ^10",
+                "drush/drush": "~11.1",
+                "openeuropa/code-review": "^2.0.0-alpha6",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta6",
                 "phpspec/prophecy-phpunit": "^2"
             },
             "type": "drupal-module",
             "extra": {
-                "composer-exit-on-patch-failure": true,
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                },
                 "enable-patching": true,
                 "installer-paths": {
                     "build/core": [
                         "type:drupal-core"
                     ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
                     ],
                     "build/modules/contrib/{$name}": [
                         "type:drupal-module"
                     ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
                     ]
                 },
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "./build"
-                    }
-                }
+                "composer-exit-on-patch-failure": true
             },
             "autoload": {
                 "psr-4": {
@@ -11315,9 +11313,9 @@
             "description": "OpenEuropa Time Caching.",
             "support": {
                 "issues": "https://github.com/openeuropa/oe_time_caching/issues",
-                "source": "https://github.com/openeuropa/oe_time_caching/tree/1.3.0"
+                "source": "https://github.com/openeuropa/oe_time_caching/tree/1.5.0"
             },
-            "time": "2022-08-02T08:15:10+00:00"
+            "time": "2023-04-11T09:31:44+00:00"
         },
         {
             "name": "openeuropa/oe_webtools",
@@ -22056,7 +22054,7 @@
         "drupal/book_link_weight": 10,
         "drupal/ckeditor_find": 10,
         "drupal/content_moderation_bypass": 15,
-        "drupal/context": 10,
+        "drupal/context": 5,
         "drupal/default_content": 15,
         "drupal/entity_usage": 10,
         "drupal/flag": 10,
