@@ -103,7 +103,7 @@
         "drupal/search_api_sorts": "^1.1",
         "drupal/search_api_spellcheck": "^4.0",
         "drupal/smart_trim": "^2.0",
-        "drupal/smtp": "1.0",
+        "drupal/smtp": "^1.4",
         "drupal/social_link_field": "^2.1",
         "drupal/subpathauto": "^1.1",
         "drupal/twig_field_value": "^2.0",

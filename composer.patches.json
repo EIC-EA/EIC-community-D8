@@ -91,9 +91,7 @@
       "EICNET-3009: Change date format on \"Published on\" description": "patches/publication_date/EICNET-3009-change-date-format-published-on-description.patch"
     },
     "drupal/scheduler_content_moderation_integration": {},
-    "drupal/smtp": {
-      "#3316049 - Some custom headers (Reply-To/Sender/Return-Path) are overriden by the module": "https://www.drupal.org/files/issues/2022-10-19/3316049-4-some-custom-headers-are-overriden.patch"
-    },
+    "drupal/smtp": {},
     "drupal/subpathauto": {
       "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2023-02-15/subpathauto-group_content_add_create-3130139-14.patch"
     },
