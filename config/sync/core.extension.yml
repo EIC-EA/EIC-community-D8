@@ -240,7 +240,6 @@ module:
   publication_date: 99
   minimal: 1000
 theme:
-  seven: 0
   eic_community: 0
   stable9: 0
   claro: 0
