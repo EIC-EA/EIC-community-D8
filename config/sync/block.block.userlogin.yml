@@ -1,0 +1,20 @@
+uuid: f3d35187-8984-4d4b-9577-ee9c5aab955d
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+  theme:
+    - claro
+id: userlogin
+theme: claro
+region: content
+weight: 0
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: 'User login'
+  label_display: visible
+  provider: user
+visibility: {  }
