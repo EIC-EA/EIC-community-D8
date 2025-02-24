@@ -241,8 +241,6 @@ module:
   publication_date: 99
   minimal: 1000
 theme:
-  stable: 0
-  classy: 0
   seven: 0
   eic_community: 0
   stable9: 0
