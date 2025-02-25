@@ -2,4 +2,8 @@ cta_card:
   css:
     theme:
       css/cta-card.css: {}
-      css/dashboard-menu.css: {}
+
+dashboards_menu:
+  css:
+    theme:
+      css/dashboards-menu.css: {}
