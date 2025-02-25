@@ -25,3 +25,10 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
     ]
   ];
 }
+
+/**
+ * Implements hook_page().
+ */
+function eic_dashboards_preprocess_page(&$variables) {
+  $variables['#attached']['library'][] = 'eic_dashboards/dashboards_menu';
+}
