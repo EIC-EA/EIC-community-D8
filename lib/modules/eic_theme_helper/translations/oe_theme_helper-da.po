@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Entré"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Book din plads, @time_left til at registrere, registrering slutter den@end_date."
+msgstr "Book din plads, du har @time_left tilbage til at registrere dig, registreringen slutter den @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Registrering starter om @time_left. Du kan registrere dig fra @start_date og frem til @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Registreringsperiode udløb den @end_date."
+msgid "Registration period ended on @date"
+msgstr "Registreringsperioden sluttede den @date"
 
 msgid "Postal address"
 msgstr "Postadresse"
@@ -57,6 +57,9 @@ msgstr "Kontaktorganisation"
 
 msgid "Call status: @label"
 msgstr "Status for indkaldelse: @label"
+
+msgid "Press contact"
+msgstr "Pressekontakt"
 
 msgid "Press contacts"
 msgstr "Pressehenvendelser"
@@ -83,7 +86,7 @@ msgid "Deadline dates"
 msgstr "Tidsfrist (datoer)"
 
 msgid "Publication date"
-msgstr "Dato for offentliggørelse"
+msgstr "Publikationsdato"
 
 msgid "Author"
 msgstr "Forfatter"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Åben"
 
 msgid "Closed"
-msgstr "Lukket"
+msgstr "Lukkede"
 
 msgid "Details"
 msgstr "Detaljer"
@@ -229,8 +232,8 @@ msgstr "Flere faser"
 msgid "Permanent"
 msgstr "Permanent"
 
-msgid "in"
-msgstr "i"
+msgid "@date in @journal"
+msgstr "@date i @journal"
 
 msgid "Contact us"
 msgstr "Kontakt os"
@@ -276,3 +279,344 @@ msgstr "Tilknyttet afdeling"
 
 msgid "Related departments"
 msgstr "Tilknyttede afdelinger"
+
+msgid "Consultation"
+msgstr "Høring"
+
+msgid "Deadline"
+msgstr "Frist"
+
+msgid "Respond to the questionnaire"
+msgstr "Besvar spørgeskemaet"
+
+msgid "Respond to the consultation"
+msgstr "Deltag i høringen"
+
+msgid "Target audience"
+msgstr "Målgruppe"
+
+msgid "Why we are consulting"
+msgstr "Derfor ønsker vi at afholde en høring"
+
+msgid "Consultation outcome"
+msgstr "Resultat af høringen"
+
+msgid "Additional information"
+msgstr "Yderligere oplysninger"
+
+msgid "Reference documents"
+msgstr "Referencedokumenter"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Fristen for at deltage i denne høring er udløbet. Tak for dit bidrag."
+
+msgid "Status: @label"
+msgstr "Status: @label"
+
+msgid "Responsibilities"
+msgstr "Ansvarsområder"
+
+msgid "Media"
+msgstr "Medierne"
+
+msgid "Latest"
+msgstr "Seneste"
+
+msgid "Transparency"
+msgstr "Gennemsigtighed"
+
+msgid "Articles and presentations"
+msgstr "Artikler og præsentationer"
+
+msgid "Biography"
+msgstr "Biografi"
+
+msgid "Declaration of interests"
+msgstr "Interessetilkendegivelse"
+
+msgid "Show contact details"
+msgstr "Vis kontaktoplysninger"
+
+msgid "Hide contact details"
+msgstr "Skjul kontaktoplysninger"
+
+msgid "Leadership and organisation"
+msgstr "Ledelse og organisation"
+
+msgid "Available translations"
+msgstr "Sprogudgaver"
+
+msgid "General contact"
+msgstr "Generelle henvendelser"
+
+msgid "Grants awarded"
+msgstr "Bevilgede tilskud"
+
+msgid "Page contents"
+msgstr "Sidens indhold"
+
+msgid "Your name"
+msgstr "Dit navn"
+
+msgid "Your email address"
+msgstr "Din e-mailadresse"
+
+msgid "Subject"
+msgstr "Emne"
+
+msgid "Message"
+msgstr "Meddelelse"
+
+msgid "Country of residence"
+msgstr "Bopælsland"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Send yourself a copy"
+msgstr "Send dig selv en kopi"
+
+msgid "Status message"
+msgstr "Statusmeddelelse"
+
+msgid "Close this message"
+msgstr "Luk denne meddelelse"
+
+msgid "The sender's name"
+msgstr "Afsenderens navn"
+
+msgid "The sender's email"
+msgstr "Afsenderens e-mail"
+
+msgid "Topic"
+msgstr "Emne"
+
+msgid "Languages"
+msgstr "Sprog"
+
+msgid "Keywords"
+msgstr "Nøgleord"
+
+msgid "No results have been found"
+msgstr "Ingen resultater fundet"
+
+msgid "Event date"
+msgstr "Dato for arrangementet"
+
+msgid "Select"
+msgstr "Vælg"
+
+msgid "After"
+msgstr "Efter"
+
+msgid "Before"
+msgstr "Før"
+
+msgid "In between"
+msgstr "Imellem"
+
+msgid "Select all"
+msgstr "Vælg alle"
+
+msgid "Event type"
+msgstr "Type af arrangement"
+
+msgid "Venue"
+msgstr "Sted"
+
+msgid "Online type"
+msgstr "Online"
+
+msgid "Livestream"
+msgstr "Livestreaming"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "EU organisation type"
+msgstr "Type EU-organisation"
+
+msgid "Date"
+msgstr "Dato"
+
+msgid "End Date"
+msgstr "Slutdato"
+
+msgid "Responsible department"
+msgstr "Ansvarlig afdeling"
+
+msgid "Content owner"
+msgstr "Indehaver af indhold"
+
+msgid "Overview"
+msgstr "Oversigt"
+
+msgid "Open gallery"
+msgstr "Åbn galleriet"
+
+msgid "(Acting) @role"
+msgstr "(Fungerende) @rolle"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Følg med i den seneste udvikling, og læs mere om, hvordan du kan deltage."
+
+msgid "Upcoming and ongoing"
+msgstr "Kommende og igangværende"
+
+msgid "Past"
+msgstr "Tidligere"
+
+msgid "Upcoming and open"
+msgstr "Kommende og åbne"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Du kan få teksten oversat til dansk ved hjælp af maskinoversættelse – klik på linket nedenfor."
+
+msgid "Choose another language"
+msgstr "Vælg et andet sprog"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 dag"
+msgstr[1] "@count dage"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 uge"
+msgstr[1] "@count uger"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 år"
+msgstr[1] "@count år"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 måned"
+msgstr[1] "@count måneder"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 time"
+msgstr[1] "@count timer"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 minut"
+msgstr[1] "@count minutter"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 sekund"
+msgstr[1] "@count sekunder"
+
+msgid "Online link"
+msgstr "Link til arrangementet"
+
+msgid "Online time"
+msgstr "Tidspunkt for arrangementet"
+
+msgid "Name"
+msgstr "Navn"
+
+msgid "I have read and agree with the @link"
+msgstr "Jeg har læst og er indforstået med @link"
+
+msgid "personal data protection terms"
+msgstr "betingelserne for databeskyttelse"
+
+msgid "Highlighted"
+msgstr "Fremhævet"
+
+msgid "European Union flag"
+msgstr "EU-flaget"
+
+msgid "European Commission logo"
+msgstr "Europa-Kommissionens logo"
+
+msgid "Home"
+msgstr "Forside"
+
+msgid "European Union"
+msgstr "Europæiske Unions"
+
+msgid "Sources"
+msgstr "Kilder"
+
+msgid "This event has been cancelled."
+msgstr "Dette arrangement er aflyst."
+
+msgid "This event has been rescheduled."
+msgstr "Dette arrangement er flyttet."
+
+msgid "This event has been postponed."
+msgstr "Dette arrangement er udsat."
+
+msgid "This event has started."
+msgstr "Dette arrangement er begyndt."
+
+msgid "This event has ended."
+msgstr "Dette arrangement er slut."
+
+msgid "This livestream has started."
+msgstr "Denne livestreaming er begyndt."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Dette arrangement er begyndt. Du kan også se det via livestreaming."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Dette arrangement er slut, men livestreamingen er i gang."
+
+msgid "Who should attend"
+msgstr "Hvem kan deltage"
+
+msgid "Organisers"
+msgstr "Organisatorer"
+
+msgid "Part of"
+msgstr "Del af"
+
+msgid "Online only"
+msgstr "Kun online"
+
+msgid "External event"
+msgstr "Eksternt arrangement"
+
+msgid "Report"
+msgstr "Rapport"
+
+msgid "Register here"
+msgstr "Tilmeld dig her"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Dette arrangement er begyndt. Livestreaming starter kl @date."
+
+msgid "See all"
+msgstr "Se alle"
+
+msgid "media items"
+msgstr "medieartikler"
+
+msgid "Close"
+msgstr "Luk"
+
+msgid "Programme"
+msgstr "Program"
+
+msgid "Social media"
+msgstr "Sociale medier"
+
+msgid "Speakers"
+msgstr "Talere"
+
+msgid "Starts on @date"
+msgstr "Starter den @date"
+
+msgid "The livestream has started."
+msgstr "Denne livestreaming er begyndt."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Livestreamingen er slut, men eventet kører stadig."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage % af det samlede budget"

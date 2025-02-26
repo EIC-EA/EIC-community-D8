@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Vstopnina"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Rezervirajte svoje mesto. Za prijavo preostane še @time_left. Prijava je mogoča do @end_date."
+msgstr "Rezervirajte svoj sedež, @time_left ostane za registracijo, registracija bo potekla @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Registracija se začne v @time_left. Registrirate se lahko od @start_date  do @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Registracija se je končala  @end_date."
+msgid "Registration period ended on @date"
+msgstr "Obdobje registracije se je končalo @date"
 
 msgid "Postal address"
 msgstr "Poštni naslov"
@@ -57,6 +57,9 @@ msgstr "Kontaktna organizacija"
 
 msgid "Call status: @label"
 msgstr "Status razpisa: @label"
+
+msgid "Press contact"
+msgstr "Kontakt za medije"
 
 msgid "Press contacts"
 msgstr "Kontakti za medije"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Odprto"
 
 msgid "Closed"
-msgstr "Končano"
+msgstr "Zaprti"
 
 msgid "Details"
 msgstr "Več informacij"
@@ -229,8 +232,8 @@ msgstr "Več končnih datumov"
 msgid "Permanent"
 msgstr "Stalno"
 
-msgid "in"
-msgstr "v"
+msgid "@date in @journal"
+msgstr "@date v @journal"
 
 msgid "Contact us"
 msgstr "Kontakt"
@@ -276,3 +279,344 @@ msgstr "Povezani oddelek"
 
 msgid "Related departments"
 msgstr "Povezani oddelki"
+
+msgid "Consultation"
+msgstr "Posvetovanje"
+
+msgid "Deadline"
+msgstr "Rok"
+
+msgid "Respond to the questionnaire"
+msgstr "Odgovorite na vprašalnik"
+
+msgid "Respond to the consultation"
+msgstr "Sodelujte v posvetovanju"
+
+msgid "Target audience"
+msgstr "Ciljna skupina"
+
+msgid "Why we are consulting"
+msgstr "Namen posvetovanja"
+
+msgid "Consultation outcome"
+msgstr "Rezultati posvetovanja"
+
+msgid "Additional information"
+msgstr "Dodatne informacije"
+
+msgid "Reference documents"
+msgstr "Referenčni dokumenti"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Posvetovanje je končano. Zahvaljujemo se vam za sodelovanje."
+
+msgid "Status: @label"
+msgstr "Status: @label"
+
+msgid "Responsibilities"
+msgstr "Pristojnosti"
+
+msgid "Media"
+msgstr "Mediji"
+
+msgid "Latest"
+msgstr "Najnovejše"
+
+msgid "Transparency"
+msgstr "Transparentnost"
+
+msgid "Articles and presentations"
+msgstr "Objave in predstavitve"
+
+msgid "Biography"
+msgstr "Življenjepis"
+
+msgid "Declaration of interests"
+msgstr "Izjava o interesih"
+
+msgid "Show contact details"
+msgstr "Prikaži kontaktne podatke"
+
+msgid "Hide contact details"
+msgstr "Skrij kontaktne podatke"
+
+msgid "Leadership and organisation"
+msgstr "Vodstvo in organiziranost"
+
+msgid "Available translations"
+msgstr "Vsi prevodi"
+
+msgid "General contact"
+msgstr "Splošni kontakt"
+
+msgid "Grants awarded"
+msgstr "Dodeljena nepovratna sredstva"
+
+msgid "Page contents"
+msgstr "Vsebina strani"
+
+msgid "Your name"
+msgstr "Vaše ime"
+
+msgid "Your email address"
+msgstr "Vaš elektronski naslov"
+
+msgid "Subject"
+msgstr "Zadeva"
+
+msgid "Message"
+msgstr "Sporočilo"
+
+msgid "Country of residence"
+msgstr "Država prebivališča"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Send yourself a copy"
+msgstr "Pošlji mi kopijo"
+
+msgid "Status message"
+msgstr "Statusno sporočilo"
+
+msgid "Close this message"
+msgstr "Zapri to sporočilo"
+
+msgid "The sender's name"
+msgstr "Ime pošiljatelja"
+
+msgid "The sender's email"
+msgstr "Elektronski naslov pošiljatelja"
+
+msgid "Topic"
+msgstr "Tema"
+
+msgid "Languages"
+msgstr "Jeziki"
+
+msgid "Keywords"
+msgstr "Ključne besede"
+
+msgid "No results have been found"
+msgstr "Ni zadetkov"
+
+msgid "Event date"
+msgstr "Datum dogodka"
+
+msgid "Select"
+msgstr "Izberi"
+
+msgid "After"
+msgstr "Pozneje"
+
+msgid "Before"
+msgstr "Pred"
+
+msgid "In between"
+msgstr "Vmes"
+
+msgid "Select all"
+msgstr "Izberi vse"
+
+msgid "Event type"
+msgstr "Vrsta dogodka"
+
+msgid "Venue"
+msgstr "Lokacija"
+
+msgid "Online type"
+msgstr "Spletni prenos"
+
+msgid "Livestream"
+msgstr "Prenos v živo"
+
+msgid "Type"
+msgstr "Vrsta"
+
+msgid "EU organisation type"
+msgstr "Vrsta organizacije EU"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "End Date"
+msgstr "Končni datum"
+
+msgid "Responsible department"
+msgstr "Pristojni oddelek"
+
+msgid "Content owner"
+msgstr "Lastnik vsebine"
+
+msgid "Overview"
+msgstr "Pregled"
+
+msgid "Open gallery"
+msgstr "Odpri galerijo"
+
+msgid "(Acting) @role"
+msgstr "(Vršilec/-ka dolžnosti) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Spremljajte najnovejše dogajanje in sodelujte v družbenih medijih."
+
+msgid "Upcoming and ongoing"
+msgstr "Prihodnji in tekoči"
+
+msgid "Past"
+msgstr "Pretekli"
+
+msgid "Upcoming and open"
+msgstr "Prihodnji in odprti"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Slovenščina je na voljo kot strojni prevod – kliknite na spodnjo povezavo."
+
+msgid "Choose another language"
+msgstr "Izberi drug jezik"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 dan"
+msgstr[1] "@count dni"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 teden"
+msgstr[1] "@count tednov"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 leto"
+msgstr[1] "@count leta"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 mesec"
+msgstr[1] "@count mesecev"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 ura"
+msgstr[1] "@count ur"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 minuta"
+msgstr[1] "@count minut"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 sekunda"
+msgstr[1] "@count sekund"
+
+msgid "Online link"
+msgstr "Spletna povezava"
+
+msgid "Online time"
+msgstr "Spletni čas"
+
+msgid "Name"
+msgstr "Ime"
+
+msgid "I have read and agree with the @link"
+msgstr "Prebral/-a sem pogoje o varstvu @link"
+
+msgid "personal data protection terms"
+msgstr "osebnih podatkov in se strinjam z njimi"
+
+msgid "Highlighted"
+msgstr "Izpostavljeno"
+
+msgid "European Union flag"
+msgstr "Zastava Evropske unije"
+
+msgid "European Commission logo"
+msgstr "Logotip Evropske komisije"
+
+msgid "Home"
+msgstr "Domača stran"
+
+msgid "European Union"
+msgstr "Evropska unija"
+
+msgid "Sources"
+msgstr "Viri"
+
+msgid "This event has been cancelled."
+msgstr "Dogodek je odpovedan."
+
+msgid "This event has been rescheduled."
+msgstr "Dogodek je prestavljen."
+
+msgid "This event has been postponed."
+msgstr "Dogodek je odložen."
+
+msgid "This event has started."
+msgstr "Dogodek se je začel."
+
+msgid "This event has ended."
+msgstr "Dogodek se je končal."
+
+msgid "This livestream has started."
+msgstr "Prenos v živo se je začel."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Dogodek se je začel. Na voljo je tudi prenos v živo."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Dogodek se je končal, vendar je prenos v živo na voljo"
+
+msgid "Who should attend"
+msgstr "Ciljna skupina"
+
+msgid "Organisers"
+msgstr "Organizatorji"
+
+msgid "Part of"
+msgstr "Del"
+
+msgid "Online only"
+msgstr "Samo na spletu"
+
+msgid "External event"
+msgstr "Zunanji dogodek"
+
+msgid "Report"
+msgstr "Poročilo"
+
+msgid "Register here"
+msgstr "Registracija"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Dogodek se je začel. Prenos v živo se bo začel ob @date."
+
+msgid "See all"
+msgstr "Oglejte si vse"
+
+msgid "media items"
+msgstr "medijske prispevke"
+
+msgid "Close"
+msgstr "Končano"
+
+msgid "Programme"
+msgstr "Program"
+
+msgid "Social media"
+msgstr "Družbeni mediji"
+
+msgid "Speakers"
+msgstr "Govorniki"
+
+msgid "Starts on @date"
+msgstr "Začetek pred @date"
+
+msgid "The livestream has started."
+msgstr "Prenos v živo se je začel."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Prenos v živo se je končal, vendar dogodek še poteka."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage % celotnega proračuna"

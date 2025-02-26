@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Belépődíj"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Foglalja le helyét, @time_left van még hátra a regisztrációs időszak végéig, a regisztrációs időszak záró dátuma: @end_date."
+msgstr "Foglalja le a helyét már most! @time_left van még hátra, a regisztráció határideje @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "A regisztrációs időszak kezdetéig hátra van még @time_left. Regisztrálni ettől az időponttól: @start_date eddig az időpontig: @end_date lehet."
 
-msgid "Registration period ended on @date."
-msgstr "A regisztrációs időszak vége: @end_date."
+msgid "Registration period ended on @date"
+msgstr "A regisztrációs időszak vége: @date"
 
 msgid "Postal address"
 msgstr "Postai cím"
@@ -57,6 +57,9 @@ msgstr "Kapcsolattartó szervezet"
 
 msgid "Call status: @label"
 msgstr "A felhívás státusza: @label"
+
+msgid "Press contact"
+msgstr "Sajtókapcsolat"
 
 msgid "Press contacts"
 msgstr "Sajtókapcsolatok"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Folyamatban"
 
 msgid "Closed"
-msgstr "Lezárva"
+msgstr "Lezárt"
 
 msgid "Details"
 msgstr "Leírás"
@@ -229,8 +232,8 @@ msgstr "Többkörös"
 msgid "Permanent"
 msgstr "Állandó"
 
-msgid "in"
-msgstr "itt"
+msgid "@date in @journal"
+msgstr "@date, @journal"
 
 msgid "Contact us"
 msgstr "Kapcsolatfelvétel"
@@ -276,3 +279,344 @@ msgstr "Kapcsolódó szervezeti egység"
 
 msgid "Related departments"
 msgstr "Kapcsolódó szervezeti egységek"
+
+msgid "Consultation"
+msgstr "Konzultáció"
+
+msgid "Deadline"
+msgstr "Határidő"
+
+msgid "Respond to the questionnaire"
+msgstr "Részvétel a konzultációban"
+
+msgid "Respond to the consultation"
+msgstr "Részvétel a konzultációban"
+
+msgid "Target audience"
+msgstr "Célközönség"
+
+msgid "Why we are consulting"
+msgstr "Miért indítottuk ezt a konzultációt?"
+
+msgid "Consultation outcome"
+msgstr "A konzultáció eredménye"
+
+msgid "Additional information"
+msgstr "További információk"
+
+msgid "Reference documents"
+msgstr "Referenciadokumentumok"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "A konzultációs időszak lezárult Köszönjük, hogy részt vesz felmérésünkben!"
+
+msgid "Status: @label"
+msgstr "Státusz: @label"
+
+msgid "Responsibilities"
+msgstr "Feladatok"
+
+msgid "Media"
+msgstr "Média"
+
+msgid "Latest"
+msgstr "Legújabb információk"
+
+msgid "Transparency"
+msgstr "Átláthatóság"
+
+msgid "Articles and presentations"
+msgstr "Cikkek és prezentációk"
+
+msgid "Biography"
+msgstr "Szakmai életrajz"
+
+msgid "Declaration of interests"
+msgstr "Érdekeltségi nyilatkozat"
+
+msgid "Show contact details"
+msgstr "Elérhetőségi adatok megjelenítése"
+
+msgid "Hide contact details"
+msgstr "Elérhetőségi adatok elrejtése"
+
+msgid "Leadership and organisation"
+msgstr "Vezetés és szervezeti felépítés"
+
+msgid "Available translations"
+msgstr "Elérhető fordítások"
+
+msgid "General contact"
+msgstr "Általános kapcsolattartás"
+
+msgid "Grants awarded"
+msgstr "Támogatások odaítélve"
+
+msgid "Page contents"
+msgstr "Tartalom"
+
+msgid "Your name"
+msgstr "Az Ön neve"
+
+msgid "Your email address"
+msgstr "Az Ön e-mail-címe"
+
+msgid "Subject"
+msgstr "Tárgy"
+
+msgid "Message"
+msgstr "Üzenet"
+
+msgid "Country of residence"
+msgstr "Lakóhely szerinti ország"
+
+msgid "Phone"
+msgstr "Telefonszám"
+
+msgid "Send yourself a copy"
+msgstr "Kérek másolatot az üzenetről"
+
+msgid "Status message"
+msgstr "Állapotüzenet"
+
+msgid "Close this message"
+msgstr "Üzenet bezárása"
+
+msgid "The sender's name"
+msgstr "A küldő neve"
+
+msgid "The sender's email"
+msgstr "A küldő e-mail-címe"
+
+msgid "Topic"
+msgstr "Téma"
+
+msgid "Languages"
+msgstr "Nyelvek"
+
+msgid "Keywords"
+msgstr "Kulcsszavak"
+
+msgid "No results have been found"
+msgstr "Nincs találat"
+
+msgid "Event date"
+msgstr "Esemény dátuma"
+
+msgid "Select"
+msgstr "Kiválasztás"
+
+msgid "After"
+msgstr "Ettől:"
+
+msgid "Before"
+msgstr "Eddig:"
+
+msgid "In between"
+msgstr "Időköz"
+
+msgid "Select all"
+msgstr "Összes kiválasztása"
+
+msgid "Event type"
+msgstr "Az esemény típusa"
+
+msgid "Venue"
+msgstr "Helyszín"
+
+msgid "Online type"
+msgstr "Online"
+
+msgid "Livestream"
+msgstr "Élő online közvetítés"
+
+msgid "Type"
+msgstr "Típus"
+
+msgid "EU organisation type"
+msgstr "Uniós szervezet típusa"
+
+msgid "Date"
+msgstr "Dátum"
+
+msgid "End Date"
+msgstr "Záró dátum"
+
+msgid "Responsible department"
+msgstr "Felelős szervezeti egység"
+
+msgid "Content owner"
+msgstr "Tartalomtulajdonos"
+
+msgid "Overview"
+msgstr "Áttekintés"
+
+msgid "Open gallery"
+msgstr "Galéria megnyitása"
+
+msgid "(Acting) @role"
+msgstr "(Megbízott) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Kövesse a legújabb fejleményeket és tájékozódjon arról, hogyan vehet részt Ön is a folyamatokban!"
+
+msgid "Upcoming and ongoing"
+msgstr "Közelgő és folyamatban lévő"
+
+msgid "Past"
+msgstr "Korábbi"
+
+msgid "Upcoming and open"
+msgstr "Közelgő és aktuális"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Ez az oldal gépi fordításban magyarul is elérhető – a felület nyelvét a lenti gombbal változtathatja meg."
+
+msgid "Choose another language"
+msgstr "Válasszon másik nyelvet"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 nap"
+msgstr[1] "@count nap"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 hét"
+msgstr[1] "@count hét"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 év"
+msgstr[1] "@count év"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 hónap"
+msgstr[1] "@count hónap"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 óra"
+msgstr[1] "@count óra"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 perc"
+msgstr[1] "@count perc"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 másodperc"
+msgstr[1] "@count másodperc"
+
+msgid "Online link"
+msgstr "Az esemény linkje"
+
+msgid "Online time"
+msgstr "Az esemény időpontja"
+
+msgid "Name"
+msgstr "Név"
+
+msgid "I have read and agree with the @link"
+msgstr "Elolvastam az @link"
+
+msgid "personal data protection terms"
+msgstr "adatvédelmi nyilatkozatot, és egyetértek a benne foglaltakkal."
+
+msgid "Highlighted"
+msgstr "Előtérben"
+
+msgid "European Union flag"
+msgstr "Az Európai Unió zászlaja"
+
+msgid "European Commission logo"
+msgstr "Az Európai Bizottság logója"
+
+msgid "Home"
+msgstr "Kezdőlap"
+
+msgid "European Union"
+msgstr "Európai Unió"
+
+msgid "Sources"
+msgstr "Források"
+
+msgid "This event has been cancelled."
+msgstr "Ezt a rendezvényt törölték."
+
+msgid "This event has been rescheduled."
+msgstr "Ez a rendezvényt áttették egy későbbi időpontra."
+
+msgid "This event has been postponed."
+msgstr "Ezt a rendezvényt elnapolták."
+
+msgid "This event has started."
+msgstr "Ez a rendezvény elkezdődött."
+
+msgid "This event has ended."
+msgstr "Ez a rendezvény véget ért."
+
+msgid "This livestream has started."
+msgstr "Ez az élő közvetítés elkezdődött."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Ez a rendezvény elkezdődött. Élőben is követhető."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Ez a rendezvény véget ért, de az élő közvetítés még tart."
+
+msgid "Who should attend"
+msgstr "Résztvevői profil"
+
+msgid "Organisers"
+msgstr "Szervezők"
+
+msgid "Part of"
+msgstr "Ennek a része"
+
+msgid "Online only"
+msgstr "Csak az interneten"
+
+msgid "External event"
+msgstr "Külső rendezvény"
+
+msgid "Report"
+msgstr "Jelentés"
+
+msgid "Register here"
+msgstr "Regisztráció"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Ez a rendezvény elkezdődött. Az élő közvetítés kezdési időpontja: @date."
+
+msgid "See all"
+msgstr "Összes megtekintése"
+
+msgid "media items"
+msgstr "médiaanyag"
+
+msgid "Close"
+msgstr "Lezárva"
+
+msgid "Programme"
+msgstr "Program"
+
+msgid "Social media"
+msgstr "Közösségi média"
+
+msgid "Speakers"
+msgstr "Előadók"
+
+msgid "Starts on @date"
+msgstr "Ebben az időpontban kezdődik: @date"
+
+msgid "The livestream has started."
+msgstr "Ez az élő közvetítés elkezdődött."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Az élő közvetítés befejeződött, de a rendezvény még tart."
+
+msgid "@percentage% of the overall budget"
+msgstr "A teljes költségvetés @percentage%-a"

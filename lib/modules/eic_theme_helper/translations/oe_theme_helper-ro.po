@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Taxă de intrare"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Rezervați-vă un loc! Mai aveți la dispoziție @time_left  pentru a vă înregistra. Perioada de înregistrare se încheie la @end_date."
+msgstr "Rezervați-vă un loc, mai aveți @time_left pentru a vă înscrie. Înscrierile se încheie pe @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Perioada de înregistrare începe în @time_left. Vă puteți înscrie de pe @start_date  până pe @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Perioada de înregistrare s-a încheiat pe  @end_date."
+msgid "Registration period ended on @date"
+msgstr "Perioada de înregistrare s-a încheiat la @date"
 
 msgid "Postal address"
 msgstr "Adresă poștală"
@@ -57,6 +57,9 @@ msgstr "Contactați organizația"
 
 msgid "Call status: @label"
 msgstr "Statutul cererii: @label"
+
+msgid "Press contact"
+msgstr "Punct de contact pentru presă"
 
 msgid "Press contacts"
 msgstr "Puncte de contact pentru presă"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Deschis(ă)"
 
 msgid "Closed"
-msgstr "Încheiat(ă)"
+msgstr "Încheiate"
 
 msgid "Details"
 msgstr "Detalii"
@@ -229,8 +232,8 @@ msgstr "Cu mai multe etape"
 msgid "Permanent"
 msgstr "Permanent(ă)"
 
-msgid "in"
-msgstr "în"
+msgid "@date in @journal"
+msgstr "@date în @journal"
 
 msgid "Contact us"
 msgstr "Contactați-ne"
@@ -276,3 +279,344 @@ msgstr "Departament implicat"
 
 msgid "Related departments"
 msgstr "Departamente implicate"
+
+msgid "Consultation"
+msgstr "Consultare"
+
+msgid "Deadline"
+msgstr "Termen-limită"
+
+msgid "Respond to the questionnaire"
+msgstr "Completați chestionarul"
+
+msgid "Respond to the consultation"
+msgstr "Participați la consultare"
+
+msgid "Target audience"
+msgstr "Public-țintă"
+
+msgid "Why we are consulting"
+msgstr "De ce organizăm consultarea"
+
+msgid "Consultation outcome"
+msgstr "Rezultatul consultării"
+
+msgid "Additional information"
+msgstr "Informații suplimentare"
+
+msgid "Reference documents"
+msgstr "Documente de referință"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Perioada de desfășurare a acestei consultări s-a încheiat. Vă mulțumim pentru contribuție!"
+
+msgid "Status: @label"
+msgstr "Statut: @label"
+
+msgid "Responsibilities"
+msgstr "Responsabilități"
+
+msgid "Media"
+msgstr "Media"
+
+msgid "Latest"
+msgstr "Actualități"
+
+msgid "Transparency"
+msgstr "Transparență"
+
+msgid "Articles and presentations"
+msgstr "Articole și prezentări"
+
+msgid "Biography"
+msgstr "Biografie"
+
+msgid "Declaration of interests"
+msgstr "Declarație de interese"
+
+msgid "Show contact details"
+msgstr "Afișați datele de contact"
+
+msgid "Hide contact details"
+msgstr "Ascundeți datele de contact"
+
+msgid "Leadership and organisation"
+msgstr "Conducere și organizare"
+
+msgid "Available translations"
+msgstr "Traduceri disponibile"
+
+msgid "General contact"
+msgstr "Date de contact pentru chestiuni generale"
+
+msgid "Grants awarded"
+msgstr "Granturi atribuite"
+
+msgid "Page contents"
+msgstr "Cuprinsul paginii"
+
+msgid "Your name"
+msgstr "Numele dvs."
+
+msgid "Your email address"
+msgstr "Adresa dvs. de e-mail"
+
+msgid "Subject"
+msgstr "Subiect"
+
+msgid "Message"
+msgstr "Mesaj"
+
+msgid "Country of residence"
+msgstr "Țara de reședință"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Send yourself a copy"
+msgstr "Trimiteți-vă o copie"
+
+msgid "Status message"
+msgstr "Mesaj de statut"
+
+msgid "Close this message"
+msgstr "Închideți acest mesaj"
+
+msgid "The sender's name"
+msgstr "Numele expeditorului"
+
+msgid "The sender's email"
+msgstr "E-mailul expeditorului"
+
+msgid "Topic"
+msgstr "Temă"
+
+msgid "Languages"
+msgstr "Limbi"
+
+msgid "Keywords"
+msgstr "Cuvinte-cheie"
+
+msgid "No results have been found"
+msgstr "Nu am găsit rezultate"
+
+msgid "Event date"
+msgstr "Data evenimentului"
+
+msgid "Select"
+msgstr "Selectați"
+
+msgid "After"
+msgstr "După"
+
+msgid "Before"
+msgstr "Înainte"
+
+msgid "In between"
+msgstr "Între"
+
+msgid "Select all"
+msgstr "Selectați tot"
+
+msgid "Event type"
+msgstr "Tip de eveniment"
+
+msgid "Venue"
+msgstr "Locație"
+
+msgid "Online type"
+msgstr "Tip de eveniment online"
+
+msgid "Livestream"
+msgstr "Transmisiune în direct online"
+
+msgid "Type"
+msgstr "Tip"
+
+msgid "EU organisation type"
+msgstr "Tip de organism UE"
+
+msgid "Date"
+msgstr "Dată"
+
+msgid "End Date"
+msgstr "Data încheierii"
+
+msgid "Responsible department"
+msgstr "Serviciul responsabil"
+
+msgid "Content owner"
+msgstr "Proprietarul conținutului"
+
+msgid "Overview"
+msgstr "Prezentare"
+
+msgid "Open gallery"
+msgstr "Deschideți galeria"
+
+msgid "(Acting) @role"
+msgstr "@role (interimar)"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Urmăriți ultimele evoluții și aflați cum vă puteți implica."
+
+msgid "Upcoming and ongoing"
+msgstr "Viitoare și în curs"
+
+msgid "Past"
+msgstr "Trecute"
+
+msgid "Upcoming and open"
+msgstr "Viitoare și deschise"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Pagina în română este disponibilă doar în traducere automată. O puteți solicita prin linkul de mai jos."
+
+msgid "Choose another language"
+msgstr "Selectați altă limbă"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 zi"
+msgstr[1] "@count zile"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 săptămână"
+msgstr[1] "@count săptămâni"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 an"
+msgstr[1] "@count ani"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 lună"
+msgstr[1] "@count luni"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 oră"
+msgstr[1] "@count ore"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 minut"
+msgstr[1] "@count minute"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 secundă"
+msgstr[1] "@count secunde"
+
+msgid "Online link"
+msgstr "Link de acces la evenimentul online"
+
+msgid "Online time"
+msgstr "Momentul la care are loc evenimentul online"
+
+msgid "Name"
+msgstr "Nume"
+
+msgid "I have read and agree with the @link"
+msgstr "Am citit și sunt de acord cu @link"
+
+msgid "personal data protection terms"
+msgstr "prevederile referitoare la protecția datelor cu caracter personal"
+
+msgid "Highlighted"
+msgstr "În prim-plan"
+
+msgid "European Union flag"
+msgstr "Drapelul Uniunii Europene"
+
+msgid "European Commission logo"
+msgstr "Logoul Comisiei Europene"
+
+msgid "Home"
+msgstr "Prima pagină"
+
+msgid "European Union"
+msgstr "Uniunea Europeană"
+
+msgid "Sources"
+msgstr "Surse"
+
+msgid "This event has been cancelled."
+msgstr "Acest eveniment a fost anulat."
+
+msgid "This event has been rescheduled."
+msgstr "Acest eveniment a fost reprogramat."
+
+msgid "This event has been postponed."
+msgstr "Acest eveniment a fost amânat."
+
+msgid "This event has started."
+msgstr "Evenimentul a început."
+
+msgid "This event has ended."
+msgstr "Evenimentul s-a încheiat."
+
+msgid "This livestream has started."
+msgstr "Transmisiunea online a început."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Evenimentul a început. Îl puteți urmări și în transmisiune online."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Evenimentul s-a încheiat, dar puteți urmări transmisiunea online."
+
+msgid "Who should attend"
+msgstr "Public-țintă"
+
+msgid "Organisers"
+msgstr "Organizatori"
+
+msgid "Part of"
+msgstr "Parte din"
+
+msgid "Online only"
+msgstr "Doar online"
+
+msgid "External event"
+msgstr "Eveniment extern"
+
+msgid "Report"
+msgstr "Raport"
+
+msgid "Register here"
+msgstr "Înscrieți-vă aici"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Evenimentul a început. Transmisia în direct pe internet va începe la @date."
+
+msgid "See all"
+msgstr "Vedeți tot"
+
+msgid "media items"
+msgstr "materiale multimedia"
+
+msgid "Close"
+msgstr "Încheiat(ă)"
+
+msgid "Programme"
+msgstr "Program"
+
+msgid "Social media"
+msgstr "Rețele sociale"
+
+msgid "Speakers"
+msgstr "Vorbitori"
+
+msgid "Starts on @date"
+msgstr "Începe la @date"
+
+msgid "The livestream has started."
+msgstr "Transmisiunea online a început."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Transmisia în direct s-a încheiat, dar evenimentul este în curs de desfășurare."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage% din bugetul total"

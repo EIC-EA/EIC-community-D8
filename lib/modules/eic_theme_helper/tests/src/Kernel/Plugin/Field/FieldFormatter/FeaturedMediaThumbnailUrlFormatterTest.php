@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Kernel\Plugin\Field\FieldFormatter;
+namespace Drupal\Tests\oe_theme_helper\Kernel\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
@@ -11,6 +11,8 @@ use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the featured media thumbnail url field formatter.
+ *
+ * @group batch2
  */
 class FeaturedMediaThumbnailUrlFormatterTest extends MediaThumbnailUrlFormatterTestBase {
 
@@ -19,6 +21,7 @@ class FeaturedMediaThumbnailUrlFormatterTest extends MediaThumbnailUrlFormatterT
    */
   protected static $modules = [
     'oe_content_featured_media_field',
+    'node',
   ];
 
   /**
@@ -53,7 +56,7 @@ class FeaturedMediaThumbnailUrlFormatterTest extends MediaThumbnailUrlFormatterT
 
     // Test formatter without an image style.
     $build = $view_builder->viewField($entity->get('field_test'), [
-      'type' => 'eic_theme_helper_featured_media_thumbnail_url_formatter',
+      'type' => 'oe_theme_helper_featured_media_thumbnail_url_formatter',
       'label' => 'hidden',
     ]);
     $this->assertRendering($this->renderRoot($build), [
@@ -66,7 +69,7 @@ class FeaturedMediaThumbnailUrlFormatterTest extends MediaThumbnailUrlFormatterT
 
     // Test formatter with the medium image style.
     $build = $view_builder->viewField($entity->get('field_test'), [
-      'type' => 'eic_theme_helper_featured_media_thumbnail_url_formatter',
+      'type' => 'oe_theme_helper_featured_media_thumbnail_url_formatter',
       'label' => 'hidden',
       'settings' => [
         'image_style' => 'medium',
@@ -82,7 +85,7 @@ class FeaturedMediaThumbnailUrlFormatterTest extends MediaThumbnailUrlFormatterT
 
     // Test formatter with the large image style.
     $build = $view_builder->viewField($entity->get('field_test'), [
-      'type' => 'eic_theme_helper_featured_media_thumbnail_url_formatter',
+      'type' => 'oe_theme_helper_featured_media_thumbnail_url_formatter',
       'label' => 'hidden',
       'settings' => [
         'image_style' => 'large',

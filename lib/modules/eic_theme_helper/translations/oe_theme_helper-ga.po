@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Táille iontrála"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Cuir do shuíochán in áirithe, @time_left fágtha le clárú, cuirfear deireadh leis an bpróiseas clárúcháin an @end_date."
+msgstr "Cuir do shuíochán in áirithe, @time_left fágtha chun clárú, críochnóidh an clárúchán an @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Beidh an tréimhse chlárúcháin ar oscailt idir an @time_left. Beidh tú in ann clárú ón @start_date, go dtí an @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Tháinig deireadh leis an tréimhse chlárúcháin an @end_date."
+msgid "Registration period ended on @date"
+msgstr "Tháinig deireadh leis an tréimhse chlárúcháin an @date"
 
 msgid "Postal address"
 msgstr "Seoladh poist"
@@ -57,6 +57,9 @@ msgstr "Eagraíocht teagmhála"
 
 msgid "Call status: @label"
 msgstr "Stádas an ghlao: @label"
+
+msgid "Press contact"
+msgstr "Teagmhálaí do lucht an phreasa"
 
 msgid "Press contacts"
 msgstr "Teagmhálaithe do lucht an phreasa"
@@ -229,8 +232,8 @@ msgstr "Scoitheadh ilchéimneach"
 msgid "Permanent"
 msgstr "Buan"
 
-msgid "in"
-msgstr "in"
+msgid "@date in @journal"
+msgstr "@date sa @journal"
 
 msgid "Contact us"
 msgstr "Sonraí teagmhála"
@@ -276,3 +279,344 @@ msgstr "Roinn ghaolmhar"
 
 msgid "Related departments"
 msgstr "Ranna gaolmhara"
+
+msgid "Consultation"
+msgstr "Comhairliúchán"
+
+msgid "Deadline"
+msgstr "Sprioc-am"
+
+msgid "Respond to the questionnaire"
+msgstr "Tabhair freagra ar an gceistneoir"
+
+msgid "Respond to the consultation"
+msgstr "Tabhair freagra ar an gcomhairliúchán"
+
+msgid "Target audience"
+msgstr "Spriocphobal"
+
+msgid "Why we are consulting"
+msgstr "An fáth a bhfuil comhairliúchán ar bun againn"
+
+msgid "Consultation outcome"
+msgstr "Toradh an chomhairliúcháin"
+
+msgid "Additional information"
+msgstr "Eolas breise"
+
+msgid "Reference documents"
+msgstr "Doiciméid tagartha"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Tá an tréimhse istigh chun an comhairliúchán seo a fhreagairt. Go raibh maith agat as d'ionchur."
+
+msgid "Status: @label"
+msgstr "Stádas: @label"
+
+msgid "Responsibilities"
+msgstr "Freagrachtaí"
+
+msgid "Media"
+msgstr "Na meáin"
+
+msgid "Latest"
+msgstr "An scéala is déanaí"
+
+msgid "Transparency"
+msgstr "Trédhearcacht"
+
+msgid "Articles and presentations"
+msgstr "Ailt agus cuir i láthair"
+
+msgid "Biography"
+msgstr "Beathaisnéis"
+
+msgid "Declaration of interests"
+msgstr "Dearbhú leasanna"
+
+msgid "Show contact details"
+msgstr "Taispeáin de shonraí teagmhála"
+
+msgid "Hide contact details"
+msgstr "Cuir na sonraí teagmhála i bhfolach"
+
+msgid "Leadership and organisation"
+msgstr "Ceannaireacht agus eagrúchán"
+
+msgid "Available translations"
+msgstr "Aistriúcháin atá ar fáil"
+
+msgid "General contact"
+msgstr "Teagmháil ghinearálta"
+
+msgid "Grants awarded"
+msgstr "Deontais bhronnta"
+
+msgid "Page contents"
+msgstr "Inneachar an leathanaigh"
+
+msgid "Your name"
+msgstr "D’ainm"
+
+msgid "Your email address"
+msgstr "Do sheoladh ríomhphoist"
+
+msgid "Subject"
+msgstr "Ábhar"
+
+msgid "Message"
+msgstr "Teachtaireacht"
+
+msgid "Country of residence"
+msgstr "An tír chónaithe"
+
+msgid "Phone"
+msgstr "Guthán"
+
+msgid "Send yourself a copy"
+msgstr "Cóip a sheoladh chugat féin"
+
+msgid "Status message"
+msgstr "Teachtaireacht stádais"
+
+msgid "Close this message"
+msgstr "Dún an teachtaireacht seo"
+
+msgid "The sender's name"
+msgstr "Ainm an tseoltóra"
+
+msgid "The sender's email"
+msgstr "Ríomhphost an tseoltóra"
+
+msgid "Topic"
+msgstr "Ábhar"
+
+msgid "Languages"
+msgstr "Teangacha"
+
+msgid "Keywords"
+msgstr "Eochairfhocail"
+
+msgid "No results have been found"
+msgstr "Níor aimsíodh aon toradh"
+
+msgid "Event date"
+msgstr "Dáta an imeachta"
+
+msgid "Select"
+msgstr "Roghnaigh"
+
+msgid "After"
+msgstr "Tar éis"
+
+msgid "Before"
+msgstr "Roimh"
+
+msgid "In between"
+msgstr "Idir"
+
+msgid "Select all"
+msgstr "Roghnaigh gach rud"
+
+msgid "Event type"
+msgstr "An cineál imeachta"
+
+msgid "Venue"
+msgstr "An t-ionad"
+
+msgid "Online type"
+msgstr "An cineál imeachta ar líne"
+
+msgid "Livestream"
+msgstr "Beosruthú"
+
+msgid "Type"
+msgstr "Cineál"
+
+msgid "EU organisation type"
+msgstr "An cineál eagraíochta AE"
+
+msgid "Date"
+msgstr "Dáta"
+
+msgid "End Date"
+msgstr "Dáta Críochnaithe"
+
+msgid "Responsible department"
+msgstr "Roinn atá freagrach"
+
+msgid "Content owner"
+msgstr "Úinéir an inneachair"
+
+msgid "Overview"
+msgstr "Forbhreathnú"
+
+msgid "Open gallery"
+msgstr "An gailearaí"
+
+msgid "(Acting) @role"
+msgstr "(Gníomhach) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Eolas faoin dul chun cinn is déanaí agus faoi conas páirt a ghlacadh."
+
+msgid "Upcoming and ongoing"
+msgstr "Le teacht agus ar siúl faoi láthair"
+
+msgid "Past"
+msgstr "Roimhe seo"
+
+msgid "Upcoming and open"
+msgstr "Le teacht agus ar oscailt"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Tá leagan Gaeilge ar fáil tríd an tseirbhís meaisínaistriúcháin – bain úsáid as an nasc thíos le do thoil."
+
+msgid "Choose another language"
+msgstr "Roghnaigh teanga eile"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 lá"
+msgstr[1] "@count de laethanta"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 seachtain"
+msgstr[1] "@count de sheachtainí"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 bhliain"
+msgstr[1] "@count de bhlianta"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 mhí"
+msgstr[1] "@count de mhíonna"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 uair an chloig"
+msgstr[1] "@count uair an chloig"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 nóiméad"
+msgstr[1] "@count de nóiméid"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 soicind"
+msgstr[1] "@count de shoicindí"
+
+msgid "Online link"
+msgstr "Nasc chuig an imeacht ar líne"
+
+msgid "Online time"
+msgstr "Am an imeachta ar líne"
+
+msgid "Name"
+msgstr "Ainm"
+
+msgid "I have read and agree with the @link"
+msgstr "Léigh mé na @link"
+
+msgid "personal data protection terms"
+msgstr "téarmaí maidir le cosaint sonraí pearsanta agus aontaím leo"
+
+msgid "Highlighted"
+msgstr "Aibhsithe"
+
+msgid "European Union flag"
+msgstr "Bratach an Aontais Eorpaigh"
+
+msgid "European Commission logo"
+msgstr "Lógó an Choimisiúin Eorpaigh"
+
+msgid "Home"
+msgstr "Baile"
+
+msgid "European Union"
+msgstr "Aontais Eorpaigh"
+
+msgid "Sources"
+msgstr "Foinsí"
+
+msgid "This event has been cancelled."
+msgstr "Cuireadh an imeacht seo ar ceal."
+
+msgid "This event has been rescheduled."
+msgstr "Rinneadh an imeacht seo a athsceidealú."
+
+msgid "This event has been postponed."
+msgstr "Cuireadh an imeacht seo ar athló."
+
+msgid "This event has started."
+msgstr "Cuireadh tús leis an imeacht seo."
+
+msgid "This event has ended."
+msgstr "Tá an imeacht sin thart."
+
+msgid "This livestream has started."
+msgstr "Cuireadh tús leis an beoshruthú seo."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Cuireadh tús leis an imeacht seo. Is féidir leat féachaint air freisin ar bheoshruthú."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Tá an imeacht sin thart, ach tá an beoshruthú fós ar siúl."
+
+msgid "Who should attend"
+msgstr "Cé ba cheart freastal air"
+
+msgid "Organisers"
+msgstr "Eagraithe"
+
+msgid "Part of"
+msgstr "Cuid de"
+
+msgid "Online only"
+msgstr "Ar líne amháin"
+
+msgid "External event"
+msgstr "Imeacht seachtrach"
+
+msgid "Report"
+msgstr "Tuarascáil"
+
+msgid "Register here"
+msgstr "Cláraigh anseo"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Tá an t-imeacht seo tosaithe. Tosóidh an beoshruth ag @date."
+
+msgid "See all"
+msgstr "Féach na"
+
+msgid "media items"
+msgstr "míreanna meán uile"
+
+msgid "Close"
+msgstr "Dún"
+
+msgid "Programme"
+msgstr "Clár"
+
+msgid "Social media"
+msgstr "Na meáin shóisialta"
+
+msgid "Speakers"
+msgstr "Cainteoirí"
+
+msgid "Starts on @date"
+msgstr "Cuirfear tús leis ar @date"
+
+msgid "The livestream has started."
+msgstr "Cuireadh tús leis an beoshruthú seo."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Tá an beoshruthú thart ach tá an imeacht fós ar siúl."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage% den bhuiséad foriomlán"

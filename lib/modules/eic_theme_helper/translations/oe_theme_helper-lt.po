@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Įėjimo mokestis"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Rezervuokitės vietą, @time_left iki registracijos pabaigos, registracija baigsis @end_date."
+msgstr "Užsisakykite vietą, liko @time_left užsiregistruoti, registracija baigsis @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Iki registracijos pradžios liko @time_left. Registruotis galima nuo @start_date iki @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Registracijos laikotarpis baigėsi @end_date."
+msgid "Registration period ended on @date"
+msgstr "Registracijos laikotarpis baigėsi @date"
 
 msgid "Postal address"
 msgstr "Pašto adresas"
@@ -57,6 +57,9 @@ msgstr "Organizacija ryšiams"
 
 msgid "Call status: @label"
 msgstr "Kvietimo būsena @label"
+
+msgid "Press contact"
+msgstr "Kontaktai spaudai"
 
 msgid "Press contacts"
 msgstr "Kontaktiniai asmenys žiniasklaidai"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Vyksta"
 
 msgid "Closed"
-msgstr "Uždaryta"
+msgstr "Baigėsi"
 
 msgid "Details"
 msgstr "Išsamūs duomenys"
@@ -229,8 +232,8 @@ msgstr "Keli terminai"
 msgid "Permanent"
 msgstr "Nuolatinis"
 
-msgid "in"
-msgstr ""
+msgid "@date in @journal"
+msgstr "@date @journal"
 
 msgid "Contact us"
 msgstr "Susisiekite su mumis"
@@ -276,3 +279,344 @@ msgstr "Susijęs padalinys"
 
 msgid "Related departments"
 msgstr "Susiję padaliniai"
+
+msgid "Consultation"
+msgstr "Konsultacijos"
+
+msgid "Deadline"
+msgstr "Terminas"
+
+msgid "Respond to the questionnaire"
+msgstr "Pildyti klausimyną"
+
+msgid "Respond to the consultation"
+msgstr "Dalyvaukite konsultacijose"
+
+msgid "Target audience"
+msgstr "Tikslinė auditorija"
+
+msgid "Why we are consulting"
+msgstr "Kodėl rengiame konsultacijas?"
+
+msgid "Consultation outcome"
+msgstr "Konsultacijų rezultatai"
+
+msgid "Additional information"
+msgstr "Papildoma informacija"
+
+msgid "Reference documents"
+msgstr "Susiję dokumentai"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Šių konsultacijų nuomonių teikimo laikotarpis baigėsi. Dėkojame, kad dalyvaujate mūsų apklausoje."
+
+msgid "Status: @label"
+msgstr "Būsena: @label"
+
+msgid "Responsibilities"
+msgstr "Pareigos"
+
+msgid "Media"
+msgstr "Žiniasklaida"
+
+msgid "Latest"
+msgstr "Naujausia"
+
+msgid "Transparency"
+msgstr "Skaidrumas"
+
+msgid "Articles and presentations"
+msgstr "Straipsniai ir pranešimai"
+
+msgid "Biography"
+msgstr "Biografija"
+
+msgid "Declaration of interests"
+msgstr "Interesų deklaracija"
+
+msgid "Show contact details"
+msgstr "Rodyti kontaktinius duomenis"
+
+msgid "Hide contact details"
+msgstr "Slėpti kontaktinius duomenis"
+
+msgid "Leadership and organisation"
+msgstr "Vadovybė ir organizacinė struktūra"
+
+msgid "Available translations"
+msgstr "Vertimai"
+
+msgid "General contact"
+msgstr "Bendri kontaktiniai duomenys"
+
+msgid "Grants awarded"
+msgstr "Skirtos dotacijos"
+
+msgid "Page contents"
+msgstr "Puslapio turinys"
+
+msgid "Your name"
+msgstr "Jūsų vardas ir pavardė"
+
+msgid "Your email address"
+msgstr "Jūsų e. pašto adresas"
+
+msgid "Subject"
+msgstr "Tema"
+
+msgid "Message"
+msgstr "Žinutė"
+
+msgid "Country of residence"
+msgstr "Gyvenamoji šalis"
+
+msgid "Phone"
+msgstr "Telefonas"
+
+msgid "Send yourself a copy"
+msgstr "Siųsti kopiją sau"
+
+msgid "Status message"
+msgstr "Būsenos pranešimas"
+
+msgid "Close this message"
+msgstr "Uždaryti šią žinutę"
+
+msgid "The sender's name"
+msgstr "Siuntėjo vardas ir pavardė"
+
+msgid "The sender's email"
+msgstr "Siuntėjo e. pašto adresas"
+
+msgid "Topic"
+msgstr "Tema"
+
+msgid "Languages"
+msgstr "Kalbos"
+
+msgid "Keywords"
+msgstr "Raktažodžiai"
+
+msgid "No results have been found"
+msgstr "Rezultatų nerasta"
+
+msgid "Event date"
+msgstr "Renginio data"
+
+msgid "Select"
+msgstr "Pasirinkti"
+
+msgid "After"
+msgstr "Po"
+
+msgid "Before"
+msgstr "Iki"
+
+msgid "In between"
+msgstr "Tarp"
+
+msgid "Select all"
+msgstr "Pasirinkti viską"
+
+msgid "Event type"
+msgstr "Renginio rūšis"
+
+msgid "Venue"
+msgstr "Vieta"
+
+msgid "Online type"
+msgstr "Internetinio renginio rūšis"
+
+msgid "Livestream"
+msgstr "Tiesioginė transliacija"
+
+msgid "Type"
+msgstr "Rūšis"
+
+msgid "EU organisation type"
+msgstr "ES organizacijos rūšis"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "End Date"
+msgstr "Pabaigos data"
+
+msgid "Responsible department"
+msgstr "Atsakingas padalinys"
+
+msgid "Content owner"
+msgstr "Turinio savininkas"
+
+msgid "Overview"
+msgstr "Apžvalga"
+
+msgid "Open gallery"
+msgstr "Atidaryti galeriją"
+
+msgid "(Acting) @role"
+msgstr "(L. e. p.) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Sekite naujienas ir daugiau sužinokite, kaip galite dalyvauti."
+
+msgid "Upcoming and ongoing"
+msgstr "Artėjantys ir vykstantys"
+
+msgid "Past"
+msgstr "Buvę"
+
+msgid "Upcoming and open"
+msgstr "Artėjantys ir vykstantys"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Galima gauti mašininį vertimą į lietuvių kalbą – spustelėkite toliau pateiktą nuorodą."
+
+msgid "Choose another language"
+msgstr "Pasirinkite kitą kalbą"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 d."
+msgstr[1] "@count d."
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 sav."
+msgstr[1] "@count sav."
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 m."
+msgstr[1] "@count m."
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 mėn."
+msgstr[1] "@count mėn."
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 val."
+msgstr[1] "@count val."
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 min."
+msgstr[1] "@count min."
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 sek."
+msgstr[1] "@count sek."
+
+msgid "Online link"
+msgstr "Renginio nuoroda"
+
+msgid "Online time"
+msgstr "Renginio laikas"
+
+msgid "Name"
+msgstr "Vardas, pavardė (pavadinimas)"
+
+msgid "I have read and agree with the @link"
+msgstr "@link perskaičiau ir su jomis sutinku"
+
+msgid "personal data protection terms"
+msgstr "Asmens duomenų apsaugos sąlygas"
+
+msgid "Highlighted"
+msgstr "Paryškinta"
+
+msgid "European Union flag"
+msgstr "Europos Sąjungos vėliava"
+
+msgid "European Commission logo"
+msgstr "Europos Komisijos logotipas"
+
+msgid "Home"
+msgstr "Pradžios puslapis"
+
+msgid "European Union"
+msgstr "Europos Sąjunga"
+
+msgid "Sources"
+msgstr "Šaltiniai"
+
+msgid "This event has been cancelled."
+msgstr "Renginys buvo atšauktas."
+
+msgid "This event has been rescheduled."
+msgstr "Pakeistas renginio laikas."
+
+msgid "This event has been postponed."
+msgstr "Renginys buvo atidėtas."
+
+msgid "This event has started."
+msgstr "Renginys prasidėjo."
+
+msgid "This event has ended."
+msgstr "Renginys baigėsi."
+
+msgid "This livestream has started."
+msgstr "Tiesioginė transliacija prasidėjo."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Renginys prasidėjo. Taip pat galite jį stebėti per tiesioginę transliaciją."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Šis renginys baigėsi, tačiau vis dar vyksta tiesioginė transliacija."
+
+msgid "Who should attend"
+msgstr "Tikslinė grupė"
+
+msgid "Organisers"
+msgstr "Organizatoriai"
+
+msgid "Part of"
+msgstr "Dalis"
+
+msgid "Online only"
+msgstr "Tik internetu"
+
+msgid "External event"
+msgstr "Išorės renginys"
+
+msgid "Report"
+msgstr "Ataskaita"
+
+msgid "Register here"
+msgstr "Registruokitės čia"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Šis renginys prasidėjo. Tiesioginė transliacija prasidės @date."
+
+msgid "See all"
+msgstr "Žiūrėkite visus"
+
+msgid "media items"
+msgstr "medijos elementus"
+
+msgid "Close"
+msgstr "Uždaryti"
+
+msgid "Programme"
+msgstr "Programa"
+
+msgid "Social media"
+msgstr "Socialiniai tinklai"
+
+msgid "Speakers"
+msgstr "Pranešėjai"
+
+msgid "Starts on @date"
+msgstr "Prasideda @date"
+
+msgid "The livestream has started."
+msgstr "Tiesioginė transliacija prasidėjo."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Tiesioginė transliacija baigėsi, tačiau renginys tęsiasi."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage % bendro biudžeto"

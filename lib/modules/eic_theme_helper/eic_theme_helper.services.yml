@@ -28,7 +28,7 @@ services:
     parent: default_plugin_manager
   eic_theme_helper.twig_extension.twig_extension:
     class: Drupal\eic_theme_helper\TwigExtension\TwigExtension
-    arguments: ['@language_manager', '@renderer']
+    arguments: ['@language_manager', '@renderer', '@eic_theme_helper.external_links']
     tags:
     - { name: twig.extension }
   eic_theme_helper.node_metadata_event_subscriber:
@@ -36,3 +36,6 @@ services:
     arguments: ['@current_route_match', '@entity_type.manager', '@entity.repository']
     tags:
       - { name: event_subscriber }
+  eic_theme_helper.external_links:
+    class: Drupal\eic_theme_helper\ExternalLinks
+    arguments: [ '@config.factory' ]

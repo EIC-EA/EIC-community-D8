@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Preço de entrada"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Reserve o seu lugar, ainda dispõe de @time_left para se inscrever, inscrição até @end_date."
+msgstr "Reserve o seu lugar, @time_left para se inscrever, o período de inscrição terminará em @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Início do período de inscrição dentro de @time_left. Pode inscrever-se a partir de @start_date a @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Termo do período de inscrição em @date."
+msgid "Registration period ended on @date"
+msgstr "O período de inscrição terminou em @date"
 
 msgid "Postal address"
 msgstr "Endereço postal"
@@ -57,6 +57,9 @@ msgstr "Organização de contacto"
 
 msgid "Call status: @label"
 msgstr "Estado: @label"
+
+msgid "Press contact"
+msgstr "Contacto para a imprensa"
 
 msgid "Press contacts"
 msgstr "Contactos para a imprensa"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Aberto"
 
 msgid "Closed"
-msgstr "Encerrado"
+msgstr "Fechados"
 
 msgid "Details"
 msgstr "Informação detalhada"
@@ -229,8 +232,8 @@ msgstr "Prazos múltiplos"
 msgid "Permanent"
 msgstr "Permanente"
 
-msgid "in"
-msgstr "em"
+msgid "@date in @journal"
+msgstr "@date no @journal"
 
 msgid "Contact us"
 msgstr "Contacte-nos"
@@ -276,3 +279,344 @@ msgstr "Departamento conexo"
 
 msgid "Related departments"
 msgstr "Departamentos conexos"
+
+msgid "Consultation"
+msgstr "Consulta"
+
+msgid "Deadline"
+msgstr "Prazo"
+
+msgid "Respond to the questionnaire"
+msgstr "Responda ao questionário"
+
+msgid "Respond to the consultation"
+msgstr "Participe na consulta"
+
+msgid "Target audience"
+msgstr "Público‑alvo"
+
+msgid "Why we are consulting"
+msgstr "Porquê esta consulta?"
+
+msgid "Consultation outcome"
+msgstr "Resultados da consulta"
+
+msgid "Additional information"
+msgstr "Informação adicional"
+
+msgid "Reference documents"
+msgstr "Documentos de referência"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "O prazo de resposta à consulta terminou. Obrigado pela sua colaboração."
+
+msgid "Status: @label"
+msgstr "Estado: @label"
+
+msgid "Responsibilities"
+msgstr "Responsabilidades"
+
+msgid "Media"
+msgstr "Meios de comunicação social"
+
+msgid "Latest"
+msgstr "Atualidade"
+
+msgid "Transparency"
+msgstr "Transparência"
+
+msgid "Articles and presentations"
+msgstr "Artigos e apresentações"
+
+msgid "Biography"
+msgstr "Biografia"
+
+msgid "Declaration of interests"
+msgstr "Declaração de interesses"
+
+msgid "Show contact details"
+msgstr "Ver contactos"
+
+msgid "Hide contact details"
+msgstr "Ocultar contactos"
+
+msgid "Leadership and organisation"
+msgstr "Direção e organização"
+
+msgid "Available translations"
+msgstr "Traduções disponíveis"
+
+msgid "General contact"
+msgstr "Contacto geral"
+
+msgid "Grants awarded"
+msgstr "Subvenções atribuídas"
+
+msgid "Page contents"
+msgstr "Índice"
+
+msgid "Your name"
+msgstr "O seu nome"
+
+msgid "Your email address"
+msgstr "Endereço de correio eletrónico"
+
+msgid "Subject"
+msgstr "Assunto"
+
+msgid "Message"
+msgstr "Mensagem"
+
+msgid "Country of residence"
+msgstr "País de residência"
+
+msgid "Phone"
+msgstr "Telefone"
+
+msgid "Send yourself a copy"
+msgstr "Receber uma cópia"
+
+msgid "Status message"
+msgstr "Mensagem de estado"
+
+msgid "Close this message"
+msgstr "Fechar esta mensagem"
+
+msgid "The sender's name"
+msgstr "Nome do remetente"
+
+msgid "The sender's email"
+msgstr "Endereço de correio eletrónico do remetente"
+
+msgid "Topic"
+msgstr "Tópico"
+
+msgid "Languages"
+msgstr "Línguas"
+
+msgid "Keywords"
+msgstr "Palavras-chave"
+
+msgid "No results have been found"
+msgstr "Não foram encontrados resultados"
+
+msgid "Event date"
+msgstr "Data do evento"
+
+msgid "Select"
+msgstr "Selecionar"
+
+msgid "After"
+msgstr "A partir de"
+
+msgid "Before"
+msgstr "Antes de"
+
+msgid "In between"
+msgstr "Entre"
+
+msgid "Select all"
+msgstr "Selecionar tudo"
+
+msgid "Event type"
+msgstr "Tipo de evento"
+
+msgid "Venue"
+msgstr "Local"
+
+msgid "Online type"
+msgstr "Em linha"
+
+msgid "Livestream"
+msgstr "Em direto via Internet"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "EU organisation type"
+msgstr "Tipo de organização da UE"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "End Date"
+msgstr "Data de termo"
+
+msgid "Responsible department"
+msgstr "Serviço responsável"
+
+msgid "Content owner"
+msgstr "Proprietário do conteúdo"
+
+msgid "Overview"
+msgstr "Panorâmica"
+
+msgid "Open gallery"
+msgstr "Abrir a galeria"
+
+msgid "(Acting) @role"
+msgstr "(Em exercício) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Seguir os últimos progressos e informar-se sobre as possibilidades de participação"
+
+msgid "Upcoming and ongoing"
+msgstr "Próximos e em curso"
+
+msgid "Past"
+msgstr "Prévios"
+
+msgid "Upcoming and open"
+msgstr "Proximamente e abertos"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Para obter uma tradução automática em português, clique na ligação abaixo."
+
+msgid "Choose another language"
+msgstr "Escolha outra língua"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 dia"
+msgstr[1] "@count dias"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 semana"
+msgstr[1] "@count semanas"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 ano"
+msgstr[1] "@count anos"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 mês"
+msgstr[1] "@count meses"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 hora"
+msgstr[1] "@count horas"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 minuto"
+msgstr[1] "@count minutos"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 segundo"
+msgstr[1] "@count segundos"
+
+msgid "Online link"
+msgstr "Ligação Internet"
+
+msgid "Online time"
+msgstr "Tempo em linha"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "I have read and agree with the @link"
+msgstr "Li e concordo com as @link"
+
+msgid "personal data protection terms"
+msgstr "condições de proteção de dados pessoais"
+
+msgid "Highlighted"
+msgstr "Em destaque"
+
+msgid "European Union flag"
+msgstr "Bandeira da União Europeia"
+
+msgid "European Commission logo"
+msgstr "Logótipo da Comissão Europeia"
+
+msgid "Home"
+msgstr "Página principal"
+
+msgid "European Union"
+msgstr "União Europeia"
+
+msgid "Sources"
+msgstr "Fontes"
+
+msgid "This event has been cancelled."
+msgstr "Este evento foi anulado."
+
+msgid "This event has been rescheduled."
+msgstr "Este evento foi reprogramado."
+
+msgid "This event has been postponed."
+msgstr "Este evento foi adiado."
+
+msgid "This event has started."
+msgstr "Este evento começou."
+
+msgid "This event has ended."
+msgstr "Este evento terminou."
+
+msgid "This livestream has started."
+msgstr "A transmissão em direto via Internet já começou."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Este evento começou. Pode também assistir através da transmissão em direto via Internet."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Este evento terminou, mas a transmissão em direto via Internet continua."
+
+msgid "Who should attend"
+msgstr "Destinatários/Destinatárias"
+
+msgid "Organisers"
+msgstr "Organizadores/Organizadoras"
+
+msgid "Part of"
+msgstr "Parte de"
+
+msgid "Online only"
+msgstr "Apenas em linha"
+
+msgid "External event"
+msgstr "Evento externo"
+
+msgid "Report"
+msgstr "Relatório"
+
+msgid "Register here"
+msgstr "Registe-se aqui"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Este evento já começou. Início da transmissão em direto: @date."
+
+msgid "See all"
+msgstr "Ver tudo"
+
+msgid "media items"
+msgstr "elementos multimédia"
+
+msgid "Close"
+msgstr "Encerrado"
+
+msgid "Programme"
+msgstr "Programa"
+
+msgid "Social media"
+msgstr "Redes sociais"
+
+msgid "Speakers"
+msgstr "Oradores/Oradoras"
+
+msgid "Starts on @date"
+msgstr "Início em @date"
+
+msgid "The livestream has started."
+msgstr "A transmissão em direto via Internet já começou."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "A transmissão em direto terminou, mas o evento prossegue."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage% do orçamento global"

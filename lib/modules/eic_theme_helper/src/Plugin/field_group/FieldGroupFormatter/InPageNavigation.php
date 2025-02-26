@@ -23,6 +23,15 @@ class InPageNavigation extends InPageNavigationBase {
   /**
    * {@inheritdoc}
    */
+  public function settingsForm() {
+    $form = parent::settingsForm();
+    $form['label']['#required'] = TRUE;
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preRender(&$element, $rendering_object) {
     parent::preRender($element, $rendering_object);
 
@@ -32,7 +41,7 @@ class InPageNavigation extends InPageNavigationBase {
     ];
 
     $children = Element::children($element);
-    foreach ($children as $group_name) {
+    foreach ($children as $key => $group_name) {
       // Bail out if group does not exist or it's not of the right type.
       if (!$this->isInPageNavigationItem($group_name, $rendering_object)) {
         continue;
