@@ -1,0 +1,7 @@
+name: 'OpenEuropa Theme In-page Navigation Test'
+type: module
+description: 'Module for testing in-page navigation functionality'
+package: OpenEuropa
+core_version_requirement: ^9.4 || ^10
+dependencies:
+  - oe_theme:oe_theme_helper

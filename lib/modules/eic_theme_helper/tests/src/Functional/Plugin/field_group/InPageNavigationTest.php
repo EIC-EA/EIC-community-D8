@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Functional\Plugin\field_group;
+namespace Drupal\Tests\oe_theme_helper\Functional\Plugin\field_group;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\field\Entity\FieldConfig;
@@ -12,13 +12,10 @@ use Drupal\Tests\field_group\Functional\FieldGroupTestTrait;
 
 /**
  * Test In-page navigation field group.
+ *
+ * @group batch3
  */
 class InPageNavigationTest extends BrowserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   use FieldGroupTestTrait;
 
@@ -44,8 +41,13 @@ class InPageNavigationTest extends BrowserTestBase {
     'extra_field_test',
     'field_test',
     'field_group',
-    'eic_theme_helper',
+    'oe_theme_helper',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -143,13 +145,13 @@ class InPageNavigationTest extends BrowserTestBase {
     $groups_inpage_nav_item = [];
     $children_group_inpage_nav = [];
     foreach ($children_group_inpage_nav_items as $index => $item) {
-      $group = $this->createFieldGroup("inpage_nav_item_$index", 'eic_theme_helper_in_page_navigation_item', $item, $index);
+      $group = $this->createFieldGroup("inpage_nav_item_$index", 'oe_theme_helper_in_page_navigation_item', $item, $index);
       $groups_inpage_nav_item[] = $group;
       $children_group_inpage_nav[] = $group->group_name;
     }
 
     // Create In-page navigation group.
-    $this->createFieldGroup('main', 'eic_theme_helper_in_page_navigation', $children_group_inpage_nav);
+    $this->createFieldGroup('main', 'oe_theme_helper_in_page_navigation', $children_group_inpage_nav);
     $this->drupalGet('node/' . $this->node->id());
 
     // Assert navigation part.
@@ -167,7 +169,7 @@ class InPageNavigationTest extends BrowserTestBase {
     }
 
     // Assert content part.
-    $content = $this->assertSession()->elementExists('css', '.ecl-col-lg-9', $wrapper);
+    $content = $this->assertSession()->elementExists('css', '.ecl-col-l-9', $wrapper);
     $content_items = $content->findAll('xpath', '/div');
     $this->assertCount(3, $content_items);
     // Assert headers of field groups.

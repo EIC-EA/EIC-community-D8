@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\eic_theme_helper\Plugin\field_group\FieldGroupFormatter;
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Format a field group using the field list pattern.
@@ -20,6 +21,8 @@ use Drupal\Core\Render\Element;
  */
 class FieldListPattern extends PatternFormatterBase {
 
+  use StringTranslationTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -34,9 +37,18 @@ class FieldListPattern extends PatternFormatterBase {
     $fields = [];
 
     foreach (Element::children($element) as $field_name) {
+      $label = $element[$field_name]['#title'] ?? '';
+      // By some conditions label of some fields could be passed not yet
+      // translated. It can be related to field_group implementation.
+      // @todo Investigate why some field labels are translated and some is not.
+      if (!empty($label) && is_string($label)) {
+        // @codingStandardsIgnoreStart
+        $label = $this->t($label);
+        // @codingStandardsIgnoreEnd
+      }
       // Assign field label and content to the pattern's fields.
       $fields['items'][] = [
-        'label' => $element[$field_name]['#title'] ?? '',
+        'label' => $label,
         'body' => [
           '#label_display' => 'hidden',
         ] + $element[$field_name],

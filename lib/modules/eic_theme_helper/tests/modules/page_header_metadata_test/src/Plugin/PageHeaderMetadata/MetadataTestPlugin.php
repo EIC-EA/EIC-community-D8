@@ -6,7 +6,7 @@ namespace Drupal\page_header_metadata_test\Plugin\PageHeaderMetadata;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\eic_theme_helper\PageHeaderMetadataPluginBase;
+use Drupal\oe_theme_helper\PageHeaderMetadataPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

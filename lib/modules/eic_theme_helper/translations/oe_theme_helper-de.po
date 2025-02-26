@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Eintritt"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Jetzt Ihren Platz sichern – es bleiben noch @time_left bis zum Ende der Registrierung am @end_date."
+msgstr "Sichern Sie sich Ihren Platz! Sie haben noch @time_left Zeit. Die Registrierung endet am @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Registrierung beginnt in @time_left. Sie können sich vom @start_date bis zum @end_date registrieren."
 
-msgid "Registration period ended on @date."
-msgstr "Die Registrierung endete am @date."
+msgid "Registration period ended on @date"
+msgstr "Der Registrierungszeitraum endete am @date"
 
 msgid "Postal address"
 msgstr "Postanschrift"
@@ -57,6 +57,9 @@ msgstr "Organisation kontaktieren"
 
 msgid "Call status: @label"
 msgstr "Status der Aufforderung: @label"
+
+msgid "Press contact"
+msgstr "Pressekontakt"
 
 msgid "Press contacts"
 msgstr "Pressekontakte"
@@ -83,7 +86,7 @@ msgid "Deadline dates"
 msgstr "Stichtage"
 
 msgid "Publication date"
-msgstr "Veröffentlicht am"
+msgstr "Datum der Veröffentlichung"
 
 msgid "Author"
 msgstr "Autor"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Offen"
 
 msgid "Closed"
-msgstr "Beendet"
+msgstr "Vorbei"
 
 msgid "Details"
 msgstr "Einzelheiten"
@@ -229,8 +232,8 @@ msgstr "Mehrere Enddaten"
 msgid "Permanent"
 msgstr "Unbefristet"
 
-msgid "in"
-msgstr "im"
+msgid "@date in @journal"
+msgstr "@date im @journal"
 
 msgid "Contact us"
 msgstr "Kontakt"
@@ -276,3 +279,344 @@ msgstr "Beteiligte dienststelle"
 
 msgid "Related departments"
 msgstr "Beteiligte Dienststellen"
+
+msgid "Consultation"
+msgstr "Konsultation"
+
+msgid "Deadline"
+msgstr "Endet am"
+
+msgid "Respond to the questionnaire"
+msgstr "Fragebogen beantworten"
+
+msgid "Respond to the consultation"
+msgstr "An Konsultation teilnehmen"
+
+msgid "Target audience"
+msgstr "Zielgruppe"
+
+msgid "Why we are consulting"
+msgstr "Zweck der Konsultation"
+
+msgid "Consultation outcome"
+msgstr "Konsultationsergebnis"
+
+msgid "Additional information"
+msgstr "Zusätzliche Informationen"
+
+msgid "Reference documents"
+msgstr "Referenzdokumente"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Die Teilnahmefrist für diese Konsultation ist abgelaufen. Danke für Ihren Beitrag."
+
+msgid "Status: @label"
+msgstr "Status: @label"
+
+msgid "Responsibilities"
+msgstr "Zuständigkeiten"
+
+msgid "Media"
+msgstr "Medien"
+
+msgid "Latest"
+msgstr "Aktuelles"
+
+msgid "Transparency"
+msgstr "Transparenz"
+
+msgid "Articles and presentations"
+msgstr "Veröffentlichungen und Präsentationen"
+
+msgid "Biography"
+msgstr "Biographie"
+
+msgid "Declaration of interests"
+msgstr "Interessenerklärung"
+
+msgid "Show contact details"
+msgstr "Kontaktdaten anzeigen"
+
+msgid "Hide contact details"
+msgstr "Kontaktdaten verbergen"
+
+msgid "Leadership and organisation"
+msgstr "Leitung und Organisation"
+
+msgid "Available translations"
+msgstr "Verfügbare Übersetzungen"
+
+msgid "General contact"
+msgstr "Kontakt"
+
+msgid "Grants awarded"
+msgstr "Finanzhilfen gewährt"
+
+msgid "Page contents"
+msgstr "Seiteninhalte"
+
+msgid "Your name"
+msgstr "Ihr Name"
+
+msgid "Your email address"
+msgstr "Ihre E-Mail-Adresse"
+
+msgid "Subject"
+msgstr "Betreff"
+
+msgid "Message"
+msgstr "Nachricht"
+
+msgid "Country of residence"
+msgstr "Wohnsitzland"
+
+msgid "Phone"
+msgstr "Telefonnummer"
+
+msgid "Send yourself a copy"
+msgstr "Kopie an mich senden"
+
+msgid "Status message"
+msgstr "Statusmeldung"
+
+msgid "Close this message"
+msgstr "Diese Nachricht schließen"
+
+msgid "The sender's name"
+msgstr "Name des Absenders"
+
+msgid "The sender's email"
+msgstr "E-Mail-Adresse des Absenders"
+
+msgid "Topic"
+msgstr "Thema"
+
+msgid "Languages"
+msgstr "Sprachen"
+
+msgid "Keywords"
+msgstr "Schlüsselwörter"
+
+msgid "No results have been found"
+msgstr "Keine Ergebnisse gefunden"
+
+msgid "Event date"
+msgstr "Datum der Veranstaltung"
+
+msgid "Select"
+msgstr "Auswählen"
+
+msgid "After"
+msgstr "Nach"
+
+msgid "Before"
+msgstr "Vor"
+
+msgid "In between"
+msgstr "Zwischen"
+
+msgid "Select all"
+msgstr "Alle auswählen"
+
+msgid "Event type"
+msgstr "Art der Veranstaltung"
+
+msgid "Venue"
+msgstr "Ort"
+
+msgid "Online type"
+msgstr "Online"
+
+msgid "Livestream"
+msgstr "Livestream"
+
+msgid "Type"
+msgstr "Art"
+
+msgid "EU organisation type"
+msgstr "EU-Einrichtung"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "End Date"
+msgstr "Enddatum"
+
+msgid "Responsible department"
+msgstr "Zuständige Abteilung"
+
+msgid "Content owner"
+msgstr "Inhaltseigentümer"
+
+msgid "Overview"
+msgstr "Überblick"
+
+msgid "Open gallery"
+msgstr "Galerie öffnen"
+
+msgid "(Acting) @role"
+msgstr "(Stellvertretende/r) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Auf dem Laufenden bleiben und mitreden"
+
+msgid "Upcoming and ongoing"
+msgstr "Demnächst und jetzt"
+
+msgid "Past"
+msgstr "Vorbei"
+
+msgid "Upcoming and open"
+msgstr "Demnächst und jetzt"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Nutzen Sie für Deutsch die maschinelle Übersetzung – klicken Sie auf den nachstehenden Link."
+
+msgid "Choose another language"
+msgstr "Andere Sprache wählen"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 Tag"
+msgstr[1] "@count Tage"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 Woche"
+msgstr[1] "@count Wochen"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 Jahr"
+msgstr[1] "@count Jahre"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 Monat"
+msgstr[1] "@count Monate"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 Stunde"
+msgstr[1] "@count Stunden"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 Minute"
+msgstr[1] "@count Minuten"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 Sekunde"
+msgstr[1] "@count Sekunden"
+
+msgid "Online link"
+msgstr "Link"
+
+msgid "Online time"
+msgstr "Zeit"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "I have read and agree with the @link"
+msgstr "Ich habe die @link gelesen und stimme ihnen zu."
+
+msgid "personal data protection terms"
+msgstr "Datenschutzbestimmungen"
+
+msgid "Highlighted"
+msgstr "Hervorgehoben"
+
+msgid "European Union flag"
+msgstr "Flagge der Europäischen Union"
+
+msgid "European Commission logo"
+msgstr "Logo der Europäischen Kommission"
+
+msgid "Home"
+msgstr "Startseite"
+
+msgid "European Union"
+msgstr "Europäische Union"
+
+msgid "Sources"
+msgstr "Quellen"
+
+msgid "This event has been cancelled."
+msgstr "Diese Veranstaltung wurde abgesagt."
+
+msgid "This event has been rescheduled."
+msgstr "Diese Veranstaltung wurde verlegt."
+
+msgid "This event has been postponed."
+msgstr "Diese Veranstaltung wurde verschoben."
+
+msgid "This event has started."
+msgstr "Diese Veranstaltung hat begonnen."
+
+msgid "This event has ended."
+msgstr "Diese Veranstaltung ist beendet."
+
+msgid "This livestream has started."
+msgstr "Dieser Livestream hat begonnen."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Diese Veranstaltung hat begonnen. Sie können sie über Livestream mitverfolgen."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Diese Veranstaltung ist beendet. Der Livestream läuft noch."
+
+msgid "Who should attend"
+msgstr "Zielgruppe"
+
+msgid "Organisers"
+msgstr "Organisatoren"
+
+msgid "Part of"
+msgstr "Teil von"
+
+msgid "Online only"
+msgstr "Nur online"
+
+msgid "External event"
+msgstr "Externe Veranstaltung"
+
+msgid "Report"
+msgstr "Bericht"
+
+msgid "Register here"
+msgstr "Hier registrieren"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Die Veranstaltung hat begonnen. Livestream ab @date."
+
+msgid "See all"
+msgstr "Alle anzeigen"
+
+msgid "media items"
+msgstr "Medienbeiträge"
+
+msgid "Close"
+msgstr "Beendet"
+
+msgid "Programme"
+msgstr "Programm"
+
+msgid "Social media"
+msgstr "Soziale Medien"
+
+msgid "Speakers"
+msgstr "Redner"
+
+msgid "Starts on @date"
+msgstr "Beginnt um @date"
+
+msgid "The livestream has started."
+msgstr "Dieser Livestream hat begonnen."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Der Livestream ist beendet, aber die Veranstaltung läuft noch."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage % der Gesamtmittel"

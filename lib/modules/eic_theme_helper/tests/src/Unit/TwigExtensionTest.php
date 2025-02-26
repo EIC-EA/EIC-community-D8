@@ -2,23 +2,28 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Unit;
+namespace Drupal\Tests\oe_theme_helper\Unit;
 
-use Twig\Environment;
-use Twig\Error\RuntimeError;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Template\Loader\StringLoader;
-use Drupal\eic_theme_helper\TwigExtension\TwigExtension;
+use Drupal\oe_theme_helper\EuropeanUnionLanguages;
+use Drupal\oe_theme_helper\ExternalLinksInterface;
+use Drupal\oe_theme_helper\TwigExtension\TwigExtension;
 use Drupal\Tests\UnitTestCase;
+use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * Tests for the custom Twig filters and functions extension.
  *
- * @group eic_theme_helper
+ * @group oe_theme_helper
  *
- * @coversDefaultClass \Drupal\eic_theme_helper\TwigExtension\TwigExtension
+ * @coversDefaultClass \Drupal\oe_theme_helper\TwigExtension\TwigExtension
+ *
+ * @group batch1
  */
 class TwigExtensionTest extends UnitTestCase {
 
@@ -39,16 +44,23 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * The Twig extension being tested.
    *
-   * @var \Drupal\eic_theme_helper\TwigExtension\TwigExtension
+   * @var \Drupal\oe_theme_helper\TwigExtension\TwigExtension
    */
   protected $extension;
 
   /**
    * The Twig environment containing the extension being tested.
    *
-   * @var \Twig\Environment
+   * @var \Twig_Environment
    */
   protected $twig;
+
+  /**
+   * The external links service.
+   *
+   * @var \Drupal\oe_theme_helper\ExternalLinksInterface
+   */
+  protected $externalLinks;
 
   /**
    * {@inheritdoc}
@@ -75,8 +87,11 @@ class TwigExtensionTest extends UnitTestCase {
     // Create Renderer service mock.
     $this->renderer = $this->prophesize(Renderer::class);
 
+    // Create the external link service mock.
+    $this->externalLinks = $this->prophesize(ExternalLinksInterface::class);
+
     // Instantiate the system under test.
-    $this->extension = new TwigExtension($this->languageManager->reveal(), $this->renderer->reveal());
+    $this->extension = new TwigExtension($this->languageManager->reveal(), $this->renderer->reveal(), $this->externalLinks->reveal());
 
     // For convenience, make a version of the Twig environment available that
     // has the tested extension preloaded.
@@ -112,7 +127,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testToLanguageName()
    */
-  public static function toLanguageNameProvider(): array {
+  public function toLanguageNameProvider(): array {
     return [
       ['bg', 'Bulgarian'],
       ['cs', 'Czech'],
@@ -168,7 +183,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testToNativeLanguageName()
    */
-  public static function toNativeLanguageNameProvider(): array {
+  public function toNativeLanguageNameProvider(): array {
     return [
       ['bg', 'български'],
       ['cs', 'čeština'],
@@ -230,7 +245,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testPassingInvalidLanguageCodesToNativeLanguageName()
    */
-  public static function invalidLanguageCodesProvider(): array {
+  public function invalidLanguageCodesProvider(): array {
     return [
       [NULL],
       [TRUE],
@@ -256,7 +271,7 @@ class TwigExtensionTest extends UnitTestCase {
    *   names as values.
    */
   protected static function getEuropeanUnionLanguageList(): array {
-    return TwigExtension::getEuropeanUnionLanguageList();
+    return EuropeanUnionLanguages::getLanguageList();
   }
 
   /**
@@ -273,7 +288,11 @@ class TwigExtensionTest extends UnitTestCase {
    * @dataProvider toEclIconProvider
    */
   public function testToEclIcon(string $icon_name, array $expected_icon_array, string $size = NULL) {
-    $context = ['ecl_icon_path' => '/path/to/theme/resources/icons/'];
+    $context = [
+      'ecl_icon_path' => '/path/to/theme/resources/icons/',
+      'ecl_icon_social_media_path' => '/path/to/theme/resources/social-media-icons/',
+      'ecl_icon_flag_path' => '/path/to/theme/resources/flag-icons/',
+    ];
     // We join the resulting array from to_ecl_icon() function so that we have
     // a visual representation of the array being returned by the function.
     if ($size === NULL) {
@@ -294,12 +313,12 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @see ::testToEclIcon()
    */
-  public static function toEclIconProvider(): array {
+  public function toEclIconProvider(): array {
     return [
       [
         'right',
         [
-          'name' => 'ui--rounded-arrow',
+          'name' => 'corner-arrow',
           'transform' => 'rotate-90',
           'path' => '/path/to/theme/resources/icons/',
           'size' => 'xs',
@@ -307,9 +326,45 @@ class TwigExtensionTest extends UnitTestCase {
         'xs',
       ],
       [
+        'instagram',
+        [
+          'name' => 'instagram',
+          'path' => '/path/to/theme/resources/social-media-icons/',
+          'size' => 'xs',
+        ],
+        'xs',
+      ],
+      [
+        'instagram-color',
+        [
+          'name' => 'instagram-color',
+          'path' => '/path/to/theme/resources/social-media-icons/',
+          'size' => 'xs',
+        ],
+        'xs',
+      ],
+      [
+        'spain',
+        [
+          'name' => 'spain',
+          'path' => '/path/to/theme/resources/flag-icons/',
+          'size' => 'xs',
+        ],
+        'xs',
+      ],
+      [
+        'spain-square',
+        [
+          'name' => 'spain-square',
+          'path' => '/path/to/theme/resources/flag-icons/',
+          'size' => 'xs',
+        ],
+        'xs',
+      ],
+      [
         'close-dark',
         [
-          'name' => 'ui--close-filled',
+          'name' => 'close-filled',
           'path' => '/path/to/theme/resources/icons/',
           'size' => 'xl',
         ],
@@ -318,7 +373,7 @@ class TwigExtensionTest extends UnitTestCase {
       [
         'not-supported-icon',
         [
-          'name' => 'general--digital',
+          'name' => 'not-supported-icon',
           'path' => '/path/to/theme/resources/icons/',
           'size' => 'm',
         ],
@@ -327,7 +382,7 @@ class TwigExtensionTest extends UnitTestCase {
       [
         'no-size',
         [
-          'name' => 'general--digital',
+          'name' => 'no-size',
           'path' => '/path/to/theme/resources/icons/',
         ],
         NULL,
@@ -335,13 +390,21 @@ class TwigExtensionTest extends UnitTestCase {
       [
         'empty-size',
         [
-          'name' => 'general--digital',
+          'name' => 'empty-size',
           'path' => '/path/to/theme/resources/icons/',
           'size' => '',
         ],
         '',
       ],
     ];
+  }
+
+  /**
+   * Test that create_markup filter returns MarkupInterface object.
+   */
+  public function testCreateMarkup() {
+    $markup_object = $this->extension->createMarkup('Some string');
+    $this->assertInstanceOf(MarkupInterface::class, $markup_object);
   }
 
 }

@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Vstupní poplatek"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Zarezervujte si místo. Do konce registrace zbývá: @time_left. Konec registrace: @end_date."
+msgstr "Rezervujte si místa, k registraci zbývá @time_left – registrace skončí @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Registrace bude zahájena za @time_left dní. Můžete se zaregistrovat od @start_date do @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Registrace skončila @end_date."
+msgid "Registration period ended on @date"
+msgstr "Registrační období skončilo @date"
 
 msgid "Postal address"
 msgstr "Poštovní adresa"
@@ -57,6 +57,9 @@ msgstr "Kontaktní organizace"
 
 msgid "Call status: @label"
 msgstr "Status výzvy: @label"
+
+msgid "Press contact"
+msgstr "Kontakt pro média"
 
 msgid "Press contacts"
 msgstr "Kontakty pro tisk a média"
@@ -83,7 +86,7 @@ msgid "Deadline dates"
 msgstr "Lhůty"
 
 msgid "Publication date"
-msgstr "Datum vydání publikace"
+msgstr "Datum zveřejnění"
 
 msgid "Author"
 msgstr "Autor /Autorka"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Probíhá"
 
 msgid "Closed"
-msgstr "ukončeno"
+msgstr "Uzavřeno"
 
 msgid "Details"
 msgstr "Podrobnosti"
@@ -206,7 +209,7 @@ msgid "Project"
 msgstr "Projekt"
 
 msgid "Publication type"
-msgstr "Typ publikace"
+msgstr "Typ zveřejnění"
 
 msgid "Call for proposals"
 msgstr "Výzva k podávání návrhů"
@@ -229,8 +232,8 @@ msgstr "Několik termínů"
 msgid "Permanent"
 msgstr "Stálý"
 
-msgid "in"
-msgstr "v"
+msgid "@date in @journal"
+msgstr "@date v @journal"
 
 msgid "Contact us"
 msgstr "Kontakt"
@@ -276,3 +279,344 @@ msgstr "Zapojený útvar"
 
 msgid "Related departments"
 msgstr "Zapojené útvary"
+
+msgid "Consultation"
+msgstr "Konzultace"
+
+msgid "Deadline"
+msgstr "Lhůta"
+
+msgid "Respond to the questionnaire"
+msgstr "Zúčastnit se konzultace"
+
+msgid "Respond to the consultation"
+msgstr "Zúčastnit se konzultace"
+
+msgid "Target audience"
+msgstr "Cílová skupina"
+
+msgid "Why we are consulting"
+msgstr "Proč se konzultace koná"
+
+msgid "Consultation outcome"
+msgstr "Výsledek konzultace"
+
+msgid "Additional information"
+msgstr "Další informace"
+
+msgid "Reference documents"
+msgstr "Referenční dokumenty"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Lhůta pro zasílání odpovědí na tuto konzultaci skončila. Děkujeme vám za vyplnění dotazníku."
+
+msgid "Status: @label"
+msgstr "Status: @label"
+
+msgid "Responsibilities"
+msgstr "Povinnosti"
+
+msgid "Media"
+msgstr "Média"
+
+msgid "Latest"
+msgstr "Novinky"
+
+msgid "Transparency"
+msgstr "Transparentnost"
+
+msgid "Articles and presentations"
+msgstr "Články a prezentace"
+
+msgid "Biography"
+msgstr "Osobní profil"
+
+msgid "Declaration of interests"
+msgstr "Prohlášení o zájmech"
+
+msgid "Show contact details"
+msgstr "Zobrazit kontaktní údaje"
+
+msgid "Hide contact details"
+msgstr "Skrýt kontaktní údaje"
+
+msgid "Leadership and organisation"
+msgstr "Vedení a organizace"
+
+msgid "Available translations"
+msgstr "Dostupné překlady"
+
+msgid "General contact"
+msgstr "Obecné kontakty"
+
+msgid "Grants awarded"
+msgstr "Granty uděleny"
+
+msgid "Page contents"
+msgstr "Obsah stránky"
+
+msgid "Your name"
+msgstr "Vaše jméno"
+
+msgid "Your email address"
+msgstr "Vaše e-mailová adresa"
+
+msgid "Subject"
+msgstr "Předmět"
+
+msgid "Message"
+msgstr "Zpráva"
+
+msgid "Country of residence"
+msgstr "Země bydliště"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Send yourself a copy"
+msgstr "Poslat si kopii"
+
+msgid "Status message"
+msgstr "Zpráva o stavu"
+
+msgid "Close this message"
+msgstr "Zavřít tuto zprávu"
+
+msgid "The sender's name"
+msgstr "Jméno odesílatele"
+
+msgid "The sender's email"
+msgstr "E-mail odesílatele"
+
+msgid "Topic"
+msgstr "Téma"
+
+msgid "Languages"
+msgstr "Jazyky"
+
+msgid "Keywords"
+msgstr "Klíčová slova"
+
+msgid "No results have been found"
+msgstr "Nebyly nalezeny žádné výsledky"
+
+msgid "Event date"
+msgstr "Datum akce"
+
+msgid "Select"
+msgstr "Vybrat"
+
+msgid "After"
+msgstr "po"
+
+msgid "Before"
+msgstr "před"
+
+msgid "In between"
+msgstr "mezi"
+
+msgid "Select all"
+msgstr "Vybrat vše"
+
+msgid "Event type"
+msgstr "Typ akce"
+
+msgid "Venue"
+msgstr "Místo konání"
+
+msgid "Online type"
+msgstr "Koná se online"
+
+msgid "Livestream"
+msgstr "Živý přenos"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "EU organisation type"
+msgstr "Typ organizace EU"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "End Date"
+msgstr "Datum ukončení"
+
+msgid "Responsible department"
+msgstr "Odpovědné oddělení"
+
+msgid "Content owner"
+msgstr "Vlastník obsahu"
+
+msgid "Overview"
+msgstr "Přehled"
+
+msgid "Open gallery"
+msgstr "Otevřít galerii"
+
+msgid "(Acting) @role"
+msgstr "(Úřadující) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "O nejnovějším vývoji se dozvíte i na sociálních médiích, kde se můžete rovněž zapojit do diskuse."
+
+msgid "Upcoming and ongoing"
+msgstr "Nadcházející a probíhající"
+
+msgid "Past"
+msgstr "Již proběhlo"
+
+msgid "Upcoming and open"
+msgstr "Nadcházející a probíhající"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "V češtině si obsah stránky můžete zobrazit ve strojovém překladu – použijte níže uvedený odkaz."
+
+msgid "Choose another language"
+msgstr "Zvolte prosím jiný jazyk"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 den"
+msgstr[1] "@count dní"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 týden"
+msgstr[1] "@count týdnů"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 rok"
+msgstr[1] "@count let"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 měsíc"
+msgstr[1] "@count měsíců"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 hodina"
+msgstr[1] "@count hodin"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 minuta"
+msgstr[1] "@count minut"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 sekunda"
+msgstr[1] "@count sekund"
+
+msgid "Online link"
+msgstr "Odkaz"
+
+msgid "Online time"
+msgstr "Datum a hodina"
+
+msgid "Name"
+msgstr "Jméno/Název"
+
+msgid "I have read and agree with the @link"
+msgstr "Obeznámil(a) jsem se a souhlasím s @link"
+
+msgid "personal data protection terms"
+msgstr "podmínkami ochrany osobních údajů."
+
+msgid "Highlighted"
+msgstr "Důležité"
+
+msgid "European Union flag"
+msgstr "Vlajka Evropské unie"
+
+msgid "European Commission logo"
+msgstr "Logo Evropské komise"
+
+msgid "Home"
+msgstr "Úvod"
+
+msgid "European Union"
+msgstr "Evropská unie"
+
+msgid "Sources"
+msgstr "Zdroje"
+
+msgid "This event has been cancelled."
+msgstr "Tato akce byla zrušena."
+
+msgid "This event has been rescheduled."
+msgstr "Termín akce byl pozměněn."
+
+msgid "This event has been postponed."
+msgstr "Termín akce byl odsunut na později."
+
+msgid "This event has started."
+msgstr "Tato akce již začala."
+
+msgid "This event has ended."
+msgstr "Tato akce již skončila."
+
+msgid "This livestream has started."
+msgstr "Živý přenos již začal."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Tato akce již začala. Můžete ji rovněž sledovat prostřednictvím živého přenosu."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Akce již skončila, živý přenos však stále probíhá."
+
+msgid "Who should attend"
+msgstr "Cílová skupina"
+
+msgid "Organisers"
+msgstr "Organizátoři"
+
+msgid "Part of"
+msgstr "Část"
+
+msgid "Online only"
+msgstr "Pouze online"
+
+msgid "External event"
+msgstr "Externí akce"
+
+msgid "Report"
+msgstr "Zpráva"
+
+msgid "Register here"
+msgstr "Zaregistrovat se můžete zde"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Tato akce již začala. Živý přenos bude zahájen v @date."
+
+msgid "See all"
+msgstr "Zobrazit vše"
+
+msgid "media items"
+msgstr "Počet mediálních materiálů"
+
+msgid "Close"
+msgstr "Zavřít"
+
+msgid "Programme"
+msgstr "Program"
+
+msgid "Social media"
+msgstr "Sociální média"
+
+msgid "Speakers"
+msgstr "Řečníci"
+
+msgid "Starts on @date"
+msgstr "Začíná @date"
+
+msgid "The livestream has started."
+msgstr "Živý přenos již začal."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Živé vysílání bylo ukončeno, nicméně akce stále probíhá."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage % celkového rozpočtu"

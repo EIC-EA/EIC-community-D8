@@ -2,18 +2,20 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Kernel\Plugin\Field\FieldFormatter;
+namespace Drupal\Tests\oe_theme_helper\Kernel\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
-use Drupal\Tests\oe_theme\Kernel\AbstractKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\oe_theme\Kernel\AbstractKernelTestBase;
 
 /**
  * Tests the featured media formatter.
+ *
+ * @group batch2
  */
 class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
 
@@ -65,6 +67,10 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
       'oe_media_iframe',
       'oe_content_featured_media_field',
     ]);
+
+    // Call the install hook of the Media module.
+    module_load_include('install', 'media');
+    media_install();
 
     // Create a content type.
     $type = NodeType::create([
@@ -151,7 +157,7 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
     $view_builder = $this->container->get('entity_type.manager')->getViewBuilder('node');
 
     $build = $view_builder->viewField($node->get('featured_media_field'), [
-      'type' => 'eic_theme_helper_featured_media_formatter',
+      'type' => 'oe_theme_helper_featured_media_formatter',
     ]);
 
     $this->assertRendering($this->renderRoot($build), [
@@ -190,7 +196,7 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
     $node = $node_storage->load($node->id());
 
     $build = $view_builder->viewField($node->get('featured_media_field'), [
-      'type' => 'eic_theme_helper_featured_media_formatter',
+      'type' => 'oe_theme_helper_featured_media_formatter',
     ]);
 
     $this->assertRendering($this->renderRoot($build), [
@@ -240,7 +246,7 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
     $view_builder = $this->container->get('entity_type.manager')->getViewBuilder('node');
 
     $build = $view_builder->viewField($node->get('featured_media_field'), [
-      'type' => 'eic_theme_helper_featured_media_formatter',
+      'type' => 'oe_theme_helper_featured_media_formatter',
     ]);
 
     $this->assertRendering($this->renderRoot($build), [
@@ -279,7 +285,7 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
     $node = $node_storage->load($node->id());
 
     $build = $view_builder->viewField($node->get('featured_media_field'), [
-      'type' => 'eic_theme_helper_featured_media_formatter',
+      'type' => 'oe_theme_helper_featured_media_formatter',
     ]);
 
     $this->assertRendering($this->renderRoot($build), [
@@ -322,7 +328,7 @@ class FeaturedMediaFormatterTest extends AbstractKernelTestBase {
     $node = $node_storage->load($node->id());
 
     $build = $view_builder->viewField($node->get('featured_media_field'), [
-      'type' => 'eic_theme_helper_featured_media_formatter',
+      'type' => 'oe_theme_helper_featured_media_formatter',
     ]);
 
     $this->assertRendering($this->renderRoot($build), [

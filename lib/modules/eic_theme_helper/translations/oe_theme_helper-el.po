@@ -29,13 +29,13 @@ msgid "Entrance fee"
 msgstr "Εισιτήριο"
 
 msgid "Book your seat, @time_left left to register, registration will end on @end_date"
-msgstr "Κάντε κράτηση για τη θέση σας, απομένουν ακόμη @time_left για την εγγραφή, η προθεσμία εγγραφής λήγει την/στις @end_date."
+msgstr "Κρατήστε θέση, έχετε ακόμα @time_left για να γραφτείτε, η εγγραφή θα λήξει στις @end_date"
 
 msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
 msgstr "Η εγγραφή θα είναι δυνατή από την/τις @time_left. Μπορείτε να εγγραφείτε από την/τις @start_date, έως την/τις @end_date."
 
-msgid "Registration period ended on @date."
-msgstr "Η περίοδος εγγραφής έληξε την/στις @end_date."
+msgid "Registration period ended on @date"
+msgstr "Η περίοδος εγγραφής έληξε στις @date"
 
 msgid "Postal address"
 msgstr "Ταχυδρομική διεύθυνση"
@@ -57,6 +57,9 @@ msgstr "Επικοινωνία με τον φορέα"
 
 msgid "Call status: @label"
 msgstr "Κατάσταση της πρόσκλησης: @label"
+
+msgid "Press contact"
+msgstr "Υπεύθυνος/-η Τύπου"
 
 msgid "Press contacts"
 msgstr "Υπεύθυνοι επικοινωνίας με τα ΜΜΕ"
@@ -140,7 +143,7 @@ msgid "Open"
 msgstr "Ανοικτό"
 
 msgid "Closed"
-msgstr "Έχει κλείσει"
+msgstr "Κλειστές"
 
 msgid "Details"
 msgstr "Λεπτομέρειες"
@@ -229,8 +232,8 @@ msgstr "Πολλές ημερομηνίες λήξης"
 msgid "Permanent"
 msgstr "Μόνιμος"
 
-msgid "in"
-msgstr "στην"
+msgid "@date in @journal"
+msgstr "@date στην @journal"
 
 msgid "Contact us"
 msgstr "Επικοινωνήστε μαζί μας"
@@ -276,3 +279,344 @@ msgstr "Σχετικό τμήμα"
 
 msgid "Related departments"
 msgstr "Σχετικά τμήματα"
+
+msgid "Consultation"
+msgstr "Διαβούλευση"
+
+msgid "Deadline"
+msgstr "Προθεσμία"
+
+msgid "Respond to the questionnaire"
+msgstr "Απαντήστε στο ερωτηματολόγιο"
+
+msgid "Respond to the consultation"
+msgstr "Πάρτε μέρος στη διαβούλευση"
+
+msgid "Target audience"
+msgstr "Στοχευόμενο κοινό"
+
+msgid "Why we are consulting"
+msgstr "Γιατί διεξάγουμε τη δημόσια διαβούλευση"
+
+msgid "Consultation outcome"
+msgstr "Αποτελέσματα της διαβούλευσης"
+
+msgid "Additional information"
+msgstr "Πρόσθετες πληροφορίες"
+
+msgid "Reference documents"
+msgstr "Έγγραφα αναφοράς"
+
+msgid "The response period for this consultation has ended. Thank you for your input."
+msgstr "Η περίοδος συμμετοχής στην εν λόγω διαβούλευση έχει λήξει. Ευχαριστούμε για το μήνυμά σας."
+
+msgid "Status: @label"
+msgstr "Καθεστώς: @label"
+
+msgid "Responsibilities"
+msgstr "Αρμοδιότητες"
+
+msgid "Media"
+msgstr "Μέσα ενημέρωσης"
+
+msgid "Latest"
+msgstr "Επικαιρότητα"
+
+msgid "Transparency"
+msgstr "Διαφάνεια"
+
+msgid "Articles and presentations"
+msgstr "Άρθρα και παρουσιάσεις"
+
+msgid "Biography"
+msgstr "Βιογραφικό"
+
+msgid "Declaration of interests"
+msgstr "Δήλωση συμφερόντων"
+
+msgid "Show contact details"
+msgstr "Εμφάνιση στοιχείων επικοινωνίας"
+
+msgid "Hide contact details"
+msgstr "Απόκρυψη στοιχείων επικοινωνίας"
+
+msgid "Leadership and organisation"
+msgstr "Διοίκηση και οργάνωση"
+
+msgid "Available translations"
+msgstr "Διαθέσιμες μεταφράσεις"
+
+msgid "General contact"
+msgstr "Γενικά στοιχεία επικοινωνίας"
+
+msgid "Grants awarded"
+msgstr "Εγκριθείσες επιχορηγήσεις"
+
+msgid "Page contents"
+msgstr "Περιεχόμενα σελίδας"
+
+msgid "Your name"
+msgstr "Όνομα"
+
+msgid "Your email address"
+msgstr "Ηλεκτρονική διεύθυνση"
+
+msgid "Subject"
+msgstr "Αντικείμενο"
+
+msgid "Message"
+msgstr "Μήνυμα"
+
+msgid "Country of residence"
+msgstr "Χώρα διαμονής"
+
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+msgid "Send yourself a copy"
+msgstr "Αποστολή αντίγραφου"
+
+msgid "Status message"
+msgstr "Μήνυμα κατάστασης"
+
+msgid "Close this message"
+msgstr "Κλείσιμο αυτού του μηνύματος"
+
+msgid "The sender's name"
+msgstr "Όνομα αποστολέα"
+
+msgid "The sender's email"
+msgstr "Ηλεκτρονικό ταχυδρομείο αποστολέα"
+
+msgid "Topic"
+msgstr "Θέμα"
+
+msgid "Languages"
+msgstr "Γλώσσες"
+
+msgid "Keywords"
+msgstr "Λέξεις-κλειδιά"
+
+msgid "No results have been found"
+msgstr "Δεν βρέθηκαν αποτελέσματα"
+
+msgid "Event date"
+msgstr "Ημερομηνία εκδήλωσης"
+
+msgid "Select"
+msgstr "Επιλογή"
+
+msgid "After"
+msgstr "Μετά"
+
+msgid "Before"
+msgstr "Πριν"
+
+msgid "In between"
+msgstr "Μεταξύ"
+
+msgid "Select all"
+msgstr "Επιλογή όλων"
+
+msgid "Event type"
+msgstr "Είδος εκδήλωσης"
+
+msgid "Venue"
+msgstr "Τόπος εκδήλωσης"
+
+msgid "Online type"
+msgstr "Είδος διαδικτυακής εκδήλωσης"
+
+msgid "Livestream"
+msgstr "Ζωντανή μετάδοση"
+
+msgid "Type"
+msgstr "Είδος"
+
+msgid "EU organisation type"
+msgstr "Είδος οργανισμού της ΕΕ"
+
+msgid "Date"
+msgstr "Ημερομηνία"
+
+msgid "End Date"
+msgstr "Ημερομηνία λήξης"
+
+msgid "Responsible department"
+msgstr "Αρμόδια υπηρεσία"
+
+msgid "Content owner"
+msgstr "Ιδιοκτήτης περιεχομένου"
+
+msgid "Overview"
+msgstr "Επισκόπηση"
+
+msgid "Open gallery"
+msgstr "Άνοιγμα συλλογής"
+
+msgid "(Acting) @role"
+msgstr "(Ασκών/-ούσα καθήκοντα) @role"
+
+msgid "Follow the latest progress and learn more about getting involved."
+msgstr "Παρακολουθείτε τις τελευταίες εξελίξεις και ενημερωθείτε για τις δυνατότητες συμμετοχής σας."
+
+msgid "Upcoming and ongoing"
+msgstr "Προσεχείς και τρέχουσες"
+
+msgid "Past"
+msgstr "Προηγούμενες"
+
+msgid "Upcoming and open"
+msgstr "Προσεχείς και ανοικτές"
+
+msgid "English is available via machine translation – please use the link below."
+msgstr "Τα ελληνικά είναι διαθέσιμα μέσω αυτόματης μετάφρασης — χρησιμοποιήστε τον παρακάτω σύνδεσμο."
+
+msgid "Choose another language"
+msgstr "Επιλέξτε άλλη γλώσσα"
+
+msgid "1 day"
+msgid_plural "@count days"
+msgstr[0] "1 ημέρα"
+msgstr[1] "@count ημέρες"
+
+msgid "1 week"
+msgid_plural "@count weeks"
+msgstr[0] "1 εβδομάδα"
+msgstr[1] "@count εβδομάδες"
+
+msgid "1 year"
+msgid_plural "@count years"
+msgstr[0] "1 χρόνο"
+msgstr[1] "@count χρόνια"
+
+msgid "1 month"
+msgid_plural "@count months"
+msgstr[0] "1 μήνα"
+msgstr[1] "@count μήνες"
+
+msgid "1 hour"
+msgid_plural "@count hours"
+msgstr[0] "1 ώρα"
+msgstr[1] "@count ώρες"
+
+msgid "1 minute"
+msgid_plural "@count minutes"
+msgstr[0] "1 λεπτό"
+msgstr[1] "@count λεπτά"
+
+msgid "1 second"
+msgid_plural "@count seconds"
+msgstr[0] "1 δευτερόλεπτο"
+msgstr[1] "@count δευτερόλεπτα"
+
+msgid "Online link"
+msgstr "Διαδικτυακός σύνδεσμος"
+
+msgid "Online time"
+msgstr "Διαδικτυακή ώρα"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "I have read and agree with the @link"
+msgstr "Διάβασα και συμφωνώ με τους @link"
+
+msgid "personal data protection terms"
+msgstr "όρους προστασίας των δεδομένων προσωπικού χαρακτήρα"
+
+msgid "Highlighted"
+msgstr "Με επισήμανση"
+
+msgid "European Union flag"
+msgstr "Σημαία της Ευρωπαϊκής Ένωσης"
+
+msgid "European Commission logo"
+msgstr "Λογότυπος της Ευρωπαϊκής Επιτροπής"
+
+msgid "Home"
+msgstr "Αρχική σελίδα"
+
+msgid "European Union"
+msgstr "Ευρωπαϊκή Ένωση"
+
+msgid "Sources"
+msgstr "Πηγές"
+
+msgid "This event has been cancelled."
+msgstr "Η εκδήλωση αυτή έχει ματαιωθεί."
+
+msgid "This event has been rescheduled."
+msgstr "Η εκδήλωση αυτή έχει αναπρογραμματιστεί."
+
+msgid "This event has been postponed."
+msgstr "Η εκδήλωση αυτή έχει αναβληθεί."
+
+msgid "This event has started."
+msgstr "Η εκδήλωση αυτή έχει αρχίσει."
+
+msgid "This event has ended."
+msgstr "Η εκδήλωση αυτή έληξε."
+
+msgid "This livestream has started."
+msgstr "Αυτή η ζωντανή μετάδοση έχει ξεκινήσει."
+
+msgid "This event has started. You can also watch it via livestream."
+msgstr "Η εκδήλωση αυτή έχει αρχίσει. Μπορείτε επίσης να την παρακολουθήσετε σε ζωντανή μετάδοση."
+
+msgid "This event has ended, but the livestream is ongoing."
+msgstr "Η εκδήλωση αυτή έληξε, αλλά είναι διαθέσιμη η ζωντανή μετάδοση."
+
+msgid "Who should attend"
+msgstr "Ποιοι θα πρέπει να συμμετάσχουν"
+
+msgid "Organisers"
+msgstr "Διοργανωτές"
+
+msgid "Part of"
+msgstr "Μέρος"
+
+msgid "Online only"
+msgstr "Αποκλειστικά μέσω διαδικτύου"
+
+msgid "External event"
+msgstr "Εξωτερική εκδήλωση"
+
+msgid "Report"
+msgstr "Έκθεση"
+
+msgid "Register here"
+msgstr "Εγγραφείτε εδώ"
+
+msgid "This event has started. The livestream will start at @date."
+msgstr "Η εκδήλωση αυτή έχει ξεκινήσει. Η ζωντανή μετάδοση θα ξεκινήσει στις @date."
+
+msgid "See all"
+msgstr "Δείτε τα όλα"
+
+msgid "media items"
+msgstr "στοιχεία πολυμέσων"
+
+msgid "Close"
+msgstr "Έχει κλείσει"
+
+msgid "Programme"
+msgstr "Πρόγραμμα"
+
+msgid "Social media"
+msgstr "Μέσα κοινωνικής δικτύωσης"
+
+msgid "Speakers"
+msgstr "Ομιλητές"
+
+msgid "Starts on @date"
+msgstr "Αρχίζει στις @date"
+
+msgid "The livestream has started."
+msgstr "Αυτή η ζωντανή μετάδοση έχει ξεκινήσει."
+
+msgid "The livestream has ended, but the event is ongoing."
+msgstr "Η ζωντανή μετάδοση έληξε, αλλά η εκδήλωση συνεχίζεται."
+
+msgid "@percentage% of the overall budget"
+msgstr "@percentage % του συνολικού προϋπολογισμού"

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Kernel\Plugin\Field\FieldFormatter;
+namespace Drupal\Tests\oe_theme_helper\Kernel\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
@@ -12,6 +12,8 @@ use Drupal\Tests\oe_theme\Kernel\AbstractKernelTestBase;
 
 /**
  * Base test class for "Social media links" field formatters.
+ *
+ * @group batch2
  */
 class SocialMediaLinksFormatterTestBase extends AbstractKernelTestBase {
 
@@ -23,12 +25,13 @@ class SocialMediaLinksFormatterTestBase extends AbstractKernelTestBase {
     'link',
     'typed_link',
     'entity_test',
+    'node',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('entity_test');
   }
@@ -49,6 +52,7 @@ class SocialMediaLinksFormatterTestBase extends AbstractKernelTestBase {
           'email' => 'Email',
           'facebook' => 'Facebook',
           'twitter' => 'Twitter',
+          'telegram' => 'Telegram',
         ],
       ],
     ]);
@@ -77,6 +81,16 @@ class SocialMediaLinksFormatterTestBase extends AbstractKernelTestBase {
           'link_type' => 'twitter',
           'uri' => 'http://twitter.com',
           'title' => 'Twitter',
+        ],
+        [
+          'link_type' => 'telegram',
+          'uri' => 'http://t.me/example',
+          'title' => 'Telegram',
+        ],
+        [
+          'link_type' => 'mastodon',
+          'uri' => 'http://mastodon.social/@example',
+          'title' => 'Mastodon',
         ],
       ],
     ]);

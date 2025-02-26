@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Kernel;
+namespace Drupal\Tests\oe_theme_helper\Kernel;
 
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\Markup;
@@ -11,8 +11,17 @@ use Drupal\Tests\oe_theme\Kernel\AbstractKernelTestBase;
 
 /**
  * Test those Twig extension filters that require Drupal to be bootstrapped.
+ *
+ * @group batch2
  */
 class TwigExtensionTest extends AbstractKernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'node',
+  ];
 
   /**
    * Test smart_trim filter.
@@ -45,10 +54,10 @@ class TwigExtensionTest extends AbstractKernelTestBase {
     if ($metadata) {
       /** @var \Drupal\Core\Render\BubbleableMetadata $actual_metadata */
       $actual_metadata = $context->pop();
-      $this->assertEqual($actual_metadata->getAttachments(), $metadata['attachments']);
-      $this->assertEqual($actual_metadata->getCacheContexts(), $metadata['contexts']);
-      $this->assertEqual($actual_metadata->getCacheTags(), $metadata['tags']);
-      $this->assertEqual($actual_metadata->getCacheMaxAge(), $metadata['max_age']);
+      $this->assertEquals($metadata['attachments'], $actual_metadata->getAttachments());
+      $this->assertEquals($metadata['contexts'], $actual_metadata->getCacheContexts());
+      $this->assertEquals($metadata['tags'], $actual_metadata->getCacheTags());
+      $this->assertEquals($metadata['max_age'], $actual_metadata->getCacheMaxAge());
     }
 
     $this->assertRendering($output, $assertions);
@@ -193,7 +202,7 @@ class TwigExtensionTest extends AbstractKernelTestBase {
         ],
         'assertions' => [
           'contains' => [
-            '<blockquote class="ecl-blockquote"><p class="ecl-blockquote__body">Lorem ipsum dolor sit...</p></blockquote>',
+            '<blockquote class="ecl-blockquote__quote"><p class="ecl-blockquote__citation">Lorem ipsum dolor sit...</p></blockquote>',
           ],
         ],
       ],

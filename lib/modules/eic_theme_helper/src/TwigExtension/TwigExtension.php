@@ -4,12 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\eic_theme_helper\TwigExtension;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-use Twig\Environment;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -19,15 +14,21 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\eic_theme_helper\EuropeanUnionLanguages;
-use Drupal\smart_trim\Truncate\TruncateHTML;
 use Drupal\Core\Template\TwigExtension as CoreTwigExtension;
+use Drupal\eic_theme_helper\ExternalLinksInterface;
+use Drupal\smart_trim\TruncateHTML;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Collection of extra Twig extensions as filters and functions.
  *
  * We don't enforce any strict type checking on filters' arguments as they are
  * coming straight from Twig templates.
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class TwigExtension extends AbstractExtension {
 
@@ -46,16 +47,26 @@ class TwigExtension extends AbstractExtension {
   protected $renderer;
 
   /**
+   * The external links service.
+   *
+   * @var \Drupal\eic_theme_helper\ExternalLinksInterface
+   */
+  protected $externalLinks;
+
+  /**
    * Constructs a new TwigExtension object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\eic_theme_helper\ExternalLinksInterface $external_links
+   *   The external links service.
    */
-  public function __construct(LanguageManagerInterface $languageManager, RendererInterface $renderer) {
+  public function __construct(LanguageManagerInterface $languageManager, RendererInterface $renderer, ExternalLinksInterface $external_links) {
     $this->languageManager = $languageManager;
     $this->renderer = $renderer;
+    $this->externalLinks = $external_links;
   }
 
   /**
@@ -65,30 +76,15 @@ class TwigExtension extends AbstractExtension {
     return [
       new TwigFilter('format_size', 'format_size'),
       new TwigFilter('to_language', [$this, 'toLanguageName']),
-      new TwigFilter(
-        'to_native_language',
-        [$this, 'toNativeLanguageName']
-      ),
-      new TwigFilter(
-        'to_internal_language_id',
-        [$this, 'toInternalLanguageId']
-      ),
+      new TwigFilter('to_native_language', [$this, 'toNativeLanguageName']),
+      new TwigFilter('to_internal_language_id', [$this, 'toInternalLanguageId']),
       new TwigFilter('to_file_icon', [$this, 'toFileIcon']),
       new TwigFilter('to_date_status', [$this, 'toDateStatus']),
-      new TwigFilter(
-        'to_ecl_attributes',
-        [$this, 'toEclAttributes']
-      ),
-      new TwigFilter(
-        'smart_trim',
-        [$this, 'smartTrim'],
-        ['needs_environment' => TRUE]
-      ),
-      new TwigFilter(
-        'is_external_url',
-        [UrlHelper::class, 'isExternal']
-      ),
+      new TwigFilter('to_ecl_attributes', [$this, 'toEclAttributes']),
+      new TwigFilter('smart_trim', [$this, 'smartTrim'], ['needs_environment' => TRUE]),
+      new TwigFilter('is_external_url', [$this, 'isExternal']),
       new TwigFilter('filter_empty', [$this, 'filterEmpty']),
+      new TwigFilter('create_markup', [$this, 'createMarkup']),
     ];
   }
 
@@ -290,263 +286,162 @@ class TwigExtension extends AbstractExtension {
    *   Icon array for ECL components containing icon name, path and rotation.
    */
   public function toEclIcon(array $context, $icon, string $size = ''): array {
-    $path = $context['ecl_icon_path'];
+    $path = $this->getIconPath($context, $icon);
 
-    // ECL supported icons naming and rotation.
-    $icons = [
-      'facebook' => [
-        'name' => 'branded--facebook',
-      ],
-      'instagram' => [
-        'name' => 'branded--instagram',
-      ],
-      'linkedin' => [
-        'name' => 'branded--linkedin',
-      ],
-      'pinterest' => [
-        'name' => 'branded--pinterest',
-      ],
-      'rss' => [
-        'name' => 'branded--rss',
-      ],
-      'skype' => [
-        'name' => 'branded--skype',
-      ],
-      'twitter' => [
-        'name' => 'eic-branded--x',
-      ],
-      'youtube' => [
-        'name' => 'branded--youtube',
-      ],
-      'audio' => [
-        'name' => 'general--audio',
-      ],
-      'book' => [
-        'name' => 'general--book',
-      ],
-      'brochure' => [
-        'name' => 'general--brochure',
-      ],
-      'budget' => [
-        'name' => 'general--budget',
-      ],
-      'calendar' => [
-        'name' => 'general--calendar',
-      ],
-      'copy' => [
-        'name' => 'general--copy',
-      ],
-      'data' => [
-        'name' => 'general--data',
-      ],
-      'digital' => [
-        'name' => 'general--digital',
-      ],
-      'edit' => [
-        'name' => 'general--edit',
-      ],
-      'energy' => [
-        'name' => 'general--energy',
-      ],
-      'euro' => [
-        'name' => 'general--euro',
-      ],
-      'faq' => [
-        'name' => 'general--faq',
-      ],
-      'feedback' => [
-        'name' => 'general--feedback',
-      ],
-      'file' => [
-        'name' => 'general--file',
-      ],
-      'gear' => [
-        'name' => 'general--gear',
-      ],
-      'generic-lang' => [
-        'name' => 'general--generic-lang',
-      ],
-      'global' => [
-        'name' => 'general--global',
-      ],
+    // Icons that require transforming.
+    $transformed_icons = [
       'googleplus' => [
-        'name' => 'general--digital',
-      ],
-      'growth' => [
-        'name' => 'general--growth',
-      ],
-      'hamburger' => [
-        'name' => 'general--hamburger',
-      ],
-      'image' => [
-        'name' => 'general--image',
-      ],
-      'infographic' => [
-        'name' => 'general--infographic',
-      ],
-      'language' => [
-        'name' => 'general--language',
-      ],
-      'livestreaming' => [
-        'name' => 'general--livestreaming',
-      ],
-      'location' => [
-        'name' => 'general--location',
-      ],
-      'log-in' => [
-        'name' => 'general--log-in',
-      ],
-      'logged-in' => [
-        'name' => 'general--logged-in',
-      ],
-      'multiple-files' => [
-        'name' => 'general--multiple-files',
-      ],
-      'organigram' => [
-        'name' => 'general--organigram',
-      ],
-      'package' => [
-        'name' => 'general--package',
-      ],
-      'presentation' => [
-        'name' => 'general--presentation',
-      ],
-      'print' => [
-        'name' => 'general--print',
-      ],
-      'regulation' => [
-        'name' => 'general--regulation',
-      ],
-      'search' => [
-        'name' => 'general--search',
-      ],
-      'share' => [
-        'name' => 'general--share',
+        'name' => 'digital',
       ],
       'slides' => [
-        'name' => 'general--presentation',
-      ],
-      'spinner' => [
-        'name' => 'general--spinner',
-      ],
-      'spreadsheet' => [
-        'name' => 'general--spreadsheet',
-      ],
-      'video' => [
-        'name' => 'general--video',
-      ],
-      'camera' => [
-        'name' => 'general--video',
-      ],
-      'error' => [
-        'name' => 'notifications--error',
-      ],
-      'information' => [
-        'name' => 'notifications--information',
+        'name' => 'presentation',
       ],
       'info' => [
-        'name' => 'notifications--information',
-      ],
-      'success' => [
-        'name' => 'notifications--success',
-      ],
-      'warning' => [
-        'name' => 'notifications--warning',
-      ],
-      'check' => [
-        'name' => 'ui--check',
-      ],
-      'check-filled' => [
-        'name' => 'ui--check-filled',
-      ],
-      'close' => [
-        'name' => 'ui--close',
-      ],
-      'close-filled' => [
-        'name' => 'ui--close-filled',
-      ],
-      'corner-arrow' => [
-        'name' => 'ui--corner-arrow',
-      ],
-      'download' => [
-        'name' => 'ui--download',
-      ],
-      'external' => [
-        'name' => 'ui--external',
-      ],
-      'fullscreen' => [
-        'name' => 'ui--fullscreen',
-      ],
-      'minus' => [
-        'name' => 'ui--minus',
-      ],
-      'plus' => [
-        'name' => 'ui--plus',
-      ],
-      'rounded-arrow' => [
-        'name' => 'ui--rounded-arrow',
-      ],
-      'solid-arrow' => [
-        'name' => 'ui--solid-arrow',
+        'name' => 'information',
       ],
       'close-dark' => [
-        'name' => 'ui--close-filled',
+        'name' => 'close-filled',
       ],
       'in' => [
-        'name' => 'ui--download',
+        'name' => 'download',
       ],
       'tag-close' => [
-        'name' => 'ui--close',
+        'name' => 'close',
       ],
       'up' => [
-        'name' => 'ui--rounded-arrow',
+        'name' => 'corner-arrow',
       ],
       'arrow-down' => [
-        'name' => 'ui--solid-arrow',
+        'name' => 'solid-arrow',
         'transform' => 'rotate-180',
       ],
       'arrow-up' => [
-        'name' => 'ui--solid-arrow',
+        'name' => 'solid-arrow',
       ],
       'breadcrumb' => [
-        'name' => 'ui--rounded-arrow',
+        'name' => 'corner-arrow',
         'transform' => 'rotate-90',
       ],
       'down' => [
-        'name' => 'ui--rounded-arrow',
+        'name' => 'corner-arrow',
         'transform' => 'rotate-180',
       ],
       'left' => [
-        'name' => 'ui--rounded-arrow',
+        'name' => 'corner-arrow',
         'transform' => 'rotate-270',
       ],
       'right' => [
-        'name' => 'ui--rounded-arrow',
+        'name' => 'corner-arrow',
         'transform' => 'rotate-90',
       ],
     ];
 
-    if (array_key_exists($icon, $icons)) {
-      $icons[$icon]['path'] = $path;
+    // Check whether the icon needs any transformation.
+    if (array_key_exists($icon, $transformed_icons)) {
+      $transformed_icons[$icon]['path'] = $path;
       if ($size) {
-        $icons[$icon]['size'] = $size;
+        $transformed_icons[$icon]['size'] = $size;
       }
-
-      return $icons[$icon];
+      return $transformed_icons[$icon];
     }
 
-    if ($size) {
-      return [
-        'name' => 'general--digital',
-        'path' => $path,
-        'size' => $size,
-      ];
+    // We define a default icon if one is not provided.
+    if (!$icon) {
+      $icon = 'digital';
     }
-
-    return [
-      'name' => 'general--digital',
+    $icon = [
+      'name' => $icon,
       'path' => $path,
     ];
+    if ($size) {
+      $icon['size'] = $size;
+
+    }
+    return $icon;
+  }
+
+  /**
+   * Returns the file path for an ECL icon.
+   *
+   * @param array $context
+   *   The twig context.
+   * @param string $icon
+   *   The icon to be converted.
+   *
+   * @return string
+   *   ECL icon file path.
+   */
+  protected function getIconPath(array $context, string $icon): string {
+    // Flag icon names.
+    $flag_icons = [
+      'austria',
+      'belgium',
+      'bulgaria',
+      'croatia',
+      'cyprus',
+      'czech-republic',
+      'denmark',
+      'estonia',
+      'EU',
+      'finland',
+      'france',
+      'germany',
+      'greece',
+      'hungary',
+      'ireland',
+      'italy',
+      'latvia',
+      'lithuania',
+      'luxembourg',
+      'malta',
+      'netherlands',
+      'poland',
+      'portugal',
+      'romania',
+      'slovakia',
+      'slovenia',
+      'spain',
+      'sweden',
+    ];
+    // Flag icons can have a -square string appended, so check if the icon name
+    // starts with a country name.
+    $found_icon = array_filter($flag_icons, function ($var) use ($icon) {
+      if (strpos($icon, $var) === 0) {
+        return TRUE;
+      };
+      return FALSE;
+    });
+    if ($found_icon) {
+      return $context['ecl_icon_flag_path'];
+    }
+
+    // Social media icon names.
+    $social_icons = [
+      'blog',
+      'facebook',
+      'flickr',
+      'foursquare',
+      'instagram',
+      'linkedin',
+      'pinterest',
+      'reddit',
+      'skype',
+      'spotify',
+      'twitter',
+      'youtube',
+    ];
+    // Social icons can have a -color or a -negative string appended,
+    // so check if the icon name starts with a social name.
+    $found_icon = array_filter($social_icons, function ($var) use ($icon) {
+      if (strpos($icon, $var) === 0) {
+        return TRUE;
+      };
+      return FALSE;
+    });
+    if ($found_icon) {
+      return $context['ecl_icon_social_media_path'];
+    }
+    return $context['ecl_icon_path'];
   }
 
   /**
@@ -562,7 +457,14 @@ class TwigExtension extends AbstractExtension {
    * @return mixed
    *   The trimmed output.
    */
-  public function smartTrim(Environment $env, $input, $limit) {
+  public function smartTrim(Environment $env, $input, $limit = 0) {
+    if ($limit === NULL) {
+      // phpcs:disable Drupal.Semantics.FunctionTriggerError
+      @trigger_error('Using the smart_trim filter with a null limit value is deprecated in oe_theme:3.x and will be removed in oe_theme:4.x releases.', E_USER_DEPRECATED);
+      // phpcs:enable
+      $limit = 0;
+    }
+
     // Bubbles Twig template argument's cacheability & attachment metadata.
     $this->bubbleArgMetadata($input);
     $truncate = new TruncateHTML();
@@ -648,11 +550,10 @@ class TwigExtension extends AbstractExtension {
 
     $icon = [
       'path' => $icon_path,
-      'type' => 'ui',
       'size' => $size,
       'color' => 'primary',
     ];
-    if (UrlHelper::isExternal($path)) {
+    if ($this->externalLinks->isExternalLink($path)) {
       $icon['name'] = 'external';
     }
     else {
@@ -678,6 +579,11 @@ class TwigExtension extends AbstractExtension {
     $ecl_links = [];
 
     foreach ($links as $link) {
+      // Skip if the link is limited to some ECL branding and the current
+      // ECL branding does not match.
+      if (!empty($link['branding']) && $context['ecl_branding'] !== $link['branding']) {
+        continue;
+      }
       $ecl_link = [
         'link' => [
           'label' => $link['label'],
@@ -690,8 +596,8 @@ class TwigExtension extends AbstractExtension {
         $ecl_link += [
           'icon' => [
             'path' => $context['ecl_icon_path'],
-            'type' => 'ui',
             'name' => 'external',
+            'size' => 'xs',
           ],
         ];
       }
@@ -700,9 +606,8 @@ class TwigExtension extends AbstractExtension {
         $ecl_link['link']['icon_position'] = 'before';
         $ecl_link += [
           'icon' => [
-            'path' => $context['ecl_icon_path'],
-            'type' => 'branded',
-            'name' => $link['social_network'],
+            'path' => $context['ecl_icon_social_media_path'],
+            'name' => $context['ecl_component_library'] == 'eu' ? $link['social_network'] : $link['social_network'] . '-negative',
           ],
         ];
       }
@@ -711,6 +616,32 @@ class TwigExtension extends AbstractExtension {
     }
 
     return $ecl_links;
+  }
+
+  /**
+   * Checks if a given path is external or not.
+   *
+   * @param string $path
+   *   The path to be checked.
+   *
+   * @return bool
+   *   Whether the path is external.
+   */
+  public function isExternal(string $path): bool {
+    return $this->externalLinks->isExternalLink($path);
+  }
+
+  /**
+   * Creates a Markup object.
+   *
+   * @param mixed $string
+   *   The string to mark as safe. This value will be cast to a string.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   *   A safe string.
+   */
+  public function createMarkup($string): MarkupInterface {
+    return Markup::create($string);
   }
 
 }

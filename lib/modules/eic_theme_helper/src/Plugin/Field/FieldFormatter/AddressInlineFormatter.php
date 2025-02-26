@@ -7,7 +7,6 @@ namespace Drupal\eic_theme_helper\Plugin\Field\FieldFormatter;
 use CommerceGuys\Addressing\Locale;
 use Drupal\address\AddressInterface;
 use Drupal\address\Plugin\Field\FieldFormatter\AddressDefaultFormatter;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -90,9 +89,9 @@ class AddressInlineFormatter extends AddressDefaultFormatter {
     $address_format = $this->addressFormatRepository->get($country_code);
     $values = $this->getValues($address, $address_format);
 
-    $address_elements['%country'] = Html::escape($countries[$country_code]);
+    $address_elements['%country'] = $countries[$country_code];
     foreach ($address_format->getUsedFields() as $field) {
-      $address_elements['%' . $field] = Html::escape($values[$field]);
+      $address_elements['%' . $field] = $values[$field];
     }
 
     if (Locale::matchCandidates($address_format->getLocale(), $address->getLocale())) {
@@ -101,6 +100,13 @@ class AddressInlineFormatter extends AddressDefaultFormatter {
     else {
       $format_string = $address_format->getFormat() . "\n" . '%country';
     }
+    /*
+     * Remove extra characters from address format since address fields are
+     * optional.
+     *
+     * @see \CommerceGuys\Addressing\AddressFormat\AddressFormatRepository::getDefinitions()
+     */
+    $format_string = str_replace([',', ' - ', '/'], "\n", $format_string);
 
     $items = $this->extractAddressItems($format_string, $address_elements);
 
@@ -118,7 +124,7 @@ class AddressInlineFormatter extends AddressDefaultFormatter {
   }
 
   /**
-   * Extract address items from a format string and replaces placeholders.
+   * Extract address items from a format string and replace placeholders.
    *
    * @param string $string
    *   The address format string, containing placeholders.
@@ -130,7 +136,9 @@ class AddressInlineFormatter extends AddressDefaultFormatter {
    */
   protected function extractAddressItems(string $string, array $replacements): array {
     // Make sure the replacements don't have any unneeded newlines.
-    $replacements = array_map('trim', $replacements);
+    array_walk($replacements, function (&$value) {
+      $value = trim($value ?? '');
+    });
     $string = strtr($string, $replacements);
     // Remove noise caused by empty placeholders.
     $lines = explode("\n", $string);
@@ -141,9 +149,7 @@ class AddressInlineFormatter extends AddressDefaultFormatter {
       $lines[$index] = $line;
     }
     // Remove empty lines.
-    $lines = array_filter($lines);
-
-    return $lines;
+    return array_filter($lines);
   }
 
 }

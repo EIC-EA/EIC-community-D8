@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\page_header_metadata_test\Plugin\PageHeaderMetadata;
 
-use Drupal\eic_theme_helper\Plugin\PageHeaderMetadata\NodeViewRoutesBase;
+use Drupal\oe_theme_helper\Plugin\PageHeaderMetadata\NodeViewRoutesBase;
 
 /**
  * Test implementation of a metadata plugin for nodes of bundle "test".

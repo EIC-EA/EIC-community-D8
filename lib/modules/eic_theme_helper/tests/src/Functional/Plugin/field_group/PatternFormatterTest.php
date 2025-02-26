@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Functional\Plugin\field_group;
+namespace Drupal\Tests\oe_theme_helper\Functional\Plugin\field_group;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -11,13 +11,10 @@ use Drupal\Tests\field_group\Functional\FieldGroupTestTrait;
 
 /**
  * Test the pattern field group formatter.
+ *
+ * @group batch3
  */
 class PatternFormatterTest extends BrowserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   use FieldGroupTestTrait;
 
@@ -29,8 +26,13 @@ class PatternFormatterTest extends BrowserTestBase {
     'text',
     'field_ui',
     'field_group',
-    'eic_theme_helper',
+    'oe_theme_helper',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -113,7 +115,7 @@ class PatternFormatterTest extends BrowserTestBase {
         1 => 'field_test_2',
       ],
       'label' => 'Test label',
-      'format_type' => 'eic_theme_helper_field_list_pattern',
+      'format_type' => 'oe_theme_helper_field_list_pattern',
       'format_settings' => [
         'label' => 'Test label',
         'variant' => 'default',

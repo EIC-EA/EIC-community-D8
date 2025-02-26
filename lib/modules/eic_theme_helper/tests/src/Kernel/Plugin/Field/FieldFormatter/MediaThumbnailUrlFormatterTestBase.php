@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\eic_theme_helper\Kernel\Plugin\Field\FieldFormatter;
+namespace Drupal\Tests\oe_theme_helper\Kernel\Plugin\Field\FieldFormatter;
 
 use Drupal\media\Entity\Media;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -10,6 +10,8 @@ use Drupal\Tests\oe_theme\Kernel\AbstractKernelTestBase;
 
 /**
  * Base class for formatters rendering media thumbnail URLs.
+ *
+ * @group batch2
  */
 class MediaThumbnailUrlFormatterTestBase extends AbstractKernelTestBase {
 
@@ -19,18 +21,17 @@ class MediaThumbnailUrlFormatterTestBase extends AbstractKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'field',
     'entity_test',
-    'media',
-    'image',
+    'field',
     'file',
-    'entity_reference',
+    'media',
+    'node',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('media');
@@ -40,9 +41,12 @@ class MediaThumbnailUrlFormatterTestBase extends AbstractKernelTestBase {
     $this->installConfig([
       'file',
       'field',
-      'entity_reference',
       'media',
     ]);
+
+    // Call the install hook of the Media module.
+    module_load_include('install', 'media');
+    media_install();
   }
 
   /**
@@ -57,7 +61,7 @@ class MediaThumbnailUrlFormatterTestBase extends AbstractKernelTestBase {
   protected function createMediaImage(string $filepath): Media {
     $media_type = $this->createMediaType('image');
 
-    $file = \Drupal::service('file.repository')->writeData(file_get_contents($filepath), 'public://' . $this->container->get('file_system')->basename($filepath));
+    $file = \Drupal::service('file.repository')->writeData(file_get_contents($filepath), 'public://' . basename($filepath));
     $file->setPermanent();
     $file->save();
 
