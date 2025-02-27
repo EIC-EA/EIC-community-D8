@@ -64,8 +64,6 @@
       "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2023-06-07/3112986-29.patch",
       "2723703 - Add relationship to flagged entities when Flagging is base table" : "https://www.drupal.org/files/issues/2021-02-22/2723703-73.patch"
     },
-    "drupal/flag_search_api": {
-    },
     "drupal/group_flex": {
       "3207164 - fatal error when saving after adding an image to an image field in a flex group" : "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch",
       "update drupal/group_permissions" : "https://git.drupalcode.org/project/group_flex/-/merge_requests/30.diff"
@@ -96,8 +94,6 @@
       "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
       "EICNET-3009: Change date format on \"Published on\" description": "patches/publication_date/EICNET-3009-change-date-format-published-on-description.patch"
     },
-    "drupal/scheduler_content_moderation_integration": {},
-    "drupal/smtp": {},
     "drupal/subpathauto": {
       "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2023-02-15/subpathauto-group_content_add_create-3130139-14.patch"
     },
