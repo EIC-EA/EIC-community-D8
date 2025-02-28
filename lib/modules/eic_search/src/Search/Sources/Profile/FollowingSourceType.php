@@ -45,6 +45,7 @@ class FollowingSourceType extends SourceType {
       'ss_content_language_label' => $this->t('Language', [], ['context' => 'eic_search']),
       'sm_author_topic_expertise_name' => $this->t('Topic expertise', [], ['context' => 'eic_search']),
       'sm_author_topic_interest_name' => $this->t('Topic interest', [], ['context' => 'eic_search']),
+      'sm_author_vocab_geo_name' => $this->t('Country interest', [], ['context' => 'eic_search']),
     ];
   }
 
