@@ -34,7 +34,7 @@ function eic_stakeholder_theme() {
     'stakeholder' => [
       'render element' => 'elements',
     ],
-    'stakeholder__view__project_content__project_participating_countries' => [
+    'stakeholder__teaser' => [
       'render element' => 'elements',
     ],
   ];
@@ -43,9 +43,9 @@ function eic_stakeholder_theme() {
 /**
  * Prepares variables for stakeholder templates.
  *
- * Default template: stakeholder--view--project-content--project-participating-countries.html.twig.
+ * Default template: stakeholder--teaser.html.twig.
  */
-function eic_stakeholder_preprocess_stakeholder__view__project_content__project_participating_countries(array &$variables) {
+function eic_stakeholder_preprocess_stakeholder__teaser(array &$variables) {
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
@@ -90,19 +90,6 @@ function template_preprocess_stakeholder(array &$variables) {
 
     // Store the modified items back into the variables array for use in the template.
     $variables['items'] = $items;
-  }
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK_alter().
- */
-function eic_stakeholder_theme_suggestions_stakeholder_alter(array &$suggestions, array $variables) {
-  $stakeholder = $variables['elements']['#stakeholder'];
-  if (!empty($stakeholder->view) && $stakeholder->view->storage->id()) {
-    $suggestions[] = 'stakeholder__view__' . $stakeholder->view->storage->id();
-    if (!empty($stakeholder->view->current_display)) {
-      $suggestions[] = 'stakeholder__view__' . $stakeholder->view->storage->id() . '__' . $stakeholder->view->current_display;
-    }
   }
 }
 

@@ -37,6 +37,9 @@ dependencies:
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_comment
     - field.storage.message.field_referenced_node
+    - field.storage.profile.field_vocab_geo
+    - field.storage.profile.field_vocab_topic_expertise
+    - field.storage.profile.field_vocab_topic_interest
     - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
     - field.storage.message.field_share_message
@@ -66,9 +69,6 @@ dependencies:
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_social_links
-    - field.storage.profile.field_vocab_geo
-    - field.storage.profile.field_vocab_topic_expertise
-    - field.storage.profile.field_vocab_topic_interest
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
@@ -83,11 +83,11 @@ dependencies:
     - message
     - comment
     - node
+    - profile
     - eic_private_content
     - path
     - paragraphs
     - eic_stakeholder
-    - profile
     - search_api
     - address
     - eic_events
@@ -240,6 +240,48 @@ field_settings:
         - file
         - media
         - message
+        - user
+  author_topic_expertise_name:
+    label: 'Referenced node » Content » Authored by » User » Member profiles » Profile » Topics of Expertise » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:uid:entity:member_profiles:entity:field_vocab_topic_expertise:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.profile.field_vocab_topic_expertise
+      module:
+        - node
+        - profile
+        - taxonomy
+        - user
+  author_topic_interest_name:
+    label: 'Referenced node » Content » Authored by » User » Member profiles » Profile » Topics of Interest » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:uid:entity:member_profiles:entity:field_vocab_topic_interest:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.profile.field_vocab_topic_interest
+      module:
+        - node
+        - profile
+        - taxonomy
+        - user
+  author_vocab_geo_name:
+    label: 'Referenced node » Content » Authored by » User » Member profiles » Profile » Countriesregions of interest » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:uid:entity:member_profiles:entity:field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.profile.field_vocab_geo
+      module:
+        - node
+        - profile
+        - taxonomy
         - user
   changed:
     label: Changed

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8fdf2e0695b7270b1be3fdd2a7c412d",
+    "content-hash": "f4b5d1ae3cc2c9463202f6ae246dc454",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -8578,29 +8578,29 @@
         },
         {
             "name": "drupal/social_link_field",
-            "version": "1.1.0-alpha1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/social_link_field.git",
-                "reference": "8.x-1.1-alpha1"
+                "reference": "2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/social_link_field-8.x-1.1-alpha1.zip",
-                "reference": "8.x-1.1-alpha1",
-                "shasum": "9c9d6d1225f8cdcce4212ad4746dbec395b7ff03"
+                "url": "https://ftp.drupal.org/files/projects/social_link_field-2.1.0.zip",
+                "reference": "2.1.0",
+                "shasum": "65348f339564c47057e16e312ee7c296cfbf0fbe"
             },
             "require": {
-                "drupal/core": "^8 || ^9"
+                "drupal/core": "^9 || ^10 || ^11"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.1-alpha1",
-                    "datestamp": "1590232338",
+                    "version": "2.1.0",
+                    "datestamp": "1729288139",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Alpha releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -8614,11 +8614,11 @@
                     "homepage": "https://www.drupal.org/u/romixua"
                 },
                 {
-                    "name": "NickDickinsonWilde",
+                    "name": "nickdickinsonwilde",
                     "homepage": "https://www.drupal.org/user/3094661"
                 },
                 {
-                    "name": "Romixua",
+                    "name": "romixua",
                     "homepage": "https://www.drupal.org/user/3516201"
                 },
                 {
@@ -9225,21 +9225,24 @@
         },
         {
             "name": "drupal/views_data_export",
-            "version": "1.3.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_data_export.git",
-                "reference": "8.x-1.3"
+                "reference": "8.x-1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_data_export-8.x-1.3.zip",
-                "reference": "8.x-1.3",
-                "shasum": "a8a5483e13787f2bb3eb66d9b0f19d96c0d8d7c1"
+                "url": "https://ftp.drupal.org/files/projects/views_data_export-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "2664bd52dd47b068dec60eecd3c6fc73f2d6c1b8"
             },
             "require": {
-                "drupal/core": "^9 || ^10",
-                "drupal/csv_serialization": "~1.4 || ~2.0 || ~3"
+                "drupal/core": "^9 || ^10 || ^11",
+                "drupal/csv_serialization": "~1.4 || ~2.0 || ~3 || ~4"
+            },
+            "conflict": {
+                "phpoffice/phpspreadsheet": "<1.23.0"
             },
             "require-dev": {
                 "drupal/search_api": "~1.12",
@@ -9248,8 +9251,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.3",
-                    "datestamp": "1679072666",
+                    "version": "8.x-1.5",
+                    "datestamp": "1732280381",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -9258,7 +9261,7 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -9282,7 +9285,7 @@
                     "homepage": "https://www.drupal.org/user/1557710"
                 },
                 {
-                    "name": "Steven Jones",
+                    "name": "steven jones",
                     "homepage": "https://www.drupal.org/user/99644"
                 }
             ],
@@ -9294,28 +9297,28 @@
         },
         {
             "name": "drupal/views_data_export_phpspreadsheet",
-            "version": "1.5.0",
+            "version": "2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/views_data_export_phpspreadsheet.git",
-                "reference": "8.x-1.5"
+                "reference": "2.0.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_data_export_phpspreadsheet-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "15387976a110f910e041b5d3d553a74dd39f3021"
+                "url": "https://ftp.drupal.org/files/projects/views_data_export_phpspreadsheet-2.0.5.zip",
+                "reference": "2.0.5",
+                "shasum": "4e8fb3e240af77dde533d7a404c8263346be82f6"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9 || ^10",
+                "drupal/core": "^9 || ^10 || ^11 || ^12",
                 "drupal/views_data_export": "~1",
-                "phpoffice/phpspreadsheet": "~1"
+                "phpoffice/phpspreadsheet": "^1 || ^2 || ^3"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1674575158",
+                    "version": "2.0.5",
+                    "datestamp": "1732801477",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -9340,6 +9343,13 @@
             ],
             "description": "Plugin to export views data into various file formats.",
             "homepage": "https://www.drupal.org/project/views_data_export_phpspreadsheet",
+            "keywords": [
+                "Drupal",
+                "excel",
+                "export",
+                "spreadsheet",
+                "views"
+            ],
             "support": {
                 "source": "https://git.drupalcode.org/project/views_data_export_phpspreadsheet",
                 "issues": "https://www.drupal.org/project/issues/views_data_export_phpspreadsheet"
@@ -9713,67 +9723,6 @@
                 "source": "https://github.com/ethosce/drupal-group_purl"
             },
             "time": "2022-12-12T23:29:26+00:00"
-        },
-        {
-            "name": "ezyang/htmlpurifier",
-            "version": "v4.16.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/523407fb06eb9e5f3d59889b3978d5bfe94299c8",
-                "reference": "523407fb06eb9e5f3d59889b3978d5bfe94299c8",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0"
-            },
-            "require-dev": {
-                "cerdic/css-tidy": "^1.7 || ^2.0",
-                "simpletest/simpletest": "dev-master"
-            },
-            "suggest": {
-                "cerdic/css-tidy": "If you want to use the filter 'Filter.ExtractStyleBlocks'.",
-                "ext-bcmath": "Used for unit conversion and imagecrash protection",
-                "ext-iconv": "Converts text to and from non-UTF-8 encodings",
-                "ext-tidy": "Used for pretty-printing HTML"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "library/HTMLPurifier.composer.php"
-                ],
-                "psr-0": {
-                    "HTMLPurifier": "library/"
-                },
-                "exclude-from-classmap": [
-                    "/library/HTMLPurifier/Language/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Edward Z. Yang",
-                    "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com"
-                }
-            ],
-            "description": "Standards compliant HTML filter written in PHP",
-            "homepage": "http://htmlpurifier.org/",
-            "keywords": [
-                "html"
-            ],
-            "support": {
-                "issues": "https://github.com/ezyang/htmlpurifier/issues",
-                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.16.0"
-            },
-            "time": "2022-09-18T07:06:19+00:00"
         },
         {
             "name": "grasmash/expander",
@@ -11644,80 +11593,73 @@
         },
         {
             "name": "openeuropa/oe_webtools",
-            "version": "1.19.0",
+            "version": "1.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openeuropa/oe_webtools.git",
-                "reference": "7d1fb4f639c5311c0b1975e9a8c15dd27b29104e"
+                "reference": "faa4ae65a2f28ab00914765fbb518b7fe7d7530b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/oe_webtools/zipball/7d1fb4f639c5311c0b1975e9a8c15dd27b29104e",
-                "reference": "7d1fb4f639c5311c0b1975e9a8c15dd27b29104e",
+                "url": "https://api.github.com/repos/openeuropa/oe_webtools/zipball/faa4ae65a2f28ab00914765fbb518b7fe7d7530b",
+                "reference": "faa4ae65a2f28ab00914765fbb518b7fe7d7530b",
                 "shasum": ""
             },
             "require": {
-                "drupal/core": "^9.3",
+                "drupal/core": "^9.5 || ^10",
                 "ext-json": "*",
-                "php": ">=7.4"
+                "php": ">=8.0"
             },
             "conflict": {
                 "openeuropa/oe_webtools_location": "*"
             },
             "require-dev": {
-                "behat/behat": "^3.10",
                 "composer/installers": "~1.5",
-                "drupal/config_devel": "~1.2",
-                "drupal/core-composer-scaffold": "^9.3",
-                "drupal/core-dev": "^9.3",
-                "drupal/ctools": "^3.7",
-                "drupal/drupal-extension": "^4.0",
-                "drupal/geocoder": "^3.0",
+                "drupal/captcha": "^1.10 || ^2.0",
+                "drupal/core-composer-scaffold": "^9.5 || ^10",
+                "drupal/drupal-extension": "^5.0",
+                "drupal/geocoder": "^4.0",
                 "drupal/geofield": "^1.0",
-                "drupal/json_field": "~1.0-rc4",
-                "drupal/token": "^1.10",
-                "drupaltest/behat-traits": "^0.3",
-                "drush/drush": "~10.3",
-                "fabpot/goutte": "^3.3",
-                "nikic/php-parser": "^4.12.0",
-                "openeuropa/behat-transformation-context": "~0.1",
-                "openeuropa/code-review": "^2.0",
-                "openeuropa/oe_media": "^1.15",
-                "openeuropa/oe_multilingual": "^1.10",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta5",
-                "openeuropa/webtools-geocoding-provider": "^0.2",
+                "drupal/json_field": "~1.1",
+                "drush/drush": "^11.1",
+                "mikey179/vfsstream": "^1.6",
+                "openeuropa/behat-transformation-context": "^0.2",
+                "openeuropa/code-review": "^2.0.0-alpha6",
+                "openeuropa/oe_media": "^1.23",
+                "openeuropa/oe_multilingual": "^1.13",
+                "openeuropa/rdf_skos": "^1.0.0-alpha10",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta6",
+                "openeuropa/webtools-geocoding-provider": "^0.3",
                 "phpspec/prophecy-phpunit": "^2",
-                "symfony/dom-crawler": "^4.4.12"
+                "symfony/phpunit-bridge": "^6.2"
             },
             "type": "drupal-module",
             "extra": {
-                "composer-exit-on-patch-failure": true,
-                "enable-patching": true,
-                "installer-paths": {
-                    "build/core": [
-                        "type:drupal-core"
-                    ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
-                    "build/modules/contrib/{$name}": [
-                        "type:drupal-module"
-                    ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
-                    ]
-                },
+                "_readme": [
+                    "Explicit requirement of symfony/phpunit-bridge to replace drupal/core-dev testing classes and traits.",
+                    "Explicit requirement of mikey179/vfsstream to remove when drupal/core-dev is reinstated."
+                ],
                 "drupal-scaffold": {
                     "locations": {
                         "web-root": "./build"
                     }
                 },
-                "_readme": [
-                    "Explicit requirement of drupal/token module due to PHP8 compatbility.",
-                    "Explicit requirement of behat module due to PHP8 compatibility.",
-                    "Explicit lower version requirement of drupal/ctools due to Drupal core 9.3 compatibility.",
-                    "Explicit minimum version requirement of fabpot/goutte due to Drupal 9.3 compatbility."
-                ]
+                "enable-patching": true,
+                "installer-paths": {
+                    "build/core": [
+                        "type:drupal-core"
+                    ],
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
+                    ],
+                    "build/modules/contrib/{$name}": [
+                        "type:drupal-module"
+                    ],
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
+                    ]
+                },
+                "composer-exit-on-patch-failure": true
             },
             "autoload": {
                 "psr-4": {
@@ -11731,9 +11673,9 @@
             "description": "OpenEuropa Webtools integration.",
             "support": {
                 "issues": "https://github.com/openeuropa/oe_webtools/issues",
-                "source": "https://github.com/openeuropa/oe_webtools/tree/1.19.0"
+                "source": "https://github.com/openeuropa/oe_webtools/tree/1.26.0"
             },
-            "time": "2022-08-02T07:50:45+00:00"
+            "time": "2023-11-21T14:19:53+00:00"
         },
         {
             "name": "pear/archive_tar",
@@ -12441,16 +12383,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "1.28.0",
+            "version": "3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "6e81cf39bbd93ebc3a4e8150444c41e8aa9b769a"
+                "reference": "949c799c3538f3158bcf6c5f4d8a403027be0fbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/6e81cf39bbd93ebc3a4e8150444c41e8aa9b769a",
-                "reference": "6e81cf39bbd93ebc3a4e8150444c41e8aa9b769a",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/949c799c3538f3158bcf6c5f4d8a403027be0fbd",
+                "reference": "949c799c3538f3158bcf6c5f4d8a403027be0fbd",
                 "shasum": ""
             },
             "require": {
@@ -12467,25 +12409,24 @@
                 "ext-xmlwriter": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",
-                "ezyang/htmlpurifier": "^4.15",
-                "maennchen/zipstream-php": "^2.1",
+                "maennchen/zipstream-php": "^2.1 || ^3.0",
                 "markbaker/complex": "^3.0",
                 "markbaker/matrix": "^3.0",
-                "php": "^7.4 || ^8.0",
+                "php": "^8.1",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "dev-main",
-                "dompdf/dompdf": "^1.0 || ^2.0",
+                "dompdf/dompdf": "^2.0 || ^3.0",
                 "friendsofphp/php-cs-fixer": "^3.2",
-                "mitoteam/jpgraph": "^10.2.4",
+                "mitoteam/jpgraph": "^10.3",
                 "mpdf/mpdf": "^8.1.1",
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phpstan/phpstan": "^1.1",
                 "phpstan/phpstan-phpunit": "^1.0",
-                "phpunit/phpunit": "^8.5 || ^9.0",
+                "phpunit/phpunit": "^10.5",
                 "squizlabs/php_codesniffer": "^3.7",
                 "tecnickcom/tcpdf": "^6.5"
             },
@@ -12540,9 +12481,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.28.0"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/3.8.0"
             },
-            "time": "2023-02-25T12:24:49+00:00"
+            "time": "2025-01-12T03:48:58+00:00"
         },
         {
             "name": "psr/cache",
@@ -13239,29 +13180,29 @@
         },
         {
             "name": "softcreatr/jsonpath",
-            "version": "0.7.6",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SoftCreatR/JSONPath.git",
-                "reference": "e04c02cb78bcc242c69d17dac5b29436bf3e1076"
+                "reference": "c2f4a164c2d9be754e2d47811157a31fe93067d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SoftCreatR/JSONPath/zipball/e04c02cb78bcc242c69d17dac5b29436bf3e1076",
-                "reference": "e04c02cb78bcc242c69d17dac5b29436bf3e1076",
+                "url": "https://api.github.com/repos/SoftCreatR/JSONPath/zipball/c2f4a164c2d9be754e2d47811157a31fe93067d0",
+                "reference": "c2f4a164c2d9be754e2d47811157a31fe93067d0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.1,<8.0"
+                "php": ">=8.0"
             },
             "replace": {
                 "flow/jsonpath": "*"
             },
             "require-dev": {
-                "phpunit/phpunit": ">=7.0",
+                "phpunit/phpunit": "^9.5",
                 "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.5"
+                "squizlabs/php_codesniffer": "^3.6"
             },
             "type": "library",
             "autoload": {
@@ -13304,7 +13245,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-09-27T09:27:12+00:00"
+            "time": "2022-01-31T14:22:15+00:00"
         },
         {
             "name": "solarium/solarium",
@@ -20875,7 +20816,6 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "drupal/realname": 10,
-        "drupal/social_link_field": 15,
         "drupal/workflow_buttons": 10,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15
@@ -20883,14 +20823,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4",
+        "php": "^8.0",
         "ext-dom": "*",
         "ext-json": "*",
         "ext-zip": "*"
     },
     "platform-dev": {},
-    "platform-overrides": {
-        "php": "7.4"
-    },
     "plugin-api-version": "2.6.0"
 }

@@ -10,6 +10,11 @@
 
     <div class="ecl-social-share__items">
       {% for item in items %}
+        {# Change twitter to x. #}
+        {% if item.name == 'twitter' %}
+          {% set item = item|merge({'name': 'x'}) %}
+          {% set item = item|merge({'type': 'eic-branded'}) %}
+        {% endif %}
         <div class="ecl-social-share__item{{ item.name ? ' ecl-social-share__item--' ~ item.name }}">
           {% if item.path %}
             <a class="ecl-link ecl-social-share__item-wrapper" href="{{ item.path }}">

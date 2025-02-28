@@ -87,7 +87,7 @@
       "3134245 - Run drush imports as user=1" : "https://www.drupal.org/files/issues/2020-05-06/3134245.patch"
     },
     "drupal/migrate_plus": {
-      "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
+      "3007709 - Add XPath-style filtering ability in JSON data parser plugin (up to date with version ^6.0.x)" : "https://www.drupal.org/files/issues/2022-10-28/migrate_plus-json-xpath-filtering-3007709-40.patch"
     },
     "drupal/publication_date": {
       "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
@@ -95,9 +95,6 @@
     },
     "drupal/scheduler_content_moderation_integration": {
       "3285808 - Scheduler breaks ajax requests when content moderation is enabled": "https://www.drupal.org/files/issues/2022-06-15/scheduler-content-moderation-state-values-breaks-node-form-3285808-2.patch"
-    },
-    "drupal/social_link_field": {
-      "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
     },
     "drupal/smtp": {
       "#3316049 - Some custom headers (Reply-To/Sender/Return-Path) are overriden by the module": "https://www.drupal.org/files/issues/2022-10-19/3316049-4-some-custom-headers-are-overriden.patch"
@@ -109,12 +106,15 @@
       "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",
       "3241213 - Add S3 bucket support": "https://www.drupal.org/files/issues/2021-10-07/s3-bucket-support--3241213.patch"
     },
+    "drupal/views_data_export_phpspreadsheet": {
+      "3503071 - Fatal error: Declaration of XlsEncoder::encode() must be compatible with EncoderInterface::encode()": "patches/views_data_export_phpspreadsheet/3503071.patch"
+    },
     "openeuropa/ecl-twig-loader": {
       "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",
       "7f697ba - Make OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::findTemplate($name) compatible with Twig\\Loader\\FilesystemLoader::findTemplate($name, $throw = true)": "patches/ecl-twig-loader/7f697ba-make-ecl-loader-findtemplate-function-compatible-with-parent-function.patch"
     },
     "drupal/aws_sqs" : {
-      "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch" 
+      "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch"
     }
   }
 }

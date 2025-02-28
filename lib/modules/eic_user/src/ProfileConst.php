@@ -12,7 +12,7 @@ final class ProfileConst {
    */
   const ALLOWED_SOCIAL_NETWORKS = [
     'linkedin',
-    'twitter',
+    'x',
     'facebook',
   ];
 

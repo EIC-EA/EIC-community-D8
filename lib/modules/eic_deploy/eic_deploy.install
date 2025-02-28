@@ -376,3 +376,38 @@ function eic_deploy_update_9012(&$sandbox) {
     }
   }
 }
+
+/**
+ * Re-create news_stories moderation states for existing entities.
+ */
+function eic_deploy_update_9013(&$sandbox) {
+
+  $mapping = [
+    'draft' => 'draft',
+    'published' => 'published',
+    'archived' => 'unpublished'
+  ];
+
+  // Load existing states.
+  $book_workflows = \Drupal::entityTypeManager()
+    ->getStorage('content_moderation_state')
+    ->loadByProperties([
+      'workflow' => 'news_stories',
+    ]);
+
+  // Re-create news_stories workflows.
+  foreach ($book_workflows as $book_workflow) {
+    $state = $book_workflow->get('moderation_state')->value;
+    $entity_id = $book_workflow->get('content_entity_id')->value;
+    $book_workflow->delete();
+
+    // Map old state to the new one.
+    $state = $mapping[$state] ?? NULL;
+
+    $entity = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->load($entity_id);
+    $entity->set('moderation_state', $state);
+    $entity->save();
+  }
+}
