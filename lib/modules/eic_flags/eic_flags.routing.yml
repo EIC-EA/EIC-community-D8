@@ -1,2 +1,11 @@
 route_callbacks:
   - '\Drupal\eic_flags\Routing\RequestRoutes::routes'
+
+eic_flags.anonymous_flag_member_access:
+  path: '/flag-member-access'
+  defaults:
+    _title: 'Member access'
+    _controller: '\Drupal\eic_flags\Controller\MemberAccessController::build'
+  requirements:
+    # This page should be accessible to anyone.
+    _access: 'TRUE'
