@@ -43,7 +43,7 @@ class OrganisationEditDescriptionForm extends FormBase {
    * @inheritDoc
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if ($this->group->bundle() !== 'organisation') {
+    if ((!($this->group instanceof GroupInterface)) && $this->group->bundle() !== 'organisation') {
       throw new AccessDeniedHttpException();
     }
 
