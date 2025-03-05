@@ -82,6 +82,14 @@ function _eic_community_get_social_share_block() {
   $social_share_json = [
     'service' => 'share',
     'version' => '2.0',
+    'stats' => TRUE,
+    'selection' => TRUE,
+    'more' => [
+      'x',
+      'facebook',
+      'linkedin',
+      'email',
+    ]
   ];
 
   return [
