@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - node.type.book
     - node.type.discussion
     - node.type.document
     - node.type.event
@@ -58,6 +59,7 @@ type_settings:
       weight: 1
   entity_types:
     node:
+      - book
       - discussion
       - document
       - event
