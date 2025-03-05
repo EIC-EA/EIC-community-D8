@@ -1,6 +1,0 @@
-services:
-  eic_book.event_subscriber:
-    class: Drupal\eic_book\EventSubscriber\BookRedirectSubscriber
-    arguments: ['@book.manager', '@entity_type.manager', '@entity.repository', '@current_user']
-    tags:
-      - { name: event_subscriber }
