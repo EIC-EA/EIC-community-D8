@@ -25,7 +25,7 @@ class MediaDownloadRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = parent::getSubscribedEvents();
 
     // Use a lower priority than \Drupal\views\EventSubscriber\RouteSubscriber
