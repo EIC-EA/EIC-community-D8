@@ -139,6 +139,8 @@ third_party_settings:
       include_language_independent: true
       specific_languages:
         en: '0'
+      use_language_undefined_as_fallback_language: false
+      use_universal_collation: false
 id: global
 name: Global
 description: ''
@@ -1055,7 +1057,7 @@ field_settings:
     datasource_id: 'entity:group'
     property_path: label
     type: text
-    boost: !!float 3
+    boost: 3.0
     dependencies:
       module:
         - group
