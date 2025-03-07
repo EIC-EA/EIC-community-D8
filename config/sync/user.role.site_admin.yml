@@ -150,6 +150,7 @@ permissions:
   - 'delete gallery revisions'
   - 'delete news revisions'
   - 'delete own book content'
+  - 'delete own files'
   - 'delete own member profile'
   - 'delete own news content'
   - 'delete own page content'

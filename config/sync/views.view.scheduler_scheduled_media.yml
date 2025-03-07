@@ -1,4 +1,4 @@
-uuid: f4390521-4ca5-44dd-8ab6-e5abb4fa7dcc
+uuid: d2618ad5-e783-4247-b4a6-c1eebd860956
 langcode: en
 status: true
 dependencies:
@@ -399,6 +399,15 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -466,6 +475,15 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -531,6 +549,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 50
           total_pages: null
           id: 0
@@ -1067,7 +1086,7 @@ display:
         empty: false
         access: false
         arguments: false
-      display_description: 'Scheduled media on user profile, showing just that user''s scheduled media'
+      display_description: "Scheduled media on user profile, showing just that user's scheduled media"
       display_comment: 'Access to the user view is controlled via SchedulerRouteSubscriber::alterRoutes(). The high-level permission "view media" is added to satisfy the security_review module'
       display_extenders: {  }
       path: user/%user/scheduled_media

@@ -4,5 +4,5 @@ status: true
 dependencies: {  }
 id: basic
 label: Basic
-revision: 0
+revision: false
 description: 'Block type composed by an optional title and description.'

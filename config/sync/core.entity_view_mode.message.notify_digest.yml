@@ -6,5 +6,6 @@ dependencies:
     - message
 id: message.notify_digest
 label: 'Notify - Digest'
+description: ''
 targetEntityType: message
 cache: true
