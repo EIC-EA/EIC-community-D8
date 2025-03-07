@@ -71,6 +71,7 @@ class EntityTreeController extends ControllerBase {
         $query->range($offset, $length);
       }
 
+      $query->accessCheck(FALSE);
       $query->sort($tree_property->getSortField(), 'ASC');
       $tree_property->generateExtraCondition($query, $options);
       $entities_id = $query->execute();

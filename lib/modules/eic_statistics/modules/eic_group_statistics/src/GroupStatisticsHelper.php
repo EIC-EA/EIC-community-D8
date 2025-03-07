@@ -292,6 +292,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       // may contain comments.
       /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
       $query = $group_content_storage->getQuery();
+      $query->accessCheck(FALSE);
       $query->condition('type', $content_plugins, 'IN');
       $query->condition('gid', $group->id());
       $query->exists('entity_id.entity:node.' . Comments::DEFAULT_NODE_COMMENTS_FIELD);

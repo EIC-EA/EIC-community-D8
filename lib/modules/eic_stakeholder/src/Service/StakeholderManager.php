@@ -129,6 +129,7 @@ class StakeholderManager {
   public function getOrganisationParticipatedProjects(GroupInterface $group, array $stakeholder_types = [], bool $published_only = TRUE): array|GroupInterface {
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = $this->entityTypeManager->getStorage('stakeholder')->getQuery();
+    $query->accessCheck(FALSE);
 
     if (!empty($stakeholder_types)) {
       $query->condition('type', $stakeholder_types, 'IN');

@@ -149,7 +149,8 @@ function oec_group_flex_update_9003(&$sandbox) {
   foreach ($group_types as $group_type) {
     if ($groupFlexType->hasFlexEnabled($group_type)) {
       $query = \Drupal::entityQuery('group');
-      $query->condition('type', $group_type->id());
+      $query->accessCheck(FALSE)
+        ->condition('type', $group_type->id());
       if ($results = $query->execute()) {
         foreach ($results as $gid) {
           $group = Group::load($gid);
