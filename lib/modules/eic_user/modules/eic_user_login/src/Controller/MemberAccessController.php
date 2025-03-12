@@ -4,7 +4,7 @@ namespace Drupal\eic_user_login\Controller;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Http\RequestStack;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -42,7 +42,7 @@ class MemberAccessController extends ControllerBase {
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
-   * @param \Drupal\Core\Http\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The current request.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The current request.

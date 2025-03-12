@@ -1004,6 +1004,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     $query->condition('field_vocab_topics', [$term->id()], 'IN');
+    $query->accessCheck(FALSE);
     return $query->execute();
   }
 

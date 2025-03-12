@@ -359,6 +359,7 @@ class UserHelper {
     // @see https://www.drupal.org/project/drupal/issues/2975750
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = $this->entityTypeManager->getStorage('profile')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', ProfileConst::MEMBER_PROFILE_TYPE_NAME)
       ->condition('status', 1)
       ->condition('field_vocab_topic_expertise', [$term->id()], 'IN');
