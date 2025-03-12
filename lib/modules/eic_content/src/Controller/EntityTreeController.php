@@ -129,7 +129,7 @@ class EntityTreeController extends ControllerBase {
    */
   public function search(Request $request) {
     $text = $request->query->get('search_text', '');
-    $selected_values = $request->query->get('values', []);
+    $selected_values = $request->query->all('values');
     $target_entity = $request->query->get('targetEntity');
     $target_bundle = $request->query->get('targetBundle');
     $disable_top = (bool) $request->query->get('disableTop', FALSE);
