@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4aeb2597d7d915aec847b1802d07bfc5",
+    "content-hash": "b72a9a5b016de4a2d7937312e7ade810",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -2285,58 +2285,6 @@
             "homepage": "https://www.drupal.org/project/block_field",
             "support": {
                 "source": "https://git.drupalcode.org/project/block_field"
-            }
-        },
-        {
-            "name": "drupal/book",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/book.git",
-                "reference": "2.0.0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/book-2.0.0.zip",
-                "reference": "2.0.0",
-                "shasum": "1274147b4a012ae21dba7ee05685b01bc9ca776e"
-            },
-            "require": {
-                "drupal/core": "^10.3 || ^11",
-                "ext-pdo": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "2.0.0",
-                    "datestamp": "1735922161",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Peter Wolanin (pwolanin)",
-                    "homepage": "https://www.drupal.org/u/pwolanin",
-                    "role": "Maintainer"
-                },
-                {
-                    "name": "Stephen Mustgrave (smustgrave)",
-                    "homepage": "https://www.drupal.org/u/smustgrave",
-                    "role": "Co-Maintainer"
-                }
-            ],
-            "description": "A book is a set of nodes tied together in a hierarchical structure, with chapters, sections, and subsections.",
-            "homepage": "https://drupal.org/project/book",
-            "support": {
-                "source": "https://git.drupalcode.org/project/book",
-                "issues": "https://drupal.org/project/issues/book"
             }
         },
         {
