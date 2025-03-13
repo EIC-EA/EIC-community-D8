@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'User types'
 vid: user_types
-description: ''
+description: null
 weight: 0
+new_revision: false

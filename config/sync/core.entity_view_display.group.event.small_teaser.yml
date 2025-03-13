@@ -61,6 +61,7 @@ content:
       timezone_override: ''
       format_type: medium
       separator: '-'
+      from_to: both
     third_party_settings: {  }
     weight: 17
     region: content
@@ -104,6 +105,7 @@ content:
       timezone_override: ''
       format_type: medium
       separator: '-'
+      from_to: both
     third_party_settings: {  }
     weight: 30
     region: content
@@ -270,3 +272,4 @@ hidden:
   langcode: true
   search_api_excerpt: true
   uid: true
+  workflow_buttons: true

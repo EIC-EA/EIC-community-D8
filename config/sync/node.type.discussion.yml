@@ -26,7 +26,7 @@ third_party_settings:
 name: Discussion
 type: discussion
 description: "The content type \"Discussion\" is designed to host a discussion that the author wants to launch. The discussion can start from a question or a more elaborate topic.\r\nOnce created and published, the discussion will occur through comments posted on the \"Discussion\" page "
-help: ''
+help: null
 new_revision: true
 preview_mode: 1
 display_submitted: true

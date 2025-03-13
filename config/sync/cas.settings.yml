@@ -1,5 +1,6 @@
 _core:
   default_config_hash: W42TeamUFaYIcLMbvbx1hngcurDgrV8-Rh_iNsgeFJc
+langcode: en
 login_link_enabled: true
 login_link_label: 'EU Login'
 login_success_message: 'You have been logged in.'
