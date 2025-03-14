@@ -79,11 +79,15 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
       $flags[$flag->id()]['content'] = _eic_community_get_flag_render_array($flag->id(), $node);
     }
   }
+  $description = '';
+  if ($node->hasField('field_body') && !$node->get('field_body')->isEmpty()) {
+    $description = Markup::create(Xss::filter($node->get('field_body')->value));
+  }
 
   return [
     'type' => $node->type->entity->label(),
     'author' => eic_community_get_teaser_user_display($node->getOwner(), 'crop_80x80'),
-    'description' => $node->hasField('field_body') ? Markup::create(Xss::filter($node->get('field_body')->value)) : '',
+    'description' => $description,
     'tags' => $tags,
     'language' => $language,
     'highlight' => FALSE,
