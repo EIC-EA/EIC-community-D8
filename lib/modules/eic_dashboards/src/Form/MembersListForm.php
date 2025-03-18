@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Implements the members list page.
  */
-class CommunityActivityReportForm extends FormBase {
+class MembersListForm extends FormBase {
 
   use StringTranslationTrait;
 
