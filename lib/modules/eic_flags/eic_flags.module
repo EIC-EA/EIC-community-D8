@@ -44,6 +44,12 @@ function eic_flags_theme() {
         'flag_id' => NULL,
       ],
     ],
+    'member_access_login_page' => [
+      'variables' => [
+        'login_link' => NULL,
+        'register_link' => NULL,
+      ],
+    ],
   ];
 }
 

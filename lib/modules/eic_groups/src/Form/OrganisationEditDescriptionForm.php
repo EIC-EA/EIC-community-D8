@@ -43,7 +43,7 @@ class OrganisationEditDescriptionForm extends FormBase {
    * @inheritDoc
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if ($this->group->bundle() !== 'organisation') {
+    if ((!($this->group instanceof GroupInterface)) || $this->group->bundle() !== 'organisation') {
       throw new AccessDeniedHttpException();
     }
 
@@ -80,8 +80,8 @@ class OrganisationEditDescriptionForm extends FormBase {
   }
 
   public function access(AccountInterface $account) {
-    if ($this->group->bundle() !== 'organisation') {
-      return AccessResult::forbidden('Only applicable for organisation groups.');
+    if ((!($this->group instanceof GroupInterface)) || $this->group->bundle() !== 'organisation') {
+      return AccessResult::forbidden('Only applicable for organisation group entities.');
     }
     $permission = 'edit organisation description';
     $membership = $this->group->getMember($account);

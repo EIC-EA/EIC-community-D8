@@ -1,0 +1,17 @@
+{% extends "@paragraphs/paragraph.html.twig" %}
+{% block paragraph %}
+  {% block content %}
+    {% include "@ecl-twig/ec-component-card/ecl-card.html.twig" with {
+      card: {
+        title: {
+          label: paragraph_content.title,
+        },
+        image: {
+          src: paragraph_content.image.src,
+          alt: paragraph_content.image.alt,
+        },
+        description: paragraph_content.description,
+      }
+    } only %}
+  {% endblock %}
+{% endblock paragraph %}
