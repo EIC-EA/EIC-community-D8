@@ -41,7 +41,6 @@
 
     {% if content.field_stakeholder_related_people.0 %}
       <div>{{ "Related people in the EIC Community:"|t }}</div>
-
       {% include "@eic_community/patterns/compositions/teaser-overview.html.twig" with {
         amount_options: amount_options,
         active_filters: active_filters,
@@ -52,8 +51,6 @@
         extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns ecl-u-pt-2xs',
         icon_file_path: common.icon_file_path,
       } only %}
-    {% else %}
-      <div>{{ "No related people in the EIC Community."|t }}</div>
     {% endif %}
   {% endif %}
 </article>
