@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5685862b5bde4545156b40a04e7ae11a",
+    "content-hash": "16e4ca2c0f4bdecf3b6c26c409b90cb0",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -22039,6 +22039,12 @@
     ],
     "aliases": [
         {
+            "package": "drupal/group_permissions",
+            "version": "1.0.0.0-RC9",
+            "alias": "1.0.0-alpha4",
+            "alias_normalized": "1.0.0.0-alpha4"
+        },
+        {
             "package": "twig/twig",
             "version": "2.15.3.0",
             "alias": "1.44.2",
@@ -22057,7 +22063,6 @@
         "drupal/flag": 10,
         "drupal/gcontent_moderation": 10,
         "drupal/group_flex": 20,
-        "drupal/group_permissions": 5,
         "drupal/masquerade": 10,
         "drupal/mimemail": 15,
         "drupal/openapi": 5,
