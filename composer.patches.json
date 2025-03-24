@@ -32,6 +32,9 @@
     "drupal/ckeditor_oembed": {
       "3296767 - Drupal 10 compatibility": "https://www.drupal.org/files/issues/2022-07-18/ckeditor_oembed.1.x-dev.rector.patch"
     },
+    "drupal/components": {
+      "3299045 - Ignore duplicate templates warnings": "patches/components/3299045-ignore_duplicate_template_warnings.patch"
+    },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
     },
