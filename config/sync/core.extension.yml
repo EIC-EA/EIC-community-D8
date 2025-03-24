@@ -231,6 +231,7 @@ module:
   views_bulk_operations: 0
   views_data_export: 0
   views_data_export_phpspreadsheet: 0
+  views_fields_on_off: 0
   views_ui: 0
   workflow_buttons: 0
   workflows: 0
