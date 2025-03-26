@@ -770,8 +770,12 @@ display:
           plugin_id: views_fields_on_off_form
           operator: in
           value:
+            label: label
+            field_stakeholder_address_country_code: field_stakeholder_address_country_code
             field_project_funding_programme: field_project_funding_programme
+            field_project_fields_of_science: field_project_fields_of_science
             field_project_status: field_project_status
+            field_project_date: field_project_date
             field_project_horizon_results: field_project_horizon_results
             field_project_innovations: field_project_innovations
             count: count
@@ -1136,6 +1140,7 @@ display:
             group_items: {  }
           fields:
             label: label
+            field_stakeholder_address_country_code: field_stakeholder_address_country_code
             field_project_funding_programme: field_project_funding_programme
             field_project_status: field_project_status
             field_body: field_body
