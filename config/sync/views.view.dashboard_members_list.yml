@@ -764,14 +764,6 @@ display:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-        combine:
-          id: combine
-          table: views
-          field: combine
-          plugin_id: views_autocomplete_filters_combine
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
         views_fields_on_off_form:
           id: views_fields_on_off_form
           table: views
@@ -875,6 +867,58 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_vocab_user_type_target_id:
+          id: field_vocab_user_type_target_id
+          table: profile__field_vocab_user_type
+          field: field_vocab_user_type_target_id
+          relationship: profile
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_vocab_user_type_target_id_op
+            label: 'Member type'
+            description: ''
+            use_operator: false
+            operator: field_vocab_user_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_vocab_user_type_target_id
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: user_types
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
         field_vocab_topic_expertise_target_id:
           id: field_vocab_topic_expertise_target_id
           table: profile__field_vocab_topic_expertise
@@ -1038,8 +1082,8 @@ display:
           plugin_id: date
           operator: between
           value:
-            min: From
-            max: To
+            min: ''
+            max: ''
             value: ''
             type: date
           group: 1
@@ -1065,8 +1109,8 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            min_placeholder: ''
-            max_placeholder: ''
+            min_placeholder: From
+            max_placeholder: To
             placeholder: ''
           is_grouped: false
           group_info:
@@ -1080,30 +1124,30 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        field_vocab_user_type_target_id:
-          id: field_vocab_user_type_target_id
-          table: profile__field_vocab_user_type
-          field: field_vocab_user_type_target_id
-          relationship: profile
+        combine_1:
+          id: combine_1
+          table: views
+          field: combine
+          relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value: {  }
+          plugin_id: views_autocomplete_filters_combine
+          operator: '='
+          value: ''
           group: 1
           exposed: true
           expose:
-            operator_id: field_vocab_user_type_target_id_op
-            label: 'Member type'
+            operator_id: combine_1_op
+            label: 'Free text search'
             description: ''
             use_operator: false
-            operator: field_vocab_user_type_target_id_op
+            operator: combine_1_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: field_vocab_user_type_target_id
+            identifier: combine_1
             required: false
             remember: false
-            multiple: true
+            multiple: false
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -1113,7 +1157,13 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            reduce: false
+            placeholder: ''
+            autocomplete_filter: 0
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
           is_grouped: false
           group_info:
             label: ''
@@ -1126,12 +1176,70 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: false
-          vid: user_types
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
+          fields:
+            name: name
+            field_location_address_country_code: field_location_address_country_code
+            status: status
+            field_first_name: field_first_name
+            field_last_name: field_last_name
+        access:
+          id: access
+          table: users_field_data
+          field: access
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          entity_field: access
+          plugin_id: date
+          operator: between
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: access_op
+            label: 'Last access'
+            description: ''
+            use_operator: false
+            operator: access_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: access
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            min_placeholder: From
+            max_placeholder: To
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: table
         options:
@@ -1140,11 +1248,83 @@ display:
           default_row_class: true
           columns:
             name: name
+            field_location_address_country_code: field_location_address_country_code
+            field_vocab_user_type: field_vocab_user_type
+            field_vocab_topic_expertise: field_vocab_topic_expertise
+            field_vocab_topic_interest: field_vocab_topic_interest
+            status: status
+            created: created
+            login: login
+            field_first_name: field_first_name
+            field_last_name: field_last_name
+            field_vocab_language: field_vocab_language
           default: '-1'
           info:
             name:
-              sortable: false
+              sortable: true
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_location_address_country_code:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_vocab_user_type:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_vocab_topic_expertise:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_vocab_topic_interest:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            status:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            created:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            login:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_first_name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_last_name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_vocab_language:
               align: ''
               separator: ''
               empty_column: false
