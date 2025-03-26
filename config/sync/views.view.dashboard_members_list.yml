@@ -10,6 +10,7 @@ dependencies:
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - taxonomy.vocabulary.topics
+    - taxonomy.vocabulary.user_types
   module:
     - address
     - profile
@@ -842,7 +843,7 @@ display:
           exposed: true
           expose:
             operator_id: field_location_address_country_code_op
-            label: Address
+            label: Country
             description: ''
             use_operator: false
             operator: field_location_address_country_code_op
@@ -989,7 +990,7 @@ display:
           entity_field: status
           plugin_id: boolean
           operator: '='
-          value: ''
+          value: All
           group: 1
           exposed: true
           expose:
@@ -1001,7 +1002,7 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: status_1
-            required: true
+            required: false
             remember: false
             multiple: false
             remember_roles:
@@ -1079,6 +1080,58 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        field_vocab_user_type_target_id:
+          id: field_vocab_user_type_target_id
+          table: profile__field_vocab_user_type
+          field: field_vocab_user_type_target_id
+          relationship: profile
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_vocab_user_type_target_id_op
+            label: 'Member type'
+            description: ''
+            use_operator: false
+            operator: field_vocab_user_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_vocab_user_type_target_id
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: user_types
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
       style:
         type: table
         options:
