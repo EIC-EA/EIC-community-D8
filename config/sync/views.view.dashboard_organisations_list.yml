@@ -945,7 +945,7 @@ display:
           plugin_id: flag_relationship
           required: false
           flag: follow_group
-          user_scope: current
+          user_scope: any
         flag_relationship_1:
           id: flag_relationship_1
           table: groups_field_data
@@ -958,7 +958,17 @@ display:
           required: false
           flag: recommend_group
           user_scope: current
-      header: {  }
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: 'Showing @start - @end of @total results.'
       footer: {  }
       display_extenders: {  }
     cache_metadata:
