@@ -554,7 +554,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: numeric
-          label: Follows
+          label: 'Number of follows'
           exclude: true
           alter:
             alter_text: false
@@ -611,7 +611,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: numeric
-          label: Likes
+          label: 'Number of likes'
           exclude: true
           alter:
             alter_text: false
@@ -1251,7 +1251,7 @@ display:
           plugin_id: flag_relationship
           required: false
           flag: follow_group
-          user_scope: current
+          user_scope: any
         flag_relationship_1:
           id: flag_relationship_1
           table: groups_field_data
@@ -1263,7 +1263,7 @@ display:
           plugin_id: flag_relationship
           required: false
           flag: recommend_group
-          user_scope: current
+          user_scope: any
         group_content_id:
           id: group_content_id
           table: groups_field_data
