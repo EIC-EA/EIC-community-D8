@@ -15,7 +15,7 @@ class AddressInlineFormatterTest extends FormatterTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
+  public static $modules = [
     'eic_theme_helper',
   ];
 

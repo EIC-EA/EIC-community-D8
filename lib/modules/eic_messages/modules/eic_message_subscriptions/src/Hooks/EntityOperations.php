@@ -150,7 +150,6 @@ class EntityOperations implements ContainerInjectionInterface {
 
     $message_ids = $this->entityTypeManager->getStorage('message')
       ->getQuery()
-      ->accessCheck(FALSE)
       ->condition('template', MessageSubscriptionTypes::NEW_EVENT_PUBLISHED)
       ->condition('field_group_ref', $event->id())
       ->execute();

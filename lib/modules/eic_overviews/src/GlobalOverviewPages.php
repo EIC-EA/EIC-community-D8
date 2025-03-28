@@ -84,7 +84,6 @@ class GlobalOverviewPages {
    */
   public static function getGlobalOverviewPageLink(int $page, array $params = []): Link {
     $overview_entities = \Drupal::entityQuery('overview_page')
-      ->accessCheck(FALSE)
       ->condition('field_overview_id', $page)
       ->execute();
 

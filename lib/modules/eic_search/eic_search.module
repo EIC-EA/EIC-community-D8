@@ -5,7 +5,6 @@
  * Primary module hooks for EIC Search module.
  */
 
-use Drupal\search_api\IndexInterface;
 use \Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use \Solarium\Core\Query\QueryInterface as SolrQueryInterface;
 use Solarium\QueryType\Select\Query\Query as SolrQuery;
@@ -87,7 +86,7 @@ function eic_search_preprocess_html(&$variables) {
  */
 function eic_search_search_api_solr_documents_alter(
   array &$documents,
-  IndexInterface $index,
+  \Drupal\search_api\IndexInterface $index,
   array $items
 ) {
   /** @var \Drupal\eic_groups\EICGroupsHelper $group_helper */
@@ -125,7 +124,7 @@ function eic_search_search_api_solr_query_alter(SolrQueryInterface $solarium_que
   /** @var \Drupal\search_api\IndexInterface $index */
   $index = $index_storage->load('global');
 
-  if (!$index instanceof IndexInterface) {
+  if (!$index instanceof \Drupal\search_api\IndexInterface) {
     return;
   }
 

@@ -15,11 +15,6 @@ use Drupal\Tests\field_group\Functional\FieldGroupTestTrait;
  */
 class InPageNavigationTest extends BrowserTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   use FieldGroupTestTrait;
 
   /**
@@ -50,7 +45,7 @@ class InPageNavigationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  public function setUp() {
     parent::setUp();
 
     // Enable and set OpenEuropa Theme as default.
@@ -177,25 +172,25 @@ class InPageNavigationTest extends BrowserTestBase {
 
     // Assert first field group.
     $content_first_group = $content_items[0]->getText();
-    $this->assertStringContainsString('Field label field_test_0', $content_first_group);
-    $this->assertStringContainsString('100', $content_first_group);
-    $this->assertStringContainsString('Field label field_test_1', $content_first_group);
-    $this->assertStringContainsString('200', $content_first_group);
+    $this->assertContains('Field label field_test_0', $content_first_group);
+    $this->assertContains('100', $content_first_group);
+    $this->assertContains('Field label field_test_1', $content_first_group);
+    $this->assertContains('200', $content_first_group);
 
     // Assert second field group.
     $content_second_group = $content_items[1]->getText();
-    $this->assertStringContainsString('Single text', $content_second_group);
-    $this->assertStringContainsString('Output from SingleTextFieldTest', $content_second_group);
-    $this->assertStringContainsString('Aap', $content_second_group);
-    $this->assertStringContainsString('Noot', $content_second_group);
+    $this->assertContains('Single text', $content_second_group);
+    $this->assertContains('Output from SingleTextFieldTest', $content_second_group);
+    $this->assertContains('Aap', $content_second_group);
+    $this->assertContains('Noot', $content_second_group);
 
     // Assert third field group.
     $content_third_group = $content_items[2]->getText();
-    $this->assertStringContainsString('Field group html_element', $content_third_group);
-    $this->assertStringContainsString('Field label field_test_2', $content_third_group);
-    $this->assertStringContainsString('300', $content_third_group);
-    $this->assertStringContainsString('Field label field_test_3', $content_third_group);
-    $this->assertStringContainsString('400', $content_third_group);
+    $this->assertContains('Field group html_element', $content_third_group);
+    $this->assertContains('Field label field_test_2', $content_third_group);
+    $this->assertContains('300', $content_third_group);
+    $this->assertContains('Field label field_test_3', $content_third_group);
+    $this->assertContains('400', $content_third_group);
 
     // Assert fourth field group - it mustn't exist.
     $this->assertSession()->elementTextNotContains('css', 'body', 'Field group inpage_nav_item_3');

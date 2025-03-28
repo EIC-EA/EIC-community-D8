@@ -12,11 +12,6 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
  */
 class NodeViewRoutesMetadataTest extends BrowserTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   use ContentModerationTestTrait;
 
   /**
@@ -41,7 +36,7 @@ class NodeViewRoutesMetadataTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  public function setUp() {
     parent::setUp();
 
     // Enable oe_theme and set it as default.

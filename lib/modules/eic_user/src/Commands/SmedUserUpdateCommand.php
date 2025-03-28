@@ -53,10 +53,7 @@ class SmedUserUpdateCommand extends DrushCommands {
    */
   public function actionCheckSmedId() {
     $user_ids = $this->entityTypeManager->getStorage('user')
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->notExists('field_smed_id')
-      ->execute();
+      ->getQuery()->notExists('field_smed_id')->execute();
     $batch = new BatchBuilder();
 
     $chunks = array_chunk($user_ids, 20);

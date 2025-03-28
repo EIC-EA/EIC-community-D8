@@ -89,7 +89,7 @@ class MediaThumbnailUrlFormatter extends ImageFormatter {
         continue;
       }
       $uri = $thumbnail_file->getFileUri();
-      $url = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+      $url = file_create_url($uri);
 
       // Get processed URL if image style is set.
       if ($image_style_setting) {

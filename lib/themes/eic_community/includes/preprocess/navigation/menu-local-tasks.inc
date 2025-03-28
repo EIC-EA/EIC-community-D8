@@ -5,7 +5,6 @@
  * Contains implementation for hook_preprocess_menu_local_tasks().
  */
 
-use Drupal\node\NodeInterface;
 use Drupal\eic_flags\RequestTypes;
 
 /**
@@ -39,7 +38,7 @@ function eic_community_preprocess_menu_local_tasks(array &$variables): void {
     }
   }
 
-  if ($current_node instanceof NodeInterface) {
+  if ($current_node instanceof \Drupal\node\NodeInterface) {
     $request_uri = \Drupal::request()->getRequestUri();
     $current_user = \Drupal::currentUser();
 

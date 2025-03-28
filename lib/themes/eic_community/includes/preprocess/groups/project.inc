@@ -5,7 +5,6 @@
  * Prepares variables for group type project templates.
  */
 
-use Drupal\views\Views;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_projects\Constants\Projects;
@@ -66,7 +65,7 @@ function _eic_community_render_project_teaser(&$variables, GroupInterface $group
   $view_id = 'project_content';
   $group_id = $group->id();
   // Retrieve the view object once and check if it exists.
-  $view = Views::getView($view_id);
+  $view = \Drupal\views\Views::getView($view_id);
 
   if ($view) {
     // Get all available display IDs from the view's storage.
