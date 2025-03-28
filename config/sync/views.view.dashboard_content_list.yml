@@ -760,7 +760,7 @@ display:
           settings:
             thousand_separator: ''
             prefix_suffix: true
-          group_column: value
+          group_column: entity_id
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -1048,6 +1048,7 @@ display:
           entity_field: gid
           plugin_id: standard
           required: false
+      group_by: false
       header: {  }
       footer: {  }
       display_extenders: {  }
