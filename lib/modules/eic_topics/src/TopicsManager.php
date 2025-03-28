@@ -113,6 +113,7 @@ class TopicsManager {
   ): int {
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = \Drupal::entityQuery($entity_type)
+      ->accessCheck(FALSE)
       ->condition('media' !== $entity_type ? 'type' : 'bundle', $bundle)
       ->condition(self::FIELD_ENTITY_TOPICS, $tid, 'IN')
       ->condition('status', 1);

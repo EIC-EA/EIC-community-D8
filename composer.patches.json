@@ -23,11 +23,16 @@
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
     "drupal/cas": {
-      "Dispatch EVENT_PRE_LOGIN before active check": "patches/cas/cas-dispatch_EVENT_PRE_LOGIN_before_active_check.patch",
-      "Properly retrieve the submit handlers":  "https://www.drupal.org/files/issues/2020-10-27/properly_fetch_submit_handlers.patch"
+      "Dispatch EVENT_PRE_LOGIN before active check": "patches/cas/cas-dispatch_EVENT_PRE_LOGIN_before_active_check.patch"
+    },
+    "drupal/ckeditor_find": {
+      "D10 compatibility": "https://www.drupal.org/files/issues/2025-02-25/3397636-d10-ckeditor_find-10.patch"
     },
     "drupal/ckeditor_selectall": {
-      "3226489 - Make this module compatible with Drupal 9": "https://www.drupal.org/files/issues/2021-08-09/3226489-3.patch"
+      "3226489 - Make this module compatible with Drupal 10": "https://www.drupal.org/files/issues/2023-10-25/3226489-4.patch"
+    },
+    "drupal/ckeditor_oembed": {
+      "3296767 - Drupal 10 compatibility": "https://www.drupal.org/files/issues/2022-07-18/ckeditor_oembed.1.x-dev.rector.patch"
     },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
@@ -49,9 +54,7 @@
       "3294949 - Group Permission Callbacks Create White Screen Error on Group Type Permissions Page": "https://www.drupal.org/files/issues/2022-07-27/group-3294949-2.patch"
     },
     "drupal/group_permissions": {
-      "3302469 - Allow other modules to alter the calculated permissions": "https://www.drupal.org/files/issues/2022-08-12/group_permissions-cache_performance_issue-3301865-7.patch",
-      "3210227 - Column not found: 1054 Unknown column 'revision_log'": "https://www.drupal.org/files/issues/2022-09-27/3210227-8-revision_log_problem.patch",
-      "3221828 - More than one group breaks permission tab in Drupal 9.2.0": "https://git.drupalcode.org/project/group_permissions/-/merge_requests/11.patch"
+      "3301865 - Allow other modules to alter the calculated permissions(3302469)": "https://www.drupal.org/files/issues/2025-02-20/3301865-8.patch"
     },
     "drupal/group_content_menu": {
       "3209011 - Active trail is cached incorrectly": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch"
@@ -61,11 +64,9 @@
       "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2023-06-07/3112986-29.patch",
       "2723703 - Add relationship to flagged entities when Flagging is base table" : "https://www.drupal.org/files/issues/2021-02-22/2723703-73.patch"
     },
-    "drupal/flag_search_api": {
-      "3123595 - Add support for global flag status indexing and flag counts": "https://www.drupal.org/files/issues/2020-07-21/flag-counts-indexer-3123595-1.patch"
-    },
     "drupal/group_flex": {
-      "3207164 - fatal error when saving after adding an image to an image field in a flex group" : "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch"
+      "3207164 - fatal error when saving after adding an image to an image field in a flex group" : "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch",
+      "update drupal/group_permissions" : "https://git.drupalcode.org/project/group_flex/-/merge_requests/30.diff"
     },
     "drupal/masquerade": {
       "3181882 - \"Masquerade as ROLE\" permission not granting access": "https://www.drupal.org/files/issues/2020-11-11/masquerade_permission_per_role-3181882-2.patch"
@@ -74,7 +75,7 @@
       "3183734 - Unable to use inline styles when tokens are used in a message (patch provided)": "https://www.drupal.org/files/issues/2020-11-20/update-process-token-function-to-avoid-issue-with-html-filtering-3183734-2.patch"
     },
     "drupal/menu_trail_by_path": {
-      "2914746 - Fatal error after installing the module": "https://www.drupal.org/files/issues/2020-01-10/menu_trail_by_path-fatal_error_on_menu_active_trail_service_override-2914746-18.patch"
+      "2914746 - Fatal error after installing the module": "https://www.drupal.org/files/issues/2025-01-29/2914746-33.patch"
     },
     "drupal/message_notify": {
       "3251270 - Error when trying to send a message to a deleted owner": "https://www.drupal.org/files/issues/2021-11-25/message_notify-check_owner_account-3251270-2.patch"
@@ -93,12 +94,6 @@
       "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
       "EICNET-3009: Change date format on \"Published on\" description": "patches/publication_date/EICNET-3009-change-date-format-published-on-description.patch"
     },
-    "drupal/scheduler_content_moderation_integration": {
-      "3285808 - Scheduler breaks ajax requests when content moderation is enabled": "https://www.drupal.org/files/issues/2022-06-15/scheduler-content-moderation-state-values-breaks-node-form-3285808-2.patch"
-    },
-    "drupal/smtp": {
-      "#3316049 - Some custom headers (Reply-To/Sender/Return-Path) are overriden by the module": "https://www.drupal.org/files/issues/2022-10-19/3316049-4-some-custom-headers-are-overriden.patch"
-    },
     "drupal/subpathauto": {
       "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2023-02-15/subpathauto-group_content_add_create-3130139-14.patch"
     },
@@ -114,7 +109,8 @@
       "7f697ba - Make OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::findTemplate($name) compatible with Twig\\Loader\\FilesystemLoader::findTemplate($name, $throw = true)": "patches/ecl-twig-loader/7f697ba-make-ecl-loader-findtemplate-function-compatible-with-parent-function.patch"
     },
     "drupal/aws_sqs" : {
-      "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch"
+      "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch",
+      "3367429 - Drupal 10 compatibility": "https://www.drupal.org/files/issues/2025-02-21/3367429-11-drupal-10-compatibility.patch"
     }
   }
 }

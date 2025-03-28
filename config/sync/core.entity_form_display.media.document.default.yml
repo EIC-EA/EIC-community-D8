@@ -56,4 +56,8 @@ hidden:
   created: true
   oe_media_file_type: true
   oe_media_remote_file: true
+  publish_on: true
+  publish_state: true
   uid: true
+  unpublish_on: true
+  unpublish_state: true

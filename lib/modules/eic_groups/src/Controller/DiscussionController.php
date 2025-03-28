@@ -238,6 +238,7 @@ class DiscussionController extends ControllerBase {
 
     $query = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('pid', $parent_id, $parent_id === 0 ? 'IS NULL' : '=')
       ->condition('status', Node::PUBLISHED)
       ->sort('created', 'DESC')
@@ -255,6 +256,7 @@ class DiscussionController extends ControllerBase {
 
     $total = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('entity_id', $discussion_id)
       ->condition('pid', $parent_id, $parent_id === 0 ? 'IS NULL' : '=')
       ->condition('status', Node::PUBLISHED)

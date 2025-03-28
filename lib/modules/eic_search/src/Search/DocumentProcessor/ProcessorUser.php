@@ -210,7 +210,7 @@ class ProcessorUser extends DocumentProcessor {
     $total_events = 0;
 
     $comment_storage = $this->entityTypeManager->getStorage('comment');
-    $query = $comment_storage->getQuery();
+    $query = $comment_storage->getQuery()->accessCheck(TRUE);
     $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
     $query->condition('status', CommentInterface::PUBLISHED);
     $query->condition('uid', $user->id());
@@ -230,11 +230,16 @@ class ProcessorUser extends DocumentProcessor {
     $total_content = (int) $query_content->execute()->fetchAssoc()['count'];
 
     $memberships = $this->groupMembershipLoader->loadByUser($user);
-    $group_ids = array_unique(
-      array_map(function (GroupMembership $membership) {
-        return $membership->getGroup()->id();
-      }, $memberships)
-    );
+    if (!empty($memberships)) {
+      $group_ids = array_unique(
+        array_map(function (GroupMembership $membership) {
+          return $membership->getGroup()->id();
+        }, $memberships)
+      );
+    }
+    else {
+      $group_ids = [0];
+    }
 
     $this->addOrUpdateDocumentField(
       $document,

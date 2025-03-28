@@ -24,8 +24,6 @@ dependencies:
     - paragraphs
     - path
     - publication_date
-    - scheduler
-    - scheduler_content_moderation_integration
     - text
 third_party_settings:
   field_group:
@@ -302,18 +300,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 16
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  publish_state:
-    type: scheduler_moderation
-    weight: 15
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
     weight: 11
@@ -352,18 +338,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 13
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  unpublish_state:
-    type: scheduler_moderation
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 18
     region: content
@@ -371,3 +345,7 @@ content:
     third_party_settings: {  }
 hidden:
   member_content_edit_access: true
+  publish_on: true
+  publish_state: true
+  unpublish_on: true
+  unpublish_state: true
