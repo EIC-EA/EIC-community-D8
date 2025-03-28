@@ -5,7 +5,6 @@
  * Prepares variables for group templates.
  */
 
-use Drupal\file\FileInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Render\Markup;
@@ -397,7 +396,7 @@ function _eic_groups_get_formatted_attachments(ContentEntityInterface $entity, s
 
     $file = File::load($media_id);
 
-    if (!$file instanceof FileInterface) {
+    if (!$file instanceof \Drupal\file\FileInterface) {
       continue;
     }
 

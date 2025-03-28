@@ -597,9 +597,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * @return array|NULL
    */
   private function extractFilterFromUrl(): ?array {
-    $filters = $this->requestStack->getCurrentRequest()
+    $filters = $this->requestStack
+      ->getCurrentRequest()
       ->query
-      ->all('filter');
+      ->get('filter', []);
 
     if (!is_array($filters)) {
       return NULL;

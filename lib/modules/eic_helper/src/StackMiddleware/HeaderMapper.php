@@ -4,7 +4,6 @@ namespace Drupal\eic_helper\StackMiddleware;
 
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -59,9 +58,9 @@ class HeaderMapper implements HttpKernelInterface {
    */
   public function handle(
     Request $request,
-    $type = self::MAIN_REQUEST,
+    $type = self::MASTER_REQUEST,
     $catch = TRUE
-  ): Response {
+  ) {
     if (
       $this->settings->get('reverse_proxy') !== FALSE
       && !empty($this->settings->get(self::HEADER_MAPPING_SETTING))

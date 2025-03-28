@@ -50,7 +50,6 @@ class EntityStatisticsController extends ControllerBase {
 
     $ids = $this->entityTypeManager()->getStorage('node')
       ->getQuery()
-      ->accessCheck(FALSE)
       ->condition('type', $request->query->get('bundle'))
       ->condition('nid', (int) $request->query->get('entityId'))
       ->range(0, 1)

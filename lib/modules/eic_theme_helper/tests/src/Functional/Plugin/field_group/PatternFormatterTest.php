@@ -14,11 +14,6 @@ use Drupal\Tests\field_group\Functional\FieldGroupTestTrait;
  */
 class PatternFormatterTest extends BrowserTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   use FieldGroupTestTrait;
 
   /**
@@ -35,7 +30,7 @@ class PatternFormatterTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  public function setUp() {
     parent::setUp();
 
     // Enable oe_theme and set it as default.

@@ -124,7 +124,6 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler i
    */
   protected function commentReplyCount($cid, $nid, $entity_type): int {
     $result = \Drupal::entityQuery('comment')
-      ->accessCheck(FALSE)
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $nid)
       ->condition('pid', $cid)

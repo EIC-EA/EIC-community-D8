@@ -64,8 +64,4 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-hidden:
-  publish_on: true
-  publish_state: true
-  unpublish_on: true
-  unpublish_state: true
+hidden: {  }

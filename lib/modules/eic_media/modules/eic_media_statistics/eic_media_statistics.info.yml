@@ -3,8 +3,9 @@ type: module
 description: 'Provides a Media statistics'
 package: European Innovation Council
 configure: eic_media_statistics.settings
-core_version_requirement: ^8 || ^9 || ^10
+core: 8.x
 php: ^7.4
+core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:media
   - drupal:statistics

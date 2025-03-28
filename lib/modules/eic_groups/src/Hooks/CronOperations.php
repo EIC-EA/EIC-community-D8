@@ -219,9 +219,7 @@ class CronOperations implements ContainerInjectionInterface {
             $installedContentPluginIds[$key] = 'group-' . str_replace(':', '-', $pluginId);
           }
 
-          $query = $this->entityTypeManager->getStorage('group_content')
-            ->getQuery()
-            ->accessCheck(FALSE);
+          $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
           $query->condition('type', $installedContentPluginIds, 'IN');
           $query->condition('gid', $group->id());
           $results = $query->execute();
@@ -293,7 +291,6 @@ class CronOperations implements ContainerInjectionInterface {
 
     $groups = Group::loadMultiple($results);
     $query = \Drupal::entityQuery('user')
-      ->accessCheck(FALSE)
       ->condition('status', 1);
 
     $or_condition = $query->orConditionGroup()

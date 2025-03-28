@@ -123,9 +123,7 @@ class QueuedMessageChecker {
     $request_time = $this->timeService->getRequestTime();
 
     // Look for similar older messages.
-    $query = $this->entityTypeManager->getStorage('message')
-      ->getQuery()
-      ->accessCheck(TRUE);
+    $query = $this->entityTypeManager->getStorage('message')->getQuery();
     $query->condition('template', $message->getTemplate()->id());
     $query->condition('uid', $message->getOwnerId());
     $query->condition('created', ($request_time - $threshold), '>=');

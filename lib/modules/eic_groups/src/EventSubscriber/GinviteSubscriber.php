@@ -10,7 +10,7 @@ use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\ginvite\GroupInvitation;
 use Drupal\ginvite\GroupInvitationLoader;
 use Drupal\ginvite\EventSubscriber\GinviteSubscriber as GinviteSubscriberBase;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Decorates Ginvite module event subscriber.
@@ -43,13 +43,13 @@ class GinviteSubscriber extends GinviteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function notifyAboutPendingInvitations(RequestEvent $event) {
+  public function notifyAboutPendingInvitations(GetResponseEvent $event) {
     // We skip AJAX requests.
     if ($event->getRequest()->isXmlHttpRequest()) {
       return;
     }
 
-    if (!$event->isMainRequest()) {
+    if (!$event->isMasterRequest()) {
       return;
     }
 

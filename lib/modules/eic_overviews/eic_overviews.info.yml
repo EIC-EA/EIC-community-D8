@@ -2,7 +2,8 @@ name: EIC Overviews
 type: module
 description: 'Provides an overview page entity.'
 package: European Innovation Council
-core_version_requirement: ^8 || ^9 || ^10
+core: 8.x
+core_version_requirement: ^8 || ^9
 php: 7.3
 dependencies:
   - drupal:text
