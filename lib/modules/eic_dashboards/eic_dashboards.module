@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Core\Extension\ExtensionPathResolver;
+use Drupal\path_alias\Entity\PathAlias;
 
 /**
  * Implements hook_theme().
@@ -31,4 +31,16 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
  */
 function eic_dashboards_preprocess_page(&$variables) {
   $variables['#attached']['library'][] = 'eic_dashboards/dashboards_menu';
+}
+
+/**
+ * Create aliases for given group paths.
+ */
+function _eic_communities_create_alias($group_id, $group_name, $group_paths) {
+  foreach ($group_paths as $group_path) {
+    PathAlias::create([
+      'path' => '/group/' . $group_id . '/' . $group_path,
+      'alias' => '/communities/' . $group_name . '/' . $group_path,
+    ])->save();
+  }
 }

@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * @file
+ * Defines database schema and runs functions during installation.
+ */
+
+use Drupal\eic_dashboards\DashboardRepository;
+use Drupal\path_alias\PathAliasInterface;
+
+/**
+ * Implements hook_install().
+ *
+ * Populates eic_dashboards custom table with past data
+ * and creates community dashboard aliases.
+ */
+function eic_dashboards_install(): void {
+  $connection = \Drupal::database();
+  $container = \Drupal::getContainer();
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  $entityTypeManager = $container->get('entity_type.manager');
+
+  /**
+   * The date formatter.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  $dateFormatter = $container->get('date.formatter');
+
+  /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  $loggerFactory = $container->get('logger.factory');
+
+  /**
+   * The queue factory.
+   *
+   * @var \Drupal\Core\Queue\QueueFactory
+   */
+  $queueFactory = $container->get('queue');
+
+  // Insert past cumulative statistics to database.
+  $dashboardRepository = new DashboardRepository($connection, $entityTypeManager, $dateFormatter, $loggerFactory, $queueFactory);
+  $dashboardRepository->insertPastCumulativeStats();
+
+  // Create community dashboard aliases.
+  $pathAliasManager = \Drupal::entityTypeManager()->getStorage('path_alias');
+
+  $groupPaths = [
+    'dashboard',
+    'dashboard/members-report',
+    'dashboard/activity-report',
+    'dashboard/moderation-overview',
+  ];
+
+  $groups = \Drupal::entityTypeManager()->getStorage('group')->loadMultiple();
+
+  foreach ($groups as $group) {
+    $groupId = $group->id();
+    $pathAliases = $pathAliasManager->loadByProperties(['path' => '/group/' . $groupId]);
+    $pathAlias = reset($pathAliases);
+
+    if (!$pathAlias instanceof PathAliasInterface) {
+      continue;
+    }
+
+    foreach ($groupPaths as $group_path) {
+      $groupPathAliases = $pathAliasManager->loadByProperties(['path' => '/group/' . $groupId . '/' . $group_path]);
+
+      if (!empty($groupPathAliases)) {
+        continue;
+      }
+      // Create aliases for unaliased paths.
+      else {
+        $pathAliasesParts = explode('/', $pathAlias->getAlias());
+        $groupName = $pathAliasesParts[2];
+        // Create aliases for group paths.
+        _eic_communities_create_alias($groupId, $groupName, $groupPaths);
+        continue 2;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Deletes custom EIC Dashboard table.
+ *
+ * @see hook_uninstall()
+ *
+ * @ingroup eic_dashboards
+ */
+function eic_dashboards_uninstall(): void {
+  $connection = \Drupal::database();
+  $connection->delete('eic_dashboards')->execute();
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * Defines the database tables used by this module.
+ *
+ * @see hook_schema()
+ *
+ * @ingroup eic_dashboards
+ */
+function eic_dashboards_schema(): array {
+  $schema['eic_dashboards'] = [
+    'description' => 'Stores counts of bundle items per month.',
+    'fields' => [
+      'lid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique log ID',
+      ],
+      'cid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Community ID',
+      ],
+      'bundle' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the bundle',
+      ],
+      'count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The number of bundle items at specific date',
+      ],
+      'date' => [
+        'type' => 'varchar',
+        'mysql_type' => 'date',
+        'not null' => TRUE,
+        'description' => 'The date that log was created in year/month/day format',
+      ],
+    ],
+    'primary key' => ['lid'],
+    'indexes' => [
+      'bundle' => ['bundle'],
+      'date' => ['date'],
+    ],
+  ];
+
+  return $schema;
+}
