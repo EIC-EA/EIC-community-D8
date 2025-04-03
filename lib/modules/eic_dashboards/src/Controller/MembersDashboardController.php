@@ -76,9 +76,25 @@ class MembersDashboardController extends ControllerBase
       ], 3),
     ];
 
+    // Members by organisation type.
+    $membersByOrganizationTypeData = json_encode($this->dashboardHelper->transformLabelCountToNameAndY($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_user_type', 'id')));
+    $a = $membersByOrganizationTypeData;
+    $membersByOrganizationTypeChart = $this->dashboardBuilder->chartPie($this->t('Members by organisation type'), $membersByOrganizationTypeData, '');
+//    $membersByOrganizationTypeMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_user_type', DashboardFilters::DASHBOARD_MEMBERS_LIST_ORGANIZATION_TYPE), 'view.members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_ORGANIZATION_TYPE]);
+//    $membersByOrganizationTypeMenu = $this->dashboardBuilder->jumpMenu($this->t('List members of type'), $this->t('Choose organisation type'), $membersByOrganizationTypeMenuData);
+//    $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByOrganizationTypeChart, $membersByOrganizationTypeMenu);
+    $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByOrganizationTypeChart, '');
+
+    // Section 3.
+    $section3Build = $this->dashboardBuilder->columns([
+      $membersByOrganizationType,
+    ], 2);
+
+
     $build = [
       'content' => [
         $section1Build,
+        $section3Build,
       ],
     ];
 

@@ -95,5 +95,65 @@ class DashboardBuilder implements DashboardBuilderInterface {
     return Link::fromTextAndUrl($buttonText, $url);
   }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function chartPie($title, $data, $size): array {
+        return [
+            '#theme' => 'chart_pie',
+            '#title' => $title,
+            '#data' => $data,
+            '#size' => $size,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function chartWithMenu($chart, $menu): array {
+        return [
+            '#theme' => 'chart_with_menu',
+            '#chart' => $chart,
+            '#menu' => $menu,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jumpMenu($title, $placeholder, $links): array {
+        if (!empty($links)) {
+            return [
+                '#theme' => 'jump_menu',
+                '#wrapper_attributes' => [
+                    'class' => [
+                        'jump-menu',
+                    ],
+                ],
+                '#title' => $title,
+                '#title_attributes' => [
+                    'class' => [
+                        'jump-menu__label',
+                    ],
+                ],
+                '#placeholder' => $placeholder,
+                '#items' => $links,
+                '#attributes' => [
+                    'class' => [
+                        'ecl-select',
+                        'form-select',
+                        'jump-menu__select',
+                        'js-jump-menu',
+                    ],
+                ],
+            ];
+        }
+        else {
+            return [];
+        }
+    }
+
+
+
 }
 

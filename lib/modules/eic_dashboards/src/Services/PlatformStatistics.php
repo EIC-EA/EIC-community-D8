@@ -56,4 +56,30 @@ class PlatformStatistics implements PlatformStatisticsInterface {
       ->count()
       ->execute();
   }
+
+  /**
+   * Returns members grouped by vocabulary.
+   */
+  public function getMembersPerTaxonomyTerm($taxonomyField, $argumentId): array {
+    $query = $this->connection->select('profile', 'pfl');
+    $query->join('user__roles', 'ur', 'pfl.uid = ur.entity_id');
+    $query->join('users_field_data', 'ufd', 'pfl.uid = ufd.uid');
+    $query->join('profile__' . $taxonomyField, 'tf', 'pfl.profile_id = tf.entity_id');
+    $query->addExpression('COUNT(tf.' . $taxonomyField . '_target_id)', 'count_members');
+    $query->addExpression('tf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('ufd.status', 1);
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('taxonomy_term_id', 'ASC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[$row->taxonomy_term_id][$argumentId] = $row->taxonomy_term_id;
+      $data[$row->taxonomy_term_id]['label'] = $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA';
+      $data[$row->taxonomy_term_id]['count'] = (int) $row->count_members;
+    }
+
+    return $data;
+  }
 }

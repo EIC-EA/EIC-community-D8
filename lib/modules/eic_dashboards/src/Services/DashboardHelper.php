@@ -61,4 +61,22 @@ class DashboardHelper implements DashboardHelperInterface {
     return $this->urlGenerator->generateFromRoute($route_name, [], ['absolute' => TRUE]);
   }
 
+  /**
+   * Transforms data array into name and y format.
+   */
+  public function transformLabelCountToNameAndY($data): array {
+    $result = [];
+
+    foreach ($data as $item) {
+      if (isset($item['label']) && isset($item['count'])) {
+        $result[] = [
+          'name' => $item['label'],
+          'y' => $item['count'],
+        ];
+      }
+    }
+
+    return $result;
+  }
+
 }

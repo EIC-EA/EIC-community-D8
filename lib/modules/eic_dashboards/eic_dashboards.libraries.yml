@@ -1,3 +1,12 @@
+scripts:
+  css:
+    theme:
+      css/highcharts.css: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - oe_webtools/drupal.webtools-smartloader
+
 cta_card:
   css:
     theme:
@@ -12,3 +21,14 @@ number-and-link:
   css:
     theme:
       css/number-and-link.css: {}
+
+jump-menu:
+  css:
+    theme:
+      css/jump-menu.css: { }
+  js:
+    js/jump-menu.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

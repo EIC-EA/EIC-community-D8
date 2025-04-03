@@ -37,6 +37,29 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'link' => '',
       ],
     ],
+    'chart_pie' => [
+      'variables' => [
+        'title' => '',
+        'data' => '',
+        'size' => '',
+      ],
+    ],
+    'chart_with_menu' => [
+      'variables' => [
+        'chart' => '',
+        'menu' => '',
+      ],
+    ],
+    'jump_menu' => [
+      'variables' => [
+        'wrapper_attributes' => [],
+        'placeholder' => '',
+        'title' => '',
+        'title_attributes' => [],
+        'items' => [],
+        'attributes' => [],
+      ],
+    ],
   ];
 }
 
