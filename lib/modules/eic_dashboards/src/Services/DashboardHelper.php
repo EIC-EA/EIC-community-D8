@@ -51,7 +51,7 @@ class DashboardHelper implements DashboardHelperInterface {
    */
   public function getRoutingTitle($route_name): string {
     $route = $this->routeProvider->getRouteByName($route_name);
-    return $route->getDefault('_title');
+    return (string) $route->getDefault('_title');
   }
 
   /**

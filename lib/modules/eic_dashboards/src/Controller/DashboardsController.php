@@ -32,7 +32,7 @@ class DashboardsController extends ControllerBase
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
-    DashboardHelperInterface  $dashboardHelper,
+    DashboardHelperInterface   $dashboardHelper,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;

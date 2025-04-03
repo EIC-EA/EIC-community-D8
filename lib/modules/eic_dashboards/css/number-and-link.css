@@ -1,0 +1,9 @@
+.number-and-link__title {
+  font-size: 20px;
+}
+
+.number-and-link__number {
+  margin: 6px 0;
+  font-size: 48px;
+  font-weight: 700;
+}

@@ -39,11 +39,13 @@ class MembersDashboardController extends ControllerBase
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
-    DashboardHelperInterface  $dashboardHelper,
+    DashboardHelperInterface   $dashboardHelper,
+    PlatformStatisticsInterface $platformStatistics,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
+    $this->platformStatistics = $platformStatistics;
   }
 
   /**
@@ -54,6 +56,7 @@ class MembersDashboardController extends ControllerBase
     return new static(
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
+      $container->get('eic_dashboards.platform_statistics'),
     );
   }
 
@@ -63,7 +66,7 @@ class MembersDashboardController extends ControllerBase
   public function membersOverview(): array {
     // Platform members.
     $platformMembersData = $this->platformStatistics->getTotalPlatformMembers();
-    $platformMembersLink = $this->dashboardBuilder->buttonToView('view.members_list.page', '', '', $this->t('Members list'));
+    $platformMembersLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', '', '', $this->t('Members list'));
     $platformMembers = $this->dashboardBuilder->numberAndLink($this->t('Platform members'), $platformMembersData, $platformMembersLink);
 
     // Section 1.
