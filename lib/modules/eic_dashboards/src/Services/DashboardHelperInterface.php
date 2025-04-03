@@ -5,7 +5,7 @@ namespace Drupal\eic_dashboards\Services;
 /**
  * Defines dashboards helper interface.
  */
-interface DashboardsHelperInterface {
+interface DashboardHelperInterface {
 
   /**
    * Gets title from a routing.

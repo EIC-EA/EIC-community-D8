@@ -7,7 +7,7 @@ namespace Drupal\eic_dashboards\Constants;
  *
  * @package Drupal\eic_dashboards\Constants
  */
-final class DashboardDatabase {
+final class DashboardsDatabase {
   const DASHBOARDS_DATABASE = 'eic_dashboards';
 
 }
