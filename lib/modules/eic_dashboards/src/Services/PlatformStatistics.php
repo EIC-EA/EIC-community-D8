@@ -51,7 +51,8 @@ class PlatformStatistics implements PlatformStatisticsInterface {
    */
   public function getTotalPlatformMembers(): array|int {
     $query = $this->entityTypeManager->getStorage('user')->getQuery();
-    return $query->accessCheck(FALSE)
+    return $query->condition('status', '1')
+      ->accessCheck(FALSE)
       ->count()
       ->execute();
   }
