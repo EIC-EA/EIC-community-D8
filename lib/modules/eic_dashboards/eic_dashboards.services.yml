@@ -3,9 +3,7 @@ services:
     class: Drupal\eic_dashboards\Services\DashboardBuilder
   eic_dashboards.helper:
     class: Drupal\eic_dashboards\Services\DashboardHelper
-    arguments:
-      - '@router.route_provider'
-      - '@url_generator'
+    arguments: [ '@router.route_provider', '@url_generator' ]
   eic_dashboards.platform_statistics:
     class: Drupal\eic_dashboards\Services\PlatformStatistics
     arguments: [ '@database', '@entity_type.manager' ]

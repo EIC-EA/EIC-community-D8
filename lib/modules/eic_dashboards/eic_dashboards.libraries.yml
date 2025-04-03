@@ -7,3 +7,8 @@ dashboards_menu:
   css:
     theme:
       css/dashboards-menu.css: {}
+
+number-and-link:
+  css:
+    theme:
+      css/number-and-link.css: {}
