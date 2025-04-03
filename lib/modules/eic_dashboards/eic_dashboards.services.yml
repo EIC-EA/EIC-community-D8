@@ -7,3 +7,6 @@ services:
   eic_dashboards.platform_statistics:
     class: Drupal\eic_dashboards\Services\PlatformStatistics
     arguments: [ '@database', '@entity_type.manager' ]
+  eic_dashboards.content_statistics:
+    class: Drupal\eic_dashboards\Services\ContentStatistics
+    arguments: [ '@database', '@entity_type.manager' ]
