@@ -9,7 +9,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 /**
  * Implements dashboards helpers.
  */
-class DashboardsHelper implements DashboardsHelperInterface {
+class DashboardHelper implements DashboardHelperInterface {
 
   /**
    * The route provider.

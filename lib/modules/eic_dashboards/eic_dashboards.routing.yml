@@ -9,7 +9,7 @@ eic_dashboards.homepage:
 eic_dashboards.members_dashboard:
   path: '/dashboards/members-dashboard'
   defaults:
-    _controller: '\Drupal\eic_dashboards\Controller\DashboardsController::membersOverview'
+    _controller: '\Drupal\eic_dashboards\Controller\MembersDashboardController::membersOverview'
     _title: 'Members dashboard'
   requirements:
     _role: 'sensitive'
