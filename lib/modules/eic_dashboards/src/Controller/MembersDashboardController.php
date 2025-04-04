@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_dashboards\Constants\DashboardFilters;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\PlatformStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -77,13 +78,11 @@ class MembersDashboardController extends ControllerBase
     ];
 
     // Members by organisation type.
-    $membersByOrganizationTypeData = json_encode($this->dashboardHelper->transformLabelCountToNameAndY($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_user_type', 'id')));
-    $a = $membersByOrganizationTypeData;
-    $membersByOrganizationTypeChart = $this->dashboardBuilder->chartPie($this->t('Members by organisation type'), $membersByOrganizationTypeData, '');
-//    $membersByOrganizationTypeMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_user_type', DashboardFilters::DASHBOARD_MEMBERS_LIST_ORGANIZATION_TYPE), 'view.members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_ORGANIZATION_TYPE]);
-//    $membersByOrganizationTypeMenu = $this->dashboardBuilder->jumpMenu($this->t('List members of type'), $this->t('Choose organisation type'), $membersByOrganizationTypeMenuData);
-//    $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByOrganizationTypeChart, $membersByOrganizationTypeMenu);
-    $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByOrganizationTypeChart, '');
+    $membersByUserTypeData = json_encode($this->dashboardHelper->transformLabelCountToNameAndY($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_user_type', 'id')));
+    $membersByUserTypeChart = $this->dashboardBuilder->chartPie($this->t('Members by type'), $membersByUserTypeData, '');
+    $membersByUserTypeMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_user_type', DashboardFilters::DASHBOARD_MEMBERS_LIST_USER_TYPE), 'view.dashboard_members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_USER_TYPE]);
+    $membersByUserTypeMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by type'), $this->t('Choose expertise'), $membersByUserTypeMenuData);
+    $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByUserTypeChart, $membersByUserTypeMenu);
 
     // Section 3.
     $section3Build = $this->dashboardBuilder->columns([

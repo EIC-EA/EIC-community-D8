@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\path_alias\Entity\PathAlias;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_theme().
@@ -94,5 +95,33 @@ function _eic_communities_create_alias($group_id, $group_name, $group_paths) {
       'path' => '/group/' . $group_id . '/' . $group_path,
       'alias' => '/communities/' . $group_name . '/' . $group_path,
     ])->save();
+  }
+}
+
+/**
+ * Prepares variables for EIC Dashboard jump menu template.
+ *
+ * Default template: jump-menu.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - items: An array of items to be displayed in the select.
+ *   - title: A title to be prepended to the list.
+ */
+function template_preprocess_jump_menu(array &$variables) {
+  $variables['wrapper_attributes'] = new Attribute($variables['wrapper_attributes']);
+  $variables['title_attributes'] = new Attribute($variables['title_attributes']);
+
+  foreach ($variables['items'] as &$item) {
+    $attributes = [];
+    if (isset($item['#attributes'])) {
+      $attributes = $item['#attributes'];
+    }
+    // Set the item's value and attributes for the template.
+    $item = [
+      'label' => $item['#label'],
+      'value' => $item['#value'],
+      'attributes' => new Attribute($attributes),
+    ];
   }
 }

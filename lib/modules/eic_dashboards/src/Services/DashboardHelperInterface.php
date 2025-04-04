@@ -17,4 +17,9 @@ interface DashboardHelperInterface {
    */
   public function getRoutingUrl($route_name);
 
+  /**
+   * Prepares data for jump menu, links to View with one argument.
+   */
+  public function prepareDataForJumpMenu($items, $viewMachineName, $routeParameters, $argumentIds);
+
 }

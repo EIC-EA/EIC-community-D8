@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_dashboards\Services;
 
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -77,6 +78,37 @@ class DashboardHelper implements DashboardHelperInterface {
     }
 
     return $result;
+  }
+
+  /**
+   * Prepares data for jump menu, links to View with one argument.
+   */
+  public function prepareDataForJumpMenu($items, $viewMachineName, $routeParameters, $argumentIds): array {
+    foreach ($items as $key => $item) {
+      $query = [];
+      foreach ($argumentIds as $argumentId) {
+        if (isset($item[$argumentId])) {
+          $query[$argumentId] = $item[$argumentId];
+        }
+      }
+
+      $url = Url::fromRoute($viewMachineName, $routeParameters, ['query' => $query]);
+
+      $links[$key] = [
+        '#value' => $key,
+        '#label' => $item['label'],
+        '#attributes' => [
+          'data-url' => $url->toString(),
+        ],
+      ];
+    }
+
+    if (!empty($links)) {
+      return $links;
+    }
+    else {
+      return [];
+    }
   }
 
 }

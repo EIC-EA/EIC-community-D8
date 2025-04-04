@@ -1,0 +1,13 @@
+<?php
+
+namespace Drupal\eic_dashboards\Constants;
+
+/**
+ * Defines constants around Dashboard Views filters.
+ *
+ * @package Drupal\eic_dashboards\Constants
+ */
+final class DashboardFilters {
+  const DASHBOARD_MEMBERS_LIST_USER_TYPE = 'field_vocab_user_type_target_id[]';
+
+}

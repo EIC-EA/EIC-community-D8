@@ -69,7 +69,7 @@ class PlatformStatistics implements PlatformStatisticsInterface {
     $query->addExpression('tf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
     $query->condition('ufd.status', 1);
     $query->groupBy('taxonomy_term_id');
-    $query->orderBy('taxonomy_term_id', 'ASC');
+    $query->orderBy('count_members', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
