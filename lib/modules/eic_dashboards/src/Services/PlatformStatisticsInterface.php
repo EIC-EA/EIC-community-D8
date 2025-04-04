@@ -13,6 +13,11 @@ interface PlatformStatisticsInterface {
   public function getTotalPlatformMembers();
 
   /**
+   * Returns members grouped by country.
+   */
+  public function getMembersGroupedByCountry($argumentId);
+
+  /**
    * Returns members grouped by vocabulary.
    */
   public function getMembersPerTaxonomyTerm($taxonomyField, $argumentId);

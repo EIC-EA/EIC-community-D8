@@ -22,4 +22,13 @@ interface DashboardHelperInterface {
    */
   public function prepareDataForJumpMenu($items, $viewMachineName, $routeParameters, $argumentIds);
 
+  /**
+   * Encodes given data to JSON format for chart use.
+   */
+  public function jsonEncodeCategoriesSeries($data);
+
+  /**
+   * Transforms data array into categories and series format.
+   */
+  public function transformIdCountToCategoriesSeries($data);
 }

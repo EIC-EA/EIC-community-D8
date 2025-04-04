@@ -25,14 +25,23 @@ class PlatformStatistics implements PlatformStatisticsInterface {
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * The country service.
+   *
+   * @var \Drupal\eic_dashboards\Services\CountryServiceInterface
+   */
+  protected CountryServiceInterface $countryService;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
     EntityTypeManagerInterface $entityTypeManager,
+    CountryServiceInterface $countryService,
   ) {
     $this->connection = $connection;
     $this->entityTypeManager = $entityTypeManager;
+    $this->countryService = $countryService;
   }
 
   /**
@@ -42,6 +51,7 @@ class PlatformStatistics implements PlatformStatisticsInterface {
     return new static(
       $container->get('database'),
       $container->get('entity_type.manager'),
+      $container->get('eic_dashboards.country_service'),
     );
   }
 
@@ -55,6 +65,32 @@ class PlatformStatistics implements PlatformStatisticsInterface {
       ->accessCheck(FALSE)
       ->count()
       ->execute();
+  }
+
+  /**
+   * Returns members grouped by country.
+   */
+  public function getMembersGroupedByCountry($argumentId): array {
+    $query = $this->connection->select('profile', 'pfl');
+    $query->join('user__roles', 'ur', 'pfl.uid = ur.entity_id');
+    $query->join('users_field_data', 'ufd', 'pfl.uid = ufd.uid');
+    $query->join('profile__field_location_address', 'pfl_foa', 'pfl.profile_id = pfl_foa.entity_id');
+    $query->addExpression('COUNT(pfl_foa.field_location_address_country_code)', 'count_members');
+    $query->addExpression('pfl_foa.field_location_address_country_code', 'country_code');
+    $query->condition('ufd.status', 1);
+    $query->groupBy('country_code');
+    $query->orderBy('country_code', 'ASC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[$row->country_code][$argumentId] = $row->country_code;
+      $data[$row->country_code]['label'] = $this->countryService->getCountryName($row->country_code);
+      $data[$row->country_code]['count'] = $row->count_members;
+    }
+
+    return $data;
   }
 
   /**

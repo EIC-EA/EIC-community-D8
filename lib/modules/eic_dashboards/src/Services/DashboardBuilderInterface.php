@@ -43,6 +43,11 @@ interface DashboardBuilderInterface {
   public function chartWithMenu($chart, $menu);
 
   /**
+   * Build dashboard column chart.
+   */
+  public function chartColumn($title, $data);
+
+  /**
    * Build dashboard jump menu.
    */
   public function jumpMenu($title, $placeholder, $links);

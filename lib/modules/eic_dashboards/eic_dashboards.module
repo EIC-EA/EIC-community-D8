@@ -8,6 +8,13 @@ use Drupal\Core\Template\Attribute;
  */
 function eic_dashboards_theme($existing, $type, $theme, $path) {
   return [
+    'chart_column' => [
+      'variables' => [
+        'title' => '',
+        'categories' => '',
+        'series' => '',
+      ],
+    ],
     'dashboards_homepage' => [
       'variables' => [
         'title' => '',

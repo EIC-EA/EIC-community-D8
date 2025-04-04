@@ -111,4 +111,31 @@ class DashboardHelper implements DashboardHelperInterface {
     }
   }
 
+  /**
+   * Encodes given data to JSON format for chart use.
+   */
+  public function jsonEncodeCategoriesSeries($data): array {
+    return [
+      'categories' => json_encode($data['categories']),
+      'series' => json_encode($data['series'], JSON_NUMERIC_CHECK),
+    ];
+  }
+
+  /**
+   * Transforms data array into categories and series format.
+   */
+  public function transformIdCountToCategoriesSeries($data): array {
+    $result = [
+      'categories' => [],
+      'series' => [],
+    ];
+    foreach ($data as $item) {
+      if (isset($item['id']) && isset($item['count'])) {
+        $result['categories'][] = $item['id'];
+        $result['series'][] = $item['count'];
+      }
+    }
+
+    return $result;
+  }
 }
