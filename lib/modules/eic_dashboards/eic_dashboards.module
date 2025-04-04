@@ -65,6 +65,14 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_page_attachments().
+ */
+function eic_dashboards_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'eic_dashboards/general';
+  $attachments['#attached']['library'][] = 'eic_dashboards/scripts';
+}
+
+/**
  * Implements hook_page().
  */
 function eic_dashboards_preprocess_page(&$variables) {

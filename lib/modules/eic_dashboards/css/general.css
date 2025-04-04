@@ -1,0 +1,69 @@
+.date-from-to-wrapper .dates-from-to {
+  display: flex;
+  gap: 5px;
+  margin-top: -6px;
+}
+
+.listing-page form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.listing-page .datetime-wrapper {
+  position: relative;
+  top: -16px;
+  margin-bottom: -32px;
+}
+
+.listing-page .date-from-to-wrapper .ecl-form-group {
+  margin-bottom: 0 !important;
+}
+
+.listing-page .datetime-label {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.listing-page .content-wrapper {
+  overflow-x: auto;
+}
+
+.listing-page .form-actions {
+  margin-left: auto;
+  margin-top: auto !important;
+}
+
+.listing-page .ecl-text-input:not(.ecl-datepicker__field),
+.listing-page .form-item-field-appear-on-members-listing-value .ecl-form-group,
+.listing-page .form-item-status .ecl-form-group,
+.listing-page .form-item-type .ecl-form-group,
+.listing-page .form-item-field-theme-target-id .ecl-form-group,
+.listing-page .form-item-gid .ecl-form-group {
+  margin-top: 0.75rem !important;
+}
+
+.listing-page .ecl-datepicker__field {
+  margin-top: 2px;
+}
+
+.listing-page.content-list .form-item-field-proc-inter-policy-target-id .ecl-form-group {
+  margin-top: 0.75rem !important;
+}
+
+.listing-page header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.listing-page .views-data-export-feed {
+  margin-top: 0 !important;
+}
+
+.ecl-button--small {
+  font-size: 14px !important;
+  padding: 6px 12px !important;
+}

@@ -1,3 +1,8 @@
+general:
+  css:
+    theme:
+      css/general.css: {}
+
 scripts:
   css:
     theme:
