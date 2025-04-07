@@ -95,9 +95,21 @@ class MembersDashboardController extends ControllerBase
     $membersByUserTypeMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by type'), $this->t('Choose expertise'), $membersByUserTypeMenuData);
     $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByUserTypeChart, $membersByUserTypeMenu);
 
+    // Members by topic of Interest.
+    $membersByTopicOfInterestData = json_encode(
+      $this->dashboardHelper->formatCollapsedCountsForChart(
+        $this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_interest', 'id'),
+        'topics'
+      )
+    );
+    $membersByTopicOfInterestChart = $this->dashboardBuilder->chartPie($this->t('Members by topic of interest'), $membersByTopicOfInterestData, '');
+    $membersByTopicOfInterestMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_interest', DashboardFilters::DASHBOARD_MEMBERS_LIST_TOPIC_OF_INTEREST), 'view.dashboard_members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_TOPIC_OF_INTEREST]);
+    $membersByTopicOfInterestMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of interest'), $this->t('Choose interest'), $membersByTopicOfInterestMenuData);
+    $membersByTopicOfInterest = $this->dashboardBuilder->chartWithMenu($membersByTopicOfInterestChart, $membersByTopicOfInterestMenu);
 
     $section3Build = $this->dashboardBuilder->columns([
       $membersByOrganizationType,
+      $membersByTopicOfInterest
     ], 2);
 
     // Build sections

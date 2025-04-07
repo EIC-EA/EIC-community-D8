@@ -31,4 +31,13 @@ interface DashboardHelperInterface {
    * Transforms data array into categories and series format.
    */
   public function transformIdCountToCategoriesSeries($data);
+
+  /**
+   * Flat tree of taxonomy terms with collapsed depth info.
+   *
+   * @param string $vid
+   *    The machine name (ID) of the taxonomy vocabulary to load.
+   */
+  public function loadTreeCollapsedToSecondLevel(string $vid);
+
 }
