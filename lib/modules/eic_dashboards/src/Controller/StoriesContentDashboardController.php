@@ -120,7 +120,7 @@ class StoriesContentDashboardController extends ControllerBase
     $section5Build = [
       $this->dashboardBuilder->columns([
         $mostViewedNodes,
-      ], 1),
+      ], 2),
     ];
 
     $build = [
