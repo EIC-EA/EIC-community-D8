@@ -166,7 +166,4 @@ class DashboardBuilder implements DashboardBuilderInterface {
         }
     }
 
-
-
 }
-
