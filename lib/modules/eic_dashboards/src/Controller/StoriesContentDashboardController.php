@@ -67,10 +67,7 @@ class StoriesContentDashboardController extends ControllerBase
   public function page(): array {
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes('story');
-    $numberOfNodesLink = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page_1', '', '', $this->t
-    ('Content list'));
-    $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData,
-      $numberOfNodesLink);
+    $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
 
     // Section 1.
     $section1Build = [
