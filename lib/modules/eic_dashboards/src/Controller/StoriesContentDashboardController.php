@@ -65,12 +65,15 @@ class StoriesContentDashboardController extends ControllerBase
    * {@inheritdoc}
    */
   public function page(): array {
+    // Specify current bundle.
+    $bundle = 'story';
+
     // Number of nodes.
-    $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes('story');
+    $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
 
     // Number of nodes created in past 30 days..
-    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPast30Days('story');
+    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPast30Days($bundle);
     $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Stories - last 30 days'), $numberOfNodesPast30DaysData, '');
 
     // Section 1.
@@ -81,9 +84,21 @@ class StoriesContentDashboardController extends ControllerBase
       ], 3),
     ];
 
+    // Nodes grouped by type chart.
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type'));
+    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Stories by program type'), $nodesByTypeData, '');
+
+    // Section 2.
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $nodesByType,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
+        $section2Build,
       ],
     ];
 

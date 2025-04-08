@@ -61,10 +61,35 @@ class ContentStatistics implements ContentStatisticsInterface {
    */
   public function getNumberOfBundleNodesPast30Days($bundle): array|int {
     $query = $this->connection->select('node', 'n');
-    $query->join('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
     $query->condition('n.type', $bundle)
       ->condition('nfd.created', strtotime('-30 days'), '>=');
 
     return $query->countQuery()->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of nodes of given content type grouped by vocabulary.
+   */
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node__' . $taxonomyField, 'tf', 'n.nid = tf.entity_id');
+    $query->addExpression('COUNT(tf.' . $taxonomyField . '_target_id)', 'count_nodes');
+    $query->addExpression('tf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('n.type', $bundle);
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('taxonomy_term_id');
+    $results = $query->execute()->fetchAll();
+
+    // Prepare data for JSON.
+    $data = [];
+    foreach ($results as $row) {
+      $data[] = [
+        'name' => $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA',
+        'y' => (int) $row->count_nodes,
+      ];
+    }
+
+    return $data;
   }
 }
