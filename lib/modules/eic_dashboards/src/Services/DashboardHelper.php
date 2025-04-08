@@ -165,6 +165,7 @@ class DashboardHelper implements DashboardHelperInterface {
    *   Array of flat term objects at depth 1 or their collapsed children.
    */
   function loadTreeCollapsedToSecondLevel(string $vid): array {
+    // TODO: The result could be statically cached.
     /** @var \Drupal\taxonomy\TermStorageInterface $term_storage */
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
 
