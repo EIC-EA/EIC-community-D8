@@ -113,6 +113,17 @@ class StoriesContentDashboardController extends ControllerBase
       ], 1),
     ];
 
+    // Last 10 nodes list table.
+    $last10NodesMetricsData = $this->contentStatistics->getLast10StoriesMetrics();
+    $last10NodesMetrics = $this->dashboardBuilder->table($last10NodesMetricsData['header'], $last10NodesMetricsData['rows'], 'js-stories-table');
+
+    // Section 4.
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $last10NodesMetrics,
+      ], 1),
+    ];
+
     // Most viewed nodes.
     $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed stories - all time'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
 
@@ -128,6 +139,7 @@ class StoriesContentDashboardController extends ControllerBase
         $section1Build,
         $section2Build,
         $section3Build,
+        $section4Build,
         $section5Build,
       ],
     ];

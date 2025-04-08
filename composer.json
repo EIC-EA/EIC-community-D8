@@ -120,6 +120,7 @@
         "drush/drush": "^11",
         "ethosce/group_purl": "2.x-dev",
         "lramarojaona/purl": "^1.0@alpha",
+        "mottie/tablesorter": "^2.32",
         "openeuropa/ecl-twig-loader": "^2.12",
         "openeuropa/oe_authentication": "^1.5",
         "openeuropa/oe_media": "^1.13",
@@ -147,12 +148,24 @@
             "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
         ]
     },
-    "repositories": {
-        "drupal": {
+    "repositories": [
+        {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "mottie/tablesorter",
+                "version": "2.32.0",
+                "dist": {
+                    "url": "https://github.com/Mottie/tablesorter/archive/refs/tags/v2.32.0.zip",
+                    "type": "zip"
+                },
+                "type": "drupal-library"
+            }
         }
-    },
+    ],
     "extra": {
         "merge-plugin": {
             "require": [

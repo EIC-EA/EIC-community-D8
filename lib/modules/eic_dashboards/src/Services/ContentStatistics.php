@@ -96,7 +96,6 @@ class ContentStatistics implements ContentStatisticsInterface {
     $query->condition('n.type', $bundle);
 
     if ($parentTermId) {
-      echo $parentTermId;
       $query->condition('ttp.parent_target_id', $parentTermId);
     }
 
@@ -151,5 +150,52 @@ class ContentStatistics implements ContentStatisticsInterface {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns information about last 10 story nodes.
+   */
+  public function getLast10StoriesMetrics(): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->innerJoin('node__field_vocab_topics', 'nfvst', 'n.nid = nfvst.entity_id');
+    $query->innerJoin('node_counter', 'nc', 'n.nid = nc.nid');
+    $query->innerJoin('flag_counts', 'fc', 'n.nid = fc.entity_id');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.created', 'created');
+    $query->addExpression('nfvst.field_vocab_topics_target_id', 'taxonomy_term_id');
+    $query->addExpression('fc.count', 'likes');
+    $query->addExpression('nc.totalcount', 'views');
+    $query->condition('n.type', 'story')
+      ->condition('fc.entity_type', 'node')
+      ->condition('fc.flag_id', 'like_content')
+      ->orderBy('created', 'DESC')
+      ->range(0, 10);
+    $results = $query->execute()->fetchAll();
+
+    $rows = [];
+
+    foreach ($results as $result) {
+      $rows[] = [
+        'title' => $this->entityTypeManager->getStorage('node')->load($result->node_id)->label(),
+        'published' => $result->created,
+        'topic' =>  $this->entityTypeManager->getStorage('taxonomy_term')->load($result->taxonomy_term_id)?->name->value ?? 'NA',
+        'views' => $result->views,
+        'likes' => $result->likes,
+      ];
+    }
+
+    $header = [
+      'Story',
+      'Published',
+      'Topic',
+      'Views',
+      'Likes',
+    ];
+
+    return [
+      'header' => $header,
+      'rows' => $rows,
+    ];
   }
 }

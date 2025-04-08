@@ -28,4 +28,9 @@ interface ContentStatisticsInterface {
    */
   public function getMostViewedNodesOfBundle($bundle);
 
+  /**
+   * Returns information about last 10 story nodes.
+   */
+  public function getLast10StoriesMetrics();
+
 }

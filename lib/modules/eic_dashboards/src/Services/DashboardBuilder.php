@@ -178,4 +178,21 @@ class DashboardBuilder implements DashboardBuilderInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function table($header, $rows, $class): array {
+    $build = [];
+
+    $build['table'] = [
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows'   => $rows,
+    ];
+
+    $build['#attached']['library'][] = 'eic_dashboards/tablesorter';
+
+    return $build;
+  }
+
 }

@@ -57,4 +57,9 @@ interface DashboardBuilderInterface {
    */
   public function titleLinkList($title, $link, $list);
 
+  /**
+   * Build dashboard table.
+   */
+  public function table($header, $rows, $class);
+
 }
