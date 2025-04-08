@@ -69,10 +69,15 @@ class StoriesContentDashboardController extends ControllerBase
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes('story');
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
 
+    // Number of nodes created in past 30 days..
+    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPast30Days('story');
+    $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Stories - last 30 days'), $numberOfNodesPast30DaysData, '');
+
     // Section 1.
     $section1Build = [
       $this->dashboardBuilder->columns([
         $numberOfNodes,
+        $numberOfNodesPast30Days,
       ], 3),
     ];
 

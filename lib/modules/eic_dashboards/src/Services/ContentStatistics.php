@@ -54,4 +54,17 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     return $query->countQuery()->execute()->fetchField();
   }
+
+  /**
+   * Returns number of content of given bundle
+   * created in the past 30 days.
+   */
+  public function getNumberOfBundleNodesPast30Days($bundle): array|int {
+    $query = $this->connection->select('node', 'n');
+    $query->join('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->condition('n.type', $bundle)
+      ->condition('nfd.created', strtotime('-30 days'), '>=');
+
+    return $query->countQuery()->execute()->fetchField();
+  }
 }
