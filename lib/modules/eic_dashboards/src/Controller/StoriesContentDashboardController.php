@@ -84,13 +84,18 @@ class StoriesContentDashboardController extends ControllerBase
       ], 3),
     ];
 
+    // Nodes grouped by program type chart.
+    $nodesByProgramTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type'));
+    $nodesByProgramType = $this->dashboardBuilder->chartPie($this->t('Stories by program type'), $nodesByProgramTypeData, '');
+
     // Nodes grouped by type chart.
-    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type'));
-    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Stories by program type'), $nodesByTypeData, '');
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_story_type'));
+    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Stories by type'), $nodesByTypeData, '');
 
     // Section 2.
     $section2Build = [
       $this->dashboardBuilder->columns([
+        $nodesByProgramType,
         $nodesByType,
       ], 2),
     ];
