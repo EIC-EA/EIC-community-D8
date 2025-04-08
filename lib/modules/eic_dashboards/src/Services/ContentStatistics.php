@@ -70,13 +70,25 @@ class ContentStatistics implements ContentStatisticsInterface {
 
   /**
    * Returns number of nodes of given content type grouped by terms.
+   * If $parentTermId is given, it will display only the children terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chart): array {
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node__' . $taxonomyField, 'ntf', 'n.nid = ntf.entity_id');
+
+    if ($parentTermId) {
+      $query->innerJoin('taxonomy_term__parent', 'ttp', 'ntf.' . $taxonomyField . '_target_id = ttp.entity_id');
+    }
+
     $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'count_nodes');
     $query->addExpression('ntf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
     $query->condition('n.type', $bundle);
+
+    if ($parentTermId) {
+      echo $parentTermId;
+      $query->condition('ttp.parent_target_id', $parentTermId);
+    }
+
     $query->groupBy('taxonomy_term_id');
     $query->orderBy('taxonomy_term_id');
     $results = $query->execute()->fetchAll();
@@ -84,14 +96,14 @@ class ContentStatistics implements ContentStatisticsInterface {
     $data = [];
 
     // Handle data output depending on chart type.
-    if ($chart == 'pie') {
+    if ($chartType == 'pie') {
       foreach ($results as $row) {
         $data[] = [
           'name' => $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA',
           'y' => (int) $row->count_nodes,
         ];
       }
-    } else if ($chart == 'column') {
+    } else if ($chartType == 'column') {
       foreach ($results as $row) {
         $label = $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ??
           'NA';
