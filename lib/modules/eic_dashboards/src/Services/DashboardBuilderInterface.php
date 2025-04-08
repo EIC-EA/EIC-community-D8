@@ -32,4 +32,24 @@ interface DashboardBuilderInterface {
    */
   public function buttonToRoute($buttonText, $route, $parameterId, $parameterValue);
 
+  /**
+   * Build dashboard pie chart.
+   */
+  public function chartPie($title, $data, $size);
+
+  /**
+   * Build dashboard jump menu.
+   */
+  public function chartWithMenu($chart, $menu);
+
+  /**
+   * Build dashboard column chart.
+   */
+  public function chartColumn($title, $data);
+
+  /**
+   * Build dashboard jump menu.
+   */
+  public function jumpMenu($title, $placeholder, $links);
+
 }

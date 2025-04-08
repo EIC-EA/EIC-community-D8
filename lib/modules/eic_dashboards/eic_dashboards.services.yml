@@ -4,9 +4,12 @@ services:
   eic_dashboards.helper:
     class: Drupal\eic_dashboards\Services\DashboardHelper
     arguments: [ '@router.route_provider', '@url_generator' ]
+  eic_dashboards.country_service:
+    class: Drupal\eic_dashboards\Services\CountryService
+    arguments: [ '@address.country_repository' ]
   eic_dashboards.platform_statistics:
     class: Drupal\eic_dashboards\Services\PlatformStatistics
-    arguments: [ '@database', '@entity_type.manager' ]
+    arguments: [ '@database', '@entity_type.manager', '@eic_dashboards.country_service' ]
   eic_dashboards.content_statistics:
     class: Drupal\eic_dashboards\Services\ContentStatistics
     arguments: [ '@database', '@entity_type.manager' ]
