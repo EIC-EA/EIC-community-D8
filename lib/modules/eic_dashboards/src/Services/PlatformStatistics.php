@@ -71,6 +71,7 @@ class PlatformStatistics implements PlatformStatisticsInterface {
    * Returns members grouped by country.
    */
   public function getMembersGroupedByCountry($argumentId): array {
+    // TODO: Statically cache the result.
     $query = $this->connection->select('profile', 'pfl');
     $query->join('user__roles', 'ur', 'pfl.uid = ur.entity_id');
     $query->join('users_field_data', 'ufd', 'pfl.uid = ufd.uid');
@@ -84,9 +85,10 @@ class PlatformStatistics implements PlatformStatisticsInterface {
 
     $data = [];
 
+    $countries = $this->countryService->getAllCountries();
     foreach ($results as $row) {
       $data[$row->country_code][$argumentId] = $row->country_code;
-      $data[$row->country_code]['label'] = $this->countryService->getCountryName($row->country_code);
+      $data[$row->country_code]['label'] = $countries[mb_strtoupper($row->country_code)] ?? '';
       $data[$row->country_code]['count'] = $row->count_members;
     }
 
@@ -111,8 +113,13 @@ class PlatformStatistics implements PlatformStatisticsInterface {
     $data = [];
 
     foreach ($results as $row) {
+      $query = $this->connection->select('taxonomy_term_field_data', 'ttfd');
+      $query->fields('ttfd', ['name']);
+      $query->condition('ttfd.tid', $row->taxonomy_term_id);
+      $label = $query->execute()->fetchField();
+
       $data[$row->taxonomy_term_id][$argumentId] = $row->taxonomy_term_id;
-      $data[$row->taxonomy_term_id]['label'] = $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA';
+      $data[$row->taxonomy_term_id]['label'] = !empty($label) ? $label : 'NA';
       $data[$row->taxonomy_term_id]['count'] = (int) $row->count_members;
     }
 
