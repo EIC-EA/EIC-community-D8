@@ -113,11 +113,22 @@ class StoriesContentDashboardController extends ControllerBase
       ], 1),
     ];
 
+    // Most viewed nodes.
+    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed stories - all time'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
+
+    // Section 5.
+    $section5Build = [
+      $this->dashboardBuilder->columns([
+        $mostViewedNodes,
+      ], 1),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
         $section3Build,
+        $section5Build,
       ],
     ];
 

@@ -166,4 +166,16 @@ class DashboardBuilder implements DashboardBuilderInterface {
         }
     }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function titleLinkList($title, $link, $list): array {
+    return [
+      '#theme' => 'title_link_list',
+      '#title' => $title,
+      '#link' => $link,
+      '#list' => $list,
+    ];
+  }
+
 }

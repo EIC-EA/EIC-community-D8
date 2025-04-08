@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,14 +26,23 @@ class ContentStatistics implements ContentStatisticsInterface {
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
+   * The alias manager.
+   *
+   * @var \Drupal\path_alias\AliasManagerInterface
+   */
+  protected AliasManagerInterface $aliasManager;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
     EntityTypeManagerInterface $entityTypeManager,
+    AliasManagerInterface $aliasManager,
   ) {
     $this->connection = $connection;
     $this->entityTypeManager = $entityTypeManager;
+    $this->aliasManager = $aliasManager;
   }
 
   /**
@@ -42,6 +52,7 @@ class ContentStatistics implements ContentStatisticsInterface {
     return new static(
       $container->get('database'),
       $container->get('entity_type.manager'),
+      $container->get('path_alias.manager'),
     );
   }
 
@@ -69,7 +80,7 @@ class ContentStatistics implements ContentStatisticsInterface {
   }
 
   /**
-   * Returns number of nodes of given content type grouped by terms.
+   * Returns number of nodes of given bundle grouped by terms.
    * If $parentTermId is given, it will display only the children terms.
    */
   public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId): array {
@@ -111,6 +122,32 @@ class ContentStatistics implements ContentStatisticsInterface {
         $data[$row->taxonomy_term_id]['label'] = $label;
         $data[$row->taxonomy_term_id]['count'] = $row->count_nodes;
       }
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns most viewed nodes of given bundle.
+   */
+  public function getMostViewedNodesOfBundle($bundle): array {
+    $query = $this->connection->select('node_counter', 'nc');
+    $query->innerJoin('node', 'n', 'n.nid = nc.nid');
+    $query->addExpression('nc.nid', 'node_id');
+    $query->addExpression('nc.totalcount', 'total_views');
+    $query->condition('n.type', $bundle);
+    $query->orderBy('total_views', 'DESC');
+    $query->range(0, 5);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[] = [
+        'prefix' => (int) $row->total_views . ' views',
+        'title' => $this->entityTypeManager->getStorage('node')->load($row->node_id)->label(),
+        'url' => $this->aliasManager->getAliasByPath('/node/' . $row->node_id),
+      ];
     }
 
     return $data;

@@ -23,4 +23,9 @@ interface ContentStatisticsInterface {
    */
   public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId);
 
+  /**
+   * Returns most viewed nodes of given bundle.
+   */
+  public function getMostViewedNodesOfBundle($bundle);
+
 }

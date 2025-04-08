@@ -1,0 +1,9 @@
+.title-link-list__header {
+  align-items: center;
+}
+
+.title-link-list__item-prefix {
+  text-align: right;
+  width: 100px;
+  flex-shrink: 0;
+}

@@ -69,6 +69,13 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'attributes' => [],
       ],
     ],
+    'title_link_list' => [
+      'variables' => [
+        'title' => '',
+        'link' => '',
+        'list' => '',
+      ],
+    ],
   ];
 }
 

@@ -52,4 +52,9 @@ interface DashboardBuilderInterface {
    */
   public function jumpMenu($title, $placeholder, $links);
 
+  /**
+   * Build dashboard list with title and link.
+   */
+  public function titleLinkList($title, $link, $list);
+
 }
