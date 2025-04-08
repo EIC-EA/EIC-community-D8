@@ -1,0 +1,41 @@
+<script type="application/json">
+  {
+    "service": "chart",
+    "version": "2.0",
+    "data": {
+      "chart": {
+        "type": "column"
+      },
+      "title": {
+        "text": "{{ title }}",
+        "align": "left"
+      },
+      "legend": {
+        "enabled": false
+      },
+      "plotOptions": {
+        "series": {
+          "dataLabels": {
+            "enabled": true,
+            "format": "{point.y}"
+          }
+        }
+      },
+      "series": [
+        {
+          "name": "{{ title|split(' ')[0] }}",
+          "data": {{ series|raw }}
+        }
+      ],
+      "xAxis": {
+        "categories": {{ categories|raw }},
+        "labels": {
+          "rotation": 270
+        }
+      },
+      "yAxis": {
+        "title": false
+      }
+    }
+  }
+</script>
