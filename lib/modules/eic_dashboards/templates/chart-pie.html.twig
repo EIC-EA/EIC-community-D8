@@ -1,0 +1,65 @@
+<script type="application/json">
+  {
+    "service": "chart",
+    "version": "2.0",
+    "data": {
+      "chart": {
+        "type": "pie",
+        "marginRight": 150{% if size == 'sm' %},{% endif %}
+        {% if size == 'sm' %}"height": 200{% endif %}
+      },
+      "legend": {
+        "align": "right",
+        "verticalAlign": "top",
+        "layout": "vertical",
+        "x": 0,
+        "y": {% if size == 'sm' %}50{% else %}100{% endif %},
+        "width": {% if size == 'sm' %}110{% else %}130{% endif %}
+      },
+      "title": {
+        "text": "{{ title }}",
+        "align": "left"
+      },
+      "plotOptions": {
+        "pie": {
+          "allowPointSelect": true,
+          "cursor": "pointer",
+          "dataLabels": {
+            "enabled": true,
+            "allowOverlap": true
+          },
+          "showInLegend": true
+        },
+        "series": {
+          "allowPointSelect": true,
+          "cursor": "pointer",
+          "dataLabels": [
+            {
+              "enabled": false,
+              "distance": 0
+            },
+            {
+              "enabled": true,
+              "distance": {% if size == 'sm' %}-30{% else %}-40{% endif %},
+              "format": "{point.y}",
+              "style": {
+                "fontSize": "{% if size == 'sm' %}14px{% else %}18px{% endif %}",
+                "textOutline": "none",
+                "opacity": 0.7
+              }
+            }
+          ]
+        }
+      },
+      "series": [
+        {
+          "name": "{{ title|split(' ')[0] }}",
+          "data": {{ data|raw }}
+        }
+      ]
+    },
+    "options": {
+      "theme": "corporate"
+    }
+  }
+</script>
