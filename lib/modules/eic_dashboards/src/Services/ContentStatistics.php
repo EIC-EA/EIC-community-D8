@@ -69,25 +69,36 @@ class ContentStatistics implements ContentStatisticsInterface {
   }
 
   /**
-   * Returns number of nodes of given content type grouped by vocabulary.
+   * Returns number of nodes of given content type grouped by terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField): array {
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chart): array {
     $query = $this->connection->select('node', 'n');
-    $query->innerJoin('node__' . $taxonomyField, 'tf', 'n.nid = tf.entity_id');
-    $query->addExpression('COUNT(tf.' . $taxonomyField . '_target_id)', 'count_nodes');
-    $query->addExpression('tf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->innerJoin('node__' . $taxonomyField, 'ntf', 'n.nid = ntf.entity_id');
+    $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'count_nodes');
+    $query->addExpression('ntf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
     $query->condition('n.type', $bundle);
     $query->groupBy('taxonomy_term_id');
     $query->orderBy('taxonomy_term_id');
     $results = $query->execute()->fetchAll();
 
-    // Prepare data for JSON.
     $data = [];
-    foreach ($results as $row) {
-      $data[] = [
-        'name' => $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA',
-        'y' => (int) $row->count_nodes,
-      ];
+
+    // Handle data output depending on chart type.
+    if ($chart == 'pie') {
+      foreach ($results as $row) {
+        $data[] = [
+          'name' => $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA',
+          'y' => (int) $row->count_nodes,
+        ];
+      }
+    } else if ($chart == 'column') {
+      foreach ($results as $row) {
+        $label = $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ??
+          'NA';
+        $data[$row->taxonomy_term_id]['id'] = $label;
+        $data[$row->taxonomy_term_id]['label'] = $label;
+        $data[$row->taxonomy_term_id]['count'] = $row->count_nodes;
+      }
     }
 
     return $data;

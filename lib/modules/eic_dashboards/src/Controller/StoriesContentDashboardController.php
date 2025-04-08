@@ -85,11 +85,11 @@ class StoriesContentDashboardController extends ControllerBase
     ];
 
     // Nodes grouped by program type chart.
-    $nodesByProgramTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type'));
+    $nodesByProgramTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type', 'pie'));
     $nodesByProgramType = $this->dashboardBuilder->chartPie($this->t('Stories by program type'), $nodesByProgramTypeData, '');
 
     // Nodes grouped by type chart.
-    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_story_type'));
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_story_type', 'pie'));
     $nodesByType = $this->dashboardBuilder->chartPie($this->t('Stories by type'), $nodesByTypeData, '');
 
     // Section 2.
@@ -100,10 +100,22 @@ class StoriesContentDashboardController extends ControllerBase
       ], 2),
     ];
 
+    // Nodes by topic.
+    $nodesByTopicData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column')));
+    $nodesByTopicChart = $this->dashboardBuilder->chartColumn($this->t('Stories by topic'), $nodesByTopicData);
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $nodesByTopicChart,
+      ], 1),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
       ],
     ];
 

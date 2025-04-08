@@ -19,8 +19,8 @@ interface ContentStatisticsInterface {
   public function getNumberOfBundleNodesPast30Days($bundle);
 
   /**
-   * Returns number of nodes of content type grouped by vocabulary.
+   * Returns number of nodes of content type grouped by terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField);
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chart);
 
 }
