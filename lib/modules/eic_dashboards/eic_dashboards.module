@@ -13,6 +13,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'title' => '',
         'categories' => '',
         'series' => '',
+        'vertical' => false,
       ],
     ],
     'dashboards_homepage' => [

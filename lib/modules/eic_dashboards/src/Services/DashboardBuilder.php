@@ -121,12 +121,13 @@ class DashboardBuilder implements DashboardBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function chartColumn($title, $data): array {
+  public function chartColumn($title, $data, $vertical): array {
     return [
       '#theme' => 'chart_column',
       '#title' => $title,
       '#categories' => $data['categories'],
       '#series' => $data['series'],
+      '#vertical' => $vertical,
     ];
   }
 

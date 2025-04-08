@@ -4,11 +4,17 @@
     "version": "2.0",
     "data": {
       "chart": {
+        {% if vertical %}
+        "inverted": true,
+        "height": 600,
+        {% endif %}
         "type": "column"
       },
       "title": {
-        "text": "{{ title }}",
-        "align": "left"
+        {% if vertical %}
+        "align": "left",
+        {% endif %}
+        "text": "{{ title }}"
       },
       "legend": {
         "enabled": false
@@ -30,7 +36,9 @@
       "xAxis": {
         "categories": {{ categories|raw }},
         "labels": {
+          {% if not vertical %}
           "rotation": 270
+          {% endif %}
         }
       },
       "yAxis": {

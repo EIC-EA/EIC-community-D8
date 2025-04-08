@@ -102,7 +102,7 @@ class StoriesContentDashboardController extends ControllerBase
 
     // Nodes by topic.
     $nodesByTopicData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column')));
-    $nodesByTopicChart = $this->dashboardBuilder->chartColumn($this->t('Stories by topic'), $nodesByTopicData);
+    $nodesByTopicChart = $this->dashboardBuilder->chartColumn($this->t('Stories by topic'), $nodesByTopicData, true);
 
     // Section 3.
     $section3Build = [
