@@ -295,7 +295,7 @@ class DashboardHelper implements DashboardHelperInterface {
 
     // Sort by count descending
     usort($result, fn($a, $b) => $b['y'] <=> $a['y']);
-$a = 1;
+
     return $result;
   }
 
