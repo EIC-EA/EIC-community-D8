@@ -37,3 +37,19 @@ jump-menu:
     - core/jquery
     - core/drupal
     - core/drupalSettings
+
+title-link-list:
+  css:
+    theme:
+      css/title-link-list.css: {}
+
+tablesorter:
+  css:
+    theme:
+      css/tablesorter.css: { }
+  js:
+    /libraries/tablesorter/dist/js/jquery.tablesorter.min.js: { }
+    js/tablesorter.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal

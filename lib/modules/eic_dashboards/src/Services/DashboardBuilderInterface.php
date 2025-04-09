@@ -45,11 +45,21 @@ interface DashboardBuilderInterface {
   /**
    * Build dashboard column chart.
    */
-  public function chartColumn($title, $data);
+  public function chartColumn($title, $data, $vertical);
 
   /**
    * Build dashboard jump menu.
    */
   public function jumpMenu($title, $placeholder, $links);
+
+  /**
+   * Build dashboard list with title and link.
+   */
+  public function titleLinkList($title, $link, $list);
+
+  /**
+   * Build dashboard table.
+   */
+  public function table($header, $rows, $class);
 
 }

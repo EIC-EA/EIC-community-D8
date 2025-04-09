@@ -1,0 +1,20 @@
+{{ attach_library('eic_dashboards/title-link-list') }}
+
+<div class="title-link-list">
+  <div class="title-link-list__header ecl-u-d-flex ecl-u-mb-m">
+    <div class="ecl-u-type-heading-4 ecl-u-mr-m">{{ title }}</div>
+    {% if link %}
+      <div class="title-link-list__link">
+        <a href="{{ link.url }}" class="ecl-button ecl-button--primary ecl-button--small">{{ link.text }}</a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="title-link-list__content">
+    {% for item in list %}
+      <div class="title-link-list__item ecl-u-d-flex ecl-u-mb-m">
+        <div class="title-link-list__item-prefix ecl-u-mr-m">{{ item.prefix }}</div>
+        <a class="title-link-list__item-link" href="{{ item.url }}">{{ item.title }}</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
