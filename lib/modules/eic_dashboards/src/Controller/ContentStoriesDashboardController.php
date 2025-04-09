@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides route responses for the eic_dashboards module.
  */
-class StoriesContentDashboardController extends ControllerBase
+class ContentStoriesDashboardController extends ControllerBase
 {
 
   /**
