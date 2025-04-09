@@ -40,4 +40,14 @@ interface DashboardHelperInterface {
    */
   public function loadTreeCollapsedToSecondLevel(string $vid);
 
+  /**
+   * Gets the taxonomy term label.
+   *
+   * @param string $tid
+   *   Taxonomy id.
+   *
+   * @return array
+   *   The label of the term or NA if not found.
+   */
+  public function getTaxonomyTermLabel(string $tid);
 }
