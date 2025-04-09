@@ -201,4 +201,33 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     return $data;
   }
+
+  /**
+   * Returns most downloaded nodes of given bundle.
+   */
+  public function getMostDownloadedFilesOfBundle($bundle, $range = 5): array {
+    $query = $this->connection->select('file_counter', 'fc');
+    $query->innerJoin('media__field_media_file', 'mfmf', 'mfmf.field_media_file_target_id = fc.fid');
+    $query->innerJoin('node__field_document_media', 'nfdm', 'nfdm.field_document_media_target_id = mfmf.entity_id');
+    $query->innerJoin('node_field_data', 'nfd', 'nfd.nid = nfdm.entity_id');
+    $query->addExpression('fc.totalcount', 'total_downloads');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression('nfd.nid', 'node_id');
+    $query->condition('nfd.type', $bundle);
+    $query->orderBy('total_downloads', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[] = [
+        'prefix' => (int) $row->total_downloads . ' downloads',
+        'title' => $row->title,
+        'url' => '/node/' . $row->node_id,
+      ];
+    }
+
+    return $data;
+  }
 }

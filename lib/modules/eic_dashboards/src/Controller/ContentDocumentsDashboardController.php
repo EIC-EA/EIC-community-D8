@@ -103,10 +103,26 @@ class ContentDocumentsDashboardController extends ControllerBase
       ], 2),
     ];
 
+    // Most viewed nodes.
+    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed documents'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
+
+    // Most downloaded files.
+    $mostDownloadedFiles = $this->dashboardBuilder->titleLinkList($this->t('Most downloaded documents'), '',
+      $this->contentStatistics->getMostDownloadedFilesOfBundle($bundle));
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $mostViewedNodes,
+        $mostDownloadedFiles,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
       ],
     ];
 

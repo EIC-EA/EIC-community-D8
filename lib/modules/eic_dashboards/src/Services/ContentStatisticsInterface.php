@@ -33,4 +33,9 @@ interface ContentStatisticsInterface {
    */
   public function getMostViewedNodesOfBundle($bundle, $range);
 
+  /**
+   * Returns most downloaded files of given bundle.
+   */
+  public function getMostDownloadedFilesOfBundle($bundle, $range);
+
 }
