@@ -186,8 +186,15 @@ class DashboardBuilder implements DashboardBuilderInterface {
 
     $build['table'] = [
       '#type' => 'table',
+      '#theme' => 'table__with_fields',
       '#header' => $header,
       '#rows'   => $rows,
+      '#attributes' => [
+        'class' => [
+          'tablesorter',
+          'js-stories-table',
+        ]
+      ],
     ];
 
     $build['#attached']['library'][] = 'eic_dashboards/tablesorter';
