@@ -40,15 +40,17 @@ class DashboardHelper implements DashboardHelperInterface {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected Connection $database;
+  protected Connection $connection;
 
   /**
    * {@inheritdoc}
    */
   public function __construct(
+    Connection $connection,
     RouteProviderInterface $routeProvider,
     UrlGeneratorInterface $urlGenerator,
   ) {
+    $this->connection = $connection;
     $this->routeProvider = $routeProvider;
     $this->urlGenerator = $urlGenerator;
   }
@@ -58,6 +60,7 @@ class DashboardHelper implements DashboardHelperInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('database'),
       $container->get('router.route_provider'),
       $container->get('url_generator'),
     );
@@ -297,6 +300,23 @@ class DashboardHelper implements DashboardHelperInterface {
     usort($result, fn($a, $b) => $b['y'] <=> $a['y']);
 
     return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTaxonomyTermLabel(string $tid): string {
+    static $labelCache = [];
+
+    if (!isset($labelCache[$tid])) {
+      $labelCache[$tid] = $this->connection->select('taxonomy_term_field_data', 'ttfd')
+        ->fields('ttfd', ['name'])
+        ->condition('tid', $tid)
+        ->execute()
+        ->fetchField() ?? 'NA';
+    }
+
+    return $labelCache[$tid];
   }
 
 }

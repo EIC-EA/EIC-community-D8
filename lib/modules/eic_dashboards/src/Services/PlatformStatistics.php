@@ -32,16 +32,25 @@ class PlatformStatistics implements PlatformStatisticsInterface {
   protected CountryServiceInterface $countryService;
 
   /**
+   * The dashboard helper service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardHelperInterface
+   */
+  protected DashboardHelperInterface $dashboardHelper;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
     EntityTypeManagerInterface $entityTypeManager,
     CountryServiceInterface $countryService,
+    DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
     $this->entityTypeManager = $entityTypeManager;
     $this->countryService = $countryService;
+    $this->dashboardHelper = $dashboardHelper;
   }
 
   /**
@@ -52,6 +61,7 @@ class PlatformStatistics implements PlatformStatisticsInterface {
       $container->get('database'),
       $container->get('entity_type.manager'),
       $container->get('eic_dashboards.country_service'),
+      $container->get('eic_dashboards.helper')
     );
   }
 
@@ -113,13 +123,8 @@ class PlatformStatistics implements PlatformStatisticsInterface {
     $data = [];
 
     foreach ($results as $row) {
-      $query = $this->connection->select('taxonomy_term_field_data', 'ttfd');
-      $query->fields('ttfd', ['name']);
-      $query->condition('ttfd.tid', $row->taxonomy_term_id);
-      $label = $query->execute()->fetchField();
-
       $data[$row->taxonomy_term_id][$argumentId] = $row->taxonomy_term_id;
-      $data[$row->taxonomy_term_id]['label'] = !empty($label) ? $label : 'NA';
+      $data[$row->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id);
       $data[$row->taxonomy_term_id]['count'] = (int) $row->count_members;
     }
 
