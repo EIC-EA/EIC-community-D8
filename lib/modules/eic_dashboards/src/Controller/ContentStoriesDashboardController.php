@@ -9,7 +9,7 @@ use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides route responses for the eic_dashboards module.
+ * Displays statistics for stories.
  */
 class ContentStoriesDashboardController extends ControllerBase
 {
