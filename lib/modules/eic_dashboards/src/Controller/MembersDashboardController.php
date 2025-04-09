@@ -97,7 +97,7 @@ class MembersDashboardController extends ControllerBase
 
     // Members by topic of Interest.
     $membersByTopicOfInterestData = json_encode(
-      $this->dashboardHelper->formatCollapsedCountsForChart(
+      $this->dashboardHelper->transformTermTreeCountsForChart(
         $this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_interest', 'id'),
         'topics'
       )
@@ -109,7 +109,7 @@ class MembersDashboardController extends ControllerBase
 
     // Members by topic of Expertise.
     $membersByTopicOfExpertiseData = json_encode(
-      $this->dashboardHelper->formatCollapsedCountsForChart(
+      $this->dashboardHelper->transformTermTreeCountsForChart(
         $this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_expertise', 'id'),
         'topics'
       )

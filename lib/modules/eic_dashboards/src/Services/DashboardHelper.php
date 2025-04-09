@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Url;
+use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -159,148 +160,111 @@ class DashboardHelper implements DashboardHelperInterface {
   }
 
   /**
-   * Loads a flat tree of 2nd-level terms and collapses deeper terms under them.
+   * Builds a flattened term map starting from 2nd-level taxonomy terms.
+   *
+   * This function:
+   * - Skips 1st-level (root) taxonomy terms.
+   * - For each 2nd-level term, it gathers all its descendant term IDs, including itself.
+   * - Useful for aggregating member counts or content references to taxonomy subtrees.
    *
    * @param string $vid
-   *   Vocabulary machine name.
+   *   The vocabulary machine name (e.g. 'topics', 'departments').
    *
    * @return array
-   *   Array of flat term objects at depth 1 or their collapsed children.
+   *   An associative array keyed by 2nd-level term TID. Each item includes:
+   *   - 'name' => string, the term's name.
+   *   - 'tids' => int[], a flat list of TIDs (self + all descendants).
+   *   - 'count' => int, initialized to 0 for later use.
+   *
+   * @example
+   * [
+   *   345 => [
+   *     'name' => 'Marketing',
+   *     'tids' => [345, 364, 834, 623],
+   *     'count' => 0,
+   *   ],
+   *   ...
+   * ]
    */
-  function loadTreeCollapsedToSecondLevel(string $vid): array {
-    // TODO: The result could be statically cached.
-    /** @var \Drupal\taxonomy\TermStorageInterface $term_storage */
-    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  public function getNestedTidTree(string $vid): array {
+    $result = [];
 
-    // Load full tree, no entity loading.
-    $full_tree = $term_storage->loadTree($vid, 0, NULL, FALSE);
+    // Step 1: Load top-level (1st-level) terms: parent = 0
+    $topLevelTerms = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadTree($vid, 0, 1, FALSE);
 
-    $terms = [];
-    $second_level = [];
+    // Step 2: For each 1st-level term, load its 2nd-level children only
+    foreach ($topLevelTerms as $firstLevelTerm) {
+      $secondLevelTerms = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->loadTree($vid, $firstLevelTerm->tid, 1, FALSE);
 
-    // Index terms by tid.
-    $term_index = [];
-    foreach ($full_tree as $term) {
-      $term_index[$term->tid] = $term;
-    }
+      // Step 3: For each 2nd-level term, collect its descendants
+      foreach ($secondLevelTerms as $secondLevel) {
+        // Get all descendants under this term (level 3 and deeper)
+        $descendants = \Drupal::entityTypeManager()
+          ->getStorage('taxonomy_term')
+          ->loadTree($vid, $secondLevel->tid, NULL, FALSE);
 
-    // Step 1: Get second-level terms.
-    foreach ($full_tree as $term) {
-      if ($term->depth === 1) {
-        $second_level[$term->tid] = $term;
-      }
-    }
-
-    // Step 2: Process all terms, collapsing deeper levels.
-    foreach ($full_tree as $term) {
-      if ($term->depth === 1) {
-        // Keep second-level term as-is.
-        $terms[$term->tid] = $term;
-      }
-      elseif ($term->depth > 1) {
-        // Traverse up to find 2nd-level ancestor.
-        $parent_tid = reset($term->parents);
-        while (!empty($term_index[$parent_tid]) && $term_index[$parent_tid]->depth > 1) {
-          $parent_tid = reset($term_index[$parent_tid]->parents);
+        // Build a flat list of tids: self + all nested
+        $tids = [$secondLevel->tid];
+        foreach ($descendants as $descendant) {
+          $tids[] = $descendant->tid;
         }
 
-        // If a valid second-level ancestor exists, collapse under it.
-        if (isset($second_level[$parent_tid])) {
-          $collapsed_term = clone $term;
-          $collapsed_term->name = $second_level[$parent_tid]->name;
-          $collapsed_term->tid = $term->tid;
-          $collapsed_term->pid = $parent_tid;
-          $collapsed_term->collapsed = TRUE;
-          $collapsed_term->depth = 1; // flatten it
-
-          $terms[$collapsed_term->tid] = $collapsed_term;
-        }
+        // Build output record
+        $result[$secondLevel->tid] = [
+          'name' => $secondLevel->name,
+          'tids' => $tids,
+          'count' => 0,
+        ];
       }
     }
-
-    return array_values($terms);
+$b = 4;
+    return $result;
   }
 
   /**
-   * Formats member counts for chart display, collapsing nested taxonomy terms.
-   *
-   * This method:
-   * - Loads a flat taxonomy tree with second-level terms and their collapsed children.
-   * - Reassigns counts from collapsed (nested) terms to their 2nd-level parents.
-   * - Outputs a flat array formatted for charting libraries (e.g. Highcharts).
-   *
-   * @param array $rawData
-   *   Raw member count data keyed by term ID, each item includes:
-   *   - id: (int|string) The taxonomy term ID.
-   *   - label: (string) The term name.
-   *   - count: (int) The member count.
-   *
-   * @param string $vid
-   *   The vocabulary machine name to use for taxonomy term tree loading.
-   *
-   * @return array
-   *   A list of arrays formatted for highcharts as:
-   *   - tid: (int) Taxonomy term ID.
-   *   - name: (string) The term label.
-   *   - y: (int) The total member count (collapsed and direct).
+   * {@inheritdoc}
    */
-  public function formatCollapsedCountsForChart(array $rawData, string $vid): array {
-    $flat_tree = $this->loadTreeCollapsedToSecondLevel($vid);
+  public function transformTermTreeCountsForChart(array $rawData, string $vid): array {
+    // Step 1: Get group structure from 2nd-level terms and their nested tids
+    $secondLevelTerms = $this->getNestedTidTree($vid);
 
-    $collapsed_terms_parent_map = []; // Maps collapsed term TIDs to their 2nd-level parent TID.
-    $second_level_tids = [];          // Used for fast lookup of 2nd-level term IDs.
-    $second_level_sum_counts = [];    // Stores aggregated member counts per 2nd-level TID.
-
-    // Step 1: Build term maps and initialize counts
-    foreach ($flat_tree as $term) {
-      $tid = (int) $term->tid;
-
-      if (!empty($term->collapsed)) {
-        $collapsed_terms_parent_map[$tid] = (int) $term->pid; // Map collapsed term to its 2nd-level parent.
-      }
-      else {
-        // Initialize counter for each 2nd-level term.
-        $second_level_tids[$tid] = TRUE;
-        $second_level_sum_counts[$tid] = 0;
+    // Step 2: Build reverse map: tid => group_tid (NOT reference to group array)
+    $nestedTidToParent = [];
+    foreach ($secondLevelTerms as $secondLevelTid => $term) {
+      foreach ($term['tids'] as $tid) {
+        $nestedTidToParent[$tid] = $secondLevelTid;
       }
     }
 
-    // Step 2: Aggregate counts
-    foreach ($rawData as $tid => $item) {
-      $tid = (int) $tid;
-      $count = (int) ($item['count'] ?? 0);
-
-      // Skip unknown TIDs that are neither 2nd-level nor collapsed.
-      if (!isset($second_level_tids[$tid]) && !isset($collapsed_terms_parent_map[$tid])) {
-        continue;
+    // Step 3: Loop over flat counts and assign to the correct group
+    foreach ($rawData as $tid => $count) {
+      if (isset($nestedTidToParent[$tid])) {
+        $secondLevelTid = $nestedTidToParent[$tid];
+        $secondLevelTerms[$secondLevelTid]['count'] += (int) $count['count'];
       }
-
-      // Resolve to 2nd-level TID: if collapsed, use its parent.
-      $target_tid = $collapsed_terms_parent_map[$tid] ?? $tid;
-
-      // Defensive check: only aggregate to known 2nd-level terms.
-      if (!isset($second_level_sum_counts[$target_tid])) {
-        continue;
-      }
-
-      $second_level_sum_counts[$target_tid] += $count;
     }
 
-    // Step 3: Format result for charts.
+    // Step 4: Prepare chart-ready output
     $result = [];
-    foreach ($second_level_sum_counts as $tid => $count) {
+    foreach ($secondLevelTerms as $secondLevelTid => $term) {
       $result[] = [
-        'tid' => $tid,
-        'name' => $rawData[$tid]['label'],
-        'y' => $count,
+        'tid' => $secondLevelTid,
+        'name' => $term['name'],
+        'y' => $term['count'],
       ];
     }
 
-    // Sort by count descending
+    // Step 5: Sort by count descending (optional)
     usort($result, fn($a, $b) => $b['y'] <=> $a['y']);
 
     return $result;
   }
+
+
 
   /**
    * {@inheritdoc}
