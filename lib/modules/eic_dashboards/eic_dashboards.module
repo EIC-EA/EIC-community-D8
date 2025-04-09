@@ -13,6 +13,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'title' => '',
         'categories' => '',
         'series' => '',
+        'vertical' => false,
       ],
     ],
     'dashboards_homepage' => [
@@ -66,6 +67,13 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'title_attributes' => [],
         'items' => [],
         'attributes' => [],
+      ],
+    ],
+    'title_link_list' => [
+      'variables' => [
+        'title' => '',
+        'link' => '',
+        'list' => '',
       ],
     ],
   ];

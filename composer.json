@@ -120,6 +120,7 @@
         "drush/drush": "^11",
         "ethosce/group_purl": "2.x-dev",
         "lramarojaona/purl": "^1.0@alpha",
+        "mottie/tablesorter": "^2.32",
         "openeuropa/ecl-twig-loader": "^2.12",
         "openeuropa/oe_authentication": "^1.5",
         "openeuropa/oe_media": "^1.13",

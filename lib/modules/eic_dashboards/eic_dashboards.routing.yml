@@ -35,6 +35,14 @@ eic_dashboards.content_dashboard:
   requirements:
     _role: 'sensitive'
 
+eic_dashboards.content.stories:
+  path: '/dashboards/content/stories'
+  defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\ContentStoriesDashboardController::page'
+    _title: 'Stories content dashboard'
+  requirements:
+    _role: 'sensitive'
+
 eic_dashboards.events_dashboard:
   path: '/dashboards/events-dashboard'
   defaults:

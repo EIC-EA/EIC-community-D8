@@ -80,7 +80,7 @@ class MembersDashboardController extends ControllerBase
     // ===== Section 2.
     // Members by country.
     $membersByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->platformStatistics->getMembersGroupedByCountry('id')));
-    $membersByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Members by country'), $membersByCountryData);
+    $membersByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Members by country'), $membersByCountryData, false);
     $membersByCountryMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersGroupedByCountry(DashboardFilters::DASHBOARD_MEMBERS_LIST_COUNTRY), 'view.dashboard_members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_COUNTRY]);
     $membersByCountryMenu = $this->dashboardBuilder->jumpMenu($this->t('List members of'), $this->t('Choose a country'), $membersByCountryMenuData);
     $membersByCountry = $this->dashboardBuilder->chartWithMenu($membersByCountryChart, $membersByCountryMenu);

@@ -156,6 +156,18 @@
           "type": "zip"
         }
       }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "mottie/tablesorter",
+        "version": "2.32.0",
+        "dist": {
+          "url": "https://github.com/Mottie/tablesorter/archive/refs/tags/v2.32.0.zip",
+          "type": "zip"
+        },
+        "type": "drupal-library"
+      }
     }
   ],
   "extra": {
