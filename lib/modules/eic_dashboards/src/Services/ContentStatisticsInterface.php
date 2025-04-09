@@ -21,7 +21,7 @@ interface ContentStatisticsInterface {
   /**
    * Returns number of nodes of content type grouped by terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId);
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId, $range);
 
   /**
    * Returns information about last story nodes.

@@ -84,7 +84,7 @@ class ContentStatistics implements ContentStatisticsInterface {
    * Returns number of nodes of given bundle grouped by terms.
    * If $parentTermId is given, it will display only the children terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId): array {
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId, $range = NULL): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node__' . $taxonomyField, 'ntf', 'n.nid = ntf.entity_id');
 
@@ -100,8 +100,12 @@ class ContentStatistics implements ContentStatisticsInterface {
       $query->condition('ttp.parent_target_id', $parentTermId);
     }
 
+    if ($range) {
+      $query->range(0, $range);
+    }
+
     $query->groupBy('taxonomy_term_id');
-    $query->orderBy('taxonomy_term_id');
+    $query->orderBy('count_nodes', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -116,7 +120,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       }
     } else if ($chartType == 'column') {
       foreach ($results as $row) {
-        $label = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id)?->name->value ?? 'NA';
+        $label = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id) ?? 'NA';
         $data[$row->taxonomy_term_id]['id'] = $label;
         $data[$row->taxonomy_term_id]['label'] = $label;
         $data[$row->taxonomy_term_id]['count'] = $row->count_nodes;
@@ -257,4 +261,5 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     return $data;
   }
+
 }

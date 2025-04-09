@@ -87,13 +87,12 @@ class ContentDocumentsDashboardController extends ControllerBase
 
     // Nodes grouped by type chart.
     $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie', ''));
-    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'),
-      $nodesByTypeData, '');
+    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'), $nodesByTypeData, '');
 
     // Nodes grouped by topic chart.
     $topicTermId = 506;
-    $nodesByTopicData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'pie', ''));
-    $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, $topicTermId);
+    $nodesByTopicData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'pie', $topicTermId));
+    $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, '');
 
     // Section 2.
     $section2Build = [
@@ -118,13 +117,19 @@ class ContentDocumentsDashboardController extends ControllerBase
       ], 2),
     ];
 
-    // Most viewed nodes.
+    // Top 10 terms used.
+    $top10Terms = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
+    ($bundle, 'field_vocab_topics', 'column', $topicTermId, 10)));
+    $top10TermsChart = $this->dashboardBuilder->chartColumn($this->t('Top 10 document topics'), $top10Terms, true);
+
+    // Latest nodes.
     $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
 
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
-        '',
+        $top10TermsChart,
         $latestNodes,
       ], 2),
     ];
