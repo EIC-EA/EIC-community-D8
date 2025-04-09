@@ -40,7 +40,7 @@ class MembersDashboardController extends ControllerBase
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
-    DashboardHelperInterface   $dashboardHelper,
+    DashboardHelperInterface $dashboardHelper,
     PlatformStatisticsInterface $platformStatistics,
   )
   {
