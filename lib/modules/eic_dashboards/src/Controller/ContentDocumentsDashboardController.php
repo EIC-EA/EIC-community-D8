@@ -85,9 +85,28 @@ class ContentDocumentsDashboardController extends ControllerBase
       ], 3),
     ];
 
+    // Nodes grouped by type chart.
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie', ''));
+    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'),
+      $nodesByTypeData, '');
+
+    // Nodes grouped by topic chart.
+    $topicTermId = 506;
+    $nodesByTopicData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'pie', ''));
+    $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, $topicTermId);
+
+    // Section 2.
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $nodesByType,
+        $nodesByTopic,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
+        $section2Build,
       ],
     ];
 
