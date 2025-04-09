@@ -72,8 +72,8 @@ class ContentStoriesDashboardController extends ControllerBase
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
 
-    // Number of nodes created in past 30 days..
-    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPast30Days($bundle);
+    // Number of nodes created in past 30 days.
+    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle, 30);
     $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Stories - last 30 days'), $numberOfNodesPast30DaysData, '');
 
     // Section 1.
@@ -114,7 +114,7 @@ class ContentStoriesDashboardController extends ControllerBase
     ];
 
     // Last 10 nodes list table.
-    $last10NodesMetricsData = $this->contentStatistics->getLast10StoriesMetrics();
+    $last10NodesMetricsData = $this->contentStatistics->getLastStoriesMetrics(10);
     $last10NodesMetrics = $this->dashboardBuilder->table($last10NodesMetricsData['header'], $last10NodesMetricsData['rows'], 'js-stories-table');
 
     // Section 4.

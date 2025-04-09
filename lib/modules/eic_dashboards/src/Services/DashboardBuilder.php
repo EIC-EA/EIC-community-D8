@@ -192,7 +192,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
       '#attributes' => [
         'class' => [
           'tablesorter',
-          'js-stories-table',
+          $class,
         ]
       ],
     ];

@@ -14,9 +14,9 @@ interface ContentStatisticsInterface {
 
   /**
    * Returns number of content of given bundle
-   * created in the past 30 days.
+   * created in the past days.
    */
-  public function getNumberOfBundleNodesPast30Days($bundle);
+  public function getNumberOfBundleNodesPastDays($bundle, $days);
 
   /**
    * Returns number of nodes of content type grouped by terms.
@@ -29,8 +29,8 @@ interface ContentStatisticsInterface {
   public function getMostViewedNodesOfBundle($bundle);
 
   /**
-   * Returns information about last 10 story nodes.
+   * Returns information about last story nodes.
    */
-  public function getLast10StoriesMetrics();
+  public function getLastStoriesMetrics($range);
 
 }

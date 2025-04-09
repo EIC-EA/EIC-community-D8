@@ -70,11 +70,11 @@ class ContentStatistics implements ContentStatisticsInterface {
    * Returns number of content of given bundle
    * created in the past 30 days.
    */
-  public function getNumberOfBundleNodesPast30Days($bundle): array|int {
+  public function getNumberOfBundleNodesPastDays($bundle, $days): array|int {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
     $query->condition('n.type', $bundle)
-      ->condition('nfd.created', strtotime('-30 days'), '>=');
+      ->condition('nfd.created', strtotime('-' . $days . ' days'), '>=');
 
     return $query->countQuery()->execute()->fetchField();
   }
@@ -153,9 +153,9 @@ class ContentStatistics implements ContentStatisticsInterface {
   }
 
   /**
-   * Returns information about last 10 story nodes.
+   * Returns information about last story nodes.
    */
-  public function getLast10StoriesMetrics(): array {
+  public function getLastStoriesMetrics($range): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
     $query->innerJoin('node__field_vocab_topics', 'nfvst', 'n.nid = nfvst.entity_id');
@@ -170,7 +170,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       ->condition('fc.entity_type', 'node')
       ->condition('fc.flag_id', 'like_content')
       ->orderBy('created', 'DESC')
-      ->range(0, 10);
+      ->range(0, $range);
     $results = $query->execute()->fetchAll();
 
     $rows = [];
