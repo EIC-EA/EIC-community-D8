@@ -73,7 +73,7 @@ class ContentStoriesDashboardController extends ControllerBase
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
 
     // Number of nodes created in past 30 days.
-    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle, 30);
+    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
     $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Stories - last 30 days'), $numberOfNodesPast30DaysData, '');
 
     // Section 1.
@@ -114,7 +114,7 @@ class ContentStoriesDashboardController extends ControllerBase
     ];
 
     // Last 10 nodes list table.
-    $last10NodesMetricsData = $this->contentStatistics->getLastStoriesMetrics(10);
+    $last10NodesMetricsData = $this->contentStatistics->getLastStoriesMetrics();
     $last10NodesMetrics = $this->dashboardBuilder->table(
       $last10NodesMetricsData['header'],
       $last10NodesMetricsData['rows'],
@@ -129,7 +129,7 @@ class ContentStoriesDashboardController extends ControllerBase
     ];
 
     // Most viewed nodes.
-    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed stories - all time'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle, 5));
+    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed stories - all time'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
 
     // Section 5.
     $section5Build = [

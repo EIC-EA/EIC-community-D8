@@ -69,9 +69,9 @@ class ContentStatistics implements ContentStatisticsInterface {
 
   /**
    * Returns number of content of given bundle
-   * created in the past 30 days.
+   * created in the past days.
    */
-  public function getNumberOfBundleNodesPastDays($bundle, $days): array|int {
+  public function getNumberOfBundleNodesPastDays($bundle, $days = 30): array|int {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
     $query->condition('n.type', $bundle)
@@ -129,7 +129,7 @@ class ContentStatistics implements ContentStatisticsInterface {
   /**
    * Returns information about last story nodes.
    */
-  public function getLastStoriesMetrics($range): array {
+  public function getLastStoriesMetrics($range = 10): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
     $query->innerJoin('node__field_vocab_story_type', 'nfvst', 'n.nid = nfvst.entity_id');
@@ -177,7 +177,7 @@ class ContentStatistics implements ContentStatisticsInterface {
   /**
    * Returns most viewed nodes of given bundle.
    */
-  public function getMostViewedNodesOfBundle($bundle, $range): array {
+  public function getMostViewedNodesOfBundle($bundle, $range = 5): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node_counter', 'nc', 'n.nid = nc.nid');
     $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
