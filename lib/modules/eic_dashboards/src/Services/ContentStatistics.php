@@ -4,7 +4,8 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\path_alias\AliasManagerInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,11 +27,11 @@ class ContentStatistics implements ContentStatisticsInterface {
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
-   * The alias manager.
+   * The dashboard helper service.
    *
-   * @var \Drupal\path_alias\AliasManagerInterface
+   * @var \Drupal\eic_dashboards\Services\DashboardHelperInterface
    */
-  protected AliasManagerInterface $aliasManager;
+  protected DashboardHelperInterface $dashboardHelper;
 
   /**
    * {@inheritdoc}
@@ -38,11 +39,11 @@ class ContentStatistics implements ContentStatisticsInterface {
   public function __construct(
     Connection $connection,
     EntityTypeManagerInterface $entityTypeManager,
-    AliasManagerInterface $aliasManager,
+    DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
     $this->entityTypeManager = $entityTypeManager;
-    $this->aliasManager = $aliasManager;
+    $this->dashboardHelper = $dashboardHelper;
   }
 
   /**
@@ -52,7 +53,7 @@ class ContentStatistics implements ContentStatisticsInterface {
     return new static(
       $container->get('database'),
       $container->get('entity_type.manager'),
-      $container->get('path_alias.manager'),
+      $container->get('eic_dashboards.helper'),
     );
   }
 
@@ -109,44 +110,17 @@ class ContentStatistics implements ContentStatisticsInterface {
     if ($chartType == 'pie') {
       foreach ($results as $row) {
         $data[] = [
-          'name' => $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ?? 'NA',
+          'name' => $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id) ?? 'NA',
           'y' => (int) $row->count_nodes,
         ];
       }
     } else if ($chartType == 'column') {
       foreach ($results as $row) {
-        $label = $this->entityTypeManager->getStorage('taxonomy_term')->load($row->taxonomy_term_id)?->name->value ??
-          'NA';
+        $label = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id)?->name->value ?? 'NA';
         $data[$row->taxonomy_term_id]['id'] = $label;
         $data[$row->taxonomy_term_id]['label'] = $label;
         $data[$row->taxonomy_term_id]['count'] = $row->count_nodes;
       }
-    }
-
-    return $data;
-  }
-
-  /**
-   * Returns most viewed nodes of given bundle.
-   */
-  public function getMostViewedNodesOfBundle($bundle): array {
-    $query = $this->connection->select('node_counter', 'nc');
-    $query->innerJoin('node', 'n', 'n.nid = nc.nid');
-    $query->addExpression('nc.nid', 'node_id');
-    $query->addExpression('nc.totalcount', 'total_views');
-    $query->condition('n.type', $bundle);
-    $query->orderBy('total_views', 'DESC');
-    $query->range(0, 5);
-    $results = $query->execute()->fetchAll();
-
-    $data = [];
-
-    foreach ($results as $row) {
-      $data[] = [
-        'prefix' => (int) $row->total_views . ' views',
-        'title' => $this->entityTypeManager->getStorage('node')->load($row->node_id)->label(),
-        'url' => $this->aliasManager->getAliasByPath('/node/' . $row->node_id),
-      ];
     }
 
     return $data;
@@ -158,12 +132,13 @@ class ContentStatistics implements ContentStatisticsInterface {
   public function getLastStoriesMetrics($range): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
-    $query->innerJoin('node__field_vocab_topics', 'nfvst', 'n.nid = nfvst.entity_id');
+    $query->innerJoin('node__field_vocab_story_type', 'nfvst', 'n.nid = nfvst.entity_id');
     $query->innerJoin('node_counter', 'nc', 'n.nid = nc.nid');
     $query->innerJoin('flag_counts', 'fc', 'n.nid = fc.entity_id');
     $query->addExpression('n.nid', 'node_id');
-    $query->addExpression('nfd.created', 'created');
-    $query->addExpression('nfvst.field_vocab_topics_target_id', 'taxonomy_term_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %M %Y')", 'created');
+    $query->addExpression('nfvst.field_vocab_story_type_target_id', 'taxonomy_term_id');
     $query->addExpression('fc.count', 'likes');
     $query->addExpression('nc.totalcount', 'views');
     $query->condition('n.type', 'story')
@@ -177,9 +152,9 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     foreach ($results as $result) {
       $rows[] = [
-        'title' => $this->entityTypeManager->getStorage('node')->load($result->node_id)->label(),
+        'title' => Markup::create('<a href="/node/' . $result->node_id . '">' . $result->title . '</a>'),
         'published' => $result->created,
-        'topic' =>  $this->entityTypeManager->getStorage('taxonomy_term')->load($result->taxonomy_term_id)?->name->value ?? 'NA',
+        'type' =>  $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
         'views' => $result->views,
         'likes' => $result->likes,
       ];
@@ -188,7 +163,7 @@ class ContentStatistics implements ContentStatisticsInterface {
     $header = [
       'Story',
       'Published',
-      'Topic',
+      'Type',
       'Views',
       'Likes',
     ];
@@ -197,5 +172,33 @@ class ContentStatistics implements ContentStatisticsInterface {
       'header' => $header,
       'rows' => $rows,
     ];
+  }
+
+  /**
+   * Returns most viewed nodes of given bundle.
+   */
+  public function getMostViewedNodesOfBundle($bundle, $range): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_counter', 'nc', 'n.nid = nc.nid');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('nc.totalcount', 'total_views');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->condition('n.type', $bundle);
+    $query->orderBy('total_views', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[] = [
+        'prefix' => (int) $row->total_views . ' views',
+        'title' => $row->title,
+        'url' => '/node/' . $row->node_id,
+      ];
+    }
+
+    return $data;
   }
 }

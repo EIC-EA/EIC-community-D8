@@ -24,13 +24,13 @@ interface ContentStatisticsInterface {
   public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId);
 
   /**
-   * Returns most viewed nodes of given bundle.
-   */
-  public function getMostViewedNodesOfBundle($bundle);
-
-  /**
    * Returns information about last story nodes.
    */
   public function getLastStoriesMetrics($range);
+
+  /**
+   * Returns most viewed nodes of given bundle.
+   */
+  public function getMostViewedNodesOfBundle($bundle, $range);
 
 }

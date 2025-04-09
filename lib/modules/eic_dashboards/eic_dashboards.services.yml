@@ -12,4 +12,4 @@ services:
     arguments: [ '@database', '@entity_type.manager', '@eic_dashboards.country_service', '@eic_dashboards.helper' ]
   eic_dashboards.content_statistics:
     class: Drupal\eic_dashboards\Services\ContentStatistics
-    arguments: [ '@database', '@entity_type.manager', '@path_alias.manager' ]
+    arguments: [ '@database', '@entity_type.manager', '@eic_dashboards.helper' ]
