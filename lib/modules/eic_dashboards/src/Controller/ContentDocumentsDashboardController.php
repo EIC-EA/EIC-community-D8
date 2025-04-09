@@ -118,11 +118,23 @@ class ContentDocumentsDashboardController extends ControllerBase
       ], 2),
     ];
 
+    // Most viewed nodes.
+    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
+
+    // Section 4.
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        '',
+        $latestNodes,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
         $section3Build,
+        $section4Build,
       ],
     ];
 

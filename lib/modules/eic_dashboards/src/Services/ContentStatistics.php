@@ -137,14 +137,14 @@ class ContentStatistics implements ContentStatisticsInterface {
     $query->innerJoin('flag_counts', 'fc', 'n.nid = fc.entity_id');
     $query->addExpression('n.nid', 'node_id');
     $query->addExpression('nfd.title', 'title');
-    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %M %Y')", 'created');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
     $query->addExpression('nfvst.field_vocab_story_type_target_id', 'taxonomy_term_id');
     $query->addExpression('fc.count', 'likes');
     $query->addExpression('nc.totalcount', 'views');
     $query->condition('n.type', 'story')
       ->condition('fc.entity_type', 'node')
       ->condition('fc.flag_id', 'like_content')
-      ->orderBy('created', 'DESC')
+      ->orderBy('nfd.created', 'DESC')
       ->range(0, $range);
     $results = $query->execute()->fetchAll();
 
@@ -223,6 +223,33 @@ class ContentStatistics implements ContentStatisticsInterface {
     foreach ($results as $row) {
       $data[] = [
         'prefix' => (int) $row->total_downloads . ' downloads',
+        'title' => $row->title,
+        'url' => '/node/' . $row->node_id,
+      ];
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns latest nodes of given bundle
+   */
+  public function getLatestNodesOfBundle($bundle, $range = 10): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
+    $query->condition('n.type', $bundle);
+    $query->orderBy('nfd.created', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[] = [
+        'prefix' => $row->created,
         'title' => $row->title,
         'url' => '/node/' . $row->node_id,
       ];
