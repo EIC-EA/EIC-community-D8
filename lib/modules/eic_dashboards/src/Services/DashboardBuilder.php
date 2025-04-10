@@ -6,7 +6,12 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Implements dashboards builders for templating.
+ * @file
+ * Contains the DashboardBuilder service for building dashboard UI components.
+ *
+ * This class provides reusable render arrays and helpers for generating
+ * common dashboard elements such as cards, charts, tables, and buttons,
+ * based on custom theme implementations in the eic_dashboards module.
  */
 class DashboardBuilder implements DashboardBuilderInterface {
 
