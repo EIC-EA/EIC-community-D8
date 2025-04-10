@@ -3,7 +3,7 @@
 namespace Drupal\eic_dashboards\Services;
 
 /**
- * Defines platform statistics interface.
+ * Defines content statistics interface.
  */
 interface ContentStatisticsInterface {
 
