@@ -3,9 +3,7 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,13 +18,6 @@ class ContentStatistics implements ContentStatisticsInterface {
   protected Connection $connection;
 
   /**
-   * Entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * The dashboard helper service.
    *
    * @var \Drupal\eic_dashboards\Services\DashboardHelperInterface
@@ -38,11 +29,9 @@ class ContentStatistics implements ContentStatisticsInterface {
    */
   public function __construct(
     Connection $connection,
-    EntityTypeManagerInterface $entityTypeManager,
     DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
-    $this->entityTypeManager = $entityTypeManager;
     $this->dashboardHelper = $dashboardHelper;
   }
 
@@ -52,7 +41,6 @@ class ContentStatistics implements ContentStatisticsInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('database'),
-      $container->get('entity_type.manager'),
       $container->get('eic_dashboards.helper'),
     );
   }
@@ -84,7 +72,7 @@ class ContentStatistics implements ContentStatisticsInterface {
    * Returns number of nodes of given bundle grouped by terms.
    * If $parentTermId is given, it will display only the children terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId): array {
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId, $range = NULL): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node__' . $taxonomyField, 'ntf', 'n.nid = ntf.entity_id');
 
@@ -100,8 +88,12 @@ class ContentStatistics implements ContentStatisticsInterface {
       $query->condition('ttp.parent_target_id', $parentTermId);
     }
 
+    if ($range) {
+      $query->range(0, $range);
+    }
+
     $query->groupBy('taxonomy_term_id');
-    $query->orderBy('taxonomy_term_id');
+    $query->orderBy('count_nodes', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -116,7 +108,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       }
     } else if ($chartType == 'column') {
       foreach ($results as $row) {
-        $label = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id)?->name->value ?? 'NA';
+        $label = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id) ?? 'NA';
         $data[$row->taxonomy_term_id]['id'] = $label;
         $data[$row->taxonomy_term_id]['label'] = $label;
         $data[$row->taxonomy_term_id]['count'] = $row->count_nodes;
@@ -137,14 +129,14 @@ class ContentStatistics implements ContentStatisticsInterface {
     $query->innerJoin('flag_counts', 'fc', 'n.nid = fc.entity_id');
     $query->addExpression('n.nid', 'node_id');
     $query->addExpression('nfd.title', 'title');
-    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %M %Y')", 'created');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
     $query->addExpression('nfvst.field_vocab_story_type_target_id', 'taxonomy_term_id');
     $query->addExpression('fc.count', 'likes');
     $query->addExpression('nc.totalcount', 'views');
     $query->condition('n.type', 'story')
       ->condition('fc.entity_type', 'node')
       ->condition('fc.flag_id', 'like_content')
-      ->orderBy('created', 'DESC')
+      ->orderBy('nfd.created', 'DESC')
       ->range(0, $range);
     $results = $query->execute()->fetchAll();
 
@@ -201,4 +193,61 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     return $data;
   }
+
+  /**
+   * Returns most downloaded nodes of given bundle.
+   */
+  public function getMostDownloadedFilesOfBundle($bundle, $range = 5): array {
+    $query = $this->connection->select('file_counter', 'fc');
+    $query->innerJoin('media__field_media_file', 'mfmf', 'mfmf.field_media_file_target_id = fc.fid');
+    $query->innerJoin('node__field_document_media', 'nfdm', 'nfdm.field_document_media_target_id = mfmf.entity_id');
+    $query->innerJoin('node_field_data', 'nfd', 'nfd.nid = nfdm.entity_id');
+    $query->addExpression('fc.totalcount', 'total_downloads');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression('nfd.nid', 'node_id');
+    $query->condition('nfd.type', $bundle);
+    $query->orderBy('total_downloads', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[] = [
+        'prefix' => (int) $row->total_downloads . ' downloads',
+        'title' => $row->title,
+        'url' => '/node/' . $row->node_id,
+      ];
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns latest nodes of given bundle
+   */
+  public function getLatestNodesOfBundle($bundle, $range = 10): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
+    $query->condition('n.type', $bundle);
+    $query->orderBy('nfd.created', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[] = [
+        'prefix' => $row->created,
+        'title' => $row->title,
+        'url' => '/node/' . $row->node_id,
+      ];
+    }
+
+    return $data;
+  }
+
 }

@@ -20,3 +20,7 @@
   background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
   border-bottom: #000 2px solid;
 }
+
+.tablesorter.stories-table tbody tr td:nth-child(2) {
+  width: 100px;
+}

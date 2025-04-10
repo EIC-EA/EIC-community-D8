@@ -9,9 +9,9 @@ use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Displays statistics for stories.
+ * Displays statistics for documents.
  */
-class ContentStoriesDashboardController extends ControllerBase
+class ContentDocumentsDashboardController extends ControllerBase
 {
 
   /**
@@ -66,15 +66,16 @@ class ContentStoriesDashboardController extends ControllerBase
    */
   public function page(): array {
     // Specify current bundle.
-    $bundle = 'story';
+    $bundle = 'document';
 
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
-    $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
+    $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total documents'), $numberOfNodesData, '');
 
     // Number of nodes created in past 30 days.
     $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
-    $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Stories - last 30 days'), $numberOfNodesPast30DaysData, '');
+    $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Documents - last 30 days'),
+      $numberOfNodesPast30DaysData, '');
 
     // Section 1.
     $section1Build = [
@@ -84,56 +85,52 @@ class ContentStoriesDashboardController extends ControllerBase
       ], 3),
     ];
 
-    // Nodes grouped by program type chart.
-    $nodesByProgramTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type', 'pie', ''));
-    $nodesByProgramType = $this->dashboardBuilder->chartPie($this->t('Stories by program type'), $nodesByProgramTypeData, '');
-
     // Nodes grouped by type chart.
-    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_story_type', 'pie', ''));
-    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Stories by type'), $nodesByTypeData, '');
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie', ''));
+    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'), $nodesByTypeData, '');
+
+    // Nodes grouped by topic chart.
+    $topicTermId = 506;
+    $nodesByTopicData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'pie', $topicTermId));
+    $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, '');
 
     // Section 2.
     $section2Build = [
       $this->dashboardBuilder->columns([
-        $nodesByProgramType,
         $nodesByType,
+        $nodesByTopic,
       ], 2),
     ];
 
-    // Nodes by topic.
-    $topicTermId = 506;
-    $nodesByTopicData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column', $topicTermId)));
-    $nodesByTopicChart = $this->dashboardBuilder->chartColumn($this->t('Stories by topic'), $nodesByTopicData, true);
+    // Most viewed nodes.
+    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed documents'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
+
+    // Most downloaded files.
+    $mostDownloadedFiles = $this->dashboardBuilder->titleLinkList($this->t('Most downloaded documents'), '',
+      $this->contentStatistics->getMostDownloadedFilesOfBundle($bundle));
 
     // Section 3.
     $section3Build = [
       $this->dashboardBuilder->columns([
-        $nodesByTopicChart,
-      ], 1),
+        $mostViewedNodes,
+        $mostDownloadedFiles,
+      ], 2),
     ];
 
-    // Last 10 nodes list table.
-    $last10NodesMetricsData = $this->contentStatistics->getLastStoriesMetrics();
-    $last10NodesMetrics = $this->dashboardBuilder->table(
-      $last10NodesMetricsData['header'],
-      $last10NodesMetricsData['rows'],
-      'stories-table js-stories-table'
-    );
+    // Top 10 terms used.
+    $top10Terms = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
+    ($bundle, 'field_vocab_topics', 'column', $topicTermId, 10)));
+    $top10TermsChart = $this->dashboardBuilder->chartColumn($this->t('Top 10 document topics'), $top10Terms, true);
+
+    // Latest nodes.
+    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
 
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
-        $last10NodesMetrics,
-      ], 1),
-    ];
-
-    // Most viewed nodes.
-    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed stories - all time'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
-
-    // Section 5.
-    $section5Build = [
-      $this->dashboardBuilder->columns([
-        $mostViewedNodes,
+        $top10TermsChart,
+        $latestNodes,
       ], 2),
     ];
 
@@ -143,7 +140,6 @@ class ContentStoriesDashboardController extends ControllerBase
         $section2Build,
         $section3Build,
         $section4Build,
-        $section5Build,
       ],
     ];
 
