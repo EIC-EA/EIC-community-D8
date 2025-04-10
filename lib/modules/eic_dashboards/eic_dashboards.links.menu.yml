@@ -50,6 +50,13 @@ eic_dashboards.content.stories:
   route_name: eic_dashboards.content.stories
   weight: 4
 
+eic_dashboards.content.discussions:
+  title: 'Content / Discussions'
+  description: 'Discussions content statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.content.discussions
+  weight: 4
+
 eic_dashboards.events_dashboard:
   title: 'Events dashboard'
   description: 'Platform events statistics'
