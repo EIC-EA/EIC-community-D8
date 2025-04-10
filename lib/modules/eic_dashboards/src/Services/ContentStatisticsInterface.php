@@ -21,7 +21,7 @@ interface ContentStatisticsInterface {
   /**
    * Returns number of nodes of content type grouped by terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId);
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId, $range);
 
   /**
    * Returns information about last story nodes.
@@ -32,5 +32,15 @@ interface ContentStatisticsInterface {
    * Returns most viewed nodes of given bundle.
    */
   public function getMostViewedNodesOfBundle($bundle, $range);
+
+  /**
+   * Returns most downloaded files of given bundle.
+   */
+  public function getMostDownloadedFilesOfBundle($bundle, $range);
+
+  /**
+   * Returns latest nodes of given bundle
+   */
+  public function getLatestNodesOfBundle($bundle, $range);
 
 }
