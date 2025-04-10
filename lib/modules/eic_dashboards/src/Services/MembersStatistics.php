@@ -7,9 +7,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Platform statistics class.
+ * Members statistics class.
  */
-class PlatformStatistics implements PlatformStatisticsInterface {
+class MembersStatistics implements MembersStatisticsInterface {
   /**
    * The database connection.
    *
@@ -69,7 +69,7 @@ class PlatformStatistics implements PlatformStatisticsInterface {
   /**
    * Returns the total number of platform members.
    */
-  public function getTotalPlatformMembers(): array|int {
+  public function getTotalMembers(): array|int {
     $query = $this->entityTypeManager->getStorage('user')->getQuery();
     return $query->condition('status', '1')
       ->accessCheck(FALSE)

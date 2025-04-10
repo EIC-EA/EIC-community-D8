@@ -3,14 +3,14 @@
 namespace Drupal\eic_dashboards\Services;
 
 /**
- * Defines platform statistics interface.
+ * Defines members statistics interface.
  */
-interface PlatformStatisticsInterface {
+interface MembersStatisticsInterface {
 
   /**
    * Returns total number of platform members.
    */
-  public function getTotalPlatformMembers();
+  public function getTotalMembers();
 
   /**
    * Returns members grouped by country.

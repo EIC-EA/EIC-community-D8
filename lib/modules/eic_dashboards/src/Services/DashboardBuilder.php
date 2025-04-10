@@ -6,7 +6,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Implements dashboards helpers.
+ * Implements dashboards builders for templating.
  */
 class DashboardBuilder implements DashboardBuilderInterface {
 
