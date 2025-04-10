@@ -102,10 +102,48 @@ class ContentDiscussionsDashboardController extends ControllerBase
       ], 2),
     ];
 
+    // Top 10 tags used.
+    $top10Tags = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', '', 10)));
+    $top10TagsChart = $this->dashboardBuilder->chartColumn($this->t('Top 10 discussion tags'), $top10Tags, true);
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $top10TagsChart,
+        '',
+      ], 2),
+    ];
+
+    // Most viewed nodes.
+    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed discussions'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
+
+    // Section 4.
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $mostViewedNodes,
+        '',
+      ], 2),
+    ];
+
+    // Latest nodes.
+    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest discussions'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
+
+    // Section 5.
+    $section5Build = [
+      $this->dashboardBuilder->columns([
+        $latestNodes,
+        '',
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
+        $section4Build,
+        $section5Build,
       ],
     ];
 

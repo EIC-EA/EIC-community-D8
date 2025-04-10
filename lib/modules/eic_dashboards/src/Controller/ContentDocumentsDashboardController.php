@@ -118,10 +118,9 @@ class ContentDocumentsDashboardController extends ControllerBase
     ];
 
     // Top 10 terms used.
-    $top10Terms = $this->dashboardHelper->jsonEncodeCategoriesSeries
-    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
-    ($bundle, 'field_vocab_topics', 'column', $topicTermId, 10)));
-    $top10TermsChart = $this->dashboardBuilder->chartColumn($this->t('Top 10 document topics'), $top10Terms, true);
+    $top10Tags = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', '', 10)));
+    $top10TagsChart = $this->dashboardBuilder->chartColumn($this->t('Top 10 document tags'), $top10Tags, true);
 
     // Latest nodes.
     $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
@@ -129,7 +128,7 @@ class ContentDocumentsDashboardController extends ControllerBase
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
-        $top10TermsChart,
+        $top10TagsChart,
         $latestNodes,
       ], 2),
     ];
