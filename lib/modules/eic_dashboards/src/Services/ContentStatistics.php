@@ -250,4 +250,44 @@ class ContentStatistics implements ContentStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns number of nodes of given bundle grouped by value from a list field.
+   */
+  public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range = NULL): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node__' . $listField, 'ntf', 'n.nid = ntf.entity_id');
+    $query->addExpression('COUNT(ntf.' . $listField . '_value)', 'count_nodes');
+    $query->addExpression('ntf.' . $listField . '_value', 'value');
+    $query->condition('n.type', $bundle);
+
+    if ($range) {
+      $query->range(0, $range);
+    }
+
+    $query->groupBy('value');
+    $query->orderBy('count_nodes', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    // Handle data output depending on chart type.
+    if ($chartType == 'pie') {
+      foreach ($results as $result) {
+        $data[] = [
+          'name' => ucfirst($result->value),
+          'y' => (int) $result->count_nodes,
+        ];
+      }
+    } else if ($chartType == 'column') {
+      foreach ($results as $result) {
+        $label = ucfirst($result->value);
+        $data[$result->value]['id'] = $label;
+        $data[$result->value]['label'] = $label;
+        $data[$result->value]['count'] = $result->count_nodes;
+      }
+    }
+
+    return $data;
+  }
+
 }
