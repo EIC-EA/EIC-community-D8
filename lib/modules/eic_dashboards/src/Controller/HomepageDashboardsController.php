@@ -10,7 +10,7 @@ use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 /**
  * Provides route responses for the eic_dashboards module.
  */
-class DashboardsController extends ControllerBase
+class HomepageDashboardsController extends ControllerBase
 {
 
   /**
@@ -58,8 +58,6 @@ class DashboardsController extends ControllerBase
     // Get the title from the route definition.
     $title = \Drupal::routeMatch()->getRouteObject()->getDefault('_title');
 
-    $test = $this->dashboardHelper;
-
     // Build the render array.
     $build['content'] = [
       '#theme' => 'dashboards_homepage',
@@ -82,19 +80,4 @@ class DashboardsController extends ControllerBase
     ];
     return $build;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function ctaCard($title, $link, $icon, $variant): array
-  {
-    return [
-      '#theme' => 'cta_card',
-      '#title' => $title,
-      '#link' => $link,
-      "#icon" => $icon,
-      "#variant" => $variant,
-    ];
-  }
-
 }
