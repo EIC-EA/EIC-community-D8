@@ -48,4 +48,9 @@ interface ContentStatisticsInterface {
    */
   public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range);
 
+  /**
+   * Returns most commented nodes of given bundle.
+   */
+  public function getMostCommentedNodesOfBundle($bundle, $range);
+
 }

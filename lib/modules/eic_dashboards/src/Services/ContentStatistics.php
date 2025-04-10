@@ -100,18 +100,18 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     // Handle data output depending on chart type.
     if ($chartType == 'pie') {
-      foreach ($results as $row) {
+      foreach ($results as $result) {
         $data[] = [
-          'name' => $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id) ?? 'NA',
-          'y' => (int) $row->count_nodes,
+          'name' => $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
+          'y' => (int) $result->count_nodes,
         ];
       }
     } else if ($chartType == 'column') {
-      foreach ($results as $row) {
-        $label = $this->dashboardHelper->getTaxonomyTermLabel($row->taxonomy_term_id) ?? 'NA';
-        $data[$row->taxonomy_term_id]['id'] = $label;
-        $data[$row->taxonomy_term_id]['label'] = $label;
-        $data[$row->taxonomy_term_id]['count'] = $row->count_nodes;
+      foreach ($results as $result) {
+        $label = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA';
+        $data[$result->taxonomy_term_id]['id'] = $label;
+        $data[$result->taxonomy_term_id]['label'] = $label;
+        $data[$result->taxonomy_term_id]['count'] = $result->count_nodes;
       }
     }
 
@@ -183,11 +183,11 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     $data = [];
 
-    foreach ($results as $row) {
+    foreach ($results as $result) {
       $data[] = [
-        'prefix' => (int) $row->total_views . ' views',
-        'title' => $row->title,
-        'url' => '/node/' . $row->node_id,
+        'prefix' => (int) $result->total_views . ' views',
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
       ];
     }
 
@@ -212,11 +212,11 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     $data = [];
 
-    foreach ($results as $row) {
+    foreach ($results as $result) {
       $data[] = [
-        'prefix' => (int) $row->total_downloads . ' downloads',
-        'title' => $row->title,
-        'url' => '/node/' . $row->node_id,
+        'prefix' => (int) $result->total_downloads . ' downloads',
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
       ];
     }
 
@@ -239,11 +239,11 @@ class ContentStatistics implements ContentStatisticsInterface {
 
     $data = [];
 
-    foreach ($results as $row) {
+    foreach ($results as $result) {
       $data[] = [
-        'prefix' => $row->created,
-        'title' => $row->title,
-        'url' => '/node/' . $row->node_id,
+        'prefix' => $result->created,
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
       ];
     }
 
@@ -286,6 +286,35 @@ class ContentStatistics implements ContentStatisticsInterface {
         $data[$result->value]['label'] = $label;
         $data[$result->value]['count'] = $result->count_nodes;
       }
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns most commented nodes of given bundle.
+   */
+  public function getMostCommentedNodesOfBundle($bundle, $range = 5): array {
+    $query = $this->connection->select('comment_field_data', 'cfd');
+    $query->innerJoin('node_field_data', 'nfd', 'nfd.nid = cfd.entity_id');
+    $query->addExpression('COUNT(cfd.entity_id)', 'comments_count');
+    $query->addExpression('cfd.entity_id', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->condition('nfd.type', $bundle);
+    $query->groupBy('node_id');
+    $query->groupBy('title');
+    $query->orderBy('comments_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[] = [
+        'prefix' => (int) $result->comments_count . ' comments',
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
+      ];
     }
 
     return $data;
