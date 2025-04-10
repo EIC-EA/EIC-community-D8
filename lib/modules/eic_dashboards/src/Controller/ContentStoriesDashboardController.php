@@ -101,6 +101,7 @@ class ContentStoriesDashboardController extends ControllerBase
     ];
 
     // Nodes by topic.
+    // TODO: Clarify which levels of vocabularies should be displayed.
     $topicTermId = 506;
     $nodesByTopicData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column', $topicTermId)));
     $nodesByTopicChart = $this->dashboardBuilder->chartColumn($this->t('Stories by topic'), $nodesByTopicData, true);

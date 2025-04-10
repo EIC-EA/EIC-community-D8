@@ -89,6 +89,7 @@ class ContentDiscussionsDashboardController extends ControllerBase
     $nodesByType = $this->dashboardBuilder->chartPie($this->t('Discussions by type'), $nodesByTypeData, '');
 
     // Nodes grouped by topic chart.
+    // TODO: Clarify which levels of vocabularies should be displayed.
     $topicTermId = 506;
     $nodesByTopicData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'pie', $topicTermId));
     $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Discussions by topic'), $nodesByTopicData, '');
