@@ -3,7 +3,6 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Url;
-use Drupal\taxonomy\TermInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -11,7 +10,7 @@ use Drupal\taxonomy\TermStorageInterface;
 use Drupal\Core\Database\Connection;
 
 /**
- * Implements dashboards helpers.
+ * Implements dashboards generic helpers functions.
  */
 class DashboardHelper implements DashboardHelperInterface {
 
@@ -261,11 +260,13 @@ class DashboardHelper implements DashboardHelperInterface {
     static $labelCache = [];
 
     if (!isset($labelCache[$tid])) {
-      $labelCache[$tid] = $this->connection->select('taxonomy_term_field_data', 'ttfd')
+      $termName = $this->connection->select('taxonomy_term_field_data', 'ttfd')
         ->fields('ttfd', ['name'])
         ->condition('tid', $tid)
         ->execute()
-        ->fetchField() ?? 'NA';
+        ->fetchField();
+
+      $labelCache[$tid] = $termName ?: "[Orphan term #{$tid}]";
     }
 
     return $labelCache[$tid];

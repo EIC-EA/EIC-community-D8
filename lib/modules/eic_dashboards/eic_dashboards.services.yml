@@ -7,6 +7,9 @@ services:
   eic_dashboards.country_service:
     class: Drupal\eic_dashboards\Services\CountryService
     arguments: [ '@address.country_repository' ]
-  eic_dashboards.platform_statistics:
-    class: Drupal\eic_dashboards\Services\PlatformStatistics
+  eic_dashboards.members_statistics:
+    class: Drupal\eic_dashboards\Services\MembersStatistics
     arguments: [ '@database', '@entity_type.manager', '@eic_dashboards.country_service', '@eic_dashboards.helper' ]
+  eic_dashboards.content_statistics:
+    class: Drupal\eic_dashboards\Services\ContentStatistics
+    arguments: [ '@database', '@eic_dashboards.helper' ]

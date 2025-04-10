@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57bc9478628bca553fe9099719abb565",
+    "content-hash": "242335f4f109c9691b86e3a4da3bcd83",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -11063,6 +11063,15 @@
                 "source": "https://github.com/Masterminds/html5-php/tree/2.8.1"
             },
             "time": "2023-05-10T11:58:31+00:00"
+        },
+        {
+            "name": "mottie/tablesorter",
+            "version": "2.32.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/Mottie/tablesorter/archive/refs/tags/v2.32.0.zip"
+            },
+            "type": "drupal-library"
         },
         {
             "name": "mtdowling/jmespath.php",

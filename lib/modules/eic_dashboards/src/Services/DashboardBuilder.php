@@ -6,7 +6,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Implements dashboards helpers.
+ * Implements dashboards builders for templating.
  */
 class DashboardBuilder implements DashboardBuilderInterface {
 
@@ -121,12 +121,13 @@ class DashboardBuilder implements DashboardBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function chartColumn($title, $data): array {
+  public function chartColumn($title, $data, $vertical): array {
     return [
       '#theme' => 'chart_column',
       '#title' => $title,
       '#categories' => $data['categories'],
       '#series' => $data['series'],
+      '#vertical' => $vertical,
     ];
   }
 
@@ -165,7 +166,40 @@ class DashboardBuilder implements DashboardBuilderInterface {
         }
     }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function titleLinkList($title, $link, $list): array {
+    return [
+      '#theme' => 'title_link_list',
+      '#title' => $title,
+      '#link' => $link,
+      '#list' => $list,
+    ];
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function table($header, $rows, $class): array {
+    $build = [];
+
+    $build['table'] = [
+      '#type' => 'table',
+      '#theme' => 'table__with_fields',
+      '#header' => $header,
+      '#rows'   => $rows,
+      '#attributes' => [
+        'class' => [
+          'tablesorter',
+          $class,
+        ]
+      ],
+    ];
+
+    $build['#attached']['library'][] = 'eic_dashboards/tablesorter';
+
+    return $build;
+  }
 
 }
-
