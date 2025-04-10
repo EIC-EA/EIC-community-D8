@@ -73,15 +73,15 @@ class ContentDocumentsDashboardController extends ControllerBase
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total documents'), $numberOfNodesData, '');
 
     // Number of nodes created in past 30 days.
-    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
-    $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Documents - last 30 days'),
-      $numberOfNodesPast30DaysData, '');
+    $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
+    $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('Documents - last 30 days'),
+      $numberOfNodesPastDaysData, '');
 
     // Section 1.
     $section1Build = [
       $this->dashboardBuilder->columns([
         $numberOfNodes,
-        $numberOfNodesPast30Days,
+        $numberOfNodesPastDays,
       ], 3),
     ];
 
@@ -117,10 +117,12 @@ class ContentDocumentsDashboardController extends ControllerBase
       ], 2),
     ];
 
-    // Top 10 terms used.
-    $top10Tags = $this->dashboardHelper->jsonEncodeCategoriesSeries
-    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', '', 10)));
-    $top10TagsChart = $this->dashboardBuilder->chartColumn($this->t('Top 10 document tags'), $top10Tags, true);
+    // Top terms used.
+    $topTermsLimit = 10;
+    $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
+    ($bundle, 'field_vocab_topics', 'column', $topicTermId, $topTermsLimit)));
+    $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit document topics', ['@limit' => $topTermsLimit]), $topTerms, true);
 
     // Latest nodes.
     $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
@@ -128,7 +130,7 @@ class ContentDocumentsDashboardController extends ControllerBase
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
-        $top10TagsChart,
+        $topTermsChart,
         $latestNodes,
       ], 2),
     ];

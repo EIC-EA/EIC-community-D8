@@ -73,14 +73,15 @@ class ContentStoriesDashboardController extends ControllerBase
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total stories'), $numberOfNodesData, '');
 
     // Number of nodes created in past 30 days.
-    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
-    $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('Stories - last 30 days'), $numberOfNodesPast30DaysData, '');
+    $lastDaysLimit = 30;
+    $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle, $lastDaysLimit);
+    $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('Stories - last @days days', ['@days' => $lastDaysLimit]), $numberOfNodesPastDaysData, '');
 
     // Section 1.
     $section1Build = [
       $this->dashboardBuilder->columns([
         $numberOfNodes,
-        $numberOfNodesPast30Days,
+        $numberOfNodesPastDays,
       ], 3),
     ];
 
@@ -114,17 +115,18 @@ class ContentStoriesDashboardController extends ControllerBase
     ];
 
     // Last 10 nodes list table.
-    $last10NodesMetricsData = $this->contentStatistics->getLastStoriesMetrics();
-    $last10NodesMetrics = $this->dashboardBuilder->table(
-      $last10NodesMetricsData['header'],
-      $last10NodesMetricsData['rows'],
+    $latestNodesLimit = 10;
+    $latestNodesMetricsData = $this->contentStatistics->getLastStoriesMetrics($latestNodesLimit);
+    $latestNodesMetrics = $this->dashboardBuilder->table(
+      $latestNodesMetricsData['header'],
+      $latestNodesMetricsData['rows'],
       'stories-table js-stories-table'
     );
 
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
-        $last10NodesMetrics,
+        $latestNodesMetrics,
       ], 1),
     ];
 

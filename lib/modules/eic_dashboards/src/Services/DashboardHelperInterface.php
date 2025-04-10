@@ -33,12 +33,24 @@ interface DashboardHelperInterface {
   public function transformIdCountToCategoriesSeries($data);
 
   /**
-   * Flat tree of taxonomy terms with collapsed depth info.
+   * Formats member counts for chart display by collapsing sub-terms.
+   *
+   * This function:
+   * - Accepts raw counts keyed by taxonomy term ID.
+   * - Uses getNestedTidTree() to define 2nd-level parent groups.
+   * - Builds a reverse lookup to map any term to its top-level group.
+   * - Loops over raw data once and updates counts efficiently.
+   *
+   * @param array $rawData
+   *   Flat list of counts keyed by term ID
    *
    * @param string $vid
-   *    The machine name (ID) of the taxonomy vocabulary to load.
+   *   The vocabulary machine name (e.g. 'topics').
+   *
+   * @return array
+   *   Flattened chart-friendly array.
    */
-  public function loadTreeCollapsedToSecondLevel(string $vid);
+  public function transformTermTreeCountsForChart(array $rawData, string $vid);
 
   /**
    * Gets the taxonomy term label.
