@@ -309,11 +309,13 @@ class DashboardHelper implements DashboardHelperInterface {
     static $labelCache = [];
 
     if (!isset($labelCache[$tid])) {
-      $labelCache[$tid] = $this->connection->select('taxonomy_term_field_data', 'ttfd')
+      $termName = $this->connection->select('taxonomy_term_field_data', 'ttfd')
         ->fields('ttfd', ['name'])
         ->condition('tid', $tid)
         ->execute()
-        ->fetchField() ?? 'NA';
+        ->fetchField();
+
+      $labelCache[$tid] = $termName ?: "[Orphan term #{$tid}]";
     }
 
     return $labelCache[$tid];
