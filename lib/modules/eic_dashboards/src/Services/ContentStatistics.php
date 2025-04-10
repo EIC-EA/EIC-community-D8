@@ -3,9 +3,7 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,13 +18,6 @@ class ContentStatistics implements ContentStatisticsInterface {
   protected Connection $connection;
 
   /**
-   * Entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
    * The dashboard helper service.
    *
    * @var \Drupal\eic_dashboards\Services\DashboardHelperInterface
@@ -38,11 +29,9 @@ class ContentStatistics implements ContentStatisticsInterface {
    */
   public function __construct(
     Connection $connection,
-    EntityTypeManagerInterface $entityTypeManager,
     DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
-    $this->entityTypeManager = $entityTypeManager;
     $this->dashboardHelper = $dashboardHelper;
   }
 
@@ -52,7 +41,6 @@ class ContentStatistics implements ContentStatisticsInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('database'),
-      $container->get('entity_type.manager'),
       $container->get('eic_dashboards.helper'),
     );
   }
