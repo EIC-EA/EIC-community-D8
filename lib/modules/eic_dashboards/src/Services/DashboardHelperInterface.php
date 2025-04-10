@@ -50,4 +50,9 @@ interface DashboardHelperInterface {
    *   The label of the term or NA if not found.
    */
   public function getTaxonomyTermLabel(string $tid);
+
+  /**
+   * Returns the human-readable value of a list field in an entity.
+   */
+  public function getListFieldValue(string $entityTypeId, string $fieldName, string $listItemValue);
 }

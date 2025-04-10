@@ -269,18 +269,19 @@ class ContentStatistics implements ContentStatisticsInterface {
     $results = $query->execute()->fetchAll();
 
     $data = [];
+    $entityTypeId = 'node';
 
     // Handle data output depending on chart type.
     if ($chartType == 'pie') {
       foreach ($results as $result) {
         $data[] = [
-          'name' => ucfirst($result->value),
+          'name' => $this->dashboardHelper->getListFieldValue($entityTypeId, $listField, $result->value),
           'y' => (int) $result->count_nodes,
         ];
       }
     } else if ($chartType == 'column') {
       foreach ($results as $result) {
-        $label = ucfirst($result->value);
+        $label = $this->dashboardHelper->getListFieldValue($entityTypeId, $listField, $result->value);
         $data[$result->value]['id'] = $label;
         $data[$result->value]['label'] = $label;
         $data[$result->value]['count'] = $result->count_nodes;
