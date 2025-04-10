@@ -105,15 +105,20 @@ class ContentDiscussionsDashboardController extends ControllerBase
     // Top terms used.
     $topTermsLimit = 10;
     $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
-    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
-    ($bundle, 'field_tags', 'column', '', $topTermsLimit)));
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', '', $topTermsLimit)));
     $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit discussion tags', ['@limit' => $topTermsLimit]), $topTerms, true);
+
+    // Top groups by number of nodes.
+    $typeOfNode = 'group-group_node-discussion';
+    $topGroupsLimit = 10;
+    $topGroupsByNumberOfNodes = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getGroupsByNumberOfBundle($typeOfNode, $topGroupsLimit)));
+    $topGroupsByNumberOfNodesChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of discussions', ['@limit' => $topGroupsLimit]), $topGroupsByNumberOfNodes, true);
 
     // Section 3.
     $section3Build = [
       $this->dashboardBuilder->columns([
         $topTermsChart,
-        '',
+        $topGroupsByNumberOfNodesChart,
       ], 2),
     ];
 

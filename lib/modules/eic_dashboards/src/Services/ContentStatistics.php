@@ -80,7 +80,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       $query->innerJoin('taxonomy_term__parent', 'ttp', 'ntf.' . $taxonomyField . '_target_id = ttp.entity_id');
     }
 
-    $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'count_nodes');
+    $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'nodes_count');
     $query->addExpression('ntf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
     $query->condition('n.type', $bundle);
 
@@ -93,7 +93,7 @@ class ContentStatistics implements ContentStatisticsInterface {
     }
 
     $query->groupBy('taxonomy_term_id');
-    $query->orderBy('count_nodes', 'DESC');
+    $query->orderBy('nodes_count', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -103,7 +103,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       foreach ($results as $result) {
         $data[] = [
           'name' => $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
-          'y' => (int) $result->count_nodes,
+          'y' => (int) $result->nodes_count,
         ];
       }
     } else if ($chartType == 'column') {
@@ -111,7 +111,7 @@ class ContentStatistics implements ContentStatisticsInterface {
         $label = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA';
         $data[$result->taxonomy_term_id]['id'] = $label;
         $data[$result->taxonomy_term_id]['label'] = $label;
-        $data[$result->taxonomy_term_id]['count'] = $result->count_nodes;
+        $data[$result->taxonomy_term_id]['count'] = $result->nodes_count;
       }
     }
 
@@ -256,7 +256,7 @@ class ContentStatistics implements ContentStatisticsInterface {
   public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range = NULL): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node__' . $listField, 'ntf', 'n.nid = ntf.entity_id');
-    $query->addExpression('COUNT(ntf.' . $listField . '_value)', 'count_nodes');
+    $query->addExpression('COUNT(ntf.' . $listField . '_value)', 'nodes_count');
     $query->addExpression('ntf.' . $listField . '_value', 'value');
     $query->condition('n.type', $bundle);
 
@@ -265,7 +265,7 @@ class ContentStatistics implements ContentStatisticsInterface {
     }
 
     $query->groupBy('value');
-    $query->orderBy('count_nodes', 'DESC');
+    $query->orderBy('nodes_count', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -276,7 +276,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       foreach ($results as $result) {
         $data[] = [
           'name' => $this->dashboardHelper->getListFieldValue($entityTypeId, $listField, $result->value),
-          'y' => (int) $result->count_nodes,
+          'y' => (int) $result->nodes_count,
         ];
       }
     } else if ($chartType == 'column') {
@@ -284,7 +284,7 @@ class ContentStatistics implements ContentStatisticsInterface {
         $label = $this->dashboardHelper->getListFieldValue($entityTypeId, $listField, $result->value);
         $data[$result->value]['id'] = $label;
         $data[$result->value]['label'] = $label;
-        $data[$result->value]['count'] = $result->count_nodes;
+        $data[$result->value]['count'] = $result->nodes_count;
       }
     }
 
@@ -315,6 +315,34 @@ class ContentStatistics implements ContentStatisticsInterface {
         'title' => $result->title,
         'url' => '/node/' . $result->node_id,
       ];
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns list of groups based on number of discussions.
+   */
+  public function getGroupsByNumberOfBundle($bundle, $range = NULL) {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = gcfd.gid');
+    $query->addExpression('gcfd.gid', 'group_id');
+    $query->addExpression('gfd.label', 'label');
+    $query->addExpression('COUNT(gcfd.gid)', 'nodes_count');
+    $query->condition('gcfd.type', $bundle);
+    $query->condition('gfd.type', 'group');
+    $query->groupBy('group_id');
+    $query->groupBy('label');
+    $query->orderBy('nodes_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->group_id]['id'] = $result->label;
+      $data[$result->group_id]['label'] = $result->label;
+      $data[$result->group_id]['count'] = $result->nodes_count;
     }
 
     return $data;

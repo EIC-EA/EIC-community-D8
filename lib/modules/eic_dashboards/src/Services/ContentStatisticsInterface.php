@@ -53,4 +53,9 @@ interface ContentStatisticsInterface {
    */
   public function getMostCommentedNodesOfBundle($bundle, $range);
 
+
+  /**
+   * Returns list of groups based on number of bundle.
+   */
+  public function getGroupsByNumberOfBundle($bundle, $range);
 }
