@@ -96,24 +96,14 @@ class MembersDashboardController extends ControllerBase
     $membersByOrganizationType = $this->dashboardBuilder->chartWithMenu($membersByUserTypeChart, $membersByUserTypeMenu);
 
     // Members by topic of Interest.
-    $membersByTopicOfInterestData = json_encode(
-      $this->dashboardHelper->transformTermTreeCountsForChart(
-        $this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_interest', 'id'),
-        'topics'
-      )
-    );
+    $membersByTopicOfInterestData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_interest', 'id'), 'topics'));
     $membersByTopicOfInterestChart = $this->dashboardBuilder->chartPie($this->t('Members by topic of interest'), $membersByTopicOfInterestData, '');
     $membersByTopicOfInterestMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_interest', DashboardFilters::DASHBOARD_MEMBERS_LIST_TOPIC_OF_INTEREST), 'view.dashboard_members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_TOPIC_OF_INTEREST]);
     $membersByTopicOfInterestMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of interest'), $this->t('Choose interest'), $membersByTopicOfInterestMenuData);
     $membersByTopicOfInterest = $this->dashboardBuilder->chartWithMenu($membersByTopicOfInterestChart, $membersByTopicOfInterestMenu);
 
     // Members by topic of Expertise.
-    $membersByTopicOfExpertiseData = json_encode(
-      $this->dashboardHelper->transformTermTreeCountsForChart(
-        $this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_expertise', 'id'),
-        'topics'
-      )
-    );
+    $membersByTopicOfExpertiseData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_expertise', 'id'),'topics'));
     $membersByTopicOfExpertiseChart = $this->dashboardBuilder->chartPie($this->t('Members by topic of expertise'), $membersByTopicOfExpertiseData, '');
     $membersByTopicOfExpertiseMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->platformStatistics->getMembersPerTaxonomyTerm('field_vocab_topic_expertise', DashboardFilters::DASHBOARD_MEMBERS_LIST_TOPIC_OF_EXPERTISE), 'view.dashboard_members_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_TOPIC_OF_INTEREST]);
     $membersByTopicOfExpertiseMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of expertise'), $this->t('Choose expertise'), $membersByTopicOfExpertiseMenuData);

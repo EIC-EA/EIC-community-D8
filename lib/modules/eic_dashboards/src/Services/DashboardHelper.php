@@ -168,23 +168,13 @@ class DashboardHelper implements DashboardHelperInterface {
    * - Useful for aggregating member counts or content references to taxonomy subtrees.
    *
    * @param string $vid
-   *   The vocabulary machine name (e.g. 'topics', 'departments').
+   *   The vocabulary machine name (e.g. 'topics').
    *
    * @return array
    *   An associative array keyed by 2nd-level term TID. Each item includes:
    *   - 'name' => string, the term's name.
    *   - 'tids' => int[], a flat list of TIDs (self + all descendants).
    *   - 'count' => int, initialized to 0 for later use.
-   *
-   * @example
-   * [
-   *   345 => [
-   *     'name' => 'Marketing',
-   *     'tids' => [345, 364, 834, 623],
-   *     'count' => 0,
-   *   ],
-   *   ...
-   * ]
    */
   public function getNestedTidTree(string $vid): array {
     $result = [];
@@ -221,7 +211,7 @@ class DashboardHelper implements DashboardHelperInterface {
         ];
       }
     }
-$b = 4;
+
     return $result;
   }
 
@@ -263,8 +253,6 @@ $b = 4;
 
     return $result;
   }
-
-
 
   /**
    * {@inheritdoc}
