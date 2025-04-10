@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Template\Attribute;
 
@@ -105,7 +106,7 @@ function eic_dashboards_views_data_alter(array &$data) {
       'title' => t('User organisation group memberships'),
       'help' => t('Retrieves the organisations a user belongs to.'),
       'id' => 'user_organisation_group_memberships',
-    ]
+    ],
   ];
 }
 
@@ -147,4 +148,14 @@ function template_preprocess_jump_menu(array &$variables) {
       'attributes' => new Attribute($attributes),
     ];
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function eic_dashboards_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+ if ($form['#id'] === 'views-exposed-form-dashboard-members-list-page-1') {
+   $form['status_1']['#options'][1] = t('Enabled');
+   $form['status_1']['#options'][0] = t('Disabled');
+ }
 }
