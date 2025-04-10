@@ -117,7 +117,7 @@ class ContentStoriesDashboardController extends ControllerBase
     $last10NodesMetrics = $this->dashboardBuilder->table(
       $last10NodesMetricsData['header'],
       $last10NodesMetricsData['rows'],
-      'js-stories-table'
+      'stories-table js-stories-table'
     );
 
     // Section 4.
