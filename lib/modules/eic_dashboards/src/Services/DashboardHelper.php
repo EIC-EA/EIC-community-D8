@@ -272,4 +272,33 @@ class DashboardHelper implements DashboardHelperInterface {
     return $labelCache[$tid];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getListFieldValue(string $entityTypeId, string $fieldName, string $listItemValue): string {
+    static $allowedValuesCache = [];
+
+    $cacheKey = $entityTypeId . ':' . $fieldName;
+
+    if (!isset($allowedValuesCache[$cacheKey])) {
+      $configName = "field.storage.{$entityTypeId}.{$fieldName}";
+
+      $settings = $this->connection->select('config', 'c')
+        ->fields('c', ['data'])
+        ->condition('name', $configName)
+        ->execute()
+        ->fetchField();
+
+      if ($settings) {
+        $decodedSettings = unserialize($settings);
+        $allowedValues = array_column($decodedSettings['settings']['allowed_values'], 'label', 'value');
+        $allowedValuesCache[$cacheKey] = $allowedValues ?? [];
+      } else {
+        $allowedValuesCache[$cacheKey] = [];
+      }
+    }
+
+    return $allowedValuesCache[$cacheKey][$listItemValue] ?? $listItemValue;
+  }
+
 }

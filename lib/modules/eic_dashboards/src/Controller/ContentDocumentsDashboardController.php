@@ -121,8 +121,8 @@ class ContentDocumentsDashboardController extends ControllerBase
     $topTermsLimit = 10;
     $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
     ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
-    ($bundle, 'field_vocab_topics', 'column', $topicTermId, $topTermsLimit)));
-    $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit document topics', ['@limit' => $topTermsLimit]), $topTerms, true);
+    ($bundle, 'field_tags', 'column', '', $topTermsLimit)));
+    $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit document tags', ['@limit' => $topTermsLimit]), $topTerms, true);
 
     // Latest nodes.
     $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getLatestNodesOfBundle($bundle));
