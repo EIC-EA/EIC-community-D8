@@ -57,5 +57,5 @@ interface ContentStatisticsInterface {
   /**
    * Returns list of groups based on number of bundle.
    */
-  public function getGroupsByNumberOfBundle($bundle, $range);
+  public function getGroupsByNumberOfBundle($bundle, $groupType, $range);
 }

@@ -323,14 +323,18 @@ class ContentStatistics implements ContentStatisticsInterface {
   /**
    * Returns list of groups based on number of discussions.
    */
-  public function getGroupsByNumberOfBundle($bundle, $range = NULL) {
+  public function getGroupsByNumberOfBundle($bundle, $groupType, $range = NULL) {
     $query = $this->connection->select('group_content_field_data', 'gcfd');
     $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = gcfd.gid');
     $query->addExpression('gcfd.gid', 'group_id');
     $query->addExpression('gfd.label', 'label');
     $query->addExpression('COUNT(gcfd.gid)', 'nodes_count');
     $query->condition('gcfd.type', $bundle);
-    $query->condition('gfd.type', 'group');
+
+    if ($groupType) {
+      $query->condition('gfd.type', $groupType);
+    }
+
     $query->groupBy('group_id');
     $query->groupBy('label');
     $query->orderBy('nodes_count', 'DESC');
