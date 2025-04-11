@@ -43,4 +43,19 @@ interface ContentStatisticsInterface {
    */
   public function getLatestNodesOfBundle($bundle, $range);
 
+  /**
+   * Returns number of nodes of given bundle grouped by value from a list field.
+   */
+  public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range);
+
+  /**
+   * Returns most commented nodes of given bundle.
+   */
+  public function getMostCommentedNodesOfBundle($bundle, $range);
+
+
+  /**
+   * Returns list of groups based on number of bundle.
+   */
+  public function getGroupsByNumberOfBundle($bundle, $groupType, $range);
 }
