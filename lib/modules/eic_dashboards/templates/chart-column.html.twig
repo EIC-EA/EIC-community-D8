@@ -29,7 +29,11 @@
       },
       "series": [
         {
+          {% if vertical %}
+          "name": "Count",
+          {% else %}
           "name": "{{ title|split(' ')[0] }}",
+          {% endif %}
           "data": {{ series|raw }}
         }
       ],
