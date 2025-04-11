@@ -22,4 +22,14 @@ interface MembersStatisticsInterface {
    */
   public function getMembersPerTaxonomyTerm($taxonomyField, $argumentId);
 
+  /**
+   * Counts distinct active users linked via a specific group membership type.
+   *
+   * @param string $membershipType
+   *   The group content type (e.g. 'organisation-group_membership' or 'project-group_membership').
+   *
+   * @return int
+   *   The number of distinct active users with that membership type.
+   */
+  public function getMembersLinkedByType(string $membershipType): int;
 }
