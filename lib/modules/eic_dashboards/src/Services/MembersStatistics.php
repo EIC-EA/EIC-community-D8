@@ -130,4 +130,20 @@ class MembersStatistics implements MembersStatisticsInterface {
 
     return $data;
   }
+
+  /**
+   * {*inheritdoc*}
+   */
+  public function getMembersLinkedByType(string $membershipType): int {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->join('users_field_data', 'ufd', 'gcfd.entity_id = ufd.uid');
+    $query->addExpression('COUNT(DISTINCT gcfd.entity_id)');
+    $query->condition('gcfd.type', $membershipType);
+    $query->condition('ufd.status', 1);
+
+    $result = $query->execute()->fetchField();
+
+    return (int) $result;
+  }
+
 }
