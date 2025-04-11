@@ -101,11 +101,21 @@ function eic_dashboards_preprocess_page(&$variables) {
 function eic_dashboards_views_data_alter(array &$data) {
   $data['users']['user_organisation_group_memberships'] = [
     'title' => t('User organisation group memberships'),
-    'group' => t('Users'),
+    'group' => t('User'),
     'field' => [
       'title' => t('User organisation group memberships'),
       'help' => t('Retrieves the organisations a user belongs to.'),
       'id' => 'user_organisation_group_memberships',
+    ],
+  ];
+
+  $data['users']['user_profile_completion_status'] = [
+    'title' => t('User Profile completion status'),
+    'group' => t('User'),
+    'field' => [
+      'title' => t('User Profile completion status'),
+      'help' => t('Reports if a user profile is completed or not.'),
+      'id' => 'user_profile_completion_status',
     ],
   ];
 }
