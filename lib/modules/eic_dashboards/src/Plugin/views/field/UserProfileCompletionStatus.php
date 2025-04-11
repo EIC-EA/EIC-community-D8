@@ -4,8 +4,6 @@ namespace Drupal\eic_dashboards\Plugin\views\field;
 
 
 use Drupal\Core\Database\Connection;
-use Drupal\eic_user\UserHelper;
-use Drupal\user\UserInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class UserProfileCompletionStatus extends FieldPluginBase {
 
-  public function __construct($configuration, $plugin_id, $plugin_definition, private readonly UserHelper $userHelper) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, private readonly Connection $connection) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -28,7 +26,7 @@ class UserProfileCompletionStatus extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('eic_user.helper')
+      $container->get('database')
     );
   }
 
@@ -43,15 +41,32 @@ class UserProfileCompletionStatus extends FieldPluginBase {
    * @inheritdoc
    */
   public function render(ResultRow $values) {
-    $user = $values->_entity;
-    if ($user instanceof UserInterface) {
-      $is_completed = $this->userHelper->isUserProfileCompleted($user);
-      if ($is_completed) {
-        return $this->t("Completed");
+    $uid = $values->uid;
+
+    $query = $this->connection->select('profile__field_body', 'pfb')
+      ->condition('pfb.entity_id', $uid);
+    $query->addField('pfb', 'field_body_value');
+    $query->join('profile__field_vocab_topic_expertise', 'pvte', 'pfb.entity_id = pvte.entity_id');
+    $query->join('profile__field_vocab_topic_interest', 'pvti', 'pfb.entity_id = pvti.entity_id');
+    $query->join('profile__field_location_address', 'pla', 'pfb.entity_id = pla.entity_id');
+    $query->fields('pvte', ['field_vocab_topic_expertise_target_id']);
+    $query->fields('pvti', ['field_vocab_topic_interest_target_id']);
+    $query->fields('pla', ['field_location_address_address_line1']);
+
+    $result = $query->execute()->fetchAll();
+    $is_completed = FALSE;
+    foreach ($result as $field) {
+      if (!empty($field)) {
+        $is_completed = TRUE;
       }
-      return $this->t("Incomplete");
+      else {
+        $is_completed = FALSE;
+      }
     }
-    return $this->t("N/A");
+    if ($is_completed) {
+      return $this->t("Completed");
+    }
+    return $this->t("Incomplete");
   }
 
 }
