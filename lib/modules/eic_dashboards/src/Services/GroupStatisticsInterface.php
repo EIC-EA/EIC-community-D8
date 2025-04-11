@@ -18,4 +18,9 @@ interface GroupStatisticsInterface {
    * created in the past days.
    */
   public function getNumberOfGroupsPastDays($groupType, $days);
+
+  /**
+   * Returns groups grouped by status.
+   */
+  public function getGroupsByStatus($groupType);
 }

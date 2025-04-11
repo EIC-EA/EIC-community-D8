@@ -69,4 +69,29 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $query->countQuery()->execute()->fetchField();
   }
 
+  /**
+   * Returns groups grouped by status.
+   */
+  public function getGroupsByStatus($groupType): array {
+    $query = $this->connection->select('content_moderation_state_field_data', 'cmsfd');
+    $query->innerJoin('groups', 'g', 'g.id = cmsfd.content_entity_id');
+    $query->addExpression('COUNT(cmsfd.moderation_state)', 'groups_count');
+    $query->addExpression('cmsfd.moderation_state', 'status');
+    $query->condition('cmsfd.content_entity_type_id', 'group');
+    $query->condition('g.type', $groupType);
+    $query->groupBy('status');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[] = [
+        'name' => ucfirst($result->status),
+        'y' => (int) $result->groups_count,
+      ];
+    }
+
+    return $data;
+  }
+
 }

@@ -87,9 +87,22 @@ class GroupGroupsDashboardController extends ControllerBase
       ], 3),
     ];
 
+    // Groups by moderation status chart.
+    $groupsByStatusData = json_encode($this->groupStatistics->getGroupsByStatus($groupType));
+    $groupsByStatus = $this->dashboardBuilder->chartPie($this->t('Groups by status'), $groupsByStatusData, '');
+
+
+    // Section 2.
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByStatus,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
+        $section2Build,
       ],
     ];
 
