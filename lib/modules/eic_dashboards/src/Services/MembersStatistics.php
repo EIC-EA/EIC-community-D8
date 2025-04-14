@@ -78,6 +78,20 @@ class MembersStatistics implements MembersStatisticsInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getMembersRegisteredPastDays(int $days = 30): int {
+    $timestamp = strtotime("-$days days");
+
+    $query = $this->entityTypeManager->getStorage('user')->getQuery();
+    return $query->condition('status', 1)
+      ->condition('created', $timestamp, '>=')
+      ->accessCheck(FALSE)
+      ->count()
+      ->execute();
+  }
+
+  /**
    * Returns members grouped by country.
    */
   public function getMembersGroupedByCountry($argumentId): array {

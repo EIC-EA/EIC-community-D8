@@ -71,9 +71,16 @@ class MembersDashboardController extends ControllerBase
     $membersLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', '', '', $this->t('Members list'));
     $members = $this->dashboardBuilder->numberAndLink($this->t('Platform members'), $totalMembers, $membersLink);
 
+    // Joined in the past 30 days.
+    $days = 30;
+    $membersCreatedPastDaysData = $this->membersStatistics->getMembersRegisteredPastDays($days);
+    $membersCreatedPastDaysLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', 'registered_from', gmdate("Y-m-d", strtotime("-$days days")), $this->t('Members list'));
+    $membersCreatedPastDays = $this->dashboardBuilder->numberAndLink($this->t('Joined in the past @days days', ['@days' => $days]), $membersCreatedPastDaysData, $membersCreatedPastDaysLink);
+
     $section1Build = [
       $this->dashboardBuilder->columns([
         $members,
+        $membersCreatedPastDays,
       ], 3),
     ];
 
