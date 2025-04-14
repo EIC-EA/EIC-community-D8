@@ -33,4 +33,9 @@ interface GroupStatisticsInterface {
    * Returns top groups by number of members.
    */
   public function getTopGroupsByMembers($membershipType);
+
+  /**
+   * Returns top groups by number of given content type.
+   */
+  public function getTopGroupsByContentType($contentType, $range);
 }

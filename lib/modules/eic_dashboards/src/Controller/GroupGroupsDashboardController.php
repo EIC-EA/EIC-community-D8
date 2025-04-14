@@ -103,17 +103,39 @@ class GroupGroupsDashboardController extends ControllerBase
       ], 2),
     ];
 
-    // Top 10 groups by number of members.
+    // Define membership, content type and range.
     $membershipType = 'group-group_membership';
+    $discussionType = 'group-group_node-discussion';
+    $eventType = 'group-group_node-event';
+    $documentType = 'group-group_node-document';
     $topGroupsLimit = 10;
+
+    // Top 10 groups by number of members.
     $topGroupsByMembers = $this->dashboardHelper->jsonEncodeCategoriesSeries
     ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType, $topGroupsLimit)));
     $topGroupsByMembersChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of members', ['@limit' => $topGroupsLimit]), $topGroupsByMembers, true);
+
+    // Top 10 groups by number of discussions.
+    $topGroupsByDiscussions = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($discussionType, $topGroupsLimit)));
+    $topGroupsByDiscussionsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of discussions', ['@limit' => $topGroupsLimit]), $topGroupsByDiscussions, true);
+
+    // Top 10 groups by number of events.
+    $topGroupsByEvents = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($eventType, $topGroupsLimit)));
+    $topGroupsByEventsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of events',
+      ['@limit' => $topGroupsLimit]), $topGroupsByEvents, true);
+
+    // Top 10 groups by number of documents.
+    $topGroupsByDocuments = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($documentType, $topGroupsLimit)));
+    $topGroupsByDocumentsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of documents',
+      ['@limit' => $topGroupsLimit]), $topGroupsByDocuments, true);
 
     // Section 3.
     $section3Build = [
       $this->dashboardBuilder->columns([
         $topGroupsByMembersChart,
+        $topGroupsByDiscussionsChart,
+        $topGroupsByEventsChart,
+        $topGroupsByDocumentsChart,
       ], 2),
     ];
 

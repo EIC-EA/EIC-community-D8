@@ -147,4 +147,31 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns top groups by number of given content type.
+   */
+  public function getTopGroupsByContentType($contentType, $range = 10): array {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = gcfd.gid');
+    $query->addExpression('gcfd.gid', 'group_id');
+    $query->addExpression('gfd.label', 'label');
+    $query->addExpression('COUNT(gcfd.gid)', 'nodes_count');
+    $query->condition('gcfd.type', $contentType);
+    $query->groupBy('group_id');
+    $query->groupBy('label');
+    $query->orderBy('nodes_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->group_id]['id'] = $result->label;
+      $data[$result->group_id]['label'] = $result->label;
+      $data[$result->group_id]['count'] = $result->nodes_count;
+    }
+
+    return $data;
+  }
+
 }
