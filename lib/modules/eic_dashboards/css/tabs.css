@@ -14,10 +14,12 @@
 }
 
 .tabs .tab {
-  padding: 24px 0;
+  display: block;
+  padding: 0;
   order: 2;
   flex-grow: 1;
-  display: none;
+  opacity: 0;
+  height: 0;
   width: 100%;
   border-top: 1px solid #cfcfcf;
 }
@@ -40,5 +42,7 @@
 }
 
 .tabs input[type="radio"]:checked + label + .tab {
-  display: block;
+  padding: 24px 0;
+  opacity: 1;
+  height: auto;
 }
