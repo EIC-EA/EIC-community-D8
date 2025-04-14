@@ -67,9 +67,9 @@ class MembersDashboardController extends ControllerBase
   public function membersOverview(): array {
     // ===== Section 1.
     // Platform members.
-    $membersData = $this->membersStatistics->getTotalMembers();
+    $totalMembers = $this->membersStatistics->getTotalMembers();
     $membersLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', '', '', $this->t('Members list'));
-    $members = $this->dashboardBuilder->numberAndLink($this->t('Platform members'), $membersData, $membersLink);
+    $members = $this->dashboardBuilder->numberAndLink($this->t('Platform members'), $totalMembers, $membersLink);
 
     $section1Build = [
       $this->dashboardBuilder->columns([
@@ -109,10 +109,28 @@ class MembersDashboardController extends ControllerBase
     $membersByTopicOfExpertiseMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of expertise'), $this->t('Choose expertise'), $membersByTopicOfExpertiseMenuData);
     $membersByTopicOfExpertise = $this->dashboardBuilder->chartWithMenu($membersByTopicOfExpertiseChart, $membersByTopicOfExpertiseMenu);
 
+    // Members linked to Organisations
+    $membersLinkedToOrganisations = $this->membersStatistics->getMembersLinkedByType('organisation-group_membership');
+    $membersLinkedToOrganisationsData = json_encode([
+      ['name' => 'Linked to at least one EIC Community organisation', 'y' => $membersLinkedToOrganisations],
+      ['name' => 'Not linked to any Organisation', 'y' => ($totalMembers - $membersLinkedToOrganisations)],
+    ], JSON_NUMERIC_CHECK);
+    $membersLinkedToOrganisationsChart = $this->dashboardBuilder->chartPie($this->t('Members linked to Organisations'), $membersLinkedToOrganisationsData, '');
+
+    // Members linked to Projects
+    $membersLinkedToProjects = $this->membersStatistics->getMembersLinkedByType('project-group_membership');
+    $membersLinkedToProjectsData = json_encode([
+      ['name' => 'Linked to at least one EIC Community organisation', 'y' => $membersLinkedToProjects],
+      ['name' => 'Not linked to any Organisation', 'y' => ($totalMembers - $membersLinkedToProjects)],
+    ], JSON_NUMERIC_CHECK);
+    $membersLinkedToProjectsChart = $this->dashboardBuilder->chartPie($this->t('Members linked to Projects'), $membersLinkedToProjectsData, '');
+
     $section3Build = $this->dashboardBuilder->columns([
       $membersByOrganizationType,
       $membersByTopicOfInterest,
-      $membersByTopicOfExpertise
+      $membersByTopicOfExpertise,
+      $membersLinkedToOrganisationsChart,
+      $membersLinkedToProjectsChart
     ], 2);
 
     // Build sections

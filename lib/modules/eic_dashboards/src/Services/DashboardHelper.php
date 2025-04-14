@@ -241,7 +241,6 @@ class DashboardHelper implements DashboardHelperInterface {
     $result = [];
     foreach ($secondLevelTerms as $secondLevelTid => $term) {
       $result[] = [
-        'tid' => $secondLevelTid,
         'name' => $term['name'],
         'y' => $term['count'],
       ];
