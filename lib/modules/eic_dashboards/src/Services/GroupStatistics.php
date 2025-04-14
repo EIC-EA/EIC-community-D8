@@ -118,4 +118,33 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns top groups by number of members.
+   */
+  public function getTopGroupsByMembers($membershipType, $range = 10): array {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = gcfd.gid');
+    $query->innerJoin('users_field_data', 'ufd', 'gcfd.entity_id = ufd.uid');
+    $query->addExpression('gcfd.gid', 'group_id');
+    $query->addExpression('gfd.label', 'label');
+    $query->addExpression('COUNT(gcfd.gid)', 'members_count');
+    $query->condition('gcfd.type', $membershipType);
+    $query->condition('ufd.status', 1);
+    $query->groupBy('group_id');
+    $query->groupBy('label');
+    $query->orderBy('members_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->group_id]['id'] = $result->label;
+      $data[$result->group_id]['label'] = $result->label;
+      $data[$result->group_id]['count'] = $result->members_count;
+    }
+
+    return $data;
+  }
+
 }

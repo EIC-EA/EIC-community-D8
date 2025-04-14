@@ -103,10 +103,25 @@ class GroupGroupsDashboardController extends ControllerBase
       ], 2),
     ];
 
+    // Top 10 groups by number of members.
+    $membershipType = 'group-group_membership';
+    $topGroupsLimit = 10;
+    $topGroupsByMembers = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType, $topGroupsLimit)));
+    $topGroupsByMembersChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of members', ['@limit' => $topGroupsLimit]), $topGroupsByMembers, true);
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $topGroupsByMembersChart,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
       ],
     ];
 

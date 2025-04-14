@@ -28,4 +28,9 @@ interface GroupStatisticsInterface {
    * Returns groups grouped by visibility.
    */
   public function getGroupsByVisibility($groupType);
+
+  /**
+   * Returns top groups by number of members.
+   */
+  public function getTopGroupsByMembers($membershipType);
 }
