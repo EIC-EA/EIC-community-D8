@@ -139,8 +139,8 @@ class GroupGroupsDashboardController extends ControllerBase
     $topGroupsByFollows = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByFlag($groupType, $followFlag, $topGroupsLimit)));
     $topGroupsByFollowsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of follows', ['@limit' => $topGroupsLimit]), $topGroupsByFollows, true);
 
-    // Section 3.
-    $section3Build = [
+    // Tab content 1.
+    $tabContent1 = [
       $this->dashboardBuilder->columns([
         $topGroupsByMembersChart,
         $topGroupsByDiscussionsChart,
@@ -172,8 +172,8 @@ class GroupGroupsDashboardController extends ControllerBase
     $topGroupsByDocumentsLastDays = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($documentType, $topGroupsLimit, $lastDays)));
     $topGroupsByDocumentsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of documents (last @days days)', ['@limit' => $topGroupsLimit, '@days' => $lastDays]), $topGroupsByDocumentsLastDays, true);
 
-    // Section 4.
-    $section4Build = [
+    // Tab content 2.
+    $tabContent2 = [
       $this->dashboardBuilder->columns([
         $topGroupsByMembersLastDaysChart,
         $topGroupsByDiscussionsLastDaysChart,
@@ -182,12 +182,24 @@ class GroupGroupsDashboardController extends ControllerBase
       ], 2),
     ];
 
+    $tabsItems = [
+      [
+        'title' => 'All time',
+        'content' => $tabContent1
+      ],
+      [
+        'title' => 'Last ' . $lastDays . ' days',
+        'content' => $tabContent2
+      ]
+    ];
+
+    $section3Build = $this->dashboardBuilder->tabs('Top ' . $topGroupsLimit . ' metrics', $tabsItems);
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
         $section3Build,
-        $section4Build,
       ],
     ];
 

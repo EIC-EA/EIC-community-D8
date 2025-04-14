@@ -77,6 +77,12 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'list' => '',
       ],
     ],
+    'tabs' => [
+      'variables' => [
+        'title' => '',
+        'items' => [],
+      ],
+    ],
   ];
 }
 
