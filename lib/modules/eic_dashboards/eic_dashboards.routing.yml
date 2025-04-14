@@ -74,13 +74,6 @@ eic_dashboards.events_dashboard:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.groups_dashboard:
-  path: '/dashboards/groups-dashboard'
-  defaults:
-    _title: 'Groups dashboard'
-  requirements:
-    _role: 'sensitive'
-
 eic_dashboards.members_list:
   path: '/dashboards/members-list'
   defaults:

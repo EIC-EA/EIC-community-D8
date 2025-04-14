@@ -71,13 +71,6 @@ eic_dashboards.events_dashboard:
   route_name: eic_dashboards.events_dashboard
   weight: 5
 
-eic_dashboards.groups_dashboard:
-  title: 'Groups dashboard'
-  description: 'Platform groups statistics'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.groups_dashboard
-  weight: 6
-
 eic_dashboards.members_list:
   title: 'Members list'
   description: 'List of platform members'
