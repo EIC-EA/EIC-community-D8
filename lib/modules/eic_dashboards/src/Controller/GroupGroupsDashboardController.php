@@ -103,12 +103,14 @@ class GroupGroupsDashboardController extends ControllerBase
       ], 2),
     ];
 
-    // Define membership, content type and range.
+    // Define range, membership, content type and flags.
+    $topGroupsLimit = 10;
     $membershipType = 'group-group_membership';
     $discussionType = 'group-group_node-discussion';
     $eventType = 'group-group_node-event';
     $documentType = 'group-group_node-document';
-    $topGroupsLimit = 10;
+    $likeFlag = 'recommend_group';
+    $followFlag = 'follow_group';
 
     // Top 10 groups by number of members.
     $topGroupsByMembers = $this->dashboardHelper->jsonEncodeCategoriesSeries
@@ -129,6 +131,14 @@ class GroupGroupsDashboardController extends ControllerBase
     $topGroupsByDocumentsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of documents',
       ['@limit' => $topGroupsLimit]), $topGroupsByDocuments, true);
 
+    // Top 10 groups by number of likes.
+    $topGroupsByLikes = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit)));
+    $topGroupsByLikesChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of likes', ['@limit' => $topGroupsLimit]), $topGroupsByLikes, true);
+
+    // Top 10 groups by number of follow.
+    $topGroupsByFollows = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByFlag($groupType, $followFlag, $topGroupsLimit)));
+    $topGroupsByFollowsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of follows', ['@limit' => $topGroupsLimit]), $topGroupsByFollows, true);
+
     // Section 3.
     $section3Build = [
       $this->dashboardBuilder->columns([
@@ -136,6 +146,8 @@ class GroupGroupsDashboardController extends ControllerBase
         $topGroupsByDiscussionsChart,
         $topGroupsByEventsChart,
         $topGroupsByDocumentsChart,
+        $topGroupsByLikesChart,
+        $topGroupsByFollowsChart,
       ], 2),
     ];
 

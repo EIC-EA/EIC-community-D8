@@ -38,4 +38,9 @@ interface GroupStatisticsInterface {
    * Returns top groups by number of given content type.
    */
   public function getTopGroupsByContentType($contentType, $range);
+
+  /**
+   * Returns top groups by number of flag count.
+   */
+  public function getTopGroupsByFlag($groupType, $flagID, $range);
 }

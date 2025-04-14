@@ -174,4 +174,32 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns top groups by number of flag count.
+   */
+  public function getTopGroupsByFlag($groupType, $flagID, $range = 10): array {
+    $query = $this->connection->select('flag_counts', 'fc');
+    $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = fc.entity_id');
+    $query->addExpression('gfd.id', 'group_id');
+    $query->addExpression('gfd.label', 'label');
+    $query->addExpression('fc.count', 'flag_count');
+    $query->condition('gfd.type', $groupType);
+    $query->condition('fc.flag_id', $flagID);
+    $query->groupBy('group_id');
+    $query->groupBy('label');
+    $query->orderBy('flag_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->group_id]['id'] = $result->label;
+      $data[$result->group_id]['label'] = $result->label;
+      $data[$result->group_id]['count'] = $result->flag_count;
+    }
+
+    return $data;
+  }
+
 }
