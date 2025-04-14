@@ -1,6 +1,7 @@
 .tabs {
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .tabs label {
