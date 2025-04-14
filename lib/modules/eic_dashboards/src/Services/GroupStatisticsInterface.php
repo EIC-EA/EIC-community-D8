@@ -23,4 +23,9 @@ interface GroupStatisticsInterface {
    * Returns groups grouped by status.
    */
   public function getGroupsByStatus($groupType);
+
+  /**
+   * Returns groups grouped by visibility.
+   */
+  public function getGroupsByVisibility($groupType);
 }
