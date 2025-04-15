@@ -53,3 +53,8 @@ tablesorter:
   dependencies:
     - core/jquery
     - core/drupal
+
+tabs:
+  css:
+    theme:
+      css/tabs.css: {}
