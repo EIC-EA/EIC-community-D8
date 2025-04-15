@@ -157,19 +157,19 @@ class GroupGroupsDashboardController extends ControllerBase
     $topGroupsByMembersLastDays = $this->dashboardHelper->jsonEncodeCategoriesSeries
     ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers
     ($membershipType, $topGroupsLimit, $lastDaysLimit)));
-    $topGroupsByMembersLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of members (last @days days)', ['@limit' => $topGroupsLimit, '@days' => $lastDaysLimit]), $topGroupsByMembersLastDays, true);
+    $topGroupsByMembersLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of members', ['@limit' => $topGroupsLimit]), $topGroupsByMembersLastDays, true);
 
     // Top 10 groups by number of discussions in the past days.
     $topGroupsByDiscussionsLastDays = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($discussionType, $topGroupsLimit, $lastDaysLimit)));
-    $topGroupsByDiscussionsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of discussions (last @days days)', ['@limit' => $topGroupsLimit, '@days' => $lastDaysLimit]), $topGroupsByDiscussionsLastDays, true);
+    $topGroupsByDiscussionsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of discussions', ['@limit' => $topGroupsLimit]), $topGroupsByDiscussionsLastDays, true);
 
     // Top 10 groups by number of events in the past days.
     $topGroupsByEventsLastDays = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($eventType, $topGroupsLimit, $lastDaysLimit)));
-    $topGroupsByEventsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of events (last @days days)', ['@limit' => $topGroupsLimit, '@days' => $lastDaysLimit]), $topGroupsByEventsLastDays, true);
+    $topGroupsByEventsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of events', ['@limit' => $topGroupsLimit]), $topGroupsByEventsLastDays, true);
 
     // Top 10 groups by number of documents in the past days.
     $topGroupsByDocumentsLastDays = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByContentType($documentType, $topGroupsLimit, $lastDaysLimit)));
-    $topGroupsByDocumentsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of documents (last @days days)', ['@limit' => $topGroupsLimit, '@days' => $lastDaysLimit]), $topGroupsByDocumentsLastDays, true);
+    $topGroupsByDocumentsLastDaysChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of documents', ['@limit' => $topGroupsLimit]), $topGroupsByDocumentsLastDays, true);
 
     // Tab content 2.
     $tabContent2 = [
