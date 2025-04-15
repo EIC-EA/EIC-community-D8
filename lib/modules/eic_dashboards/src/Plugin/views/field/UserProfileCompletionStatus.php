@@ -43,30 +43,21 @@ class UserProfileCompletionStatus extends FieldPluginBase {
   public function render(ResultRow $values) {
     $uid = $values->uid;
 
-    $query = $this->connection->select('profile__field_body', 'pfb')
-      ->condition('pfb.entity_id', $uid);
-    $query->addField('pfb', 'field_body_value');
-    $query->join('profile__field_vocab_topic_expertise', 'pvte', 'pfb.entity_id = pvte.entity_id');
-    $query->join('profile__field_vocab_topic_interest', 'pvti', 'pfb.entity_id = pvti.entity_id');
-    $query->join('profile__field_location_address', 'pla', 'pfb.entity_id = pla.entity_id');
-    $query->fields('pvte', ['field_vocab_topic_expertise_target_id']);
-    $query->fields('pvti', ['field_vocab_topic_interest_target_id']);
-    $query->fields('pla', ['field_location_address_address_line1']);
+    $query = $this->connection->select('profile', 'p')
+      ->condition('p.uid', $uid)
+      ->fields('p', ['uid', 'profile_id']);
+    $query->join('profile__field_vocab_topic_expertise', 'pvte', 'p.profile_id = pvte.entity_id');
+    $query->join('profile__field_vocab_topic_interest', 'pvti', 'p.profile_id = pvti.entity_id');
+    $query->join('profile__field_location_address', 'pla', 'p.profile_id = pla.entity_id');
 
     $result = $query->execute()->fetchAll();
-    $is_completed = FALSE;
-    foreach ($result as $field) {
-      if (!empty($field)) {
-        $is_completed = TRUE;
-      }
-      else {
-        $is_completed = FALSE;
-      }
+    if (empty($result)) {
+      return $this->t("Incomplete");
     }
-    if ($is_completed) {
+    else {
       return $this->t("Completed");
     }
-    return $this->t("Incomplete");
+
   }
 
 }
