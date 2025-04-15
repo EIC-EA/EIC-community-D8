@@ -62,4 +62,9 @@ interface DashboardBuilderInterface {
    */
   public function table($header, $rows, $class);
 
+  /**
+   * Build dashboard tabs.
+   */
+  public function tabs($title, $items);
+
 }

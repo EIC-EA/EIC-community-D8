@@ -207,4 +207,15 @@ class DashboardBuilder implements DashboardBuilderInterface {
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tabs($title, $items): array {
+    return [
+      '#theme' => 'tabs',
+      '#title' => $title,
+      '#items' => $items,
+    ];
+  }
+
 }
