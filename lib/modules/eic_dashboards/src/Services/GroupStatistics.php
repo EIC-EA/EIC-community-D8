@@ -6,7 +6,7 @@ use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Community statistics class.
+ * Group statistics class.
  */
 class GroupStatistics implements GroupStatisticsInterface {
 
@@ -18,21 +18,12 @@ class GroupStatistics implements GroupStatisticsInterface {
   protected Connection $connection;
 
   /**
-   * The dashboard helper service.
-   *
-   * @var \Drupal\eic_dashboards\Services\DashboardHelperinterface
-   */
-  protected DashboardHelperInterface $dashboardHelper;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
-    DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
-    $this->dashboardHelper = $dashboardHelper;
   }
 
   /**
@@ -41,7 +32,6 @@ class GroupStatistics implements GroupStatisticsInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('database'),
-      $container->get('eic_dashboards.helper'),
     );
   }
 
