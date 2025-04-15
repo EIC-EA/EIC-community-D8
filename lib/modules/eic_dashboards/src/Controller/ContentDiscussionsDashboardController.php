@@ -11,8 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Displays statistics for discussions.
  */
-class ContentDiscussionsDashboardController extends ControllerBase
-{
+class ContentDiscussionsDashboardController extends ControllerBase {
 
   /**
    * The dashboards builder service.

@@ -67,9 +67,10 @@ eic_dashboards.group.groups:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.events_dashboard:
-  path: '/dashboards/events-dashboard'
+eic_dashboards.group.events:
+  path: '/dashboards/group/events'
   defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\GroupEventsDashboardController::page'
     _title: 'Events dashboard'
   requirements:
     _role: 'sensitive'

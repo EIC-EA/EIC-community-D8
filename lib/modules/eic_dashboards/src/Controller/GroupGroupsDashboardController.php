@@ -11,8 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Displays statistics for Group type "Group".
  */
-class GroupGroupsDashboardController extends ControllerBase
-{
+class GroupGroupsDashboardController extends ControllerBase {
 
   /**
    * The dashboards builder service.
@@ -52,8 +51,7 @@ class GroupGroupsDashboardController extends ControllerBase
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container)
-  {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
