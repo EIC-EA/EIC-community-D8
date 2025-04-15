@@ -71,12 +71,12 @@ class GroupGroupsDashboardController extends ControllerBase {
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
-    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groupss', ['@groups' => $groupType]),
+    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groups', ['@group' => $groupType]),
       $numberOfGroupsData, '');
 
     // Number of groups created in past days.
     $numberOfGroupsPastDaysData = $this->groupStatistics->getNumberOfGroupsPastDays($groupType, $lastDaysLimit);
-    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groupss - last @days days', ['@groups' => $groupType, '@days' =>
+    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', ['@group' => $groupType, '@days' =>
       $lastDaysLimit]), $numberOfGroupsPastDaysData, '');
 
     // Section 1.
