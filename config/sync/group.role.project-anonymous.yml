@@ -11,4 +11,5 @@ internal: true
 audience: anonymous
 group_type: project
 permissions_ui: true
-permissions: {  }
+permissions:
+  - 'view group'
