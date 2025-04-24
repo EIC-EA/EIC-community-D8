@@ -6,8 +6,11 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\eic_projects\Entity\ExtractionRequest;
 use Drupal\eic_projects\Hooks\CronOperations;
+use Drupal\eic_projects\Hooks\EntityOperations;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -24,6 +27,15 @@ function eic_projects_entity_insert(\Drupal\Core\Entity\EntityInterface $entity)
   if ($entity instanceof ExtractionRequest) {
     $queue = \Drupal::service('queue')->get('eic_projects_cordis_extraction_worker');
     $queue->createItem($entity->id());
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function eic_projects_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof GroupInterface && $entity->bundle() === Projects::GROUP_PROJECT_BUNDLE) {
+    \Drupal::classResolver(EntityOperations::class)->projectGroupPreSave($entity);
   }
 }
 
