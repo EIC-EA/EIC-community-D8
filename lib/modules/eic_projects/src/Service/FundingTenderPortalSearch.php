@@ -16,20 +16,27 @@ class FundingTenderPortalSearch {
 
   }
 
-  public function getPortalUrl(int|string $gid) {
+  /**
+   * Get the URL of the project in FTP by the group project entity ID.
+   *
+   * @param int|string $gid
+   *
+   * @return false|string
+   */
+  public function getPortalUrl(int|string $gid): bool|string {
     $portal_results = $this->searchPortalByGid($gid);
     if ($portal_results) {
       return match ($portal_results['totalResults']) {
         1 => $portal_results['results'][0]['url'],
         0 => FALSE,
-        default => $this->search_result_url . $this->getProjectIdByGroupId($gid),
+        default => $this->getProjectIdByGroupId($gid) ? $this->search_result_url . $this->getProjectIdByGroupId($gid) : FALSE,
       };
     }
     return FALSE;
   }
 
   /**
-   * Search Portal by Group Project ID.
+   * Search Portal by group project entity ID.
    *
    * @param int|string $gid
    *
@@ -37,13 +44,17 @@ class FundingTenderPortalSearch {
    */
   public function searchPortalByGid(int|string $gid) {
     $project_id = $this->getProjectIdByGroupId($gid);
-    return $this->searchPortal($project_id);
+    return $project_id ? $this->searchPortal($project_id) : [];
   }
 
   /**
+   * Search FTP by the project ID.
    *
+   * @param int $project_id
+   *
+   * @return bool|array
    */
-  public function searchPortal(int $project_id) {
+  public function searchPortal(int $project_id): bool|array {
     $query = [
       "bool" => [
         "must" => [
@@ -77,7 +88,16 @@ class FundingTenderPortalSearch {
 
   }
 
-  private function getProjectIdByGroupId(int|string $gid) {
+  /**
+   * Gets the project ID of the group given.
+   *
+   * @param int|string $gid
+   *
+   * @return int|null
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getProjectIdByGroupId(int|string $gid): int|null {
     $group_project = $this->entityTypeManager->getStorage('group')
       ->load($gid);
     return (int) $group_project->get('field_project_grant_agreement_id')->value;
