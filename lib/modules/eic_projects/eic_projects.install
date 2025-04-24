@@ -65,3 +65,58 @@ function eic_projects_update_9001(&$sandbox) {
   // Rebuild the Drupal container during the update.
   \Drupal::service('kernel')->rebuildContainer();
 }
+
+/**
+ * Update group project entities to add HRP links where possible.
+ */
+function eic_projects_update_9002(&$sandbox) {
+  if (!isset($sandbox['total'])) {
+    $gids = \Drupal::entityQuery('group')
+      ->condition('type', 'project')
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($gids);
+    $sandbox['current'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return;
+    }
+  }
+
+  $groups_per_batch = 25;
+  $gids = \Drupal::entityQuery('group')
+    ->condition('type', 'project')
+    ->accessCheck(FALSE)
+    ->range($sandbox['current'], $groups_per_batch)
+    ->execute();
+  if (empty($gids)) {
+    $sandbox['#finished'] = 1;
+    return;
+  }
+
+  foreach ($gids as $gid) {
+    $url = \Drupal::service('eic_projects.ftp_search')->getPortalUrl($gid);
+    if ($url) {
+      $group = \Drupal::entityTypeManager()->getStorage('group')->load($gid);
+      $link = [
+        'uri' => $url,
+        'title' => 'Horizon Results Platform',
+      ];
+      $group->set('field_project_horizon_results', $link);
+      $group->save();
+    }
+
+    $sandbox['current']++;
+  }
+
+  \Drupal::messenger()
+    ->addMessage($sandbox['current'] . ' groups processed.');
+
+  if ($sandbox['current'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+}
