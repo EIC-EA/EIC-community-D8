@@ -98,13 +98,11 @@ function eic_projects_update_9002(&$sandbox) {
   foreach ($gids as $gid) {
     $url = \Drupal::service('eic_projects.ftp_search')->getPortalUrl($gid);
     if ($url) {
-      $group = \Drupal::entityTypeManager()->getStorage('group')->load($gid);
-      $link = [
-        'uri' => $url,
-        'title' => 'Horizon Results Platform',
-      ];
-      $group->set('field_project_horizon_results', $link);
-      $group->save();
+      // Just save the group.
+      // \Drupal\eic_projects\Hooks\EntityOperations::projectGroupPreSave will
+      // add the HRP link to the field.
+      \Drupal::entityTypeManager()->getStorage('group')
+        ->load($gid)->save();
     }
 
     $sandbox['current']++;
