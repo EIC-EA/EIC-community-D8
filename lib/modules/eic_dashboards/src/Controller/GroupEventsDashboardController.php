@@ -124,11 +124,24 @@ class GroupEventsDashboardController extends ControllerBase {
       ], 1),
     ];
 
+    // Top topics of groups.
+    $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
+    $topTopicsOfGroups = $this->dashboardBuilder->chartColumn( $this->t('Top 10 event topics'), $topTopicsOfGroupsData, true);
+
+    // Section 4.
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $topTopicsOfGroups,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
         $section3Build,
+        $section4Build,
       ],
     ];
 

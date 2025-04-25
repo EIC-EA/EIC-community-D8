@@ -53,4 +53,9 @@ interface GroupStatisticsInterface {
    * Returns groups grouped by location.
    */
   public function getGroupsGroupedByLocation($groupType, $argumentId);
+
+  /**
+   * Returns top terms used by groups.
+   */
+  public function getTopTermsOfGroups($groupType, $taxonomyField, $range);
 }

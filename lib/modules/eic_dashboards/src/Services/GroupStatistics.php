@@ -261,4 +261,28 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns top terms used by groups.
+   */
+  public function getTopTermsOfGroups($groupType, $taxonomyField, $range = 10) {
+    $query = $this->connection->select('group__' . $taxonomyField, 'gtf');
+    $query->addExpression('COUNT(gtf.' . $taxonomyField. '_target_id)', 'term_count');
+    $query->addExpression('gtf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('gtf.bundle', $groupType);
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('term_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->taxonomy_term_id]['id'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA';
+      $data[$result->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA';
+      $data[$result->taxonomy_term_id]['count'] = $result->term_count;
+    }
+
+    return $data;
+  }
+
 }
