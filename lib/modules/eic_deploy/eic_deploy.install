@@ -392,3 +392,20 @@ function eic_deploy_update_9013(&$sandbox) {
 
   eic_deploy_add_group_permissions_to_role($new_permissions, $roles);
 }
+
+/**
+ * Update News & Articles overview page's facets
+ */
+function eic_deploy_update_9014(&$sandbox) {
+  $story_overview = \Drupal::entityTypeManager()
+    ->getStorage('overview_page')->load(4);
+
+  $search_block = $story_overview->get('field_overview_block')->getValue();
+  $facets =& $search_block[0]["settings"]["facets"];
+  unset($facets['ss_content_type']);
+  $facets['sm_content_field_story_type_string'] = 'sm_content_field_story_type_string';
+  $facets['sm_content_field_vocab_program_type_string'] = 'sm_content_field_vocab_program_type_string';
+
+  $story_overview->set('field_overview_block', $search_block);
+  $story_overview->save();
+}
