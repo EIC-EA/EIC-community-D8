@@ -125,8 +125,7 @@ class ContentDiscussionsDashboardController extends ControllerBase {
     $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed discussions'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
 
     // Most commented nodes.
-    $mostCommentedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most commented discussions'), '',
-      $this->contentStatistics->getMostCommentedNodesOfBundle($bundle));
+    $mostCommentedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most commented discussions'), '', $this->contentStatistics->getMostCommentedNodesOfBundle($bundle));
 
     // Section 4.
     $section4Build = [

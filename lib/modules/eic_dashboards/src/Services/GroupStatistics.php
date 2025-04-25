@@ -189,7 +189,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns top groups by number of flag count.
    */
-  public function getTopGroupsByFlag($groupType, $flagID, $range = 10): array {
+  public function getTopGroupsByFlag($groupType, $flagID, $range = 10, $chartType = 'column'): array {
     $query = $this->connection->select('flag_counts', 'fc');
     $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = fc.entity_id');
     $query->addExpression('gfd.id', 'group_id');
@@ -205,10 +205,23 @@ class GroupStatistics implements GroupStatisticsInterface {
 
     $data = [];
 
-    foreach ($results as $result) {
-      $data[$result->group_id]['id'] = $result->label;
-      $data[$result->group_id]['label'] = $result->label;
-      $data[$result->group_id]['count'] = $result->flag_count;
+    if($chartType == 'column') {
+      foreach ($results as $result) {
+        $data[$result->group_id]['id'] = $result->label;
+        $data[$result->group_id]['label'] = $result->label;
+        $data[$result->group_id]['count'] = $result->flag_count;
+      }
+    } elseif ($chartType == 'list') {
+      if ($flagID == 'recommend_group') {
+        $flagName = 'likes';
+      }
+      foreach ($results as $result) {
+        $data[] = [
+          'prefix' => (int) $result->flag_count . ' ' . $flagName,
+          'title' => $result->label,
+          'url' => '/group/' . $result->group_id,
+        ];
+      }
     }
 
     return $data;

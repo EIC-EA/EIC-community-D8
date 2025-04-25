@@ -32,17 +32,17 @@ interface GroupStatisticsInterface {
   /**
    * Returns top groups by number of members.
    */
-  public function getTopGroupsByMembers($membershipType);
+  public function getTopGroupsByMembers($membershipType, $range, $days);
 
   /**
    * Returns top groups by number of given content type.
    */
-  public function getTopGroupsByContentType($contentType, $range);
+  public function getTopGroupsByContentType($contentType, $range, $days);
 
   /**
    * Returns top groups by number of flag count.
    */
-  public function getTopGroupsByFlag($groupType, $flagID, $range);
+  public function getTopGroupsByFlag($groupType, $flagID, $range, $chartType);
 
   /**
    * Returns number of groups per taxonomy term.

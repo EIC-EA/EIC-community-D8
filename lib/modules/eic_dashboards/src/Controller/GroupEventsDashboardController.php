@@ -63,12 +63,14 @@ class GroupEventsDashboardController extends ControllerBase {
    * {@inheritdoc}
    */
   public function page(): array {
-    // Specify current group & membership type.
+    // Specify current group typ.
     $groupType = 'event';
-    $membershipType = 'event-group_membership';
 
-    // Define number of past days.
+    // Define days, range, membership and flags.
     $lastDaysLimit = 90;
+    $topGroupsLimit = 10;
+    $membershipType = 'event-group_membership';
+    $likeFlag = 'recommend_group';
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
@@ -94,8 +96,8 @@ class GroupEventsDashboardController extends ControllerBase {
     $groupsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupsByTypeData, '');
 
     // Groups by most members.
-    $topGroupsByMembersData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType)));
-    $topGroupsByMembers = $this->dashboardBuilder->chartColumn( $this->t('Top 10 events with most members registered'), $topGroupsByMembersData, true);
+    $topGroupsByMembersData = $this->dashboardHelper->jsonEncodeCategoriesSeries    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType, $topGroupsLimit)));
+    $topGroupsByMembers = $this->dashboardBuilder->chartColumn( $this->t('Top @limit events with most members registered', ['@limit' => $topGroupsLimit]), $topGroupsByMembersData, true);
 
     // Groups by topic chart.
     $topicField = 'field_vocab_topics';
@@ -131,12 +133,17 @@ class GroupEventsDashboardController extends ControllerBase {
 
     // Top topics of groups.
     $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
-    $topTopicsOfGroups = $this->dashboardBuilder->chartColumn( $this->t('Top 10 event topics'), $topTopicsOfGroupsData, true);
+    $topTopicsOfGroups = $this->dashboardBuilder->chartColumn( $this->t('Top @limit event topics', ['@limit' => $topGroupsLimit]), $topTopicsOfGroupsData, true);
+
+    // Most liked groups.
+    $topGroupsByLikesLink = $this->dashboardBuilder->buttonToView('view.admin_groups.page_admin_events', '', '', $this->t('See all'));
+    $topGroupsByLikes = $this->dashboardBuilder->titleLinkList($this->t('Most liked events'), $topGroupsByLikesLink, $this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit, 'list'));
 
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
         $topTopicsOfGroups,
+        $topGroupsByLikes,
       ], 2),
     ];
 

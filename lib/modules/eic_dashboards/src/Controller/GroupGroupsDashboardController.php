@@ -66,8 +66,15 @@ class GroupGroupsDashboardController extends ControllerBase {
     // Specify current group type.
     $groupType = 'group';
 
-    // Define number of past days.
+    // Define days, range, membership, content type and flags.
     $lastDaysLimit = 90;
+    $topGroupsLimit = 10;
+    $membershipType = 'group-group_membership';
+    $discussionType = 'group-group_node-discussion';
+    $eventType = 'group-group_node-event';
+    $documentType = 'group-group_node-document';
+    $likeFlag = 'recommend_group';
+    $followFlag = 'follow_group';
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
@@ -102,15 +109,6 @@ class GroupGroupsDashboardController extends ControllerBase {
         $groupsByVisibility,
       ], 2),
     ];
-
-    // Define range, membership, content type and flags.
-    $topGroupsLimit = 10;
-    $membershipType = 'group-group_membership';
-    $discussionType = 'group-group_node-discussion';
-    $eventType = 'group-group_node-event';
-    $documentType = 'group-group_node-document';
-    $likeFlag = 'recommend_group';
-    $followFlag = 'follow_group';
 
     // Top 10 groups by number of members.
     $topGroupsByMembers = $this->dashboardHelper->jsonEncodeCategoriesSeries
