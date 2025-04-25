@@ -112,10 +112,23 @@ class GroupEventsDashboardController extends ControllerBase {
       ], 2),
     ];
 
+    // Groups by country.
+    $groupsByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getGroupsGroupedByLocation($groupType, 'id')));
+    $groupsByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Events by country'), $groupsByCountryData,
+      false);
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByCountryChart,
+      ], 1),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
       ],
     ];
 

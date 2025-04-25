@@ -48,4 +48,9 @@ interface GroupStatisticsInterface {
    * Returns number of groups per taxonomy term.
    */
   public function getGroupsByTerm($groupType, $taxonomyField);
+
+  /**
+   * Returns groups grouped by location.
+   */
+  public function getGroupsGroupedByLocation($groupType, $argumentId);
 }
