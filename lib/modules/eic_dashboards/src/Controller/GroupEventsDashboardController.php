@@ -87,9 +87,35 @@ class GroupEventsDashboardController extends ControllerBase {
       ], 3),
     ];
 
+    // Groups by type chart.
+    $typeField = 'field_vocab_event_type';
+    $groupsByTypeData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $typeField));
+    $groupsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupsByTypeData, '');
+
+    // Groups by topic chart.
+    $topicField = 'field_vocab_topics';
+    $groupsByTopicData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $topicField));
+    $groupsByTopic = $this->dashboardBuilder->chartPie($this->t('Events by topic'), $groupsByTopicData, '');
+
+    // Groups by visibility chart.
+    $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
+    $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Events by visibility'), $groupsByVisibilityData,
+      '');
+
+    // Section 2.
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByType,
+        '',
+        $groupsByTopic,
+        $groupsByVisibility,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
+        $section2Build,
       ],
     ];
 

@@ -43,4 +43,9 @@ interface GroupStatisticsInterface {
    * Returns top groups by number of flag count.
    */
   public function getTopGroupsByFlag($groupType, $flagID, $range);
+
+  /**
+   * Returns number of groups per taxonomy term.
+   */
+  public function getGroupsByTerm($groupType, $taxonomyField);
 }

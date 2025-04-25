@@ -91,7 +91,7 @@ class GroupGroupsDashboardController extends ControllerBase {
     $groupsByStatusData = json_encode($this->groupStatistics->getGroupsByStatus($groupType));
     $groupsByStatus = $this->dashboardBuilder->chartPie($this->t('Groups by status'), $groupsByStatusData, '');
 
-    // Groups by moderation status chart.
+    // Groups by visibility chart.
     $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
     $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Groups by visibility'), $groupsByVisibilityData, '');
 

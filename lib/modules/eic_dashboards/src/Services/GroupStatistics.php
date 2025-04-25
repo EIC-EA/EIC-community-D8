@@ -18,12 +18,21 @@ class GroupStatistics implements GroupStatisticsInterface {
   protected Connection $connection;
 
   /**
+   * The dashboard helper service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardHelperInterface
+   */
+  protected DashboardHelperInterface $dashboardHelper;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
+    DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
+    $this->dashboardHelper = $dashboardHelper;
   }
 
   /**
@@ -32,6 +41,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('database'),
+      $container->get('eic_dashboards.helper'),
     );
   }
 
@@ -70,6 +80,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->condition('cmsfd.content_entity_type_id', 'group');
     $query->condition('g.type', $groupType);
     $query->groupBy('status');
+    $query->orderBy('groups_count', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -94,6 +105,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->addExpression('ogv.type', 'visibility');
     $query->condition('g.type', $groupType);
     $query->groupBy('visibility');
+    $query->orderBy('groups_count', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -197,6 +209,30 @@ class GroupStatistics implements GroupStatisticsInterface {
       $data[$result->group_id]['id'] = $result->label;
       $data[$result->group_id]['label'] = $result->label;
       $data[$result->group_id]['count'] = $result->flag_count;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns number of groups per taxonomy term.
+   */
+  public function getGroupsByTerm($groupType, $taxonomyField): array {
+    $query = $this->connection->select('group__' . $taxonomyField, 'gtf');
+    $query->addExpression('COUNT(gtf.' . $taxonomyField . '_target_id)', 'groups_count');
+    $query->addExpression('gtf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('gtf.bundle', $groupType);
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('groups_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[] = [
+        'name' => $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
+        'y' => (int) $result->groups_count,
+      ];
     }
 
     return $data;
