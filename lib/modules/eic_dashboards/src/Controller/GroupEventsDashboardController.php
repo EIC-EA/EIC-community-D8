@@ -63,8 +63,9 @@ class GroupEventsDashboardController extends ControllerBase {
    * {@inheritdoc}
    */
   public function page(): array {
-    // Specify current group type.
+    // Specify current group & membership type.
     $groupType = 'event';
+    $membershipType = 'event-group_membership';
 
     // Define number of past days.
     $lastDaysLimit = 90;
@@ -92,6 +93,10 @@ class GroupEventsDashboardController extends ControllerBase {
     $groupsByTypeData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $typeField));
     $groupsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupsByTypeData, '');
 
+    // Groups by most members.
+    $topGroupsByMembersData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType)));
+    $topGroupsByMembers = $this->dashboardBuilder->chartColumn( $this->t('Top 10 events with most members registered'), $topGroupsByMembersData, true);
+
     // Groups by topic chart.
     $topicField = 'field_vocab_topics';
     $groupsByTopicData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $topicField));
@@ -106,7 +111,7 @@ class GroupEventsDashboardController extends ControllerBase {
     $section2Build = [
       $this->dashboardBuilder->columns([
         $groupsByType,
-        '',
+        $topGroupsByMembers,
         $groupsByTopic,
         $groupsByVisibility,
       ], 2),
@@ -125,8 +130,7 @@ class GroupEventsDashboardController extends ControllerBase {
     ];
 
     // Top topics of groups.
-    $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries
-    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
+    $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
     $topTopicsOfGroups = $this->dashboardBuilder->chartColumn( $this->t('Top 10 event topics'), $topTopicsOfGroupsData, true);
 
     // Section 4.
