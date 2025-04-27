@@ -18,12 +18,21 @@ class GroupStatistics implements GroupStatisticsInterface {
   protected Connection $connection;
 
   /**
+   * The dashboard helper service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardHelperInterface
+   */
+  protected DashboardHelperInterface $dashboardHelper;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
+    DashboardHelperInterface $dashboardHelper,
   ) {
     $this->connection = $connection;
+    $this->dashboardHelper = $dashboardHelper;
   }
 
   /**
@@ -32,6 +41,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('database'),
+      $container->get('eic_dashboards.helper'),
     );
   }
 
@@ -70,6 +80,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->condition('cmsfd.content_entity_type_id', 'group');
     $query->condition('g.type', $groupType);
     $query->groupBy('status');
+    $query->orderBy('groups_count', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -94,6 +105,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->addExpression('ogv.type', 'visibility');
     $query->condition('g.type', $groupType);
     $query->groupBy('visibility');
+    $query->orderBy('groups_count', 'DESC');
     $results = $query->execute()->fetchAll();
 
     $data = [];
@@ -177,7 +189,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns top groups by number of flag count.
    */
-  public function getTopGroupsByFlag($groupType, $flagID, $range = 10): array {
+  public function getTopGroupsByFlag($groupType, $flagID, $range = 10, $chartType = 'column'): array {
     $query = $this->connection->select('flag_counts', 'fc');
     $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = fc.entity_id');
     $query->addExpression('gfd.id', 'group_id');
@@ -193,10 +205,94 @@ class GroupStatistics implements GroupStatisticsInterface {
 
     $data = [];
 
+    if($chartType == 'column') {
+      foreach ($results as $result) {
+        $data[$result->group_id]['id'] = $result->label;
+        $data[$result->group_id]['label'] = $result->label;
+        $data[$result->group_id]['count'] = $result->flag_count;
+      }
+    } elseif ($chartType == 'list') {
+      if ($flagID == 'recommend_group') {
+        $flagName = 'likes';
+      }
+      foreach ($results as $result) {
+        $data[] = [
+          'prefix' => (int) $result->flag_count . ' ' . $flagName,
+          'title' => $result->label,
+          'url' => '/group/' . $result->group_id,
+        ];
+      }
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns number of groups per taxonomy term.
+   */
+  public function getGroupsByTerm($groupType, $taxonomyField): array {
+    $query = $this->connection->select('group__' . $taxonomyField, 'gtf');
+    $query->addExpression('COUNT(gtf.' . $taxonomyField . '_target_id)', 'groups_count');
+    $query->addExpression('gtf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('gtf.bundle', $groupType);
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('groups_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
     foreach ($results as $result) {
-      $data[$result->group_id]['id'] = $result->label;
-      $data[$result->group_id]['label'] = $result->label;
-      $data[$result->group_id]['count'] = $result->flag_count;
+      $data[] = [
+        'name' => $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
+        'y' => (int) $result->groups_count,
+      ];
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns groups grouped by location.
+   */
+  public function getGroupsGroupedByLocation($groupType, $argumentId): array {
+    $query = $this->connection->select('group__field_location', 'gfl');
+    $query->addExpression('COUNT(gfl.field_location_country_code)', 'groups_count');
+    $query->addExpression('gfl.field_location_country_code', 'country_code');
+    $query->condition('gfl.bundle', $groupType);
+    $query->groupBy('country_code');
+    $query->orderBy('country_code', 'ASC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[$row->country_code][$argumentId] = $row->country_code;
+      $data[$row->country_code]['label'] = $countries[mb_strtoupper($row->country_code)] ?? '';
+      $data[$row->country_code]['count'] = $row->groups_count;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns top terms used by groups.
+   */
+  public function getTopTermsOfGroups($groupType, $taxonomyField, $range = 10) {
+    $query = $this->connection->select('group__' . $taxonomyField, 'gtf');
+    $query->addExpression('COUNT(gtf.' . $taxonomyField. '_target_id)', 'term_count');
+    $query->addExpression('gtf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('gtf.bundle', $groupType);
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('term_count', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->taxonomy_term_id]['id'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA';
+      $data[$result->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA';
+      $data[$result->taxonomy_term_id]['count'] = $result->term_count;
     }
 
     return $data;

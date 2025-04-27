@@ -10,8 +10,7 @@ use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 /**
  * Provides route responses for the eic_dashboards module.
  */
-class HomepageDashboardsController extends ControllerBase
-{
+class HomepageDashboardsController extends ControllerBase {
 
   /**
    * The dashboards builder service.
@@ -42,8 +41,7 @@ class HomepageDashboardsController extends ControllerBase
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container)
-  {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
@@ -53,8 +51,7 @@ class HomepageDashboardsController extends ControllerBase
   /**
    * {@inheritdoc}
    */
-  public function dashboardsHomepage(): array
-  {
+  public function dashboardsHomepage(): array {
     // Get the title from the route definition.
     $title = \Drupal::routeMatch()->getRouteObject()->getDefault('_title');
 
@@ -67,7 +64,7 @@ class HomepageDashboardsController extends ControllerBase
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.organisations_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.organisations_dashboard'), 'dashboard-organisations', 'dashboard'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.projects_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.projects_dashboard'), 'dashboard-projects', 'dashboard'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.content_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.content_dashboard'), 'dashboard-content', 'dashboard'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.events_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.events_dashboard'), 'dashboard-events', 'dashboard'),
+        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.events'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.events'), 'dashboard-events', 'dashboard'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.groups'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.groups'), 'dashboard-groups', 'dashboard'),
       ],
       '#listings' => [
