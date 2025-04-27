@@ -64,11 +64,11 @@ eic_dashboards.group.groups:
   route_name: eic_dashboards.group.groups
   weight: 5
 
-eic_dashboards.events_dashboard:
-  title: 'Events dashboard'
-  description: 'Platform events statistics'
+eic_dashboards.group.events:
+  title: 'Group / Events'
+  description: 'Events statistics'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.events_dashboard
+  route_name: eic_dashboards.group.events
   weight: 5
 
 eic_dashboards.members_list:

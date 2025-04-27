@@ -11,8 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Displays statistics for Group type "Group".
  */
-class GroupGroupsDashboardController extends ControllerBase
-{
+class GroupGroupsDashboardController extends ControllerBase {
 
   /**
    * The dashboards builder service.
@@ -52,8 +51,7 @@ class GroupGroupsDashboardController extends ControllerBase
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container)
-  {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
@@ -68,17 +66,24 @@ class GroupGroupsDashboardController extends ControllerBase
     // Specify current group type.
     $groupType = 'group';
 
-    // Define number of past days.
+    // Define days, range, membership, content type and flags.
     $lastDaysLimit = 90;
+    $topGroupsLimit = 10;
+    $membershipType = 'group-group_membership';
+    $discussionType = 'group-group_node-discussion';
+    $eventType = 'group-group_node-event';
+    $documentType = 'group-group_node-document';
+    $likeFlag = 'recommend_group';
+    $followFlag = 'follow_group';
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
-    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groupss', ['@groups' => $groupType]),
+    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groups', ['@group' => $groupType]),
       $numberOfGroupsData, '');
 
     // Number of groups created in past days.
     $numberOfGroupsPastDaysData = $this->groupStatistics->getNumberOfGroupsPastDays($groupType, $lastDaysLimit);
-    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groupss - last @days days', ['@groups' => $groupType, '@days' =>
+    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', ['@group' => $groupType, '@days' =>
       $lastDaysLimit]), $numberOfGroupsPastDaysData, '');
 
     // Section 1.
@@ -93,7 +98,7 @@ class GroupGroupsDashboardController extends ControllerBase
     $groupsByStatusData = json_encode($this->groupStatistics->getGroupsByStatus($groupType));
     $groupsByStatus = $this->dashboardBuilder->chartPie($this->t('Groups by status'), $groupsByStatusData, '');
 
-    // Groups by moderation status chart.
+    // Groups by visibility chart.
     $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
     $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Groups by visibility'), $groupsByVisibilityData, '');
 
@@ -104,15 +109,6 @@ class GroupGroupsDashboardController extends ControllerBase
         $groupsByVisibility,
       ], 2),
     ];
-
-    // Define range, membership, content type and flags.
-    $topGroupsLimit = 10;
-    $membershipType = 'group-group_membership';
-    $discussionType = 'group-group_node-discussion';
-    $eventType = 'group-group_node-event';
-    $documentType = 'group-group_node-document';
-    $likeFlag = 'recommend_group';
-    $followFlag = 'follow_group';
 
     // Top 10 groups by number of members.
     $topGroupsByMembers = $this->dashboardHelper->jsonEncodeCategoriesSeries
