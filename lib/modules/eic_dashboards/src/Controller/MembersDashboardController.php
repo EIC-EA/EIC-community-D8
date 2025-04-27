@@ -149,7 +149,13 @@ class MembersDashboardController extends ControllerBase
 
     // ===== Section 4.
     $maxResults = 20;
-    $lastRegisteredMembersList = $this->membersStatistics->getLastRegisteredMembersList($maxResults);
+    $lastRegisteredMembersList = $this->dashboardBuilder->titleLinkList($this->t('Latest members'), '', $this->membersStatistics->getLastRegisteredMembersList($maxResults));
+
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $lastRegisteredMembersList,
+      ], 2),
+    ];
 
     // Build sections
     $build = [
@@ -157,6 +163,7 @@ class MembersDashboardController extends ControllerBase
         $section1Build,
         $section2Build,
         $section3Build,
+        $section4Build,
       ],
     ];
 

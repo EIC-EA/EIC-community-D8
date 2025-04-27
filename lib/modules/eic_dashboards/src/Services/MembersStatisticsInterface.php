@@ -24,16 +24,20 @@ interface MembersStatisticsInterface {
   public function getMembersRegisteredPastDays(int $days): int;
 
   /**
-   * Retrieves the latest active registered members.
+   * Gets the most recently registered active members.
+   *
+   * Retrieves the latest registered users with an active status,
+   * along with their first name, last name, country name,
+   * profile URL, and registration date.
    *
    * @param int $maxResults
-   *   The maximum number of users to return.
+   *   The maximum number of users to retrieve.
    *
    * @return array
-   *   An array of members. Each member array contains:
-   *   - first_name: The user's first name (string).
-   *   - last_name: The user's last name (string).
-   *   - profile_link: A URL string linking to the user's profile page.
+   *   An array of members, each containing:
+   *   - prefix: (string) Formatted registration date (e.g., '27 Apr 2025').
+   *   - title: (string) Full name with country in parentheses (e.g., 'John Doe (Greece)').
+   *   - url: (string) URL to the user's profile page.
    */
   public function getLastRegisteredMembersList(int $maxResults): array;
 
