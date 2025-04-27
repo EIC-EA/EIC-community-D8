@@ -21,7 +21,18 @@ interface MembersStatisticsInterface {
    * @return int
    *   The total number of users registered in the past N days.
    */
-  public function getMembersRegisteredPastDays(int $days);
+  public function getMembersRegisteredPastDays(int $days): int;
+
+  /**
+   * Returns the number of active users who have logged in during the past N days.
+   *
+   * @param int $days
+   *   The number of days to look back from the current time.
+   *
+   * @return int
+   *   The total number of active users who logged in within the given time period.
+   */
+  public function getPlatformMembersLoggedPastDays(int $days): int;
 
   /**
    * Returns members grouped by country.

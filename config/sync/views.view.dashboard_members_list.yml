@@ -1385,8 +1385,8 @@ display:
         - 'config:field.storage.profile.field_vocab_user_type'
         - 'config:field.storage.user.field_first_name'
         - 'config:field.storage.user.field_last_name'
-  page_1:
-    id: page_1
+  page:
+    id: page
     display_title: Page
     display_plugin: page
     position: 1
