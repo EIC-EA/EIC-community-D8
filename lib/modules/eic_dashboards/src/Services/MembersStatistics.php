@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -89,6 +90,36 @@ class MembersStatistics implements MembersStatisticsInterface {
       ->accessCheck(FALSE)
       ->count()
       ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastRegisteredMembersList(int $maxResults = 20): array {
+    $query = $this->connection->select('users_field_data', 'u');
+    $query->fields('u', ['uid']);
+    $query->condition('u.status', 1);
+    $query->orderBy('u.uid', 'DESC');
+    $query->range(0, $maxResults);
+    $query->leftJoin('user__field_first_name', 'fn', 'u.uid = fn.entity_id');
+    $query->leftJoin('user__field_last_name', 'ln', 'u.uid = ln.entity_id');
+    $query->addField('fn', 'field_first_name_value', 'first_name');
+    $query->addField('ln', 'field_last_name_value', 'last_name');
+
+    $result = $query->execute()->fetchAllAssoc('uid');
+
+    $members = [];
+    foreach ($result as $uid => $user) {
+      $profile_url = Url::fromRoute('entity.user.canonical', ['user' => $uid])->toString();
+
+      $members[] = [
+        'first_name' => $user->first_name ?? '',
+        'last_name' => $user->last_name ?? '',
+        'profile_link' => $profile_url,
+      ];
+    }
+
+    return $members;
   }
 
   /**

@@ -147,6 +147,10 @@ class MembersDashboardController extends ControllerBase
       $membersLinkedToProjectsChart
     ], 2);
 
+    // ===== Section 4.
+    $maxResults = 20;
+    $lastRegisteredMembersList = $this->membersStatistics->getLastRegisteredMembersList($maxResults);
+
     // Build sections
     $build = [
       'content' => [

@@ -24,6 +24,20 @@ interface MembersStatisticsInterface {
   public function getMembersRegisteredPastDays(int $days): int;
 
   /**
+   * Retrieves the latest active registered members.
+   *
+   * @param int $maxResults
+   *   The maximum number of users to return.
+   *
+   * @return array
+   *   An array of members. Each member array contains:
+   *   - first_name: The user's first name (string).
+   *   - last_name: The user's last name (string).
+   *   - profile_link: A URL string linking to the user's profile page.
+   */
+  public function getLastRegisteredMembersList(int $maxResults): array;
+
+  /**
    * Returns the number of active users who have logged in during the past N days.
    *
    * @param int $days
