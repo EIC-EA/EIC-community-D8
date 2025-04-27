@@ -95,7 +95,7 @@ class MembersStatistics implements MembersStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLastRegisteredMembersList(int $maxResults = 20): array {
+  public function getLastRegisteredMembersList(int $maxResults = 10): array {
     $query = $this->connection->select('users_field_data', 'u');
     $query->fields('u', ['uid', 'created']);
     $query->condition('u.status', 1);
