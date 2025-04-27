@@ -59,17 +59,19 @@ eic_dashboards.content.discussions:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.events_dashboard:
-  path: '/dashboards/events-dashboard'
+eic_dashboards.group.groups:
+  path: '/dashboards/group/groups'
   defaults:
-    _title: 'Events dashboard'
+    _controller: '\Drupal\eic_dashboards\Controller\GroupGroupsDashboardController::page'
+    _title: 'Groups dashboard'
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.groups_dashboard:
-  path: '/dashboards/groups-dashboard'
+eic_dashboards.group.events:
+  path: '/dashboards/group/events'
   defaults:
-    _title: 'Groups dashboard'
+    _controller: '\Drupal\eic_dashboards\Controller\GroupEventsDashboardController::page'
+    _title: 'Events dashboard'
   requirements:
     _role: 'sensitive'
 

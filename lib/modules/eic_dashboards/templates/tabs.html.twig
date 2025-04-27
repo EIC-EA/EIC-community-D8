@@ -1,0 +1,14 @@
+{{ attach_library('eic_dashboards/tabs') }}
+
+<div class="ecl-container ecl-u-mb-xl">
+  <h2>{{ title }}</h2>
+  <div {{ attributes.addClass('tabs') }}>
+    {% for item in items %}
+      <input type="radio" name="tabs" id="tab-{{ loop.index }}" {% if loop.index == '1' %}checked="checked"{% endif %}>
+      <label for="tab-{{ loop.index }}">{{ item.title }}</label>
+      <div class="tab">
+        {{ item.content }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

@@ -11,8 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Displays statistics for stories.
  */
-class ContentStoriesDashboardController extends ControllerBase
-{
+class ContentStoriesDashboardController extends ControllerBase {
 
   /**
    * The dashboards builder service.

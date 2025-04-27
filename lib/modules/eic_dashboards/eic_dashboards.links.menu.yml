@@ -57,19 +57,19 @@ eic_dashboards.content.discussions:
   route_name: eic_dashboards.content.discussions
   weight: 4
 
-eic_dashboards.events_dashboard:
-  title: 'Events dashboard'
-  description: 'Platform events statistics'
+eic_dashboards.group.groups:
+  title: 'Group / Groups'
+  description: 'Groups statistics'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.events_dashboard
+  route_name: eic_dashboards.group.groups
   weight: 5
 
-eic_dashboards.groups_dashboard:
-  title: 'Groups dashboard'
-  description: 'Platform groups statistics'
+eic_dashboards.group.events:
+  title: 'Group / Events'
+  description: 'Events statistics'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.groups_dashboard
-  weight: 6
+  route_name: eic_dashboards.group.events
+  weight: 5
 
 eic_dashboards.members_list:
   title: 'Members list'
