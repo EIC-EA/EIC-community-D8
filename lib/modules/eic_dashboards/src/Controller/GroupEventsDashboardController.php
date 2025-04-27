@@ -63,7 +63,7 @@ class GroupEventsDashboardController extends ControllerBase {
    * {@inheritdoc}
    */
   public function page(): array {
-    // Specify current group typ.
+    // Specify current group type.
     $groupType = 'event';
 
     // Define days, range, membership and flags.
