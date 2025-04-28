@@ -114,10 +114,34 @@ class GroupOrganisationsDashboardController extends ControllerBase {
       ], 2),
     ];
 
+    // Groups with project.
+    $projectField = 'field_organisation_project_id';
+    $groupsWithProject = $this->groupStatistics->getNumberOfGroupsWithProject($groupType, $projectField);
+    $groupsWithoutProject = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithProject;
+    $groupsByProjectData = json_encode([
+      [
+        'name' => 'Referencing one or more projects',
+        'y' => (int) $groupsWithProject,
+      ],
+      [
+        'name' => 'Without any projects referenced',
+        'y' => (int) $groupsWithoutProject,
+      ]
+    ]);
+    $groupsByProject = $this->dashboardBuilder->chartPie($this->t('Organisations with projects'),$groupsByProjectData, '');
+
+    // Section 4.
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByProject,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
         $section2Build,
+        $section4Build,
       ],
     ];
 

@@ -58,4 +58,9 @@ interface GroupStatisticsInterface {
    * Returns top terms used by groups.
    */
   public function getTopTermsOfGroups($groupType, $taxonomyField, $range);
+
+  /**
+   * Returns groups with at least one project.
+   */
+  public function getNumberOfGroupsWithProject($groupType, $projectField);
 }
