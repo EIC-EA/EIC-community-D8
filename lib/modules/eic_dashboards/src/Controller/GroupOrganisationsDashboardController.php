@@ -9,9 +9,9 @@ use Drupal\eic_dashboards\Services\GroupStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Displays statistics for Group type "Event".
+ * Displays statistics for Group type "Organisation".
  */
-class GroupEventsDashboardController extends ControllerBase {
+class GroupOrganisationsDashboardController extends ControllerBase {
 
   /**
    * The dashboards builder service.
@@ -64,13 +64,12 @@ class GroupEventsDashboardController extends ControllerBase {
    */
   public function page(): array {
     // Specify current group type.
-    $groupType = 'event';
+    $groupType = 'organisation';
 
     // Define days, range, membership and flags.
     $lastDaysLimit = 90;
     $topGroupsLimit = 10;
-    $membershipType = 'event-group_membership';
-    $likeFlag = 'recommend_group';
+    $membershipType = 'organisation-group_membership';
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
@@ -91,23 +90,18 @@ class GroupEventsDashboardController extends ControllerBase {
     ];
 
     // Groups by type chart.
-    $typeField = 'field_vocab_event_type';
+    $typeField = 'field_organisation_type';
     $groupsByTypeData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $typeField));
-    $groupsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupsByTypeData, '');
+    $groupsByType = $this->dashboardBuilder->chartPie($this->t('Organisations by type'), $groupsByTypeData, '');
 
     // Groups by most members.
     $topGroupsByMembersData = $this->dashboardHelper->jsonEncodeCategoriesSeries    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType, $topGroupsLimit)));
-    $topGroupsByMembers = $this->dashboardBuilder->chartColumn( $this->t('Top @limit events with most members registered', ['@limit' => $topGroupsLimit]), $topGroupsByMembersData, true);
+    $topGroupsByMembers = $this->dashboardBuilder->chartColumn( $this->t('Top @limit organisations with most members registered', ['@limit' => $topGroupsLimit]), $topGroupsByMembersData, true);
 
     // Groups by topic chart.
     $topicField = 'field_vocab_topics';
     $groupsByTopicData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $topicField));
-    $groupsByTopic = $this->dashboardBuilder->chartPie($this->t('Events by topic'), $groupsByTopicData, '');
-
-    // Groups by visibility chart.
-    $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
-    $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Events by visibility'), $groupsByVisibilityData,
-      '');
+    $groupsByTopic = $this->dashboardBuilder->chartPie($this->t('Organisations by topic'), $groupsByTopicData, '');
 
     // Section 2.
     $section2Build = [
@@ -115,15 +109,13 @@ class GroupEventsDashboardController extends ControllerBase {
         $groupsByType,
         $topGroupsByMembers,
         $groupsByTopic,
-        $groupsByVisibility,
       ], 2),
     ];
 
     // Groups by country.
-    $locationField = 'field_location';
+    $locationField = 'field_address';
     $groupsByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getGroupsGroupedByLocation($groupType, $locationField, 'id')));
-    $groupsByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Events by country'), $groupsByCountryData,
-      false);
+    $groupsByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Organisations by country'), $groupsByCountryData, false);
 
     // Section 3.
     $section3Build = [
@@ -132,19 +124,42 @@ class GroupEventsDashboardController extends ControllerBase {
       ], 1),
     ];
 
-    // Top topics of groups.
-    $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
-    $topTopicsOfGroups = $this->dashboardBuilder->chartColumn( $this->t('Top @limit event topics', ['@limit' => $topGroupsLimit]), $topTopicsOfGroupsData, true);
+    // Groups with project.
+    $projectField = 'field_organisation_project_id';
+    $groupsWithProject = $this->groupStatistics->getNumberOfGroupsWithProject($groupType, $projectField);
+    $groupsWithoutProject = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithProject;
+    $groupsByProjectData = json_encode([
+      [
+        'name' => 'Referencing one or more projects',
+        'y' => (int) $groupsWithProject,
+      ],
+      [
+        'name' => 'Without any projects referenced',
+        'y' => (int) $groupsWithoutProject,
+      ]
+    ]);
+    $groupsByProject = $this->dashboardBuilder->chartPie($this->t('Organisations with projects'),$groupsByProjectData, '');
 
-    // Most liked groups.
-    $topGroupsByLikesLink = $this->dashboardBuilder->buttonToView('view.admin_groups.page_admin_events', '', '', $this->t('See all'));
-    $topGroupsByLikes = $this->dashboardBuilder->titleLinkList($this->t('Most liked events'), $topGroupsByLikesLink, $this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit, 'list'));
+    // Groups with members.
+    $groupsWithMembers = $this->groupStatistics->getNumberOfGroupsWithMembers($membershipType);
+    $groupsWithoutMembers = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithMembers;
+    $groupsByMembersData = json_encode([
+      [
+        'name' => 'With one or more members',
+        'y' => (int) $groupsWithMembers,
+      ],
+      [
+        'name' => 'Without any members',
+        'y' => (int) $groupsWithoutMembers,
+      ]
+    ]);
+    $groupsByMembers = $this->dashboardBuilder->chartPie($this->t('Organisations with members'),$groupsByMembersData, '');
 
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
-        $topTopicsOfGroups,
-        $topGroupsByLikes,
+        $groupsByProject,
+        $groupsByMembers,
       ], 2),
     ];
 

@@ -254,11 +254,28 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns groups grouped by location.
    */
-  public function getGroupsGroupedByLocation($groupType, $argumentId): array {
-    $query = $this->connection->select('group__field_location', 'gfl');
-    $query->addExpression('COUNT(gfl.field_location_country_code)', 'groups_count');
-    $query->addExpression('gfl.field_location_country_code', 'country_code');
-    $query->condition('gfl.bundle', $groupType);
+  public function getGroupsGroupedByLocation($groupType, $locationField, $argumentId): array {
+    // Get only the first location value for each group.
+    $subquery = $this->connection->select('group__' . $locationField, 'glf');
+    $subquery->addField('glf', 'entity_id');
+    $subquery->addField('glf', $locationField . '_country_code', 'country_code');
+    $subquery->condition('glf.bundle', $groupType);
+
+    // Add a subquery join to get only the minimum delta.
+    $min_delta_query = $this->connection->select('group__' . $locationField, 'glfj');
+    $min_delta_query->fields('glfj', ['entity_id']);
+    $min_delta_query->addExpression('MIN(glfj.delta)', 'min_delta');
+    $min_delta_query->groupBy('glfj.entity_id');
+    $subquery->join(
+      $min_delta_query,
+      'mdt',
+      'glf.entity_id = mdt.entity_id AND glf.delta = mdt.min_delta'
+    );
+
+    // Main query to count groups by location.
+    $query = $this->connection->select($subquery, 'sq');
+    $query->addExpression('COUNT(DISTINCT sq.entity_id)', 'groups_count');
+    $query->addField('sq', 'country_code');
     $query->groupBy('country_code');
     $query->orderBy('country_code', 'ASC');
     $results = $query->execute()->fetchAll();
@@ -296,6 +313,29 @@ class GroupStatistics implements GroupStatisticsInterface {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns number of groups with at least one project.
+   */
+  public function getNumberOfGroupsWithProject($groupType, $projectField): array|int {
+    $query = $this->connection->select('group__' . $projectField, 'gpf');
+    $query->addExpression('COUNT(DISTINCT gpf.entity_id)', 'groups_count');
+    $query->condition('gpf.bundle', $groupType);
+
+    return $query->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of groups with at least one member.
+   */
+  public function getNumberOfGroupsWithMembers($membershipType): array|int {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->addExpression('COUNT(DISTINCT gcfd.gid)', 'groups_count');
+    $query->condition('gcfd.type', $membershipType);
+    $query->condition('gcfd.label', ['Community Manager'], 'NOT IN');
+
+    return $query->execute()->fetchField();
   }
 
 }
