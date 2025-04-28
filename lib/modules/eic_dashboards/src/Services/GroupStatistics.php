@@ -255,11 +255,27 @@ class GroupStatistics implements GroupStatisticsInterface {
    * Returns groups grouped by location.
    */
   public function getGroupsGroupedByLocation($groupType, $locationField, $argumentId): array {
-    $query = $this->connection->select('group__' . $locationField, 'glf');
-    $query->addExpression('COUNT(glf.' . $locationField . '_country_code)', 'groups_count');
-    $query->addExpression('glf.' . $locationField . '_country_code', 'country_code');
-    $query->condition('glf.bundle', $groupType);
-    $query->condition('glf.delta', 0);
+    // Get only the first location value for each group.
+    $subquery = $this->connection->select('group__' . $locationField, 'glf');
+    $subquery->addField('glf', 'entity_id');
+    $subquery->addField('glf', $locationField . '_country_code', 'country_code');
+    $subquery->condition('glf.bundle', $groupType);
+
+    // Add a subquery join to get only the minimum delta.
+    $min_delta_query = $this->connection->select('group__' . $locationField, 'glfj');
+    $min_delta_query->fields('glfj', ['entity_id']);
+    $min_delta_query->addExpression('MIN(glfj.delta)', 'min_delta');
+    $min_delta_query->groupBy('glfj.entity_id');
+    $subquery->join(
+      $min_delta_query,
+      'mdt',
+      'glf.entity_id = mdt.entity_id AND glf.delta = mdt.min_delta'
+    );
+
+    // Main query to count groups by location.
+    $query = $this->connection->select($subquery, 'sq');
+    $query->addExpression('COUNT(DISTINCT sq.entity_id)', 'groups_count');
+    $query->addField('sq', 'country_code');
     $query->groupBy('country_code');
     $query->orderBy('country_code', 'ASC');
     $results = $query->execute()->fetchAll();
