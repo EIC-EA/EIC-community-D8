@@ -8,6 +8,7 @@ use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\MembersStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
+use Drupal\eic_user\UserHelper;
 
 /**
  * Provides route responses for the eic_dashboards module.
@@ -36,17 +37,27 @@ class MembersDashboardController extends ControllerBase
   protected MembersStatisticsInterface $membersStatistics;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $eicUserHelper;
+
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface  $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
     MembersStatisticsInterface $membersStatistics,
+    UserHelper $eic_user_helper,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->membersStatistics = $membersStatistics;
+    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -58,6 +69,7 @@ class MembersDashboardController extends ControllerBase
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.members_statistics'),
+      $container->get('eic_user.helper'),
     );
   }
 
@@ -123,7 +135,7 @@ class MembersDashboardController extends ControllerBase
     $membersByTopicOfExpertiseMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of expertise'), $this->t('Choose expertise'), $membersByTopicOfExpertiseMenuData);
     $membersByTopicOfExpertise = $this->dashboardBuilder->chartWithMenu($membersByTopicOfExpertiseChart, $membersByTopicOfExpertiseMenu);
 
-    $totalCompletedMembersProfiles = $this->membersStatistics->getTotalCompletedMembersProfiles();
+    $totalCompletedMembersProfiles = $this->eicUserHelper->getMemberProfileCompletionCount();
     $totalCompletedMembersProfilesData = json_encode([
       ['name' => 'Completed profile', 'y' => $totalCompletedMembersProfiles],
       ['name' => 'Incomplete profile', 'y' => ($totalMembers - $totalCompletedMembersProfiles)],

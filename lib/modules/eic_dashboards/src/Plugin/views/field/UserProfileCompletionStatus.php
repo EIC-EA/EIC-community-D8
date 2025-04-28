@@ -3,10 +3,10 @@
 namespace Drupal\eic_dashboards\Plugin\views\field;
 
 
-use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\eic_user\UserHelper;
 
 /**
  * Field handler to flag the node type.
@@ -17,7 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class UserProfileCompletionStatus extends FieldPluginBase {
 
-  public function __construct($configuration, $plugin_id, $plugin_definition, private readonly Connection $connection) {
+  public function __construct(
+    $configuration,
+    $plugin_id,
+    $plugin_definition,
+    private readonly UserHelper $UserHelper
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -26,7 +31,7 @@ class UserProfileCompletionStatus extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('database')
+      $container->get('eic_user.helper')
     );
   }
 
@@ -43,14 +48,7 @@ class UserProfileCompletionStatus extends FieldPluginBase {
   public function render(ResultRow $values) {
     $uid = $values->uid;
 
-    $query = $this->connection->select('profile', 'p')
-      ->condition('p.uid', $uid)
-      ->fields('p', ['uid', 'profile_id']);
-    $query->join('profile__field_vocab_topic_expertise', 'pvte', 'p.profile_id = pvte.entity_id');
-    $query->join('profile__field_vocab_topic_interest', 'pvti', 'p.profile_id = pvti.entity_id');
-    $query->join('profile__field_location_address', 'pla', 'p.profile_id = pla.entity_id');
-
-    $result = $query->execute()->fetchAll();
+    $result = $this->UserHelper->getMemberProfileCompletionCount($uid);
     if (empty($result)) {
       return $this->t("Incomplete");
     }

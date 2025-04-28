@@ -69,15 +69,4 @@ interface MembersStatisticsInterface {
    *   The number of distinct active users with that membership type.
    */
   public function getMembersLinkedByType(string $membershipType): int;
-
-  /**
-   * Retrieves profile information for all active users.
-   *
-   * Fetches the user ID, profile ID, topic expertise term ID,
-   * topic interest term ID, and country code for each active user.
-   *
-   * @return int
-   *   The total number of users with completed profile.
-   */
-  public function getTotalCompletedMembersProfiles(): int;
 }
