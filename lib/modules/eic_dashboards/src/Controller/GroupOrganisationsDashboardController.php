@@ -108,7 +108,6 @@ class GroupOrganisationsDashboardController extends ControllerBase {
       $this->dashboardBuilder->columns([
         $groupsByType,
         $topGroupsByMembers,
-        '',
         $groupsByTopic,
       ], 2),
     ];

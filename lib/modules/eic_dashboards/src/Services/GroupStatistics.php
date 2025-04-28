@@ -316,6 +316,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query = $this->connection->select('group_content_field_data', 'gcfd');
     $query->addExpression('COUNT(DISTINCT gcfd.gid)', 'groups_count');
     $query->condition('gcfd.type', $membershipType);
+    $query->condition('gcfd.label', ['Community Manager'], 'NOT IN');
 
     return $query->execute()->fetchField();
   }
