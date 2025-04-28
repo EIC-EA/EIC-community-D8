@@ -259,6 +259,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->addExpression('COUNT(glf.' . $locationField . '_country_code)', 'groups_count');
     $query->addExpression('glf.' . $locationField . '_country_code', 'country_code');
     $query->condition('glf.bundle', $groupType);
+    $query->condition('glf.delta', 0);
     $query->groupBy('country_code');
     $query->orderBy('country_code', 'ASC');
     $results = $query->execute()->fetchAll();
