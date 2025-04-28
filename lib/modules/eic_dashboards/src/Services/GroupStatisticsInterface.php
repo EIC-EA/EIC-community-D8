@@ -52,10 +52,20 @@ interface GroupStatisticsInterface {
   /**
    * Returns groups grouped by location.
    */
-  public function getGroupsGroupedByLocation($groupType, $argumentId);
+  public function getGroupsGroupedByLocation($groupType, $locationField, $argumentId);
 
   /**
    * Returns top terms used by groups.
    */
   public function getTopTermsOfGroups($groupType, $taxonomyField, $range);
+
+  /**
+   * Returns number of groups with at least one project.
+   */
+  public function getNumberOfGroupsWithProject($groupType, $projectField);
+
+  /**
+   * Returns number of groups with at least one member.
+   */
+  public function getNumberOfGroupsWithMembers($membershipType);
 }
