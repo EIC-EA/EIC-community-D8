@@ -123,6 +123,13 @@ class MembersDashboardController extends ControllerBase
     $membersByTopicOfExpertiseMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of expertise'), $this->t('Choose expertise'), $membersByTopicOfExpertiseMenuData);
     $membersByTopicOfExpertise = $this->dashboardBuilder->chartWithMenu($membersByTopicOfExpertiseChart, $membersByTopicOfExpertiseMenu);
 
+    $totalCompletedMembersProfiles = $this->membersStatistics->getCompletedMembersProfiles();
+    $totalCompletedMembersProfilesData = json_encode([
+      ['name' => 'Completed profile', 'y' => $totalCompletedMembersProfiles],
+      ['name' => 'Incomplete profile', 'y' => ($totalMembers - $totalCompletedMembersProfiles)],
+    ], JSON_NUMERIC_CHECK);
+    $totalCompletedMembersProfilesChart = $this->dashboardBuilder->chartPie($this->t('Profile completion status'), $totalCompletedMembersProfilesData, '');
+
     // Members linked to Organisations
     $membersLinkedToOrganisations = $this->membersStatistics->getMembersLinkedByType('organisation-group_membership');
     $membersLinkedToOrganisationsData = json_encode([
@@ -143,6 +150,7 @@ class MembersDashboardController extends ControllerBase
       $membersByOrganizationType,
       $membersByTopicOfInterest,
       $membersByTopicOfExpertise,
+      $totalCompletedMembersProfilesChart,
       $membersLinkedToOrganisationsChart,
       $membersLinkedToProjectsChart
     ], 2);

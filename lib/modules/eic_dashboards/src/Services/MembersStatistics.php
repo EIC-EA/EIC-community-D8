@@ -220,4 +220,39 @@ class MembersStatistics implements MembersStatisticsInterface {
     return (int) $result;
   }
 
+  /**
+   * {*inheritdoc}
+   */
+  public function getCompletedMembersProfiles(): int {
+    $query = $this->connection->select('profile', 'p');
+    $query->leftJoin('profile__field_vocab_topic_expertise', 'pvte', 'p.profile_id = pvte.entity_id');
+    $query->leftJoin('profile__field_vocab_topic_interest', 'pvti', 'p.profile_id = pvti.entity_id');
+    $query->leftJoin('profile__field_location_address', 'pla', 'p.profile_id = pla.entity_id');
+
+    // Join users table to link profiles with their owners.
+    $query->innerJoin('users_field_data', 'u', 'p.uid = u.uid');
+
+    // Filters: active users and member profiles.
+    $query->condition('u.status', 1);
+    $query->condition('p.type', 'member');
+
+    // Select fields and aggregate.
+    $query->addExpression('COUNT(DISTINCT pvte.field_vocab_topic_expertise_target_id)', 'expertise_count');
+    $query->addExpression('COUNT(DISTINCT pvti.field_vocab_topic_interest_target_id)', 'interest_count');
+    $query->addExpression('MAX(pla.field_location_address_country_code)', 'country_code');
+
+    // Group by UID.
+    $query->groupBy('p.uid');
+
+    // Having conditions to filter completed profiles.
+    $query->having('expertise_count > 0');
+    $query->having('interest_count > 0');
+    $query->having('country_code IS NOT NULL');
+
+    // Now, count how many rows we get = how many users completed.
+    $completedProfiles = $query->countQuery()->execute()->fetchField();
+
+    return (int) $completedProfiles;
+  }
+
 }

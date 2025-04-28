@@ -34,10 +34,7 @@ interface MembersStatisticsInterface {
    *   The maximum number of users to retrieve.
    *
    * @return array
-   *   An array of members, each containing:
-   *   - prefix: (string) Formatted registration date (e.g., '27 Apr 2025').
-   *   - title: (string) Full name with country in parentheses (e.g., 'John Doe (Greece)').
-   *   - url: (string) URL to the user's profile page.
+   *   An array of members
    */
   public function getLastRegisteredMembersList(int $maxResults): array;
 
@@ -72,4 +69,15 @@ interface MembersStatisticsInterface {
    *   The number of distinct active users with that membership type.
    */
   public function getMembersLinkedByType(string $membershipType): int;
+
+  /**
+   * Retrieves profile information for all active users.
+   *
+   * Fetches the user ID, profile ID, topic expertise term ID,
+   * topic interest term ID, and country code for each active user.
+   *
+   * @return int
+   *   The total number of users with completed profile.
+   */
+  public function getCompletedMembersProfiles(): int;
 }
