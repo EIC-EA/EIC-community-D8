@@ -14,13 +14,6 @@ eic_dashboards.members_dashboard:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.organisations_dashboard:
-  path: '/dashboards/organisations-dashboard'
-  defaults:
-    _title: 'Organisations dashboard'
-  requirements:
-    _role: 'sensitive'
-
 eic_dashboards.projects_dashboard:
   path: '/dashboards/projects-dashboard'
   defaults:
@@ -72,6 +65,14 @@ eic_dashboards.group.events:
   defaults:
     _controller: '\Drupal\eic_dashboards\Controller\GroupEventsDashboardController::page'
     _title: 'Events dashboard'
+  requirements:
+    _role: 'sensitive'
+
+eic_dashboards.group.organisations:
+  path: '/dashboards/group/organisations'
+  defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\GroupOrganisationsDashboardController::page'
+    _title: 'Organisations dashboard'
   requirements:
     _role: 'sensitive'
 
