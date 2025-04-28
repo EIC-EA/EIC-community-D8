@@ -60,7 +60,12 @@ interface GroupStatisticsInterface {
   public function getTopTermsOfGroups($groupType, $taxonomyField, $range);
 
   /**
-   * Returns groups with at least one project.
+   * Returns number of groups with at least one project.
    */
   public function getNumberOfGroupsWithProject($groupType, $projectField);
+
+  /**
+   * Returns number of groups with at least one member.
+   */
+  public function getNumberOfGroupsWithMembers($membershipType);
 }

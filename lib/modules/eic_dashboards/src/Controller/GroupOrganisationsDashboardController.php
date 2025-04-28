@@ -70,7 +70,6 @@ class GroupOrganisationsDashboardController extends ControllerBase {
     $lastDaysLimit = 90;
     $topGroupsLimit = 10;
     $membershipType = 'organisation-group_membership';
-    $likeFlag = 'recommend_group';
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
@@ -130,10 +129,26 @@ class GroupOrganisationsDashboardController extends ControllerBase {
     ]);
     $groupsByProject = $this->dashboardBuilder->chartPie($this->t('Organisations with projects'),$groupsByProjectData, '');
 
+    // Groups with members.
+    $groupsWithMembers = $this->groupStatistics->getNumberOfGroupsWithMembers($membershipType);
+    $groupsWithoutMembers = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithMembers;
+    $groupsByMembersData = json_encode([
+      [
+        'name' => 'With one or more members',
+        'y' => (int) $groupsWithMembers,
+      ],
+      [
+        'name' => 'Without any members',
+        'y' => (int) $groupsWithoutMembers,
+      ]
+    ]);
+    $groupsByMembers = $this->dashboardBuilder->chartPie($this->t('Organisations with members'),$groupsByMembersData, '');
+
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
         $groupsByProject,
+        $groupsByMembers,
       ], 2),
     ];
 

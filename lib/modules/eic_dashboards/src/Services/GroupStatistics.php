@@ -299,12 +299,23 @@ class GroupStatistics implements GroupStatisticsInterface {
   }
 
   /**
-   * Returns groups with at least one project.
+   * Returns number of groups with at least one project.
    */
   public function getNumberOfGroupsWithProject($groupType, $projectField): array|int {
     $query = $this->connection->select('group__' . $projectField, 'gpf');
     $query->addExpression('COUNT(DISTINCT gpf.entity_id)', 'groups_count');
     $query->condition('gpf.bundle', $groupType);
+
+    return $query->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of groups with at least one member.
+   */
+  public function getNumberOfGroupsWithMembers($membershipType): array|int {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->addExpression('COUNT(DISTINCT gcfd.gid)', 'groups_count');
+    $query->condition('gcfd.type', $membershipType);
 
     return $query->execute()->fetchField();
   }
