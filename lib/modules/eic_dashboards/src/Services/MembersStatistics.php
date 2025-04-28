@@ -223,7 +223,7 @@ class MembersStatistics implements MembersStatisticsInterface {
   /**
    * {*inheritdoc}
    */
-  public function getCompletedMembersProfiles(): int {
+  public function getTotalCompletedMembersProfiles(): int {
     $query = $this->connection->select('profile', 'p');
     $query->leftJoin('profile__field_vocab_topic_expertise', 'pvte', 'p.profile_id = pvte.entity_id');
     $query->leftJoin('profile__field_vocab_topic_interest', 'pvti', 'p.profile_id = pvti.entity_id');

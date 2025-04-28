@@ -123,7 +123,7 @@ class MembersDashboardController extends ControllerBase
     $membersByTopicOfExpertiseMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of expertise'), $this->t('Choose expertise'), $membersByTopicOfExpertiseMenuData);
     $membersByTopicOfExpertise = $this->dashboardBuilder->chartWithMenu($membersByTopicOfExpertiseChart, $membersByTopicOfExpertiseMenu);
 
-    $totalCompletedMembersProfiles = $this->membersStatistics->getCompletedMembersProfiles();
+    $totalCompletedMembersProfiles = $this->membersStatistics->getTotalCompletedMembersProfiles();
     $totalCompletedMembersProfilesData = json_encode([
       ['name' => 'Completed profile', 'y' => $totalCompletedMembersProfiles],
       ['name' => 'Incomplete profile', 'y' => ($totalMembers - $totalCompletedMembersProfiles)],

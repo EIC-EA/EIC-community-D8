@@ -79,5 +79,5 @@ interface MembersStatisticsInterface {
    * @return int
    *   The total number of users with completed profile.
    */
-  public function getCompletedMembersProfiles(): int;
+  public function getTotalCompletedMembersProfiles(): int;
 }
