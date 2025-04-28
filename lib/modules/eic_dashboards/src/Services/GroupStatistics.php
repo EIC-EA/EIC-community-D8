@@ -254,11 +254,11 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns groups grouped by location.
    */
-  public function getGroupsGroupedByLocation($groupType, $argumentId): array {
-    $query = $this->connection->select('group__field_location', 'gfl');
-    $query->addExpression('COUNT(gfl.field_location_country_code)', 'groups_count');
-    $query->addExpression('gfl.field_location_country_code', 'country_code');
-    $query->condition('gfl.bundle', $groupType);
+  public function getGroupsGroupedByLocation($groupType, $locationField, $argumentId): array {
+    $query = $this->connection->select('group__' . $locationField, 'glf');
+    $query->addExpression('COUNT(glf.' . $locationField . '_country_code)', 'groups_count');
+    $query->addExpression('glf.' . $locationField . '_country_code', 'country_code');
+    $query->condition('glf.bundle', $groupType);
     $query->groupBy('country_code');
     $query->orderBy('country_code', 'ASC');
     $results = $query->execute()->fetchAll();

@@ -112,6 +112,18 @@ class GroupOrganisationsDashboardController extends ControllerBase {
       ], 2),
     ];
 
+    // Groups by country.
+    $locationField = 'field_address';
+    $groupsByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getGroupsGroupedByLocation($groupType, $locationField, 'id')));
+    $groupsByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Organisations by country'), $groupsByCountryData, false);
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByCountryChart,
+      ], 1),
+    ];
+
     // Groups with project.
     $projectField = 'field_organisation_project_id';
     $groupsWithProject = $this->groupStatistics->getNumberOfGroupsWithProject($groupType, $projectField);
@@ -155,6 +167,7 @@ class GroupOrganisationsDashboardController extends ControllerBase {
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
         $section4Build,
       ],
     ];
