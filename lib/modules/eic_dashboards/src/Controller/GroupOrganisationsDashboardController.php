@@ -126,7 +126,7 @@ class GroupOrganisationsDashboardController extends ControllerBase {
 
     // Groups with project.
     $projectField = 'field_organisation_project_id';
-    $groupsWithProject = $this->groupStatistics->getNumberOfGroupsWithProject($groupType, $projectField);
+    $groupsWithProject = $this->groupStatistics->getNumberOfGroupsWithPopulatedField($groupType, $projectField);
     $groupsWithoutProject = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithProject;
     $groupsByProjectData = json_encode([
       [

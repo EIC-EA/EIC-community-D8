@@ -1337,14 +1337,14 @@ display:
         - 'config:field.storage.group.field_project_horizon_results'
         - 'config:field.storage.group.field_project_innovations'
         - 'config:field.storage.group.field_project_status'
-  page_dashboard_members_list:
-    id: page_dashboard_members_list
+  page:
+    id: page
     display_title: Page
     display_plugin: page
     position: 1
     display_options:
       display_extenders: {  }
-      path: dashboards/projects-list
+      path: dashboards/listings/projects
     cache_metadata:
       max-age: -1
       contexts:

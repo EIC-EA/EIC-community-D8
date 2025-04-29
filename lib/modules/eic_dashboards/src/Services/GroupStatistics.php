@@ -316,10 +316,10 @@ class GroupStatistics implements GroupStatisticsInterface {
   }
 
   /**
-   * Returns number of groups with at least one project.
+   * Returns number of groups with given field populated.
    */
-  public function getNumberOfGroupsWithProject($groupType, $projectField): array|int {
-    $query = $this->connection->select('group__' . $projectField, 'gpf');
+  public function getNumberOfGroupsWithPopulatedField($groupType, $groupField): array|int {
+    $query = $this->connection->select('group__' . $groupField, 'gpf');
     $query->addExpression('COUNT(DISTINCT gpf.entity_id)', 'groups_count');
     $query->condition('gpf.bundle', $groupType);
 
@@ -336,6 +336,86 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->condition('gcfd.label', ['Community Manager'], 'NOT IN');
 
     return $query->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of groups per value from a list field.
+   */
+  public function getGroupsPerValue($groupType, $listField): array|int {
+    $query = $this->connection->select('group__' . $listField, 'glf');
+    $query->addExpression('COUNT(glf.' . $listField . '_value)', 'groups_count');
+    $query->addExpression('glf.' . $listField . '_value', 'value');
+    $query->condition('glf.bundle', $groupType);
+    $query->groupBy('value');
+    $query->orderBy('groups_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+    $entityTypeId = 'group';
+
+    foreach ($results as $result) {
+      $data[] = [
+        'name' => $this->dashboardHelper->getListFieldValue($entityTypeId, $listField, $result->value),
+        'y' => (int) $result->groups_count,
+      ];
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns number of projects linked from organisations.
+   */
+  public function getNumberOfProjectsLinkedFromOrganisations(): array|int {
+    $query = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
+    $query->innerJoin('group__field_organisation_project_id', 'gfopi', 'gfopi.field_organisation_project_id_value = gfpgai.field_project_grant_agreement_id_value');
+    $query->addExpression('COUNT(DISTINCT gfopi.field_organisation_project_id_value)', 'projects_count');
+    $query->condition('gfpgai.bundle', 'project');
+    $query->condition('gfopi.bundle', 'organisation');
+
+    return $query->execute()->fetchField();
+  }
+
+  /**
+   * Returns projects grouped by location of linked organisation.
+   */
+  public function getProjectsGroupedByLocationOfOrganisation(): array {
+    $subquery = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
+    $subquery->innerJoin('group__field_organisation_project_id', 'gfopi', 'gfopi.field_organisation_project_id_value = gfpgai.field_project_grant_agreement_id_value');
+    $subquery->innerJoin('group__field_address', 'gfa', 'gfa.entity_id = gfopi.entity_id');
+    $subquery->addField('gfa', 'entity_id');
+    $subquery->addField('gfa', 'field_address_country_code', 'country_code');
+    $subquery->condition('gfpgai.bundle', 'project');
+    $subquery->condition('gfopi.bundle', 'organisation');
+
+    // Add a subquery join to get only the minimum delta.
+    $min_delta_query = $this->connection->select('group__field_address', 'gfaj');
+    $min_delta_query->fields('gfaj', ['entity_id']);
+    $min_delta_query->addExpression('MIN(gfaj.delta)', 'min_delta');
+    $min_delta_query->groupBy('gfaj.entity_id');
+    $subquery->join(
+      $min_delta_query,
+      'mdt',
+      'gfa.entity_id = mdt.entity_id AND gfa.delta = mdt.min_delta'
+    );
+
+    // Main query to count projects by location.
+    $query = $this->connection->select($subquery, 'sq');
+    $query->addExpression('COUNT(DISTINCT sq.entity_id)', 'projects_count');
+    $query->addField('sq', 'country_code');
+    $query->groupBy('country_code');
+    $query->orderBy('country_code', 'ASC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $row) {
+      $data[$row->country_code]['id'] = $row->country_code;
+      $data[$row->country_code]['label'] = $countries[mb_strtoupper($row->country_code)] ?? '';
+      $data[$row->country_code]['count'] = $row->projects_count;
+    }
+
+    return $data;
   }
 
 }

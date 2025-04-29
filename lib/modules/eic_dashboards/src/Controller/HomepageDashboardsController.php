@@ -60,19 +60,18 @@ class HomepageDashboardsController extends ControllerBase {
       '#theme' => 'dashboards_homepage',
       '#title' => $title,
       '#dashboards' => [
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.members_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.members_dashboard'), 'dashboard-members', 'dashboard'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.organisations_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.organisations_dashboard'), 'dashboard-organisations', 'dashboard'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.projects_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.projects_dashboard'), 'dashboard-projects', 'dashboard'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.content_dashboard'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.content_dashboard'), 'dashboard-content', 'dashboard'),
+        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.members'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.members'), 'dashboard-members', 'dashboard'),
+        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.organisations'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.organisations'), 'dashboard-organisations', 'dashboard'),
+        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.projects'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.projects'), 'dashboard-projects', 'dashboard'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.events'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.events'), 'dashboard-events', 'dashboard'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.groups'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.groups'), 'dashboard-groups', 'dashboard'),
       ],
       '#listings' => [
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.members_list'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.groups'), 'list-members', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.organisations_list'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.groups'), 'list-organisations', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.projects_list'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.projects_list'), 'list-projects', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.content_list'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.content_list'), 'list-content', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.activity_report'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.activity_report'), 'activity-report', 'list'),
+        $this->dashboardBuilder->ctaCard('Members list', $this->dashboardHelper->getRoutingUrl('view.dashboard_members_list.page'), 'list-members', 'list'),
+        $this->dashboardBuilder->ctaCard('Organisations list', $this->dashboardHelper->getRoutingUrl('view.dashboard_organisations_list.page'), 'list-organisations', 'list'),
+        $this->dashboardBuilder->ctaCard('Projects list', $this->dashboardHelper->getRoutingUrl('view.dashboard_projects_list.page'), 'list-projects', 'list'),
+        $this->dashboardBuilder->ctaCard('Content list', $this->dashboardHelper->getRoutingUrl('view.dashboard_content_list.page'), 'list-content', 'list'),
+        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.activity_report'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.activity_report'), 'activity-report', 'list'),
       ]
     ];
     return $build;
