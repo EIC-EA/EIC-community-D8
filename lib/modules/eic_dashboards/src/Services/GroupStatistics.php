@@ -316,10 +316,10 @@ class GroupStatistics implements GroupStatisticsInterface {
   }
 
   /**
-   * Returns number of groups with at least one project.
+   * Returns number of groups with given field populated.
    */
-  public function getNumberOfGroupsWithPopulatedField($groupType, $projectField): array|int {
-    $query = $this->connection->select('group__' . $projectField, 'gpf');
+  public function getNumberOfGroupsWithPopulatedField($groupType, $groupField): array|int {
+    $query = $this->connection->select('group__' . $groupField, 'gpf');
     $query->addExpression('COUNT(DISTINCT gpf.entity_id)', 'groups_count');
     $query->condition('gpf.bundle', $groupType);
 
@@ -361,6 +361,19 @@ class GroupStatistics implements GroupStatisticsInterface {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns number of projects linked from organisations.
+   */
+  public function getNumberOfProjectsLinkedFromOrganisations(): array|int {
+    $query = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
+    $query->innerJoin('group__field_organisation_project_id', 'gfopi', 'gfopi.field_organisation_project_id_value = gfpgai.field_project_grant_agreement_id_value');
+    $query->addExpression('COUNT(DISTINCT gfopi.field_organisation_project_id_value)', 'projects_count');
+    $query->condition('gfpgai.bundle', 'project');
+    $query->condition('gfopi.bundle', 'organisation');
+
+    return $query->execute()->fetchField();
   }
 
 }

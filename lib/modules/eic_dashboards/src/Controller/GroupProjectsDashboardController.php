@@ -149,11 +149,27 @@ class GroupProjectsDashboardController extends ControllerBase {
     ]);
     $groupsByInnovations = $this->dashboardBuilder->chartPie($this->t('Projects recognized by Innovation Radar'), $groupsByInnovationsData, '');
 
+    // Groups linked to organisations.
+    $groupsLinkedToOrganisations = $this->groupStatistics->getNumberOfProjectsLinkedFromOrganisations();
+    $groupsNotLinkedToOrganisations = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsLinkedToOrganisations;
+    $groupsByLinkToOrganisationData = json_encode([
+      [
+        'name' => 'Linked to at least one EIC Community organisation',
+        'y' => (int) $groupsLinkedToOrganisations,
+      ],
+      [
+        'name' => 'Not linked to any organisations',
+        'y' => (int) $groupsNotLinkedToOrganisations,
+      ]
+    ]);
+    $groupsByLinkToOrganisation = $this->dashboardBuilder->chartPie($this->t('Projects linked to organisations'), $groupsByLinkToOrganisationData, '');
+
     // Section 4.
     $section4Build = [
       $this->dashboardBuilder->columns([
         $groupsByResults,
         $groupsByInnovations,
+        $groupsByLinkToOrganisation,
       ], 2),
     ];
 

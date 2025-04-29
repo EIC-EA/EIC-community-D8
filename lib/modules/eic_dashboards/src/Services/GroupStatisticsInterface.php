@@ -60,9 +60,9 @@ interface GroupStatisticsInterface {
   public function getTopTermsOfGroups($groupType, $taxonomyField, $range);
 
   /**
-   * Returns number of groups with at least one project.
+   * Returns number of groups with given field populated.
    */
-  public function getNumberOfGroupsWithPopulatedField($groupType, $projectField);
+  public function getNumberOfGroupsWithPopulatedField($groupType, $groupField);
 
   /**
    * Returns number of groups with at least one member.
@@ -73,4 +73,9 @@ interface GroupStatisticsInterface {
    * Returns number of groups per value from a list field.
    */
   public function getGroupsPerValue($groupType, $listField);
+
+  /**
+   * Returns number of projects linked from organisations.
+   */
+  public function getNumberOfProjectsLinkedFromOrganisations();
 }
