@@ -74,13 +74,11 @@ class GroupProjectsDashboardController extends ControllerBase {
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
-    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groups', ['@group' => $groupType]),
-      $numberOfGroupsData, '');
+    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groups', ['@group' => $groupType]), $numberOfGroupsData, '');
 
     // Number of groups created in past days.
     $numberOfGroupsPastDaysData = $this->groupStatistics->getNumberOfGroupsPastDays($groupType, $lastDaysLimit);
-    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', ['@group' => $groupType, '@days' =>
-      $lastDaysLimit]), $numberOfGroupsPastDaysData, '');
+    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', ['@group' => $groupType, '@days' => $lastDaysLimit]), $numberOfGroupsPastDaysData, '');
 
     // Section 1.
     $section1Build = [
@@ -119,10 +117,51 @@ class GroupProjectsDashboardController extends ControllerBase {
       ], 2),
     ];
 
+    // Groups by Horizon Platform results.
+    $resultsField = 'field_project_horizon_results';
+    $groupsWithResults = $this->groupStatistics->getNumberOfGroupsWithPopulatedField($groupType, $resultsField);
+    $groupsWithoutResults = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithResults;
+    $groupsByResultsData = json_encode([
+      [
+        'name' => 'Includes HRP reference',
+        'y' => (int) $groupsWithResults,
+      ],
+      [
+        'name' => 'Without HRP reference',
+        'y' => (int) $groupsWithoutResults,
+      ]
+    ]);
+    $groupsByResults = $this->dashboardBuilder->chartPie($this->t('Projects with Horizon Platform Results'),$groupsByResultsData, '');
+
+    // Groups by Innovation Radar results.
+    $innovationsField = 'field_project_innovations';
+    $groupsWithInnovations = $this->groupStatistics->getNumberOfGroupsWithPopulatedField($groupType, $innovationsField);
+    $groupsWithoutInnovations = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithInnovations;
+    $groupsByInnovationsData = json_encode([
+      [
+        'name' => 'Recognized by Innovation Radar',
+        'y' => (int) $groupsWithInnovations,
+      ],
+      [
+        'name' => 'Not recognized by Innovation Radar',
+        'y' => (int) $groupsWithoutInnovations,
+      ]
+    ]);
+    $groupsByInnovations = $this->dashboardBuilder->chartPie($this->t('Projects recognized by Innovation Radar'),$groupsByInnovationsData, '');
+
+    // Section 4.
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByResults,
+        $groupsByInnovations,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
-        $section2Build
+        $section2Build,
+        $section4Build,
       ],
     ];
 

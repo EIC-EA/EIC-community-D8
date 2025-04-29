@@ -318,7 +318,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns number of groups with at least one project.
    */
-  public function getNumberOfGroupsWithProject($groupType, $projectField): array|int {
+  public function getNumberOfGroupsWithPopulatedField($groupType, $projectField): array|int {
     $query = $this->connection->select('group__' . $projectField, 'gpf');
     $query->addExpression('COUNT(DISTINCT gpf.entity_id)', 'groups_count');
     $query->condition('gpf.bundle', $groupType);

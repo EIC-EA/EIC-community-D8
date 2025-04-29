@@ -62,7 +62,7 @@ interface GroupStatisticsInterface {
   /**
    * Returns number of groups with at least one project.
    */
-  public function getNumberOfGroupsWithProject($groupType, $projectField);
+  public function getNumberOfGroupsWithPopulatedField($groupType, $projectField);
 
   /**
    * Returns number of groups with at least one member.
