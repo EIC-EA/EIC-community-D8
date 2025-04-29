@@ -89,9 +89,22 @@ class GroupProjectsDashboardController extends ControllerBase {
       ], 3),
     ];
 
+    // Groups by funding programme chart.
+    $fundingField = 'field_project_funding_programme';
+    $groupsByFundingData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $fundingField));
+    $groupsByFunding = $this->dashboardBuilder->chartPie($this->t('Projects by funding programme'), $groupsByFundingData, '');
+
+    // Section 2.
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByFunding,
+      ], 2),
+    ];
+
     $build = [
       'content' => [
         $section1Build,
+        $section2Build
       ],
     ];
 
