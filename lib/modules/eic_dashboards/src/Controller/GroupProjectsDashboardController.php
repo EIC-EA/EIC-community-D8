@@ -131,9 +131,9 @@ class GroupProjectsDashboardController extends ControllerBase {
         'y' => (int) $groupsWithoutResults,
       ]
     ]);
-    $groupsByResults = $this->dashboardBuilder->chartPie($this->t('Projects with Horizon Platform Results'),$groupsByResultsData, '');
+    $groupsByResults = $this->dashboardBuilder->chartPie($this->t('Projects with Horizon Platform Results'), $groupsByResultsData, '');
 
-    // Groups by Innovation Radar results.
+    // Groups by Innovation Radar recognition.
     $innovationsField = 'field_project_innovations';
     $groupsWithInnovations = $this->groupStatistics->getNumberOfGroupsWithPopulatedField($groupType, $innovationsField);
     $groupsWithoutInnovations = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsWithInnovations;
@@ -147,7 +147,7 @@ class GroupProjectsDashboardController extends ControllerBase {
         'y' => (int) $groupsWithoutInnovations,
       ]
     ]);
-    $groupsByInnovations = $this->dashboardBuilder->chartPie($this->t('Projects recognized by Innovation Radar'),$groupsByInnovationsData, '');
+    $groupsByInnovations = $this->dashboardBuilder->chartPie($this->t('Projects recognized by Innovation Radar'), $groupsByInnovationsData, '');
 
     // Section 4.
     $section4Build = [
