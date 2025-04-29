@@ -70,6 +70,7 @@ class GroupProjectsDashboardController extends ControllerBase {
     $lastDaysLimit = 90;
     $topGroupsLimit = 10;
     $membershipType = 'project-group_membership';
+    $likeFlag = 'recommend_group';
 
     // Number of groups.
     $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
@@ -94,10 +95,15 @@ class GroupProjectsDashboardController extends ControllerBase {
     $groupsByFundingData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $fundingField));
     $groupsByFunding = $this->dashboardBuilder->chartPie($this->t('Projects by funding programme'), $groupsByFundingData, '');
 
+    // Most liked groups.
+    $topGroupsByLikesLink = $this->dashboardBuilder->buttonToView('view.admin_groups.page_admin_projects', '', '', $this->t('See all'));
+    $topGroupsByLikes = $this->dashboardBuilder->titleLinkList($this->t('Most liked projects'), $topGroupsByLikesLink, $this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit, 'list'));
+
     // Section 2.
     $section2Build = [
       $this->dashboardBuilder->columns([
         $groupsByFunding,
+        $topGroupsByLikes,
       ], 2),
     ];
 
