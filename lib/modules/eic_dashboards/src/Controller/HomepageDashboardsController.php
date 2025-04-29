@@ -67,10 +67,10 @@ class HomepageDashboardsController extends ControllerBase {
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.group.groups'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.group.groups'), 'dashboard-groups', 'dashboard'),
       ],
       '#listings' => [
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.members'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.members'), 'list-members', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.organisations'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.organisations'), 'list-organisations', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.projects'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.projects'), 'list-projects', 'list'),
-        $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.content'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.content'), 'list-content', 'list'),
+        $this->dashboardBuilder->ctaCard('Members list', $this->dashboardHelper->getRoutingUrl('view.dashboard_members_list.page'), 'list-members', 'list'),
+        $this->dashboardBuilder->ctaCard('Organisations list', $this->dashboardHelper->getRoutingUrl('view.dashboard_organisations_list.page'), 'list-organisations', 'list'),
+        $this->dashboardBuilder->ctaCard('Projects list', $this->dashboardHelper->getRoutingUrl('view.dashboard_projects_list.page'), 'list-projects', 'list'),
+        $this->dashboardBuilder->ctaCard('Content list', $this->dashboardHelper->getRoutingUrl('view.dashboard_content_list.page'), 'list-content', 'list'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.activity_report'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.activity_report'), 'activity-report', 'list'),
       ]
     ];

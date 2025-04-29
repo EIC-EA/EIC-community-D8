@@ -70,34 +70,6 @@ eic_dashboards.content.discussions:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.listings.members:
-  path: '/dashboards/listings/members'
-  defaults:
-    _title: 'Members list'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.listings.organisations:
-  path: '/dashboards/listings/organisations'
-  defaults:
-    _title: 'Organisations list'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.listings.projects:
-  path: '/dashboards/listings/projects'
-  defaults:
-    _title: 'Projects list'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.listings.content:
-  path: '/dashboards/listings/content'
-  defaults:
-    _title: 'Content list'
-  requirements:
-    _role: 'sensitive'
-
 eic_dashboards.listings.activity_report:
   path: '/dashboards/listings/activity-report'
   defaults:

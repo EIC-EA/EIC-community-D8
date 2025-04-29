@@ -89,28 +89,28 @@ eic_dashboards.listings.members:
   title: 'Members'
   description: 'List of members'
   parent: eic_dashboards.listings
-  route_name: eic_dashboards.listings.members
+  route_name: view.dashboard_members_list.page
   weight: 9
 
 eic_dashboards.listings.content:
   title: 'Content'
   description: 'List of content'
   parent: eic_dashboards.listings
-  route_name: eic_dashboards.listings.content
+  route_name: view.dashboard_content_list.page
   weight: 10
 
 eic_dashboards.listings.organisations:
   title: 'Organisations'
   description: 'List of organisations'
   parent: eic_dashboards.listings
-  route_name: eic_dashboards.listings.organisations
+  route_name: view.dashboard_organisations_list.page
   weight: 11
 
 eic_dashboards.listings.projects:
   title: 'Projects'
   description: 'List of projects'
   parent: eic_dashboards.listings
-  route_name: eic_dashboards.listings.projects
+  route_name: view.dashboard_projects_list.page
   weight: 12
 
 eic_dashboards.listings.activity_report:
