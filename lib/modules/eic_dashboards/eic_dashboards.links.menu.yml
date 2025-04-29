@@ -71,6 +71,13 @@ eic_dashboards.group.organisations:
   route_name: eic_dashboards.group.organisations
   weight: 5
 
+eic_dashboards.group.projects:
+  title: 'Group / Projects'
+  description: 'Projects statistics'
+  parent: system.eic_dashboards
+  route_name: eic_dashboards.group.projects
+  weight: 5
+
 eic_dashboards.members_list:
   title: 'Members list'
   description: 'List of platform members'
