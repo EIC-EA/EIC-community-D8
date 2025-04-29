@@ -116,6 +116,17 @@ class GroupProjectsDashboardController extends ControllerBase {
       ], 2),
     ];
 
+    // Groups by location of coordinating organisation.
+    $groupsByLocationOfOrganisationData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getProjectsGroupedByLocationOfOrganisation()));
+    $groupsByLocationOfOrganisationChart = $this->dashboardBuilder->chartColumn($this->t('Projects by coordinating organisation country'), $groupsByLocationOfOrganisationData, false);
+
+    // Section 3.
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $groupsByLocationOfOrganisationChart,
+      ], 1),
+    ];
+
     // Groups by Horizon Platform results.
     $resultsField = 'field_project_horizon_results';
     $groupsWithResults = $this->groupStatistics->getNumberOfGroupsWithPopulatedField($groupType, $resultsField);
@@ -176,6 +187,7 @@ class GroupProjectsDashboardController extends ControllerBase {
       'content' => [
         $section1Build,
         $section2Build,
+        $section3Build,
         $section4Build,
       ],
     ];

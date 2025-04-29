@@ -78,4 +78,9 @@ interface GroupStatisticsInterface {
    * Returns number of projects linked from organisations.
    */
   public function getNumberOfProjectsLinkedFromOrganisations();
+
+  /**
+   * Returns projects grouped by location of linked organisation.
+   */
+  public function getProjectsGroupedByLocationOfOrganisation();
 }
