@@ -1,6 +1,6 @@
 system.eic_dashboards:
   title: 'Dashboards'
-  description: 'EIC Community Management statistics for platform.'
+  description: 'EIC Community Management statistics'
   parent: system.admin
   route_name: eic_dashboards.homepage
   weight: -16
@@ -8,100 +8,114 @@ system.eic_dashboards:
       attributes:
         class: ['menu-icon-dashboard']
 
-eic_dashboards.members_dashboard:
-  title: 'Members dashboard'
-  description: 'Platform members statistics'
+eic_dashboards.dashboards:
+  title: 'Dashboards'
+  description: 'Available member & group dashboards'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.members_dashboard
+  url: 'internal:#'
+  weight: 0
+
+eic_dashboards.content:
+  title: 'Content'
+  description: 'Available content dashboards'
+  parent: system.eic_dashboards
+  url: 'internal:#'
   weight: 1
 
-eic_dashboards.projects_dashboard:
-  title: 'Projects dashboard'
-  description: 'Platform projects statistics'
+eic_dashboards.listings:
+  title: 'Listings'
+  description: 'Available listings'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.projects_dashboard
-  weight: 3
+  url: 'internal:#'
+  weight: 2
 
-eic_dashboards.content_dashboard:
-  title: 'Content dashboard'
-  description: 'Platform content statistics'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.content_dashboard
-  weight: 4
-
-eic_dashboards.content.documents:
-  title: 'Content / Documents'
-  description: 'Documents content statistics'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.content.documents
-  weight: 4
-
-eic_dashboards.content.stories:
-  title: 'Content / Stories'
-  description: 'Stories content statistics'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.content.stories
-  weight: 4
-
-eic_dashboards.content.discussions:
-  title: 'Content / Discussions'
-  description: 'Discussions content statistics'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.content.discussions
-  weight: 4
+eic_dashboards.members:
+  title: 'Members'
+  description: 'Members statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.members
+  weight: 1
 
 eic_dashboards.group.groups:
-  title: 'Group / Groups'
+  title: 'Groups'
   description: 'Groups statistics'
-  parent: system.eic_dashboards
+  parent: eic_dashboards.dashboards
   route_name: eic_dashboards.group.groups
-  weight: 5
+  weight: 2
 
 eic_dashboards.group.events:
-  title: 'Group / Events'
+  title: 'Events'
   description: 'Events statistics'
-  parent: system.eic_dashboards
+  parent: eic_dashboards.dashboards
   route_name: eic_dashboards.group.events
-  weight: 5
+  weight: 3
 
 eic_dashboards.group.organisations:
-  title: 'Group / Organisations'
+  title: 'Organisations'
   description: 'Organisations statistics'
-  parent: system.eic_dashboards
+  parent: eic_dashboards.dashboards
   route_name: eic_dashboards.group.organisations
+  weight: 4
+
+eic_dashboards.group.projects:
+  title: 'Projects'
+  description: 'Projects statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.group.projects
   weight: 5
 
-eic_dashboards.members_list:
-  title: 'Members list'
-  description: 'List of platform members'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.members_list
+eic_dashboards.content.documents:
+  title: 'Documents'
+  description: 'Documents content statistics'
+  parent: eic_dashboards.content
+  route_name: eic_dashboards.content.documents
+  weight: 6
+
+eic_dashboards.content.stories:
+  title: 'Stories'
+  description: 'Stories content statistics'
+  parent: eic_dashboards.content
+  route_name: eic_dashboards.content.stories
   weight: 7
 
-eic_dashboards.organisations_list:
-  title: 'Organisations list'
-  description: 'List of platform organisations'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.organisations_list
+eic_dashboards.content.discussions:
+  title: 'Discussions'
+  description: 'Discussions content statistics'
+  parent: eic_dashboards.content
+  route_name: eic_dashboards.content.discussions
   weight: 8
 
-eic_dashboards.projects_list:
-  title: 'Projects list'
-  description: 'List of platform projects'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.projects_list
+eic_dashboards.listings.members:
+  title: 'Members'
+  description: 'List of members'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_members_list.page
   weight: 9
 
-eic_dashboards.content_list:
-  title: 'Content list'
-  description: 'List of platform content'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.content_list
+eic_dashboards.listings.content:
+  title: 'Content'
+  description: 'List of content'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_content_list.page
   weight: 10
 
-eic_dashboards.activity_report:
+eic_dashboards.listings.organisations:
+  title: 'Organisations'
+  description: 'List of organisations'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_organisations_list.page
+  weight: 11
+
+eic_dashboards.listings.projects:
+  title: 'Projects'
+  description: 'List of projects'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_projects_list.page
+  weight: 12
+
+eic_dashboards.listings.activity_report:
   title: 'Activity report'
   description: 'Platform activity report'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.activity_report
-  weight: 11
+  parent: eic_dashboards.listings
+  route_name: eic_dashboards.listings.activity_report
+  weight: 13
