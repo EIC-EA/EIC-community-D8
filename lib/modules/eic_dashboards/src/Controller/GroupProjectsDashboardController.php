@@ -99,11 +99,17 @@ class GroupProjectsDashboardController extends ControllerBase {
     $topGroupsByLikesLink = $this->dashboardBuilder->buttonToView('view.admin_groups.page_admin_projects', '', '', $this->t('See all'));
     $topGroupsByLikes = $this->dashboardBuilder->titleLinkList($this->t('Most liked projects'), $topGroupsByLikesLink, $this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit, 'list'));
 
+    // Groups by field of science chart.
+    $scienceField = 'field_project_fields_of_science';
+    $groupsByScienceData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $scienceField));
+    $groupsByScience = $this->dashboardBuilder->chartPie($this->t('Projects by field of science'), $groupsByScienceData, '');
+
     // Section 2.
     $section2Build = [
       $this->dashboardBuilder->columns([
         $groupsByFunding,
         $topGroupsByLikes,
+        $groupsByScience,
       ], 2),
     ];
 
