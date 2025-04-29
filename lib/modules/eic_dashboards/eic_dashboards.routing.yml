@@ -6,18 +6,43 @@ eic_dashboards.homepage:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.members_dashboard:
-  path: '/dashboards/members-dashboard'
+eic_dashboards.members:
+  path: '/dashboards/members'
   defaults:
     _controller: '\Drupal\eic_dashboards\Controller\MembersDashboardController::membersOverview'
     _title: 'Members dashboard'
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.content_dashboard:
-  path: '/dashboards/content-dashboard'
+eic_dashboards.group.groups:
+  path: '/dashboards/groups'
   defaults:
-    _title: 'Content dashboard'
+    _controller: '\Drupal\eic_dashboards\Controller\GroupGroupsDashboardController::page'
+    _title: 'Groups dashboard'
+  requirements:
+    _role: 'sensitive'
+
+eic_dashboards.group.events:
+  path: '/dashboards/events'
+  defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\GroupEventsDashboardController::page'
+    _title: 'Events dashboard'
+  requirements:
+    _role: 'sensitive'
+
+eic_dashboards.group.organisations:
+  path: '/dashboards/organisations'
+  defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\GroupOrganisationsDashboardController::page'
+    _title: 'Organisations dashboard'
+  requirements:
+    _role: 'sensitive'
+
+eic_dashboards.group.projects:
+  path: '/dashboards/projects'
+  defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\GroupProjectsDashboardController::page'
+    _title: 'Projects dashboard'
   requirements:
     _role: 'sensitive'
 
@@ -45,68 +70,36 @@ eic_dashboards.content.discussions:
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.group.groups:
-  path: '/dashboards/group/groups'
-  defaults:
-    _controller: '\Drupal\eic_dashboards\Controller\GroupGroupsDashboardController::page'
-    _title: 'Groups dashboard'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.group.events:
-  path: '/dashboards/group/events'
-  defaults:
-    _controller: '\Drupal\eic_dashboards\Controller\GroupEventsDashboardController::page'
-    _title: 'Events dashboard'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.group.organisations:
-  path: '/dashboards/group/organisations'
-  defaults:
-    _controller: '\Drupal\eic_dashboards\Controller\GroupOrganisationsDashboardController::page'
-    _title: 'Organisations dashboard'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.group.projects:
-  path: '/dashboards/group/projects'
-  defaults:
-    _controller: '\Drupal\eic_dashboards\Controller\GroupProjectsDashboardController::page'
-    _title: 'Projects dashboard'
-  requirements:
-    _role: 'sensitive'
-
-eic_dashboards.members_list:
-  path: '/dashboards/members-list'
+eic_dashboards.listings.members:
+  path: '/dashboards/listings/members'
   defaults:
     _title: 'Members list'
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.organisations_list:
-  path: '/dashboards/organisations-list'
+eic_dashboards.listings.organisations:
+  path: '/dashboards/listings/organisations'
   defaults:
     _title: 'Organisations list'
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.projects_list:
-  path: '/dashboards/projects-list'
+eic_dashboards.listings.projects:
+  path: '/dashboards/listings/projects'
   defaults:
     _title: 'Projects list'
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.content_list:
-  path: '/dashboards/content-list'
+eic_dashboards.listings.content:
+  path: '/dashboards/listings/content'
   defaults:
     _title: 'Content list'
   requirements:
     _role: 'sensitive'
 
-eic_dashboards.activity_report:
-  path: '/dashboards/activity-report'
+eic_dashboards.listings.activity_report:
+  path: '/dashboards/listings/activity-report'
   defaults:
     _title: 'Activity report'
   requirements:

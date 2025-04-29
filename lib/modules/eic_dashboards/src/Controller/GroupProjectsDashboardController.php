@@ -66,10 +66,9 @@ class GroupProjectsDashboardController extends ControllerBase {
     // Specify current group type.
     $groupType = 'project';
 
-    // Define days, range, membership and flags.
-    $lastDaysLimit = 90;
+    // Define days, range and flags.
+    $lastDaysLimit = 30;
     $topGroupsLimit = 10;
-    $membershipType = 'project-group_membership';
     $likeFlag = 'recommend_group';
 
     // Number of groups.
