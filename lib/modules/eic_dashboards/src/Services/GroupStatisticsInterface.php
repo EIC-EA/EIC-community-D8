@@ -68,4 +68,9 @@ interface GroupStatisticsInterface {
    * Returns number of groups with at least one member.
    */
   public function getNumberOfGroupsWithMembers($membershipType);
+
+  /**
+   * Returns number of groups per value from a list field.
+   */
+  public function getGroupsPerValue($groupType, $listField);
 }

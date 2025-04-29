@@ -338,4 +338,29 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $query->execute()->fetchField();
   }
 
+  /**
+   * Returns number of groups per value from a list field.
+   */
+  public function getGroupsPerValue($groupType, $listField): array|int {
+    $query = $this->connection->select('group__' . $listField, 'glf');
+    $query->addExpression('COUNT(glf.' . $listField . '_value)', 'groups_count');
+    $query->addExpression('glf.' . $listField . '_value', 'value');
+    $query->condition('glf.bundle', $groupType);
+    $query->groupBy('value');
+    $query->orderBy('groups_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+    $entityTypeId = 'group';
+
+    foreach ($results as $result) {
+      $data[] = [
+        'name' => $this->dashboardHelper->getListFieldValue($entityTypeId, $listField, $result->value),
+        'y' => (int) $result->groups_count,
+      ];
+    }
+
+    return $data;
+  }
+
 }

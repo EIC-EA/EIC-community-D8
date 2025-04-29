@@ -104,12 +104,18 @@ class GroupProjectsDashboardController extends ControllerBase {
     $groupsByScienceData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $scienceField));
     $groupsByScience = $this->dashboardBuilder->chartPie($this->t('Projects by field of science'), $groupsByScienceData, '');
 
+    // Groups by status chart.
+    $statusField = 'field_project_status';
+    $groupsByStatusData = json_encode($this->groupStatistics->getGroupsPerValue($groupType, $statusField));
+    $groupsByStatus = $this->dashboardBuilder->chartPie($this->t('Projects status'), $groupsByStatusData, '');
+
     // Section 2.
     $section2Build = [
       $this->dashboardBuilder->columns([
         $groupsByFunding,
         $topGroupsByLikes,
         $groupsByScience,
+        $groupsByStatus,
       ], 2),
     ];
 
