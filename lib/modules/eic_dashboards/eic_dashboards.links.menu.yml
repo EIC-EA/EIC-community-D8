@@ -15,13 +15,6 @@ eic_dashboards.members_dashboard:
   route_name: eic_dashboards.members_dashboard
   weight: 1
 
-eic_dashboards.projects_dashboard:
-  title: 'Projects dashboard'
-  description: 'Platform projects statistics'
-  parent: system.eic_dashboards
-  route_name: eic_dashboards.projects_dashboard
-  weight: 3
-
 eic_dashboards.content_dashboard:
   title: 'Content dashboard'
   description: 'Platform content statistics'
