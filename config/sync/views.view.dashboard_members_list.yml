@@ -1443,7 +1443,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: dashboards/members-list
+      path: dashboards/listings/members
     cache_metadata:
       max-age: -1
       contexts:

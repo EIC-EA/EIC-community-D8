@@ -1344,7 +1344,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: dashboards/projects-list
+      path: dashboards/listings/projects
     cache_metadata:
       max-age: -1
       contexts:

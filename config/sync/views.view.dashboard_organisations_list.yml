@@ -990,7 +990,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: dashboards/organisations-list
+      path: dashboards/listings/organisations
     cache_metadata:
       max-age: -1
       contexts:
