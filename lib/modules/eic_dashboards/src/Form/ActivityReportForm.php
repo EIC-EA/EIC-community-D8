@@ -9,6 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\eic_dashboards\Services\ContentStatisticsInterface;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\GroupStatisticsInterface;
 use Drupal\eic_dashboards\Services\MembersStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -53,6 +54,13 @@ class ActivityReportForm extends FormBase {
   protected ContentStatisticsInterface $contentStatistics;
 
   /**
+   * The content statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\GroupStatisticsInterface
+   */
+  protected GroupStatisticsInterface $groupStatistics;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -60,11 +68,13 @@ class ActivityReportForm extends FormBase {
     DashboardBuilderInterface $dashboardBuilder,
     MembersStatisticsInterface $membersStatistics,
     ContentStatisticsInterface $contentStatistics,
+    GroupStatisticsInterface $groupStatistics,
   ) {
     $this->dateFormatter = $dateFormatter;
     $this->dashboardBuilder = $dashboardBuilder;
     $this->membersStatistics = $membersStatistics;
     $this->contentStatistics = $contentStatistics;
+    $this->groupStatistics = $groupStatistics;
   }
 
   /**
@@ -76,6 +86,7 @@ class ActivityReportForm extends FormBase {
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.members_statistics'),
       $container->get('eic_dashboards.content_statistics'),
+      $container->get('eic_dashboards.group_statistics'),
     );
   }
 
@@ -258,6 +269,19 @@ class ActivityReportForm extends FormBase {
       }
       $discussionsCreated = $this->dashboardBuilder->reportList($this->t('New discussions'), '', $discussionsItems);
 
+      // Events created in given period of time.
+      $eventType = 'event';
+      $events = $this->groupStatistics->getGroupsCreatedInGivenPeriod($eventType, $startDate, $endDate);
+      $eventsItems = [];
+      foreach ($events as $event) {
+        $eventsItems[] = [
+          'prefix' => $event['prefix'],
+          'url' => $event['url'],
+          'value' => $event['title'],
+        ];
+      }
+      $eventsCreated = $this->dashboardBuilder->reportList($this->t('New events'), '', $eventsItems);
+
       // Stories created in given period of time.
       $storyBundle = 'story';
       $stories = $this->contentStatistics->getNodesOfBundleInGivenPeriod($storyBundle, $startDate, $endDate);
@@ -275,6 +299,7 @@ class ActivityReportForm extends FormBase {
         'content' => [
           $membersRegistered,
           $discussionsCreated,
+          $eventsCreated,
           $storiesCreated,
         ],
       ];
