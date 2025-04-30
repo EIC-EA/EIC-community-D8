@@ -6,6 +6,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\eic_dashboards\Services\ContentStatisticsInterface;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\MembersStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,16 +45,25 @@ class ActivityReportForm extends FormBase {
   protected MembersStatisticsInterface $membersStatistics;
 
   /**
+   * The content statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\ContentStatisticsInterface
+   */
+  protected ContentStatisticsInterface $contentStatistics;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DateFormatterInterface $dateFormatter,
     DashboardBuilderInterface $dashboardBuilder,
     MembersStatisticsInterface $membersStatistics,
+    ContentStatisticsInterface $contentStatistics,
   ) {
     $this->dateFormatter = $dateFormatter;
     $this->dashboardBuilder = $dashboardBuilder;
     $this->membersStatistics = $membersStatistics;
+    $this->contentStatistics = $contentStatistics;
   }
 
   /**
@@ -64,6 +74,7 @@ class ActivityReportForm extends FormBase {
       $container->get('date.formatter'),
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.members_statistics'),
+      $container->get('eic_dashboards.content_statistics'),
     );
   }
 
@@ -233,9 +244,23 @@ class ActivityReportForm extends FormBase {
       }
       $membersRegistered = $this->dashboardBuilder->reportList($this->t('New members'), '', $membersItems);
 
+      // Community discussions created in given period of time.
+      $discussionBundle = 'discussion';
+      $discussions = $this->contentStatistics->getContentOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate);
+      $discussionsItems = [];
+      foreach ($discussions as $discussion) {
+        $discussionsItems[] = [
+          'prefix' => $discussion['prefix'],
+          'url' => $discussion['url'],
+          'value' => $discussion['title'],
+        ];
+      }
+      $discussionsCreated = $this->dashboardBuilder->reportList($this->t('New discussions'), '', $discussionsItems);
+
       $build = [
         'content' => [
           $membersRegistered,
+          $discussionsCreated,
         ],
       ];
 

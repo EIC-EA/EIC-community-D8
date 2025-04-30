@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Render\Markup;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -224,33 +225,6 @@ class ContentStatistics implements ContentStatisticsInterface {
   }
 
   /**
-   * Returns latest nodes of given bundle
-   */
-  public function getLatestNodesOfBundle($bundle, $range = 10): array {
-    $query = $this->connection->select('node', 'n');
-    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
-    $query->addExpression('n.nid', 'node_id');
-    $query->addExpression('nfd.title', 'title');
-    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
-    $query->condition('n.type', $bundle);
-    $query->orderBy('nfd.created', 'DESC');
-    $query->range(0, $range);
-    $results = $query->execute()->fetchAll();
-
-    $data = [];
-
-    foreach ($results as $result) {
-      $data[] = [
-        'prefix' => $result->created,
-        'title' => $result->title,
-        'url' => '/node/' . $result->node_id,
-      ];
-    }
-
-    return $data;
-  }
-
-  /**
    * Returns number of nodes of given bundle grouped by value from a list field.
    */
   public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range = NULL): array {
@@ -347,6 +321,58 @@ class ContentStatistics implements ContentStatisticsInterface {
       $data[$result->group_id]['id'] = $result->label;
       $data[$result->group_id]['label'] = $result->label;
       $data[$result->group_id]['count'] = $result->nodes_count;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns content of bundle created between given dates.
+   */
+  public function getContentOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range = 10): array {
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      // Convert string dates to DateTime objects if necessary.
+      if (is_string($startDate)) {
+        $startDate = new \DateTime($startDate);
+      }
+      if (is_string($endDate)) {
+        $endDate = new \DateTime($endDate);
+      }
+
+      // Ensure dates are at the start/end of their respective days.
+      $startDate->setTime(0, 0, 0);
+      $endDate->setTime(23, 59, 59);
+    }
+
+    // Build the query.
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
+    $query->condition('n.type', $bundle);
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      $query->condition('nfd.created', [
+        $startDate->getTimestamp(),
+        $endDate->getTimestamp(),
+      ], 'BETWEEN');
+    }
+    $query->orderBy('nfd.created', 'DESC');
+    $query->range(0, $range);
+
+    $results = $query->execute()->fetchAll();
+
+    if (empty($results)) {
+      return [];
+    }
+
+    $data = [];
+    foreach ($results as $result) {
+      $data[] = [
+        'prefix' => $result->created,
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
+      ];
     }
 
     return $data;

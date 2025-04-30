@@ -39,11 +39,6 @@ interface ContentStatisticsInterface {
   public function getMostDownloadedFilesOfBundle($bundle, $range);
 
   /**
-   * Returns latest nodes of given bundle
-   */
-  public function getLatestNodesOfBundle($bundle, $range);
-
-  /**
    * Returns number of nodes of given bundle grouped by value from a list field.
    */
   public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range);
@@ -58,4 +53,9 @@ interface ContentStatisticsInterface {
    * Returns list of groups based on number of bundle.
    */
   public function getGroupsByNumberOfBundle($bundle, $groupType, $range);
+
+  /**
+   * Returns content of bundle created between given dates.
+   */
+  public function getContentOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range );
 }
