@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Plugin\views\filter;
 
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -64,8 +65,16 @@ class UserProfileCompletionStatus extends BooleanOperator {
     }
   }
 
+  protected function valueForm(&$form, FormStateInterface $form_state) {
+    parent::valueForm($form, $form_state);
+    unset($form['value']['#options'][0]);
+  }
+
   public function getValueOptions() {
-    $this->valueOptions = [1 => $this->t('Completed')];
+    $this->valueOptions = [
+      1 => $this->t('Completed'),
+      0 => $this->t('Incomplete'),
+    ];
   }
 
 }
