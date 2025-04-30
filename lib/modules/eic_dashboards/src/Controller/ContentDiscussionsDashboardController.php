@@ -136,7 +136,7 @@ class ContentDiscussionsDashboardController extends ControllerBase {
     ];
 
     // Latest nodes.
-    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest discussions'), '', $this->contentStatistics->getContentOfBundleInGivenPeriod($bundle, '', ''));
+    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest discussions'), '', $this->contentStatistics->getNodesOfBundleInGivenPeriod($bundle, '', ''));
 
     // Section 5.
     $section5Build = [

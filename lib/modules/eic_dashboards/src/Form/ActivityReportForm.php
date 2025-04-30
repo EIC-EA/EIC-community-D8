@@ -247,7 +247,7 @@ class ActivityReportForm extends FormBase {
 
       // Discussions created in given period of time.
       $discussionBundle = 'discussion';
-      $discussions = $this->contentStatistics->getContentOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate);
+      $discussions = $this->contentStatistics->getNodesOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate);
       $discussionsItems = [];
       foreach ($discussions as $discussion) {
         $discussionsItems[] = [
@@ -260,7 +260,7 @@ class ActivityReportForm extends FormBase {
 
       // Stories created in given period of time.
       $storyBundle = 'story';
-      $stories = $this->contentStatistics->getContentOfBundleInGivenPeriod($storyBundle, $startDate, $endDate);
+      $stories = $this->contentStatistics->getNodesOfBundleInGivenPeriod($storyBundle, $startDate, $endDate);
       $storiesItems = [];
       foreach ($stories as $story) {
         $storiesItems[] = [

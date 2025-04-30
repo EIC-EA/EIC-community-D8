@@ -327,9 +327,9 @@ class ContentStatistics implements ContentStatisticsInterface {
   }
 
   /**
-   * Returns content of bundle created between given dates.
+   * Returns nodes of bundle created between given dates.
    */
-  public function getContentOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range = 10): array {
+  public function getNodesOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range = 10): array {
     if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
       // Convert string dates to DateTime objects if necessary.
       if (is_string($startDate)) {

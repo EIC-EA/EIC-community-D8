@@ -55,7 +55,7 @@ interface ContentStatisticsInterface {
   public function getGroupsByNumberOfBundle($bundle, $groupType, $range);
 
   /**
-   * Returns content of bundle created between given dates.
+   * Returns nodes of bundle created between given dates.
    */
-  public function getContentOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range );
+  public function getNodesOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range );
 }

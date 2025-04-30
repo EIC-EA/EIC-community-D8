@@ -124,7 +124,7 @@ class ContentDocumentsDashboardController extends ControllerBase {
     $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit document tags', ['@limit' => $topTermsLimit]), $topTerms, true);
 
     // Latest nodes.
-    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getContentOfBundleInGivenPeriod($bundle, '', ''));
+    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getNodesOfBundleInGivenPeriod($bundle, '', ''));
 
     // Section 4.
     $section4Build = [
