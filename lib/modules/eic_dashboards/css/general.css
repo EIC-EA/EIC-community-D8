@@ -67,3 +67,50 @@
   font-size: 14px !important;
   padding: 6px 12px !important;
 }
+
+.activity-report-form {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: unset !important;
+}
+
+.activity-report-form h2 {
+  font-size: 18px;
+  margin: 0 !important;
+}
+
+.activity-report-form .date-range-form {
+  margin-top: 12px;
+  margin-bottom: 0 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+}
+
+.activity-report-form .date-range-form .form-item {
+  margin-top: 0 !important;
+  margin-right: 1em !important;
+  margin-bottom: 0 !important;
+}
+
+.activity-report-form .preset-date-ranges-wrapper {
+  margin-bottom: 24px;
+}
+
+.activity-report-form .preset-date-ranges {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.activity-report-form .preset-date-ranges li {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.activity-report-form .preset-date-ranges li:not(:last-child):after {
+  display: block;
+  content: '|';
+  margin: 0 5px;
+}
