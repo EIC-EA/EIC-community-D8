@@ -8,6 +8,7 @@ use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\MembersStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
+use Drupal\eic_user\UserHelper;
 
 /**
  * Provides route responses for the eic_dashboards module.
@@ -36,17 +37,27 @@ class MembersDashboardController extends ControllerBase
   protected MembersStatisticsInterface $membersStatistics;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $eicUserHelper;
+
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface  $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
     MembersStatisticsInterface $membersStatistics,
+    UserHelper $eic_user_helper,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->membersStatistics = $membersStatistics;
+    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -58,6 +69,7 @@ class MembersDashboardController extends ControllerBase
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.members_statistics'),
+      $container->get('eic_user.helper'),
     );
   }
 
@@ -71,9 +83,23 @@ class MembersDashboardController extends ControllerBase
     $membersLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', '', '', $this->t('Members list'));
     $members = $this->dashboardBuilder->numberAndLink($this->t('Platform members'), $totalMembers, $membersLink);
 
+    // Joined in the past 30 days.
+    $days = 30;
+    $membersCreatedPastDaysData = $this->membersStatistics->getMembersRegisteredPastDays($days);
+    $membersCreatedPastDaysLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', 'created[min]', gmdate("Y-m-d", strtotime("-$days days")), $this->t('Members list'));
+    $membersCreatedPastDays = $this->dashboardBuilder->numberAndLink($this->t('Joined in the past @days days', ['@days' => $days]), $membersCreatedPastDaysData, $membersCreatedPastDaysLink);
+
+    // Recently logged in.
+    $days = 30;
+    $membersLoggedPastDaysData = $this->membersStatistics->getPlatformMembersLoggedPastDays($days);
+    $membersLoggedPastDaysLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', 'access[min]', gmdate("Y-m-d", strtotime("-$days days")), $this->t('Members list'));
+    $membersLoggedPastDays = $this->dashboardBuilder->numberAndLink($this->t('Recently logged in'), $membersLoggedPastDaysData, $membersLoggedPastDaysLink);
+
     $section1Build = [
       $this->dashboardBuilder->columns([
         $members,
+        $membersCreatedPastDays,
+        $membersLoggedPastDays
       ], 3),
     ];
 
@@ -109,6 +135,13 @@ class MembersDashboardController extends ControllerBase
     $membersByTopicOfExpertiseMenu = $this->dashboardBuilder->jumpMenu($this->t('List members by topic of expertise'), $this->t('Choose expertise'), $membersByTopicOfExpertiseMenuData);
     $membersByTopicOfExpertise = $this->dashboardBuilder->chartWithMenu($membersByTopicOfExpertiseChart, $membersByTopicOfExpertiseMenu);
 
+    $totalCompletedMembersProfiles = $this->eicUserHelper->getMemberProfileCompletionCount();
+    $totalCompletedMembersProfilesData = json_encode([
+      ['name' => 'Completed profile', 'y' => $totalCompletedMembersProfiles],
+      ['name' => 'Incomplete profile', 'y' => ($totalMembers - $totalCompletedMembersProfiles)],
+    ], JSON_NUMERIC_CHECK);
+    $totalCompletedMembersProfilesChart = $this->dashboardBuilder->chartPie($this->t('Profile completion status'), $totalCompletedMembersProfilesData, '');
+
     // Members linked to Organisations
     $membersLinkedToOrganisations = $this->membersStatistics->getMembersLinkedByType('organisation-group_membership');
     $membersLinkedToOrganisationsData = json_encode([
@@ -129,9 +162,20 @@ class MembersDashboardController extends ControllerBase
       $membersByOrganizationType,
       $membersByTopicOfInterest,
       $membersByTopicOfExpertise,
+      $totalCompletedMembersProfilesChart,
       $membersLinkedToOrganisationsChart,
       $membersLinkedToProjectsChart
     ], 2);
+
+    // ===== Section 4.
+    $maxResults = 10;
+    $lastRegisteredMembersList = $this->dashboardBuilder->titleLinkList($this->t('Latest members'), '', $this->membersStatistics->getLastRegisteredMembersList($maxResults));
+
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $lastRegisteredMembersList,
+      ], 2),
+    ];
 
     // Build sections
     $build = [
@@ -139,6 +183,7 @@ class MembersDashboardController extends ControllerBase
         $section1Build,
         $section2Build,
         $section3Build,
+        $section4Build,
       ],
     ];
 

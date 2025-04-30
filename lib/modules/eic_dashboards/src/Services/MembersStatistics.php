@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -75,6 +76,81 @@ class MembersStatistics implements MembersStatisticsInterface {
       ->accessCheck(FALSE)
       ->count()
       ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMembersRegisteredPastDays(int $days = 30): int {
+    $timestamp = strtotime("-$days days");
+
+    $query = $this->entityTypeManager->getStorage('user')->getQuery();
+    return $query->condition('status', 1)
+      ->condition('created', $timestamp, '>=')
+      ->accessCheck(FALSE)
+      ->count()
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastRegisteredMembersList(int $maxResults = 10): array {
+    $query = $this->connection->select('users_field_data', 'u');
+    $query->fields('u', ['uid', 'created']);
+    $query->condition('u.status', 1);
+    $query->orderBy('u.uid', 'DESC');
+    $query->range(0, $maxResults);
+    $query->leftJoin('profile', 'p', 'u.uid = p.uid AND p.type = :profile_type', ['profile_type' => 'member']);
+    $query->leftJoin('user__field_first_name', 'fn', 'u.uid = fn.entity_id');
+    $query->leftJoin('user__field_last_name', 'ln', 'u.uid = ln.entity_id');
+    $query->leftJoin('profile__field_location_address', 'pla', 'p.profile_id = pla.entity_id AND pla.deleted = 0');
+    $query->addField('fn', 'field_first_name_value', 'first_name');
+    $query->addField('ln', 'field_last_name_value', 'last_name');
+    $query->addField('pla', 'field_location_address_country_code', 'country');
+
+    $result = $query->execute()->fetchAllAssoc('uid');
+
+    $members = [];
+    foreach ($result as $uid => $user) {
+      $profile_url = Url::fromRoute('entity.user.canonical', ['user' => $uid])->toString();
+
+      // Build the user's full name.
+      $first_name = $user->first_name ?? '';
+      $last_name = $user->last_name ?? '';
+      $title = trim("$first_name $last_name");
+
+      // Append country name if available.
+      if (!empty($user->country)) {
+        $country_name = $this->countryService->getCountryName($user->country) ?? $user->country;
+        $title .= " ($country_name)";
+      }
+
+      $members[] = [
+        'prefix' => !empty($user->created) ? date('d M Y', $user->created) : '',
+        'title' => $title,
+        'url' => $profile_url,
+      ];
+    }
+
+    return $members;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPlatformMembersLoggedPastDays(int $days = 10): int {
+    $timestamp = strtotime("-$days days");
+
+    $query = $this->entityTypeManager->getStorage('user')->getQuery();
+
+    $result = $query->condition('status', 1)
+      ->condition('login', $timestamp, '>=')
+      ->accessCheck(FALSE)
+      ->count()
+      ->execute();
+
+    return $result;
   }
 
   /**
