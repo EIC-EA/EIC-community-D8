@@ -199,6 +199,13 @@ class ActivityReportForm extends FormBase {
 
     // Add preset date range links at the bottom.
     $form['date_range']['preset_ranges'] = $this->buildPresetLinks();
+
+    $form['date_range']['info_text'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'em',
+      '#value' => $this->t('A maximum of 10 recent items is displayed per category. Use the listing pages for a detailed report of individual items.'),
+    ];
+
     // Only load and display content if the form has been submitted.
     if ($this->getRequest()->query->has('from') || ($form_state->isSubmitted() && !$form_state->hasAnyErrors())) {
       $startDate = $form_state->getValue('from', $fromDefault);

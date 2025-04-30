@@ -71,6 +71,7 @@
 .activity-report-form {
   margin-left: 0 !important;
   margin-right: 0 !important;
+  max-width: unset !important;
 }
 
 .activity-report-form h2 {
@@ -79,6 +80,7 @@
 }
 
 .activity-report-form .date-range-form {
+  margin-top: 12px;
   margin-bottom: 0 !important;
   display: flex !important;
   align-items: flex-end !important;
@@ -91,7 +93,7 @@
 }
 
 .activity-report-form .preset-date-ranges-wrapper {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .activity-report-form .preset-date-ranges {
