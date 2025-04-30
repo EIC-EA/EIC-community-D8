@@ -139,16 +139,18 @@ class MembersStatistics implements MembersStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPlatformMembersLoggedPastDays(int $days): int {
+  public function getPlatformMembersLoggedPastDays(int $days = 10): int {
     $timestamp = strtotime("-$days days");
 
     $query = $this->entityTypeManager->getStorage('user')->getQuery();
 
-    return $query->condition('status', 1)
+    $result = $query->condition('status', 1)
       ->condition('login', $timestamp, '>=')
       ->accessCheck(FALSE)
       ->count()
       ->execute();
+
+    return $result;
   }
 
   /**
