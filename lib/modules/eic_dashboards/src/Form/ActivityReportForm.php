@@ -233,9 +233,13 @@ class ActivityReportForm extends FormBase {
     // Add preset date range links at the bottom.
     $form['date_range']['preset_ranges'] = $this->buildPresetLinks();
 
+
+    // Set the maximum number of results.
+    $resultsLimit = 10;
+
     $form['date_range']['info_text'] = [
       '#type' => 'markup',
-      '#markup' => '<em>' . $this->t('A maximum of 10 recent items is displayed per category. Use the listing pages for a detailed report of individual items.') . '</em><br><br><br>',
+      '#markup' => '<em>' . $this->t('A maximum of @limit recent items is displayed per category. Use the listing pages for a detailed report of individual items.', ['@limit' => $resultsLimit]) . '</em><br><br><br>',
     ];
 
     // Only load and display content if the form has been submitted.
@@ -244,7 +248,7 @@ class ActivityReportForm extends FormBase {
       $endDate = $form_state->getValue('to', $toDefault);
 
       // Members that registered in given period of time.
-      $members = $this->membersStatistics->getMembersListInGivenPeriod($startDate, $endDate);
+      $members = $this->membersStatistics->getMembersListInGivenPeriod($startDate, $endDate, $resultsLimit);
       $membersItems = [];
       foreach ($members as $member) {
         $membersItems[] = [
@@ -257,7 +261,7 @@ class ActivityReportForm extends FormBase {
 
       // Discussions created in given period of time.
       $discussionBundle = 'discussion';
-      $discussions = $this->contentStatistics->getNodesOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate);
+      $discussions = $this->contentStatistics->getNodesOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate, $resultsLimit);
       $discussionsItems = [];
       foreach ($discussions as $discussion) {
         $discussionsItems[] = [
@@ -270,7 +274,7 @@ class ActivityReportForm extends FormBase {
 
       // Events created in given period of time.
       $eventType = 'event';
-      $events = $this->groupStatistics->getGroupsCreatedInGivenPeriod($eventType, $startDate, $endDate);
+      $events = $this->groupStatistics->getGroupsCreatedInGivenPeriod($eventType, $startDate, $endDate, $resultsLimit);
       $eventsItems = [];
       foreach ($events as $event) {
         $eventsItems[] = [
@@ -283,7 +287,7 @@ class ActivityReportForm extends FormBase {
 
       // Stories created in given period of time.
       $storyBundle = 'story';
-      $stories = $this->contentStatistics->getNodesOfBundleInGivenPeriod($storyBundle, $startDate, $endDate);
+      $stories = $this->contentStatistics->getNodesOfBundleInGivenPeriod($storyBundle, $startDate, $endDate, $resultsLimit);
       $storiesItems = [];
       foreach ($stories as $story) {
         $storiesItems[] = [
