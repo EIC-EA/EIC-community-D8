@@ -4,7 +4,6 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Render\Markup;
-use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

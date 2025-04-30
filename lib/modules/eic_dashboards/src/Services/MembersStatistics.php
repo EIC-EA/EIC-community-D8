@@ -5,7 +5,6 @@ namespace Drupal\eic_dashboards\Services;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
-use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
