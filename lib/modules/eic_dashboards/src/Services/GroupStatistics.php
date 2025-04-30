@@ -418,4 +418,55 @@ class GroupStatistics implements GroupStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns groups of given type created in given period.
+   */
+  public function getGroupsCreatedInGivenPeriod($groupType, $startDate, $endDate, $range = 10): array {
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      // Convert string dates to DateTime objects if necessary.
+      if (is_string($startDate)) {
+        $startDate = new \DateTime($startDate);
+      }
+      if (is_string($endDate)) {
+        $endDate = new \DateTime($endDate);
+      }
+
+      // Ensure dates are at the start/end of their respective days.
+      $startDate->setTime(0, 0, 0);
+      $endDate->setTime(23, 59, 59);
+    }
+
+    $query = $this->connection->select('groups', 'g');
+    $query->innerJoin('groups_field_data', 'gfd', 'g.id = gfd.id');
+    $query->addExpression('g.id', 'group_id');
+    $query->addExpression('gfd.label', 'label');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(gfd.created), '%d %b %Y')", 'created');
+    $query->condition('g.type', $groupType);
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      $query->condition('gfd.created', [
+        $startDate->getTimestamp(),
+        $endDate->getTimestamp(),
+      ], 'BETWEEN');
+    }
+    $query->orderBy('gfd.created', 'DESC');
+    $query->range(0, $range);
+
+    $results = $query->execute()->fetchAll();
+
+    if (empty($results)) {
+      return [];
+    }
+
+    $data = [];
+    foreach ($results as $result) {
+      $data[] = [
+        'prefix' => $result->created,
+        'title' => $result->label,
+        'url' => '/group/' . $result->group_id,
+      ];
+    }
+
+    return $data;
+  }
+
 }

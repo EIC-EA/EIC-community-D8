@@ -83,4 +83,9 @@ interface GroupStatisticsInterface {
    * Returns projects grouped by location of linked organisation.
    */
   public function getProjectsGroupedByLocationOfOrganisation();
+
+  /**
+   * Returns groups of given type created in given period.
+   */
+  public function getGroupsCreatedInGivenPeriod($groupType, $startDate, $endDate, $range);
 }

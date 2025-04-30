@@ -38,6 +38,11 @@ jump-menu:
     - core/drupal
     - core/drupalSettings
 
+report-list:
+  css:
+    theme:
+      css/report-list.css: {}
+
 title-link-list:
   css:
     theme:
