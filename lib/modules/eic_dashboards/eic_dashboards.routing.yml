@@ -73,6 +73,7 @@ eic_dashboards.content.discussions:
 eic_dashboards.listings.activity_report:
   path: '/dashboards/listings/activity-report'
   defaults:
+    _form: '\Drupal\eic_dashboards\Form\ActivityReportForm'
     _title: 'Activity report'
   requirements:
     _role: 'sensitive'
