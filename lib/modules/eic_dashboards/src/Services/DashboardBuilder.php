@@ -100,28 +100,45 @@ class DashboardBuilder implements DashboardBuilderInterface {
     return Link::fromTextAndUrl($buttonText, $url);
   }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function chartPie($title, $data, $size): array {
-        return [
-            '#theme' => 'chart_pie',
-            '#title' => $title,
-            '#data' => $data,
-            '#size' => $size,
-        ];
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function reportList($title, $link, $items): array {
+    $build = [];
+    $build['report_list'] = [
+      '#theme' => 'report_list',
+      '#title' => $title,
+      '#link' => $link,
+      '#items' => $items,
+    ];
+
+    $build['#attached']['library'][] = 'eic_dashboards/report-list';
+
+    return $build;
+  }
 
     /**
      * {@inheritdoc}
      */
-    public function chartWithMenu($chart, $menu): array {
-        return [
-            '#theme' => 'chart_with_menu',
-            '#chart' => $chart,
-            '#menu' => $menu,
-        ];
-    }
+  public function chartPie($title, $data, $size): array {
+      return [
+          '#theme' => 'chart_pie',
+          '#title' => $title,
+          '#data' => $data,
+          '#size' => $size,
+      ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function chartWithMenu($chart, $menu): array {
+      return [
+          '#theme' => 'chart_with_menu',
+          '#chart' => $chart,
+          '#menu' => $menu,
+      ];
+  }
 
   /**
    * {@inheritdoc}
@@ -136,40 +153,40 @@ class DashboardBuilder implements DashboardBuilderInterface {
     ];
   }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function jumpMenu($title, $placeholder, $links): array {
-        if (!empty($links)) {
-            return [
-                '#theme' => 'jump_menu',
-                '#wrapper_attributes' => [
-                    'class' => [
-                        'jump-menu',
-                    ],
-                ],
-                '#title' => $title,
-                '#title_attributes' => [
-                    'class' => [
-                        'jump-menu__label',
-                    ],
-                ],
-                '#placeholder' => $placeholder,
-                '#items' => $links,
-                '#attributes' => [
-                    'class' => [
-                        'ecl-select',
-                        'form-select',
-                        'jump-menu__select',
-                        'js-jump-menu',
-                    ],
-                ],
-            ];
-        }
-        else {
-            return [];
-        }
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function jumpMenu($title, $placeholder, $links): array {
+      if (!empty($links)) {
+          return [
+              '#theme' => 'jump_menu',
+              '#wrapper_attributes' => [
+                  'class' => [
+                      'jump-menu',
+                  ],
+              ],
+              '#title' => $title,
+              '#title_attributes' => [
+                  'class' => [
+                      'jump-menu__label',
+                  ],
+              ],
+              '#placeholder' => $placeholder,
+              '#items' => $links,
+              '#attributes' => [
+                  'class' => [
+                      'ecl-select',
+                      'form-select',
+                      'jump-menu__select',
+                      'js-jump-menu',
+                  ],
+              ],
+          ];
+      }
+      else {
+          return [];
+      }
+  }
 
   /**
    * {@inheritdoc}

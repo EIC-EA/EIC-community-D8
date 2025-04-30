@@ -33,6 +33,11 @@ interface DashboardBuilderInterface {
   public function buttonToRoute($buttonText, $route, $parameterId, $parameterValue);
 
   /**
+   * Build dashboard report list.
+   */
+  public function reportList($title, $link, $items);
+
+  /**
    * Build dashboard pie chart.
    */
   public function chartPie($title, $data, $size);
