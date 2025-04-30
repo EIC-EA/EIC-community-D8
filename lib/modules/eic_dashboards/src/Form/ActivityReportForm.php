@@ -5,6 +5,7 @@ namespace Drupal\eic_dashboards\Form;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\eic_dashboards\Services\ContentStatisticsInterface;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
@@ -244,7 +245,7 @@ class ActivityReportForm extends FormBase {
       }
       $membersRegistered = $this->dashboardBuilder->reportList($this->t('New members'), '', $membersItems);
 
-      // Community discussions created in given period of time.
+      // Discussions created in given period of time.
       $discussionBundle = 'discussion';
       $discussions = $this->contentStatistics->getContentOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate);
       $discussionsItems = [];
@@ -257,10 +258,24 @@ class ActivityReportForm extends FormBase {
       }
       $discussionsCreated = $this->dashboardBuilder->reportList($this->t('New discussions'), '', $discussionsItems);
 
+      // Stories created in given period of time.
+      $storyBundle = 'story';
+      $stories = $this->contentStatistics->getContentOfBundleInGivenPeriod($storyBundle, $startDate, $endDate);
+      $storiesItems = [];
+      foreach ($stories as $story) {
+        $storiesItems[] = [
+          'prefix' => $story['prefix'],
+          'url' => $story['url'],
+          'value' => $story['title'],
+        ];
+      }
+      $storiesCreated = $this->dashboardBuilder->reportList($this->t('New stories'), '', $storiesItems);
+
       $build = [
         'content' => [
           $membersRegistered,
           $discussionsCreated,
+          $storiesCreated,
         ],
       ];
 
