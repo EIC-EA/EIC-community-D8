@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\MembersStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,14 +37,23 @@ class ActivityReportForm extends FormBase {
   protected DashboardBuilderInterface $dashboardBuilder;
 
   /**
+   * The platform statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\MembersStatisticsInterface
+   */
+  protected MembersStatisticsInterface $membersStatistics;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DateFormatterInterface $dateFormatter,
     DashboardBuilderInterface $dashboardBuilder,
+    MembersStatisticsInterface $membersStatistics,
   ) {
     $this->dateFormatter = $dateFormatter;
     $this->dashboardBuilder = $dashboardBuilder;
+    $this->membersStatistics = $membersStatistics;
   }
 
   /**
@@ -53,6 +63,7 @@ class ActivityReportForm extends FormBase {
     return new static(
       $container->get('date.formatter'),
       $container->get('eic_dashboards.builder'),
+      $container->get('eic_dashboards.members_statistics'),
     );
   }
 
@@ -201,9 +212,8 @@ class ActivityReportForm extends FormBase {
     $form['date_range']['preset_ranges'] = $this->buildPresetLinks();
 
     $form['date_range']['info_text'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'em',
-      '#value' => $this->t('A maximum of 10 recent items is displayed per category. Use the listing pages for a detailed report of individual items.'),
+      '#type' => 'markup',
+      '#markup' => '<em>' . $this->t('A maximum of 10 recent items is displayed per category. Use the listing pages for a detailed report of individual items.') . '</em><br><br><br>',
     ];
 
     // Only load and display content if the form has been submitted.
@@ -211,8 +221,21 @@ class ActivityReportForm extends FormBase {
       $startDate = $form_state->getValue('from', $fromDefault);
       $endDate = $form_state->getValue('to', $toDefault);
 
+      // Members that registered in given period of time.
+      $members = $this->membersStatistics->getMembersListInGivenPeriod($startDate, $endDate);
+      $membersItems = [];
+      foreach ($members as $member) {
+        $membersItems[] = [
+          'prefix' => $member['prefix'],
+          'url' => $member['url'],
+          'value' => $member['title'],
+        ];
+      }
+      $membersRegistered = $this->dashboardBuilder->reportList($this->t('New members'), '', $membersItems);
+
       $build = [
         'content' => [
+          $membersRegistered,
         ],
       ];
 

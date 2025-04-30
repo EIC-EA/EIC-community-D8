@@ -83,6 +83,13 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'items' => [],
       ],
     ],
+    'report_list' => [
+      'variables' => [
+        'title' => '',
+        'link' => '',
+        'items' => '',
+      ],
+    ],
   ];
 }
 

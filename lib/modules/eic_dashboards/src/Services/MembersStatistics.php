@@ -5,6 +5,7 @@ namespace Drupal\eic_dashboards\Services;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -95,10 +96,30 @@ class MembersStatistics implements MembersStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLastRegisteredMembersList(int $maxResults = 10): array {
+  public function getMembersListInGivenPeriod($startDate, $endDate, int $maxResults = 10): array {
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      // Convert string dates to DateTime objects if necessary.
+      if (is_string($startDate)) {
+        $startDate = new \DateTime($startDate);
+      }
+      if (is_string($endDate)) {
+        $endDate = new \DateTime($endDate);
+      }
+
+      // Ensure dates are at the start/end of their respective days.
+      $startDate->setTime(0, 0, 0);
+      $endDate->setTime(23, 59, 59);
+    }
+
     $query = $this->connection->select('users_field_data', 'u');
     $query->fields('u', ['uid', 'created']);
     $query->condition('u.status', 1);
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      $query->condition('u.created', [
+        $startDate->getTimestamp(),
+        $endDate->getTimestamp(),
+      ], 'BETWEEN');
+    }
     $query->orderBy('u.uid', 'DESC');
     $query->range(0, $maxResults);
     $query->leftJoin('profile', 'p', 'u.uid = p.uid AND p.type = :profile_type', ['profile_type' => 'member']);

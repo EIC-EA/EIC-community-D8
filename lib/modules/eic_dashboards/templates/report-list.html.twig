@@ -8,7 +8,7 @@
       {{ link }}
       {% for item in items %}
         <div class="report-list__item">
-          <span>{{ item.date }}</span> <a href="{{ item.url }}">{{ item.value }}</a>
+          <span>{{ item.prefix }}</span> <a href="{{ item.url }}">{{ item.value }}</a>
         </div>
       {% endfor %}
     {% else %}
