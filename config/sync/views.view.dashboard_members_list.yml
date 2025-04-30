@@ -802,19 +802,6 @@ display:
       sorts: {  }
       arguments: {  }
       filters:
-        status:
-          id: status
-          table: users_field_data
-          field: status
-          entity_type: user
-          entity_field: status
-          plugin_id: boolean
-          value: '1'
-          group: 1
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
         views_fields_on_off_form:
           id: views_fields_on_off_form
           table: views
@@ -1085,7 +1072,7 @@ display:
           entity_field: status
           plugin_id: boolean
           operator: '='
-          value: All
+          value: '1'
           group: 1
           exposed: true
           expose:
@@ -1096,7 +1083,7 @@ display:
             operator: status_1_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: status_1
+            identifier: status
             required: false
             remember: false
             multiple: false
@@ -1275,6 +1262,51 @@ display:
             min_placeholder: From
             max_placeholder: To
             placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        user_profile_completion_status:
+          id: user_profile_completion_status
+          table: views
+          field: user_profile_completion_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: user_profile_completion_status
+          operator: '='
+          value: All
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'User profile completion status'
+            description: ''
+            use_operator: false
+            operator: user_profile_completion_status_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: user_profile_completion_status
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
           is_grouped: false
           group_info:
             label: ''
