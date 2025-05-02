@@ -5,10 +5,12 @@ dependencies:
   module:
     - eic_content_gallery
     - eic_stakeholder
+    - file
 id: sensitive
 label: 'Sensitive content administrator'
 weight: -7
 is_admin: null
 permissions:
+  - 'delete own files'
   - 'download gallery archive'
   - 'view stakeholder'

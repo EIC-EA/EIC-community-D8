@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for the EIC Statistics module.
  */
 
-module_load_include('inc', 'eic_groups', 'eic_groups.install');
+\Drupal::moduleHandler()->loadInclude('eic_groups', 'inc', 'eic_groups.install');
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;
@@ -51,6 +51,7 @@ function eic_groups_install() {
 function eic_groups_update_9001(&$sandbox) {
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $group_permissions = GroupPermission::loadMultiple($group_permissions);
@@ -112,6 +113,7 @@ function eic_groups_update_9001(&$sandbox) {
 function eic_groups_update_9002(&$sandbox) {
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $group_permissions = GroupPermission::loadMultiple();
@@ -204,6 +206,7 @@ function eic_groups_update_9003(&$sandbox) {
 function eic_groups_update_9004(&$sandbox) {
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $group_permissions = GroupPermission::loadMultiple();
@@ -443,6 +446,7 @@ function eic_groups_update_9008(&$sandbox) {
 
   $group_permissions = \Drupal::entityQuery('group_permission')
     ->condition('gid.entity:group.type', 'organisation')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($group_permissions);
@@ -477,6 +481,7 @@ function eic_groups_update_9009(&$sandbox) {
 
   $groups = \Drupal::entityQuery('group')
     ->condition('type', 'event')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($groups);
@@ -510,6 +515,7 @@ function eic_groups_update_9010(&$sandbox) {
     ->setErrorMessage(t('Batch has encountered an error'));
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($group_permissions);
@@ -560,6 +566,7 @@ function eic_groups_update_9011(&$sandbox) {
     ->setErrorMessage(t('Batch has encountered an error'));
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($group_permissions);
@@ -606,6 +613,7 @@ function eic_groups_update_9012(&$sandbox) {
     ->setErrorMessage(t('Batch has encountered an error'));
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($group_permissions);
@@ -659,6 +667,7 @@ function eic_groups_update_9014(&$sandbox) {
     ->setErrorMessage(t('Batch has encountered an error'));
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($group_permissions);
@@ -703,6 +712,7 @@ function eic_groups_update_9015() {
   $menu_link_ids = \Drupal::entityQuery('menu_link_content')
     ->condition('link__uri', 'internal:/group/%/news', 'LIKE')
     ->condition('menu_name', 'group_menu_link_content-%', 'LIKE')
+    ->accessCheck(FALSE)
     ->execute();
 
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $menu_links */
@@ -724,6 +734,7 @@ function eic_groups_update_9016(&$sandbox) {
     ->setErrorMessage(t('Batch has encountered an error'));
 
   $group_permissions = \Drupal::entityQuery('group_permission')
+    ->accessCheck(FALSE)
     ->execute();
 
   $max_groups = count($group_permissions);

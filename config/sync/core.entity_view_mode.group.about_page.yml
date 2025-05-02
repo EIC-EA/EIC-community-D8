@@ -6,5 +6,6 @@ dependencies:
     - group
 id: group.about_page
 label: 'About page'
+description: ''
 targetEntityType: group
 cache: true

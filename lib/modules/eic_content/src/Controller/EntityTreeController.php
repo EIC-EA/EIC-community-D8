@@ -71,6 +71,7 @@ class EntityTreeController extends ControllerBase {
         $query->range($offset, $length);
       }
 
+      $query->accessCheck(FALSE);
       $query->sort($tree_property->getSortField(), 'ASC');
       $tree_property->generateExtraCondition($query, $options);
       $entities_id = $query->execute();
@@ -96,6 +97,7 @@ class EntityTreeController extends ControllerBase {
       'total' => \Drupal::entityTypeManager()
         ->getStorage($target_entity)
         ->getQuery()
+        ->accessCheck(FALSE)
         ->condition('vid', $target_bundle)
         ->count()
         ->execute(),
@@ -127,7 +129,7 @@ class EntityTreeController extends ControllerBase {
    */
   public function search(Request $request) {
     $text = $request->query->get('search_text', '');
-    $selected_values = $request->query->get('values', []);
+    $selected_values = $request->query->all('values');
     $target_entity = $request->query->get('targetEntity');
     $target_bundle = $request->query->get('targetBundle');
     $disable_top = (bool) $request->query->get('disableTop', FALSE);
@@ -182,6 +184,7 @@ class EntityTreeController extends ControllerBase {
     $results = $this->entityTypeManager()
       ->getStorage('taxonomy_term')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('vid', $target_bundle)
       ->condition('name', $name, '= BINARY')
       ->execute();

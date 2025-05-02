@@ -175,7 +175,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     }
     if (!empty($content_plugins)) {
       // We need to query on group_content entities to get the latest node.
-      $query = $group_content_storage->getQuery();
+      $query = $group_content_storage->getQuery()->accessCheck(FALSE);
       $query->condition('type', $content_plugins, 'IN');
       $query->condition('gid', $group->id());
       foreach ($conditions as $field => $value) {
@@ -220,7 +220,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     $group_content_storage = $this->entityTypeManager->getStorage('group_content');
 
     // We need to query on group_content entities.
-    $query = $group_content_storage->getQuery();
+    $query = $group_content_storage->getQuery()->accessCheck(FALSE);
     $query->condition('type', $content_plugins, 'IN');
     $query->condition('gid', $group->id());
     foreach ($conditions as $field => $value) {
@@ -292,6 +292,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       // may contain comments.
       /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
       $query = $group_content_storage->getQuery();
+      $query->accessCheck(FALSE);
       $query->condition('type', $content_plugins, 'IN');
       $query->condition('gid', $group->id());
       $query->exists('entity_id.entity:node.' . Comments::DEFAULT_NODE_COMMENTS_FIELD);
@@ -307,7 +308,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       // Now we can query comments based on the list of nodes.
       if (!empty($node_ids)) {
         $comment_storage = $this->entityTypeManager->getStorage('comment');
-        $query = $comment_storage->getQuery();
+        $query = $comment_storage->getQuery()->accessCheck(FALSE);
         $query->condition('entity_id', $node_ids, 'IN');
         $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
         $query->condition('field_name', Comments::DEFAULT_NODE_COMMENTS_FIELD);

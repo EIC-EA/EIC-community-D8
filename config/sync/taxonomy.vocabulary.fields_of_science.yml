@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'Fields of science'
 vid: fields_of_science
-description: ''
+description: null
 weight: 0
+new_revision: false

@@ -162,6 +162,7 @@ class MessageTemplateType extends FilterPluginBase {
    */
   protected function getMessageTemplates(array $message_template_types = []) {
     $query = $this->entityTypeManager->getStorage('message_template')->getQuery();
+    $query->accessCheck(FALSE);
 
     $operator = NULL;
     if (!empty($message_template_types)) {
