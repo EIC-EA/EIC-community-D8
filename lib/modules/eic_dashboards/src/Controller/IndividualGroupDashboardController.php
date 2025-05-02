@@ -85,6 +85,13 @@ class IndividualGroupDashboardController extends ControllerBase {
         ->addCacheableDependency($group);
     }
 
+    // TODO: Delete when current development is over.
+    if ($account->id() === '1') {
+      return AccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->cachePerPermissions();
+    }
+
     $user = $this->entityTypeManager->getStorage('user')->load($account->id());
     $groupMembership = $group->getMember($account);
 
@@ -109,8 +116,16 @@ class IndividualGroupDashboardController extends ControllerBase {
    */
   public function page(GroupInterface $group): array {
     $build = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'ecl-container',
+          'ecl-u-mv-xl',
+        ],
+      ],
       'content' => [
-        ['Group dashboard page'],
+        '#type' => 'markup',
+        '#markup' => 'Group #' . $group->id() .' dashboard content.',
       ],
     ];
 
