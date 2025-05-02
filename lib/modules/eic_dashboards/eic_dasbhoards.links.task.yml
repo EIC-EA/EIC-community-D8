@@ -1,0 +1,5 @@
+entity.group.dashboard:
+  route_name: entity.group.dashboard
+  base_route: entity.group.canonical
+  title: Dashboard
+  weight: -10
