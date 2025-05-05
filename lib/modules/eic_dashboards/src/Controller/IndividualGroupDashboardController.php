@@ -126,11 +126,15 @@ class IndividualGroupDashboardController extends ControllerBase {
       $lastDaysLimit);
     $groupMembersJoinedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('Joined - past @limit days', ['@limit' => $lastDaysLimit]), $groupMembersJoinedInPastDaysData, '');
 
+    $groupMembersLoggedInPastDaysData = $this->groupStatistics->getGroupMembersLoggedPastDays($group, $lastDaysLimit);
+    $groupMembersLoggedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('Logged in - past @limit days', ['@limit' => $lastDaysLimit]), $groupMembersLoggedInPastDaysData, '');
+
     // Section 1.
     $section1Build = [
       $this->dashboardBuilder->columns([
         $groupMembers,
         $groupMembersJoinedInPastDays,
+        $groupMembersLoggedInPastDays,
       ], 3),
     ];
 

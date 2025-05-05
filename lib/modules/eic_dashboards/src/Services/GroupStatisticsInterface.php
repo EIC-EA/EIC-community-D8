@@ -95,7 +95,12 @@ interface GroupStatisticsInterface {
   public function getGroupMembers(GroupInterface $group);
 
   /**
-   * Returns number of community members that joined in the past days.
+   * Returns number of group members that joined in the past days.
    */
   public function getGroupMembersRegisteredPastDays(GroupInterface $group, $days);
+
+  /**
+   * Returns number of group members that logged in the past days.
+   */
+  public function getGroupMembersLoggedPastDays(GroupInterface $group, $days);
 }

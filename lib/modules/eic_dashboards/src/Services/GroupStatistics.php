@@ -484,17 +484,31 @@ class GroupStatistics implements GroupStatisticsInterface {
   }
 
   /**
-   * Returns number of community members that joined in the past days.
+   * Returns number of group members that joined in the past days.
    */
   public function getGroupMembersRegisteredPastDays(GroupInterface $group, $days = 30) {
-    return $this->connection->select('group_content_field_data', 'gcfd')
-      ->fields('gcfd', ['entity_id'])
-      ->condition('gid', $group->id())
-      ->condition('type', $group->getGroupType()->id() . '-group_membership')
-      ->condition('created', strtotime('-' . $days . ' days'), '>=')
-      ->countQuery()
-      ->execute()
-      ->fetchField();
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->fields('gcfd', ['entity_id']);
+    $query->condition('gid', $group->id());
+    $query->condition('type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('created', strtotime('-' . $days . ' days'), '>=');
+
+    return $query->countQuery()->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of group members that logged in the past days.
+   */
+  public function getGroupMembersLoggedPastDays(GroupInterface $group, $days = 30): int {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('profile', 'pfl', 'gcfd.entity_id = pfl.profile_id');
+    $query->innerJoin('users_field_data', 'ufd', 'pfl.profile_id = ufd.uid');
+    $query->fields('gcfd', ['entity_id']);
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('ufd.login', strtotime('-' . $days . ' days'), '>=');
+
+    return $query->countQuery()->execute()->fetchField();
   }
 
 }
