@@ -151,6 +151,24 @@ class IndividualGroupDashboardController extends ControllerBase {
       ], 1)
     ];
 
+    // Group members by topics of expertise.
+    $topicsVocabulary = 'topics';
+    $topicsOfExpertiseField = 'field_vocab_topic_expertise';
+    $groupMembersByExpertiseData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->groupStatistics->getGroupMembersPerTaxonomyTerm($group, $topicsOfExpertiseField, 'id', DashboardFilters::DASHBOARD_MEMBERS_LIST_GROUP_ID), $topicsVocabulary));
+    $groupMembersByExpertiseChart = $this->dashboardBuilder->chartPie($this->t('Members by topics of expertise'), $groupMembersByExpertiseData, '');
+
+    // Group members by topics of interest.
+    $topicsOfInterestField = 'field_vocab_topic_interest';
+    $groupMembersByInterestData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->groupStatistics->getGroupMembersPerTaxonomyTerm($group, $topicsOfInterestField, 'id', DashboardFilters::DASHBOARD_MEMBERS_LIST_GROUP_ID), $topicsVocabulary));
+    $groupMembersByInterestChart = $this->dashboardBuilder->chartPie($this->t('Members by topics of interest'), $groupMembersByInterestData, '');
+
+    $section3build = [
+      $this->dashboardBuilder->columns([
+        $groupMembersByExpertiseChart,
+        $groupMembersByInterestChart,
+      ], 2)
+    ];
+
     $build = [
       '#type' => 'container',
       '#attributes' => [
@@ -162,6 +180,7 @@ class IndividualGroupDashboardController extends ControllerBase {
       'content' => [
         $section1Build,
         $section2Build,
+        $section3build,
       ],
     ];
 

@@ -529,7 +529,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query->innerJoin('profile', 'p', 'gcfd.entity_id = p.profile_id');
     $query->innerJoin('profile__field_location_address', 'pfla', 'p.profile_id = pfla.entity_id');
     $query->addExpression('gcfd.gid', 'group_id');
-    $query->addExpression('COUNT(pfla.field_location_address_country_code)', 'count_members');
+    $query->addExpression('COUNT(pfla.field_location_address_country_code)', 'members_count');
     $query->addExpression('pfla.field_location_address_country_code', 'country_code');
     $query->condition('gcfd.gid', $group->id());
     $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
@@ -545,7 +545,36 @@ class GroupStatistics implements GroupStatisticsInterface {
       $data[$result->country_code][$countryId] = $result->country_code;
       $data[$result->country_code][$groupId] = $result->group_id;
       $data[$result->country_code]['label'] = $countries[mb_strtoupper($result->country_code)] ?? '';
-      $data[$result->country_code]['count'] = $result->count_members;
+      $data[$result->country_code]['count'] = $result->members_count;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns group members grouped by vocabulary.
+   */
+  public function getGroupMembersPerTaxonomyTerm(GroupInterface $group, $taxonomyField, $argumentId, $groupId): array {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('profile', 'p', 'gcfd.entity_id = p.profile_id');
+    $query->innerJoin('profile__' . $taxonomyField, 'ptf', 'p.profile_id = ptf.entity_id');
+    $query->addExpression('gcfd.gid', 'group_id');
+    $query->addExpression('COUNT(ptf.' . $taxonomyField . '_target_id)', 'members_count');
+    $query->addExpression('ptf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('p.type', 'member');
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('members_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->taxonomy_term_id][$argumentId] = $result->taxonomy_term_id;
+      $data[$result->taxonomy_term_id][$groupId] = $result->group_id;
+      $data[$result->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id);
+      $data[$result->taxonomy_term_id]['count'] = (int) $result->members_count;
     }
 
     return $data;

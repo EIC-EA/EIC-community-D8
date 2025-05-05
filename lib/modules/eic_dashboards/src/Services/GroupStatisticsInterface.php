@@ -108,4 +108,9 @@ interface GroupStatisticsInterface {
    * Returns group members grouped by country.
    */
   public function getGroupMembersGroupedByCountry(GroupInterface $group, $countryId, $groupId);
+
+  /**
+   * Returns group members grouped by vocabulary.
+   */
+  public function getGroupMembersPerTaxonomyTerm(GroupInterface $group, $taxonomyField, $argumentId, $groupId);
 }
