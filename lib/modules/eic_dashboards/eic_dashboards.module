@@ -99,6 +99,44 @@ function eic_dashboards_page_attachments(array &$attachments) {
  */
 function eic_dashboards_preprocess_page(&$variables) {
   $variables['#attached']['library'][] = 'eic_dashboards/dashboards_menu';
+
+  $route_match = \Drupal::routeMatch();
+  $route_name = $route_match->getRouteName();
+
+  // Only apply on specific Views pages
+  if ($route_name === 'view.dashboard_content_list.page'
+    || $route_name === 'view.dashboard_organisations_list.page'
+    || $route_name === 'view.dashboard_members_list.page'
+    || $route_name === 'view.dashboard_projects_list.page'
+    || $route_name === 'view.dashboard_organisations_list.page'
+    || $route_name === 'eic_dashboards.members'
+    || $route_name === 'eic_dashboards.group.groups'
+    || $route_name === 'eic_dashboards.group.events'
+    || $route_name === 'eic_dashboards.group.organisations'
+    || $route_name === 'eic_dashboards.group.projects'
+    || $route_name === 'eic_dashboards.content.documents'
+    || $route_name === 'eic_dashboards.content.stories'
+    || $route_name === 'eic_dashboards.content.discussions'
+    || $route_name === 'eic_dashboards.listings.activity_report') {
+
+    // Inject a custom render array into the content region
+    $variables['page']['content']['custom_dashboard_banner'] = [
+      '#type' => 'markup',
+      '#markup' => '
+        <div class="ecl-overview-header">
+          <div class="ecl-container">
+            <div class="ecl-overview-header__content">
+              <div class="ecl-overview-header__main">
+                <h1 class="ecl-overview-header__title">' . htmlspecialchars($variables['page']['#title']) . '</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      ',
+      '#allowed_tags' => ['div', 'h1'], // Optional: whitelist HTML tags
+      '#weight' => -100, // Put it at the top
+    ];
+  }
 }
 
 /**
@@ -174,4 +212,23 @@ function eic_dashboards_form_views_exposed_form_alter(&$form, FormStateInterface
    $form['status_1']['#options'][1] = t('Enabled');
    $form['status_1']['#options'][0] = t('Disabled');
  }
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function eic_dashboards_preprocess_views_view(array &$variables) {
+  $view = $variables['view'];
+
+  // List of view IDs you want to target.
+  $target_view_ids = [
+    'dashboard_content_list',
+    'dashboard_organisations_list',
+    'dashboard_members_list',
+    'dashboard_projects_list'
+  ];
+
+  if (in_array($view->id(), $target_view_ids, true)) {
+    $variables['header_classes'][] = 'ecl-container ecl-u-mt-m';
+  }
 }

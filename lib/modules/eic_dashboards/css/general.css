@@ -5,10 +5,12 @@
 }
 
 .listing-page form {
+  max-width: 100%;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .listing-page .datetime-wrapper {
   position: relative;
   top: -16px;
@@ -66,4 +68,10 @@
 .ecl-button--small {
   font-size: 14px !important;
   padding: 6px 12px !important;
+}
+
+.listing-page fieldset {
+  max-width: 200px !important;
+  display: flex;
+  gap: 5px;
 }

@@ -958,6 +958,7 @@ display:
           required: false
           flag: recommend_group
           user_scope: current
+      css_class: listing-page
       header:
         result:
           id: result
