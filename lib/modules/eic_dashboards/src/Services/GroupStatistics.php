@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -467,6 +468,33 @@ class GroupStatistics implements GroupStatisticsInterface {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns the number of given group members.
+   */
+  public function getGroupMembers(GroupInterface $group) {
+    $query = $this->connection->select('group_content_field_data', 'gc');
+    $query->addExpression('COUNT(DISTINCT entity_id)', 'count');
+    $query->condition('gc.gid', $group->id());
+    $query->condition('gc.type', $group->getGroupType()->id() . '-group_membership');
+    $result = $query->execute()->fetchAll();
+
+    return $result[0]->count;
+  }
+
+  /**
+   * Returns number of community members that joined in the past days.
+   */
+  public function getGroupMembersRegisteredPastDays(GroupInterface $group, $days = 30) {
+    return $this->connection->select('group_content_field_data', 'gcfd')
+      ->fields('gcfd', ['entity_id'])
+      ->condition('gid', $group->id())
+      ->condition('type', $group->getGroupType()->id() . '-group_membership')
+      ->condition('created', strtotime('-' . $days . ' days'), '>=')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
   }
 
 }

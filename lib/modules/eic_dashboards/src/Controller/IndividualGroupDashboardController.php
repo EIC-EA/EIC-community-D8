@@ -51,7 +51,7 @@ class IndividualGroupDashboardController extends ControllerBase {
     $this->entityTypeManager = $entityTypeManager;
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
-    $this->communityStatistics = $groupStatistics;
+    $this->groupStatistics = $groupStatistics;
   }
 
   /**
@@ -115,6 +115,25 @@ class IndividualGroupDashboardController extends ControllerBase {
    * Group dashboard page.
    */
   public function page(GroupInterface $group): array {
+    // Define past days limit.
+    $lastDaysLimit = 30;
+
+    // Group members.
+    $groupMembersData = $this->groupStatistics->getGroupMembers($group);
+    $groupMembers = $this->dashboardBuilder->numberAndLink($this->t('Total members'), $groupMembersData, '');
+
+    $groupMembersJoinedInPastDaysData = $this->groupStatistics->getGroupMembersRegisteredPastDays($group,
+      $lastDaysLimit);
+    $groupMembersJoinedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('Joined - past @limit days', ['@limit' => $lastDaysLimit]), $groupMembersJoinedInPastDaysData, '');
+
+    // Section 1.
+    $section1Build = [
+      $this->dashboardBuilder->columns([
+        $groupMembers,
+        $groupMembersJoinedInPastDays,
+      ], 3),
+    ];
+
     $build = [
       '#type' => 'container',
       '#attributes' => [
@@ -124,8 +143,7 @@ class IndividualGroupDashboardController extends ControllerBase {
         ],
       ],
       'content' => [
-        '#type' => 'markup',
-        '#markup' => 'Group #' . $group->id() .' dashboard content.',
+        $section1Build,
       ],
     ];
 

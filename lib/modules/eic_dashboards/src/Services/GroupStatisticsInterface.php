@@ -88,4 +88,14 @@ interface GroupStatisticsInterface {
    * Returns groups of given type created in given period.
    */
   public function getGroupsCreatedInGivenPeriod($groupType, $startDate, $endDate, $range);
+
+  /**
+   * Returns the number of given group members.
+   */
+  public function getGroupMembers(GroupInterface $group);
+
+  /**
+   * Returns number of community members that joined in the past days.
+   */
+  public function getGroupMembersRegisteredPastDays(GroupInterface $group, $days);
 }
