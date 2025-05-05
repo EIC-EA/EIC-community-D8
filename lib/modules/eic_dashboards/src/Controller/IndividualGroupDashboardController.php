@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_dashboards\Constants\DashboardFilters;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Drupal\eic_dashboards\Services\GroupStatisticsInterface;
@@ -138,6 +139,18 @@ class IndividualGroupDashboardController extends ControllerBase {
       ], 3),
     ];
 
+    // Group members by country.
+    $groupMembersByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries
+    ($this->groupStatistics->getGroupMembersGroupedByCountry($group, 'id', DashboardFilters::DASHBOARD_MEMBERS_LIST_GROUP_ID)));
+    $groupMembersByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Members by country'), $groupMembersByCountryData, false);
+
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $groupMembersByCountryChart,
+      ], 1)
+    ];
+
     $build = [
       '#type' => 'container',
       '#attributes' => [
@@ -148,6 +161,7 @@ class IndividualGroupDashboardController extends ControllerBase {
       ],
       'content' => [
         $section1Build,
+        $section2Build,
       ],
     ];
 

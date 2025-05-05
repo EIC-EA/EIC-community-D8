@@ -103,4 +103,9 @@ interface GroupStatisticsInterface {
    * Returns number of group members that logged in the past days.
    */
   public function getGroupMembersLoggedPastDays(GroupInterface $group, $days);
+
+  /**
+   * Returns group members grouped by country.
+   */
+  public function getGroupMembersGroupedByCountry(GroupInterface $group, $countryId, $groupId);
 }
