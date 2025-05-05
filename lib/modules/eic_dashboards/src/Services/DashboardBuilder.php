@@ -235,4 +235,16 @@ class DashboardBuilder implements DashboardBuilderInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function dashboardSection($title, $link, $content): array {
+    return [
+      '#theme' => 'dashboard_section',
+      '#title' => $title,
+      '#link' => $link,
+      '#content' => $content,
+    ];
+  }
+
 }

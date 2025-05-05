@@ -92,6 +92,13 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'items' => '',
       ],
     ],
+    'dashboard_section' => [
+      'variables' => [
+        'title' => '',
+        'link' => '',
+        'content' => '',
+      ],
+    ],
   ];
 }
 

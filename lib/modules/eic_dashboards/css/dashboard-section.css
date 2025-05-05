@@ -1,0 +1,8 @@
+.dashboard-section {
+  padding-top: 24px;
+  border-top: 1px solid #bbbdbf;
+}
+
+.dashboard-section__header {
+  align-items: center;
+}

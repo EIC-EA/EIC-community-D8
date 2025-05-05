@@ -1,0 +1,15 @@
+{{ attach_library('eic_dashboards/dashboard-section') }}
+
+<div class="dashboard-section">
+  <div class="dashboard-section__header ecl-u-d-flex ecl-u-mb-m">
+    <div class="ecl-u-type-heading-2 ecl-u-mr-m">{{ title }}</div>
+    {% if link %}
+      <div class="dashboard-section__link">
+        <a href="{{ link.url }}" class="ecl-button ecl-button--primary ecl-button--small">{{ link.text }}</a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="dashboard-section__content">
+    {{ content }}
+  </div>
+</div>

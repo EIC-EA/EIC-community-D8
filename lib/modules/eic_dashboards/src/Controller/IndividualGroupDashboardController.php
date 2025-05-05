@@ -172,34 +172,46 @@ class IndividualGroupDashboardController extends ControllerBase {
     ];
 
     // Group discussions statistics.
+    $discussionsTitle = 'Forum discussions';
     $discussionType = 'group-group_node-discussion';
+
+    $discussionsButton = $this->dashboardBuilder->buttonToRoute($this->t('List all'), 'eic_overviews.groups.overview_page.discussions', 'group', $group->id());
+
     $groupTotalDiscussionsData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $discussionType);
     $groupTotalDiscussions = $this->dashboardBuilder->numberAndLink($this->t('Total discussions'), $groupTotalDiscussionsData, '');
 
     $groupDiscussionsPastDaysData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $discussionType, $lastDaysLimit);
     $groupDiscussionsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New discussions in last @limit days', ['@limit' => $lastDaysLimit]), $groupDiscussionsPastDaysData, '');
 
-    $section5build = [
+    $discussionsContent = [
       $this->dashboardBuilder->columns([
         $groupTotalDiscussions,
         $groupDiscussionsPastDays,
       ], 2)
     ];
 
+    $section5build = [$this->dashboardBuilder->dashboardSection($discussionsTitle, $discussionsButton, $discussionsContent)];
+
     // Group files statistics.
+    $filesTitle = 'Files';
     $fileType = 'group-group_node-document';
+
+    $filesButton = $this->dashboardBuilder->buttonToRoute($this->t('List all'), 'eic_overviews.groups.overview_page.files', 'group', $group->id());
+
     $groupTotalFilesData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $fileType);
     $groupTotalFiles = $this->dashboardBuilder->numberAndLink($this->t('Total files'), $groupTotalFilesData, '');
 
     $groupFilesPastDaysData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $fileType, $lastDaysLimit);
     $groupFilesPastDays = $this->dashboardBuilder->numberAndLink($this->t('New files in last @limit days', ['@limit' => $lastDaysLimit]), $groupFilesPastDaysData, '');
 
-    $section6build = [
+    $filesContent = [
       $this->dashboardBuilder->columns([
         $groupTotalFiles,
         $groupFilesPastDays,
       ], 2)
     ];
+
+    $section6build = [$this->dashboardBuilder->dashboardSection($filesTitle, $filesButton, $filesContent)];
 
     $build = [
       '#type' => 'container',
