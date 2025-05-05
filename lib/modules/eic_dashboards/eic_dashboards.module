@@ -83,6 +83,13 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'items' => [],
       ],
     ],
+    'report_list' => [
+      'variables' => [
+        'title' => '',
+        'link' => '',
+        'items' => '',
+      ],
+    ],
   ];
 }
 
@@ -137,6 +144,26 @@ function eic_dashboards_preprocess_page(&$variables) {
       '#weight' => -100, // Put it at the top
     ];
   }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function eic_dashboards_views_data() {
+  $data = [];
+
+  $data['views']['user_profile_completion_status'] = [
+    'title' => t('User profile completion status'),
+    'filter' => [
+      'title' => t('User profile completion status'),
+      'group' => t('User'),
+      'help' => t('Filters user by profile completion'),
+      'field' => 'id',
+      'id' => 'user_profile_completion_status',
+    ],
+  ];
+
+  return $data;
 }
 
 /**

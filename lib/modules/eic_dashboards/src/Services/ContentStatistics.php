@@ -352,4 +352,56 @@ class ContentStatistics implements ContentStatisticsInterface {
     return $data;
   }
 
+  /**
+   * Returns nodes of bundle created between given dates.
+   */
+  public function getNodesOfBundleInGivenPeriod($bundle, $startDate, $endDate, $range = 10): array {
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      // Convert string dates to DateTime objects if necessary.
+      if (is_string($startDate)) {
+        $startDate = new \DateTime($startDate);
+      }
+      if (is_string($endDate)) {
+        $endDate = new \DateTime($endDate);
+      }
+
+      // Ensure dates are at the start/end of their respective days.
+      $startDate->setTime(0, 0, 0);
+      $endDate->setTime(23, 59, 59);
+    }
+
+    // Build the query.
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
+    $query->condition('n.type', $bundle);
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      $query->condition('nfd.created', [
+        $startDate->getTimestamp(),
+        $endDate->getTimestamp(),
+      ], 'BETWEEN');
+    }
+    $query->orderBy('nfd.created', 'DESC');
+    $query->range(0, $range);
+
+    $results = $query->execute()->fetchAll();
+
+    if (empty($results)) {
+      return [];
+    }
+
+    $data = [];
+    foreach ($results as $result) {
+      $data[] = [
+        'prefix' => $result->created,
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
+      ];
+    }
+
+    return $data;
+  }
+
 }

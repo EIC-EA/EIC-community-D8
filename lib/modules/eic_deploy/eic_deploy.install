@@ -376,3 +376,19 @@ function eic_deploy_update_9012(&$sandbox) {
     }
   }
 }
+
+
+/**
+ * Adds group permission 'view group' to Anonymous.
+ */
+function eic_deploy_update_9013(&$sandbox) {
+  $new_permissions = [
+    'view group',
+  ];
+
+  $roles = [
+    'project-anonymous',
+  ];
+
+  eic_deploy_add_group_permissions_to_role($new_permissions, $roles);
+}

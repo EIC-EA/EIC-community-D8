@@ -21,7 +21,7 @@ class UserProfileCompletionStatus extends FieldPluginBase {
     $configuration,
     $plugin_id,
     $plugin_definition,
-    private readonly UserHelper $UserHelper
+    private readonly UserHelper $userHelper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -48,7 +48,7 @@ class UserProfileCompletionStatus extends FieldPluginBase {
   public function render(ResultRow $values) {
     $uid = $values->uid;
 
-    $result = $this->UserHelper->getMemberProfileCompletionCount($uid);
+    $result = $this->userHelper->getMemberProfileCompletionCount($uid);
     if (empty($result)) {
       return $this->t("Incomplete");
     }
