@@ -123,10 +123,12 @@ class IndividualGroupDashboardController extends ControllerBase {
     $groupMembersData = $this->groupStatistics->getGroupMembers($group);
     $groupMembers = $this->dashboardBuilder->numberAndLink($this->t('Total members'), $groupMembersData, '');
 
+    // Group members that joined in past days.
     $groupMembersJoinedInPastDaysData = $this->groupStatistics->getGroupMembersRegisteredPastDays($group,
       $lastDaysLimit);
     $groupMembersJoinedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('Joined - past @limit days', ['@limit' => $lastDaysLimit]), $groupMembersJoinedInPastDaysData, '');
 
+    // Group members that logged in past days.
     $groupMembersLoggedInPastDaysData = $this->groupStatistics->getGroupMembersLoggedPastDays($group, $lastDaysLimit);
     $groupMembersLoggedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('Logged in - past @limit days', ['@limit' => $lastDaysLimit]), $groupMembersLoggedInPastDaysData, '');
 
@@ -169,6 +171,36 @@ class IndividualGroupDashboardController extends ControllerBase {
       ], 2)
     ];
 
+    // Group discussions statistics.
+    $discussionType = 'group-group_node-discussion';
+    $groupTotalDiscussionsData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $discussionType);
+    $groupTotalDiscussions = $this->dashboardBuilder->numberAndLink($this->t('Total discussions'), $groupTotalDiscussionsData, '');
+
+    $groupDiscussionsPastDaysData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $discussionType, $lastDaysLimit);
+    $groupDiscussionsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New discussions in last @limit days', ['@limit' => $lastDaysLimit]), $groupDiscussionsPastDaysData, '');
+
+    $section5build = [
+      $this->dashboardBuilder->columns([
+        $groupTotalDiscussions,
+        $groupDiscussionsPastDays,
+      ], 2)
+    ];
+
+    // Group files statistics.
+    $fileType = 'group-group_node-document';
+    $groupTotalFilesData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $fileType);
+    $groupTotalFiles = $this->dashboardBuilder->numberAndLink($this->t('Total files'), $groupTotalFilesData, '');
+
+    $groupFilesPastDaysData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $fileType, $lastDaysLimit);
+    $groupFilesPastDays = $this->dashboardBuilder->numberAndLink($this->t('New files in last @limit days', ['@limit' => $lastDaysLimit]), $groupFilesPastDaysData, '');
+
+    $section6build = [
+      $this->dashboardBuilder->columns([
+        $groupTotalFiles,
+        $groupFilesPastDays,
+      ], 2)
+    ];
+
     $build = [
       '#type' => 'container',
       '#attributes' => [
@@ -181,6 +213,8 @@ class IndividualGroupDashboardController extends ControllerBase {
         $section1Build,
         $section2Build,
         $section3build,
+        $section5build,
+        $section6build,
       ],
     ];
 

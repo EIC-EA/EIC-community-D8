@@ -113,4 +113,9 @@ interface GroupStatisticsInterface {
    * Returns group members grouped by vocabulary.
    */
   public function getGroupMembersPerTaxonomyTerm(GroupInterface $group, $taxonomyField, $argumentId, $groupId);
+
+  /**
+   * Returns number of content type's nodes of a given group in a given period.
+   */
+  public function getNumberOfContentInGivenPeriod(GroupInterface $group, $contentType, $days);
 }

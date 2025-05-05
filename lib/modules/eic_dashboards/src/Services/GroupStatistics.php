@@ -60,11 +60,10 @@ class GroupStatistics implements GroupStatisticsInterface {
    * Returns number of groups of given type.
    */
   public function getNumberOfGroups($groupType): array|int {
-    $query = $this->connection->select('groups', 'g')
-      ->condition('g.type', $groupType)
-      ->countQuery();
+    $query = $this->connection->select('groups', 'g');
+    $query->condition('g.type', $groupType);
 
-    return $query->execute()->fetchField();
+    return $query->countQuery()->execute()->fetchField();
   }
 
   /**
@@ -74,8 +73,8 @@ class GroupStatistics implements GroupStatisticsInterface {
   public function getNumberOfGroupsPastDays($groupType, $days = 30): array|int {
     $query = $this->connection->select('groups', 'g');
     $query->innerJoin('groups_field_data', 'gfd', 'g.id = gfd.id');
-    $query->condition('g.type', $groupType)
-      ->condition('gfd.created', strtotime('-' . $days . ' days'), '>=');
+    $query->condition('g.type', $groupType);
+    $query->condition('gfd.created', strtotime('-' . $days . ' days'), '>=');
 
     return $query->countQuery()->execute()->fetchField();
   }
@@ -578,6 +577,21 @@ class GroupStatistics implements GroupStatisticsInterface {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns number of content type's nodes of a given group in a given period.
+   */
+  public function getNumberOfContentInGivenPeriod(GroupInterface $group, $contentType, $days = NULL) {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $contentType);
+
+    if ($days) {
+      $query->condition('gcfd.created', strtotime('-' . $days . ' days'), '>=');
+    }
+
+    return $query->countQuery()->execute()->fetchField();
   }
 
 }
