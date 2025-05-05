@@ -443,8 +443,8 @@ display:
       sorts: {  }
       arguments: {  }
       filters:
-        type:
-          id: type
+        type_1:
+          id: type_1
           table: group_content_field_data
           field: type
           relationship: none
@@ -503,6 +503,184 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        type:
+          id: type
+          table: group_content_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: group_content
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            event-group_node-book: event-group_node-book
+            event-group_node-discussion: event-group_node-discussion
+            event-group_node-document: event-group_node-document
+            event-group_node-gallery: event-group_node-gallery
+            event-group_node-news: event-group_node-news
+            event-group_node-story: event-group_node-story
+            event-group_node-video: event-group_node-video
+            event-group_node-wiki_page: event-group_node-wiki_page
+            group-group_node-book: group-group_node-book
+            group-group_node-discussion: group-group_node-discussion
+            group-group_node-document: group-group_node-document
+            group-group_node-event: group-group_node-event
+            group-group_node-gallery: group-group_node-gallery
+            group-group_node-video: group-group_node-video
+            group-group_node-wiki_page: group-group_node-wiki_page
+            organisation-group_node-document: organisation-group_node-document
+            organisation-group_node-event: organisation-group_node-event
+            organisation-group_node-gallery: organisation-group_node-gallery
+            organisation-group_node-news: organisation-group_node-news
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: 'Content type'
+            description: ''
+            use_operator: false
+            operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        gid:
+          id: gid
+          table: group_content_field_data
+          field: gid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: group_content
+          entity_field: gid
+          plugin_id: numeric
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: gid_op
+            label: 'Parent group'
+            description: ''
+            use_operator: false
+            operator: gid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: gid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: gc__node
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: 'Created on'
+            description: ''
+            use_operator: false
+            operator: created_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: created
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: table
       row:
@@ -581,6 +759,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
       tags: {  }
   page:
     id: page
@@ -595,4 +774,5 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
       tags: {  }
