@@ -3,10 +3,10 @@
 namespace Drupal\eic_dashboards\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,22 +48,12 @@ class GroupOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Implements hook_group_insert().
-   */
-  public function groupInsert(EntityInterface $entity) {
-    $this->createGroupDashboardPageMenuLink($entity);
-  }
-
-  /**
    * Creates a menu item for the dashboard page in the Group main menu.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $group
+   * @param \Drupal\group\Entity\GroupInterface $group
    *   The group for which we create the menu item.
-   *
-   * @return \Drupal\menu_link_content\Entity\MenuLinkContent|false
-   *   The saved menu item or FALSE if an error occurred.
    */
-  protected function createGroupDashboardPageMenuLink(EntityInterface $group) {
+  protected function createGroupDashboardPageMenuLink(GroupInterface $group) {
     foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
       if (
         $group_menu->getGroupContentType()
@@ -85,7 +75,6 @@ class GroupOperations implements ContainerInjectionInterface {
 
         try {
           $menu_item->save();
-          return $menu_item;
         }
         catch (EntityStorageException $e) {
           return FALSE;
