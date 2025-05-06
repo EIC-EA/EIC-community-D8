@@ -599,11 +599,11 @@ class GroupStatistics implements GroupStatisticsInterface {
    */
   public function getGroupNodesOfGroupByTerm($group, $groupNodeType, $taxonomyField): array {
     $query = $this->connection->select('group_content_field_data', 'gcfd');
-    $query->innerJoin('group__' . $taxonomyField, 'gtf', 'gcfd.entity_id = gtf.entity_id');
+    $query->innerJoin('node__' . $taxonomyField, 'ntf', 'gcfd.entity_id = ntf.entity_id');
     $query->condition('gcfd.gid', $group->id());
     $query->condition('gcfd.type', $groupNodeType);
-    $query->addExpression('COUNT(gtf.' . $taxonomyField . '_target_id)', 'group_nodes_count');
-    $query->addExpression('gtf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'group_nodes_count');
+    $query->addExpression('ntf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
     $query->groupBy('taxonomy_term_id');
     $query->orderBy('group_nodes_count', 'DESC');
     $results = $query->execute()->fetchAll();
@@ -611,10 +611,9 @@ class GroupStatistics implements GroupStatisticsInterface {
     $data = [];
 
     foreach ($results as $result) {
-      $data[] = [
-        'name' => $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
-        'y' => (int) $result->group_nodes_count,
-      ];
+      $data[$result->taxonomy_term_id]['id'] = $result->taxonomy_term_id;
+      $data[$result->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id);
+      $data[$result->taxonomy_term_id]['count'] = (int) $result->group_nodes_count;
     }
 
     return $data;

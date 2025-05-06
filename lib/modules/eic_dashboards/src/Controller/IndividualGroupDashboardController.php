@@ -187,12 +187,12 @@ class IndividualGroupDashboardController extends ControllerBase {
 
     // Group events by type chart.
     $typeField = 'field_vocab_event_type';
-    $groupEventsByTypeData = json_encode($this->groupStatistics->getGroupNodesOfGroupByTerm($group, $eventsType, $typeField));
+    $groupEventsByTypeData = json_encode($this->dashboardHelper->transformLabelCountToNameAndY($this->groupStatistics->getGroupNodesOfGroupByTerm($group, $eventsType, $typeField)));
     $groupEventsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupEventsByTypeData, '');
 
     // Group events by topic chart.
     $topicField = 'field_vocab_topics';
-    $groupEventsByTopicData = json_encode($this->groupStatistics->getGroupNodesOfGroupByTerm($group, $eventsType, $topicField));
+    $groupEventsByTopicData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->groupStatistics->getGroupNodesOfGroupByTerm($group, $eventsType, $topicField), $topicsVocabulary));
     $groupEventsByTopic = $this->dashboardBuilder->chartPie($this->t('Events by topic'), $groupEventsByTopicData, '');
 
     $eventsContent = [
