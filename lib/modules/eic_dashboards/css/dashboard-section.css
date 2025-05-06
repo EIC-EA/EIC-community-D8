@@ -1,3 +1,7 @@
+.dashboard-section img {
+  max-height: 30px;
+}
+
 .dashboard-section--has-border {
   border-top: 1px solid #bbbdbf;
 }

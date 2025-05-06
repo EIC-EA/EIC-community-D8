@@ -1,6 +1,6 @@
 {{ attach_library('eic_dashboards/dashboard-section') }}
 
-<div class="dashboard-section {% if has_border %} dashboard-section--has-border ecl-u-pt-xl{% endif %}">
+<div class="dashboard-section ecl-container ecl-u-pt-xl {% if has_border %}dashboard-section--has-border{% endif %}">
   <div class="dashboard-section__header ecl-u-d-flex ecl-u-mb-xl">
     {% if icon %}
       <img class="ecl-u-mr-s" src="{{ path ~ 'icon-' ~ icon }}.svg" alt="{{ icon }}">

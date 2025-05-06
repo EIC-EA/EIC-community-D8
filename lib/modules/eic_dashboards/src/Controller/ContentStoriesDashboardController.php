@@ -64,8 +64,10 @@ class ContentStoriesDashboardController extends ControllerBase {
    * {@inheritdoc}
    */
   public function page(): array {
-    // Specify current bundle.
+    // Specify current bundle, title and link.
     $bundle = 'story';
+    $title = 'Stories';
+    $link = '';
 
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
@@ -138,16 +140,14 @@ class ContentStoriesDashboardController extends ControllerBase {
       ], 2),
     ];
 
-    $build = [
-      'content' => [
-        $section1Build,
-        $section2Build,
-        $section3Build,
-        $section4Build,
-        $section5Build,
-      ],
+    $content = [
+      $section1Build,
+      $section2Build,
+      $section3Build,
+      $section4Build,
+      $section5Build,
     ];
 
-    return $build;
+    return [$this->dashboardBuilder->dashboardSection($title, $link, $content, 'stories', FALSE)];
   }
 }
