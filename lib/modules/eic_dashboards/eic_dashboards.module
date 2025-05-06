@@ -23,6 +23,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
       'variables' => [
         'title' => '',
         'dashboards' => NULL,
+        'content' => NULL,
         'listings' => NULL,
       ],
     ],

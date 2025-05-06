@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div class="ecl-section-wrapper {{ extra_classes }}">
+<div class="ecl-section-wrapper ecl-section-wrapper--is-white {{ extra_classes }}">
   <div class="ecl-container">
     <h2 class="ecl-u-type-heading-2">{{ 'Dashboards'|t }}</h2>
     <div class="ecl-row">
@@ -37,7 +37,17 @@
     </div>
   </div>
 </div>
-<div class="ecl-section-wrapper ecl-u-mb-xl {{ extra_classes }}">
+<div class="ecl-section-wrapper ecl-u-mb-xl ecl-section-wrapper--is-white {{ extra_classes }}">
+  <div class="ecl-container">
+    <h2 class="ecl-u-type-heading-2">{{ 'Content'|t }}</h2>
+    <div class="ecl-row">
+      {% for item in content %}
+        <div class="ecl-col-12 ecl-col-lg-4">{{ item }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="ecl-section-wrapper ecl-u-mb-xl ecl-section-wrapper--is-white {{ extra_classes }}">
   <div class="ecl-container">
     <h2 class="ecl-u-type-heading-2">{{ 'Listings'|t }}</h2>
     <div class="ecl-row">
