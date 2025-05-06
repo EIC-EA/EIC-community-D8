@@ -326,6 +326,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $query = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
       ->condition('field_request_status', RequestStatus::OPEN)
+      ->accessCheck(TRUE)
       ->condition(
         'flag_id',
         $supported_entity_types[$content_entity->getEntityTypeId()]

@@ -26,7 +26,7 @@ function eic_community_preprocess_page__taxonomy__term(&$variables) {
 
   $banner_image = $term->get('field_topic_banner')->referencedEntities();
   $file = $banner_image ? File::load($banner_image[0]->get('oe_media_image')->target_id) : NULL;
-  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(file_create_url($file->get('uri')->value)) : NULL;
+  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(\Drupal::service('file_url_generator')->generateAbsoluteString($file->get('uri')->value)) : NULL;
   $variables['banner_image_url'] = $file_url;
   $variables['topic_title'] = $term->label();
   // Adds breadcrumbs block to the theme variables.

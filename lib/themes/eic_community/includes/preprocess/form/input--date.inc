@@ -7,15 +7,14 @@
 
 /**
  * Implements template_preprocess_input__date().
+ *
+ * @see https://www.drupal.org/node/3258267
  */
 function eic_community_preprocess_input__date(array &$variables): void {
-  $php_date_format =
-    !empty($variables['attributes']['data-drupal-date-format'] && is_array($variables['attributes']['data-drupal-date-format']))
-      ? reset($variables['attributes']['data-drupal-date-format'])
-      : 'Y-m-d';
+  $php_date_format = 'Y-m-d';
   $format_map = [
     // @todo find a cleverer way of mapping PHP date formats to the expected
-    // ECL ones.
+    //   ECL ones.
     'Y-m-d' => 'YYYY-MM-DD',
   ];
   $ecl_format = $format_map[$php_date_format] ?? 'YYYY-MM-DD';

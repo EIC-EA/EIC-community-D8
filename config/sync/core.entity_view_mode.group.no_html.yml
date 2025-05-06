@@ -6,5 +6,6 @@ dependencies:
     - group
 id: group.no_html
 label: no_html
+description: ''
 targetEntityType: group
 cache: true

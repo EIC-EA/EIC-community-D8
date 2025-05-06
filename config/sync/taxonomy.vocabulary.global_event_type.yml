@@ -6,3 +6,4 @@ name: 'Global Event type'
 vid: global_event_type
 description: 'This taxonomy is synced from SMED'
 weight: 0
+new_revision: false

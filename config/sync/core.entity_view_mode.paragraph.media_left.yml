@@ -6,5 +6,6 @@ dependencies:
     - paragraphs
 id: paragraph.media_left
 label: 'Media aligned to left'
+description: ''
 targetEntityType: paragraph
 cache: true

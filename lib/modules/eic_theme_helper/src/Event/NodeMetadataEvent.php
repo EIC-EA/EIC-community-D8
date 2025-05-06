@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace Drupal\eic_theme_helper\Event;
 
+use Symfony\Contracts\EventDispatcher\Event;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\node\NodeInterface;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event used for retrieving the node entity for the page header metadata.

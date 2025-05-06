@@ -1,0 +1,634 @@
+diff --git a/core/includes/theme.inc b/core/includes/theme.inc
+index a99cefcedbec1dad7f7472dcde456c129920f53b..55def0c1840c27752591d7c91da6fd8915431541 100644
+--- a/core/includes/theme.inc
++++ b/core/includes/theme.inc
+@@ -8,6 +8,7 @@
+  * customized by user themes.
+  */
+
++use Drupal\Core\Cache\CacheableMetadata;
+ use Drupal\Core\Url;
+ use Drupal\Component\Serialization\Json;
+ use Drupal\Component\Utility\Crypt;
+@@ -511,6 +512,7 @@ function template_preprocess_links(&$variables): void {
+       $heading['attributes'] = new Attribute($heading['attributes']);
+     }
+
++    $cache = CacheableMetadata::createFromRenderArray($variables);
+     $variables['links'] = [];
+     foreach ($links as $key => $link) {
+       $item = [];
+@@ -541,6 +543,17 @@ function template_preprocess_links(&$variables): void {
+       // convert this jQuery selector to a CSS selector:
+       // jQuery('li:has("a.is-active")')
+       if (isset($link['url'])) {
++        /** @var \Drupal\Core\Url $url */
++        $url = $link['url'];
++        // Entity access uses orIf to sum access results, but routing uses
++        // andIf, where neutral currently denies access, so to not show links to
++        // entity routes we must deny unless the result is allow.
++        $link_element['#access'] = $url->access(return_as_object: TRUE);
++        $cache->addCacheableDependency($link_element['#access']);
++        if (!$link_element['#access']->isAllowed()) {
++          // Templates expect inaccessible links to not be included.
++          continue;
++        }
+         if (!empty($variables['set_active_class'])) {
+
+           // Also enable set_active_class for the contained link.
+@@ -560,8 +573,6 @@ function template_preprocess_links(&$variables): void {
+             $li_attributes['data-drupal-link-query'] = Json::encode($query);
+           }
+
+-          /** @var \Drupal\Core\Url $url */
+-          $url = $link['url'];
+           if ($url->isRouted()) {
+             // Add a "data-drupal-link-system-path" attribute to let the
+             // drupal.active-link library know the path in a standardized
+@@ -590,6 +601,7 @@ function template_preprocess_links(&$variables): void {
+       // Add the item to the list of links.
+       $variables['links'][$key] = $item;
+     }
++    $cache->applyTo($variables);
+   }
+ }
+
+diff --git a/core/lib/Drupal/Core/Entity/EntityListBuilder.php b/core/lib/Drupal/Core/Entity/EntityListBuilder.php
+index 1eb4fc78caf79c824fa2883b1b04fa69a7227ef3..5f75ea369ebfe3d619172b5d90db60f717e31e7d 100644
+--- a/core/lib/Drupal/Core/Entity/EntityListBuilder.php
++++ b/core/lib/Drupal/Core/Entity/EntityListBuilder.php
+@@ -149,7 +149,7 @@ public function getOperations(EntityInterface $entity) {
+    */
+   protected function getDefaultOperations(EntityInterface $entity) {
+     $operations = [];
+-    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
++    if ($entity->hasLinkTemplate('edit-form')) {
+       $edit_url = $this->ensureDestination($entity->toUrl('edit-form'));
+       if (!empty($entity->label())) {
+         $label = $this->t('Edit @entity_label', ['@entity_label' => $entity->label()]);
+@@ -167,7 +167,7 @@ protected function getDefaultOperations(EntityInterface $entity) {
+         'url' => $edit_url,
+       ];
+     }
+-    if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
++    if ($entity->hasLinkTemplate('delete-form')) {
+       $delete_url = $this->ensureDestination($entity->toUrl('delete-form'));
+       if (!empty($entity->label())) {
+         $label = $this->t('Delete @entity_label', ['@entity_label' => $entity->label()]);
+diff --git a/core/modules/comment/src/CommentLinkBuilder.php b/core/modules/comment/src/CommentLinkBuilder.php
+index b7a12faab19bafb8dbb5e9dc0f2c0c3a9b7124c7..5a3a1438b845885cfc667aab5803661ddbca1955 100644
+--- a/core/modules/comment/src/CommentLinkBuilder.php
++++ b/core/modules/comment/src/CommentLinkBuilder.php
+@@ -112,7 +112,7 @@ public function buildCommentedEntityLinks(FieldableEntityInterface $entity, arra
+               if ($this->moduleHandler->moduleExists('history')) {
+                 $links['comment-new-comments'] = [
+                   'title' => '',
+-                  'url' => Url::fromRoute('<current>'),
++                  'url' => $entity->toUrl(),
+                   'attributes' => [
+                     'class' => 'hidden',
+                     'title' => $this->t('Jump to the first new comment.'),
+diff --git a/core/modules/config/tests/config_test/src/ConfigTestAccessControlHandler.php b/core/modules/config/tests/config_test/src/ConfigTestAccessControlHandler.php
+index 7f0ff870d49f01b9a2cf4ac0e766abaaa4c9a6c5..8e949fec2609f8276291491ca2d46e54fb9c11c8 100644
+--- a/core/modules/config/tests/config_test/src/ConfigTestAccessControlHandler.php
++++ b/core/modules/config/tests/config_test/src/ConfigTestAccessControlHandler.php
+@@ -20,14 +20,14 @@ class ConfigTestAccessControlHandler extends EntityAccessControlHandler {
+    * {@inheritdoc}
+    */
+   public function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+-    return AccessResult::allowed();
++    return AccessResult::allowed()->cachePerPermissions();
+   }
+
+   /**
+    * {@inheritdoc}
+    */
+   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+-    return AccessResult::allowed();
++    return AccessResult::allowed()->cachePerPermissions();
+   }
+
+ }
+diff --git a/core/modules/content_translation/src/Access/ContentTranslationManageAccessCheck.php b/core/modules/content_translation/src/Access/ContentTranslationManageAccessCheck.php
+index 578c8f7826a551dc4f1815703112499a7d2ebeaa..124f33aa75876aafebe7406c4e6684d4b9b4ad5d 100644
+--- a/core/modules/content_translation/src/Access/ContentTranslationManageAccessCheck.php
++++ b/core/modules/content_translation/src/Access/ContentTranslationManageAccessCheck.php
+@@ -2,6 +2,7 @@
+
+ namespace Drupal\content_translation\Access;
+
++use Drupal\content_translation\ContentTranslationManager;
+ use Drupal\Core\Access\AccessResult;
+ use Drupal\Core\Entity\ContentEntityInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+@@ -91,6 +92,18 @@ public function access(Route $route, RouteMatchInterface $route_match, AccountIn
+         return AccessResult::allowed()->cachePerPermissions();
+       }
+
++      // The route parameter holds the "active" revision, which may still have
++      // translations which have since been removed.
++      $use_latest_revisions = $entity_type->isRevisionable() && ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $entity->bundle());
++      if ($use_latest_revisions) {
++        /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
++        $storage = $this->entityTypeManager->getStorage($entity_type_id);
++        $latest_revision_id = $storage->getLatestRevisionId($entity->id());
++        if ($latest_revision_id != $entity->getRevisionId()) {
++          $entity = $storage->loadRevision($latest_revision_id);
++        }
++      }
++
+       switch ($operation) {
+         case 'create':
+           /** @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
+diff --git a/core/modules/content_translation/src/Controller/ContentTranslationController.php b/core/modules/content_translation/src/Controller/ContentTranslationController.php
+index ac811c36c9c4f1baaeee68ad10322915568e0bc5..d847d9b5725203f80f46645d21611c5bdcb9caf2 100644
+--- a/core/modules/content_translation/src/Controller/ContentTranslationController.php
++++ b/core/modules/content_translation/src/Controller/ContentTranslationController.php
+@@ -379,7 +379,7 @@ public function overview(RouteMatchInterface $route_match, $entity_type_id = NUL
+    */
+   public function add(LanguageInterface $source, LanguageInterface $target, RouteMatchInterface $route_match, $entity_type_id = NULL) {
+     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+-    $entity = $route_match->getParameter($entity_type_id);
++    $entity = clone $route_match->getParameter($entity_type_id);
+
+     // In case of a pending revision, make sure we load the latest
+     // translation-affecting revision for the source language, otherwise the
+diff --git a/core/modules/content_translation/tests/src/Unit/Access/ContentTranslationManageAccessCheckTest.php b/core/modules/content_translation/tests/src/Unit/Access/ContentTranslationManageAccessCheckTest.php
+index de493c5187db1a23fdf0d20e957c6cb952e5cb09..4b1adc6d6477b685f051be823dae3d4723befd7c 100644
+--- a/core/modules/content_translation/tests/src/Unit/Access/ContentTranslationManageAccessCheckTest.php
++++ b/core/modules/content_translation/tests/src/Unit/Access/ContentTranslationManageAccessCheckTest.php
+@@ -9,6 +9,7 @@
+ use Drupal\Core\DependencyInjection\ContainerBuilder;
+ use Drupal\Core\Cache\Cache;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Extension\ModuleHandlerInterface;
+ use Drupal\Core\Language\Language;
+ use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
+ use Drupal\Tests\UnitTestCase;
+@@ -30,6 +31,13 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
+    */
+   protected $cacheContextsManager;
+
++  /**
++   * The module handler.
++   *
++   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
++   */
++  protected $moduleHandler;
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -41,8 +49,11 @@ protected function setUp(): void {
+       ->getMock();
+     $this->cacheContextsManager->method('assertValidTokens')->willReturn(TRUE);
+
++    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
++
+     $container = new ContainerBuilder();
+     $container->set('cache_contexts_manager', $this->cacheContextsManager);
++    $container->set('module_handler', $this->moduleHandler);
+     \Drupal::setContainer($container);
+   }
+
+@@ -58,11 +69,25 @@ public function testCreateAccess(): void {
+       ->method('getTranslationAccess')
+       ->willReturn(AccessResult::allowed());
+
++    $entity_type = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
++    $entity_type->expects($this->once())
++      ->method('isRevisionable')
++      ->willReturn(TRUE);
++
+     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+     $entity_type_manager->expects($this->once())
+       ->method('getHandler')
+       ->withAnyParameters()
+       ->willReturn($translation_handler);
++    $entity_type_manager->expects($this->once())
++      ->method('getDefinition')
++      ->with('node')
++      ->willReturn($entity_type);
++
++    $this->moduleHandler->expects($this->once())
++      ->method('moduleExists')
++      ->with('content_moderation')
++      ->willReturn(FALSE);
+
+     // Set our source and target languages.
+     $source = 'en';
+@@ -87,6 +112,9 @@ public function testCreateAccess(): void {
+       ->getMock();
+     $entity->expects($this->once())
+       ->method('getEntityTypeId');
++    $entity->expects($this->once())
++      ->method('bundle')
++      ->willReturn('page');
+     $entity->expects($this->once())
+       ->method('getTranslationLanguages')
+       ->with()
+diff --git a/core/modules/help/tests/src/Functional/HelpTest.php b/core/modules/help/tests/src/Functional/HelpTest.php
+index 3a954ac0eadddbf2021bb6ccf4861cc5a81f04fe..bd56ef2bad75e1c97efab57a9d8e9dcf8886c5aa 100644
+--- a/core/modules/help/tests/src/Functional/HelpTest.php
++++ b/core/modules/help/tests/src/Functional/HelpTest.php
+@@ -157,7 +157,18 @@ protected function verifyHelp($response = 200): void {
+           $this->assertSession()->pageTextContains($name . ' administration pages');
+         }
+         foreach ($admin_tasks as $task) {
+-          $this->assertSession()->linkExists($task['title']);
++          /** @var \Drupal\Core\Url $url */
++          $url = $task['url'];
++          // Links should only be rendered if we have access. Some links such as
++          // the Workflow task will not be rendered as there are no child menu
++          // links available and therefore access is denied based on the
++          // _access_admin_menu_block_page access check.
++          if ($url->access()) {
++            $this->assertSession()->linkExistsExact($task['title']);
++          }
++          else {
++            $this->assertSession()->linkNotExistsExact($task['title']);
++          }
+           // Ensure there are no double escaped '&' or '<' characters.
+           $this->assertSession()->assertNoEscaped('&amp;');
+           $this->assertSession()->assertNoEscaped('&lt;');
+diff --git a/core/modules/node/src/Hook/NodeHooks1.php b/core/modules/node/src/Hook/NodeHooks1.php
+index 5a3f54ad519aff59eb08872dcf63f2ef93015f94..a06be5422bc64e7ffe47a1683c4864e9923b994a 100644
+--- a/core/modules/node/src/Hook/NodeHooks1.php
++++ b/core/modules/node/src/Hook/NodeHooks1.php
+@@ -369,15 +369,24 @@ public function nodeAccess(NodeInterface $node, $operation, AccountInterface $ac
+     switch ($operation) {
+       case 'update':
+         $access = AccessResult::allowedIfHasPermission($account, 'edit any ' . $type . ' content');
+-        if (!$access->isAllowed() && $account->hasPermission('edit own ' . $type . ' content')) {
+-          $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId())->cachePerUser()->addCacheableDependency($node));
++        $has_edit_own = $account->hasPermission('edit own ' . $type . ' content');
++        if ($has_edit_own) {
++          $access->cachePerUser()->addCacheableDependency($node);
+         }
++        if (!$access->isAllowed() && $has_edit_own) {
++          $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId()));
++        }
++
+         break;
+
+       case 'delete':
+         $access = AccessResult::allowedIfHasPermission($account, 'delete any ' . $type . ' content');
+-        if (!$access->isAllowed() && $account->hasPermission('delete own ' . $type . ' content')) {
+-          $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId()))->cachePerUser()->addCacheableDependency($node);
++        $has_delete_own = $account->hasPermission('delete own ' . $type . ' content');
++        if ($has_delete_own) {
++          $access->cachePerUser()->addCacheableDependency($node);
++        }
++        if (!$access->isAllowed() && $has_delete_own) {
++          $access = $access->orIf(AccessResult::allowedIf($account->id() == $node->getOwnerId()));
+         }
+         break;
+
+diff --git a/core/modules/node/tests/src/Kernel/NodeViewBuilderTest.php b/core/modules/node/tests/src/Kernel/NodeViewBuilderTest.php
+index b149880bf03f29a147abaa44ae2b00c2417d8f30..b4c60c751b7a56ad997857753bd52c911e3e84e8 100644
+--- a/core/modules/node/tests/src/Kernel/NodeViewBuilderTest.php
++++ b/core/modules/node/tests/src/Kernel/NodeViewBuilderTest.php
+@@ -7,7 +7,6 @@
+ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+ use Drupal\node\Entity\Node;
+ use Drupal\node\Entity\NodeType;
+-use Drupal\user\Entity\User;
+
+ /**
+  * Tests the node view builder.
+@@ -72,10 +71,10 @@ protected function setUp(): void {
+    * @covers ::buildLinks
+    */
+   public function testPendingRevisionLinks(): void {
+-    $account = User::create([
+-      'name' => $this->randomString(),
++    $account = $this->drupalSetUpCurrentUser(permissions: [
++      'access content',
++      'view own unpublished content',
+     ]);
+-    $account->save();
+
+     $title = $this->randomMachineName();
+     $node = Node::create([
+diff --git a/core/modules/system/tests/modules/router_test_directory/router_test.routing.yml b/core/modules/system/tests/modules/router_test_directory/router_test.routing.yml
+index 7e6475aba2c215368904949e8e9146a28aa646e4..4eb9621f1ec1e055549917e94d86e9c5a6f14722 100644
+--- a/core/modules/system/tests/modules/router_test_directory/router_test.routing.yml
++++ b/core/modules/system/tests/modules/router_test_directory/router_test.routing.yml
+@@ -178,6 +178,14 @@ router_test.27:
+   requirements:
+     _access: 'TRUE'
+
++router_test.28:
++  path: '/router_test/test28'
++  defaults:
++    _controller: '\Drupal\router_test\TestControllers::test28'
++  requirements:
++    _custom_access: '\Drupal\router_test\TestControllers::test28Access'
++
++
+ router_test.hierarchy_parent:
+   path: '/menu-test/parent'
+   defaults:
+diff --git a/core/modules/system/tests/modules/router_test_directory/src/TestControllers.php b/core/modules/system/tests/modules/router_test_directory/src/TestControllers.php
+index 73b977e40cb8225fd6afa88fc06ccf689def0555..7d74fca3c83e23248be40a23d355327bfb81c9a7 100644
+--- a/core/modules/system/tests/modules/router_test_directory/src/TestControllers.php
++++ b/core/modules/system/tests/modules/router_test_directory/src/TestControllers.php
+@@ -4,6 +4,8 @@
+
+ namespace Drupal\router_test;
+
++use Drupal\Core\Access\AccessResult;
++use Drupal\Core\Access\AccessResultInterface;
+ use Drupal\Core\Cache\CacheableResponse;
+ use Drupal\Core\ParamConverter\ParamNotConvertedException;
+ use Drupal\user\UserInterface;
+@@ -114,6 +116,19 @@ public function test25() {
+     ];
+   }
+
++  public function test28(): array {
++    return [
++      '#cache' => [
++        'url',
++      ],
++      '#markup' => \Drupal::requestStack()->getCurrentRequest()->getUri(),
++    ];
++  }
++
++  public function test28Access(): AccessResultInterface {
++    return AccessResult::allowed()->addCacheTags(['router-test-28']);
++  }
++
+   public function testRouteName(Request $request) {
+     return [
+       '#markup' => $request->attributes->get(RouteObjectInterface::ROUTE_NAME),
+diff --git a/core/modules/system/tests/src/Kernel/Theme/FunctionsTest.php b/core/modules/system/tests/src/Kernel/Theme/FunctionsTest.php
+index d063736562a1d156424f9233fe5b734c1773552f..874bb449e9230f83c6bb23ae5930cd4b84d88e60 100644
+--- a/core/modules/system/tests/src/Kernel/Theme/FunctionsTest.php
++++ b/core/modules/system/tests/src/Kernel/Theme/FunctionsTest.php
+@@ -8,6 +8,7 @@
+ use Drupal\Component\Utility\Html;
+ use Drupal\Component\Render\FormattableMarkup;
+ use Drupal\Core\Render\Element\Link;
++use Drupal\Core\Render\RenderContext;
+ use Drupal\Core\Session\UserSession;
+ use Drupal\Core\Url;
+ use Drupal\KernelTests\KernelTestBase;
+@@ -223,6 +224,10 @@ public function testLinks(): void {
+           'key' => 'value',
+         ],
+       ],
++      'cache-test' => [
++        'title' => 'Cache test route',
++        'url' => Url::fromRoute('router_test.28'),
++      ],
+     ];
+
+     $expected_links = '';
+@@ -234,13 +239,16 @@ public function testLinks(): void {
+     $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . Html::escape('Test route') . '</a></li>';
+     $query = ['key' => 'value'];
+     $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . Html::escape('Query test route') . '</a></li>';
++    $expected_links .= '<li><a href="' . Url::fromRoute('router_test.28')->toString() . '">' . Html::escape('Cache test route') . '</a></li>';
+     $expected_links .= '</ul>';
+
+     // Verify that passing a string as heading works.
+     $variables['heading'] = 'Links heading';
+     $expected_heading = '<h2>Links heading</h2>';
+     $expected = $expected_heading . $expected_links;
+-    $this->assertThemeOutput('links', $variables, $expected);
++    $render_context = new RenderContext();
++    $this->assertThemeOutput('links', $variables, $expected, NULL, $render_context);
++    $this::assertEquals(['router-test-28'], $render_context->pop()->getCacheTags());
+
+     // Restore the original request's query.
+     \Drupal::request()->query->replace($original_query);
+@@ -274,6 +282,7 @@ public function testLinks(): void {
+     $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . Html::escape('Test route') . '</a></li>';
+     $query = ['key' => 'value'];
+     $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . Html::escape('Query test route') . '</a></li>';
++    $expected_links .= '<li><a href="' . Url::fromRoute('router_test.28')->toString() . '">' . Html::escape('Cache test route') . '</a></li>';
+     $expected_links .= '</ul>';
+     $expected = $expected_heading . $expected_links;
+     $this->assertThemeOutput('links', $variables, $expected);
+@@ -291,6 +300,7 @@ public function testLinks(): void {
+     $query = ['key' => 'value'];
+     $encoded_query = Html::escape(Json::encode($query));
+     $expected_links .= '<li data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Query test route') . '</a></li>';
++    $expected_links .= '<li data-drupal-link-system-path="router_test/test28"><a href="' . Url::fromRoute('router_test.28')->toString() . '" data-drupal-link-system-path="router_test/test28">' . Html::escape('Cache test route') . '</a></li>';
+     $expected_links .= '</ul>';
+     $expected = $expected_heading . $expected_links;
+     $this->assertThemeOutput('links', $variables, $expected);
+@@ -447,7 +457,7 @@ public function testDrupalPreRenderLinks(): void {
+           // This should always be rendered.
+           'first_child_link' => [
+             'title' => 'First child link',
+-            'url' => Url::fromRoute('router_test.7'),
++            'url' => Url::fromRoute('router_test.10'),
+           ],
+         ],
+       ],
+@@ -457,7 +467,7 @@ public function testDrupalPreRenderLinks(): void {
+         '#links' => [
+           'second_child_link' => [
+             'title' => 'Second child link',
+-            'url' => Url::fromRoute('router_test.8'),
++            'url' => Url::fromRoute('router_test.2'),
+           ],
+         ],
+       ],
+@@ -473,6 +483,12 @@ public function testDrupalPreRenderLinks(): void {
+         ],
+         '#access' => FALSE,
+       ],
++      // This should never be rendered, since the user does not have access to
++      // the route.
++      'fourth_child_link' => [
++        'title' => 'Fourth child link',
++        'url' => Url::fromRoute('router_test.7'),
++      ],
+     ];
+
+     // Start with a fresh copy of the base array, and try rendering the entire
+@@ -489,6 +505,7 @@ public function testDrupalPreRenderLinks(): void {
+     $this->assertEquals('Second child link', $list_elements->item(2)->nodeValue, 'Third expected link found.');
+     $this->assertStringNotContainsString('Parent link copy', $html, '"Parent link copy" link not found.');
+     $this->assertStringNotContainsString('Third child link', $html, '"Third child link" link not found.');
++    $this->assertStringNotContainsString('Fourth child link', $html, '"Fourth child link" link not found.');
+
+     // Now render 'first_child', followed by the rest of the links, and make
+     // sure we get two separate <ul>'s with the appropriate links contained
+diff --git a/core/modules/user/tests/src/Kernel/Views/UserRoleTest.php b/core/modules/user/tests/src/Kernel/Views/UserRoleTest.php
+index 03c496bd4e6bf8c0ab68caa922553f35394f2636..9f93b58981b36cbbd0cfc939a90b895f78156f5c 100644
+--- a/core/modules/user/tests/src/Kernel/Views/UserRoleTest.php
++++ b/core/modules/user/tests/src/Kernel/Views/UserRoleTest.php
+@@ -4,9 +4,9 @@
+
+ namespace Drupal\Tests\user\Kernel\Views;
+
++use Drupal\Tests\user\Traits\UserCreationTrait;
+ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+ use Drupal\user\Entity\Role;
+-use Drupal\user\Entity\User;
+ use Drupal\views\Views;
+
+ /**
+@@ -16,6 +16,8 @@
+  */
+ class UserRoleTest extends ViewsKernelTestBase {
+
++  use UserCreationTrait;
++
+   /**
+    * Tests numeric role.
+    */
+@@ -26,18 +28,17 @@ public function testNumericRole(): void {
+     Role::create(['id' => 123, 'label' => 'Numeric'])
+       ->save();
+
+-    $user = User::create([
+-      'uid' => 2,
++    $this->setupCurrentUser([
++      'uid' => 1,
+       'name' => 'foo',
+       'roles' => 123,
+     ]);
+-    $user->save();
+
+     $view = Views::getView('user_admin_people');
+     $this->executeView($view);
+     $view->render('user_admin_people');
+     $output = $view->field['roles_target_id']->render($view->result[0]);
+-    $this->assertEquals(2, $output);
++    $this->assertEquals(1, $output);
+   }
+
+ }
+diff --git a/core/modules/views/tests/src/Functional/Handler/FieldEntityOperationsTest.php b/core/modules/views/tests/src/Functional/Handler/FieldEntityOperationsTest.php
+index fc1477bf937aaf0dcb7e4209b4d10d930a117407..fb76cac6f3d1db63097a5680d1adfad9370c0888 100644
+--- a/core/modules/views/tests/src/Functional/Handler/FieldEntityOperationsTest.php
++++ b/core/modules/views/tests/src/Functional/Handler/FieldEntityOperationsTest.php
+@@ -106,4 +106,47 @@ public function testEntityOperations(): void {
+     $this->assertSession()->fieldNotExists('style_options[info][operations][sortable]');
+   }
+
++  /**
++   * Tests entity operations cacheability varies correctly.
++   */
++  public function testEntityOperationsCacheability(): void {
++    // It's important that both users have the same role here so cacheability
++    // doesn't vary on that.
++    $role = $this->drupalCreateRole([
++      'edit own article content',
++    ]);
++    $user1 = $this->drupalCreateUser([], 'User 1');
++    $user1->addRole($role);
++    $user1->save();
++    $user2 = $this->drupalCreateUser([], 'User 2');
++    $user2->addRole($role);
++    $user2->save();
++
++    $article = Node::create([
++      'title' => 'An article',
++      'type' => 'article',
++      'uid' => $user1->id(),
++    ]);
++    $article->save();
++    $article2 = Node::create([
++      'title' => 'Another article',
++      'type' => 'article',
++      'uid' => $user2->id(),
++    ]);
++    $article2->save();
++
++    $this->drupalLogin($user2);
++    $this->drupalGet('test-entity-operations');
++
++    $this->assertSession()->linkByHrefExists($article2->toUrl('edit-form')->toString());
++    $this->assertSession()->linkByHrefNotExists($article->toUrl('edit-form')->toString());
++
++    $this->drupalLogin($user1);
++    $this->drupalGet('test-entity-operations');
++
++    $this->assertSession()->linkByHrefNotExists($article2->toUrl('edit-form')->toString());
++    $this->assertSession()->linkByHrefExists($article->toUrl('edit-form')->toString());
++
++  }
++
+ }
+diff --git a/core/modules/views/tests/src/Kernel/Entity/RowEntityRenderersTest.php b/core/modules/views/tests/src/Kernel/Entity/RowEntityRenderersTest.php
+index 32c0c16e966fc505cae53e2490f3f1a2f4633fbd..1b012d0aae94aef5fdd0b37c35c0da86d2556318 100644
+--- a/core/modules/views/tests/src/Kernel/Entity/RowEntityRenderersTest.php
++++ b/core/modules/views/tests/src/Kernel/Entity/RowEntityRenderersTest.php
+@@ -8,8 +8,8 @@
+ use Drupal\field\Entity\FieldStorageConfig;
+ use Drupal\language\Entity\ConfigurableLanguage;
+ use Drupal\node\Entity\NodeType;
++use Drupal\Tests\user\Traits\UserCreationTrait;
+ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+-use Drupal\user\Entity\User;
+ use Drupal\views\Tests\ViewTestData;
+ use Drupal\views\Views;
+
+@@ -21,6 +21,8 @@
+  */
+ class RowEntityRenderersTest extends ViewsKernelTestBase {
+
++  use UserCreationTrait;
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -100,10 +102,9 @@ protected function setUp($import_test_views = TRUE): void {
+       ConfigurableLanguage::createFromLangcode($langcode)->save();
+     }
+
+-    $this->testAuthor = User::create([
++    $this->testAuthor = $this->setupCurrentUser([
+       'name' => 'foo',
+     ]);
+-    $this->testAuthor->save();
+
+     // Make sure we do not try to render non-existing user data.
+     $node_type = NodeType::create([
+diff --git a/core/tests/Drupal/KernelTests/AssertContentTrait.php b/core/tests/Drupal/KernelTests/AssertContentTrait.php
+index 34b7ccd97c5f548f4d1cc0c4e61135de51f5020d..eb2bd3589c7557a61a9c529a55dbe6b2ac8f9c04 100644
+--- a/core/tests/Drupal/KernelTests/AssertContentTrait.php
++++ b/core/tests/Drupal/KernelTests/AssertContentTrait.php
+@@ -793,15 +793,17 @@ protected function assertNoTitle($title, $message = '') {
+    *   message text, or use sprintf() if necessary. Avoid the use of
+    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
+    *   a string. If left blank, a default message will be displayed.
++   * @param \Drupal\Core\Render\RenderContext|null $render_context
++   *   (optional) A specific render context to be used.
+    */
+-  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '') {
++  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '', ?RenderContext $render_context = NULL) {
+     /** @var \Drupal\Core\Render\RendererInterface $renderer */
+     $renderer = \Drupal::service('renderer');
+
+     // The string cast is necessary because theme functions return
+     // MarkupInterface objects. This means we can assert that $expected
+     // matches the theme output without having to worry about 0 == ''.
+-    $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($callback, $variables) {
++    $output = (string) $renderer->executeInRenderContext($render_context ?: new RenderContext(), function () use ($callback, $variables) {
+       return \Drupal::theme()->render($callback, $variables);
+     });
+     if (!$message) {
+diff --git a/core/tests/Drupal/Tests/Core/Entity/EntityListBuilderTest.php b/core/tests/Drupal/Tests/Core/Entity/EntityListBuilderTest.php
+index 9a7531d5f2cd0f726863dae9b625a9cd1525e85c..2698cf85b889f068c0fef285b1e376e2b0786fd3 100644
+--- a/core/tests/Drupal/Tests/Core/Entity/EntityListBuilderTest.php
++++ b/core/tests/Drupal/Tests/Core/Entity/EntityListBuilderTest.php
+@@ -131,6 +131,12 @@ public function testGetOperations(): void {
+     $list->setStringTranslation($this->translationManager);
+     $list->setRedirectDestination($this->redirectDestination);
+
++    $cache_contexts_manager = $this->createMock('Drupal\Core\Cache\Context\CacheContextsManager');
++    $cache_contexts_manager->method('assertValidTokens')
++      ->with(['user'])
++      ->willReturn(TRUE);
++    $this->container->set('cache_contexts_manager', $cache_contexts_manager);
++
+     $operations = $list->getOperations($this->role);
+     $this->assertIsArray($operations);
+     $this->assertArrayHasKey('edit', $operations);
