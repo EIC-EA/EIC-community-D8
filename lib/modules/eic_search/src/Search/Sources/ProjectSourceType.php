@@ -114,6 +114,7 @@ class ProjectSourceType extends SourceType {
     return [
       'tm_global_title',
       'tm_X3b_en_group_project_teaser',
+      'its_field_project_grant_agreement_id',
     ];
   }
 
