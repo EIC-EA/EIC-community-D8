@@ -76,6 +76,7 @@ class ProcessorDiscussion extends DocumentProcessor {
     $comment = NULL;
     $results = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('entity_id', $nid)
       ->condition('pid', 0, 'IS NULL')
       ->sort('created', 'DESC')

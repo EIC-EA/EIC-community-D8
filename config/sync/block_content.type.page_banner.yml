@@ -6,5 +6,5 @@ _core:
   default_config_hash: Tsm2SJ4_667uQLA3V6nFwJWw3aMoUC6L_q-AYZarrG8
 id: page_banner
 label: 'Page banner'
-revision: 0
+revision: false
 description: 'This is a block that can be placed as a page header.'

@@ -13,6 +13,7 @@ use Drupal\user\Entity\User;
  */
 function eic_user_login_update_9001(&$sandbox) {
   $users = \Drupal::entityQuery('user')
+    ->accessCheck(FALSE)
     ->execute();
 
   $users = User::loadMultiple($users);

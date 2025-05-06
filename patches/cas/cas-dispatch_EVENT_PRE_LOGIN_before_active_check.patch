@@ -1,13 +1,13 @@
 diff --git a/src/Service/CasUserManager.php b/src/Service/CasUserManager.php
-index 2c2bd8a..eeabcce 100644
+index 42d01d1..c8ab6ce 100644
 --- a/src/Service/CasUserManager.php
 +++ b/src/Service/CasUserManager.php
-@@ -203,17 +203,20 @@ class CasUserManager {
+@@ -238,17 +238,20 @@ class CasUserManager {
        }
      }
- 
+
 -    // Check if the retrieved user is blocked before moving forward.
--    if (!$account->isActive()) {
+-    if ($account->isBlocked()) {
 -      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginException::ACCOUNT_BLOCKED);
 -    }
 -
@@ -15,13 +15,13 @@ index 2c2bd8a..eeabcce 100644
      // in and/or alter the user entity before we save it.
      $pre_login_event = new CasPreLoginEvent($account, $property_bag);
      $this->casHelper->log(LogLevel::DEBUG, 'Dispatching EVENT_PRE_LOGIN.');
-     $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_LOGIN, $pre_login_event);
- 
+     $this->eventDispatcher->dispatch($pre_login_event, CasHelper::EVENT_PRE_LOGIN);
+
 +    // Reload the user account in case it has changed meanwhile.
 +    $account = $this->externalAuth->load($property_bag->getUsername(), $this->provider);
 +
 +    // Check if the retrieved user is blocked before moving forward.
-+    if (!$account->isActive()) {
++    if ($account->isBlocked()) {
 +      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginException::ACCOUNT_BLOCKED);
 +    }
 +

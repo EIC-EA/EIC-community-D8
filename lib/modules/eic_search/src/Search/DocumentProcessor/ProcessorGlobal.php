@@ -304,10 +304,10 @@ class ProcessorGlobal extends DocumentProcessor {
             'id' => $slide->id(),
             'size' => $file->getSize(),
             'uri' => $this->urlGenerator->transformRelative(
-              file_create_url($destination_uri)
+              \Drupal::service('file_url_generator')->generateAbsoluteString($destination_uri)
             ),
             'uri_160' => $this->urlGenerator->transformRelative(
-              file_create_url($destination_uri_160)
+              \Drupal::service('file_url_generator')->generateAbsoluteString($destination_uri_160)
             ),
             'legend' => $slide->get('field_gallery_slide_legend')->value,
           ]);

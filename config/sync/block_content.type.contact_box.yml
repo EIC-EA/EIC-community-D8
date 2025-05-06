@@ -4,5 +4,5 @@ status: true
 dependencies: {  }
 id: contact_box
 label: 'Contact box'
-revision: 0
+revision: false
 description: 'A contact box block that shows a title, a description and a CTA button.'

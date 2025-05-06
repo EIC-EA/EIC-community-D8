@@ -6,5 +6,6 @@ dependencies:
     - eic_stakeholder
 id: stakeholder.teaser
 label: Teaser
+description: ''
 targetEntityType: stakeholder
 cache: true

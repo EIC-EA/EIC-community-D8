@@ -17,7 +17,7 @@ function eic_community_preprocess_block__eic_groups_wiki_book_navigation(&$varia
   }, ARRAY_FILTER_USE_BOTH);
 
   // Get trail urls related to the current path.
-  $trail_urls = \Drupal::service('menu_trail_by_path.path_helper')->getUrls();
+  $trail_urls = \Drupal::service('menu.active_trail')->getTrailUrls();
 
   // Create hierarchical list of links maximum 3 levels deep.
   $items = [];
