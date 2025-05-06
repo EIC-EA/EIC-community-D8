@@ -112,6 +112,13 @@ class IndividualGroupDashboardController extends ControllerBase {
   }
 
   /**
+   * Group dashboard title.
+   */
+  public function title(GroupInterface $group) {
+    return $this->t('Group dashboard');
+  }
+
+  /**
    * Group dashboard page.
    */
   public function page(GroupInterface $group): array {
