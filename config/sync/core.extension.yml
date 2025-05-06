@@ -187,6 +187,7 @@ module:
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
+  phpass: 0
   profile: 0
   rabbit_hole: 0
   raven: 0
@@ -242,9 +243,7 @@ module:
   publication_date: 99
   minimal: 1000
 theme:
-  stable: 0
-  classy: 0
-  seven: 0
   eic_community: 0
   stable9: 0
+  claro: 0
 profile: minimal

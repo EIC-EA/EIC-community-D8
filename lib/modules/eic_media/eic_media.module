@@ -82,14 +82,11 @@ function eic_media_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
     case 'media_library-widget_table':
       // We need to filter on the current logged-in user. This is known issue,
       // we need this code until the issue is solved.
+      // @see EICNET-2442
       // @see https://www.drupal.org/project/drupal/issues/3142777
-      $query->where[0]['conditions'][] = [
-        'field' => 'media_field_data.uid',
-        'value' => [
-          ':media_field_data_uid' => \Drupal::currentUser()->id(),
-        ],
-        'operator' => '=',
-      ];
+      // @see https://www.drupal.org/project/drupal/issues/3283692
+      $media_content_data = $query->setWhereGroup('AND');
+      $query->addWhere($media_content_data, 'media_field_data.uid', \Drupal::currentUser()->id(), 'IN');
       break;
   }
 }

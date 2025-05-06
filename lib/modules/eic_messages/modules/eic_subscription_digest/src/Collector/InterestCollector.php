@@ -56,6 +56,7 @@ class InterestCollector implements CollectorInterface {
 
     $message_ids = $this->entityTypeManager->getStorage('message')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('template', $supported_templates, 'IN')
       ->condition('field_topic_term', $interest_topics, 'IN')
       ->condition('created', [

@@ -16,7 +16,12 @@ class RetinaScaleEffectTest extends ToolkitTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['image', 'eic_theme_helper'];
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['image', 'eic_theme_helper'];
 
   /**
    * The image effect manager.
@@ -28,7 +33,7 @@ class RetinaScaleEffectTest extends ToolkitTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->manager = $this->container->get('plugin.manager.image.effect');
   }
@@ -45,8 +50,8 @@ class RetinaScaleEffectTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(['scale']);
 
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scale'][0][0], 10, 'Width was passed correctly');
-    $this->assertEqual($calls['scale'][0][1], 10, 'Height was based off aspect ratio and passed correctly');
+    $this->assertEquals($calls['scale'][0][0], 10, 'Width was passed correctly');
+    $this->assertEquals($calls['scale'][0][1], 10, 'Height was based off aspect ratio and passed correctly');
   }
 
   /**
@@ -61,7 +66,7 @@ class RetinaScaleEffectTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(['scale']);
 
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scale'][0][0], $this->image->getWidth() * 4, 'Width was passed correctly');
+    $this->assertEquals($calls['scale'][0][0], $this->image->getWidth() * 4, 'Width was passed correctly');
   }
 
   /**
@@ -75,7 +80,7 @@ class RetinaScaleEffectTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(['scale']);
 
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scale'][0][0], $this->image->getWidth() * 2, 'Width is double the original size.');
+    $this->assertEquals($calls['scale'][0][0], $this->image->getWidth() * 2, 'Width is double the original size.');
   }
 
   /**
@@ -90,7 +95,7 @@ class RetinaScaleEffectTest extends ToolkitTestBase {
     $this->assertToolkitOperationsCalled(['scale']);
 
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scale'][0][0], $this->image->getWidth() * 3, 'Width is triple the original size.');
+    $this->assertEquals($calls['scale'][0][0], $this->image->getWidth() * 3, 'Width is triple the original size.');
   }
 
   /**

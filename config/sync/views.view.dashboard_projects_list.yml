@@ -359,7 +359,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: 'From {{ field_project_date__value|date(''U'')|format_date(''eu_short_date'')}} to {{ field_project_date__end_value|date(''U'')|format_date(''eu_short_date'') }}'
+            text: "From {{ field_project_date__value|date('U')|format_date('eu_short_date')}} to {{ field_project_date__end_value|date('U')|format_date('eu_short_date') }}"
             make_link: false
             path: ''
             absolute: false
@@ -740,6 +740,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
+          pagination_heading_level: h4
       exposed_form:
         type: basic
         options:
@@ -1308,6 +1309,7 @@ display:
           group_content_plugins:
             'group_stakeholder:coordinator': 'group_stakeholder:coordinator'
             'group_stakeholder:participant': '0'
+      css_class: listing-page
       header:
         result:
           id: result
@@ -1328,7 +1330,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
       tags:
         - 'config:field.storage.group.field_body'
         - 'config:field.storage.group.field_project_date'
@@ -1352,7 +1353,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
       tags:
         - 'config:field.storage.group.field_body'
         - 'config:field.storage.group.field_project_date'

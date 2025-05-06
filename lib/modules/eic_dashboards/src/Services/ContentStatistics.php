@@ -224,6 +224,33 @@ class ContentStatistics implements ContentStatisticsInterface {
   }
 
   /**
+   * Returns latest nodes of given bundle
+   */
+  public function getLatestNodesOfBundle($bundle, $range = 10): array {
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
+    $query->condition('n.type', $bundle);
+    $query->orderBy('nfd.created', 'DESC');
+    $query->range(0, $range);
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[] = [
+        'prefix' => $result->created,
+        'title' => $result->title,
+        'url' => '/node/' . $result->node_id,
+      ];
+    }
+
+    return $data;
+  }
+
+  /**
    * Returns number of nodes of given bundle grouped by value from a list field.
    */
   public function getNodesOfBundlePerValue($bundle, $listField, $chartType, $range = NULL): array {

@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./themes/custom/eic_community/patterns/layout/base.html.twig
+ */
+#}
+{% set _wrap_content = true %}
+
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{#{% block page_header %}#}
+{#  <div class="ecl-overview-header{{ image is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">#}
+{#    {% if image is not empty %}#}
+{#      <figure class="ecl-overview-header__image-wrapper">#}
+{#        <img class="ecl-overview-header__image" src="{{ image }}" alt=""/>#}
+{#      </figure>#}
+{#    {% endif %}#}
+
+{#    <div class="ecl-container">#}
+{#      <div class="ecl-overview-header__content">#}
+{#        {% if title is not empty %}#}
+{#          <div class="ecl-overview-header__main">#}
+{#            <h1 class="ecl-overview-header__title ecl-u-mb-xl">{{ title }}</h1>#}
+{#          </div>#}
+{#        {% endif %}#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#{% endblock %}#}

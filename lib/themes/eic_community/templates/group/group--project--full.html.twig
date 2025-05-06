@@ -174,8 +174,10 @@
             <strong>{{ content.field_project_fields_of_science['#title'] }}</strong>
           </div>
           <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
-            {% for key, item in content.field_project_fields_of_science if key|first != '#' %}
-              <li>{{ item }}</li>
+            {% for key, item in content.field_project_fields_of_science %}
+              {% if key|first != '#' %}
+                <li>{{ item }}</li>
+              {% endif %}
             {% endfor %}
           </ul>
         {% endif %}

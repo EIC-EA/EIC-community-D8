@@ -64,7 +64,10 @@ class FormAlter implements ContainerInjectionInterface {
     $account = $form_state->getFormObject()->getEntity();
 
     $is_power_user = UserHelper::isPowerUser(\Drupal::currentUser());
-    $is_cas_account = $this->casUserManager->getCasUsernameForAccount($account->id());
+    $is_cas_account = FALSE;
+    if ($account->id() !== NULL) {
+      $is_cas_account = $this->casUserManager->getCasUsernameForAccount($account->id());
+    }
 
     // Remove access to SMED related fields for non-power users.
     if (!$is_power_user) {

@@ -15,7 +15,7 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
     return;
   }
 
-  $group_permissions = \Drupal::entityQuery('group_permission')->execute();
+  $group_permissions = \Drupal::entityQuery('group_permission')->accessCheck(FALSE)->execute();
 
   \Drupal::logger('eic_deploy')->notice("Loading ".sizeof($group_permissions)." group permission ids");
 
@@ -81,7 +81,7 @@ function eic_deploy_remove_group_permissions_to_role(array $removed_permissions 
     return;
   }
 
-  $group_permissions = \Drupal::entityQuery('group_permission')->execute();
+  $group_permissions = \Drupal::entityQuery('group_permission')->accessCheck(FALSE)->execute();
 
   $group_permissions = GroupPermission::loadMultiple($group_permissions);
 

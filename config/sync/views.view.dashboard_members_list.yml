@@ -444,6 +444,15 @@ display:
             date_format: eu_short_date
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -511,6 +520,15 @@ display:
             date_format: eu_short_date
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -781,6 +799,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+          pagination_heading_level: h4
       exposed_form:
         type: basic
         options:
@@ -802,6 +821,19 @@ display:
       sorts: {  }
       arguments: {  }
       filters:
+        status:
+          id: status
+          table: users_field_data
+          field: status
+          entity_type: user
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
         views_fields_on_off_form:
           id: views_fields_on_off_form
           table: views
@@ -1439,6 +1471,7 @@ display:
           entity_type: user
           plugin_id: standard
           required: false
+      css_class: listing-page
       header:
         result:
           id: result
@@ -1459,7 +1492,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - user.permissions
       tags:
         - 'config:field.storage.profile.field_vocab_language'
@@ -1483,7 +1515,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - user.permissions
       tags:
         - 'config:field.storage.profile.field_vocab_language'

@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - group_flex
+    - group_permissions
 third_party_settings:
   group_flex:
     group_flex_enabler: false
@@ -14,6 +15,8 @@ third_party_settings:
       group_invitation: group_invitation
       tu_close_method: tu_close_method
     group_type_joining_method_override: true
+  group_permissions:
+    enabled: true
 id: project
 label: Project
 description: ''
