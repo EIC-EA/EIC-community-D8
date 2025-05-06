@@ -25,6 +25,9 @@ dependencies:
     - group.content_type.organisation-group_node-event
     - group.content_type.organisation-group_node-gallery
     - group.content_type.organisation-group_node-news
+    - group.type.event
+    - group.type.group
+    - group.type.organisation
   module:
     - flag
     - group
@@ -701,59 +704,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        gid:
-          id: gid
-          table: group_content_field_data
-          field: gid
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: group_content
-          entity_field: gid
-          plugin_id: numeric
-          operator: '='
-          value:
-            min: ''
-            max: ''
-            value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: gid_op
-            label: 'Parent group'
-            description: ''
-            use_operator: false
-            operator: gid_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: gid
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              trusted_user: '0'
-              sensitive: '0'
-              content_administrator: '0'
-              service_authentication: '0'
-              site_admin: '0'
-              administrator: '0'
-            min_placeholder: ''
-            max_placeholder: ''
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
         created:
           id: created
           table: node_field_data
@@ -796,6 +746,57 @@ display:
             min_placeholder: ''
             max_placeholder: ''
             placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        type_2:
+          id: type_2
+          table: groups_field_data
+          field: type
+          relationship: gid
+          group_type: group
+          admin_label: ''
+          entity_type: group
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            event: event
+            group: group
+            organisation: organisation
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_2_op
+            label: 'Group type'
+            description: ''
+            use_operator: false
+            operator: type_2_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: group_type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: true
           is_grouped: false
           group_info:
             label: ''
