@@ -638,6 +638,7 @@ display:
           required: false
           flag: like_content
           user_scope: any
+      css_class: listing-page
       header: {  }
       footer: {  }
       display_extenders: {  }

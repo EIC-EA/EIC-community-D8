@@ -1309,6 +1309,7 @@ display:
           group_content_plugins:
             'group_stakeholder:coordinator': 'group_stakeholder:coordinator'
             'group_stakeholder:participant': '0'
+      css_class: listing-page
       header:
         result:
           id: result
