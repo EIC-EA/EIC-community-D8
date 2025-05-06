@@ -76,8 +76,12 @@
   padding: 30px 0;
 }
 
-.listing-page .form-item {
+.listing-page .form-item:not(fieldset) {
   margin: 0 0 2rem 0 !important;
+}
+
+.listing-page fieldset.form-item {
+  margin: 0 !important;
 }
 
 .listing-page form:after {
