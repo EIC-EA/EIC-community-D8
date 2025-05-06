@@ -1,7 +1,10 @@
 {{ attach_library('eic_dashboards/dashboard-section') }}
 
 <div class="dashboard-section">
-  <div class="dashboard-section__header ecl-u-d-flex ecl-u-mb-m">
+  <div class="dashboard-section__header ecl-u-d-flex ecl-u-mb-l">
+    {% if icon %}
+      <img class="ecl-u-mr-s" src="{{ path ~ 'icon-' ~ icon }}.svg" alt="{{ icon }}">
+    {% endif %}
     <div class="ecl-u-type-heading-2 ecl-u-mr-m">{{ title }}</div>
     {% if link %}
       <div class="dashboard-section__link">

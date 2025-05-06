@@ -132,14 +132,17 @@ class IndividualGroupDashboardController extends ControllerBase {
     $groupMembersLoggedInPastDaysData = $this->groupStatistics->getGroupMembersLoggedPastDays($group, $lastDaysLimit);
     $groupMembersLoggedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('Logged in - past @limit days', ['@limit' => $lastDaysLimit]), $groupMembersLoggedInPastDaysData, '');
 
-    // Section 1.
-    $section1Build = [
+    $section1Content = [
       $this->dashboardBuilder->columns([
         $groupMembers,
         $groupMembersJoinedInPastDays,
         $groupMembersLoggedInPastDays,
       ], 3),
     ];
+
+    // Section 1.
+    $section1Title = 'Members metrics';
+    $section1Build = [$this->dashboardBuilder->dashboardSection($section1Title, '', $section1Content, 'members')];
 
     // Group members by country.
     $groupMembersByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries
@@ -164,7 +167,7 @@ class IndividualGroupDashboardController extends ControllerBase {
     $groupMembersByInterestData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->groupStatistics->getGroupMembersPerTaxonomyTerm($group, $topicsOfInterestField, 'id', DashboardFilters::DASHBOARD_MEMBERS_LIST_GROUP_ID), $topicsVocabulary));
     $groupMembersByInterestChart = $this->dashboardBuilder->chartPie($this->t('Members by topics of interest'), $groupMembersByInterestData, '');
 
-    $section3build = [
+    $section3Build = [
       $this->dashboardBuilder->columns([
         $groupMembersByExpertiseChart,
         $groupMembersByInterestChart,
@@ -190,7 +193,8 @@ class IndividualGroupDashboardController extends ControllerBase {
       ], 2)
     ];
 
-    $section5build = [$this->dashboardBuilder->dashboardSection($discussionsTitle, $discussionsButton, $discussionsContent)];
+    // Section 5.
+    $section5Build = [$this->dashboardBuilder->dashboardSection($discussionsTitle, $discussionsButton, $discussionsContent, 'discussions')];
 
     // Group files statistics.
     $filesTitle = 'Files';
@@ -211,7 +215,8 @@ class IndividualGroupDashboardController extends ControllerBase {
       ], 2)
     ];
 
-    $section6build = [$this->dashboardBuilder->dashboardSection($filesTitle, $filesButton, $filesContent)];
+    // Section 6
+    $section6Build = [$this->dashboardBuilder->dashboardSection($filesTitle, $filesButton, $filesContent, 'files')];
 
     $build = [
       '#type' => 'container',
@@ -224,9 +229,9 @@ class IndividualGroupDashboardController extends ControllerBase {
       'content' => [
         $section1Build,
         $section2Build,
-        $section3build,
-        $section5build,
-        $section6build,
+        $section3Build,
+        $section5Build,
+        $section6Build,
       ],
     ];
 

@@ -97,6 +97,8 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'title' => '',
         'link' => '',
         'content' => '',
+        'icon' => '',
+        'path' => '',
       ],
     ],
   ];
