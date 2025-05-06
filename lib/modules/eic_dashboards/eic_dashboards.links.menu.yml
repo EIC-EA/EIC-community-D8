@@ -12,21 +12,21 @@ eic_dashboards.dashboards:
   title: 'Dashboards'
   description: 'Available member & group dashboards'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.homepage
+  url: "internal:/dashboards#dashboards"
   weight: 0
 
 eic_dashboards.content:
   title: 'Content'
   description: 'Available content dashboards'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.homepage
+  url: "internal:/dashboards#content"
   weight: 1
 
 eic_dashboards.listings:
   title: 'Listings'
   description: 'Available listings'
   parent: system.eic_dashboards
-  route_name: eic_dashboards.homepage
+  url: "internal:/dashboards#listings"
   weight: 2
 
 eic_dashboards.members:

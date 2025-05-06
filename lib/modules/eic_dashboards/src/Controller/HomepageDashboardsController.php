@@ -68,8 +68,8 @@ class HomepageDashboardsController extends ControllerBase {
       ],
       '#content' => [
         $this->dashboardBuilder->ctaCard('Documents', $this->dashboardHelper->getRoutingUrl('eic_dashboards.content.documents'), 'content-documents', 'content'),
-        $this->dashboardBuilder->ctaCard('Discussions', $this->dashboardHelper->getRoutingUrl('eic_dashboards.content.discussions'), 'content-stories', 'content'),
-        $this->dashboardBuilder->ctaCard('Stories', $this->dashboardHelper->getRoutingUrl('eic_dashboards.content.stories'), 'content-discussions', 'content'),
+        $this->dashboardBuilder->ctaCard('Discussions', $this->dashboardHelper->getRoutingUrl('eic_dashboards.content.discussions'), 'content-discussions', 'content'),
+        $this->dashboardBuilder->ctaCard('Stories', $this->dashboardHelper->getRoutingUrl('eic_dashboards.content.stories'), 'content-stories', 'content'),
       ],
       '#listings' => [
         $this->dashboardBuilder->ctaCard('Members list', $this->dashboardHelper->getRoutingUrl('view.dashboard_members_list.page'), 'list-members', 'list'),
