@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Dashboards module.
+ */
+
+use Drupal\eic_dashboards\Hooks\EntityOperations;
+
+/**
+ * Add "Dashboard" link to Group content menu.
+ */
+function eic_dashboards_update_10001(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+  $groups = $em->getStorage('group')->loadByProperties([
+    'type' => 'group',
+  ]);
+
+  foreach ($groups as $group) {
+    \Drupal::classResolver(EntityOperations::class)->createGroupDashboardPageMenuLink($group);
+  }
+}

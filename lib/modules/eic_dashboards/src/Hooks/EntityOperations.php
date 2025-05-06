@@ -3,19 +3,19 @@
 namespace Drupal\eic_dashboards\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class GroupOperations.
+ * Class EntityOperations.
  *
- * Implementations for Group entity hooks.
+ * Implementations for entity hooks.
  */
-class GroupOperations implements ContainerInjectionInterface {
+class EntityOperations implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -27,7 +27,7 @@ class GroupOperations implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
-   * Constructs a new GroupOperations object.
+   * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -50,10 +50,14 @@ class GroupOperations implements ContainerInjectionInterface {
   /**
    * Creates a menu item for the dashboard page in the Group main menu.
    *
-   * @param \Drupal\group\Entity\GroupInterface $group
+   * @param \Drupal\Core\Entity\EntityInterface $group
    *   The group for which we create the menu item.
    */
-  protected function createGroupDashboardPageMenuLink(GroupInterface $group) {
+  public function createGroupDashboardPageMenuLink(EntityInterface $group) {
+    if ($group->bundle() !== 'group') {
+      return 0;
+    }
+
     foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
       if (
         $group_menu->getGroupContentType()

@@ -10,6 +10,8 @@ use Drupal\eic_dashboards\Constants\DashboardFilters;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Drupal\eic_dashboards\Services\GroupStatisticsInterface;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -86,30 +88,27 @@ class IndividualGroupDashboardController extends ControllerBase {
         ->addCacheableDependency($group);
     }
 
-    // TODO: Delete when current development is over.
-    if ($account->id() === '1') {
+    // Allow access to power users.
+    if (UserHelper::isPowerUser($account)) {
       return AccessResult::allowed()
-        ->addCacheableDependency($account)
-        ->cachePerPermissions();
+        ->addCacheableDependency($group)
+        ->addCacheableDependency($account);
     }
 
-    $user = $this->entityTypeManager->getStorage('user')->load($account->id());
     $groupMembership = $group->getMember($account);
-
     if ($groupMembership instanceof GroupMembership) {
       foreach ($groupMembership->getRoles() as $group_role) {
-        if ($group_role->id() === 'group-admin' or $group_role->id() === 'group-owner') {
+        if ($group_role->id() === EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE or $group_role->id() === EICGroupsHelper::GROUP_OWNER_ROLE) {
           return AccessResult::allowed()
             ->addCacheableDependency($group)
-            ->addCacheableDependency($user)
-            ->cachePerPermissions();
+            ->addCacheableDependency($account);
         }
       }
     }
 
     return AccessResult::forbidden()
-      ->cachePerUser()
-      ->addCacheableDependency($user);
+      ->addCacheableDependency($group)
+      ->addCacheableDependency($account);
   }
 
   /**
