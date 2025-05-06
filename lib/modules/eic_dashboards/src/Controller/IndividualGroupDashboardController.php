@@ -183,15 +183,25 @@ class IndividualGroupDashboardController extends ControllerBase {
     $groupTotalEvents = $this->dashboardBuilder->numberAndLink($this->t('Total events'), $groupTotalEventsData, '');
 
     // Group events created in past days.
-    $groupEventsCreatedInPastDaysData = $this->groupStatistics->getGroupMembersRegisteredPastDays($group, $lastDaysLimit);
+    $groupEventsCreatedInPastDaysData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $eventsType, $lastDaysLimit);
     $groupEventsCreatedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('New events - past @limit days', ['@limit' => $lastDaysLimit]), $groupEventsCreatedInPastDaysData, '');
+
+    // Group events by type chart.
+    $typeField = 'field_vocab_event_type';
+    $groupEventsByTypeData = json_encode($this->groupStatistics->getGroupNodesOfGroupByTerm($group, $eventsType, $typeField));
+    $groupEventsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupEventsByTypeData, '');
+
+    // Group events by topic chart.
+    $topicField = 'field_vocab_topics';
+    $groupEventsByTopicData = json_encode($this->groupStatistics->getGroupNodesOfGroupByTerm($group, $eventsType, $topicField));
+    $groupEventsByTopic = $this->dashboardBuilder->chartPie($this->t('Events by topic'), $groupEventsByTopicData, '');
 
     $eventsContent = [
       $this->dashboardBuilder->columns([
         $groupTotalEvents,
         $groupEventsCreatedInPastDays,
-        'Column #3',
-        'Column #4',
+        $groupEventsByType,
+        $groupEventsByTopic,
       ], 2)
     ];
 

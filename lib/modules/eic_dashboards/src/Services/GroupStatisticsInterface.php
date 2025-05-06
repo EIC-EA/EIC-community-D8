@@ -118,4 +118,9 @@ interface GroupStatisticsInterface {
    * Returns number of content type's nodes of a given group in a given period.
    */
   public function getNumberOfContentInGivenPeriod(GroupInterface $group, $contentType, $days);
+
+  /**
+   * Returns number of group nodes that belong to group, grouped by taxonomy term.
+   */
+  public function getGroupNodesOfGroupByTerm($group, $groupNodeType, $taxonomyField);
 }
