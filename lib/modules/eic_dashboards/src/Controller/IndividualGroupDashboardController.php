@@ -174,6 +174,30 @@ class IndividualGroupDashboardController extends ControllerBase {
       ], 2)
     ];
 
+    // Group events statistics.
+    $eventsTitle = 'Events';
+    $eventsType = 'group-group_node-event';
+
+    // Group events.
+    $groupTotalEventsData = $this->groupStatistics->getNumberOfContentInGivenPeriod($group, $eventsType);
+    $groupTotalEvents = $this->dashboardBuilder->numberAndLink($this->t('Total events'), $groupTotalEventsData, '');
+
+    // Group events created in past days.
+    $groupEventsCreatedInPastDaysData = $this->groupStatistics->getGroupMembersRegisteredPastDays($group, $lastDaysLimit);
+    $groupEventsCreatedInPastDays = $this->dashboardBuilder->numberAndLink($this->t('New events - past @limit days', ['@limit' => $lastDaysLimit]), $groupEventsCreatedInPastDaysData, '');
+
+    $eventsContent = [
+      $this->dashboardBuilder->columns([
+        $groupTotalEvents,
+        $groupEventsCreatedInPastDays,
+        'Column #3',
+        'Column #4',
+      ], 2)
+    ];
+
+    // Section 4.
+    $section4Build = [$this->dashboardBuilder->dashboardSection($eventsTitle, '', $eventsContent, 'events')];
+
     // Group discussions statistics.
     $discussionsTitle = 'Forum discussions';
     $discussionType = 'group-group_node-discussion';
@@ -230,6 +254,7 @@ class IndividualGroupDashboardController extends ControllerBase {
         $section1Build,
         $section2Build,
         $section3Build,
+        $section4Build,
         $section5Build,
         $section6Build,
       ],
