@@ -19,9 +19,9 @@ interface ContentStatisticsInterface {
   public function getNumberOfBundleNodesPastDays($bundle, $days);
 
   /**
-   * Returns number of nodes of content type grouped by terms.
+   * Returns number of nodes of given bundle grouped by terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId, $range);
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $range);
 
   /**
    * Returns information about last story nodes.

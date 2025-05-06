@@ -85,12 +85,12 @@ class ContentDocumentsDashboardController extends ControllerBase {
     ];
 
     // Nodes grouped by type chart.
-    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie', ''));
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie'));
     $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'), $nodesByTypeData, '');
 
     // Nodes grouped by topic chart.
-    $topicTermId = 506;
-    $nodesByTopicData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'pie', $topicTermId));
+    $topicsVocabulary = 'topics';
+    $nodesByTopicData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column'), $topicsVocabulary));
     $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, '');
 
     // Section 2.
@@ -119,8 +119,7 @@ class ContentDocumentsDashboardController extends ControllerBase {
     // Top terms used.
     $topTermsLimit = 10;
     $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
-    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm
-    ($bundle, 'field_tags', 'column', '', $topTermsLimit)));
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', $topTermsLimit)));
     $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit document tags', ['@limit' => $topTermsLimit]), $topTerms, true);
 
     // Latest nodes.

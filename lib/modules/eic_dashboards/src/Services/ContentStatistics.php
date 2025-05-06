@@ -70,23 +70,13 @@ class ContentStatistics implements ContentStatisticsInterface {
 
   /**
    * Returns number of nodes of given bundle grouped by terms.
-   * If $parentTermId is given, it will display only the children terms.
    */
-  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $parentTermId, $range = NULL): array {
+  public function getNodesOfBundlePerTerm($bundle, $taxonomyField, $chartType, $range = NULL): array {
     $query = $this->connection->select('node', 'n');
     $query->innerJoin('node__' . $taxonomyField, 'ntf', 'n.nid = ntf.entity_id');
-
-    if ($parentTermId) {
-      $query->innerJoin('taxonomy_term__parent', 'ttp', 'ntf.' . $taxonomyField . '_target_id = ttp.entity_id');
-    }
-
     $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'nodes_count');
     $query->addExpression('ntf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
     $query->condition('n.type', $bundle);
-
-    if ($parentTermId) {
-      $query->condition('ttp.parent_target_id', $parentTermId);
-    }
 
     if ($range) {
       $query->range(0, $range);
