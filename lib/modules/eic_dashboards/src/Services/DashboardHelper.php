@@ -240,6 +240,11 @@ class DashboardHelper implements DashboardHelperInterface {
     // Step 4: Prepare chart-ready output
     $result = [];
     foreach ($secondLevelTerms as $secondLevelTid => $term) {
+      // Return only items with a count greater than zero.
+      if($term['count'] === 0) {
+        continue;
+      }
+
       $result[] = [
         'name' => $term['name'],
         'y' => $term['count'],
