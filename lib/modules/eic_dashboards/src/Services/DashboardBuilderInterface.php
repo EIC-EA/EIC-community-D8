@@ -75,6 +75,6 @@ interface DashboardBuilderInterface {
   /**
    * Build dashboard section.
    */
-  public function dashboardSection($title, $link, $content, $icon);
+  public function dashboardSection($title, $link, $content, $icon, $hasBorder);
 
 }

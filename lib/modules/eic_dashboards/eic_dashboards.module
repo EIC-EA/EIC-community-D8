@@ -99,6 +99,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'content' => '',
         'icon' => '',
         'path' => '',
+        'has_border' => true,
       ],
     ],
   ];

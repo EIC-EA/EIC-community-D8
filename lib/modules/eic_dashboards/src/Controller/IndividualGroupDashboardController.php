@@ -141,7 +141,8 @@ class IndividualGroupDashboardController extends ControllerBase {
 
     // Section 1.
     $section1Title = 'Members metrics';
-    $section1Build = [$this->dashboardBuilder->dashboardSection($section1Title, '', $section1Content, 'members')];
+    $section1Border = FALSE;
+    $section1Build = [$this->dashboardBuilder->dashboardSection($section1Title, '', $section1Content, 'members', $section1Border)];
 
     // Group members by country.
     $groupMembersByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries

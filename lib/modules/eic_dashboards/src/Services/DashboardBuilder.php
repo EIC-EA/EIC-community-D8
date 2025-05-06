@@ -238,7 +238,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function dashboardSection($title, $link, $content, $icon): array {
+  public function dashboardSection($title, $link, $content, $icon, $hasBorder = TRUE): array {
     $path = '/' . \Drupal::service('extension.path.resolver')->getPath('module', 'eic_dashboards') . '/images/';
 
     return [
@@ -248,6 +248,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
       '#content' => $content,
       '#icon' => $icon,
       '#path' => $path,
+      '#has_border' => $hasBorder,
     ];
   }
 
