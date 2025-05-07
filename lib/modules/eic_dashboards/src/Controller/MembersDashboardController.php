@@ -100,7 +100,7 @@ class MembersDashboardController extends ControllerBase
         $members,
         $membersCreatedPastDays,
         $membersLoggedPastDays
-      ], 3),
+      ], 4),
     ];
 
     // ===== Section 2.

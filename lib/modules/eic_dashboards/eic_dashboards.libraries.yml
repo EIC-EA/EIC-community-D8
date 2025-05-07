@@ -8,9 +8,10 @@ scripts:
     theme:
       css/highcharts.css: { }
   js:
-    js/dates.js: {}
+    js/ecl-fix.js: {}
   dependencies:
     - core/jquery
+    - core/once
     - core/drupal
     - oe_webtools/drupal.webtools-smartloader
 
