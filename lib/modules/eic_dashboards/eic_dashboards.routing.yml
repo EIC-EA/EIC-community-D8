@@ -77,3 +77,15 @@ eic_dashboards.listings.activity_report:
     _title: 'Activity report'
   requirements:
     _role: 'sensitive'
+
+eic_dashboards.group.dashboard:
+  path: '/group/{group}/dashboard'
+  defaults:
+    _controller: '\Drupal\eic_dashboards\Controller\IndividualGroupDashboardController::page'
+    _title_callback: '\Drupal\eic_dashboards\Controller\IndividualGroupDashboardController::title'
+  requirements:
+    _custom_access: '\Drupal\eic_dashboards\Controller\IndividualGroupDashboardController::access'
+  options:
+    parameters:
+      group:
+        type: 'entity:group'

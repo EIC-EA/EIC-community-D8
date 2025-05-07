@@ -159,6 +159,24 @@ class DashboardHelper implements DashboardHelperInterface {
   }
 
   /**
+   * Transforms data array into categories and series format.
+   */
+  public function transformNameYToCategoriesSeries($data): array {
+    $result = [
+      'categories' => [],
+      'series' => [],
+    ];
+    foreach ($data as $item) {
+      if (isset($item['name']) && isset($item['y'])) {
+        $result['categories'][] = $item['name'];
+        $result['series'][] = $item['y'];
+      }
+    }
+
+    return $result;
+  }
+
+  /**
    * Builds a flattened term map starting from 2nd-level taxonomy terms.
    *
    * This function:
@@ -240,6 +258,11 @@ class DashboardHelper implements DashboardHelperInterface {
     // Step 4: Prepare chart-ready output
     $result = [];
     foreach ($secondLevelTerms as $secondLevelTid => $term) {
+      // Return only items with a count greater than zero.
+      if($term['count'] === 0) {
+        continue;
+      }
+
       $result[] = [
         'name' => $term['name'],
         'y' => $term['count'],

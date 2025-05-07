@@ -64,8 +64,10 @@ class ContentStoriesDashboardController extends ControllerBase {
    * {@inheritdoc}
    */
   public function page(): array {
-    // Specify current bundle.
+    // Specify current bundle, title and link.
     $bundle = 'story';
+    $title = 'Stories';
+    $link = '';
 
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
@@ -85,11 +87,11 @@ class ContentStoriesDashboardController extends ControllerBase {
     ];
 
     // Nodes grouped by program type chart.
-    $nodesByProgramTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type', 'pie', ''));
+    $nodesByProgramTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_program_type', 'pie'));
     $nodesByProgramType = $this->dashboardBuilder->chartPie($this->t('Stories by program type'), $nodesByProgramTypeData, '');
 
     // Nodes grouped by type chart.
-    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_story_type', 'pie', ''));
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_story_type', 'pie'));
     $nodesByType = $this->dashboardBuilder->chartPie($this->t('Stories by type'), $nodesByTypeData, '');
 
     // Section 2.
@@ -101,9 +103,8 @@ class ContentStoriesDashboardController extends ControllerBase {
     ];
 
     // Nodes by topic.
-    // TODO: Clarify which levels of vocabularies should be displayed.
-    $topicTermId = 506;
-    $nodesByTopicData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column', $topicTermId)));
+    $topicsVocabulary = 'topics';
+    $nodesByTopicData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformNameYToCategoriesSeries($this->dashboardHelper->transformTermTreeCountsForChart($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column'), $topicsVocabulary)));
     $nodesByTopicChart = $this->dashboardBuilder->chartColumn($this->t('Stories by topic'), $nodesByTopicData, true);
 
     // Section 3.
@@ -139,16 +140,14 @@ class ContentStoriesDashboardController extends ControllerBase {
       ], 2),
     ];
 
-    $build = [
-      'content' => [
-        $section1Build,
-        $section2Build,
-        $section3Build,
-        $section4Build,
-        $section5Build,
-      ],
+    $content = [
+      $section1Build,
+      $section2Build,
+      $section3Build,
+      $section4Build,
+      $section5Build,
     ];
 
-    return $build;
+    return [$this->dashboardBuilder->dashboardSection($title, $link, $content, 'stories', FALSE)];
   }
 }

@@ -88,4 +88,39 @@ interface GroupStatisticsInterface {
    * Returns groups of given type created in given period.
    */
   public function getGroupsCreatedInGivenPeriod($groupType, $startDate, $endDate, $range);
+
+  /**
+   * Returns the number of given group members.
+   */
+  public function getGroupMembers(GroupInterface $group);
+
+  /**
+   * Returns number of group members that joined in the past days.
+   */
+  public function getGroupMembersRegisteredPastDays(GroupInterface $group, $days);
+
+  /**
+   * Returns number of group members that logged in the past days.
+   */
+  public function getGroupMembersLoggedPastDays(GroupInterface $group, $days);
+
+  /**
+   * Returns group members grouped by country.
+   */
+  public function getGroupMembersGroupedByCountry(GroupInterface $group, $countryId, $groupId);
+
+  /**
+   * Returns group members grouped by vocabulary.
+   */
+  public function getGroupMembersPerTaxonomyTerm(GroupInterface $group, $taxonomyField, $argumentId, $groupId);
+
+  /**
+   * Returns number of content type's nodes of a given group in a given period.
+   */
+  public function getNumberOfContentInGivenPeriod(GroupInterface $group, $contentType, $days);
+
+  /**
+   * Returns number of group nodes that belong to group, grouped by taxonomy term.
+   */
+  public function getGroupNodesOfGroupByTerm($group, $groupNodeType, $taxonomyField);
 }

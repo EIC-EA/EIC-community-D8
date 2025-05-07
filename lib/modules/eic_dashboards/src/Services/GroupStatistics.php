@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,14 +26,23 @@ class GroupStatistics implements GroupStatisticsInterface {
   protected DashboardHelperInterface $dashboardHelper;
 
   /**
+   * The country service.
+   *
+   * @var \Drupal\eic_dashboards\Services\CountryServiceInterface
+   */
+  protected CountryServiceInterface $countryService;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     Connection $connection,
     DashboardHelperInterface $dashboardHelper,
+    CountryServiceInterface $countryService,
   ) {
     $this->connection = $connection;
     $this->dashboardHelper = $dashboardHelper;
+    $this->countryService = $countryService;
   }
 
   /**
@@ -42,6 +52,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     return new static(
       $container->get('database'),
       $container->get('eic_dashboards.helper'),
+      $container->get('eic_dashboards.country_service'),
     );
   }
 
@@ -49,11 +60,10 @@ class GroupStatistics implements GroupStatisticsInterface {
    * Returns number of groups of given type.
    */
   public function getNumberOfGroups($groupType): array|int {
-    $query = $this->connection->select('groups', 'g')
-      ->condition('g.type', $groupType)
-      ->countQuery();
+    $query = $this->connection->select('groups', 'g');
+    $query->condition('g.type', $groupType);
 
-    return $query->execute()->fetchField();
+    return $query->countQuery()->execute()->fetchField();
   }
 
   /**
@@ -63,8 +73,8 @@ class GroupStatistics implements GroupStatisticsInterface {
   public function getNumberOfGroupsPastDays($groupType, $days = 30): array|int {
     $query = $this->connection->select('groups', 'g');
     $query->innerJoin('groups_field_data', 'gfd', 'g.id = gfd.id');
-    $query->condition('g.type', $groupType)
-      ->condition('gfd.created', strtotime('-' . $days . ' days'), '>=');
+    $query->condition('g.type', $groupType);
+    $query->condition('gfd.created', strtotime('-' . $days . ' days'), '>=');
 
     return $query->countQuery()->execute()->fetchField();
   }
@@ -282,10 +292,10 @@ class GroupStatistics implements GroupStatisticsInterface {
 
     $data = [];
 
-    foreach ($results as $row) {
-      $data[$row->country_code][$argumentId] = $row->country_code;
-      $data[$row->country_code]['label'] = $countries[mb_strtoupper($row->country_code)] ?? '';
-      $data[$row->country_code]['count'] = $row->groups_count;
+    foreach ($results as $result) {
+      $data[$result->country_code][$argumentId] = $result->country_code;
+      $data[$result->country_code]['label'] = $countries[mb_strtoupper($result->country_code)] ?? '';
+      $data[$result->country_code]['count'] = $result->groups_count;
     }
 
     return $data;
@@ -409,10 +419,10 @@ class GroupStatistics implements GroupStatisticsInterface {
 
     $data = [];
 
-    foreach ($results as $row) {
-      $data[$row->country_code]['id'] = $row->country_code;
-      $data[$row->country_code]['label'] = $countries[mb_strtoupper($row->country_code)] ?? '';
-      $data[$row->country_code]['count'] = $row->projects_count;
+    foreach ($results as $result) {
+      $data[$result->country_code]['id'] = $result->country_code;
+      $data[$result->country_code]['label'] = $countries[mb_strtoupper($result->country_code)] ?? '';
+      $data[$result->country_code]['count'] = $result->projects_count;
     }
 
     return $data;
@@ -464,6 +474,146 @@ class GroupStatistics implements GroupStatisticsInterface {
         'title' => $result->label,
         'url' => '/group/' . $result->group_id,
       ];
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns the number of given group members.
+   */
+  public function getGroupMembers(GroupInterface $group) {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->addExpression('COUNT(DISTINCT entity_id)', 'count');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $result = $query->execute()->fetchAll();
+
+    return $result[0]->count;
+  }
+
+  /**
+   * Returns number of group members that joined in the past days.
+   */
+  public function getGroupMembersRegisteredPastDays(GroupInterface $group, $days = 30) {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->fields('gcfd', ['entity_id']);
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('gcfd.created', strtotime('-' . $days . ' days'), '>=');
+
+    return $query->countQuery()->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of group members that logged in the past days.
+   */
+  public function getGroupMembersLoggedPastDays(GroupInterface $group, $days = 30): int {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('profile', 'p', 'gcfd.entity_id = p.profile_id');
+    $query->innerJoin('users_field_data', 'ufd', 'p.profile_id = ufd.uid');
+    $query->fields('gcfd', ['entity_id']);
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('ufd.login', strtotime('-' . $days . ' days'), '>=');
+
+    return $query->countQuery()->execute()->fetchField();
+  }
+
+  /**
+   * Returns group members grouped by country.
+   */
+  public function getGroupMembersGroupedByCountry(GroupInterface $group, $countryId, $groupId): array {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('profile', 'p', 'gcfd.entity_id = p.profile_id');
+    $query->innerJoin('profile__field_location_address', 'pfla', 'p.profile_id = pfla.entity_id');
+    $query->addExpression('gcfd.gid', 'group_id');
+    $query->addExpression('COUNT(pfla.field_location_address_country_code)', 'members_count');
+    $query->addExpression('pfla.field_location_address_country_code', 'country_code');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('p.type', 'member');
+    $query->groupBy('country_code');
+    $query->orderBy('country_code', 'ASC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    $countries = $this->countryService->getAllCountries();
+    foreach ($results as $result) {
+      $data[$result->country_code][$countryId] = $result->country_code;
+      $data[$result->country_code][$groupId] = $result->group_id;
+      $data[$result->country_code]['label'] = $countries[mb_strtoupper($result->country_code)] ?? '';
+      $data[$result->country_code]['count'] = $result->members_count;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns group members grouped by vocabulary.
+   */
+  public function getGroupMembersPerTaxonomyTerm(GroupInterface $group, $taxonomyField, $argumentId, $groupId): array {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('profile', 'p', 'gcfd.entity_id = p.profile_id');
+    $query->innerJoin('profile__' . $taxonomyField, 'ptf', 'p.profile_id = ptf.entity_id');
+    $query->addExpression('gcfd.gid', 'group_id');
+    $query->addExpression('COUNT(ptf.' . $taxonomyField . '_target_id)', 'members_count');
+    $query->addExpression('ptf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $group->getGroupType()->id() . '-group_membership');
+    $query->condition('p.type', 'member');
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('members_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->taxonomy_term_id][$argumentId] = $result->taxonomy_term_id;
+      $data[$result->taxonomy_term_id][$groupId] = $result->group_id;
+      $data[$result->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id);
+      $data[$result->taxonomy_term_id]['count'] = (int) $result->members_count;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Returns number of content type's nodes of a given group in a given period.
+   */
+  public function getNumberOfContentInGivenPeriod(GroupInterface $group, $contentType, $days = NULL) {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $contentType);
+
+    if ($days) {
+      $query->condition('gcfd.created', strtotime('-' . $days . ' days'), '>=');
+    }
+
+    return $query->countQuery()->execute()->fetchField();
+  }
+
+  /**
+   * Returns number of group nodes that belong to group, grouped by taxonomy term.
+   */
+  public function getGroupNodesOfGroupByTerm($group, $groupNodeType, $taxonomyField): array {
+    $query = $this->connection->select('group_content_field_data', 'gcfd');
+    $query->innerJoin('node__' . $taxonomyField, 'ntf', 'gcfd.entity_id = ntf.entity_id');
+    $query->condition('gcfd.gid', $group->id());
+    $query->condition('gcfd.type', $groupNodeType);
+    $query->addExpression('COUNT(ntf.' . $taxonomyField . '_target_id)', 'group_nodes_count');
+    $query->addExpression('ntf.' . $taxonomyField . '_target_id', 'taxonomy_term_id');
+    $query->groupBy('taxonomy_term_id');
+    $query->orderBy('group_nodes_count', 'DESC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+
+    foreach ($results as $result) {
+      $data[$result->taxonomy_term_id]['id'] = $result->taxonomy_term_id;
+      $data[$result->taxonomy_term_id]['label'] = $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id);
+      $data[$result->taxonomy_term_id]['count'] = (int) $result->group_nodes_count;
     }
 
     return $data;

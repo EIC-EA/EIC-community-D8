@@ -235,4 +235,21 @@ class DashboardBuilder implements DashboardBuilderInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function dashboardSection($title, $link, $content, $icon, $hasBorder = TRUE): array {
+    $path = '/' . \Drupal::service('extension.path.resolver')->getPath('module', 'eic_dashboards') . '/images/';
+
+    return [
+      '#theme' => 'dashboard_section',
+      '#title' => $title,
+      '#link' => $link,
+      '#content' => $content,
+      '#icon' => $icon,
+      '#path' => $path,
+      '#has_border' => $hasBorder,
+    ];
+  }
+
 }

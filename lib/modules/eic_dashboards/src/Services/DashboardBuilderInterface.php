@@ -72,4 +72,9 @@ interface DashboardBuilderInterface {
    */
   public function tabs($title, $items);
 
+  /**
+   * Build dashboard section.
+   */
+  public function dashboardSection($title, $link, $content, $icon, $hasBorder);
+
 }

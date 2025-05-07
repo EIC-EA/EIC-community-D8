@@ -33,6 +33,11 @@ interface DashboardHelperInterface {
   public function transformIdCountToCategoriesSeries($data);
 
   /**
+   * Transforms data array into categories and series format.
+   */
+  public function transformNameYToCategoriesSeries($data);
+
+  /**
    * Formats member counts for chart display by collapsing sub-terms.
    *
    * This function:

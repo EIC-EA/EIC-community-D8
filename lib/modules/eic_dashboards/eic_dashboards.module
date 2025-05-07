@@ -1,6 +1,8 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_dashboards\Hooks\EntityOperations;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Template\Attribute;
 
@@ -89,6 +91,16 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'title' => '',
         'link' => '',
         'items' => '',
+      ],
+    ],
+    'dashboard_section' => [
+      'variables' => [
+        'title' => '',
+        'link' => '',
+        'content' => '',
+        'icon' => '',
+        'path' => '',
+        'has_border' => true,
       ],
     ],
   ];
@@ -240,6 +252,13 @@ function eic_dashboards_form_views_exposed_form_alter(&$form, FormStateInterface
    $form['status_1']['#options'][1] = t('Enabled');
    $form['status_1']['#options'][0] = t('Disabled');
  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_dashboards_group_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)->createGroupDashboardPageMenuLink($entity);
 }
 
 /**

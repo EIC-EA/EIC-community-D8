@@ -63,3 +63,8 @@ tabs:
   css:
     theme:
       css/tabs.css: {}
+
+dashboard-section:
+  css:
+    theme:
+      css/dashboard-section.css: {}
