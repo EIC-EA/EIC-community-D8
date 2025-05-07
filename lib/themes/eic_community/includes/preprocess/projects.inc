@@ -8,14 +8,16 @@
  *
  */
 
+use Drupal\oec_group_features\GroupFeatureHelper;
+
 /**
  * Implements hook_preprocess_HOOK() for group--project--full.html.twig.
  */
 function _eic_community_render_project_detail_page(&$variables, $group) {
   $view_id = 'project_content';
 
-  if ($group->hasField('features') && !$group->get('features')->isEmpty()) {
-    $features = array_column($group->get('features')->getValue(), 'value');
+  if ($group->hasField(GroupFeatureHelper::FEATURES_FIELD_NAME) && !$group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->isEmpty()) {
+    $features = array_column($group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue(), 'value');
     $variables['horizon_feature_enabled'] = is_int(array_search('eic_groups_anchor_horizon_platform_result', $features));
     $variables['innovation_feature_enabled'] = is_int(array_search('eic_groups_anchor_innovations', $features));
   }

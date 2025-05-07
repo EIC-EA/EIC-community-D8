@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\oec_group_features\GroupFeatureHelper;
 
 
 /**
@@ -112,9 +113,11 @@ function eic_projects_update_9002(&$sandbox) {
       $group = \Drupal::entityTypeManager()->getStorage('group')
         ->load($gid);
       $horizon_feature->enable($group);
+
+      // @see \Drupal\eic_groups\Hooks\FormOperations::enableDefaultFeatures
       // Make sure the feature is enabled on field level.
       $feature_found = FALSE;
-      foreach ($group->get('features')->getValue() as $item) {
+      foreach ($group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue() as $item) {
         if ($item['value'] == $horizon_plugin_definition_id) {
           $feature_found = TRUE;
           break;
