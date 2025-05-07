@@ -95,14 +95,37 @@ function eic_projects_update_9002(&$sandbox) {
     return;
   }
 
+  $horizon_plugin_definition_id = 'eic_groups_anchor_horizon_platform_result';
+
+  /** @var \Drupal\eic_groups\Plugin\GroupFeature\GroupAnchorFeature\GroupAnchorHorizonResult $horizon_feature */
+  $horizon_feature = \Drupal::service('plugin.manager.group_feature')
+    ->createInstance($horizon_plugin_definition_id);
+
   foreach ($gids as $gid) {
     $url = \Drupal::service('eic_projects.ftp_search')->getPortalUrl($gid);
     if ($url) {
       // Just save the group.
       // \Drupal\eic_projects\Hooks\EntityOperations::projectGroupPreSave will
       // add the HRP link to the field.
-      \Drupal::entityTypeManager()->getStorage('group')
-        ->load($gid)->save();
+
+      // Also enable the HRP feature on group.
+      $group = \Drupal::entityTypeManager()->getStorage('group')
+        ->load($gid);
+      $horizon_feature->enable($group);
+      // Make sure the feature is enabled on field level.
+      $feature_found = FALSE;
+      foreach ($group->get('features')->getValue() as $item) {
+        if ($item['value'] == $horizon_plugin_definition_id) {
+          $feature_found = TRUE;
+          break;
+        }
+      }
+      if (!$feature_found) {
+        $value = $group->get('features')->getValue();
+        $value[]['value'] = $horizon_plugin_definition_id;
+        $group->get('features')->setValue($value);
+      }
+      $group->save();
     }
 
     $sandbox['current']++;
