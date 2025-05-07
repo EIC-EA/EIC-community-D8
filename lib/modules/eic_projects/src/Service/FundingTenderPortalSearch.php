@@ -58,7 +58,6 @@ class FundingTenderPortalSearch {
     $query = [
       "bool" => [
         "must" => [
-          ["terms" => ["type" => ["9"]]],
           ["terms" => ["projectId" => ["$project_id"]]],
         ],
       ],
