@@ -67,7 +67,8 @@ class ContentStoriesDashboardController extends ControllerBase {
     // Specify current bundle, title and link.
     $bundle = 'story';
     $title = 'Stories';
-    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', '', 'List all');
+    $storyTypes = ['event-group_node-story'];
+    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $storyTypes, 'List all');
 
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);

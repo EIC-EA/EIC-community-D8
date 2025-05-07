@@ -67,7 +67,8 @@ class ContentDiscussionsDashboardController extends ControllerBase {
     // Specify current bundle, title and link.
     $bundle = 'discussion';
     $title = 'Forum discussions';
-    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', '', 'List all');
+    $discussionTypes = ['event-group_node-discussion', 'group-group_node-discussion'];
+    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $discussionTypes, 'List all');
 
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
