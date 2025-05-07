@@ -27,7 +27,6 @@ class FundingTenderPortalSearch {
     $portal_results = $this->searchPortalByGid($gid);
     if ($portal_results) {
       return match ($portal_results['totalResults']) {
-        1 => $portal_results['results'][0]['url'],
         0 => FALSE,
         default => $this->getProjectIdByGroupId($gid) ? $this->search_result_url . $this->getProjectIdByGroupId($gid) : FALSE,
       };
