@@ -67,8 +67,7 @@ class ContentDocumentsDashboardController extends ControllerBase {
     // Specify current bundle, title and link.
     $bundle = 'document';
     $title = 'Documents';
-    $link = '';
-
+    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', '', 'List all');
 
     // Number of nodes.
     $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
