@@ -25,13 +25,15 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   public function projectGroupPreSave(GroupInterface $group) {
-    $portal_url = $this->fundingTenderPortalSearch->getPortalUrl($group->id());
-    if ($portal_url) {
-      $link = [
-        'uri' => $portal_url,
-        'title' => 'Horizon Results Platform',
-      ];
-      $group->set('field_project_horizon_results', $link);
+    if ($group->get('field_project_horizon_results')->isEmpty()) {
+      $portal_url = $this->fundingTenderPortalSearch->getPortalUrl($group->id());
+      if ($portal_url) {
+        $link = [
+          'uri' => $portal_url,
+          'title' => 'Horizon Results Platform',
+        ];
+        $group->set('field_project_horizon_results', $link);
+      }
     }
   }
 
