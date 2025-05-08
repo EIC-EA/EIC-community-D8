@@ -4,8 +4,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_vocab_topics
-    - flag.flag.follow_content
-    - flag.flag.like_content
     - group.content_type.event-group_node-book
     - group.content_type.event-group_node-discussion
     - group.content_type.event-group_node-document
@@ -29,7 +27,6 @@ dependencies:
     - group.type.group
     - group.type.organisation
   module:
-    - flag
     - group
     - node
 id: dashboard_content_list
@@ -243,63 +240,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        count:
-          id: count
-          table: flag_counts
-          field: count
-          relationship: flag_relationship_1
-          group_type: group
-          admin_label: ''
-          plugin_id: numeric
-          label: 'Number of follows'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
-          prefix: ''
-          suffix: ''
         type_2:
           id: type_2
           table: groups_field_data
@@ -365,63 +305,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        count_1:
-          id: count_1
-          table: flag_counts
-          field: count
-          relationship: flag_relationship
-          group_type: group
-          admin_label: ''
-          plugin_id: numeric
-          label: 'Number of likes'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
-          prefix: ''
-          suffix: ''
         field_vocab_topics:
           id: field_vocab_topics
           table: node__field_vocab_topics
@@ -562,10 +445,27 @@ display:
           separator: ', '
           field_api_classes: false
       pager:
-        type: some
+        type: full
         options:
           offset: 0
-          items_per_page: 20
+          pagination_heading_level: h4
+          items_per_page: 50
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
       exposed_form:
         type: basic
         options:
@@ -690,7 +590,7 @@ display:
             identifier: type
             required: false
             remember: false
-            multiple: true
+            multiple: false
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -857,18 +757,6 @@ display:
             'group_node:video': 'group_node:video'
             'group_node:wiki_page': 'group_node:wiki_page'
             group_shared_content: '0'
-        flag_relationship_1:
-          id: flag_relationship_1
-          table: node_field_data
-          field: flag_relationship
-          relationship: gc__node
-          group_type: group
-          admin_label: 'Flag (follow)'
-          entity_type: node
-          plugin_id: flag_relationship
-          required: false
-          flag: follow_content
-          user_scope: any
         gid:
           id: gid
           table: group_content_field_data
@@ -880,20 +768,18 @@ display:
           entity_field: gid
           plugin_id: standard
           required: false
-        flag_relationship:
-          id: flag_relationship
-          table: node_field_data
-          field: flag_relationship
-          relationship: gc__node
-          group_type: group
-          admin_label: 'Flag (like)'
-          entity_type: node
-          plugin_id: flag_relationship
-          required: false
-          flag: like_content
-          user_scope: any
       css_class: listing-page
-      header: {  }
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: 'Displaying @start - @end of @total'
       footer: {  }
       display_extenders: {  }
     cache_metadata:
@@ -902,6 +788,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
       tags:
         - 'config:field.storage.node.field_vocab_topics'
   page:
@@ -918,5 +805,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
       tags:
         - 'config:field.storage.node.field_vocab_topics'
