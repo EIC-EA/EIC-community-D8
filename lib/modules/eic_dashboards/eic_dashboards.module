@@ -202,6 +202,26 @@ function eic_dashboards_views_data_alter(array &$data) {
       'id' => 'user_profile_completion_status',
     ],
   ];
+
+  $data['node']['content_flag_follows'] = [
+    'title' => t('Number of follows'),
+    'group' => t('Content'),
+    'field' => [
+      'title' => t('Number of follows'),
+      'help' => t('Show number of content flag follows.'),
+      'id' => 'content_flag_follows',
+    ],
+  ];
+
+  $data['node']['content_flag_likes'] = [
+    'title' => t('Number of likes'),
+    'group' => t('Content'),
+    'field' => [
+      'title' => t('Number of likes'),
+      'help' => t('Show number of content flag likes.'),
+      'id' => 'content_flag_likes',
+    ],
+  ];
 }
 
 /**
