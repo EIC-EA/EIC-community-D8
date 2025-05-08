@@ -445,15 +445,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        content_flag_follows:
-          id: content_flag_follows
+        flag_follow_content:
+          id: flag_follow_content
           table: node
-          field: content_flag_follows
+          field: flag_follow_content
           relationship: gc__node
           group_type: group
           admin_label: ''
           entity_type: node
-          plugin_id: content_flag_follows
+          plugin_id: flag_follow_content
           label: 'Number of follows'
           exclude: false
           alter:
@@ -495,15 +495,15 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-        content_flag_likes:
-          id: content_flag_likes
+        flag_like_content:
+          id: flag_like_content
           table: node
-          field: content_flag_likes
+          field: flag_like_content
           relationship: gc__node
           group_type: group
           admin_label: ''
           entity_type: node
-          plugin_id: content_flag_likes
+          plugin_id: flag_like_content
           label: 'Number of likes'
           exclude: false
           alter:
