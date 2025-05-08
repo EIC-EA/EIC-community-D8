@@ -8,18 +8,21 @@
   <div class="ecl-container">
     <div class="ecl-overview-header__content">
       {% if title is not empty %}
-        <div class="ecl-overview-header__main">
+        <div class="ecl-overview-header__main homepage-header">
           <h1 class="ecl-overview-header__title ecl-u-mb-xl">{{ title }}</h1>
-          <div>
+          <div class="ecl-u-mb-s">
             <span>{{ 'Tools to help you monitor the platform’s health and indicators.'|t }}</span>
           </div>
-          <div class="ecl-u-d-flex ecl-u-align-items-center">
-            <span class="ecl-u-mr-l">{{ 'The dashboard data was last updated on 11:03PM, 21 November 2024.'|t }}</span>
+          <div class="ecl-u-mb-s">
+            <div class="ecl-u-mb-s">{{ 'The dashboard data was last updated on 11:03PM, 21 November 2024.'|t }}</div>
             {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
               label: 'Refresh now'|t,
               type: "button",
               extra_classes: "dashboard-refresh",
             } only %}
+          </div>
+          <div>
+            <i>Refreshing the data is a performance-heavy operation. It may take a while to complete and the server’s resources will be strained until then. Use with care.</i>
           </div>
         </div>
       {% endif %}

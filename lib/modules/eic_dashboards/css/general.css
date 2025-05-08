@@ -1,3 +1,7 @@
+.homepage-header {
+  max-width: 700px;
+}
+
 .date-from-to-wrapper .dates-from-to {
   display: flex;
   gap: 5px;
