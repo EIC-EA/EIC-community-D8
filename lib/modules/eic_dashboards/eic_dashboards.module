@@ -203,23 +203,43 @@ function eic_dashboards_views_data_alter(array &$data) {
     ],
   ];
 
-  $data['node']['content_flag_follows'] = [
+  $data['node']['flag_follow_content'] = [
     'title' => t('Number of follows'),
     'group' => t('Content'),
     'field' => [
       'title' => t('Number of follows'),
       'help' => t('Show number of content flag follows.'),
-      'id' => 'content_flag_follows',
+      'id' => 'flag_follow_content',
     ],
   ];
 
-  $data['node']['content_flag_likes'] = [
+  $data['node']['flag_like_content'] = [
     'title' => t('Number of likes'),
     'group' => t('Content'),
     'field' => [
       'title' => t('Number of likes'),
       'help' => t('Show number of content flag likes.'),
-      'id' => 'content_flag_likes',
+      'id' => 'flag_like_content',
+    ],
+  ];
+
+  $data['groups']['flag_follow_group'] = [
+    'title' => t('Number of follows'),
+    'group' => t('Group'),
+    'field' => [
+      'title' => t('Number of follows'),
+      'help' => t('Show number of group flag follows.'),
+      'id' => 'flag_follow_group',
+    ],
+  ];
+
+  $data['groups']['flag_recommend_group'] = [
+    'title' => t('Number of Recommends'),
+    'group' => t('Group'),
+    'field' => [
+      'title' => t('Number of Recommends'),
+      'help' => t('Show number of group flag recommends.'),
+      'id' => 'flag_recommend_group',
     ],
   ];
 }
