@@ -594,7 +594,7 @@ display:
           exposed: true
           expose:
             operator_id: field_organisation_type_target_id_op
-            label: 'Organisation type (field_organisation_type)'
+            label: 'Organisation type'
             description: ''
             use_operator: false
             operator: field_organisation_type_target_id_op
