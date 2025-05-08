@@ -12,7 +12,7 @@ ui:
       enabled: true
       where: above
     display_embed: false
-    master_display: true
+    default_display: true
   always_live_preview: true
   exposed_filter_any_label: old_any
 field_rewrite_elements:
