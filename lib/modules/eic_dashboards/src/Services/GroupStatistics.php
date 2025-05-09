@@ -387,25 +387,12 @@ class GroupStatistics implements GroupStatisticsInterface {
    * Returns projects grouped by location of linked organisation.
    */
   public function getProjectsGroupedByLocationOfOrganisation($argumentId): array {
-    $subquery = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
-    $subquery->innerJoin('group__field_organisation_project_id', 'gfopi', 'gfopi.field_organisation_project_id_value = gfpgai.field_project_grant_agreement_id_value');
-    $subquery->innerJoin('group__field_address', 'gfa', 'gfa.entity_id = gfopi.entity_id');
-    $subquery->addField('gfa', 'entity_id');
-    $subquery->addField('gfa', 'field_address_country_code', 'country_code');
-    $subquery->condition('gfpgai.bundle', 'project');
-    $subquery->condition('gfopi.bundle', 'organisation');
-
-    // Add a subquery join to get only the minimum delta.
-    $min_delta_query = $this->connection->select('group__field_address', 'gfaj');
-    $min_delta_query->fields('gfaj', ['entity_id']);
-    $min_delta_query->addExpression('MIN(gfaj.delta)', 'min_delta');
-    $min_delta_query->groupBy('gfaj.entity_id');
-    $subquery->join($min_delta_query, 'mdq', 'gfa.entity_id = mdq.entity_id AND gfa.delta = mdq.min_delta');
-
-    // Main query to count projects by location.
-    $query = $this->connection->select($subquery, 'sq');
-    $query->addExpression('COUNT(DISTINCT sq.entity_id)', 'projects_count');
-    $query->addField('sq', 'country_code');
+    $query = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
+    $query->innerJoin('stakeholder_field_data', 'sfd', 'sfd.project_id = gfpgai.field_project_grant_agreement_id_value');
+    $query->innerJoin('stakeholder__field_stakeholder_address', 'sfsa', 'sfsa.entity_id = sfd.id');
+    $query->addExpression('COUNT(sfsa.field_stakeholder_address_country_code)', 'projects_count');
+    $query->addExpression('sfsa.field_stakeholder_address_country_code', 'country_code');
+    $query->condition('sfd.bundle', 'coordinator');
     $query->groupBy('country_code');
     $query->orderBy('country_code', 'ASC');
     $results = $query->execute()->fetchAll();
