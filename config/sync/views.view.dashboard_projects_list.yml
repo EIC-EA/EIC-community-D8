@@ -707,7 +707,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
       pager:
-        type: mini
+        type: full
         options:
           offset: 0
           pagination_heading_level: h4
@@ -717,6 +717,8 @@ display:
           tags:
             next: ››
             previous: ‹‹
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -725,6 +727,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
+          quantity: 9
       exposed_form:
         type: basic
         options:
@@ -1326,7 +1329,7 @@ display:
           admin_label: ''
           plugin_id: result
           empty: false
-          content: 'Showing @start - @end of @total results.'
+          content: '<i>Showing @start - @end of @total results.</i>'
       footer: {  }
       display_extenders: {  }
     cache_metadata:
