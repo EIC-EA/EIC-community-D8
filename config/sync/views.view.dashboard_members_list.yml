@@ -1308,11 +1308,12 @@ display:
             group_items: {  }
         user_profile_completion_status:
           id: user_profile_completion_status
-          table: views
+          table: users
           field: user_profile_completion_status
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
           plugin_id: user_profile_completion_status
           operator: '='
           value: All
