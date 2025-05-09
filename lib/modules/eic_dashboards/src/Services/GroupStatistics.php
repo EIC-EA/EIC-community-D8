@@ -373,7 +373,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns number of projects linked from organisations.
    */
-  public function getNumberOfProjectsLinkedFromOrganisations(): array|int {
+  public function getNumberOfProjectsLinkedToOrganisations(): array|int {
     $query = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
     $query->innerJoin('group__field_organisation_project_id', 'gfopi', 'gfopi.field_organisation_project_id_value = gfpgai.field_project_grant_agreement_id_value');
     $query->addExpression('COUNT(DISTINCT gfopi.field_organisation_project_id_value)', 'projects_count');

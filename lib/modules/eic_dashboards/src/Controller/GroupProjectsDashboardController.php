@@ -165,7 +165,7 @@ class GroupProjectsDashboardController extends ControllerBase {
     $groupsByInnovations = $this->dashboardBuilder->chartPie($this->t('Projects recognized by Innovation Radar'), $groupsByInnovationsData, '');
 
     // Groups linked to organisations.
-    $groupsLinkedToOrganisations = $this->groupStatistics->getNumberOfProjectsLinkedFromOrganisations();
+    $groupsLinkedToOrganisations = $this->groupStatistics->getNumberOfProjectsLinkedToOrganisations();
     $groupsNotLinkedToOrganisations = $this->groupStatistics->getNumberOfGroups($groupType) - $groupsLinkedToOrganisations;
     $groupsByLinkToOrganisationData = json_encode([
       [
