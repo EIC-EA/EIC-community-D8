@@ -33,6 +33,7 @@ class ContentFlagLike extends FieldPluginBase {
 
       return $this->getFlagResults($entity->id(), $entity->getEntityType()->id());
     }
+    // N/A means the custom field is not used in a correct view.
     return 'N/A';
 
   }
