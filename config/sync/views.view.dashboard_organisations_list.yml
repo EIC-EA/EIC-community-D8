@@ -494,8 +494,6 @@ display:
             field_organisation_type: field_organisation_type
             field_vocab_topics: field_vocab_topics
             created: created
-            flag_id: flag_id
-            flag_id_1: flag_id_1
           group: 1
           exposed: true
           expose:
