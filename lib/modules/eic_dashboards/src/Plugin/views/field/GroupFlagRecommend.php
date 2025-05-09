@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Plugin\views\field;
 
 
 use Drupal\group\Entity\GroupInterface;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 
@@ -14,9 +15,13 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("flag_recommend_group")
  */
-class GroupFlagRecommend extends FlagPluginBase {
+class GroupFlagRecommend extends FieldPluginBase {
 
+  use FlagPluginTrait;
 
+  public function setFlagId() {
+    $this->flagId = 'recommend_group';
+  }
   /**
    * @inheritdoc
    */

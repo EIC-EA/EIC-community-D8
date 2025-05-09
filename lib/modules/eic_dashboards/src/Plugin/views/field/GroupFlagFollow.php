@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Plugin\views\field;
 
 
 use Drupal\group\Entity\GroupInterface;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 
@@ -14,8 +15,13 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("flag_follow_group")
  */
-class GroupFlagFollow extends FlagPluginBase {
+class GroupFlagFollow extends FieldPluginBase {
 
+  use FlagPluginTrait;
+
+  public function setFlagId() {
+    $this->flagId = 'follow_group';
+  }
 
   /**
    * @inheritdoc

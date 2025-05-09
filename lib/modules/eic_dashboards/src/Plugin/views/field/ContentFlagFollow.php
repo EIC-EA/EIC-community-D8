@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Plugin\views\field;
 
 
 use Drupal\group\Entity\GroupContent;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
@@ -13,8 +14,13 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("flag_follow_content")
  */
-class ContentFlagFollow extends FlagPluginBase {
+class ContentFlagFollow extends FieldPluginBase {
 
+  use FlagPluginTrait;
+
+  public function setFlagId() {
+    $this->flagId = 'follow_content';
+  }
   /**
    * @inheritdoc
    */
