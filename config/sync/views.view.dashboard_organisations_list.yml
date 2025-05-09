@@ -595,6 +595,8 @@ display:
             field_organisation_type: field_organisation_type
             field_vocab_topics: field_vocab_topics
             created: created
+            flag_follow_group: flag_follow_group
+            flag_recommend_group: flag_recommend_group
           group: 1
           exposed: true
           expose:
