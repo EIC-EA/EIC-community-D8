@@ -3,33 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.storage.node.field_tags
     - field.storage.node.field_vocab_topics
-    - group.content_type.event-group_node-book
-    - group.content_type.event-group_node-discussion
-    - group.content_type.event-group_node-document
-    - group.content_type.event-group_node-gallery
-    - group.content_type.event-group_node-news
-    - group.content_type.event-group_node-story
-    - group.content_type.event-group_node-video
-    - group.content_type.event-group_node-wiki_page
-    - group.content_type.group-group_node-book
-    - group.content_type.group-group_node-discussion
-    - group.content_type.group-group_node-document
-    - group.content_type.group-group_node-event
-    - group.content_type.group-group_node-gallery
-    - group.content_type.group-group_node-video
-    - group.content_type.group-group_node-wiki_page
-    - group.content_type.organisation-group_node-document
-    - group.content_type.organisation-group_node-event
-    - group.content_type.organisation-group_node-gallery
-    - group.content_type.organisation-group_node-news
-    - group.type.event
-    - group.type.group
-    - group.type.organisation
+    - node.type.book
+    - node.type.discussion
+    - node.type.document
+    - node.type.event
+    - node.type.gallery
+    - node.type.news
+    - node.type.page
+    - node.type.story
+    - node.type.video
+    - node.type.wiki_page
+    - taxonomy.vocabulary.topics
   module:
     - eic_dashboards
     - group
     - node
+    - taxonomy
 id: dashboard_content_list
 label: 'Dashboard - Content list'
 module: views
@@ -46,15 +37,15 @@ display:
     display_options:
       title: 'Dashboard - Content list'
       fields:
-        label:
-          id: label
-          table: group_content_field_data
-          field: label
-          relationship: none
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: gc__node
           group_type: group
           admin_label: ''
-          entity_type: null
-          entity_field: label
+          entity_type: node
+          entity_field: title
           plugin_id: field
           label: Title
           exclude: false
@@ -111,18 +102,18 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        type:
-          id: type
-          table: group_content_field_data
+        type_3:
+          id: type_3
+          table: groups_field_data
           field: type
-          relationship: none
+          relationship: gid
           group_type: group
           admin_label: ''
-          entity_type: group_content
+          entity_type: group
           entity_field: type
           plugin_id: field
-          label: 'Content type'
-          exclude: false
+          label: Group
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -165,7 +156,7 @@ display:
           click_sort_column: target_id
           type: entity_reference_label
           settings:
-            link: false
+            link: true
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -176,17 +167,17 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        gid:
-          id: gid
-          table: group_content_field_data
-          field: gid
-          relationship: none
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          relationship: gc__node
           group_type: group
           admin_label: ''
-          entity_type: group_content
-          entity_field: gid
+          entity_type: node
+          entity_field: type
           plugin_id: field
-          label: 'Parent group'
+          label: 'Content type'
           exclude: false
           alter:
             alter_text: false
@@ -241,17 +232,17 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        type_2:
-          id: type_2
-          table: groups_field_data
-          field: type
-          relationship: gid
+        uid:
+          id: uid
+          table: node_field_data
+          field: uid
+          relationship: gc__node
           group_type: group
           admin_label: ''
-          entity_type: group
-          entity_field: type
+          entity_type: node
+          entity_field: uid
           plugin_id: field
-          label: 'Group type'
+          label: Author
           exclude: false
           alter:
             alter_text: false
@@ -314,7 +305,7 @@ display:
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Topics
+          label: Topic
           exclude: false
           alter:
             alter_text: false
@@ -379,7 +370,7 @@ display:
           entity_type: node
           entity_field: created
           plugin_id: field
-          label: 'Created on'
+          label: 'Publication date'
           exclude: false
           alter:
             alter_text: false
@@ -435,7 +426,71 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_tags:
+          id: field_tags
+          table: node__field_tags
+          field: field_tags
+          relationship: gc__node
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Tags
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -587,133 +642,6 @@ display:
       sorts: {  }
       arguments: {  }
       filters:
-        type_1:
-          id: type_1
-          table: group_content_field_data
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: group_content
-          entity_field: type
-          plugin_id: bundle
-          operator: in
-          value:
-            event-group_node-book: event-group_node-book
-            event-group_node-discussion: event-group_node-discussion
-            event-group_node-document: event-group_node-document
-            event-group_node-gallery: event-group_node-gallery
-            event-group_node-news: event-group_node-news
-            event-group_node-story: event-group_node-story
-            event-group_node-video: event-group_node-video
-            event-group_node-wiki_page: event-group_node-wiki_page
-            group-group_node-book: group-group_node-book
-            group-group_node-discussion: group-group_node-discussion
-            group-group_node-document: group-group_node-document
-            group-group_node-event: group-group_node-event
-            group-group_node-gallery: group-group_node-gallery
-            group-group_node-video: group-group_node-video
-            group-group_node-wiki_page: group-group_node-wiki_page
-            organisation-group_node-document: organisation-group_node-document
-            organisation-group_node-event: organisation-group_node-event
-            organisation-group_node-gallery: organisation-group_node-gallery
-            organisation-group_node-news: organisation-group_node-news
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            reduce: false
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-        type:
-          id: type
-          table: group_content_field_data
-          field: type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: group_content
-          entity_field: type
-          plugin_id: bundle
-          operator: in
-          value:
-            event-group_node-book: event-group_node-book
-            event-group_node-discussion: event-group_node-discussion
-            event-group_node-document: event-group_node-document
-            event-group_node-gallery: event-group_node-gallery
-            event-group_node-news: event-group_node-news
-            event-group_node-story: event-group_node-story
-            event-group_node-video: event-group_node-video
-            event-group_node-wiki_page: event-group_node-wiki_page
-            group-group_node-book: group-group_node-book
-            group-group_node-discussion: group-group_node-discussion
-            group-group_node-document: group-group_node-document
-            group-group_node-event: group-group_node-event
-            group-group_node-gallery: group-group_node-gallery
-            group-group_node-video: group-group_node-video
-            group-group_node-wiki_page: group-group_node-wiki_page
-            organisation-group_node-document: organisation-group_node-document
-            organisation-group_node-event: organisation-group_node-event
-            organisation-group_node-gallery: organisation-group_node-gallery
-            organisation-group_node-news: organisation-group_node-news
-          group: 1
-          exposed: true
-          expose:
-            operator_id: type_op
-            label: 'Content type'
-            description: ''
-            use_operator: false
-            operator: type_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: type
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              trusted_user: '0'
-              sensitive: '0'
-              content_administrator: '0'
-              service_authentication: '0'
-              site_admin: '0'
-              administrator: '0'
-            reduce: true
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
         created:
           id: created
           table: node_field_data
@@ -768,32 +696,27 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-        type_2:
-          id: type_2
-          table: groups_field_data
-          field: type
-          relationship: gid
+        field_vocab_topics_target_id:
+          id: field_vocab_topics_target_id
+          table: node__field_vocab_topics
+          field: field_vocab_topics_target_id
+          relationship: gc__node
           group_type: group
           admin_label: ''
-          entity_type: group
-          entity_field: type
-          plugin_id: bundle
-          operator: in
-          value:
-            event: event
-            group: group
-            organisation: organisation
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: type_2_op
-            label: 'Group type'
+            operator_id: field_vocab_topics_target_id_op
+            label: Topic
             description: ''
             use_operator: false
-            operator: type_2_op
+            operator: field_vocab_topics_target_id_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: group_type
+            identifier: field_vocab_topics_target_id
             required: false
             remember: false
             multiple: false
@@ -806,7 +729,113 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            reduce: true
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: topics
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          relationship: gc__node
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: 'Content type'
+            description: ''
+            use_operator: false
+            operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        type_1:
+          id: type_1
+          table: node_field_data
+          field: type
+          relationship: gc__node
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            all: all
+            book: book
+            discussion: discussion
+            document: document
+            event: event
+            gallery: gallery
+            news: news
+            page: page
+            story: story
+            video: video
+            wiki_page: wiki_page
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -870,6 +899,7 @@ display:
           plugin_id: standard
           required: false
       css_class: listing-page
+      group_by: false
       header:
         result:
           id: result
@@ -891,6 +921,7 @@ display:
         - url
         - url.query_args
       tags:
+        - 'config:field.storage.node.field_tags'
         - 'config:field.storage.node.field_vocab_topics'
   page:
     id: page
@@ -908,4 +939,5 @@ display:
         - url
         - url.query_args
       tags:
+        - 'config:field.storage.node.field_tags'
         - 'config:field.storage.node.field_vocab_topics'
