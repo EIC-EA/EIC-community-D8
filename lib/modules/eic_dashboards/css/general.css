@@ -1,8 +1,10 @@
+/* ========== DASHBOARD HOMEPAGE HEADER ========== */
 .homepage-header {
   max-width: 700px;
 }
 
-.date-from-to-wrapper .dates-from-to {
+/* ========== LISTING PAGE ========== */
+.listing-page .date-from-to-wrapper .dates-from-to {
   display: flex;
   gap: 5px;
   margin-top: -6px;
@@ -69,7 +71,7 @@
   margin-top: 0 !important;
 }
 
-.ecl-button--small {
+.listing-page .ecl-button--small {
   font-size: 14px !important;
   padding: 6px 12px !important;
 }
@@ -117,7 +119,6 @@
   text-transform: none !important;
 }
 
-
 .listing-page fieldset {
   max-width: 200px !important;
   border: 0;
@@ -128,8 +129,11 @@
 
 .listing-page .fieldset-wrapper {
   display: flex;
-  /*flex-wrap: wrap;*/
   gap: 5px;
+}
+
+.listing-page .ecl-form .form-wrapper:not(details) .fieldset-legend {
+  padding-left: 0;
 }
 
 .listing-page .fieldset-legend span {
@@ -144,6 +148,12 @@
   margin: 0;
 }
 
+.listing-page .ecl-table_header th {
+  padding: .5em 1rem;
+  text-align: left;
+}
+
+/* ========== ACTIVIY REPORT ========== */
 .activity-report-form {
   margin-left: 0 !important;
   margin-right: 0 !important;
