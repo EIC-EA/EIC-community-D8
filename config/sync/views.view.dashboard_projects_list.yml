@@ -702,6 +702,52 @@ display:
             group_items: {  }
           bypass_hook_views_pre_view: false
           exposed_select_type: multi_select
+        field_stakeholder_address_country_code:
+          id: field_stakeholder_address_country_code
+          table: stakeholder__field_stakeholder_address
+          field: field_stakeholder_address_country_code
+          relationship: gc__stakeholder
+          group_type: group
+          admin_label: ''
+          plugin_id: country
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_stakeholder_address_country_code_op
+            label: 'Coordinating country'
+            description: ''
+            use_operator: false
+            operator: field_stakeholder_address_country_code_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_stakeholder_address_country_code
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
         type:
           id: type
           table: groups_field_data
