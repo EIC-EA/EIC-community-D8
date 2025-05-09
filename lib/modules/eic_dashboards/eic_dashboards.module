@@ -2,9 +2,16 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_dashboards\Constants\DashboardsViews;
 use Drupal\eic_dashboards\Hooks\EntityOperations;
 use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Template\Attribute;
+
+
+/**
+ * @file
+ * Contains hook implementations and helpers for the EIC Dashboards module.
+ */
 
 /**
  * Implements hook_theme().
@@ -294,15 +301,18 @@ function eic_dashboards_group_insert(EntityInterface $entity) {
 function eic_dashboards_preprocess_views_view(array &$variables) {
   $view = $variables['view'];
 
-  // List of view IDs you want to target.
-  $target_view_ids = [
-    'dashboard_content_list',
-    'dashboard_organisations_list',
-    'dashboard_members_list',
-    'dashboard_projects_list'
-  ];
-
-  if (in_array($view->id(), $target_view_ids, true)) {
+  if (in_array($view->id(), DashboardsViews::DASHBOARDS_LIST_VIEWS, true)) {
     $variables['header_classes'][] = 'ecl-container ecl-u-mt-m';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for views_view.
+ */
+function eic_dashboards_theme_suggestions_views_view_alter(array &$suggestions, array $variables) {
+  $view = $variables['view'];
+
+  if (in_array($view->id(), DashboardsViews::DASHBOARDS_LIST_VIEWS)) {
+    $suggestions[] = 'views_view__dashboard_listing';
   }
 }

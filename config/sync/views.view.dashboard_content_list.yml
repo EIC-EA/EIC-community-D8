@@ -880,7 +880,7 @@ display:
           admin_label: ''
           plugin_id: result
           empty: false
-          content: 'Displaying @start - @end of @total'
+          content: '<i>Showing @start - @end of @total results.</i>'
       footer: {  }
       display_extenders: {  }
     cache_metadata:
