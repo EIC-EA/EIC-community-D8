@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_dashboards\Constants\DashboardFilters;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Drupal\eic_dashboards\Services\GroupStatisticsInterface;
@@ -117,13 +118,17 @@ class GroupProjectsDashboardController extends ControllerBase {
     ];
 
     // Groups by location of coordinating organisation.
-    $groupsByLocationOfOrganisationData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getProjectsGroupedByLocationOfOrganisation()));
+    $groupsByLocationOfOrganisationData =
+      $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getProjectsGroupedByLocationOfOrganisation('id')));
     $groupsByLocationOfOrganisationChart = $this->dashboardBuilder->chartColumn($this->t('Projects by coordinating organisation country'), $groupsByLocationOfOrganisationData, false);
+    $groupsByLocationOfOrganisationMenuData = $this->dashboardHelper->prepareDataForJumpMenu($this->groupStatistics->getProjectsGroupedByLocationOfOrganisation(DashboardFilters::DASHBOARD_MEMBERS_LIST_COUNTRY), 'view.dashboard_projects_list.page', [], [DashboardFilters::DASHBOARD_MEMBERS_LIST_COUNTRY]);
+    $groupsByLocationOfOrganisationMenu = $this->dashboardBuilder->jumpMenu($this->t('List members of'), $this->t('Choose a country'), $groupsByLocationOfOrganisationMenuData);
+    $groupsByLocationOfOrganisation = $this->dashboardBuilder->chartWithMenu($groupsByLocationOfOrganisationChart, $groupsByLocationOfOrganisationMenu);
 
     // Section 3.
     $section3Build = [
       $this->dashboardBuilder->columns([
-        $groupsByLocationOfOrganisationChart,
+        $groupsByLocationOfOrganisation,
       ], 1),
     ];
 

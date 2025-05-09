@@ -82,7 +82,7 @@ interface GroupStatisticsInterface {
   /**
    * Returns projects grouped by location of linked organisation.
    */
-  public function getProjectsGroupedByLocationOfOrganisation();
+  public function getProjectsGroupedByLocationOfOrganisation($argumentId);
 
   /**
    * Returns groups of given type created in given period.

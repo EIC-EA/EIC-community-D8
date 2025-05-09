@@ -276,11 +276,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $min_delta_query->fields('glfj', ['entity_id']);
     $min_delta_query->addExpression('MIN(glfj.delta)', 'min_delta');
     $min_delta_query->groupBy('glfj.entity_id');
-    $subquery->join(
-      $min_delta_query,
-      'mdt',
-      'glf.entity_id = mdt.entity_id AND glf.delta = mdt.min_delta'
-    );
+    $subquery->join($min_delta_query, 'mdq', 'glf.entity_id = mdq.entity_id AND glf.delta = mdq.min_delta');
 
     // Main query to count groups by location.
     $query = $this->connection->select($subquery, 'sq');
@@ -292,6 +288,7 @@ class GroupStatistics implements GroupStatisticsInterface {
 
     $data = [];
 
+    $countries = $this->countryService->getAllCountries();
     foreach ($results as $result) {
       $data[$result->country_code][$argumentId] = $result->country_code;
       $data[$result->country_code]['label'] = $countries[mb_strtoupper($result->country_code)] ?? '';
@@ -389,7 +386,7 @@ class GroupStatistics implements GroupStatisticsInterface {
   /**
    * Returns projects grouped by location of linked organisation.
    */
-  public function getProjectsGroupedByLocationOfOrganisation(): array {
+  public function getProjectsGroupedByLocationOfOrganisation($argumentId): array {
     $subquery = $this->connection->select('group__field_project_grant_agreement_id', 'gfpgai');
     $subquery->innerJoin('group__field_organisation_project_id', 'gfopi', 'gfopi.field_organisation_project_id_value = gfpgai.field_project_grant_agreement_id_value');
     $subquery->innerJoin('group__field_address', 'gfa', 'gfa.entity_id = gfopi.entity_id');
@@ -403,11 +400,7 @@ class GroupStatistics implements GroupStatisticsInterface {
     $min_delta_query->fields('gfaj', ['entity_id']);
     $min_delta_query->addExpression('MIN(gfaj.delta)', 'min_delta');
     $min_delta_query->groupBy('gfaj.entity_id');
-    $subquery->join(
-      $min_delta_query,
-      'mdt',
-      'gfa.entity_id = mdt.entity_id AND gfa.delta = mdt.min_delta'
-    );
+    $subquery->join($min_delta_query, 'mdq', 'gfa.entity_id = mdq.entity_id AND gfa.delta = mdq.min_delta');
 
     // Main query to count projects by location.
     $query = $this->connection->select($subquery, 'sq');
@@ -419,8 +412,9 @@ class GroupStatistics implements GroupStatisticsInterface {
 
     $data = [];
 
+    $countries = $this->countryService->getAllCountries();
     foreach ($results as $result) {
-      $data[$result->country_code]['id'] = $result->country_code;
+      $data[$result->country_code][$argumentId] = $result->country_code;
       $data[$result->country_code]['label'] = $countries[mb_strtoupper($result->country_code)] ?? '';
       $data[$result->country_code]['count'] = $result->projects_count;
     }
