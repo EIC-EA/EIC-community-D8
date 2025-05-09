@@ -766,8 +766,8 @@ display:
             field_project_date: field_project_date
             field_project_horizon_results: field_project_horizon_results
             field_project_innovations: field_project_innovations
-            count: count
-            count_1: count_1
+            flag_follow_group: flag_follow_group
+            flag_recommend_group: flag_recommend_group
           group: 1
           exposed: true
           expose:
