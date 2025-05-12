@@ -24,6 +24,7 @@ function eic_dashboards_deploy_0002_groups_past_stats(array &$sandbox) {
 
   $entity_type_id = 'group';
   $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'group')
     ->accessCheck(FALSE);
 
   _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::GROUPS_DASHBOARD_TYPE);
