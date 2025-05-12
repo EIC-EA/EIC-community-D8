@@ -45,6 +45,106 @@ function eic_dashboards_deploy_0003_events_past_stats(array &$sandbox) {
 
 }
 
+/**
+ * Populate eic_dashboards for organisations dashboard.
+ */
+function eic_dashboards_deploy_0004_organisations_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'group';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'organisation')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE
+  );
+
+}
+
+/**
+ * Populate eic_dashboards for projects dashboard.
+ */
+function eic_dashboards_deploy_0005_projects_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'group';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'project')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::PROJECTS_DASHBOARD_TYPE
+  );
+
+}
+
+/**
+ * Populate eic_dashboards for documents dashboard.
+ */
+function eic_dashboards_deploy_0006_documents_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'node';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'document')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE
+  );
+
+}
+
+/**
+ * Populate eic_dashboards for stories dashboard.
+ */
+function eic_dashboards_deploy_0007_stories_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'node';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'story')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::STORIES_DASHBOARD_TYPE
+  );
+
+}
+
+/**
+ * Populate eic_dashboards for discussions dashboard.
+ */
+function eic_dashboards_deploy_0008_discussions_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'node';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'story')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE
+  );
+
+}
+
 function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
 
   $count_entity_query = clone $entity_query;
