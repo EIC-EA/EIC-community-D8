@@ -13,7 +13,13 @@ function eic_dashboards_deploy_0001_members_past_stats(array &$sandbox) {
     ->condition('status', '1')
     ->accessCheck(FALSE);
 
-  _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::GROUPS_DASHBOARD_TYPE);
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::GROUPS_DASHBOARD_TYPE
+  );
 
 }
 
@@ -27,7 +33,13 @@ function eic_dashboards_deploy_0002_groups_past_stats(array &$sandbox) {
     ->condition('type', 'group')
     ->accessCheck(FALSE);
 
-  _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::GROUPS_DASHBOARD_TYPE);
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::GROUPS_DASHBOARD_TYPE)
+  ;
 
 }
 
@@ -41,7 +53,13 @@ function eic_dashboards_deploy_0003_events_past_stats(array &$sandbox) {
     ->condition('type', 'event')
     ->accessCheck(FALSE);
 
-  _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::EVENTS_DASHBOARD_TYPE);
+  _eic_dashboards_populate_database_batch_helper(
+    $sandbox,
+    $entity_query,
+    50,
+    $entity_type_id,
+    DashboardsDatabase::EVENTS_DASHBOARD_TYPE
+  );
 
 }
 
