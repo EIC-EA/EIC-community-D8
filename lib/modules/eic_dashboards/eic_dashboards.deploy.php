@@ -17,6 +17,19 @@ function eic_dashboards_deploy_0001_members_past_stats(array &$sandbox) {
 
 }
 
+/**
+ * Populate eic_dashboards for groups dashboard.
+ */
+function eic_dashboards_deploy_0002_groups_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'group';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::GROUPS_DASHBOARD_TYPE);
+
+}
+
 function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
 
 
