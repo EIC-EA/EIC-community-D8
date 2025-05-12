@@ -16,3 +16,6 @@ services:
   eic_dashboards.group_statistics:
     class: Drupal\eic_dashboards\Services\GroupStatistics
     arguments: [ '@database', '@eic_dashboards.helper', '@eic_dashboards.country_service' ]
+  eic_dashboards.cumulative:
+    class: Drupal\eic_dashboards\Services\DashboardCumulativeService
+    autowire: true
