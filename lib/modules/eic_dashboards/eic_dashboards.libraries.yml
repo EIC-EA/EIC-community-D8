@@ -9,6 +9,7 @@ scripts:
       css/highcharts.css: { }
   js:
     js/ecl-fix.js: {}
+    js/dates.js: {}
   dependencies:
     - core/jquery
     - core/once
