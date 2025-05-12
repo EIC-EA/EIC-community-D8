@@ -1,17 +1,27 @@
 <?php
 
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 
 /**
- * Implements hook_deploy_NAME().
+ * Populate eic_dashboards for members dashboard.
  */
 function eic_dashboards_deploy_0001_members_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'user';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('status', '1')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::GROUPS_DASHBOARD_TYPE);
+
+}
+
+function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
+
+
   if (!isset($sandbox['total'])) {
-    $sandbox['total'] = \Drupal::entityQuery('user')
-      ->condition('status', '1')
-      ->accessCheck(FALSE)
-      ->count()
-      ->execute();
+    $sandbox['total'] = $entity_query->count()->execute();
     $sandbox['current'] = 0;
 
     if (empty($sandbox['total'])) {
@@ -20,35 +30,33 @@ function eic_dashboards_deploy_0001_members_past_stats(array &$sandbox) {
     }
   }
 
-  $users_per_batch = 50;
-  $uids = \Drupal::entityQuery('user')
-    ->condition('status', '1')
-    ->accessCheck(FALSE)
-    ->range($sandbox['current'], $users_per_batch)
+  $ids = $entity_query
+    ->range($sandbox['current'], $entities_per_batch)
     ->execute();
-  if (empty($uids)) {
+  if (empty($ids)) {
     $sandbox['#finished'] = 1;
     return;
   }
 
-  foreach ($uids as $uid) {
-    $user = \Drupal::entityTypeManager()->getStorage('user')->load($uid);
-    $monthKey = \Drupal::service('date.formatter')->format($user->get('created')->value, 'custom', 'Y-m') . '-01';
-    \Drupal::service('eic_dashboards.cumulative')->insertOrUpdate(DashboardsDatabase::MEMBERS_DASHBOARD_TYPE, $monthKey);
+  foreach ($ids as $id) {
+    $entity = \Drupal::entityTypeManager()->getStorage($entity_type_id)->load($id);
+    $monthKey = \Drupal::service('date.formatter')->format($entity->get('created')->value, 'custom', 'Y-m') . '-01';
+    \Drupal::service('eic_dashboards.cumulative')->insertOrUpdate($dashboard_type, $monthKey);
     $sandbox['current']++;
   }
 
-    \Drupal::messenger()
-      ->addMessage($sandbox['current'] . ' users processed.');
+  \Drupal::messenger()
+    ->addMessage($sandbox['current'] . ' entities processed.');
 
-    if ($sandbox['current'] >= $sandbox['total']) {
-      $sandbox['#finished'] = 1;
-      // We are done with populating the database. We need to fix the records so
-      // each month we add the previous count plus the running's.
-      \Drupal::service('eic_dashboards.cumulative')->calculatePastStats(DashboardsDatabase::MEMBERS_DASHBOARD_TYPE);
-    }
-    else {
-      $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
-    }
+  if ($sandbox['current'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+    // We are done with populating the database. We need to fix the records so
+    // each month we add the previous count plus the running's.
+    \Drupal::service('eic_dashboards.cumulative')->calculatePastStats($dashboard_type);
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+
 
 }
