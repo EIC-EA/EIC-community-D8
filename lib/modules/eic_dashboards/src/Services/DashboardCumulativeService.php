@@ -11,6 +11,15 @@ class DashboardCumulativeService {
 
   }
 
+  /**
+   * Insert or update the counter for given dashboard_type and date.
+   *
+   * @param string $dashboard_type
+   * @param string $date
+   *
+   * @return void
+   * @throws \Exception
+   */
   public function insertOrUpdate(string $dashboard_type, string $date) {
     // Check if entry exists.
     if (!$this->checkEntry($dashboard_type, $date)) {
@@ -33,6 +42,18 @@ class DashboardCumulativeService {
     }
   }
 
+  /**
+   * Calculates the cumulative statistics for the given $dashboard_type.
+   *
+   * The column 'count' must be populated with data of the referencing date.
+   * This method adds all previous counts per month and uses the column
+   * 'cumulative_count'.
+   *
+   * @param $dashboard_type
+   *
+   * @return void
+   * @throws \Exception
+   */
   public function calculatePastStats($dashboard_type) {
     $query = $this->connection->select(DashboardsDatabase::DASHBOARDS_DATABASE, 'dd');
     $query->addExpression('dd.count', 'count');
@@ -55,11 +76,22 @@ class DashboardCumulativeService {
     }
   }
 
+  /**
+   * Checks if an entry exists in the table.
+   *
+   * @param string $dashboard_type
+   * @param string $date
+   *
+   * @return bool
+   * @throws \Exception
+   */
   private function checkEntry(string $dashboard_type, string $date) {
     return (bool) $this->getEntry($dashboard_type, $date);
   }
 
   /**
+   * Searches and returns a specific entry in the table.
+   *
    * @param string $dashboard_type
    * @param string $date
    *
