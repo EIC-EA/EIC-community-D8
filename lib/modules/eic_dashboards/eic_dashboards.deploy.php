@@ -32,9 +32,9 @@ function eic_dashboards_deploy_0002_groups_past_stats(array &$sandbox) {
 
 function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
 
-
+  $count_entity_query = clone $entity_query;
   if (!isset($sandbox['total'])) {
-    $sandbox['total'] = $entity_query->count()->execute();
+    $sandbox['total'] = $count_entity_query->count()->execute();
     $sandbox['current'] = 0;
 
     if (empty($sandbox['total'])) {
