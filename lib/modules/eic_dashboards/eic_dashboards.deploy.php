@@ -31,6 +31,20 @@ function eic_dashboards_deploy_0002_groups_past_stats(array &$sandbox) {
 
 }
 
+/**
+ * Populate eic_dashboards for events dashboard.
+ */
+function eic_dashboards_deploy_0003_events_past_stats(array &$sandbox) {
+
+  $entity_type_id = 'group';
+  $entity_query = \Drupal::entityQuery($entity_type_id)
+    ->condition('type', 'event')
+    ->accessCheck(FALSE);
+
+  _eic_dashboards_populate_database_batch_helper($sandbox, $entity_query, 50, $entity_type_id, DashboardsDatabase::EVENTS_DASHBOARD_TYPE);
+
+}
+
 function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
 
   $count_entity_query = clone $entity_query;
