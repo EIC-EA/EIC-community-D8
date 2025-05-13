@@ -47,6 +47,7 @@
   {% if header %}
     <header{{ attributes.addClass(header_classes) }}>
       {{ header }}
+      {{ feed_icons }}
     </header>
   {% endif %}
 
@@ -65,6 +66,4 @@
       {{ footer }}
     </footer>
   {% endif %}
-
-  {{ feed_icons }}
 </div>

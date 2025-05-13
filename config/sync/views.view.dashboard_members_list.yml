@@ -13,11 +13,15 @@ dependencies:
     - taxonomy.vocabulary.user_types
   module:
     - address
+    - csv_serialization
     - eic_dashboards
     - profile
+    - rest
+    - serialization
     - taxonomy
     - user
     - views_autocomplete_filters
+    - views_data_export
     - views_fields_on_off
 id: dashboard_members_list
 label: 'Dashboard - Members list'
@@ -1512,6 +1516,54 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.permissions
+      tags:
+        - 'config:field.storage.profile.field_vocab_language'
+        - 'config:field.storage.profile.field_vocab_topic_expertise'
+        - 'config:field.storage.profile.field_vocab_topic_interest'
+        - 'config:field.storage.profile.field_vocab_user_type'
+        - 'config:field.storage.user.field_first_name'
+        - 'config:field.storage.user.field_last_name'
+  data_export:
+    id: data_export
+    display_title: 'Data export'
+    display_plugin: data_export
+    position: 2
+    display_options:
+      style:
+        type: data_export
+        options:
+          formats:
+            csv: csv
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+            utf8_bom: '0'
+            use_serializer_encode_only: false
+      display_extenders: {  }
+      path: dashboards/listings/members/export
+      displays:
+        page: page
+        default: '0'
+      filename: 'members-list-export-[date:html_date]-[date:html_time].csv'
+      automatic_download: true
+      export_method: batch
+      export_batch_size: 50
+      store_in_public_file_directory: false
+      custom_redirect_path: false
+      redirect_to_display: page
+      include_query_params: true
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - url
         - user.permissions
       tags:
         - 'config:field.storage.profile.field_vocab_language'
