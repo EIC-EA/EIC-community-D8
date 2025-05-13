@@ -140,4 +140,29 @@ class DashboardCumulativeService {
       ->execute();
   }
 
+  /**
+   * Get the accumulative data from the database per dashboard type.
+   *
+   * @param $dashboard_type
+   *
+   * @return array
+   * @throws \Exception
+   */
+  public function getCumulativeStatsPerDashboardType($dashboard_type): array {
+    $query = $this->connection->select(DashboardsDatabase::DASHBOARDS_DATABASE, 'dd');
+    $query->addExpression('dd.cumulative_count', 'count');
+    $query->addExpression('dd.date', 'date');
+    $query->condition('dd.dashboard_type', $dashboard_type);
+    $query->orderBy('date', 'ASC');
+    $results = $query->execute()->fetchAll();
+
+    $data = [];
+    foreach ($results as $key => $row) {
+      $data[$key]['id'] = \Drupal::service('date.formatter')->format(strtotime($row->date), 'custom', 'M Y');
+      $data[$key]['count'] = (int) $row->count;
+    }
+
+    return $data;
+  }
+
 }
