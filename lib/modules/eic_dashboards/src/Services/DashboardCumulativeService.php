@@ -3,13 +3,16 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 
 class DashboardCumulativeService {
 
-  public function __construct(protected Connection $connection) {
-
-  }
+  public function __construct(
+    protected Connection $connection,
+    protected DateFormatterInterface $dateFormatter,
+  ) {}
 
   /**
    * Insert or update the counter for given dashboard_type and date.
@@ -158,7 +161,7 @@ class DashboardCumulativeService {
 
     $data = [];
     foreach ($results as $key => $row) {
-      $data[$key]['id'] = \Drupal::service('date.formatter')->format(strtotime($row->date), 'custom', 'M Y');
+      $data[$key]['id'] = $this->dateFormatter->format(strtotime($row->date), 'custom', 'M Y');
       $data[$key]['count'] = (int) $row->count;
     }
 
