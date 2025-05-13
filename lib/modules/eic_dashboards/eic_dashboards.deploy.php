@@ -18,7 +18,7 @@ function eic_dashboards_deploy_0001_members_past_stats(array &$sandbox) {
     $entity_query,
     50,
     $entity_type_id,
-    DashboardsDatabase::GROUPS_DASHBOARD_TYPE
+    DashboardsDatabase::MEMBERS_DASHBOARD_TYPE
   );
 
 }
