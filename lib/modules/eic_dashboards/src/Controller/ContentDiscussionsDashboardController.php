@@ -3,8 +3,10 @@
 namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 use Drupal\eic_dashboards\Services\ContentStatisticsInterface;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\DashboardCumulativeService;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,17 +37,26 @@ class ContentDiscussionsDashboardController extends ControllerBase {
   protected ContentStatisticsInterface $contentStatistics;
 
   /**
+   * The dashboard cumulative statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardCumulativeService
+   */
+  protected DashboardCumulativeService $dashboardCumulativeService;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
     ContentStatisticsInterface $contentStatistics,
+    DashboardCumulativeService $dashboardCumulativeService,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->contentStatistics = $contentStatistics;
+    $this->dashboardCumulativeService = $dashboardCumulativeService;
   }
 
   /**
@@ -57,6 +68,7 @@ class ContentDiscussionsDashboardController extends ControllerBase {
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.content_statistics'),
+      $container->get('eic_dashboards.cumulative'),
     );
   }
 
@@ -75,15 +87,27 @@ class ContentDiscussionsDashboardController extends ControllerBase {
     $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total discussions'), $numberOfNodesData, '');
 
     // Number of nodes created in past 30 days.
-    $numberOfNodesPast30DaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
-    $numberOfNodesPast30Days = $this->dashboardBuilder->numberAndLink($this->t('New discussions in the last 30 days'), $numberOfNodesPast30DaysData, '');
+    $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
+    $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('New discussions in the last 30 days'), $numberOfNodesPastDaysData, '');
+
+    $nodesStats = [
+      $this->dashboardBuilder->columns([
+        $numberOfNodes,
+        $numberOfNodesPastDays,
+      ], 3),
+    ];
+
+    // Nodes evolution.
+    $nodesCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE);
+    $nodesData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($nodesCumulativeStats));
+    $nodesEvolution = $this->dashboardBuilder->chartLine($this->t('Discussions - evolution over time'), $nodesData);
 
     // Section 1.
     $section1Build = [
       $this->dashboardBuilder->columns([
-        $numberOfNodes,
-        $numberOfNodesPast30Days,
-      ], 3),
+        $nodesStats,
+        $nodesEvolution,
+      ], 1),
     ];
 
     // Nodes grouped by type chart.
