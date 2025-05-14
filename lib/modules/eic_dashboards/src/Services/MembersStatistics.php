@@ -95,7 +95,7 @@ class MembersStatistics implements MembersStatisticsInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMembersListInGivenPeriod($startDate, $endDate, int $maxResults = 10): array {
+  public function getMembersListInGivenPeriod($startDate, $endDate, int|false $maxResults = 10): array {
     if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
       // Convert string dates to DateTime objects if necessary.
       if (is_string($startDate)) {
@@ -120,7 +120,9 @@ class MembersStatistics implements MembersStatisticsInterface {
       ], 'BETWEEN');
     }
     $query->orderBy('u.uid', 'DESC');
-    $query->range(0, $maxResults);
+    if ($maxResults) {
+      $query->range(0, $maxResults);
+    }
     $query->leftJoin('profile', 'p', 'u.uid = p.uid AND p.type = :profile_type', ['profile_type' => 'member']);
     $query->leftJoin('user__field_first_name', 'fn', 'u.uid = fn.entity_id');
     $query->leftJoin('user__field_last_name', 'ln', 'u.uid = ln.entity_id');
