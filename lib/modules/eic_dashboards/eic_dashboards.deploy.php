@@ -150,7 +150,7 @@ function eic_dashboards_deploy_0008_discussions_past_stats(array &$sandbox) {
 
   $entity_type_id = 'node';
   $entity_query = \Drupal::entityQuery($entity_type_id)
-    ->condition('type', 'story')
+    ->condition('type', 'discussion')
     ->accessCheck(FALSE);
 
   _eic_dashboards_populate_database_batch_helper(
