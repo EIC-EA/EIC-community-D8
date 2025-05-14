@@ -34,7 +34,7 @@ final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
    * Populate the data of the previous month into the database.
    */
   #[CLI\Command(name: 'eic_dashboards:generate-all-previous-month', aliases: ['dashboard-previous-month'])]
-  public function generateAllStatsPreviousMonth($options = ['format' => 'table']) {
+  public function generateAllStatsPreviousMonth() {
 
     // Set start date to first day of the previous month.
     $startDate = new \DateTime('first day of last month');
