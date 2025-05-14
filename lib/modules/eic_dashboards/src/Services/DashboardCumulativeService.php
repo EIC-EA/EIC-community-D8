@@ -3,7 +3,6 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 
@@ -232,6 +231,22 @@ class DashboardCumulativeService {
     if (empty($results)) {
       return [];
     }
+  }
+
+  /**
+   * @return string[]
+   */
+  public function getAllDashboardTypes():array {
+    return [
+      DashboardsDatabase::MEMBERS_DASHBOARD_TYPE,
+      DashboardsDatabase::GROUPS_DASHBOARD_TYPE,
+      DashboardsDatabase::EVENTS_DASHBOARD_TYPE,
+      DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE,
+      DashboardsDatabase::PROJECTS_DASHBOARD_TYPE,
+      DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE,
+      DashboardsDatabase::STORIES_DASHBOARD_TYPE,
+      DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE,
+    ];
   }
 
 }
