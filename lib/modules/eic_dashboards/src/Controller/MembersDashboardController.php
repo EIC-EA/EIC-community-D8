@@ -4,7 +4,9 @@ namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\eic_dashboards\Constants\DashboardFilters;
+use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\DashboardCumulativeService;
 use Drupal\eic_dashboards\Services\MembersStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
@@ -43,6 +45,13 @@ class MembersDashboardController extends ControllerBase
    */
   protected $eicUserHelper;
 
+  /**
+   * The dashboard cumulative statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardCumulativeService
+   */
+  protected DashboardCumulativeService $dashboardCumulativeService;
+
 
   /**
    * {@inheritdoc}
@@ -51,13 +60,15 @@ class MembersDashboardController extends ControllerBase
     DashboardBuilderInterface  $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
     MembersStatisticsInterface $membersStatistics,
-    UserHelper $eic_user_helper,
+    UserHelper $eicUserHelper,
+    DashboardCumulativeService $dashboardCumulativeService,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->membersStatistics = $membersStatistics;
-    $this->eicUserHelper = $eic_user_helper;
+    $this->eicUserHelper = $eicUserHelper;
+    $this->dashboardCumulativeService = $dashboardCumulativeService;
   }
 
   /**
@@ -70,6 +81,7 @@ class MembersDashboardController extends ControllerBase
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.members_statistics'),
       $container->get('eic_user.helper'),
+      $container->get('eic_dashboards.cumulative'),
     );
   }
 
@@ -95,12 +107,24 @@ class MembersDashboardController extends ControllerBase
     $membersLoggedPastDaysLink = $this->dashboardBuilder->buttonToView('view.dashboard_members_list.page', 'access[min]', gmdate("Y-m-d", strtotime("-$days days")), $this->t('Members list'));
     $membersLoggedPastDays = $this->dashboardBuilder->numberAndLink($this->t('Recently logged in'), $membersLoggedPastDaysData, $membersLoggedPastDaysLink);
 
-    $section1Build = [
+    $membersStats = [
       $this->dashboardBuilder->columns([
         $members,
         $membersCreatedPastDays,
-        $membersLoggedPastDays
-      ], 4),
+        $membersLoggedPastDays,
+      ], 3),
+    ];
+
+    // Members evolution.
+    $membersCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::MEMBERS_DASHBOARD_TYPE);
+    $membersData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($membersCumulativeStats));
+    $membersEvolution = $this->dashboardBuilder->chartLine($this->t('Members - evolution over time'), $membersData);
+
+    $section1Build = [
+      $this->dashboardBuilder->columns([
+        $membersStats,
+        $membersEvolution
+      ], 1),
     ];
 
     // ===== Section 2.

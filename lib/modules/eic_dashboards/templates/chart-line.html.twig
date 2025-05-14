@@ -1,0 +1,43 @@
+<script type="application/json">
+  {
+    "service": "chart",
+    "version": "2.0",
+    "data": {
+      "title": {
+        "text": "{{ title }}",
+        "align": "left"
+      },
+      "legend": {
+        "enabled": false
+      },
+      "plotOptions": {
+        "series": {
+          "dataLabels": {
+            "enabled": true,
+            "format": "{point.y}"
+          }
+        }
+      },
+      "series": [
+        {
+          "type": "line",
+          "animation": false,
+          "name": "{{ title|split(' ')[0] }}",
+          "data": {{ series|raw }}
+        }
+      ],
+      "xAxis": {
+        "categories": {{ categories|raw }},
+        "labels": {
+          "enabled": true,
+          "rotation": 270
+        }
+      },
+      "yAxis": [{
+        "title": {
+            "text": "Published {{ title|split(' ')[0]|lower }}"
+        }
+      }]
+    }
+  }
+</script>
