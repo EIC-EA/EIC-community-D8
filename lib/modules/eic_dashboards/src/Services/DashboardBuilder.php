@@ -252,4 +252,16 @@ class DashboardBuilder implements DashboardBuilderInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function chartLine($title, $data): array {
+    return [
+      '#theme' => 'chart_line',
+      '#title' => $title,
+      '#categories' => $data['categories'],
+      '#series' => $data['series'],
+    ];
+  }
+
 }

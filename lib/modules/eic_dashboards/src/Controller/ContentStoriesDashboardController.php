@@ -3,8 +3,10 @@
 namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 use Drupal\eic_dashboards\Services\ContentStatisticsInterface;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\DashboardCumulativeService;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,17 +37,26 @@ class ContentStoriesDashboardController extends ControllerBase {
   protected ContentStatisticsInterface $contentStatistics;
 
   /**
+   * The dashboard cumulative statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardCumulativeService
+   */
+  protected DashboardCumulativeService $dashboardCumulativeService;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
     ContentStatisticsInterface $contentStatistics,
+    DashboardCumulativeService $dashboardCumulativeService,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->contentStatistics = $contentStatistics;
+    $this->dashboardCumulativeService = $dashboardCumulativeService;
   }
 
   /**
@@ -57,6 +68,7 @@ class ContentStoriesDashboardController extends ControllerBase {
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.content_statistics'),
+      $container->get('eic_dashboards.cumulative'),
     );
   }
 
@@ -79,12 +91,24 @@ class ContentStoriesDashboardController extends ControllerBase {
     $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle, $lastDaysLimit);
     $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('Stories - last @days days', ['@days' => $lastDaysLimit]), $numberOfNodesPastDaysData, '');
 
-    // Section 1.
-    $section1Build = [
+    $nodesStats = [
       $this->dashboardBuilder->columns([
         $numberOfNodes,
         $numberOfNodesPastDays,
       ], 3),
+    ];
+
+    // Nodes evolution.
+    $nodesCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::STORIES_DASHBOARD_TYPE);
+    $nodesData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($nodesCumulativeStats));
+    $nodesEvolution = $this->dashboardBuilder->chartLine($this->t('Stories - evolution over time'), $nodesData);
+
+    // Section 1.
+    $section1Build = [
+      $this->dashboardBuilder->columns([
+        $nodesStats,
+        $nodesEvolution,
+      ], 1),
     ];
 
     // Nodes grouped by program type chart.

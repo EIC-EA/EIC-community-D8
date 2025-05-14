@@ -110,6 +110,13 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'has_border' => true,
       ],
     ],
+    'chart_line' => [
+      'variables' => [
+        'title' => '',
+        'categories' => '',
+        'series' => '',
+      ],
+    ],
   ];
 }
 

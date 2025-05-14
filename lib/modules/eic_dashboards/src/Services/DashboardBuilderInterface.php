@@ -77,4 +77,9 @@ interface DashboardBuilderInterface {
    */
   public function dashboardSection($title, $link, $content, $icon, $hasBorder);
 
+  /**
+   * Build dashboard line chart.
+   */
+  public function chartLine($title, $data);
+
 }

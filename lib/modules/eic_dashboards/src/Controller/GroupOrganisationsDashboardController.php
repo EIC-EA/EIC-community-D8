@@ -3,7 +3,9 @@
 namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\DashboardCumulativeService;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 use Drupal\eic_dashboards\Services\GroupStatisticsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,17 +37,26 @@ class GroupOrganisationsDashboardController extends ControllerBase {
   protected GroupStatisticsInterface $groupStatistics;
 
   /**
+   * The dashboard cumulative statistics service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardCumulativeService
+   */
+  protected DashboardCumulativeService $dashboardCumulativeService;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
     DashboardHelperInterface $dashboardHelper,
     GroupStatisticsInterface $groupStatistics,
+    DashboardCumulativeService $dashboardCumulativeService,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->groupStatistics = $groupStatistics;
+    $this->dashboardCumulativeService = $dashboardCumulativeService;
   }
 
   /**
@@ -56,6 +67,7 @@ class GroupOrganisationsDashboardController extends ControllerBase {
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.group_statistics'),
+      $container->get('eic_dashboards.cumulative'),
     );
   }
 
@@ -81,12 +93,24 @@ class GroupOrganisationsDashboardController extends ControllerBase {
     $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', ['@group' => $groupType, '@days' =>
       $lastDaysLimit]), $numberOfGroupsPastDaysData, '');
 
-    // Section 1.
-    $section1Build = [
+    $groupsStats = [
       $this->dashboardBuilder->columns([
         $numberOfGroups,
         $numberOfGroupsPastDays,
       ], 3),
+    ];
+
+    // Groups evolution.
+    $groupsCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE);
+    $groupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($groupsCumulativeStats));
+    $groupsEvolution = $this->dashboardBuilder->chartLine($this->t('Organisations - evolution over time'), $groupsData);
+
+    // Section 1.
+    $section1Build = [
+      $this->dashboardBuilder->columns([
+        $groupsStats,
+        $groupsEvolution,
+      ], 1),
     ];
 
     // Groups by type chart.
