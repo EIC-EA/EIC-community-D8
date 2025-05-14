@@ -19,11 +19,12 @@ class DashboardCumulativeService {
    *
    * @param string $dashboard_type
    * @param string $date
+   * @param int|null $count
    *
    * @return void
    * @throws \Exception
    */
-  public function insertOrUpdate(string $dashboard_type, string $date) {
+  public function insertOrUpdate(string $dashboard_type, string $date, int|null $count = NULL) {
     // Check if entry exists.
     if (!$this->checkEntry($dashboard_type, $date)) {
       // insert entry
@@ -32,14 +33,16 @@ class DashboardCumulativeService {
         ->fields([
           'dashboard_type' => $dashboard_type,
           'date' => $date,
-          'count' => 1,
+          'count' => $count ?: 1,
         ])
         ->execute();
     }
     else {
       $entry = $this->getEntry($dashboard_type, $date);
-      $count = (int) $entry['count'];
-      $count++;
+      if (is_null($count)) {
+        $count = (int) $entry['count'];
+        $count++;
+      }
       $entry['count'] = $count;
       $this->merge($entry);
     }
