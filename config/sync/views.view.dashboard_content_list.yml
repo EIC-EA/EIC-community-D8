@@ -20,7 +20,10 @@ dependencies:
     - eic_dashboards
     - group
     - node
+    - statistics
     - taxonomy
+    - views_autocomplete_filters
+    - views_fields_on_off
 id: dashboard_content_list
 label: 'Dashboard - Content list'
 module: views
@@ -113,7 +116,7 @@ display:
           entity_field: type
           plugin_id: field
           label: Group
-          exclude: true
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -349,7 +352,7 @@ display:
           click_sort_column: target_id
           type: entity_reference_label
           settings:
-            link: false
+            link: true
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -357,7 +360,7 @@ display:
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
-          multi_type: separator
+          multi_type: ul
           separator: ', '
           field_api_classes: false
         created:
@@ -510,7 +513,7 @@ display:
           entity_type: node
           plugin_id: flag_follow_content
           label: 'Number of follows'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -560,7 +563,7 @@ display:
           entity_type: node
           plugin_id: flag_like_content
           label: 'Number of likes'
-          exclude: false
+          exclude: true
           alter:
             alter_text: false
             text: ''
@@ -600,6 +603,63 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+        totalcount:
+          id: totalcount
+          table: node_counter
+          field: totalcount
+          relationship: gc__node
+          group_type: group
+          admin_label: ''
+          plugin_id: statistics_numeric
+          label: 'Number of views'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ','
+          format_plural: false
+          format_plural_string: !!binary MQNAY291bnQ=
+          prefix: ''
+          suffix: ''
       pager:
         type: full
         options:
@@ -626,7 +686,7 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -642,33 +702,86 @@ display:
       sorts: {  }
       arguments: {  }
       filters:
-        created:
-          id: created
+        views_fields_on_off_form:
+          id: views_fields_on_off_form
+          table: views
+          field: views_fields_on_off_form
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_fields_on_off_form
+          operator: in
+          value:
+            type_3: type_3
+            type: type
+            uid: uid
+            field_vocab_topics: field_vocab_topics
+            created: created
+            field_tags: field_tags
+            flag_follow_content: flag_follow_content
+            flag_like_content: flag_like_content
+            totalcount: totalcount
+          group: 1
+          exposed: true
+          expose:
+            operator_id: views_fields_on_off_form_op
+            label: 'Visible reporting columns'
+            description: ''
+            use_operator: false
+            operator: views_fields_on_off_form_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: views_fields_on_off_form
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          bypass_hook_views_pre_view: false
+          exposed_select_type: multi_select
+        type:
+          id: type
           table: node_field_data
-          field: created
+          field: type
           relationship: gc__node
           group_type: group
           admin_label: ''
           entity_type: node
-          entity_field: created
-          plugin_id: date
-          operator: '='
-          value:
-            min: ''
-            max: ''
-            value: ''
-            type: date
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: created_op
-            label: 'Created on'
+            operator_id: type_op
+            label: 'Content type'
             description: ''
             use_operator: false
-            operator: created_op
+            operator: type_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: created
+            identifier: type
             required: false
             remember: false
             multiple: false
@@ -681,9 +794,7 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            min_placeholder: ''
-            max_placeholder: ''
-            placeholder: ''
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -748,14 +859,14 @@ display:
           hierarchy: false
           limit: true
           error_message: true
-        type:
-          id: type
-          table: node_field_data
+        type_2:
+          id: type_2
+          table: groups_field_data
           field: type
-          relationship: gc__node
+          relationship: gid
           group_type: group
           admin_label: ''
-          entity_type: node
+          entity_type: group
           entity_field: type
           plugin_id: bundle
           operator: in
@@ -763,14 +874,14 @@ display:
           group: 1
           exposed: true
           expose:
-            operator_id: type_op
-            label: 'Content type'
+            operator_id: type_2_op
+            label: Group
             description: ''
             use_operator: false
-            operator: type_op
+            operator: type_2_op
             operator_limit_selection: false
             operator_list: {  }
-            identifier: type
+            identifier: type_2
             required: false
             remember: false
             multiple: false
@@ -784,6 +895,60 @@ display:
               site_admin: '0'
               administrator: '0'
             reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: gc__node
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          operator: between
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: created_op
+            label: 'Created on'
+            description: ''
+            use_operator: false
+            operator: created_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: created
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -848,12 +1013,158 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        combine:
+          id: combine
+          table: views
+          field: combine
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_autocomplete_filters_combine
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: 'Free text search'
+            description: ''
+            use_operator: false
+            operator: combine_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: combine
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            placeholder: ''
+            autocomplete_filter: 0
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          fields:
+            title: title
+            type_3: type_3
+            type: type
+            uid: uid
       filter_groups:
         operator: AND
         groups:
           1: AND
       style:
         type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            title: title
+            type_3: type_3
+            type: type
+            uid: uid
+            field_vocab_topics: field_vocab_topics
+            created: created
+            field_tags: field_tags
+            flag_follow_content: flag_follow_content
+            flag_like_content: flag_like_content
+            totalcount: totalcount
+          default: '-1'
+          info:
+            title:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            type_3:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            type:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            uid:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_vocab_topics:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            created:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_tags:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            flag_follow_content:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            flag_like_content:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            totalcount:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
       row:
         type: fields
       query:
