@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_dashboards\Drush\Commands;
 
-use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
 use Drupal\eic_dashboards\Services\DashboardCumulativeService;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
@@ -51,9 +50,14 @@ final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
 
     foreach ($this->dashboardCumulativeService->getAllDashboardTypes() as $dashboardType) {
       $count = $this->dashboardCumulativeService->getCountDashboardTypeInGivenPeriod($startDate, $endDate, $dashboardType);
-      $this->dashboardCumulativeService->insertOrUpdate($dashboardType, $date, $count);
-      $this->dashboardCumulativeService->calculatePastStats($dashboardType);
-      $this->logger()->success(t("Generated data for {$startDate->format('Y-m')} for dashboard type '$dashboardType'"));
+      if ($count) {
+        $this->dashboardCumulativeService->insertOrUpdate($dashboardType, $date, $count);
+        $this->dashboardCumulativeService->calculatePastStats($dashboardType);
+        $this->logger()->success(t("Generated data for {$startDate->format('Y-m')} for dashboard type '$dashboardType'"));
+      }
+      else {
+        $this->logger()->error(t("Could not generate data for {$startDate->format('Y-m')} for dashboard type '$dashboardType'"));
+      }
     }
 
   }
