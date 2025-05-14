@@ -73,7 +73,7 @@ class DashboardCumulativeService {
       $merge_array = [
         'dashboard_type' => $dashboard_type,
         'date' => $results[$i]->date,
-        'cumulative_count' => $results[$i]->count
+        'cumulative_count' => $results[$i]->count,
       ];
       $this->merge($merge_array);
     }
@@ -166,6 +166,69 @@ class DashboardCumulativeService {
     }
 
     return $data;
+  }
+
+  public function fn($bundle, $startDate, $endDate, $dashboard_type, $range = 10) {
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      // Convert string dates to DateTime objects if necessary.
+      if (is_string($startDate)) {
+        $startDate = new \DateTime($startDate);
+      }
+      if (is_string($endDate)) {
+        $endDate = new \DateTime($endDate);
+      }
+
+      // Ensure dates are at the start/end of their respective days.
+      $startDate->setTime(0, 0, 0);
+      $endDate->setTime(23, 59, 59);
+    }
+
+    switch ($dashboard_type) {
+      case DashboardsDatabase::MEMBERS_DASHBOARD_TYPE:
+        break;
+      case DashboardsDatabase::GROUPS_DASHBOARD_TYPE:
+        break;
+      case DashboardsDatabase::EVENTS_DASHBOARD_TYPE:
+        break;
+
+      case DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE:
+        break;
+      case DashboardsDatabase::PROJECTS_DASHBOARD_TYPE:
+        break;
+      case DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE:
+
+        break;
+      case DashboardsDatabase::STORIES_DASHBOARD_TYPE:
+        break;
+      case DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE:
+        break;
+    }
+
+
+
+  }
+
+  private function getStatsNode($bundle, $startDate, $endDate) {
+    // Build the query.
+    $query = $this->connection->select('node', 'n');
+    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
+    $query->addExpression('n.nid', 'node_id');
+    $query->addExpression('nfd.title', 'title');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
+    $query->condition('n.type', $bundle);
+    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
+      $query->condition('nfd.created', [
+        $startDate->getTimestamp(),
+        $endDate->getTimestamp(),
+      ], 'BETWEEN');
+    }
+    $query->orderBy('nfd.created', 'DESC');
+
+    $results = $query->execute()->fetchAll();
+
+    if (empty($results)) {
+      return [];
+    }
   }
 
 }
