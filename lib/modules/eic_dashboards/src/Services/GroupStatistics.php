@@ -440,7 +440,9 @@ class GroupStatistics implements GroupStatisticsInterface {
       ], 'BETWEEN');
     }
     $query->orderBy('gfd.created', 'DESC');
-    $query->range(0, $range);
+    if ($range) {
+      $query->range(0, $range);
+    }
 
     $results = $query->execute()->fetchAll();
 

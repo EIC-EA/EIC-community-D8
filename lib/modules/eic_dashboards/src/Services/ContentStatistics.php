@@ -374,7 +374,9 @@ class ContentStatistics implements ContentStatisticsInterface {
       ], 'BETWEEN');
     }
     $query->orderBy('nfd.created', 'DESC');
-    $query->range(0, $range);
+    if ($range) {
+      $query->range(0, $range);
+    }
 
     $results = $query->execute()->fetchAll();
 
