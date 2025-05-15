@@ -200,6 +200,7 @@ function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryIn
   $data_table = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getDataTable();
   if (!$data_table) {
     $sandbox['current'] += count($ids);
+    \Drupal::messenger()->addError(t("Could not process entities of $entity_type_id in $dashboard_type dashboard."));
     return;
   }
   foreach ($ids as $id) {
