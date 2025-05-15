@@ -1,1 +1,2 @@
-default_features: {  }
+default_features:
+  - eic_groups_anchor_horizon_platform_result
