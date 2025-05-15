@@ -163,7 +163,20 @@ function eic_dashboards_deploy_0008_discussions_past_stats(array &$sandbox) {
 
 }
 
-function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
+/**
+ * Helper function to batch process entities to populate dashboards table.
+ *
+ * @param array $sandbox
+ * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+ * @param int $entities_per_batch
+ * @param int|string $entity_type_id
+ * @param string $dashboard_type
+ *
+ * @return void
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, int $entities_per_batch, int|string $entity_type_id, string $dashboard_type): void {
 
   $count_entity_query = clone $entity_query;
   if (!isset($sandbox['total'])) {
