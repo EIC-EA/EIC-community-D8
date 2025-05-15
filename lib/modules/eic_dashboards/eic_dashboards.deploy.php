@@ -197,9 +197,18 @@ function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryIn
     return;
   }
 
+  $data_table = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getDataTable();
+  if (!$data_table) {
+    $sandbox['current'] += count($ids);
+    return;
+  }
   foreach ($ids as $id) {
-    $entity = \Drupal::entityTypeManager()->getStorage($entity_type_id)->load($id);
-    $monthKey = \Drupal::service('date.formatter')->format($entity->get('created')->value, 'custom', 'Y-m') . '-01';
+    $created_query = \Drupal::database()->select($data_table);
+    $created_query->addField($data_table, 'created');
+    $created_query->addField($data_table, 'id');
+    $created_query->condition("$data_table.id", $id);
+    $results = $created_query->execute()->fetchAssoc();
+    $monthKey = \Drupal::service('date.formatter')->format($results['created'], 'custom', 'Y-m') . '-01';
     \Drupal::service('eic_dashboards.cumulative')->insertOrUpdate($dashboard_type, $monthKey);
     $sandbox['current']++;
   }
