@@ -3,7 +3,6 @@
 namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 
@@ -12,6 +11,9 @@ class DashboardCumulativeService {
   public function __construct(
     protected Connection $connection,
     protected DateFormatterInterface $dateFormatter,
+    protected GroupStatisticsInterface $groupStatistics,
+    protected ContentStatisticsInterface $contentStatistics,
+    protected MembersStatisticsInterface $membersStatistics,
   ) {}
 
   /**
@@ -19,11 +21,12 @@ class DashboardCumulativeService {
    *
    * @param string $dashboard_type
    * @param string $date
+   * @param int|null $count
    *
    * @return void
    * @throws \Exception
    */
-  public function insertOrUpdate(string $dashboard_type, string $date) {
+  public function insertOrUpdate(string $dashboard_type, string $date, int|null $count = NULL) {
     // Check if entry exists.
     if (!$this->checkEntry($dashboard_type, $date)) {
       // insert entry
@@ -32,14 +35,16 @@ class DashboardCumulativeService {
         ->fields([
           'dashboard_type' => $dashboard_type,
           'date' => $date,
-          'count' => 1,
+          'count' => $count ?: 1,
         ])
         ->execute();
     }
     else {
       $entry = $this->getEntry($dashboard_type, $date);
-      $count = (int) $entry['count'];
-      $count++;
+      if (is_null($count)) {
+        $count = (int) $entry['count'];
+        $count++;
+      }
       $entry['count'] = $count;
       $this->merge($entry);
     }
@@ -168,67 +173,52 @@ class DashboardCumulativeService {
     return $data;
   }
 
-  public function fn($bundle, $startDate, $endDate, $dashboard_type, $range = 10) {
-    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
-      // Convert string dates to DateTime objects if necessary.
-      if (is_string($startDate)) {
-        $startDate = new \DateTime($startDate);
-      }
-      if (is_string($endDate)) {
-        $endDate = new \DateTime($endDate);
-      }
-
-      // Ensure dates are at the start/end of their respective days.
-      $startDate->setTime(0, 0, 0);
-      $endDate->setTime(23, 59, 59);
-    }
+  public function getCountDashboardTypeInGivenPeriod($startDate, $endDate, $dashboard_type) {
+    $results = [];
 
     switch ($dashboard_type) {
       case DashboardsDatabase::MEMBERS_DASHBOARD_TYPE:
+        $results = $this->membersStatistics->getMembersListInGivenPeriod($startDate, $endDate, FALSE);
         break;
       case DashboardsDatabase::GROUPS_DASHBOARD_TYPE:
+        $results = $this->groupStatistics->getGroupsCreatedInGivenPeriod('group', $startDate, $endDate, FALSE);
         break;
       case DashboardsDatabase::EVENTS_DASHBOARD_TYPE:
+        $results = $this->groupStatistics->getGroupsCreatedInGivenPeriod('event', $startDate, $endDate, FALSE);
         break;
-
       case DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE:
+        $results = $this->groupStatistics->getGroupsCreatedInGivenPeriod('organisation', $startDate, $endDate, FALSE);
         break;
       case DashboardsDatabase::PROJECTS_DASHBOARD_TYPE:
+        $results = $this->groupStatistics->getGroupsCreatedInGivenPeriod('project', $startDate, $endDate, FALSE);
         break;
       case DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE:
-
+        $results = $this->contentStatistics->getNodesOfBundleInGivenPeriod('document', $startDate, $endDate, FALSE);
         break;
       case DashboardsDatabase::STORIES_DASHBOARD_TYPE:
+        $results = $this->contentStatistics->getNodesOfBundleInGivenPeriod('story', $startDate, $endDate, FALSE);
         break;
       case DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE:
+        $results = $this->contentStatistics->getNodesOfBundleInGivenPeriod('discussion', $startDate, $endDate, FALSE);
         break;
     }
-
-
-
+    return count($results);
   }
 
-  private function getStatsNode($bundle, $startDate, $endDate) {
-    // Build the query.
-    $query = $this->connection->select('node', 'n');
-    $query->innerJoin('node_field_data', 'nfd', 'n.nid = nfd.nid');
-    $query->addExpression('n.nid', 'node_id');
-    $query->addExpression('nfd.title', 'title');
-    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(nfd.created), '%d %b %Y')", 'created');
-    $query->condition('n.type', $bundle);
-    if (isset($startDate) && $startDate != "" && isset($endDate) && $endDate != "") {
-      $query->condition('nfd.created', [
-        $startDate->getTimestamp(),
-        $endDate->getTimestamp(),
-      ], 'BETWEEN');
-    }
-    $query->orderBy('nfd.created', 'DESC');
-
-    $results = $query->execute()->fetchAll();
-
-    if (empty($results)) {
-      return [];
-    }
+  /**
+   * @return string[]
+   */
+  public function getAllDashboardTypes():array {
+    return [
+      DashboardsDatabase::MEMBERS_DASHBOARD_TYPE,
+      DashboardsDatabase::GROUPS_DASHBOARD_TYPE,
+      DashboardsDatabase::EVENTS_DASHBOARD_TYPE,
+      DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE,
+      DashboardsDatabase::PROJECTS_DASHBOARD_TYPE,
+      DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE,
+      DashboardsDatabase::STORIES_DASHBOARD_TYPE,
+      DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE,
+    ];
   }
 
 }

@@ -163,7 +163,20 @@ function eic_dashboards_deploy_0008_discussions_past_stats(array &$sandbox) {
 
 }
 
-function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, $entities_per_batch, $entity_type_id, $dashboard_type) {
+/**
+ * Helper function to batch process entities to populate dashboards table.
+ *
+ * @param array $sandbox
+ * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+ * @param int $entities_per_batch
+ * @param int|string $entity_type_id
+ * @param string $dashboard_type
+ *
+ * @return void
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryInterface $entity_query, int $entities_per_batch, int|string $entity_type_id, string $dashboard_type): void {
 
   $count_entity_query = clone $entity_query;
   if (!isset($sandbox['total'])) {
@@ -184,9 +197,19 @@ function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryIn
     return;
   }
 
+  $data_table = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getDataTable();
+  if (!$data_table) {
+    $sandbox['current'] += count($ids);
+    \Drupal::messenger()->addError(t("Could not process entities of $entity_type_id in $dashboard_type dashboard."));
+    return;
+  }
   foreach ($ids as $id) {
-    $entity = \Drupal::entityTypeManager()->getStorage($entity_type_id)->load($id);
-    $monthKey = \Drupal::service('date.formatter')->format($entity->get('created')->value, 'custom', 'Y-m') . '-01';
+    $created_query = \Drupal::database()->select($data_table);
+    $created_query->addField($data_table, 'created');
+    $created_query->addField($data_table, 'id');
+    $created_query->condition("$data_table.id", $id);
+    $results = $created_query->execute()->fetchAssoc();
+    $monthKey = \Drupal::service('date.formatter')->format($results['created'], 'custom', 'Y-m') . '-01';
     \Drupal::service('eic_dashboards.cumulative')->insertOrUpdate($dashboard_type, $monthKey);
     $sandbox['current']++;
   }
