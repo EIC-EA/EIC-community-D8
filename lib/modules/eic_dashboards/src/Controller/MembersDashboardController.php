@@ -17,9 +17,6 @@ use Drupal\eic_user\UserHelper;
  */
 class MembersDashboardController extends ControllerBase
 {
-
-  use DashboardCacheTrait;
-
   /**
    * The dashboards builder service.
    *
@@ -257,17 +254,4 @@ class MembersDashboardController extends ControllerBase
 
     return $build;
   }
-
-  /**
-   * @inheritDoc
-   */
-  function getDashboardCacheIds(): array {
-    return [
-      'dashboard:members:section:1',
-      'dashboard:members:section:2',
-      'dashboard:members:section:3',
-      'dashboard:members:section:4',
-    ];
-  }
-
 }
