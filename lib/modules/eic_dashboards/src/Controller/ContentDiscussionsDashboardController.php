@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContentDiscussionsDashboardController extends ControllerBase {
 
-  use DashboardCacheTrait;
-
   /**
    * The dashboards builder service.
    *
@@ -78,133 +76,101 @@ class ContentDiscussionsDashboardController extends ControllerBase {
    * {@inheritdoc}
    */
   public function page(): array {
-    // Specify current bundle.
+    // Specify current bundle, title and link.
     $bundle = 'discussion';
+    $title = 'Forum discussions';
+    $discussionTypes = ['event-group_node-discussion', 'group-group_node-discussion'];
+    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $discussionTypes, 'List all');
+
+    // Number of nodes.
+    $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
+    $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total discussions'), $numberOfNodesData, '');
+
+    // Number of nodes created in past 30 days.
+    $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
+    $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('New discussions in the last 30 days'), $numberOfNodesPastDaysData, '');
+
+    $nodesStats = [
+      $this->dashboardBuilder->columns([
+        $numberOfNodes,
+        $numberOfNodesPastDays,
+      ], 3),
+    ];
+
+    // Nodes evolution.
+    $nodesCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE);
+    $nodesData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($nodesCumulativeStats));
+    $nodesEvolution = $this->dashboardBuilder->chartLine($this->t('Discussions - evolution over time'), $nodesData);
 
     // Section 1.
-    if ($section1Cache = $this->cache()->get('dashboard:discussions:section:1')) {
-      $section1Build = $section1Cache->data;
-    }
-    else {
-      // Number of nodes.
-      $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
-      $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total discussions'), $numberOfNodesData, '');
+    $section1Build = [
+      $this->dashboardBuilder->columns([
+        $nodesStats,
+        $nodesEvolution,
+      ], 1),
+    ];
 
-      // Number of nodes created in past 30 days.
-      $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
-      $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('New discussions in the last 30 days'), $numberOfNodesPastDaysData, '');
+    // Nodes grouped by type chart.
+    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerValue($bundle, 'field_discussion_type', 'pie'));
+    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Discussions by type'), $nodesByTypeData, '');
 
-      $nodesStats = [
-        $this->dashboardBuilder->columns([
-          $numberOfNodes,
-          $numberOfNodesPastDays,
-        ], 3),
-      ];
-
-      // Nodes evolution.
-      $nodesCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE);
-      $nodesData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($nodesCumulativeStats));
-      $nodesEvolution = $this->dashboardBuilder->chartLine($this->t('Discussions - evolution over time'), $nodesData);
-
-      // Section 1.
-      $section1Build = [
-        $this->dashboardBuilder->columns([
-          $nodesStats,
-          $nodesEvolution,
-        ], 1),
-      ];
-      $this->cache()->set('dashboard:discussions:section:1', $section1Build);
-    }
+    // Nodes grouped by topic chart.
+    $topicsVocabulary = 'topics';
+    $nodesByTopicData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column'), $topicsVocabulary));
+    $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Discussions by topic'), $nodesByTopicData, '');
 
     // Section 2.
-    if ($section2Cache = $this->cache()->get('dashboard:discussions:section:2')) {
-      $section2Build = $section2Cache->data;
-    }
-    else {
-      // Nodes grouped by type chart.
-      $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerValue($bundle, 'field_discussion_type', 'pie'));
-      $nodesByType = $this->dashboardBuilder->chartPie($this->t('Discussions by type'), $nodesByTypeData, '');
+    $section2Build = [
+      $this->dashboardBuilder->columns([
+        $nodesByType,
+        $nodesByTopic,
+      ], 2),
+    ];
 
-      // Nodes grouped by topic chart.
-      $topicsVocabulary = 'topics';
-      $nodesByTopicData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column'), $topicsVocabulary));
-      $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Discussions by topic'), $nodesByTopicData, '');
+    // Top terms used.
+    $topTermsLimit = 10;
+    $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
+    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', $topTermsLimit)));
+    $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit discussion tags', ['@limit' => $topTermsLimit]), $topTerms, true);
 
-      // Section 2.
-      $section2Build = [
-        $this->dashboardBuilder->columns([
-          $nodesByType,
-          $nodesByTopic,
-        ], 2),
-      ];
-      $this->cache()->set('dashboard:discussions:section:2', $section2Build);
-    }
+    // Top groups by number of nodes.
+    $nodeType = 'group-group_node-discussion';
+    $topGroupsLimit = 10;
+    $topGroupsByNumberOfNodes = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getGroupsByNumberOfBundle($nodeType, '', $topGroupsLimit)));
+    $topGroupsByNumberOfNodesChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit groups by number of discussions', ['@limit' => $topGroupsLimit]), $topGroupsByNumberOfNodes, true);
 
     // Section 3.
-    if ($section3Cache = $this->cache()->get('dashboard:discussions:section:3')) {
-      $section3Build = $section3Cache->data;
-    }
-    else {
-      // Top terms used.
-      $topTermsLimit = 10;
-      $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
-      ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', $topTermsLimit)));
-      $topTermsChart = $this->dashboardBuilder->chartColumn($this->t('Top @limit discussion tags', ['@limit' => $topTermsLimit]), $topTerms, TRUE);
+    $section3Build = [
+      $this->dashboardBuilder->columns([
+        $topTermsChart,
+        $topGroupsByNumberOfNodesChart,
+      ], 2),
+    ];
 
-      // Top groups by number of nodes.
-      $nodeType = 'group-group_node-discussion';
-      $topGroupsLimit = 10;
-      $topGroupsByNumberOfNodes = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getGroupsByNumberOfBundle($nodeType, '', $topGroupsLimit)));
-      $topGroupsByNumberOfNodesChart = $this->dashboardBuilder->chartColumn($this->t('Top @limit groups by number of discussions', ['@limit' => $topGroupsLimit]), $topGroupsByNumberOfNodes, TRUE);
+    // Most viewed nodes.
+    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed discussions'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
 
-      // Section 3.
-      $section3Build = [
-        $this->dashboardBuilder->columns([
-          $topTermsChart,
-          $topGroupsByNumberOfNodesChart,
-        ], 2),
-      ];
-      $this->cache()->set('dashboard:discussions:section:3', $section3Build);
-    }
+    // Most commented nodes.
+    $mostCommentedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most commented discussions'), '', $this->contentStatistics->getMostCommentedNodesOfBundle($bundle));
 
     // Section 4.
-    if ($section4Cache = $this->cache()->get('dashboard:discussions:section:4')) {
-      $section4Build = $section4Cache->data;
-    }
-    else {
-      // Most viewed nodes.
-      $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed discussions'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
+    $section4Build = [
+      $this->dashboardBuilder->columns([
+        $mostViewedNodes,
+        $mostCommentedNodes,
+      ], 2),
+    ];
 
-      // Most commented nodes.
-      $mostCommentedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most commented discussions'), '', $this->contentStatistics->getMostCommentedNodesOfBundle($bundle));
-
-      // Section 4.
-      $section4Build = [
-        $this->dashboardBuilder->columns([
-          $mostViewedNodes,
-          $mostCommentedNodes,
-        ], 2),
-      ];
-      $this->cache()->set('dashboard:discussions:section:4', $section4Build);
-    }
+    // Latest nodes.
+    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest discussions'), '', $this->contentStatistics->getNodesOfBundleInGivenPeriod($bundle, '', ''));
 
     // Section 5.
-    if ($section5Cache = $this->cache()->get('dashboard:discussions:section:5')) {
-      $section5Build = $section5Cache->data;
-    }
-    else {
-      // Latest nodes.
-      $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest discussions'), '', $this->contentStatistics->getNodesOfBundleInGivenPeriod($bundle, '', ''));
-
-      // Section 5.
-      $section5Build = [
-        $this->dashboardBuilder->columns([
-          $latestNodes,
-          '',
-        ], 2),
-      ];
-      $this->cache()->set('dashboard:discussions:section:5', $section5Build);
-    }
+    $section5Build = [
+      $this->dashboardBuilder->columns([
+        $latestNodes,
+        '',
+      ], 2),
+    ];
 
     $content = [
       $section1Build,
@@ -214,25 +180,6 @@ class ContentDiscussionsDashboardController extends ControllerBase {
       $section5Build,
     ];
 
-    // Specify current title and link.
-    $title = 'Forum discussions';
-    $discussionTypes = ['event-group_node-discussion', 'group-group_node-discussion'];
-    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $discussionTypes, 'List all');
-
     return [$this->dashboardBuilder->dashboardSection($title, $link, $content, 'discussions', FALSE)];
   }
-
-  /**
-   * @inheritDoc
-   */
-  function getDashboardCacheIds(): array {
-    return [
-      'dashboard:discussions:section:1',
-      'dashboard:discussions:section:2',
-      'dashboard:discussions:section:3',
-      'dashboard:discussions:section:4',
-      'dashboard:discussions:section:5',
-    ];
-  }
-
 }
