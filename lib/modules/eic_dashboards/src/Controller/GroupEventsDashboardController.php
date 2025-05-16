@@ -84,103 +84,113 @@ class GroupEventsDashboardController extends ControllerBase {
     $membershipType = 'event-group_membership';
     $likeFlag = 'recommend_group';
 
-    // Number of groups.
-    $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
-    $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groups', ['@group' => $groupType]),
-      $numberOfGroupsData, '');
+    if ($cache = $this->cache()->get('dashboard:documents')) {
+      $content = $cache->data;
+    }
+    else {
 
-    // Number of groups created in past days.
-    $numberOfGroupsPastDaysData = $this->groupStatistics->getNumberOfGroupsPastDays($groupType, $lastDaysLimit);
-    $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', ['@group' => $groupType, '@days' =>
-      $lastDaysLimit]), $numberOfGroupsPastDaysData, '');
+      // Number of groups.
+      $numberOfGroupsData = $this->groupStatistics->getNumberOfGroups($groupType);
+      $numberOfGroups = $this->dashboardBuilder->numberAndLink($this->t('Total @groups', ['@group' => $groupType]),
+        $numberOfGroupsData, '');
 
-    $groupsStats = [
-      $this->dashboardBuilder->columns([
-        $numberOfGroups,
-        $numberOfGroupsPastDays,
-      ], 3),
-    ];
+      // Number of groups created in past days.
+      $numberOfGroupsPastDaysData = $this->groupStatistics->getNumberOfGroupsPastDays($groupType, $lastDaysLimit);
+      $numberOfGroupsPastDays = $this->dashboardBuilder->numberAndLink($this->t('New @groups - last @days days', [
+        '@group' => $groupType,
+        '@days' =>
+          $lastDaysLimit
+      ]), $numberOfGroupsPastDaysData, '');
 
-    // Groups evolution.
-    $groupsCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::EVENTS_DASHBOARD_TYPE);
-    $groupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($groupsCumulativeStats));
-    $groupsEvolution = $this->dashboardBuilder->chartLine($this->t('Events - evolution over time'), $groupsData);
+      $groupsStats = [
+        $this->dashboardBuilder->columns([
+          $numberOfGroups,
+          $numberOfGroupsPastDays,
+        ], 3),
+      ];
 
-    // Section 1.
-    $section1Build = [
-      $this->dashboardBuilder->columns([
-        $groupsStats,
-        $groupsEvolution,
-      ], 1),
-    ];
+      // Groups evolution.
+      $groupsCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::EVENTS_DASHBOARD_TYPE);
+      $groupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($groupsCumulativeStats));
+      $groupsEvolution = $this->dashboardBuilder->chartLine($this->t('Events - evolution over time'), $groupsData);
 
-    // Groups by type chart.
-    $typeField = 'field_vocab_event_type';
-    $groupsByTypeData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $typeField));
-    $groupsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupsByTypeData, '');
+      // Section 1.
+      $section1Build = [
+        $this->dashboardBuilder->columns([
+          $groupsStats,
+          $groupsEvolution,
+        ], 1),
+      ];
 
-    // Groups by most members.
-    $topGroupsByMembersData = $this->dashboardHelper->jsonEncodeCategoriesSeries    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType, $topGroupsLimit)));
-    $topGroupsByMembers = $this->dashboardBuilder->chartColumn( $this->t('Top @limit events with most members registered', ['@limit' => $topGroupsLimit]), $topGroupsByMembersData, true);
+      // Groups by type chart.
+      $typeField = 'field_vocab_event_type';
+      $groupsByTypeData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $typeField));
+      $groupsByType = $this->dashboardBuilder->chartPie($this->t('Events by type'), $groupsByTypeData, '');
 
-    // Groups by topic chart.
-    $topicField = 'field_vocab_topics';
-    $groupsByTopicData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $topicField));
-    $groupsByTopic = $this->dashboardBuilder->chartPie($this->t('Events by topic'), $groupsByTopicData, '');
+      // Groups by most members.
+      $topGroupsByMembersData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopGroupsByMembers($membershipType, $topGroupsLimit)));
+      $topGroupsByMembers = $this->dashboardBuilder->chartColumn($this->t('Top @limit events with most members registered', ['@limit' => $topGroupsLimit]), $topGroupsByMembersData, TRUE);
 
-    // Groups by visibility chart.
-    $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
-    $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Events by visibility'), $groupsByVisibilityData,
-      '');
+      // Groups by topic chart.
+      $topicField = 'field_vocab_topics';
+      $groupsByTopicData = json_encode($this->groupStatistics->getGroupsByTerm($groupType, $topicField));
+      $groupsByTopic = $this->dashboardBuilder->chartPie($this->t('Events by topic'), $groupsByTopicData, '');
 
-    // Section 2.
-    $section2Build = [
-      $this->dashboardBuilder->columns([
-        $groupsByType,
-        $topGroupsByMembers,
-        $groupsByTopic,
-        $groupsByVisibility,
-      ], 2),
-    ];
+      // Groups by visibility chart.
+      $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
+      $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Events by visibility'), $groupsByVisibilityData,
+        '');
 
-    // Groups by country.
-    $locationField = 'field_location';
-    $groupsByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getGroupsGroupedByLocation($groupType, $locationField, 'id')));
-    $groupsByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Events by country'), $groupsByCountryData,
-      false);
+      // Section 2.
+      $section2Build = [
+        $this->dashboardBuilder->columns([
+          $groupsByType,
+          $topGroupsByMembers,
+          $groupsByTopic,
+          $groupsByVisibility,
+        ], 2),
+      ];
 
-    // Section 3.
-    $section3Build = [
-      $this->dashboardBuilder->columns([
-        $groupsByCountryChart,
-      ], 1),
-    ];
+      // Groups by country.
+      $locationField = 'field_location';
+      $groupsByCountryData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getGroupsGroupedByLocation($groupType, $locationField, 'id')));
+      $groupsByCountryChart = $this->dashboardBuilder->chartColumn($this->t('Events by country'), $groupsByCountryData,
+        FALSE);
 
-    // Top topics of groups.
-    $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
-    $topTopicsOfGroups = $this->dashboardBuilder->chartColumn( $this->t('Top @limit event topics', ['@limit' => $topGroupsLimit]), $topTopicsOfGroupsData, true);
+      // Section 3.
+      $section3Build = [
+        $this->dashboardBuilder->columns([
+          $groupsByCountryChart,
+        ], 1),
+      ];
 
-    // Most liked groups.
-    $topGroupsByLikesLink = $this->dashboardBuilder->buttonToView('view.admin_groups.page_admin_events', '', '', $this->t('See all'));
-    $topGroupsByLikes = $this->dashboardBuilder->titleLinkList($this->t('Most liked events'), $topGroupsByLikesLink, $this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit, 'list'));
+      // Top topics of groups.
+      $topTopicsOfGroupsData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($this->groupStatistics->getTopTermsOfGroups($groupType, $topicField)));
+      $topTopicsOfGroups = $this->dashboardBuilder->chartColumn($this->t('Top @limit event topics', ['@limit' => $topGroupsLimit]), $topTopicsOfGroupsData, TRUE);
 
-    // Section 4.
-    $section4Build = [
-      $this->dashboardBuilder->columns([
-        $topTopicsOfGroups,
-        $topGroupsByLikes,
-      ], 2),
-    ];
+      // Most liked groups.
+      $topGroupsByLikesLink = $this->dashboardBuilder->buttonToView('view.admin_groups.page_admin_events', '', '', $this->t('See all'));
+      $topGroupsByLikes = $this->dashboardBuilder->titleLinkList($this->t('Most liked events'), $topGroupsByLikesLink, $this->groupStatistics->getTopGroupsByFlag($groupType, $likeFlag, $topGroupsLimit, 'list'));
 
-    $build = [
-      'content' => [
+      // Section 4.
+      $section4Build = [
+        $this->dashboardBuilder->columns([
+          $topTopicsOfGroups,
+          $topGroupsByLikes,
+        ], 2),
+      ];
+
+      $content = [
         $section1Build,
         $section2Build,
         $section3Build,
         $section4Build,
-      ],
-    ];
+      ];
+      $this->cache()->set('dashboard:events', $content);
+    }
 
-    return $build;
+      return [
+        'content' => $content,
+      ];
   }
 }
