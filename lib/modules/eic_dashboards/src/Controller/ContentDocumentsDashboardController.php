@@ -82,7 +82,7 @@ class ContentDocumentsDashboardController extends ControllerBase {
     $documentTypes = ['event-group_node-document', 'group-group_node-document', 'organisation-group_node-document'];
     $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $documentTypes, 'List all');
 
-    if ($cache = $this->cache()->get('dashboard:discussions')) {
+    if ($cache = $this->cache()->get('dashboard:documents')) {
       $content = $cache->data;
     }
     else {
@@ -170,7 +170,7 @@ class ContentDocumentsDashboardController extends ControllerBase {
         $section3Build,
         $section4Build,
       ];
-      $this->cache()->set('dashboard:discussions', $content);
+      $this->cache()->set('dashboard:documents', $content);
     }
 
     return [$this->dashboardBuilder->dashboardSection($title, $link, $content, 'files', FALSE)];
