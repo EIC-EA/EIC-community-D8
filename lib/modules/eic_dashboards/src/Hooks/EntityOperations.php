@@ -2,11 +2,13 @@
 
 namespace Drupal\eic_dashboards\Hooks;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,6 +28,8 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected $entityTypeManager;
 
+  protected CacheBackendInterface $cacheBackend;
+
   /**
    * Constructs a new EntityOperations object.
    *
@@ -34,8 +38,10 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
+    CacheBackendInterface $cache_backend,
   ) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -44,6 +50,7 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
+      $container->get('cache.default'),
     );
   }
 
@@ -85,6 +92,23 @@ class EntityOperations implements ContainerInjectionInterface {
         }
       }
     }
+  }
+
+  /**
+   * Invalidate the individual dashboard cache of a group type group.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $group
+   *
+   * @return int|void
+   */
+  public function updateIndividualDashboardCache(EntityInterface $group) {
+    if (!($group instanceof GroupInterface)) {
+      return 0;
+    }
+    if ($group->bundle() === 'group') {
+      $this->cacheBackend->invalidate('dashboard:group:' . $group->id());
+    }
+
   }
 
 }
