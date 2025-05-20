@@ -2,7 +2,15 @@ eic_dashboards.homepage:
   path: '/dashboards'
   defaults:
     _title: 'EIC Community Management Dashboards'
-    _controller: '\Drupal\eic_dashboards\Controller\HomepageDashboardsController:dashboardsHomepage'
+    _controller: '\Drupal\eic_dashboards\Controller\HomepageDashboardsController::dashboardsHomepage'
+  requirements:
+    _role: 'sensitive'
+
+eic_dashboards.homepage_cache_invalidate:
+  path: '/dashboards/cache/invalidate'
+  defaults:
+    _title: 'Dashboards Cache Invalidate'
+    _controller: '\Drupal\eic_dashboards\Controller\HomepageDashboardsController::invalidateCaches'
   requirements:
     _role: 'sensitive'
 

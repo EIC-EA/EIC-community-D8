@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
+use Drupal\eic_dashboards\Services\DashboardCacheManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\eic_dashboards\Services\DashboardHelperInterface;
 
@@ -27,15 +28,24 @@ class HomepageDashboardsController extends ControllerBase {
   protected DashboardHelperInterface $dashboardHelper;
 
   /**
+   * The dashboard helper service.
+   *
+   * @var \Drupal\eic_dashboards\Services\DashboardCacheManager
+   */
+  protected DashboardCacheManager $dashboardCacheManager;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
+    DashboardCacheManager $dashboardCacheManager,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
+    $this->dashboardCacheManager = $dashboardCacheManager;
   }
 
   /**
@@ -45,6 +55,7 @@ class HomepageDashboardsController extends ControllerBase {
     return new static(
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
+      $container->get('eic_dashboards.cache_manager'),
     );
   }
 
@@ -80,5 +91,11 @@ class HomepageDashboardsController extends ControllerBase {
       ],
     ];
     return $build;
+  }
+
+  public function invalidateCaches() {
+    $this->dashboardCacheManager->invalidateAllCaches();
+    $this->messenger()->addStatus($this->t("Caches have been invalidated."));
+    return $this->redirect('eic_dashboards.homepage');
   }
 }
