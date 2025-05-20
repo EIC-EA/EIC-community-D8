@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
 
   /**
-   * Constructs a GenerateCumulativeStatsMonth object.
+   * Constructs a GenerateCumulativeStatsMonthDrushCommands object.
    */
   public function __construct(
     private readonly DashboardCumulativeService $dashboardCumulativeService,
