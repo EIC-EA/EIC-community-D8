@@ -3,6 +3,7 @@
 namespace Drupal\eic_dashboards\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\eic_dashboards\Services\DashboardBuilderInterface;
 use Drupal\eic_dashboards\Services\DashboardCacheManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,17 +36,26 @@ class HomepageDashboardsController extends ControllerBase {
   protected DashboardCacheManager $dashboardCacheManager;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected DateFormatterInterface $dateFormatter;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(
     DashboardBuilderInterface $dashboardBuilder,
     DashboardHelperInterface   $dashboardHelper,
     DashboardCacheManager $dashboardCacheManager,
+    DateFormatterInterface $dateFormatter,
   )
   {
     $this->dashboardBuilder = $dashboardBuilder;
     $this->dashboardHelper = $dashboardHelper;
     $this->dashboardCacheManager = $dashboardCacheManager;
+    $this->dateFormatter = $dateFormatter;
   }
 
   /**
@@ -56,6 +66,7 @@ class HomepageDashboardsController extends ControllerBase {
       $container->get('eic_dashboards.builder'),
       $container->get('eic_dashboards.helper'),
       $container->get('eic_dashboards.cache_manager'),
+      $container->get('date.formatter'),
     );
   }
 
@@ -89,6 +100,7 @@ class HomepageDashboardsController extends ControllerBase {
         $this->dashboardBuilder->ctaCard('Content list', $this->dashboardHelper->getRoutingUrl('view.dashboard_content_list.page'), 'list-content', 'list'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.activity_report'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.activity_report'), 'activity-report', 'list'),
       ],
+      '#dashboard_cache_time' => $this->dateFormatter->format($this->state()->get('dashboards.last_invalidated_cache'), 'custom', 'g:iA, d F o'),
     ];
     return $build;
   }

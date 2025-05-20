@@ -32,6 +32,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'dashboards' => NULL,
         'content' => NULL,
         'listings' => NULL,
+        'dashboard_cache_time' => NULL,
       ],
     ],
     'columns' => [
