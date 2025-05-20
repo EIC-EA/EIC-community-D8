@@ -70,11 +70,12 @@ class DashboardCumulativeService {
     $query->orderBy('date', 'ASC');
     $results = $query->execute()->fetchAll();
 
-    for ($i = 1; $i < count($results); $i++) {
-      $previous_record = $results[$i - 1];
-      $previous_count = $previous_record->count;
-
-      $results[$i]->count = $previous_count + $results[$i]->count;
+    for ($i = 0; $i < count($results); $i++) {
+      if (isset($results[$i - 1])) {
+        $previous_record = $results[$i - 1];
+        $previous_count = $previous_record->count;
+        $results[$i]->count = $previous_count + $results[$i]->count;
+      }
       $merge_array = [
         'dashboard_type' => $dashboard_type,
         'date' => $results[$i]->date,
