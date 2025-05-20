@@ -303,9 +303,16 @@ function eic_dashboards_group_insert(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_entity_update().
  */
-function eic_dashboards_group_update(EntityInterface $entity) {
+function eic_dashboards_entity_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)->updateIndividualDashboardCache($entity);
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_dashboards_entity_insert(EntityInterface $entity) {
   \Drupal::classResolver(EntityOperations::class)->updateIndividualDashboardCache($entity);
 }
 
