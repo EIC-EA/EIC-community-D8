@@ -8,8 +8,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,8 +28,13 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
+  /**
+   * Cache backend service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
   protected CacheBackendInterface $cacheBackend;
 
   /**
@@ -97,18 +104,36 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Invalidate the individual dashboard cache of a group type group.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $group
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *
-   * @return int|void
+   * @return void
    */
-  public function updateIndividualDashboardCache(EntityInterface $group) {
-    if (!($group instanceof GroupInterface)) {
-      return 0;
+  public function updateIndividualDashboardCache(EntityInterface $entity) {
+    if ($entity instanceof GroupInterface) {
+      /** @var GroupInterface $entity */
+      if ($entity->bundle() === 'group') {
+        $this->cacheBackend->invalidate('dashboard:group:' . $entity->id());
+      }
     }
-    if ($group->bundle() === 'group') {
-      $this->cacheBackend->invalidate('dashboard:group:' . $group->id());
+    if ($entity instanceof GroupContentInterface) {
+      /** @var GroupContentInterface $entity */
+      $group = $entity->getGroup();
+      if ($group->bundle() === 'group') {
+        $this->cacheBackend->invalidate('dashboard:group:' . $group->id());
+      }
     }
-
+    if ($entity instanceof NodeInterface) {
+      /** @var GroupContentInterface[] $groupcontent */
+      $groupcontent = $this->entityTypeManager
+        ->getStorage('group_content')->loadByEntity($entity);
+      if ($groupcontent) {
+        $groupcontent = reset($groupcontent);
+        $group = $groupcontent->getGroup();
+        if ($group->bundle() === 'group') {
+          $this->cacheBackend->invalidate('dashboard:group:' . $group->id());
+        }
+      }
+    }
   }
 
 }
