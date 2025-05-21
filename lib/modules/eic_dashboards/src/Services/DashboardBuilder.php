@@ -19,7 +19,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
    * {@inheritdoc}
    */
   public function ctaCard($title, $link, $icon, $variant): array {
-    $path = '/' . \Drupal::service('extension.path.resolver')->getPath('module', 'eic_dashboards') . '/images/';
+    global $base_url;
     $build = [];
     $build['cta_card'] = [
       '#theme' => 'cta_card',
@@ -27,7 +27,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
       '#link' => $link,
       '#icon' => $icon,
       '#variant' => $variant,
-      '#path' => $path,
+      '#path' => $base_url . '/' . \Drupal::service('extension.path.resolver')->getPath('module', 'eic_dashboards') . '/images/',
     ];
     $build['#attached']['library'][] = 'eic_dashboards/cta_card';
 
