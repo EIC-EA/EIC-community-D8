@@ -84,7 +84,7 @@ class GroupEventsDashboardController extends ControllerBase {
     $membershipType = 'event-group_membership';
     $likeFlag = 'recommend_group';
 
-    if ($cache = $this->cache()->get('dashboard:documents')) {
+    if ($cache = $this->cache()->get('dashboard:events')) {
       $content = $cache->data;
     }
     else {
