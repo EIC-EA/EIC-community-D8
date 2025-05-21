@@ -55,7 +55,7 @@
         "drupal/entity_usage": "^2.0@beta",
         "drupal/extra_field": "^2.0",
         "drupal/facets": "^2.0",
-        "drupal/field_group": "^3.2",
+        "drupal/field_group": "^4.0",
         "drupal/flag": "^4.0@beta",
         "drupal/flag_search_api": "^2.0",
         "drupal/fragments": "^2.1",
