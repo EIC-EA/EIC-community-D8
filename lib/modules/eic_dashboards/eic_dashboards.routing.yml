@@ -13,6 +13,7 @@ eic_dashboards.homepage_cache_invalidate:
     _controller: '\Drupal\eic_dashboards\Controller\HomepageDashboardsController::invalidateCaches'
   requirements:
     _role: 'sensitive'
+    _csrf_token: 'TRUE'
 
 eic_dashboards.members:
   path: '/dashboards/members'
