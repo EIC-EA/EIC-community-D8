@@ -42,7 +42,7 @@
       "3168418 - Batch update error when there are no entities to load": "https://www.drupal.org/files/issues/2021-12-07/batch-update-error-3168418-16.patch"
     },
     "drupal/field_group": {
-      "HTML5 Validation Prevents Submission in Tabs": "https://www.drupal.org/files/issues/2022-12-07/2969051-87.patch"
+      "3160987 - Show asterisk on tab when fields are required": "patches/field_group/3160987-9789671603-horizontal-tabs-required.patch"
     },
     "drupal/group": {
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
