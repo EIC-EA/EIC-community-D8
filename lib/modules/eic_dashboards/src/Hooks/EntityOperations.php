@@ -2,12 +2,16 @@
 
 namespace Drupal\eic_dashboards\Hooks;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\group\Entity\GroupContentInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,7 +28,14 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * Cache backend service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected CacheBackendInterface $cacheBackend;
 
   /**
    * Constructs a new EntityOperations object.
@@ -34,8 +45,10 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
+    CacheBackendInterface $cache_backend,
   ) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -44,6 +57,7 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
+      $container->get('cache.default'),
     );
   }
 
@@ -82,6 +96,41 @@ class EntityOperations implements ContainerInjectionInterface {
         }
         catch (EntityStorageException $e) {
           return FALSE;
+        }
+      }
+    }
+  }
+
+  /**
+   * Invalidate the individual dashboard cache of a group type group.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return void
+   */
+  public function updateIndividualDashboardCache(EntityInterface $entity) {
+    if ($entity instanceof GroupInterface) {
+      /** @var GroupInterface $entity */
+      if ($entity->bundle() === 'group') {
+        $this->cacheBackend->invalidate('dashboard:group:' . $entity->id());
+      }
+    }
+    if ($entity instanceof GroupContentInterface) {
+      /** @var GroupContentInterface $entity */
+      $group = $entity->getGroup();
+      if ($group->bundle() === 'group') {
+        $this->cacheBackend->invalidate('dashboard:group:' . $group->id());
+      }
+    }
+    if ($entity instanceof NodeInterface) {
+      /** @var GroupContentInterface[] $groupcontent */
+      $groupcontent = $this->entityTypeManager
+        ->getStorage('group_content')->loadByEntity($entity);
+      if ($groupcontent) {
+        $groupcontent = reset($groupcontent);
+        $group = $groupcontent->getGroup();
+        if ($group->bundle() === 'group') {
+          $this->cacheBackend->invalidate('dashboard:group:' . $group->id());
         }
       }
     }

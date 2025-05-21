@@ -32,6 +32,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'dashboards' => NULL,
         'content' => NULL,
         'listings' => NULL,
+        'dashboard_cache_time' => NULL,
       ],
     ],
     'columns' => [
@@ -300,6 +301,20 @@ function eic_dashboards_form_views_exposed_form_alter(&$form, FormStateInterface
  */
 function eic_dashboards_group_insert(EntityInterface $entity) {
   \Drupal::classResolver(EntityOperations::class)->createGroupDashboardPageMenuLink($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function eic_dashboards_entity_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)->updateIndividualDashboardCache($entity);
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_dashboards_entity_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)->updateIndividualDashboardCache($entity);
 }
 
 /**

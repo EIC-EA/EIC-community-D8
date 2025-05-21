@@ -82,90 +82,96 @@ class ContentDocumentsDashboardController extends ControllerBase {
     $documentTypes = ['event-group_node-document', 'group-group_node-document', 'organisation-group_node-document'];
     $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $documentTypes, 'List all');
 
-    // Number of nodes.
-    $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
-    $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total documents'), $numberOfNodesData, '');
+    if ($cache = $this->cache()->get('dashboard:documents')) {
+      $content = $cache->data;
+    }
+    else {
+      // Number of nodes.
+      $numberOfNodesData = $this->contentStatistics->getNumberOfBundleNodes($bundle);
+      $numberOfNodes = $this->dashboardBuilder->numberAndLink($this->t('Total documents'), $numberOfNodesData, '');
 
-    // Number of nodes created in past 30 days.
-    $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
-    $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('Documents - last 30 days'),
-      $numberOfNodesPastDaysData, '');
+      // Number of nodes created in past 30 days.
+      $numberOfNodesPastDaysData = $this->contentStatistics->getNumberOfBundleNodesPastDays($bundle);
+      $numberOfNodesPastDays = $this->dashboardBuilder->numberAndLink($this->t('Documents - last 30 days'),
+        $numberOfNodesPastDaysData, '');
 
-    $nodesStats = [
-      $this->dashboardBuilder->columns([
-        $numberOfNodes,
-        $numberOfNodesPastDays,
-      ], 3),
-    ];
+      $nodesStats = [
+        $this->dashboardBuilder->columns([
+          $numberOfNodes,
+          $numberOfNodesPastDays,
+        ], 3),
+      ];
 
-    // Nodes evolution.
-    $nodesCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE);
-    $nodesData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($nodesCumulativeStats));
-    $nodesEvolution = $this->dashboardBuilder->chartLine($this->t('Documents - evolution over time'), $nodesData);
+      // Nodes evolution.
+      $nodesCumulativeStats = $this->dashboardCumulativeService->getCumulativeStatsPerDashboardType(DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE);
+      $nodesData = $this->dashboardHelper->jsonEncodeCategoriesSeries($this->dashboardHelper->transformIdCountToCategoriesSeries($nodesCumulativeStats));
+      $nodesEvolution = $this->dashboardBuilder->chartLine($this->t('Documents - evolution over time'), $nodesData);
 
-    // Section 1.
-    $section1Build = [
-      $this->dashboardBuilder->columns([
-        $nodesStats,
-        $nodesEvolution,
-      ], 1),
-    ];
+      // Section 1.
+      $section1Build = [
+        $this->dashboardBuilder->columns([
+          $nodesStats,
+          $nodesEvolution,
+        ], 1),
+      ];
 
-    // Nodes grouped by type chart.
-    $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie'));
-    $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'), $nodesByTypeData, '');
+      // Nodes grouped by type chart.
+      $nodesByTypeData = json_encode($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_document_type', 'pie'));
+      $nodesByType = $this->dashboardBuilder->chartPie($this->t('Documents by type'), $nodesByTypeData, '');
 
-    // Nodes grouped by topic chart.
-    $topicsVocabulary = 'topics';
-    $nodesByTopicData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column'), $topicsVocabulary));
-    $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, '');
+      // Nodes grouped by topic chart.
+      $topicsVocabulary = 'topics';
+      $nodesByTopicData = json_encode($this->dashboardHelper->transformTermTreeCountsForChart($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_vocab_topics', 'column'), $topicsVocabulary));
+      $nodesByTopic = $this->dashboardBuilder->chartPie($this->t('Documents by topic'), $nodesByTopicData, '');
 
-    // Section 2.
-    $section2Build = [
-      $this->dashboardBuilder->columns([
-        $nodesByType,
-        $nodesByTopic,
-      ], 2),
-    ];
+      // Section 2.
+      $section2Build = [
+        $this->dashboardBuilder->columns([
+          $nodesByType,
+          $nodesByTopic,
+        ], 2),
+      ];
 
-    // Most viewed nodes.
-    $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed documents'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
+      // Most viewed nodes.
+      $mostViewedNodes = $this->dashboardBuilder->titleLinkList($this->t('Most viewed documents'), '', $this->contentStatistics->getMostViewedNodesOfBundle($bundle));
 
-    // Most downloaded files.
-    $mostDownloadedFiles = $this->dashboardBuilder->titleLinkList($this->t('Most downloaded documents'), '',
-      $this->contentStatistics->getMostDownloadedFilesOfBundle($bundle));
+      // Most downloaded files.
+      $mostDownloadedFiles = $this->dashboardBuilder->titleLinkList($this->t('Most downloaded documents'), '',
+        $this->contentStatistics->getMostDownloadedFilesOfBundle($bundle));
 
-    // Section 3.
-    $section3Build = [
-      $this->dashboardBuilder->columns([
-        $mostViewedNodes,
-        $mostDownloadedFiles,
-      ], 2),
-    ];
+      // Section 3.
+      $section3Build = [
+        $this->dashboardBuilder->columns([
+          $mostViewedNodes,
+          $mostDownloadedFiles,
+        ], 2),
+      ];
 
-    // Top terms used.
-    $topTermsLimit = 10;
-    $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
-    ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', $topTermsLimit)));
-    $topTermsChart = $this->dashboardBuilder->chartColumn( $this->t('Top @limit document tags', ['@limit' => $topTermsLimit]), $topTerms, true);
+      // Top terms used.
+      $topTermsLimit = 10;
+      $topTerms = $this->dashboardHelper->jsonEncodeCategoriesSeries
+      ($this->dashboardHelper->transformIdCountToCategoriesSeries($this->contentStatistics->getNodesOfBundlePerTerm($bundle, 'field_tags', 'column', $topTermsLimit)));
+      $topTermsChart = $this->dashboardBuilder->chartColumn($this->t('Top @limit document tags', ['@limit' => $topTermsLimit]), $topTerms, TRUE);
 
-    // Latest nodes.
-    $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getNodesOfBundleInGivenPeriod($bundle, '', ''));
+      // Latest nodes.
+      $latestNodes = $this->dashboardBuilder->titleLinkList($this->t('Latest documents'), '', $this->contentStatistics->getNodesOfBundleInGivenPeriod($bundle, '', ''));
 
-    // Section 4.
-    $section4Build = [
-      $this->dashboardBuilder->columns([
-        $topTermsChart,
-        $latestNodes,
-      ], 2),
-    ];
+      // Section 4.
+      $section4Build = [
+        $this->dashboardBuilder->columns([
+          $topTermsChart,
+          $latestNodes,
+        ], 2),
+      ];
 
-    $content = [
-      $section1Build,
-      $section2Build,
-      $section3Build,
-      $section4Build,
-    ];
+      $content = [
+        $section1Build,
+        $section2Build,
+        $section3Build,
+        $section4Build,
+      ];
+      $this->cache()->set('dashboard:documents', $content);
+    }
 
     return [$this->dashboardBuilder->dashboardSection($title, $link, $content, 'files', FALSE)];
   }
