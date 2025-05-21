@@ -198,6 +198,7 @@ function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryIn
   }
 
   $data_table = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getDataTable();
+  $entity_column_id = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getEntityType()->getKey('id');
   if (!$data_table) {
     $sandbox['current'] += count($ids);
     \Drupal::messenger()->addError(t("Could not process entities of $entity_type_id in $dashboard_type dashboard."));
@@ -206,8 +207,8 @@ function _eic_dashboards_populate_database_batch_helper(array &$sandbox, QueryIn
   foreach ($ids as $id) {
     $created_query = \Drupal::database()->select($data_table);
     $created_query->addField($data_table, 'created');
-    $created_query->addField($data_table, 'id');
-    $created_query->condition("$data_table.id", $id);
+    $created_query->addField($data_table, $entity_column_id);
+    $created_query->condition("$data_table.$entity_column_id", $id);
     $results = $created_query->execute()->fetchAssoc();
     $monthKey = \Drupal::service('date.formatter')->format($results['created'], 'custom', 'Y-m') . '-01';
     \Drupal::service('eic_dashboards.cumulative')->insertOrUpdate($dashboard_type, $monthKey);
