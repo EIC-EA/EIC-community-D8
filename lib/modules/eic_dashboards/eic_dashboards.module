@@ -291,8 +291,8 @@ function template_preprocess_jump_menu(array &$variables) {
  */
 function eic_dashboards_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  if ($form['#id'] === 'views-exposed-form-dashboard-members-list-page') {
-   $form['status_1']['#options'][1] = t('Enabled');
-   $form['status_1']['#options'][0] = t('Disabled');
+   $form['status']['#options'][1] = t('Enabled');
+   $form['status']['#options'][0] = t('Disabled');
  }
 }
 
