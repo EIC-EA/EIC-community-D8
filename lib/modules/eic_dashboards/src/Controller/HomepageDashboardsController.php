@@ -77,6 +77,8 @@ class HomepageDashboardsController extends ControllerBase {
     // Get the title from the route definition.
     $title = \Drupal::routeMatch()->getRouteObject()->getDefault('_title');
 
+    $last_cache_timestamp = $this->state()->get('dashboards.last_invalidated_cache') ?: 0;
+
     // Build the render array.
     $build['content'] = [
       '#theme' => 'dashboards_homepage',
@@ -100,7 +102,7 @@ class HomepageDashboardsController extends ControllerBase {
         $this->dashboardBuilder->ctaCard('Content list', $this->dashboardHelper->getRoutingUrl('view.dashboard_content_list.page'), 'list-content', 'list'),
         $this->dashboardBuilder->ctaCard($this->dashboardHelper->getRoutingTitle('eic_dashboards.listings.activity_report'), $this->dashboardHelper->getRoutingUrl('eic_dashboards.listings.activity_report'), 'activity-report', 'list'),
       ],
-      '#dashboard_cache_time' => $this->dateFormatter->format($this->state()->get('dashboards.last_invalidated_cache'), 'custom', 'g:iA, d F o'),
+      '#dashboard_cache_time' => $this->dateFormatter->format($last_cache_timestamp, 'custom', 'g:iA, d F o'),
     ];
     return $build;
   }
