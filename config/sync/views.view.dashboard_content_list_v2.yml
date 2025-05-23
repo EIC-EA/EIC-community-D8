@@ -397,7 +397,7 @@ display:
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
-          multi_type: separator
+          multi_type: ul
           separator: ', '
           field_api_classes: false
         created:
@@ -410,7 +410,7 @@ display:
           entity_type: node
           entity_field: created
           plugin_id: field
-          label: 'Publication Date'
+          label: 'Publication date'
           exclude: false
           alter:
             alter_text: false
@@ -723,7 +723,7 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -858,7 +858,7 @@ display:
           exposed: true
           expose:
             operator_id: field_vocab_topics_target_id_op
-            label: Topics
+            label: Topic
             description: ''
             use_operator: false
             operator: field_vocab_topics_target_id_op
