@@ -760,7 +760,7 @@ display:
           admin_label: ''
           entity_type: user
           plugin_id: user_profile_completion_status
-          label: 'User Profile completion status'
+          label: 'User profile completion status'
           exclude: false
           alter:
             alter_text: false
@@ -873,9 +873,12 @@ display:
             field_vocab_topic_expertise: field_vocab_topic_expertise
             field_vocab_topic_interest: field_vocab_topic_interest
             status: status
+            created: created
+            login: login
             field_first_name: field_first_name
             field_last_name: field_last_name
             field_vocab_language: field_vocab_language
+            user_profile_completion_status: user_profile_completion_status
           group: 1
           exposed: true
           expose:
@@ -2252,7 +2255,7 @@ display:
           admin_label: ''
           entity_type: user
           plugin_id: user_profile_completion_status
-          label: 'User Profile completion status'
+          label: 'User profile completion status'
           exclude: false
           alter:
             alter_text: false
