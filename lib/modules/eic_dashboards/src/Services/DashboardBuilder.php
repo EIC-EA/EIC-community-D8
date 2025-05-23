@@ -240,7 +240,8 @@ class DashboardBuilder implements DashboardBuilderInterface {
    * {@inheritdoc}
    */
   public function dashboardSection($title, $link, $content, $icon, $hasBorder = TRUE): array {
-    $path = '/' . \Drupal::service('extension.path.resolver')->getPath('module', 'eic_dashboards') . '/images/';
+    global $base_url;
+    $path = $base_url . '/' . \Drupal::service('extension.path.resolver')->getPath('module', 'eic_dashboards') . '/images/';
 
     return [
       '#theme' => 'dashboard_section',
