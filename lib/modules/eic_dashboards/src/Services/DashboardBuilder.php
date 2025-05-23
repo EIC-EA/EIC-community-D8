@@ -42,6 +42,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
       'query' => [
         $argumentId => $argumentValue,
       ],
+      'absolute' => true,
       'attributes' => [
         'class' => [
           'ecl-button',
