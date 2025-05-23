@@ -35,7 +35,7 @@ interface DashboardBuilderInterface {
   /**
    * Build dashboard report list.
    */
-  public function reportList($title, $link, $items);
+  public function reportList($title, $link, $items, $number);
 
   /**
    * Build dashboard pie chart.

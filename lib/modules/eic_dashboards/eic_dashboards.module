@@ -99,6 +99,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
         'title' => '',
         'link' => '',
         'items' => '',
+        'number' => '',
       ],
     ],
     'dashboard_section' => [

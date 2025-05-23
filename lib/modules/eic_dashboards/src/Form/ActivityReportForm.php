@@ -249,6 +249,7 @@ class ActivityReportForm extends FormBase {
 
       // Members that registered in given period of time.
       $members = $this->membersStatistics->getMembersListInGivenPeriod($startDate, $endDate, $resultsLimit);
+      $membersNumber = count($this->membersStatistics->getMembersListInGivenPeriod($startDate, $endDate, false));
       $membersItems = [];
       foreach ($members as $member) {
         $membersItems[] = [
@@ -257,11 +258,12 @@ class ActivityReportForm extends FormBase {
           'value' => $member['title'],
         ];
       }
-      $membersRegistered = $this->dashboardBuilder->reportList($this->t('New members'), '', $membersItems);
+      $membersRegistered = $this->dashboardBuilder->reportList($this->t('New members'), '', $membersItems, $membersNumber);
 
       // Discussions created in given period of time.
       $discussionBundle = 'discussion';
       $discussions = $this->contentStatistics->getNodesOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate, $resultsLimit);
+      $discussionsNumber = count($this->contentStatistics->getNodesOfBundleInGivenPeriod($discussionBundle, $startDate, $endDate, false));
       $discussionsItems = [];
       foreach ($discussions as $discussion) {
         $discussionsItems[] = [
@@ -270,11 +272,12 @@ class ActivityReportForm extends FormBase {
           'value' => $discussion['title'],
         ];
       }
-      $discussionsCreated = $this->dashboardBuilder->reportList($this->t('New discussions'), '', $discussionsItems);
+      $discussionsCreated = $this->dashboardBuilder->reportList($this->t('New discussions'), '', $discussionsItems, $discussionsNumber);
 
       // Events created in given period of time.
       $eventType = 'event';
       $events = $this->groupStatistics->getGroupsCreatedInGivenPeriod($eventType, $startDate, $endDate, $resultsLimit);
+      $eventsNumber = count($this->groupStatistics->getGroupsCreatedInGivenPeriod($eventType, $startDate, $endDate, false));
       $eventsItems = [];
       foreach ($events as $event) {
         $eventsItems[] = [
@@ -283,11 +286,12 @@ class ActivityReportForm extends FormBase {
           'value' => $event['title'],
         ];
       }
-      $eventsCreated = $this->dashboardBuilder->reportList($this->t('New events'), '', $eventsItems);
+      $eventsCreated = $this->dashboardBuilder->reportList($this->t('New events'), '', $eventsItems, $eventsNumber);
 
       // Stories created in given period of time.
       $storyBundle = 'story';
       $stories = $this->contentStatistics->getNodesOfBundleInGivenPeriod($storyBundle, $startDate, $endDate, $resultsLimit);
+      $storiesNumber = count($this->contentStatistics->getNodesOfBundleInGivenPeriod($storyBundle, $startDate, $endDate, false));
       $storiesItems = [];
       foreach ($stories as $story) {
         $storiesItems[] = [
@@ -296,7 +300,7 @@ class ActivityReportForm extends FormBase {
           'value' => $story['title'],
         ];
       }
-      $storiesCreated = $this->dashboardBuilder->reportList($this->t('New stories'), '', $storiesItems);
+      $storiesCreated = $this->dashboardBuilder->reportList($this->t('New stories'), '', $storiesItems, $storiesNumber);
 
       $build = [
         'content' => [

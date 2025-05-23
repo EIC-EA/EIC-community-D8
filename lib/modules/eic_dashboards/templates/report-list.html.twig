@@ -1,7 +1,7 @@
 <div class="report-section">
   <div class="report-list__label-total">
     <div class="report-list__label">{{ title }}</div>
-    <div class="report-list__total">{{ items|length }}</div>
+    <div class="report-list__total">{% if number %}{{ number }}{% else %}{{ items|length }}{% endif %}</div>
   </div>
   <div class="report-list {% if link and items|length %}report-list--with-link{% endif %}">
     {% if items|length %}

@@ -103,13 +103,14 @@ class DashboardBuilder implements DashboardBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function reportList($title, $link, $items): array {
+  public function reportList($title, $link, $items, $number): array {
     $build = [];
     $build['report_list'] = [
       '#theme' => 'report_list',
       '#title' => $title,
       '#link' => $link,
       '#items' => $items,
+      '#number' => $number,
     ];
 
     $build['#attached']['library'][] = 'eic_dashboards/report-list';
