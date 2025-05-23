@@ -79,8 +79,7 @@ class ContentDiscussionsDashboardController extends ControllerBase {
     // Specify current bundle, title and link.
     $bundle = 'discussion';
     $title = 'Forum discussions';
-    $discussionTypes = ['event-group_node-discussion', 'group-group_node-discussion'];
-    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $discussionTypes, 'List all');
+    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $bundle, 'List all');
 
     if ($cache = $this->cache()->get('dashboard:discussions')) {
       $content = $cache->data;

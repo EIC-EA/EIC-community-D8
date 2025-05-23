@@ -79,8 +79,7 @@ class ContentStoriesDashboardController extends ControllerBase {
     // Specify current bundle, title and link.
     $bundle = 'story';
     $title = 'Stories';
-    $storyTypes = ['event-group_node-story'];
-    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $storyTypes, 'List all');
+    $link = $this->dashboardBuilder->buttonToView('view.dashboard_content_list.page', 'type', $bundle, 'List all');
 
     if ($cache = $this->cache()->get('dashboard:stories')) {
       $content = $cache->data;
