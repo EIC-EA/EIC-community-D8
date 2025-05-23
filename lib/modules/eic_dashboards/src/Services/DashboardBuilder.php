@@ -158,35 +158,37 @@ class DashboardBuilder implements DashboardBuilderInterface {
    * {@inheritdoc}
    */
   public function jumpMenu($title, $placeholder, $links): array {
-      if (!empty($links)) {
-          return [
-              '#theme' => 'jump_menu',
-              '#wrapper_attributes' => [
-                  'class' => [
-                      'jump-menu',
-                  ],
+    global $base_url;
+    if (!empty($links)) {
+      return [
+          '#theme' => 'jump_menu',
+          '#base_url' => $base_url,
+          '#wrapper_attributes' => [
+              'class' => [
+                  'jump-menu',
               ],
-              '#title' => $title,
-              '#title_attributes' => [
-                  'class' => [
-                      'jump-menu__label',
-                  ],
+          ],
+          '#title' => $title,
+          '#title_attributes' => [
+              'class' => [
+                  'jump-menu__label',
               ],
-              '#placeholder' => $placeholder,
-              '#items' => $links,
-              '#attributes' => [
-                  'class' => [
-                      'ecl-select',
-                      'form-select',
-                      'jump-menu__select',
-                      'js-jump-menu',
-                  ],
+          ],
+          '#placeholder' => $placeholder,
+          '#items' => $links,
+          '#attributes' => [
+              'class' => [
+                  'ecl-select',
+                  'form-select',
+                  'jump-menu__select',
+                  'js-jump-menu',
               ],
-          ];
-      }
-      else {
-          return [];
-      }
+          ],
+      ];
+    }
+    else {
+      return [];
+    }
   }
 
   /**

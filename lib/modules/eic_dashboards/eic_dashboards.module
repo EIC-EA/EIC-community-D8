@@ -73,6 +73,7 @@ function eic_dashboards_theme($existing, $type, $theme, $path) {
     ],
     'jump_menu' => [
       'variables' => [
+        'base_url' => '',
         'wrapper_attributes' => [],
         'placeholder' => '',
         'title' => '',
