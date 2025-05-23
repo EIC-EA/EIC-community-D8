@@ -292,10 +292,18 @@ function template_preprocess_jump_menu(array &$variables) {
  * Implements hook_form_FORM_ID_alter().
  */
 function eic_dashboards_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
- if ($form['#id'] === 'views-exposed-form-dashboard-members-list-page') {
-   $form['status_1']['#options'][1] = t('Enabled');
-   $form['status_1']['#options'][0] = t('Disabled');
- }
+  switch ($form['#id']) {
+    case 'views-exposed-form-dashboard-members-list-page':
+      $form['status']['#options'][1] = t('Enabled');
+      $form['status']['#options'][0] = t('Disabled');
+      break;
+    case 'views-exposed-form-dashboard-content-list-page';
+      $form['status']['#options'][1] = t('Published');
+      $form['status']['#options'][0] = t('Unpublished');
+      break;
+    default:
+      break;
+  }
 }
 
 /**

@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -133,8 +134,9 @@ class ContentStatistics implements ContentStatisticsInterface {
     $rows = [];
 
     foreach ($results as $result) {
+      $node_url = Url::fromUserInput('/node/' . $result->node_id)->toString();
       $rows[] = [
-        'title' => Markup::create('<a href="/node/' . $result->node_id . '">' . $result->title . '</a>'),
+        'title' => Markup::create('<a href="' . $node_url . '">' . $result->title . '</a>'),
         'published' => $result->created,
         'type' =>  $this->dashboardHelper->getTaxonomyTermLabel($result->taxonomy_term_id) ?? 'NA',
         'views' => $result->views,
@@ -177,7 +179,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       $data[] = [
         'prefix' => (int) $result->total_views . ' views',
         'title' => $result->title,
-        'url' => '/node/' . $result->node_id,
+        'url' => Url::fromUserInput('/node/' . $result->node_id)->toString(),
       ];
     }
 
@@ -206,7 +208,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       $data[] = [
         'prefix' => (int) $result->total_downloads . ' downloads',
         'title' => $result->title,
-        'url' => '/node/' . $result->node_id,
+        'url' => Url::fromUserInput('/node/' . $result->node_id)->toString(),
       ];
     }
 
@@ -233,7 +235,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       $data[] = [
         'prefix' => $result->created,
         'title' => $result->title,
-        'url' => '/node/' . $result->node_id,
+        'url' => Url::fromUserInput('/node/' . $result->node_id)->toString(),
       ];
     }
 
@@ -303,7 +305,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       $data[] = [
         'prefix' => (int) $result->comments_count . ' comments',
         'title' => $result->title,
-        'url' => '/node/' . $result->node_id,
+        'url' => Url::fromUserInput('/node/' . $result->node_id)->toString(),
       ];
     }
 
@@ -389,7 +391,7 @@ class ContentStatistics implements ContentStatisticsInterface {
       $data[] = [
         'prefix' => $result->created,
         'title' => $result->title,
-        'url' => '/node/' . $result->node_id,
+        'url' => Url::fromUserInput('/node/' . $result->node_id)->toString(),
       ];
     }
 
