@@ -88,6 +88,7 @@ class DashboardBuilder implements DashboardBuilderInterface {
     ];
 
     $options = [
+      'absolute' => true,
       'attributes' => [
         'class' => [
           'ecl-button',
