@@ -847,6 +847,7 @@ display:
             flag_follow_content: flag_follow_content
             flag_like_content: flag_like_content
             totalcount: totalcount
+            status: status
           group: 1
           exposed: true
           expose:
