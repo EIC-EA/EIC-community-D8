@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Plugin\views\field;
 
 
 use Drupal\group\Entity\GroupContent;
+use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -30,10 +31,9 @@ class ContentFlagFollow extends FieldPluginBase {
       $entity = $entity->getEntity();
       /** @var \Drupal\node\NodeInterface $entity */
 
-      return $this->getFlagResults(
-        $entity->id(),
-        $entity->getEntityType()->id()
-      );
+    }
+    if ($entity instanceof NodeInterface) {
+      return $this->getFlagResults($entity->id(), $entity->getEntityType()->id());
     }
     // N/A means the custom field is not used in a correct view.
     return 'N/A';
