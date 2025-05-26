@@ -113,7 +113,7 @@ class DashboardHelper implements DashboardHelperInterface {
 
       $url = Url::fromRoute($viewMachineName, $routeParameters, ['query' => $query]);
 
-      $links[$key] = [
+      $links[$item['label']] = [
         '#value' => $key,
         '#label' => $item['label'],
         '#attributes' => [
@@ -123,6 +123,7 @@ class DashboardHelper implements DashboardHelperInterface {
     }
 
     if (!empty($links)) {
+      ksort($links);
       return $links;
     }
     else {
