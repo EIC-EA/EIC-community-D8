@@ -179,9 +179,7 @@ class MembersStatistics implements MembersStatisticsInterface {
    * Returns members grouped by country.
    */
   public function getMembersGroupedByCountry($argumentId): array {
-    // TODO: Statically cache the result.
     $query = $this->connection->select('profile', 'pfl');
-    $query->join('user__roles', 'ur', 'pfl.uid = ur.entity_id');
     $query->join('users_field_data', 'ufd', 'pfl.uid = ufd.uid');
     $query->join('profile__field_location_address', 'pfl_foa', 'pfl.profile_id = pfl_foa.entity_id');
     $query->addExpression('COUNT(pfl_foa.field_location_address_country_code)', 'count_members');
@@ -208,7 +206,6 @@ class MembersStatistics implements MembersStatisticsInterface {
    */
   public function getMembersPerTaxonomyTerm($taxonomyField, $argumentId): array {
     $query = $this->connection->select('profile', 'pfl');
-    $query->join('user__roles', 'ur', 'pfl.uid = ur.entity_id');
     $query->join('users_field_data', 'ufd', 'pfl.uid = ufd.uid');
     $query->join('profile__' . $taxonomyField, 'tf', 'pfl.profile_id = tf.entity_id');
     $query->addExpression('COUNT(tf.' . $taxonomyField . '_target_id)', 'count_members');

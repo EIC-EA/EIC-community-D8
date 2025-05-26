@@ -110,8 +110,8 @@ class GroupStatistics implements GroupStatisticsInterface {
    * Returns groups grouped by visibility.
    */
   public function getGroupsByVisibility($groupType): array {
-    $query = $this->connection->select('oec_group_visibility', 'ogv');
-    $query->innerJoin('groups', 'g', 'g.id = ogv.gid');
+    $query = $this->connection->select('groups', 'g');
+    $query->leftJoin('oec_group_visibility', 'ogv', 'g.id = ogv.gid');
     $query->addExpression('COUNT(ogv.type)', 'groups_count');
     $query->addExpression('ogv.type', 'visibility');
     $query->condition('g.type', $groupType);
