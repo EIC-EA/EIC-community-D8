@@ -131,7 +131,7 @@ class GroupGroupsDashboardController extends ControllerBase {
 
       // Groups by visibility chart.
       $groupsByVisibilityData = json_encode($this->groupStatistics->getGroupsByVisibility($groupType));
-      $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Groups by visibility'), $groupsByVisibilityData, '');
+      $groupsByVisibility = $this->dashboardBuilder->chartPie($this->t('Published groups by visibility'), $groupsByVisibilityData, '');
 
       // Section 2.
       $section2Build = [
