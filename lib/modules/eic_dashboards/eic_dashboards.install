@@ -12,15 +12,8 @@ use Drupal\eic_dashboards\Hooks\EntityOperations;
  * Add "Dashboard" link to Group content menu.
  */
 function eic_dashboards_update_10001(&$sandbox) {
-  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
-  $em = \Drupal::service('entity_type.manager');
-  $groups = $em->getStorage('group')->loadByProperties([
-    'type' => 'group',
-  ]);
-
-  foreach ($groups as $group) {
-    \Drupal::classResolver(EntityOperations::class)->createGroupDashboardPageMenuLink($group);
-  }
+  // Moved to eic_dashboards_deploy_0009_add_link_to_groups hook.
+  // Left empty to maintain update numbering sequence.
 }
 
 /**

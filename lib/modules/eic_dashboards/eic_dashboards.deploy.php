@@ -2,6 +2,7 @@
 
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
+use Drupal\eic_dashboards\Hooks\EntityOperations;
 
 /**
  * Populate eic_dashboards for members dashboard.
@@ -161,6 +162,21 @@ function eic_dashboards_deploy_0008_discussions_past_stats(array &$sandbox) {
     DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE
   );
 
+}
+
+/**
+ * Add "Dashboard" link to Group content menu.
+ */
+function eic_dashboards_deploy_0009_add_link_to_groups(array &$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+  $groups = $em->getStorage('group')->loadByProperties([
+    'type' => 'group',
+  ]);
+
+  foreach ($groups as $group) {
+    \Drupal::classResolver(EntityOperations::class)->createGroupDashboardPageMenuLink($group);
+  }
 }
 
 /**
