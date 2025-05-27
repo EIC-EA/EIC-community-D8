@@ -105,9 +105,18 @@ class DashboardCumulativeService {
       $endDate->getTimestamp();
     }
 
+    $conditions = [];
+
     switch ($dashboard_type) {
       case DashboardsDatabase::MEMBERS_DASHBOARD_TYPE:
         $entity_type_id = 'user';
+        $conditions = [
+          [
+            'field' => 'status',
+            'value' => '1',
+            'operator' => '=',
+          ]
+        ];
         break;
       case DashboardsDatabase::GROUPS_DASHBOARD_TYPE:
         $entity_type_id = 'group';
@@ -146,6 +155,11 @@ class DashboardCumulativeService {
     $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(entity_field_data.created), '%d %b %Y')", 'created');
     if (isset($bundle)) {
       $query->condition('entity_field_data.type', $bundle);
+    }
+    if (!empty($conditions)) {
+      foreach ($conditions as $condition) {
+        $query->condition("entity_field_data.{$condition['field']}", $condition['value'], $condition['operator']);
+      }
     }
 
     $query->condition('entity_field_data.created', [
