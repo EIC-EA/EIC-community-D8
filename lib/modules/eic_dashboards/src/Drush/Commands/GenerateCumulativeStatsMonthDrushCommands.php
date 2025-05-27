@@ -59,7 +59,7 @@ final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
       $count = $this->dashboardCumulativeService->getCountDashboardTypeInGivenPeriod($startDate, $endDate, $dashboardType);
       if ($count) {
         $this->dashboardCumulativeService->insertOrUpdate($dashboardType, $date, $count);
-        $this->dashboardCumulativeService->calculatePastStats($dashboardType);
+        $this->dashboardCumulativeService->calculateCumulativeCountMonth($dashboardType, $startDate, $endDate);
         $this->logger()->success(t("Generated data for {$startDate->format('Y-m')} for dashboard type '$dashboardType'"));
       }
       else {

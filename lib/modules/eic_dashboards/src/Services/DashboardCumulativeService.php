@@ -52,6 +52,13 @@ class DashboardCumulativeService {
     }
   }
 
+  public function calculateCumulativeCountMonth($dashboard_type,  \DateTime $startDate, \DateTime $endDate) {
+    $entry = $this->getEntry($dashboard_type, $startDate->format('Y-m-d'));
+    $cumulative_count = $this->getCountEntityCreatedUntilEndDate($dashboard_type, $endDate);
+    $entry['cumulative_count'] = $cumulative_count;
+    $this->merge($entry);
+  }
+
   /**
    * Calculates the cumulative statistics for the given $dashboard_type.
    *
