@@ -82,7 +82,6 @@ final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
     $confirm = $this->confirm("Are you sure you want to proceed?");
     if ($confirm) {
 
-
       if ($options['all-stats']) {
         $dashboard_type_to_generate = $this->dashboardCumulativeService->getAllDashboardTypes();
       }
