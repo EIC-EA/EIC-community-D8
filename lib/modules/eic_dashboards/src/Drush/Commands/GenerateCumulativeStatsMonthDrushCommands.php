@@ -59,7 +59,7 @@ final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
       $count = $this->dashboardCumulativeService->getCountDashboardTypeInGivenPeriod($startDate, $endDate, $dashboardType);
       if ($count) {
         $this->dashboardCumulativeService->insertOrUpdate($dashboardType, $date, $count);
-        $this->dashboardCumulativeService->calculatePastStats($dashboardType);
+        $this->dashboardCumulativeService->calculateCumulativeCountMonth($dashboardType, $startDate, $endDate);
         $this->logger()->success(t("Generated data for {$startDate->format('Y-m')} for dashboard type '$dashboardType'"));
       }
       else {
@@ -78,137 +78,146 @@ final class GenerateCumulativeStatsMonthDrushCommands extends DrushCommands {
   #[CLI\Usage(name: 'drush eic_dashboards:generate-stats --dashboard-type=members', description: 'Regenerate all counts for members dashboard type (user entities).')]
   #[CLI\Usage(name: 'drush eic_dashboards:generate-stats --all-stats', description: 'Regenerate all counts for all dashboard types.')]
   public function regenerateStats($options = ['dashboard-type' => null, 'all-stats' => null]) {
-    if ($options['all-stats']) {
-      $dashboard_type_to_generate = $this->dashboardCumulativeService->getAllDashboardTypes();
-    }
-    else {
-      if (in_array($options['dashboard-type'], $this->dashboardCumulativeService->getAllDashboardTypes())) {
-        $dashboard_type_to_generate = [$options['dashboard-type']];
+    $this->io()->warning("This action is destructive. Data will be calculated differently.");
+    $confirm = $this->confirm("Are you sure you want to proceed?");
+    if ($confirm) {
+
+
+      if ($options['all-stats']) {
+        $dashboard_type_to_generate = $this->dashboardCumulativeService->getAllDashboardTypes();
       }
       else {
-        $this->logger()->error(t("The selected dashboard type '@type' does not exist.", ['@type' => $options['dashboard-type']]));
-        return self::EXIT_FAILURE_WITH_CLARITY;
-      }
-    }
-
-    foreach ($dashboard_type_to_generate as $dashboard_type) {
-      $this->logger()->info("Updating data on $dashboard_type dashboard.");
-      switch ($dashboard_type) {
-        case DashboardsDatabase::MEMBERS_DASHBOARD_TYPE:
-          $entity_type_id = 'user';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('status', '1')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::GROUPS_DASHBOARD_TYPE:
-          $entity_type_id = 'group';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'group')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::EVENTS_DASHBOARD_TYPE:
-          $entity_type_id = 'group';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'event')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE:
-          $entity_type_id = 'group';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'organisation')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::PROJECTS_DASHBOARD_TYPE:
-          $entity_type_id = 'group';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'project')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE:
-          $entity_type_id = 'node';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'document')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::STORIES_DASHBOARD_TYPE:
-          $entity_type_id = 'node';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'story')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-        case DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE:
-          $entity_type_id = 'node';
-          $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getQuery()
-            ->condition('type', 'discussion')
-            ->accessCheck(FALSE);
-          $data_table = $this->entityTypeManager->getStorage($entity_type_id)
-            ->getDataTable();
-          $entity_column_id = $this->entityTypeManager
-            ->getStorage($entity_type_id)->getEntityType()->getKey('id');
-          break;
-
-      }
-      if (!$data_table || !$entity_column_id) {
-        $this->logger()->critical("Schema for $dashboard_type entity was not found or has some errors.");
-        return self::EXIT_FAILURE_WITH_CLARITY;
-      }
-
-      $dashboard_results = [];
-      $ids = $entity_query->execute();
-      foreach ($ids as $id) {
-        $created_query = $this->connection->select($data_table);
-        $created_query->addField($data_table, 'created');
-        $created_query->addField($data_table, $entity_column_id);
-        $created_query->condition("$data_table.$entity_column_id", $id);
-        $results = $created_query->execute()->fetchAssoc();
-        $monthKey = \Drupal::service('date.formatter')->format($results['created'], 'custom', 'Y-m') . '-01';
-        if (!isset($dashboard_results[$monthKey])) {
-          $dashboard_results[$monthKey] = 1;
+        if (in_array($options['dashboard-type'], $this->dashboardCumulativeService->getAllDashboardTypes())) {
+          $dashboard_type_to_generate = [$options['dashboard-type']];
         }
         else {
-          $dashboard_results[$monthKey]++;
+          $this->logger()
+            ->error(t("The selected dashboard type '@type' does not exist.", ['@type' => $options['dashboard-type']]));
+          return self::EXIT_FAILURE_WITH_CLARITY;
         }
       }
-      foreach ($dashboard_results as $monthKey => $count) {
-        $this->dashboardCumulativeService->insertOrUpdate($dashboard_type, $monthKey, $count);
+
+      foreach ($dashboard_type_to_generate as $dashboard_type) {
+        $this->logger()->info("Updating data on $dashboard_type dashboard.");
+        switch ($dashboard_type) {
+          case DashboardsDatabase::MEMBERS_DASHBOARD_TYPE:
+            $entity_type_id = 'user';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('status', '1')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::GROUPS_DASHBOARD_TYPE:
+            $entity_type_id = 'group';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'group')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::EVENTS_DASHBOARD_TYPE:
+            $entity_type_id = 'group';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'event')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE:
+            $entity_type_id = 'group';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'organisation')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::PROJECTS_DASHBOARD_TYPE:
+            $entity_type_id = 'group';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'project')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE:
+            $entity_type_id = 'node';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'document')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::STORIES_DASHBOARD_TYPE:
+            $entity_type_id = 'node';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'story')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+          case DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE:
+            $entity_type_id = 'node';
+            $entity_query = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getQuery()
+              ->condition('type', 'discussion')
+              ->accessCheck(FALSE);
+            $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+              ->getDataTable();
+            $entity_column_id = $this->entityTypeManager
+              ->getStorage($entity_type_id)->getEntityType()->getKey('id');
+            break;
+
+        }
+        if (!$data_table || !$entity_column_id) {
+          $this->logger()
+            ->critical("Schema for $dashboard_type entity was not found or has some errors.");
+          return self::EXIT_FAILURE_WITH_CLARITY;
+        }
+
+        $dashboard_results = [];
+        $ids = $entity_query->execute();
+        foreach ($ids as $id) {
+          $created_query = $this->connection->select($data_table);
+          $created_query->addField($data_table, 'created');
+          $created_query->addField($data_table, $entity_column_id);
+          $created_query->condition("$data_table.$entity_column_id", $id);
+          $results = $created_query->execute()->fetchAssoc();
+          $monthKey = \Drupal::service('date.formatter')
+              ->format($results['created'], 'custom', 'Y-m') . '-01';
+          if (!isset($dashboard_results[$monthKey])) {
+            $dashboard_results[$monthKey] = 1;
+          }
+          else {
+            $dashboard_results[$monthKey]++;
+          }
+        }
+        foreach ($dashboard_results as $monthKey => $count) {
+          $this->dashboardCumulativeService->insertOrUpdate($dashboard_type, $monthKey, $count);
+        }
+        $this->dashboardCumulativeService->calculatePastStats($dashboard_type);
       }
-      $this->dashboardCumulativeService->calculatePastStats($dashboard_type);
     }
 
     return self::EXIT_SUCCESS;
