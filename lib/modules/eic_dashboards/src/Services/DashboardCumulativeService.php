@@ -4,6 +4,7 @@ namespace Drupal\eic_dashboards\Services;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 
 class DashboardCumulativeService {
@@ -14,6 +15,7 @@ class DashboardCumulativeService {
     protected GroupStatisticsInterface $groupStatistics,
     protected ContentStatisticsInterface $contentStatistics,
     protected MembersStatisticsInterface $membersStatistics,
+    protected EntityTypeManagerInterface $entityTypeManager,
   ) {}
 
   /**
@@ -83,6 +85,76 @@ class DashboardCumulativeService {
       ];
       $this->merge($merge_array);
     }
+  }
+
+  /**
+   * Counts how many entities have been created until the given endDate.
+   *
+   * @param $dashboard_type
+   * @param $endDate
+   *
+   * @return mixed
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getCountEntityCreatedUntilEndDate($dashboard_type, $endDate) {
+
+    if ($endDate === NULL) {
+      $endDate = new \DateTime('last day of this month');
+      $endDate->setTime(23, 59, 59);
+      $endDate->getTimestamp();
+    }
+
+    switch ($dashboard_type) {
+      case DashboardsDatabase::MEMBERS_DASHBOARD_TYPE:
+        $entity_type_id = 'user';
+        break;
+      case DashboardsDatabase::GROUPS_DASHBOARD_TYPE:
+        $entity_type_id = 'group';
+        $bundle = 'group';
+        break;
+      case DashboardsDatabase::EVENTS_DASHBOARD_TYPE:
+        $entity_type_id = 'group';
+        $bundle = 'event';
+        break;
+      case DashboardsDatabase::ORGANISATIONS_DASHBOARD_TYPE:
+        $entity_type_id = 'group';
+        $bundle = 'organisation';
+        break;
+      case DashboardsDatabase::PROJECTS_DASHBOARD_TYPE:
+        $entity_type_id = 'group';
+        $bundle = 'project';
+        break;
+      case DashboardsDatabase::DOCUMENTS_DASHBOARD_TYPE:
+        $entity_type_id = 'node';
+        $bundle = 'document';
+        break;
+      case DashboardsDatabase::STORIES_DASHBOARD_TYPE:
+        $entity_type_id = 'node';
+        $bundle = 'story';
+        break;
+      case DashboardsDatabase::DISCUSSIONS_DASHBOARD_TYPE:
+        $entity_type_id = 'node';
+        $bundle = 'discussion';
+        break;
+    }
+
+    $data_table = $this->entityTypeManager->getStorage($entity_type_id)
+      ->getDataTable();
+
+    $query = $this->connection->select($data_table, 'entity_field_data');
+    $query->addExpression("DATE_FORMAT(FROM_UNIXTIME(entity_field_data.created), '%d %b %Y')", 'created');
+    if (isset($bundle)) {
+      $query->condition('entity_field_data.type', $bundle);
+    }
+
+    $query->condition('entity_field_data.created', [
+      $endDate->getTimestamp(),
+    ], '<=');
+    $query = $query->countQuery();
+
+    $results = $query->execute()->fetchAssoc();
+    return $results['expression'];
   }
 
   /**
