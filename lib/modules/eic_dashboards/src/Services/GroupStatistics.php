@@ -149,10 +149,13 @@ class GroupStatistics implements GroupStatisticsInterface {
     $query = $this->connection->select('group_content_field_data', 'gcfd');
     $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = gcfd.gid');
     $query->innerJoin('users_field_data', 'ufd', 'gcfd.entity_id = ufd.uid');
+    $query->innerJoin('content_moderation_state_field_data', 'cmsfd', 'cmsfd.content_entity_id = gcfd.gid');
     $query->addExpression('gcfd.gid', 'group_id');
     $query->addExpression('gfd.label', 'label');
     $query->addExpression('COUNT(gcfd.gid)', 'members_count');
     $query->condition('gcfd.type', $membershipType);
+    $query->condition('cmsfd.content_entity_type_id', 'group');
+    $query->condition('cmsfd.moderation_state', 'published');
     $query->condition('ufd.status', 1);
 
     if ($days) {
@@ -182,10 +185,13 @@ class GroupStatistics implements GroupStatisticsInterface {
   public function getTopGroupsByContentType($contentType, $range = 10, $days = NULL): array {
     $query = $this->connection->select('group_content_field_data', 'gcfd');
     $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = gcfd.gid');
+    $query->innerJoin('content_moderation_state_field_data', 'cmsfd', 'cmsfd.content_entity_id = gcfd.gid');
     $query->addExpression('gcfd.gid', 'group_id');
     $query->addExpression('gfd.label', 'label');
     $query->addExpression('COUNT(gcfd.gid)', 'nodes_count');
     $query->condition('gcfd.type', $contentType);
+    $query->condition('cmsfd.content_entity_type_id', 'group');
+    $query->condition('cmsfd.moderation_state', 'published');
 
     if ($days) {
       $query->condition('gcfd.created', strtotime('-' . $days . ' days'), '>=');
@@ -214,10 +220,21 @@ class GroupStatistics implements GroupStatisticsInterface {
   public function getTopGroupsByFlag($groupType, $flagID, $range = 10, $chartType = 'column'): array {
     $query = $this->connection->select('flag_counts', 'fc');
     $query->innerJoin('groups_field_data', 'gfd', 'gfd.id = fc.entity_id');
+
+    if($groupType == 'group') {
+      $query->innerJoin('content_moderation_state_field_data', 'cmsfd', 'cmsfd.content_entity_id = gfd.id');
+    }
+
     $query->addExpression('gfd.id', 'group_id');
     $query->addExpression('gfd.label', 'label');
     $query->addExpression('fc.count', 'flag_count');
     $query->condition('gfd.type', $groupType);
+
+    if($groupType == 'group') {
+      $query->condition('cmsfd.content_entity_type_id', 'group');
+      $query->condition('cmsfd.moderation_state', 'published');
+    }
+
     $query->condition('fc.flag_id', $flagID);
     $query->groupBy('group_id');
     $query->groupBy('label');

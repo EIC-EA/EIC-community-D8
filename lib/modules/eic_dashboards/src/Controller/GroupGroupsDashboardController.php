@@ -221,7 +221,7 @@ class GroupGroupsDashboardController extends ControllerBase {
       ];
 
       // Section 3.
-      $section3Build = $this->dashboardBuilder->tabs('Top ' . $topGroupsLimit . ' metrics', $tabsItems);
+      $section3Build = $this->dashboardBuilder->tabs('Top ' . $topGroupsLimit . ' metrics (published groups only)', $tabsItems);
       $content = [
         $section1Build,
         $section2Build,
