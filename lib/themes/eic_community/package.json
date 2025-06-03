@@ -43,6 +43,7 @@
     "@ecl/ec-theme-default": "^2.35.0",
     "@ecl/ec-utility-background": "^2.35.0",
     "@ecl/ec-utility-border": "^2.35.0",
+    "@ecl/twig-component-link": "4.10.0",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-essentials": "^6.4.20",
     "@storybook/addon-knobs": "^6.2.9",
