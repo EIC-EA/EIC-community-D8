@@ -4,7 +4,7 @@
 <div class="ecl-navigation-list {{ extra_classes }}" {{ snippets.attr(extra_attributes) }}>
   {% if collapse is not empty %}
     <div class="ecl-navigation-list__controls">
-        {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+        {% include "@ecl/button/button" with {
           label: collapse.label|default('Toggle menu'),
           icon: {
             name: 'download',

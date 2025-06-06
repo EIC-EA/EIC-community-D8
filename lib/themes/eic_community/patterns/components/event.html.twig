@@ -2,7 +2,7 @@
 
   {% for tag in tags %}
     <div class="ecl--event__tags">
-      {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({})|merge({
+      {% include '@ecl/tag/tag' with tag|default({})|merge({
         tag: tag.tag|merge({
           type: 'display'
         })

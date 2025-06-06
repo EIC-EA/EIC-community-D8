@@ -15,7 +15,7 @@
 							<div class="ecl-teaser__tags">
 								{% for tag in tags %}
 									<div class="ecl-teaser__tag">
-										{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+										{% include '@ecl/tag/tag' with {
                       tag: tag|merge({
                         type: tag.path ? 'link' : 'display',
                       })
@@ -24,7 +24,7 @@
 								{% endfor %}
 								{% if group_state is not empty %}
 									<div class="ecl-teaser__tag">
-										{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+										{% include "@ecl/tag/tag" with {
 											tag: group_state|merge({
 												type: 'display',
 											}),
@@ -80,7 +80,7 @@
 					                  {% for stat in stats %}
 					                    <div class="ecl-teaser__stat">
 					                      {% if stat.icon is not empty and icon_file_path %}
-					                        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+					                        {% include '@ecl/icon' with {
 					                          icon: {
 					                            size: 'xs',
 					                            path: icon_file_path,
@@ -113,7 +113,7 @@
 					                      }) %}
 					                    {% endif %}
 
-					                    {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+					                    {% include '@ecl/link/link.html.twig' with {
 					                      icon: _icon,
 					                      extra_classes: 'ecl-link--button ecl-link--button-primary',
 					                      link: {
@@ -141,7 +141,7 @@
 				{% if date is not empty %}
 					<div
 						class="ecl-teaser__content-aside">
-						{#            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}#}
+						{#            {% include '@ecl/date-block/date-block' with date|default({}) only %}#}
 						{% include '@theme/patterns/components/date.custom.html.twig' with date|default({}) only %}
 					</div>
 				{% endif %}
@@ -167,7 +167,7 @@
 								{% for stat in stats %}
 									<div class="ecl-teaser__stat">
 										{% if stat.icon is not empty and icon_file_path %}
-											{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+											{% include '@ecl/icon' with {
                         icon: {
                           size: 'xs',
                           path: icon_file_path,
@@ -217,7 +217,7 @@
                 }) %}
 							{% endif %}
 
-							{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+							{% include '@ecl/link/link.html.twig' with {
                 icon: _icon,
                 extra_classes: 'ecl-link--button ecl-link--button-primary',
                 link: {

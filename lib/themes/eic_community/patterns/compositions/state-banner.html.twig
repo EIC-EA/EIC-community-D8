@@ -7,7 +7,7 @@
 
 <div class="ecl-state-banner {{ extra_classes }}">
   {% if icon and icon_file_path %}
-    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+    {% include "@ecl/icon" with {
       icon: icon|merge({
         path: icon_file_path,
         size: 'l',
@@ -25,7 +25,7 @@
   {% endif %}
   {% if dismiss %}
     {% if dismiss.link %}
-      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dismiss|default({})|merge({
+      {% include "@ecl/link/link.html.twig" with dismiss|default({})|merge({
         link: dismiss.link|default({})|merge({
           icon_position: 'after',
           type: 'standalone',
@@ -40,7 +40,7 @@
         extra_classes: dismiss.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-ghost ecl-button--compact-for-mobile ecl-state-banner__dismiss',
       }) only %}
     {% else %}
-      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with dismiss|default({})|merge({
+      {% include "@ecl/button/button" with dismiss|default({})|merge({
         label: dismiss.label|default('Dismiss'),
         variant: dismiss.variant|default('ghost'),
         icon: icon_file_path ? dismiss.icon|default({})|merge({

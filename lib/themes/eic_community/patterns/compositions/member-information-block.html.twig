@@ -12,7 +12,7 @@
           <{{ title_element }} class="ecl-contact-information-block__title">
             {{ title }}
             {% if icon_file_path and type.icon %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              {% include "@ecl/icon" with {
                 icon: type.icon|merge({
                   path: icon_file_path,
                   size: 's',
@@ -22,7 +22,7 @@
             {% endif %}
             {% if icon_file_path and top_contributor %}
               {% if type is empty %}
-                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                {% include "@ecl/icon" with {
                   icon: top_contributor.icon|merge({
                     path: icon_file_path,
                     size: 's',
@@ -54,7 +54,7 @@
                 {% for stat in stats %}
                   <div class="ecl-contact-information-block__stats-item">
                     {% if icon_file_path and stat.icon%}
-                      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                      {% include "@ecl/icon" with {
                         icon: stat.icon|merge({
                           path: icon_file_path,
                           size: 's',
@@ -107,7 +107,7 @@
         </figure>
       {% else %}
         <figure class="ecl-contact-information-block__image-wrapper ecl-contact-information-block__image-wrapper--empty">
-          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          {% include '@ecl/icon' with {
             icon: {
               size: 'm',
               path: icon_file_path,

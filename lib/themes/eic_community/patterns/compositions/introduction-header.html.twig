@@ -14,7 +14,7 @@
       {% endif %}
 
       {% if call_to_action is not empty %}
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with call_to_action|merge({
+        {% include '@ecl/link/link.html.twig' with call_to_action|merge({
           extra_classes: 'ecl-introduction-header__cta ' ~ call_to_action.extra_classes|default('ecl-link--button ecl-link--button-primary'),
         }) only %}
       {% endif %}

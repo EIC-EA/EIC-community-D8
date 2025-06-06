@@ -40,7 +40,7 @@
 
 {% if language_switcher %}
   {% set _language_switcher %}
-    {% include '@eic_community/compositions/ec-component-content-language-switcher/content-language-switcher.html.twig' with {
+    {% include '@eic_community/compositions/content-language-switcher/content-language-switcher.html.twig' with {
       'expandable_id': language_switcher.expandable_id,
       'unavailable': language_switcher.unavailable,
       'current': language_switcher.current,
@@ -51,7 +51,7 @@
   {% endset %}
 {% endif %}
 
-{% include '@ecl-twig/page-header-' ~ ecl_branding with {
+{% include '@ecl/page-header-' ~ ecl_branding with {
   'title': title,
   'description': introduction,
   'breadcrumb': _breadcrumb,

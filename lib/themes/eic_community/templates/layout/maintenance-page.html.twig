@@ -19,7 +19,7 @@
       <section class="ecl-mainmenu">
         <div class="ecl-container">
           <div class="ecl-mainmenu__wrapper">
-            {% include "@ecl-twig/ec-component-menu/ecl-menu.html.twig" with mainmenu|default({})|merge({
+            {% include "@ecl/menu/menu" with mainmenu|default({})|merge({
               site_name: '',
               menu_link: '',
               title: '',
@@ -36,7 +36,7 @@
       <div class="ecl-base-layout__main">
         <main{{main_attributes}}>
           {% block content %}
-            {% include '@ecl-twig/page-banner' with {
+            {% include '@ecl/page-banner' with {
               title: title,
               baseline: page.content,
               type: 'primary',

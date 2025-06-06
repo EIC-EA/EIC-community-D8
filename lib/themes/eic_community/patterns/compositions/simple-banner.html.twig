@@ -27,7 +27,7 @@
                 items: action.items,
               } only %}
             {% elseif action.link is not empty %}
-              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+              {% include "@ecl/link/link.html.twig" with action|default({})|merge({
                 link: action.link|default({})|merge({
                   icon_position: 'before',
                 }),
@@ -38,7 +38,7 @@
                 extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-ghost',
               }) only %}
             {% else %}
-              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+              {% include "@ecl/button/button" with action|default({})|merge({
                 icon_position: 'before',
                 variant: loop.first ? 'primary' : 'ghost',
                 icon: icon_file_path ? action.icon|default({})|merge({

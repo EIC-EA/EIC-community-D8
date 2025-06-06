@@ -15,7 +15,7 @@
               }) %}
             {% endif %}
 
-            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with item|default({})|merge({
+            {% include '@ecl/link/link.html.twig' with item|default({})|merge({
               icon: _icon,
               link: item.link|default({})|merge({
                 type: 'standalone',

@@ -3,7 +3,7 @@
 {% set is_link = card.title.path is empty and card.infos is empty and card.tags is empty ? TRUE : FALSE %}
 
 <div class="ecl-card-wrapper {{ is_link ? 'ecl-card-wrapper--as-link' }}">
-  {% include "@ecl-twig/ec-component-card/ecl-card.html.twig" with {
+  {% include "@ecl/card/card" with {
     card: _card,
     icon_path: icon_file_path,
     extra_attributes: extra_attributes,

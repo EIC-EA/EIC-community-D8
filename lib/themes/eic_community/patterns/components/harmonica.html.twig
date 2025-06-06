@@ -6,7 +6,7 @@
   {% if title %}
     <{{ title_element }} class="ecl-harmonica__title">
       {% if icon and icon_file_path %}
-        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with icon|default({})|merge({
+        {% include "@ecl/icon" with icon|default({})|merge({
           icon: icon.icon|default({})|merge({
             path: icon_file_path,
             size: 'xs',
@@ -29,7 +29,7 @@
               <span class="ecl-harmonica__item-title">{{ item.title }}</span>
             {% endif %}
             {% if item.content and icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with item.icon|default({})|merge({
+              {% include "@ecl/icon" with item.icon|default({})|merge({
                 icon: item.icon.icon|default({})|merge({
                   name: 'corner-arrow',
                   type: 'ui',

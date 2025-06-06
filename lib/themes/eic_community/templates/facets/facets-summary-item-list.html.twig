@@ -32,7 +32,7 @@
   {%- if items -%}
     <div class="ecl-teaser-overview__active-filters">
       {% set clearItem = items|first %}
-      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+      {% include "@ecl/button/button" with {
         icon: {
           path: eic_icon_path,
           name: 'clear',
@@ -44,7 +44,7 @@
         label: clearItem.value
       } only %}
       {%- for item in items|slice(start + 1, length) -%}
-        {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+        {% include "@ecl/button/button" with {
           icon: {
             path: eic_icon_path,
             name: 'clear',

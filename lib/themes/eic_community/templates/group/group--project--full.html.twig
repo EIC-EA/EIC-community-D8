@@ -35,7 +35,7 @@
                 'size': "xs"
               }
             } -%}
-            {% include '@ecl-twig/page-banner' with {
+            {% include '@ecl/page-banner' with {
               title: "This project has recognised innovations!"|t,
               link: _link,
               image: base_path ~ '/' ~ active_theme_path() ~ '/images/other/project-banner.png',
@@ -67,7 +67,7 @@
                 'size': "xs"
               }
             } -%}
-            {% include '@ecl-twig/page-banner' with {
+            {% include '@ecl/page-banner' with {
               title: "This project has published deliverables in Horizon Results Platform!",
               link: _link,
               image: eic_images_path ~ '/other/project-banner.png',
@@ -103,7 +103,7 @@
 
         {% if content.field_project_status.0 %}
           <div class="ecl-u-mb-l">
-            {% include "@ecl-twig/ec-component-label/ecl-label.html.twig" with {
+            {% include "@ecl/label/label" with {
               label: content.field_project_status.0|render ~ ' PROJECT'|t({}, {'context': 'eic_community'}),
               variant: content.field_project_status.0|render|lower == 'closed' ? 'medium' : 'low',
             } %}
@@ -133,7 +133,7 @@
 
         {% if content.field_project_website.0 %}
           <div class="ecl-u-mb-l">
-            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+            {% include '@ecl/link/link.html.twig' with {
               icon: {
                 path: eic_icon_path,
                 type: 'general',
@@ -152,7 +152,7 @@
         {% if content.field_project_grant_agreement_id.0 %}
           {% set cordis_url = cordis_base_path ~ content.field_project_grant_agreement_id.0|render %}
           <div class="ecl-u-mb-l">
-            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+            {% include '@ecl/link/link.html.twig' with {
               icon: {
                 path: eic_icon_path,
                 type: 'custom',

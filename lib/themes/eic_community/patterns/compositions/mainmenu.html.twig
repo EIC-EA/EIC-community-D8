@@ -5,14 +5,14 @@
         <span class="ecl-mainmenu__label">{{ label }}</span>
       {% endif %}
 
-      {% include "@ecl-twig/ec-component-menu/ecl-menu.html.twig" with mainmenu|default({})|merge({
+      {% include "@ecl/menu/menu" with mainmenu|default({})|merge({
         extra_classes: mainmenu.extra_classes|default('') ~ ' ecl-mainmenu__main',
         icon_path: icon_path,
       }) %}
 
       {% if searchform %}
         <div class="ecl-mainmenu__aside">
-          {% include '@ecl-twig/ec-component-search-form/ecl-search-form.html.twig' with searchform|default({})|merge({
+          {% include '@ecl/search-form/search-form' with searchform|default({})|merge({
             extra_classes: searchform.extra_classes|default('') ~ 'ecl-mainmenu__searchform',
           }) %}
         </div>

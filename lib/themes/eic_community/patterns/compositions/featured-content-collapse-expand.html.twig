@@ -11,14 +11,14 @@
           <div
             class="ecl-featured-list__item ecl-featured-list__item--expand ecl-featured-list__item--collapse"
           >
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            {% include "@ecl/button/button" with { icon_position:
             'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
             'rounded-arrow', size: '2xs', } : {}, label:
             collapse_label|default('Show less'), variant: 'ghost', extra_classes:
             'ecl-featured-list__collapse ecl-featured-list__btn-no-padding' } %}
           </div>
           <div class="ecl-featured-list__item ecl-featured-list__item--expand">
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            {% include "@ecl/button/button" with { icon_position:
             'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
             'rounded-arrow', transform: 'rotate-180', size: '2xs', } : {}, label:
             collapse_label|default('Show all'), variant: 'ghost', extra_classes:

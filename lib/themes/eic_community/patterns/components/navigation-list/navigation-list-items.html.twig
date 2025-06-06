@@ -17,7 +17,7 @@
               }) %}
             {% endif %}
             {% if item.items %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              {% include "@ecl/icon" with {
                 icon: icon_file_path ? {
                   path: icon_file_path,
                   type: 'ui',

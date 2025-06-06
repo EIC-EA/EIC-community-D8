@@ -17,7 +17,7 @@
   {% set _links = _links|merge([_link]) %}
 {% endfor %}
 
-{% include '@eic_community/compositions/ec-component-link-block/link-block.html.twig' with {
+{% include '@eic_community/compositions/link-block/link-block.html.twig' with {
   title: title,
   links: _links,
 } %}

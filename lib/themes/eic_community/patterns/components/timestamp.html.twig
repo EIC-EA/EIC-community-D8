@@ -1,6 +1,6 @@
 <div class="ecl-timestamp {{ extra_classes }}">
   {% if icon_file_path is not empty %}
-    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+    {% include "@ecl/icon" with {
       extra_classes: 'ecl-timestamp__icon',
       icon: {
         path: icon_file_path,

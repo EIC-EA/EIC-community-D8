@@ -19,7 +19,7 @@
 
         <div class="ecl-comment__author-info">
           {% if author %}
-            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            {% include "@ecl/link/link.html.twig" with {
               link: {
                 label: author.name,
                 path: author.path,
@@ -42,7 +42,7 @@
 
           {% if comment_origin.author is not empty %}
             <span class="ecl-comment__origin">{{ comment_origin.label|default('in reply to') }}</span>
-            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            {% include "@ecl/link/link.html.twig" with {
               link: {
                 type: 'standalone',
                 label: comment_origin.author.name,
@@ -112,7 +112,7 @@
             ] : [])
           } %}
             {% block trigger%}
-              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              {% include "@ecl/button/button" with {
                 label: options_label|default('Options'),
                 extra_classes: "ecl-button--as-form-option",
                 variant: 'ghost',
@@ -141,12 +141,12 @@
         <div class="ecl-comment__attachments" data-comment-attachment-max-length="{{ attachment_length|default(10) }}">
           <div class="ecl-comment__attachments-header">
             <span class="ecl-comment__attachments-label">{{  attachments|length ~ ' ' ~ attachments_label|default('attachment(s)')  }}</span>
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+            {% include "@ecl/button/button" with {
               label: attachment_expand_label|default('Show all'),
               variant: 'ghost',
               extra_classes: 'ecl-comment__attachments-expand'
             } %}
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+            {% include "@ecl/button/button" with {
               label: attachment_collapse_label|default('Minimize'),
               variant: 'ghost',
               extra_classes: 'ecl-comment__attachments-collapse'
@@ -176,7 +176,7 @@
             <div class="ecl-comment__actions">
               {% if reply_path %}
               <div class="ecl-comment__action">
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                {% include "@ecl/link/link.html.twig" with {
                   link: {
                     label: reply_label|default('Reply'),
                     path: reply_path,
@@ -199,7 +199,7 @@
               {% for stat in stats %}
                 <div class="ecl-comment__stat">
                   {% if stat.icon is not empty and icon_file_path %}
-                    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with stat|default({})|merge({
+                    {% include '@ecl/icon' with stat|default({})|merge({
                       icon: stat.icon|default({})|merge({
                         size: 'xs',
                         path: icon_file_path,

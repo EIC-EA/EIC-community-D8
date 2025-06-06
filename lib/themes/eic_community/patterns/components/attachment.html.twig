@@ -12,7 +12,7 @@
           </div>
         {% elseif icon_file_path and icon is not empty %}
           <div class="ecl-attachment__icon-wrapper {{ is_clickable ? 'ecl-attachment__icon-wrapper--s' }}">
-            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+            {% include "@ecl/icon" with {
               extra_classes: 'ecl-attachment__icon',
               icon: icon_file_path ? {
                 path: icon_file_path,
@@ -41,7 +41,7 @@
         {% if highlight %}
           <button class="ecl-attachment__highlight">
             {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              {% include "@ecl/icon" with {
                 icon: {
                   path: icon_file_path,
                   name: 'star_circle',
@@ -78,7 +78,7 @@
           {% if author %}
             <div class="ecl-attachment__action">
               {% if author.path %}
-                Uploaded by&nbsp;{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                Uploaded by&nbsp;{% include '@ecl/link/link.html.twig' with {
                   link: {
                     type: 'standalone',
                     label: author.name,
@@ -96,7 +96,7 @@
           {% endif %}
           {% if path %}
             <div class="ecl-attachment__action">
-              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+              {% include '@ecl/link/link.html.twig' with {
                 icon: icon_file_path ? {
                   path: icon_file_path,
                   type: 'custom',

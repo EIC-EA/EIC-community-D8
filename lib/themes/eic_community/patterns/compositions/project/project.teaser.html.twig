@@ -41,7 +41,7 @@
     {% endif %}
     {% if project_horizon_results %}
       <div class="ecl-u-mb-s">
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+        {% include '@ecl/link/link.html.twig' with {
           icon: {
             path: eic_icon_path,
             type: 'general',
@@ -59,7 +59,7 @@
     {% endif %}
     {% if project_innovations %}
       <div class="ecl-u-mb-s">
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+        {% include '@ecl/link/link.html.twig' with {
           icon: {
             path: eic_icon_path,
             type: 'custom',
@@ -78,7 +78,7 @@
     {% if project_grant_agreement %}
       {% set cordis_url = cordis_base_path ~ project_grant_agreement %}
       <div class="ecl-u-mb-s">
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+        {% include '@ecl/link/link.html.twig' with {
           icon: {
             path: eic_icon_path,
             type: 'general',
@@ -97,7 +97,7 @@
 
     {% if project_website %}
       <div class="ecl-u-mb-s">
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+        {% include '@ecl/link/link.html.twig' with {
           icon: {
             path: eic_icon_path,
             type: 'custom',

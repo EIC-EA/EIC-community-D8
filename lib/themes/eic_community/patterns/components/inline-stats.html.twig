@@ -7,7 +7,7 @@
             <a href="{{ item.path }}" class="ecl-inline-stats__item-link">
           {% endif %}
           {% if item.icon is not empty and icon_file_path %}
-            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            {% include '@ecl/icon' with {
               icon: {
                 size: 'xs',
                 path: icon_file_path,

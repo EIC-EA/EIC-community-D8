@@ -19,7 +19,7 @@
 							{% for stat in file.stats %}
 								<div class="ecl-filelist__file-stat {{ stat.hide_label ? 'ecl-filelist__file-stat--hide-label' }}">
 									{% if stat.icon is not empty and icon_file_path %}
-										{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+										{% include '@ecl/icon' with {
                       icon: {
                         size: 'xs',
                         path: icon_file_path,
@@ -44,7 +44,7 @@
 							{% else %}
 								{% set mime_type = file.mime_type %}
 							{% endif %}
-							{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+							{% include '@ecl/icon' with {
                 icon: {
                   size: 'l',
                   path: icon_file_path,
@@ -55,7 +55,7 @@
 						{% endif %}
 					</figure>
 					<footer class="ecl-filelist__file-footer">
-						{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+						{% include '@ecl/link/link.html.twig' with {
               icon: {
                 size: 'xs',
                 path: icon_file_path,

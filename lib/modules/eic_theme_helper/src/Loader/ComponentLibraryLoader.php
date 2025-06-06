@@ -33,33 +33,18 @@ class ComponentLibraryLoader extends EuropaComponentLibraryLoader {
   /**
    * {@inheritdoc}
    */
-  public function __construct($namespaces, $root, $theme, $directories, ThemeHandlerInterface $theme_handler, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct($namespaces, $root, $theme, $directory, ThemeHandlerInterface $theme_handler, LoggerChannelFactoryInterface $logger_factory) {
     // Make sure the theme exists before getting its path.
     // This is necessary when the "eic_theme_helper" module is enabled before
     // the theme is or the theme is disabled and the "eic_theme_helper" is not.
     $path = '';
-    foreach ($namespaces as $namespace) {
-      if ($namespace == 'ecl-twig') {
-        $namespace = ['ecl', 'ecl-twig'];
-        $prefix = 'ec-component';
-        if ($theme_handler->themeExists($theme)) {
-          $this->themePath = $theme_handler->getTheme($theme)->getPath();
-          $path = $this->themePath . DIRECTORY_SEPARATOR . 'node_modules/@ecl-twig';
-        }
-      }
-      else {
-        $namespace = ['ecl'];
-        $prefix = 'twig-component';
-        if ($theme_handler->themeExists($theme)) {
-          $this->themePath = $theme_handler->getTheme($theme)->getPath();
-          $path = $this->themePath . DIRECTORY_SEPARATOR . 'node_modules/@ecl';
-        }
-      }
-
+    if ($theme_handler->themeExists($theme)) {
+      $this->themePath = $theme_handler->getTheme($theme)->getPath();
+      $path = $this->themePath . DIRECTORY_SEPARATOR . $directory;
     }
 
     $this->logger = $logger_factory->get('ecl');
-    parent::__construct($namespace, $path, $root, $prefix, 'ecl-');
+    parent::__construct($namespaces, $path, $root);
   }
 
 }

@@ -12,7 +12,7 @@
   {% for field in fields %}
     {% if field.type or field.name or field.id or field.link %}
       {% if field.type == 'textarea' %}
-        {% include '@ecl-twig/ec-component-text-area/ecl-text-area.html.twig' with field|default({})|without('type')|merge({
+        {% include '@ecl/text-area/text-area' with field|default({})|without('type')|merge({
           width: 'full',
         }) %}
       {% elseif field.type == 'checkbox' %}
@@ -29,7 +29,7 @@
           icon_path: icon_file_path
         }) %}
       {% elseif field.type == 'select' %}
-        {% include '@ecl-twig/ec-component-select/ecl-select.html.twig' with field|default({})|without('type')|merge({
+        {% include '@ecl/select/select' with field|default({})|without('type')|merge({
           icon_path: icon_file_path,
           width: 'full',
         }) %}
@@ -38,24 +38,24 @@
           extra_classes: 'ecl-well--is-blue',
         }) only %}
           {% block content %}
-            {% include '@ecl-twig/ec-component-file-upload/ecl-file-upload.html.twig' with field|default({})|without('type')|merge({
+            {% include '@ecl/file-upload/file-upload' with field|default({})|without('type')|merge({
               width: 'full',
             }) %}
           {% endblock %}
         {% endembed %}
       {% elseif field.type == 'submit' %}
-        {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with field|default({})|without('type')|merge({
+        {% include '@ecl/button/button' with field|default({})|without('type')|merge({
           type: 'submit',
           icon_path: icon_file_path
         }) %}
       {% elseif field.type == 'button' %}
-        {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with field|default({})|without('type')|merge({
+        {% include '@ecl/button/button' with field|default({})|without('type')|merge({
           type: 'button',
           variant: 'secondary',
           icon_path: icon_file_path
         }) %}
       {% elseif field.link %}
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with field|default({})|without('type')|merge({
+        {% include '@ecl/link/link.html.twig' with field|default({})|without('type')|merge({
           icon_path: icon_file_path,
           extra_classes: 'ecl-link--button ecl-link--button-ghost',
         }) %}
@@ -64,7 +64,7 @@
           {{ field.text }}
         </div>
       {% else %}
-        {% include '@ecl-twig/ec-component-text-input/ecl-text-input.html.twig' with field|default({})|merge({
+        {% include '@ecl/text-input/text-input' with field|default({})|merge({
           width: 'full',
         }) %}
       {% endif %}

@@ -2,7 +2,7 @@
 
 <div class="ecl-notification-banner {{ extra_classes }}">
   {% if icon and icon_file_path %}
-    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+    {% include "@ecl/icon" with {
       icon: icon|merge({
         path: icon_file_path,
         size: 'm',

@@ -11,7 +11,7 @@
  */
 #}
 
-{% extends "@oe_theme/navigation/oe-corporate-blocks-ec-footer--standardised.html.twig" %}
+{% extends "@oe_theme/navigation/oe-corporate-blocks-ec-footer--standardised" %}
 
 {% block content %}
   {% set _logo_path = eic_logo_path ~ '/logo--' ~ current_language_id|to_internal_language_id ~ '.svg' %}
@@ -69,7 +69,7 @@
     }
   ] %}
 
-  {% include '@ecl-twig/footer-standardised' with {
+  {% include '@ecl/footer-standardised' with {
     'sections': _sections,
   } %}
 {% endblock %}

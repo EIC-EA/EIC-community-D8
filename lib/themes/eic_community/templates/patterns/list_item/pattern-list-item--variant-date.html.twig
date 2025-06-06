@@ -15,7 +15,7 @@
 <article class="ecl-content-item-date ecl-u-d-flex ecl-u-pv-m">
   {% block date %}
     <div class="ecl-content-item-date__date ecl-u-flex-grow-0 ecl-u-mr-m">
-      {% include '@eic_community/compositions/ec-component-date-block/date-block.html.twig' with {
+      {% include '@eic_community/compositions/date-block/date-block.html.twig' with {
         variant: variant|replace({'_':'-'})|to_date_status,
         week_day: date.week_day,
         day: date.day,
@@ -35,7 +35,7 @@
     {% block title %}
       <div class="ecl-content-item-date__title ecl-u-type-heading-5 ecl-u-mb-xs ecl-u-mt-none">
         {%- if url %}
-          {% include '@ecl-twig/link' with {
+          {% include '@ecl/link' with {
             link: {
               type: 'standalone',
               label: title,

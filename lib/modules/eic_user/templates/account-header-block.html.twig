@@ -16,7 +16,7 @@
               eic_icon_path: eic_icon_path
             } %}
             {% if eic_icon_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              {% include "@ecl-twig/icon" with {
                 icon: eic_icon_path ? {
                   path: eic_icon_path,
                   type: 'ui',
@@ -32,7 +32,7 @@
     {% elseif login and login.link %}
       <a href="{{ login.link.path }}" class="ecl-link ecl-link--standalone ecl-global-header__login-link">
         {% if eic_icon_path %}
-          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+          {% include "@ecl-twig/icon" with {
             icon: eic_icon_path ? {
               path: eic_icon_path,
               name: 'user_circle',

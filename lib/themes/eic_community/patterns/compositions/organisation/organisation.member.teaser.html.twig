@@ -21,7 +21,7 @@
       </a>
     {% else %}
       <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
-        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        {% include '@ecl/icon' with {
           icon: {
             size: 'm',
             path: icon_file_path,
@@ -68,7 +68,7 @@
         {% if size is not empty %}
           <p class="ecl-teaser__description">
             {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              {% include "@ecl/icon" with {
                 icon: {
                   size: 'xs',
                   path: icon_file_path,
@@ -89,7 +89,7 @@
       {% for stat in stats %}
         <div class="ecl-teaser__stat">
           {% if stat.icon is not empty and icon_file_path %}
-            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            {% include '@ecl/icon' with {
               icon: {
                 size: 'xs',
                 path: icon_file_path,

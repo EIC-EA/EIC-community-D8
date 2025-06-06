@@ -10,7 +10,7 @@
 			{% else %}
 				{% if icon_file_path %}
 					<div class="ecl-teaser__image-fallback-wrapper">
-						{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+						{% include '@ecl/icon' with {
               icon: {
                 size: '3xl',
                 path: icon_file_path,
@@ -30,7 +30,7 @@
 			<div class="ecl-teaser__meta-header">
 				{% if type is not empty %}
 					<div class="ecl-teaser__tag">
-						{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+						{% include "@ecl/tag/tag" with {
 							tag: type|merge({
 								type: type.path ? 'link' : 'display',
 							}),
@@ -40,7 +40,7 @@
 				{% endif %}
 				{% if group_state is not empty %}
 					<div class="ecl-teaser__tag">
-						{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+						{% include "@ecl/tag/tag" with {
 							tag: group_state|merge({
 								type: 'display',
 							}),
@@ -105,7 +105,7 @@
 					{% for stat in stats %}
 						<div class="ecl-teaser__stat">
 							{% if stat.icon is not empty and icon_file_path %}
-								{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+								{% include '@ecl/icon' with {
                   icon: {
                     size: 'xs',
                     path: icon_file_path,

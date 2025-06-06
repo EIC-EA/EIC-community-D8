@@ -1,5 +1,5 @@
 <div class="ecl-search-input">
-  {% include "@ecl-twig/ec-component-text-input/ecl-text-input.html.twig" with {
+  {% include "@ecl/text-input/text-input" with {
     id: id,
     disabled: disabled,
     invalid: invalid,
@@ -14,7 +14,7 @@
     extra_attributes:extra_attributes,
   } only %}
   {% if icon_file_path %}
-    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+    {% include "@ecl/icon" with {
       icon: {
         type: 'general',
         name: 'search',

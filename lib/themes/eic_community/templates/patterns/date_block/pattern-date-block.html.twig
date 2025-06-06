@@ -4,7 +4,7 @@
  * Date block.
  */
 #}
-{% include '@eic_community/compositions/ec-component-date-block/date-block.html.twig' with {
+{% include '@eic_community/compositions/date-block/date-block.html.twig' with {
   variant: variant|replace({'_':'-'})|to_date_status,
   week_day: date.week_day,
   day: date.day,

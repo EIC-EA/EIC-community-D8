@@ -11,7 +11,7 @@
           <div class="ecl-gallery__data__actions">
             <ul>
               <li>
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                {% include '@ecl/icon' with {
                   icon: {
                     size: 'l',
                     path: icon_file_path,
@@ -21,7 +21,7 @@
                   extra_classes: 'ecl-teaser__image-icon'
                 } only %}
                 {{ file.stats[0].value }} {{ file.stats[0].label }}</li>
-              <li> {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              <li> {% include '@ecl/icon' with {
                   icon: {
                     size: 'l',
                     path: icon_file_path,
@@ -32,7 +32,7 @@
                 } only %}  .{{ file.mime_type }} </li>
               <li> {{ file.stats[1].value }} </li>
             </ul>
-            <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg" href={{ file.path }} target="_blank" download="{{ file.name }}">{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg" href={{ file.path }} target="_blank" download="{{ file.name }}">{% include '@ecl/icon' with {
                 icon: {
                   size: 's',
                   path: icon_file_path,

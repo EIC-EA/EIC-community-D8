@@ -15,7 +15,7 @@
           <div class="ecl-auth-banner__actions">
             {% if login is not empty %}
               <div class="ecl-auth-banner__action">
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                {% include "@ecl/link/link.html.twig" with {
                   link: {
                     icon_position: 'after',
                     type: 'standalone',
@@ -36,7 +36,7 @@
 
             {% if register is not empty %}
               <div class="ecl-auth-banner__action">
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                {% include "@ecl/link/link.html.twig" with {
                   link: {
                     type: 'standalone',
                     label: register.label,

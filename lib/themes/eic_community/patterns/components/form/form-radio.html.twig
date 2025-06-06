@@ -99,7 +99,7 @@
           {%- for _item in _items %}
             <div class="ecl-form__radio-item">
               {% if _item.icon and icon_file_path %}
-                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with _item.icon|default({})|merge({
+                {% include "@ecl/icon" with _item.icon|default({})|merge({
                   icon: _item.icon|merge({
                     path: icon_file_path,
                     size: 's',
@@ -107,7 +107,7 @@
                   extra_classes: 'ecl-form__radio-icon',
                 }) only %}
               {% endif %}
-              {% include '@ecl-twig/ec-component-radio/ecl-radio-button.html.twig' with _item|merge({
+              {% include '@ecl/radio/radio-button' with _item|merge({
                 name: _name,
                 invalid: _invalid,
                 binary: _binary,
@@ -124,7 +124,7 @@
 {# Validation #}
 
 {% if _compliance %}
-  {% include '@ecl-twig/ec-component-ecl-compliance/components/ecl-compliance-form-group.html.twig' with {
+  {% include '@ecl/compliance/components/compliance-form-group' with {
     label: _label,
     invalid_text: _invalid_text,
     optional_text: _optional_text,

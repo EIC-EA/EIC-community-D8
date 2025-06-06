@@ -54,7 +54,7 @@ ecl-organisation__item", no_container: true, items_extra_classes:
     <h3 class="ecl-social-share__title">{{ contact.link.title }}</h3>
     {% for link in contact.link.items %}
     <div class="ecl-editorial-header__flag">
-      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with link|default({})|merge({
+      {% include "@ecl/link/link.html.twig" with link|default({})|merge({
       link: link.link|default({})|merge({ icon_position: 'before', }), extra_classes:
       'ecl-link--standalone ecl-link--flag', icon: link.icon|default({})|merge({ path:
       icon_file_path, size: 's', }) }) %}
@@ -69,7 +69,7 @@ ecl-organisation__item", no_container: true, items_extra_classes:
     {% for dataItem in contact.data.items %}
     <p>{{ dataItem.name }}</p>
     <div class="ecl-editorial-header__flag">
-      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with
+      {% include "@ecl/link/link.html.twig" with
       dataItem.link|default({})|merge({ link: dataItem.link.link|default({})|merge({ icon_position:
       'before', }), extra_classes: 'ecl-link--standalone ecl-link--flag', icon:
       dataItem.link.icon|default({})|merge({ path: icon_file_path, size: 's', }) }) %}

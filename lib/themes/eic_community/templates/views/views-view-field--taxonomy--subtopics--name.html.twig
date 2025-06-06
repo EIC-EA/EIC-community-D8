@@ -18,7 +18,7 @@
  * @see template_preprocess_views_view_field()
  */
 #}
-{% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+{% include "@ecl/tag/tag" with {
   tag: term_item|merge({
     type: term_item.path ? 'link' : 'display',
   }),

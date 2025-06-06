@@ -12,12 +12,12 @@
     {% endif %}
 
     <div class="ecl-searchform__fields">
-      {% include '@ecl-twig/ec-component-text-input/ecl-text-input.html.twig' with field|default({})|merge({
+      {% include '@ecl/text-input/text-input' with field|default({})|merge({
         width: 'full',
         extra_classes: field.extra_classes|default('') ~ ' ecl-searchform__field'
       }) %}
 
-      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with submit|default({})|merge({
+      {% include "@ecl/button/button" with submit|default({})|merge({
         label: submit.label|default('Submit'),
         extra_classes: submit.extra_classes|default('') ~ (icon_file_path ? 'ecl-searchform__submit ecl-button--has-compact-layout'),
         variant: 'primary',

@@ -16,7 +16,7 @@
                   <div class="ecl-featured-content-grid__item-media-wrapper">
                     {% if item.path %}
                       <a href="{{ item.path }}">
-                        {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                        {% include '@ecl/media-container/media-container' with {
                           description: false,
                           sources: item.media.sources,
                           image: item.media.image,
@@ -24,7 +24,7 @@
                         } only %}
                       </a>
                     {% else %}
-                      {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                      {% include '@ecl/media-container/media-container' with {
                         description: false,
                         sources: item.media.sources,
                         image: item.media.image,
@@ -82,7 +82,7 @@
                           {% for stat in item.stats %}
                             <div class="ecl-teaser__stat">
                               {% if stat.icon is not empty and icon_file_path %}
-                                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                                {% include '@ecl/icon' with {
                                   icon: {
                                     size: 'xs',
                                     path: icon_file_path,
@@ -122,7 +122,7 @@
 
 
         <footer class="ecl-featured-content-grid__footer">
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+          {% include "@ecl/link/link.html.twig" with {
             link: call_to_action.link|default({})|merge({
               type: 'standalone',
               icon_position: 'after',

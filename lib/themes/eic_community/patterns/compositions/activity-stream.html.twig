@@ -10,7 +10,7 @@
                 <div class="ecl-activity-stream__item">
                     {% if can_delete_activity %}
                         <a href="#" class="ecl-activity-stream__item__action-delete">
-                            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                            {% include "@ecl/icon" with {
                                 icon: {
                                     path: icon_file_path,
                                     name: 'clear',
@@ -36,7 +36,7 @@
                             <div class="ecl-activity-stream__item__content">
                                 <div class="ecl-activity-stream__item__type">
                                     {% if item.type.icon and icon_file_path %}
-                                        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                                        {% include "@ecl/icon" with {
                                             icon: item.type.icon|merge({
                                                 path: icon_file_path,
                                                 size: 's'
@@ -63,7 +63,7 @@
                                     {% for stat in item.stats %}
                                         <div class="ecl-teaser__stat">
                                             {% if stat.icon is not empty and icon_file_path %}
-                                                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                                                {% include '@ecl/icon' with {
                                                     icon: {
                                                         size: 'xs',
                                                         path: icon_file_path,
@@ -88,7 +88,7 @@
 
     {% if call_to_action %}
         <footer class="ecl-activity-stream__footer">
-            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            {% include "@ecl/link/link.html.twig" with {
                 link: call_to_action.link|default({})|merge({
                     type: 'standalone',
                     icon_position: 'after',

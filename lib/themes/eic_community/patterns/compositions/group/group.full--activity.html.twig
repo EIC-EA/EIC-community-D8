@@ -14,7 +14,7 @@
 
 {% block modal %}
   {% if activity_stream.modal %}
-    {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+    {% include "@ecl/link/link.html.twig" with {
         link: activity_stream.modal.call_to_action.link|default({})|merge({
             type: 'standalone',
             icon_position: 'after',

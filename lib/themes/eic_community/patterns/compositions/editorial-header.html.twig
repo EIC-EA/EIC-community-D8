@@ -15,7 +15,7 @@
         } %}
 			{% endif %}
 
-			{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
+			{% include "@ecl/link/link.html.twig" with parent|default({})|merge({
         link: parent.link|default({})|merge({
           type: 'standalone',
           icon_position: 'before',
@@ -46,7 +46,7 @@
 								<div class="ecl-editorial-header__tags">
 									{% for tag in tags %}
 										<div class="ecl-editorial-header__tag">
-											{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({}) only %}
+											{% include '@ecl/tag/tag' with tag|default({}) only %}
 										</div>
 									{% endfor %}
 								</div>
@@ -61,7 +61,7 @@
 
 										{% if action.items %}
 											{% set trigger %}
-											{% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+											{% include "@ecl/button/button" with {
                           extra_classes: action.extra_classes|default('') ~ 'ecl-button--has-icon-layout',
                           icon: icon_file_path ? action.icon|default({})|merge({
                             path: icon_file_path,
@@ -84,7 +84,7 @@
 										{% else %}
 											{% if action is not empty %}
 												{% if action.link %}
-													{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+													{% include "@ecl/link/link.html.twig" with action|default({})|merge({
                             link: action.link|default({})|merge({
                               icon_position: 'before',
                             }),
@@ -97,7 +97,7 @@
                           }) only %}
 												{% elseif action is not empty %}
 													{% if action.link %}
-														{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+														{% include "@ecl/link/link.html.twig" with action|default({})|merge({
                               link: action.link|merge({
                                 icon_position: 'before',
                               }),
@@ -108,7 +108,7 @@
                               extra_classes: (actions[0].items and not loop.first) or loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary' ~ (action.is_compact ? 'ecl-link--button-has-icon-layout'),
                             }) only %}
 													{% else %}
-														{% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+														{% include "@ecl/button/button" with action|default({})|merge({
                               icon_position: 'before',
                               extra_classes: action.is_compact ? 'ecl-button--has-icon-layout',
                               variant: (actions[0].items and not loop.first) or loop.first or (action.variant and action.variant == 'primary')  ? 'primary' : 'secondary',
@@ -147,7 +147,7 @@
 								<div class="ecl-editorial-header__tags">
 									{% for tag in tags %}
 										<div class="ecl-editorial-header__tag">
-											{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({}) only %}
+											{% include '@ecl/tag/tag' with tag|default({}) only %}
 										</div>
 									{% endfor %}
 								</div>
@@ -178,7 +178,7 @@
 														{% if flag.content is defined %}
 															{{ flag.content }}
 														{% else %}
-															{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+															{% include "@ecl/link/link.html.twig" with flag|default({})|merge({
                                   link: flag.link|default({})|merge({
                                     icon_position: 'before',
                                   }),

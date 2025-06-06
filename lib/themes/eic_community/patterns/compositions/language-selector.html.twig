@@ -6,7 +6,7 @@
   >
     <span class="ecl-language-selector__icon-wrapper">
       {% if icon_file_path %}
-        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+        {% include "@ecl/icon" with {
           icon: {
             path: icon_file_path,
             name: 'language',
@@ -20,7 +20,7 @@
     <span class="ecl-language-selector__label">{{ name ~ " (" ~ code|upper ~ ")" }}</span>
   </a>
 
-  {% include '@ecl-twig/ec-component-language-list/ecl-language-list.html.twig' with language_selector.overlay|default({})|merge({
+  {% include '@ecl/language-list/language-list' with language_selector.overlay|default({})|merge({
     overlay: true,
     icon_path: icon_file_path,
     extra_classes: 'ecl-language-selector__language-list',

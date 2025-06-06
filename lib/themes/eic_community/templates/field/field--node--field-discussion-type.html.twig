@@ -7,7 +7,7 @@
 #}
 {%  set type = items.0.content['#markup'] %}
 
-{% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+{% include "@ecl/icon" with {
   icon: {
     type: "custom",
     name: type|lower,

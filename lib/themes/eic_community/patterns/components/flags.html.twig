@@ -5,7 +5,7 @@
         {% if flag.content is defined %}
           {{ flag.content }}
         {% else %}
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+          {% include "@ecl/link/link.html.twig" with flag|default({})|merge({
             link: flag.link|default({})|merge({
               icon_position: 'before',
             }),

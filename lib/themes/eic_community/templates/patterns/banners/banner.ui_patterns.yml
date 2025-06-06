@@ -1,0 +1,146 @@
+banner:
+  label: "Banner"
+  description: "The Banner consists of a title, description, and CTA with an optional image."
+  variants:
+    plain_background:
+      label: "Plain background (deprecated - to be removed in 5.x)"
+      description: "Plain background contains title, description and CTA with blue background."
+    text_box:
+      label: "Text box (deprecated - to be removed in 5.x)"
+      description: "Wraps the title, description and CTA inside a white text box with a background image."
+    text_overlay:
+      label: "Text overlay (deprecated - to be removed in 5.x)"
+      description: "Text overlay contains title, description and CTA with an overlay effect on the background image."
+  fields:
+    title:
+      type: "text"
+      label: "Title"
+      description: "Title of the banner."
+      preview: "Headline sed elit lorem. Donec dictum."
+    description:
+      type: "text"
+      label: "Description"
+      description: "Description of the banner."
+      preview: "Pellentesque tempor tincidunt quam, finibus vulputate eros iaculis pharetra orci arcu, dictum maximus arcu pellentesque eget. Cras massa nunc."
+    title_description_link:
+      type: "boolean"
+      label: "Use title/description as a link"
+      description: "Define if the banner should use the title or the description as a link. If both fields are provided, the title will have priority."
+      preview: false
+      escape: false
+    font_size:
+      type: "text"
+      label: "Font size"
+      description: "The size of the title and description (can be 'm' or 'l'). Defaults to 'm'."
+      preview: "l"
+    font_color:
+      type: "text"
+      label: "Font color"
+      description: "The color of the title and description (can be 'dark' or 'light'). Defaults to 'dark'."
+      preview: "light"
+    box_background:
+      type: "text"
+      label: "Box background"
+      description: "The color of the box background (can be 'dark', 'light' or 'none'). Defaults to 'light'."
+      preview: "none"
+    url:
+      type: "Url"
+      label: "URL"
+      description: "Banner link url."
+      preview: "http://example.com"
+    link_extra_attributes:
+      type: "array"
+      label: "Link attributes"
+      description: "Extra attributes for link"
+      preview:
+        - name: "extra-attr"
+          value: "extra value"
+    label:
+      type: "text"
+      label: "Link text"
+      description: "Banner link text."
+      preview: "Subscribe"
+    image:
+      type: "array"
+      label: "Image"
+      description: "The image of the banner is required for the variants which include an image."
+      preview:
+        src: "https://inno-ecl.s3.amazonaws.com/media/examples/example-image.jpg"
+        alt: "alternative text"
+    sources:
+      type: "array"
+      label: "Image sources"
+      description: "Array containing different sized image for each banner size."
+      preview:
+        - src: "https://loremflickr.com/480/160/arch"
+          size: "s"
+        - src: "https://loremflickr.com/768/256/dog"
+          size: "m"
+        - src: "https://loremflickr.com/996/332/paris"
+          size: "l"
+        - src: "https://loremflickr.com/1140/380/brazil"
+          size: "xl"
+        - src: "https://inno-ecl.s3.amazonaws.com/media/examples/example-image.jpg"
+          size: "full_width"
+    size:
+      type: "text"
+      label: "Size"
+      description: "Size of the banner (can be 's', 'm', 'l'). Defaults to 'm'."
+      preview: "l"
+    centered:
+      type: "boolean"
+      label: "Centered (deprecated - to be removed in 5.x)"
+      description: "Define if the banner should be centered. Deprecated - use horizontal and vertical fields instead."
+      preview: false
+      escape: false
+    horizontal:
+      type: "text"
+      label: "Horizontal alignment"
+      description: "Horizontal box alignment (can be 'left', 'center' or 'right'). Defaults to 'left'."
+      preview: "left"
+    vertical:
+      type: "text"
+      label: "Vertical alignment"
+      description: "Vertical box alignment (can be 'top', 'center' or 'bottom'). Defaults to 'center'."
+      preview: "top"
+    full_width:
+      type: "boolean"
+      label: "Full width"
+      description: "Extends the banner to whole viewport when used inside the grid."
+      preview: true
+      escape: false
+    external_link:
+      type: "boolean"
+      label: "External link"
+      description: "Whether the banner link is external or not."
+      preview: true
+      escape: false
+    credit:
+      type: "text"
+      label: "Credit"
+      description: "Credit for the image (only displayed for image variants)."
+      preview: "© Copyright or credit"
+    video:
+      type: "array"
+      label: "Video"
+      description: "Banner video: uses the media container parameters as defined by the ECL"
+      preview:
+        poster: "https://inno-ecl.s3.amazonaws.com/media/examples/example-image.jpg"
+        sources:
+          - src: "https://inno-ecl.s3.amazonaws.com/media/videos/big_buck_bunny.mp4"
+            src_type: "video/mp4"
+        tracks:
+          - src: "captions/bunny-en.vtt"
+            kind: "captions"
+            src_lang: "en"
+            label: "English"
+    sr_play:
+      type: "text"
+      label: "Screen reader control: Play"
+      description: "Screen reader label for the play button."
+      preview: "Play"
+    sr_pause:
+      type: "text"
+      label: "Screen reader control: Pause"
+      description: "Screen reader label for the pause button."
+      preview: "Pause"

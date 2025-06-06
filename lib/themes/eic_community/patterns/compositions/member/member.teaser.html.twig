@@ -28,7 +28,7 @@
         </figure>
       {% else %}
         <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
-          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          {% include '@ecl/icon' with {
             icon: {
               size: 'm',
               path: icon_file_path,
@@ -112,7 +112,7 @@
                 }) %}
               {% endif %}
 
-              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+              {% include '@ecl/link/link.html.twig' with {
                 icon: _icon,
                 link: {
                   path: action.path,

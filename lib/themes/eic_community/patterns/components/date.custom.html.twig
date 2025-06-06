@@ -112,7 +112,7 @@
   {# Validation #}
 
   {% if _compliance %}
-    {% include '@ecl-twig/ec-component-ecl-compliance/components/ecl-compliance-date-block.html.twig' with {
+    {% include '@ecl/compliance/components/compliance-date-block' with {
       variant: _variant,
       day: _start_day,
       month: _start_month,

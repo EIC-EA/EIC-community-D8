@@ -20,7 +20,7 @@
             <a class="ecl-link ecl-social-share__item-wrapper" href="{{ item.path }}">
               {% if icon_file_path %}
                 <span class="ecl-social-share__item-icon-wrapper">
-                  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  {% include '@ecl/icon' with {
                     icon: {
                       size: compact ? "xs" : "m",
                       path: icon_file_path,

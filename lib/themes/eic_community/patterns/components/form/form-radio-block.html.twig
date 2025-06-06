@@ -35,7 +35,7 @@ Parameters:
             <span class="ecl-radio__content">
               <span class="ecl-radio__title">
                 {% if item.icon and icon_file_path %}
-                  {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  {% include "@ecl/icon" with {
                     icon: {
                       type: item.icon.type,
                       name: item.icon.name,
@@ -54,7 +54,7 @@ Parameters:
                   <div class="ecl-form__radio-items ecl-form__radio-items--list">
                       {%- for _item in item.field.items %}
                         <div class="ecl-form__radio-item">
-                          {% include '@ecl-twig/ec-component-radio/ecl-radio-button.html.twig' with _item|merge({
+                          {% include '@ecl/radio/radio-button' with _item|merge({
                             name: item.field.name
                           }) only %}
                         </div>

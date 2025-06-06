@@ -7,7 +7,7 @@
 				<{{title_element}} class="ecl-teaser-overview__title">{{ title }}</{{title_element}}>
 			{% endif %}
 			{% if action %}
-				{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+				{% include "@ecl/link/link.html.twig" with {
         link: action.link|default({})|merge({
           type: 'standalone',
           icon_position: 'before',

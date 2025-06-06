@@ -50,7 +50,7 @@
 					<section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
 						<h2>{{ 'Announcements' | t }}</h2>
 						<p>{{ 'No offers or needs for the moment.' }}</p>
-						{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with empty_announcements|default({})|merge({
+						{% include '@ecl/link/link.html.twig' with empty_announcements|default({})|merge({
                             icon_path: icon_file_path,
                         }) %}
 					</section>
@@ -89,7 +89,7 @@
 						<h3 class="ecl-social-share__title">{{ contact.link.title }}</h3>
 						{% for link in contact.link.items %}
 							<div class="ecl-editorial-header__flag">
-								{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with link|default({})|merge({
+								{% include "@ecl/link/link.html.twig" with link|default({})|merge({
                                     link: link.link|default({})|merge({
                                         icon_position: 'before',
                                     }),
@@ -116,7 +116,7 @@
 						{% for dataItem in contact.data.items %}
 							<p>{{ dataItem.name }}</p>
 							<div class="ecl-editorial-header__flag">
-								{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dataItem.link|default({})|merge({
+								{% include "@ecl/link/link.html.twig" with dataItem.link|default({})|merge({
                                     link: dataItem.link.link|default({})|merge({
                                         icon_position: 'before',
                                     }),

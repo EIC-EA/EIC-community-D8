@@ -7,7 +7,7 @@
         <div class="ecl-contact-information-block__main-top">
           <{{ title_element }} class="ecl-contact-information-block__title">{{ title }}</{{ title_element }}>
           {% if follow is not empty %}
-            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            {% include "@ecl/link/link.html.twig" with {
               link: follow.link|default({})|merge({
                 icon_position: 'before',
               }),
@@ -38,7 +38,7 @@
               {% endif %}
               <div class="ecl-contact-information-block__expertises-items">
                 {% for expertise in expertises %}
-                  {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+                  {% include '@ecl/tag/tag' with {
                     extra_classes: 'ecl-contact-information-block__expertises-item',
                     tag: {
                       type: expertise.path ? 'link' : 'display',
@@ -57,7 +57,7 @@
                 {% for stat in stats %}
                   <div class="ecl-contact-information-block__stats-item">
                     {% if icon_file_path and stat.icon%}
-                      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                      {% include "@ecl/icon" with {
                         icon: stat.icon|merge({
                           path: icon_file_path,
                           size: 's',
@@ -90,7 +90,7 @@
           {% if links is not empty %}
             <div class="ecl-contact-information-block__links">
               {% for link in links %}
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                {% include "@ecl/link/link.html.twig" with {
                   link: link.link|default({})|merge({
                     icon_position: 'before',
                   }),

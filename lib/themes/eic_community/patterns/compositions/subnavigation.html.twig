@@ -8,7 +8,7 @@
           <ul class="ecl-subnavigation__items">
             {% for item in items %}
               <li class="ecl-subnavigation__item {{ item.is_active ? 'ecl-subnavigation__item--is-active' }}">
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
+                {% include "@ecl/link/link.html.twig" with item|default({})|merge({
                   link: item.link|default({})|merge({
                     type: 'standalone'
                   }),
@@ -29,7 +29,7 @@
         {% if searchform %}
           <div class="ecl-subnavigation__searchform-wrapper">
             {% set output_searchform %}
-              {% include '@ecl-twig/ec-component-search-form/ecl-search-form.html.twig' with searchform|default({})|merge({
+              {% include '@ecl/search-form/search-form' with searchform|default({})|merge({
                 extra_classes: searchform.extra_classes|default('') ~ 'ecl-subnavigation__searchform',
               }) %}
             {% endset %}
@@ -49,7 +49,7 @@
 
 {# For now the var 'icon_file_path' is null I need the path to the file please #}
 
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+            {% include "@ecl/button/button" with {
               label: active_item_label,
               variant: 'ghost',
               icon_position: 'before',

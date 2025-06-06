@@ -1,6 +1,6 @@
 <div class="ecl-content-type-indicator {{ extra_classes }}">
   {% if icon and icon_file_path %}
-    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+    {% include "@ecl/icon" with {
       extra_classes: 'ecl-content-type-indicator__icon',
       icon: icon|default({})|merge({
         path: icon_file_path,

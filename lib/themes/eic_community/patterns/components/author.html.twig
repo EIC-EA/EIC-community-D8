@@ -6,7 +6,7 @@
       <div class="ecl-author__information">
         <{{ label_element}} class="ecl-author__label {{ label_classes }}">
           {% if path is not empty %}
-            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+            {% include '@ecl/link' with {
               link: {
                 type: 'standalone',
                 label: name,
@@ -31,7 +31,7 @@
                 <div class="ecl-author__action">
                   <a href="{{ action.path }}" class="ecl-author__action-anchor">
                     {% if action.icon is not empty %}
-                      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                      {% include "@ecl/icon" with {
                         extra_classes: 'ecl-author-action__icon',
                         icon: {
                           path: icon_file_path,
@@ -57,7 +57,7 @@
         {% if image is not empty %}
           {% if path is empty %}
             <div class="ecl-author__media-wrapper">
-              {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+              {% include '@ecl/media-container/media-container' with {
                 extra_classes: 'ecl-author__media',
                 description: false,
                 sources: [],
@@ -67,7 +67,7 @@
             </div>
           {% else %}
             <a href="{{ path }}" class="ecl-author__media-wrapper">
-              {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+              {% include '@ecl/media-container/media-container' with {
                 extra_classes: 'ecl-author__media',
                 description: false,
                 sources: [],
@@ -80,7 +80,7 @@
           {% if path is empty %}
             <div class="ecl-author__media-wrapper">
               <figure class="ecl-author__media ecl-author__media--empty">
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                {% include '@ecl/icon' with {
                   icon: {
                     size: 'm',
                     path: icon_file_path,
@@ -93,7 +93,7 @@
           {% else %}
             <a href="{{ path }}" class="ecl-author__media-wrapper">
               <figure class="ecl-author__media ecl-author__media--empty">
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                {% include '@ecl/icon' with {
                   icon: {
                     size: 'm',
                     path: icon_file_path,
