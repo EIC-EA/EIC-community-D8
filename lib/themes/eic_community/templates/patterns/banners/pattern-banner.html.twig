@@ -142,7 +142,7 @@
 {% endif %}
 
 <div{{ container_attributes }}>
-  {% include '@ecl/twig-component-banner/banner' with {
+  {% include '@ecl/banner' with {
     title: _title|default(title),
     description: _description|default(description),
     font_color: _font_color,

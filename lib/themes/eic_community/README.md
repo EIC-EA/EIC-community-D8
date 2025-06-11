@@ -84,7 +84,7 @@ The custom icons will be generated with the `custom` prefix (this can be adjuste
 You need to use this prefix during the include of an ECL icon:
 
 ```twig
-  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+  {% include '@ecl/icon' with {
     icon: {
       size: 's',
       path: 'sprite.svg',

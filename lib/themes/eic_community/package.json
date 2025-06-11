@@ -38,17 +38,16 @@
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
-    "@ecl-twig/ec-components": "^2.35.2",
-    "@ecl/builder": "5.0.0-alpha.10",
-    "@ecl/preset-ec": "5.0.0-alpha.10",
-    "@ecl/preset-eu": "5.0.0-alpha.10",
-    "@ecl/preset-reset": "5.0.0-alpha.10",
+    "@ecl/builder": "5.0.0-alpha.11",
+    "@ecl/preset-ec": "5.0.0-alpha.11",
+    "@ecl/preset-eu": "5.0.0-alpha.11",
+    "@ecl/preset-reset": "5.0.0-alpha.11",
     "@ecl/stylelint-config": "0.2.1",
-    "@ecl/theme-ec": "5.0.0-alpha.10",
-    "@ecl/theme-eu": "5.0.0-alpha.10",
-    "@ecl/twig-templates": "5.0.0-alpha.10",
-    "@ecl/utility-background": "5.0.0-alpha.10",
-    "@ecl/utility-border": "5.0.0-alpha.10",
+    "@ecl/theme-ec": "5.0.0-alpha.11",
+    "@ecl/theme-eu": "5.0.0-alpha.11",
+    "@ecl/twig-templates": "5.0.0-alpha.11",
+    "@ecl/utility-background": "5.0.0-alpha.11",
+    "@ecl/utility-border": "5.0.0-alpha.11",
     "@storybook/addon-actions": "^6.4.20",
     "@storybook/addon-essentials": "^6.4.20",
     "@storybook/addon-knobs": "^6.2.9",
@@ -91,7 +90,12 @@
     "twing-loader": "2.0.2",
     "unicode-emoji-picker": "^1.1.1",
     "video.js": "^7.18.1",
-    "webpack": "^5.9.0"
+    "grunt": "1.6.1",
+    "grunt-contrib-copy": "1.0.0",
+    "moment": "2.29.1",
+    "node-sass": "8.0.0",
+    "patch-package": "8.0.0",
+    "pikaday": "1.8.2"
   },
   "dependencies": {
     "@babel/preset-react": "^7.13.13",
@@ -116,5 +120,9 @@
     "swiper": "^7.0.6",
     "videojs-contrib-quality-levels": "^2.1.0",
     "videojs-http-source-selector": "^1.1.6"
+  },
+  "engines": {
+    "node": ">=22.11.0",
+    "pnpm": ">=9.15.3"
   }
 }

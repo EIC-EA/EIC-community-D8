@@ -61,7 +61,7 @@
   }]) %}
   {% set _link = {} %}
 {% endfor %}
-{% include '@ecl/twig-component-carousel/carousel' with {
+{% include '@ecl/carousel' with {
   'items': _items,
   'counter_label': counter_label|default('of'|t),
   'full_width': full_width|default(false),

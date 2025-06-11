@@ -30,7 +30,7 @@
   }]) %}
 {% endfor %}
 
-{% include '@ecl/twig-component-news-ticker/news-ticker' with {
+{% include '@ecl/news-ticker' with {
   'id': identifier|default(''),
   'items': _items,
   'counter_label': counter_label|default('of'),

@@ -16,7 +16,7 @@
           <div class="ecl-u-mb-s">
             <div class="ecl-u-mb-s">{{ 'The dashboard data was last updated on '|t }} {{ dashboard_cache_time }}</div>
             <a href="{{ path('eic_dashboards.homepage_cache_invalidate')  }}">
-              {% include "@ecl-twig/button/button" with {
+              {% include "@ecl/button/button" with {
                 label: 'Refresh dashboard data'|t,
                 type: "button",
                 extra_classes: "dashboard-refresh",
