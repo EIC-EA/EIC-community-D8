@@ -1,11 +1,26 @@
+$color: var(--ecl-color-dark-140) !default;
+
 .ecl-content-item-date,
 .ecl-content-item {
   &__meta {
     text-transform: uppercase;
+    line-height: 1.25rem!important;
   }
   &__description {
     p {
       margin: 0;
     }
   }
+}
+
+.ecl-content-item__title,
+.ecl-content-item-date__title {
+  a {
+    color: var(--ecl-color-primary-500);
+  }
+}
+
+.ecl-content-item__description,
+.ecl-content-item-date__description {
+  color: $color;
 }

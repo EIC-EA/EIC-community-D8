@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Media Iframe specific styles.
+ */
+.ecl-media-container--custom-ratio {
+  display: block;
+
+  .ecl-media-container__media--ratio-custom {
+    display: flex;
+  }
+
+  // This is needed in case the template is overridden and a caption is passed
+  // to the ECL template. The caption/description content should be wrapped in
+  // a div, so that its width will match the iframe width.
+  .ecl-media-container__caption {
+    display: block;
+  }
+}

@@ -1,70 +1,36 @@
-@import '@ecl/ec-base/ec-base';
 // Apply global css.
 
+$font-family: null !default;
+
 body {
-  font-family: $ecl-font-family;
-  color: ecl-typography('color');
+  font-family: $font-family;
+  margin: 0;
+  padding: 0;
 }
 
 a {
   text-decoration: none;
+  color: var(--ecl-color-primary-500);
   &:hover,
   &:focus {
     text-decoration: underline;
   }
-  color: $ecl-color-blue;
 }
 
-.ecl-description {
-  @include ecl-responsive-font('description');
-  margin: ecl-box-model('margin', 'description') 0;
-
-  &:first-child {
+.ecl {
+  p:first-child {
     margin-top: 0;
   }
-
-  &:last-child {
+  p:last-child {
     margin-bottom: 0;
   }
 }
 
-.ecl-editable-wrapper {
-  #{$ecl-typography-elements} {
-    @include ecl-responsive-font('default');
-    line-height: ecl-typography('line-height');
+.ecl-u-shadow-none {
+  box-shadow: none!important;
+}
 
-    &:first-child {
-      margin-top: 0;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  dl {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-
-    &,
-    &:last-child {
-      margn-bottom: #{map-get($ecl-spacing, 'm')}
-    }
-  }
-
-  dt,
-  dd {
-    margin: 0 0 map-get($ecl-spacing, 'm');
-    padding: 0;
-  }
-
-  dt {
-    width: calc(100% / 3);
-    font-weight: $ecl-font-weight-bold;
-  }
-
-  dd {
-    width: calc(100% / 3 * 2);
-  }
+p.address {
+  margin-bottom: 0px;
+  margin-top: 0px;
 }

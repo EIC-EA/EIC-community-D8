@@ -1,8 +1,15 @@
 theme:
   css:
     theme:
-      dist/styles/eic_community.screen.css: { media: screen }
-      dist/styles/eic_community.print.css: { media: print }
+      dist/ec/styles/optional/ecl-reset.css: { media: screen }
+      dist/ec/styles/optional/ecl-ec-default.css: { media: screen }
+      dist/ec/styles/optional/ecl-ec-utilities.css: { media: screen }
+      dist/ec/styles/ecl-ec.css: { media: screen }
+      dist/ec/styles/ecl-ec-print.css: { media: print }
+      dist/ec/styles/ecl-ec-color-modes.css: { media: screen }
+      css/style-ec.css: { media: screen }
+#      dist/styles/eic_community.screen.css: { media: screen }
+#      dist/styles/eic_community.print.css: { media: print }
   js:
     dist/scripts/vendor/ecl/ecl-ec-preset-legacy-website.js: { minified: true }
     dist/scripts/vendor/svg4everybody/svg4everybody.min.js: { minified: true }
