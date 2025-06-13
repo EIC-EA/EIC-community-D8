@@ -25,5 +25,9 @@ services:
   eic_dashboards.cache_manager:
     class: Drupal\eic_dashboards\Services\DashboardCacheManager
     autowire: true
+  eic_dashboards.export_log:
+    class: Drupal\eic_dashboards\Services\DashboardExportLog
+    autowire: true
+  Drupal\Core\Routing\Router: '@router.no_access_checks'
   Drupal\Core\Cache\CacheBackendInterface: '@cache.default'
   Drupal\eic_dashboards\Services\DashboardCumulativeService: '@eic_dashboards.cumulative'

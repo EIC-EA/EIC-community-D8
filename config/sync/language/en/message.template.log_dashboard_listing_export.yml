@@ -1,0 +1,4 @@
+text:
+  -
+    value: "<p>User [message:field_event_executing_user:entity:display-name] exported data from listing [message:field_view_id:value]&nbsp;at [message:created:eu_short_date_hour]</p>\r\n"
+    format: full_html
