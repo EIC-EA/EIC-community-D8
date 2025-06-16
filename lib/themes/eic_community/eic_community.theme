@@ -75,6 +75,15 @@ function eic_community_theme() {
         'label' => NULL,
       ],
     ],
+    'eic_community_node_total_views' => [
+      'template' => 'node-total-views',
+      'path' => $theme_path . '/patterns/components',
+      'variables' => [
+        'extra_classes' => NULL,
+        'icon_file_path' => NULL,
+        'label' => NULL,
+      ],
+    ],
   ];
 }
 
