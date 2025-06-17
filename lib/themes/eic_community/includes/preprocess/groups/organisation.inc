@@ -61,9 +61,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
 
   $topics = $group->get('field_vocab_topics')->referencedEntities();
   $markets = $group->get('field_vocab_target_markets')->referencedEntities();
-  $products = $group
-    ->get('field_vocab_services_products')
-    ->referencedEntities();
+  $products = $group->get('field_vocab_services_products')->referencedEntities();
+  $funding_source = $group->get('field_funding_source')->referencedEntities();
 
   $features = $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue();
   $features = array_map(function ($item) {
@@ -421,6 +420,29 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
               ],
             ];
         }, $markets),
+      ],
+      [
+        'title' => t('Funding source', [], ['context' => 'eic_community']),
+        'type' => 'tags',
+        'title_element' => 'h4',
+        'icon_file_path' => $variables['eic_icon_path'],
+        'is_collapsible' => TRUE,
+        'grid' => TRUE,
+        'collapse_label' => 'Less',
+        'expand_label' => 'More',
+        'items' => array_map(function (TermInterface $term) {
+          return
+            [
+              'tag' => [
+                'type' => 'link',
+                'path' => _generate_overview_prefilter_url(
+                  'sm_group_funding_source_string',
+                  $term->label()
+                ),
+                'label' => $term->getName(),
+              ],
+            ];
+        }, $funding_source),
       ],
       [
         'title' => t('Topics', [], ['context' => 'eic_community']),

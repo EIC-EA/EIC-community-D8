@@ -102,6 +102,7 @@ third_party_settings:
       children:
         - field_vocab_services_products
         - field_vocab_target_markets
+        - field_funding_source
       label: Taxonomies
       region: content
       parent_name: group_organisation
@@ -247,7 +248,7 @@ content:
     third_party_settings: {  }
   field_funding_source:
     type: entity_reference_autocomplete
-    weight: 28
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS
