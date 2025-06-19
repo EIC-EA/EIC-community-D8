@@ -17,6 +17,16 @@ class StoriesCallsSourceType extends SourceType {
   use OverrideSearchTextTrait;
 
   /**
+   * Taxonomy labels to filter in this SourceType on vid 'story_type'.
+   *
+   * @var array
+   */
+  public const taxonomiesToFilter = [
+    'Open Calls',
+    'Partner Calls',
+  ];
+
+  /**
    * @inheritDoc
    */
   public function getSourcesId(): array {
@@ -142,6 +152,17 @@ class StoriesCallsSourceType extends SourceType {
    * @inheritDoc
    */
   public function extraPrefilter(): array {
+    // We want to filter only Open/Partner calls here.
+    // @see \Drupal\eic_search\Search\Sources\NewsStorySourceType::extraPrefilter
+    $query = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(FALSE);
+    $condition1 = $query->orConditionGroup();
+    $condition1->condition('name', StoriesCallsSourceType::taxonomiesToFilter, 'IN');
+    $query->condition($condition1)
+      ->condition('vid', 'story_type');
+    $results = $query->execute();
+
+
     // @todo In the future we should provide a configuration in the overview
     // block so that we can enable/disable this extra filter.
     return [
@@ -151,10 +172,7 @@ class StoriesCallsSourceType extends SourceType {
         ],
       ],
       'OR' => [
-        'its_content_field_vocab_story_type' => [
-          1221,
-          1222,
-        ],
+        'its_content_field_vocab_story_type' => $results,
       ],
     ];
   }
