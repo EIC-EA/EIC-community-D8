@@ -1353,6 +1353,16 @@ field_settings:
         - field.storage.message.field_referenced_node
       module:
         - node
+  name:
+    label: 'Type » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_story_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_story_type
+      module:
+        - taxonomy
   node_type:
     label: 'Referenced node » Content » Content type'
     datasource_id: 'entity:message'
