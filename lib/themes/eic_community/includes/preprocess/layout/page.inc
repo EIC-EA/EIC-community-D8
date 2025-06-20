@@ -11,6 +11,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_content\Constants\StoryTypes;
 
 /**
  * Implements hook_preprocess_page().
@@ -157,15 +158,17 @@ function _preprocess_node_page(&$variables) {
         ];
 
         // Define allowed story type term IDs for "Call".
-        $allowed_story_type_ids = [1221, 1222]; // Type "Call" (Open call / Partner Call)
+        $allowed_story_call_type_ids = [
+          StoryTypes::OPEN_CALLS_TAXONOMY_TERM_ID,
+          StoryTypes::PARTNER_CALLS_TAXONOMY_TERM_ID,
+        ];
         $is_call = FALSE;
         $story_type_label = NULL;
 
         if ($node->hasField('field_vocab_story_type') && !$node->get('field_vocab_story_type')->isEmpty()) {
           $story_type_term = $node->get('field_vocab_story_type')->entity;
-
           if ($story_type_term instanceof \Drupal\taxonomy\TermInterface) {
-            $is_call = in_array($story_type_term->id(), $allowed_story_type_ids);
+            $is_call = in_array($story_type_term->id(), $allowed_story_call_type_ids);
             $story_type_label = $story_type_term->label();
           }
         }
