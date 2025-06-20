@@ -10,6 +10,10 @@ dependencies:
     - taxonomy.vocabulary.program_type
     - taxonomy.vocabulary.story_type
     - taxonomy.vocabulary.topics
+    - user.role.administrator
+    - user.role.content_administrator
+    - user.role.sensitive
+    - user.role.site_admin
   module:
     - csv_serialization
     - eic_dashboards
@@ -19,6 +23,7 @@ dependencies:
     - serialization
     - statistics
     - taxonomy
+    - user
     - views_autocomplete_filters
     - views_data_export
     - views_fields_on_off
@@ -949,8 +954,13 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            sensitive: sensitive
+            content_administrator: content_administrator
+            site_admin: site_admin
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -1617,6 +1627,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
+        - user.roles
       tags:
         - 'config:field.storage.node.field_tags'
         - 'config:field.storage.node.field_vocab_program_type'
@@ -2507,6 +2518,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      access:
+        type: role
+        options:
+          role:
+            site_admin: site_admin
       style:
         type: data_export
         options:
@@ -2522,6 +2538,7 @@ display:
             utf8_bom: '0'
             use_serializer_encode_only: false
       defaults:
+        access: false
         fields: false
       display_extenders: {  }
       path: dashboards/listings/content/export
@@ -2544,6 +2561,7 @@ display:
         - request_format
         - url
         - 'user.node_grants:view'
+        - user.roles
       tags:
         - 'config:field.storage.node.field_tags'
         - 'config:field.storage.node.field_vocab_program_type'
@@ -2555,6 +2573,8 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      defaults:
+        access: true
       display_extenders: {  }
       path: dashboards/listings/content
     cache_metadata:
@@ -2565,6 +2585,7 @@ display:
         - url
         - url.query_args
         - 'user.node_grants:view'
+        - user.roles
       tags:
         - 'config:field.storage.node.field_tags'
         - 'config:field.storage.node.field_vocab_program_type'

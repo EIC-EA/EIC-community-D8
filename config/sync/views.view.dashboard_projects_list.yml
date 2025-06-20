@@ -13,6 +13,10 @@ dependencies:
     - group.type.project
     - taxonomy.vocabulary.fields_of_science
     - taxonomy.vocabulary.funding_programme
+    - user.role.administrator
+    - user.role.content_administrator
+    - user.role.sensitive
+    - user.role.site_admin
   module:
     - address
     - csv_serialization
@@ -27,6 +31,7 @@ dependencies:
     - serialization
     - taxonomy
     - text
+    - user
     - views_autocomplete_filters
     - views_data_export
     - views_fields_on_off
@@ -743,8 +748,13 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            sensitive: sensitive
+            content_administrator: content_administrator
+            site_admin: site_admin
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -1343,6 +1353,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.group.field_body'
         - 'config:field.storage.group.field_project_date'
@@ -2022,6 +2033,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+      access:
+        type: role
+        options:
+          role:
+            site_admin: site_admin
       style:
         type: data_export
         options:
@@ -2037,6 +2053,7 @@ display:
             utf8_bom: '0'
             use_serializer_encode_only: false
       defaults:
+        access: false
         fields: false
       display_extenders: {  }
       path: dashboards/listings/projects/export
@@ -2056,6 +2073,7 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
+        - user.roles
       tags:
         - 'config:field.storage.group.field_body'
         - 'config:field.storage.group.field_project_date'
@@ -2079,6 +2097,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.group.field_body'
         - 'config:field.storage.group.field_project_date'

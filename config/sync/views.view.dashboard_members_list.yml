@@ -11,6 +11,10 @@ dependencies:
     - field.storage.user.field_last_name
     - taxonomy.vocabulary.topics
     - taxonomy.vocabulary.user_types
+    - user.role.administrator
+    - user.role.content_administrator
+    - user.role.sensitive
+    - user.role.site_admin
   module:
     - address
     - csv_serialization
@@ -834,9 +838,13 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
+        type: role
         options:
-          perm: 'access user profiles'
+          role:
+            sensitive: sensitive
+            content_administrator: content_administrator
+            site_admin: site_admin
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -1519,7 +1527,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.profile.field_vocab_language'
         - 'config:field.storage.profile.field_vocab_topic_expertise'
@@ -2296,6 +2304,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+      access:
+        type: role
+        options:
+          role:
+            site_admin: site_admin
       style:
         type: data_export
         options:
@@ -2311,6 +2324,7 @@ display:
             utf8_bom: '0'
             use_serializer_encode_only: false
       defaults:
+        access: false
         fields: false
       display_extenders: {  }
       path: dashboards/listings/members/export
@@ -2332,7 +2346,7 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.profile.field_vocab_language'
         - 'config:field.storage.profile.field_vocab_topic_expertise'
@@ -2346,6 +2360,8 @@ display:
     display_plugin: page
     position: 1
     display_options:
+      defaults:
+        access: true
       display_extenders: {  }
       path: dashboards/listings/members
     cache_metadata:
@@ -2355,7 +2371,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.permissions
+        - user.roles
       tags:
         - 'config:field.storage.profile.field_vocab_language'
         - 'config:field.storage.profile.field_vocab_topic_expertise'
