@@ -57,8 +57,8 @@ RUN latest_drush_version=${DRUSH_VERSION} \
   && drush version
 
 ENV YARN_VERSION=1.22.15
-COPY --from=node:14 /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=node:14 /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:22 /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node:22 /usr/local/bin/node /usr/local/bin/node
 
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
