@@ -30,17 +30,23 @@
 
 {% for key, item in content['#block_content'].field_social_media_links %}
   {%
-    set _items = _items|merge([{
-      path: item.url,
-      name: item.link_type,
-      label: social_media_link_types[item.link_type],
-    }])
+    set _items = _items|merge([
+      {
+        link: {
+          label: social_media_link_types[item.link_type],
+          path: item.url,
+          icon_position: 'before',
+        },
+        icon: {
+          name: item.link_type,
+          size: 'm',
+        },
+      }
+    ])
   %}
 {% endfor %}
 
-{% include "@theme/patterns/compositions/social-share.html.twig" with {
-  title: content['#block_content'].field_title.value|default(''),
-  items: _items,
-  icon_file_path: eic_icon_path,
-  extra_classes: 'ecl-featured-list',
+{% include '@ecl/social-media-follow/social-media-follow.html.twig' with {
+  description: content['#block_content'].field_title.value|default(''),
+  links: _items
 } %}
