@@ -5,7 +5,15 @@ register_path: eim/external/register.cgi
 validation_path: TicketValidationService
 assurance_level: TOP
 ticket_types: 'SERVICE,PROXY'
-force_2fa: true
+force_2fa: false
 restrict_user_delete_cancel_methods: true
-2fa_conditions: {  }
+2fa_conditions:
+  user_role:
+    id: user_role
+    negate: false
+    roles:
+      sensitive: sensitive
+      content_administrator: content_administrator
+      site_admin: site_admin
+      administrator: administrator
 message_login_2fa_required: 'Your account is required to log in using a two-factor authentication method. Please <a href=":login">log in again via this link</a>.'
