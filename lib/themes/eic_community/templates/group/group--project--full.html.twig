@@ -17,7 +17,7 @@
 
       </section>
 
-      {% if elements['#group'].features.0.value %}
+      {% if innovation_feature_enabled %}
         <section id="innovations" class="ecl-u-mb-l">
           <h2 class="ecl-u-mb-l">{{ "Innovations"|t({}, {'context': 'eic_community'}) }}</h2>
           {% if content.field_project_innovations.0 %}
@@ -49,7 +49,7 @@
         </section>
       {% endif %}
 
-      {% if elements['#group'].features.1.value %}
+      {% if horizon_feature_enabled %}
         <section id="horizon-results" class="ecl-u-mb-l">
           <h2 class="ecl-u-mb-l">{{ "Horizon Results"|t({}, {'context': 'eic_community'}) }}</h2>
           {% if content.field_project_horizon_results.0 %}

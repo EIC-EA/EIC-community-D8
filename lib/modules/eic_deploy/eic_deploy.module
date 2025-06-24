@@ -17,6 +17,8 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
 
   $group_permissions = \Drupal::entityQuery('group_permission')->accessCheck(FALSE)->execute();
 
+  \Drupal::logger('eic_deploy')->notice("Loading ".sizeof($group_permissions)." group permission ids");
+
   $group_permissions = GroupPermission::loadMultiple($group_permissions);
 
   $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
@@ -27,6 +29,7 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
 
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = $group_permission->getGroup();
+    \Drupal::logger('eic_deploy')->notice("Changing permissions for ".$group->id());
 
     $group_visibility = $group_visibility_storage->load($group->id());
 
@@ -38,7 +41,7 @@ function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], a
     }
     elseif (
       in_array($group->getGroupType()->id(), ['group', 'event']) &&
-      (empty($permissions) || !in_array($group_visibility->getType(), $group_visibilities))
+      (empty($permissions) || (is_object($group_visibility) && !in_array($group_visibility->getType(), $group_visibilities)))
     ) {
       continue;
     }

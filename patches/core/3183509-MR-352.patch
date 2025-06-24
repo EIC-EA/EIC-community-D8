@@ -1,0 +1,13 @@
+diff --git a/core/modules/node/src/NodeForm.php b/core/modules/node/src/NodeForm.php
+index ef167c82bd1..16424be5ee5 100644
+--- a/core/modules/node/src/NodeForm.php
++++ b/core/modules/node/src/NodeForm.php
+@@ -152,7 +152,7 @@ public function form(array $form, FormStateInterface $form_state) {
+     $form['meta']['author'] = [
+       '#type' => 'item',
+       '#title' => $this->t('Author'),
+-      '#markup' => $node->getOwner()->getAccountName(),
++      '#markup' => $node->getOwner()->getDisplayName(),
+       '#wrapper_attributes' => ['class' => ['entity-meta__author']],
+     ];
+

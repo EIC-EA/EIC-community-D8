@@ -768,6 +768,14 @@ field_settings:
     label: 'Event weight state'
     property_path: event_weight_state
     type: integer
+  field_project_grant_agreement_id:
+    label: ID
+    datasource_id: 'entity:group'
+    property_path: field_project_grant_agreement_id
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_project_grant_agreement_id
   field_project_horizon_results:
     label: 'Project horizon results'
     datasource_id: 'entity:group'

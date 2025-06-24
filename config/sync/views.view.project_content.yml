@@ -306,9 +306,10 @@ display:
       query:
         type: search_api_query
         options:
-          bypass_access: false
-          skip_access: false
+          bypass_access: true
+          skip_access: true
           preserve_facet_query_args: false
+          query_tags: {  }
       relationships: {  }
       header:
         area:

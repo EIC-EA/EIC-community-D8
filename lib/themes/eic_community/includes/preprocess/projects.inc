@@ -10,11 +10,19 @@ use Drupal\views\Views;
  *
  */
 
+use Drupal\oec_group_features\GroupFeatureHelper;
+
 /**
  * Implements hook_preprocess_HOOK() for group--project--full.html.twig.
  */
-function _eic_community_render_project_detail_page(&$variables) {
+function _eic_community_render_project_detail_page(&$variables, $group) {
   $view_id = 'project_content';
+
+  if ($group->hasField(GroupFeatureHelper::FEATURES_FIELD_NAME) && !$group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->isEmpty()) {
+    $features = array_column($group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue(), 'value');
+    $variables['horizon_feature_enabled'] = is_int(array_search('eic_groups_anchor_horizon_platform_result', $features));
+    $variables['innovation_feature_enabled'] = is_int(array_search('eic_groups_anchor_innovations', $features));
+  }
 
   // Render and set project coordinators and paricipants view.
   $variables['project_coordinators_view'] = _eic_community_get_rendered_view($view_id, 'project_coordinators')['#rows'] ?? _eic_community_get_rendered_view($view_id, 'project_coordinators');
