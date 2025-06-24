@@ -16,20 +16,20 @@ gateway:
   enabled: false
   recheck_time: 720
   paths:
-    id: request_path
+    id: null
     negate: false
     pages: ''
   method: server_side
 forced_login:
   enabled: false
   paths:
-    id: request_path
+    id: null
     negate: false
     pages: /user/login
 user_accounts:
   prevent_normal_login: false
   auto_register: true
-  auto_register_follow_registration_policy: false
+  auto_register_follow_registration_policy: true
   email_assignment_strategy: 1
   email_hostname: localhost
   email_attribute: email
