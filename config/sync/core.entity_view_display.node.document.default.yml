@@ -143,3 +143,4 @@ hidden:
   node_read_time: true
   published_at: true
   search_api_excerpt: true
+  workflow_buttons: true

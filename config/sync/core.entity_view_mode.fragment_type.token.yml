@@ -6,5 +6,6 @@ dependencies:
     - fragments
 id: fragment_type.token
 label: Token
+description: ''
 targetEntityType: fragment_type
 cache: true

@@ -18,7 +18,7 @@ function eic_datepicker_preprocess_input(&$variables) {
   $is_date_type = $variables['theme_hook_original'] === 'input__date'
     && ($variables['element']['#attributes']['type'] === 'date');
 
-  if (($theme === 'seven' && $is_date_type
+  if (($theme === 'claro' && $is_date_type
     && in_array($variables['element']['#name'], Datepicker::FIELDS_OVERRIDE_DATEPICKER))) {
     // Attach custom library and add class identifier to element.
     $variables['#attached']['library'][] = 'eic_datepicker/datepicker';

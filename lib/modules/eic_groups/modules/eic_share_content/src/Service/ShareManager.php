@@ -232,7 +232,9 @@ class ShareManager {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getSharedEntities(NodeInterface $node, GroupInterface $target_group = NULL): array {
-    $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
+    $query = $this->entityTypeManager->getStorage('group_content')
+      ->getQuery()
+      ->accessCheck(FALSE);
     $query->condition('entity_id', $node->id());
     if ($target_group) {
       $query->condition('type', $this->defineGroupContentType($target_group), 'LIKE');

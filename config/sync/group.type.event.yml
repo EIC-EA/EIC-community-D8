@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - group_flex
+    - group_permissions
 third_party_settings:
   group_flex:
     group_flex_enabler: true
@@ -14,6 +15,8 @@ third_party_settings:
       tu_close_method: tu_close_method
       group_invitation: '0'
     group_type_joining_method_override: true
+  group_permissions:
+    enabled: true
 id: event
 label: Event
 description: ''

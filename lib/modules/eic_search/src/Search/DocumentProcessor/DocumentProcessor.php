@@ -43,6 +43,9 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
    */
   protected function addOrUpdateDocumentField(Document &$document, $key, $fields, $value) {
     $current_fields = $document->getFields();
+    if (\is_array($value) && empty($value)) {
+      $value = NULL;
+    }
 
     array_key_exists($key, $current_fields) ?
       $document->setField($key, $value) :

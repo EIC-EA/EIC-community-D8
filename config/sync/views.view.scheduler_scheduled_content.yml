@@ -6,13 +6,15 @@ dependencies:
     - system.menu.admin
   module:
     - node
-    - scheduler
     - user
     - views_autocomplete_filters
+  enforced:
+    module:
+      - scheduler
 _core:
   default_config_hash: 72DaOXTPi--s-2ge-SRzJzYnqnoD2SAKPkUKXOvpxlU
 id: scheduler_scheduled_content
-label: 'Scheduled content'
+label: 'Scheduled Content'
 module: views
 description: 'Find and manage scheduled content.'
 tag: ''
@@ -381,6 +383,15 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -448,6 +459,15 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -513,6 +533,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 50
           total_pages: null
           id: 0
@@ -532,7 +553,9 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: scheduler
+        type: perm
+        options:
+          perm: 'view scheduled content'
       cache:
         type: tag
         options: {  }
@@ -992,8 +1015,8 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
+        - user.permissions
       tags: {  }
   overview:
     id: overview
@@ -1001,14 +1024,14 @@ display:
     display_plugin: page
     position: 1
     display_options:
-      display_description: 'Overview of all scheduled content, as a tab on main ''content admin'' page'
-      display_comment: 'Revision nid relationship is required because the content type is only stored at ''content'' level, not ''content revision'' level.'
+      display_description: "Overview of all scheduled content, as a tab on main 'content admin' page"
+      display_comment: "Revision nid relationship is required because the content type is only stored at 'content' level, not 'content revision' level."
       display_extenders: {  }
       path: admin/content/scheduled
       menu:
         type: normal
-        title: Scheduled
-        description: 'Content scheduled for publishing and unpublishing'
+        title: 'Scheduled Content'
+        description: 'Content that is scheduled for publishing or unpublishing'
         weight: -10
         expanded: false
         menu_name: admin
@@ -1027,15 +1050,19 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
+        - user.permissions
       tags: {  }
   user_page:
     id: user_page
-    display_title: 'User profile tab'
+    display_title: User
     display_plugin: page
     position: 2
     display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
       empty:
         area_text_custom:
           id: area_text_custom
@@ -1058,7 +1085,7 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: uid
-          plugin_id: numeric
+          plugin_id: entity_target_id
           default_action: empty
           exception:
             value: all
@@ -1069,7 +1096,6 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1091,13 +1117,15 @@ display:
             roles: {  }
           break_phrase: false
           not: false
+          target_entity_type_id: user
       defaults:
         empty: false
-        access: true
+        access: false
         arguments: false
         filters: true
         filter_groups: true
-      display_description: 'Scheduled content tab on user profile, showing just that user''s scheduled content'
+      display_description: "Scheduled content tab on user profile, showing just that user's scheduled content"
+      display_comment: 'Access to the user view is controlled via SchedulerRouteSubscriber::alterRoutes(). The high-level permission "access content" is added to satisfy the security_review module'
       display_extenders: {  }
       path: user/%user/scheduled
       menu:
@@ -1106,7 +1134,7 @@ display:
         description: ''
         weight: -10
         menu_name: admin
-        parent: system.admin_content
+        parent: user.page
         context: '0'
       tab_options:
         type: normal
@@ -1121,6 +1149,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
+        - user.permissions
       tags: {  }

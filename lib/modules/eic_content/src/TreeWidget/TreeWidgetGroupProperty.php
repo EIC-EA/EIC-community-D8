@@ -42,6 +42,7 @@ class TreeWidgetGroupProperty implements TreeWidgetProperties {
    */
   public function generateSearchQueryResults(string $search_text): array {
     $query = \Drupal::entityQuery('group')
+      ->accessCheck(FALSE)
       ->condition('label', $search_text, 'CONTAINS')
       ->range(0, 20);
 

@@ -312,6 +312,7 @@ function _eic_community_get_entity_last_comment(
   $published_only = TRUE
 ) {
   $query = \Drupal::entityQuery('comment')
+    ->accessCheck(TRUE)
     ->condition('entity_id', $entity->id())
     ->condition('entity_type', $entity->getEntityTypeId());
 

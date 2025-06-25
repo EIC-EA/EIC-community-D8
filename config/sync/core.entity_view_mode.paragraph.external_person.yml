@@ -6,5 +6,6 @@ dependencies:
     - paragraphs
 id: paragraph.external_person
 label: 'External person'
+description: ''
 targetEntityType: paragraph
 cache: true

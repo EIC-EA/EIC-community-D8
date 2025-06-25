@@ -3,7 +3,7 @@ type: module
 description: European Innovation Council theme helpers and tools.
 package: European Innovation Council
 php: 7.3
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 dependencies:
   - ui_patterns:ui_patterns_library
   - drupal:responsive_image

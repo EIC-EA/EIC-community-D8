@@ -2,8 +2,7 @@ name: EIC Flags
 type: module
 description: Drupal module that adds functions for flags to be used on EIC Platform.
 package: European Innovation Council
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 php: 7.3
 dependencies:
   - flag:flag

@@ -6,25 +6,16 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_webservices\Controller\SubRequestController;
-use Drupal\rest\Plugin\ResourceBase;
-use Drupal\rest\ResourceResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
-use Drupal\Core\Http\RequestStack;
-
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Session\AccountSwitcherInterface;
-
 use Drupal\Core\Config\ConfigFactoryInterface;
-
 use Symfony\Component\HttpFoundation\Session\Session;
-
 use Drupal\Core\Queue\QueueInterface;
 
 /**
@@ -45,35 +36,35 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
 
   /**
    * Required to create subRequests
-   * 
+   *
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
   protected $httpKernel;
 
   /**
    * Used for getCurrentRequest
-   * 
-   * @var \Drupal\Core\Http\RequestStack
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
 
   /**
    * Used to get eic_webservices_organisation'
-   * 
+   *
    * @var \Drupal\rest\Plugin\Type\ResourcePluginManager
    */
   protected $resourcePluginManager;
 
   /**
    * To switch to user 1 ( admin )
-   * 
+   *
    * @var Drupal\Core\Session\AccountSwitcherInterface
    */
   protected $accountSwitcher;
 
   /**
    * To create a session
-   * 
+   *
    * @var \Drupal\Core\Session\UserSession
    */
   protected $session;
@@ -81,7 +72,7 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
   /**
    * {@inheritDoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerChannelInterface $logger, 
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerChannelInterface $logger,
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
         ResourcePluginManager $resourcePluginManager,
@@ -94,7 +85,7 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     $this->logger = $logger;
     $this->requestStack = $requestStack;
     $this->httpKernel = $httpKernel;
-    $this->resourcePluginManager = $resourcePluginManager;   
+    $this->resourcePluginManager = $resourcePluginManager;
     $this->accountSwitcher = $accountSwitcher;
     $this->session = $session;
     $this->config = $config;
@@ -110,7 +101,7 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
       $plugin_id,
       $plugin_definition,
       $container->get('logger.factory')->get('logger.channel.queue_log'),
-      $container->get('http_kernel.basic'),      
+      $container->get('http_kernel.basic'),
       $container->get('request_stack'),
       $container->get('plugin.manager.rest'),
       $container->get('account_switcher'),
@@ -143,7 +134,7 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     }
     $current_request->setSession($this->session);
 
-    // Because of 
+    // Because of
     // https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Routing%21ContentTypeHeaderMatcher.php/8.9.x
     // https://github.com/symfony/http-foundation/blob/4.0/Request.php#L1286
     $current_request->headers->set('Content-Type', 'application/hal+json');
@@ -152,25 +143,25 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     // Authenticate
     $api_key = $this->config->get('eic_webservices.settings')->get('api_key');
     $current_request->headers->set('X-EIC-Auth-Token', $api_key);
-        
+
     // Get the parent resource endpoint URI.
     $parent_resource = $this->resourcePluginManager->getDefinition('eic_webservices_organisation');
     $uri = $current_request->getBasePath();
     $uri .= str_replace('{group}', $data['detail']['Id'][0], $parent_resource['uri_paths']['canonical']);
 
     $project_ids = [];
-    if (is_array($data['detail']["Projects"][0])) {  
+    if (is_array($data['detail']["Projects"][0])) {
       foreach ($data['detail']["Projects"][0]["ProjectId"] as $project_id) {
           $project_ids[] = array("value" => $project_id);
           // Enqueue project Id to get data from CORDIS
           $extraction_queue_item = new \stdClass();
           $extraction_queue_item->project_id = $project_id;
-          $this->project_id_queue->createItem($extraction_queue_item);      
+          $this->project_id_queue->createItem($extraction_queue_item);
       }
     }
 
     $data = json_encode(array("_links" => array("type" => array(
-      "href" => $current_request->getSchemeAndHttpHost().$current_request->getBaseUrl()."/rest/type/group/organisation")), 
+      "href" => $current_request->getSchemeAndHttpHost().$current_request->getBaseUrl()."/rest/type/group/organisation")),
       "field_organisation_pic" => array(array("value" => $data['detail']["EnterpriseId"][0])),
       "field_organisation_project_id" => $project_ids,
       )
@@ -197,6 +188,6 @@ class OrganisationQueueWorker extends QueueWorkerBase implements ContainerFactor
     $this->accountSwitcher->switchBack();
 
     $this->logger->notice(print_r([Json::decode($response->getContent()), $response->getStatusCode()], true));
-  }  
+  }
 
 }

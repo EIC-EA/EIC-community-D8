@@ -108,7 +108,9 @@ class FlagHelper {
     if (empty($flag_ids)) {
       return $this->flagService->getFlaggingUsers($entity);
     }
-    $query = $this->entityTypeManager->getStorage('flagging')->getQuery();
+    $query = $this->entityTypeManager->getStorage('flagging')
+      ->getQuery()
+      ->accessCheck(FALSE);
     $query->condition('entity_type', $entity->getEntityTypeId())
       ->condition('entity_id', $entity->id());
     if (!empty($flag_ids)) {

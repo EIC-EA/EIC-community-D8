@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for the EIC Messages module.
  */
 
-module_load_include('inc', 'eic_messages', 'eic_messages.install');
+\Drupal::moduleHandler()->loadInclude('eic_messages', 'inc', 'eic_messages.install');
 
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\Core\Batch\BatchBuilder;

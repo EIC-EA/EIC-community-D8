@@ -138,7 +138,7 @@ class ImageValueObject extends ValueObjectBase {
     $image_file = $image_item->get('entity')->getTarget();
 
     $image_object = new static(
-      file_create_url($image_file->get('uri')->getString()),
+      \Drupal::service('file_url_generator')->generateAbsoluteString($image_file->get('uri')->getString()),
       $image_item->get('alt')->getString(),
       $image_item->get('title')->getString()
     );

@@ -86,3 +86,4 @@ hidden:
   published_at: true
   reading_time: true
   search_api_excerpt: true
+  workflow_buttons: true

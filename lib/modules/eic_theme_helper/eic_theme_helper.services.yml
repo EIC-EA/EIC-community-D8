@@ -7,7 +7,7 @@ services:
     class: Drupal\eic_theme_helper\Loader\ComponentLibraryLoader
     arguments:
       - '%eic_theme_helper.twig_loader.namespaces%'
-      - '@app.root'
+      - '%app.root%'
       - '%eic_theme_helper.twig_loader.theme%'
       - '%eic_theme_helper.twig_loader.directory%'
       - '@theme_handler'
@@ -36,3 +36,8 @@ services:
     arguments: ['@current_route_match', '@entity_type.manager', '@entity.repository']
     tags:
       - { name: event_subscriber }
+  twig:
+    class: Drupal\eic_theme_helper\Template\TwigEnvironment
+    arguments: [ '%app.root%', '@cache.default', '%twig_extension_hash%', '@state', '@twig.loader', '%twig.config%' ]
+    tags:
+      - { name: service_collector, tag: 'twig.extension', call: addExtension }

@@ -174,6 +174,7 @@ class RequestCancelForm extends ContentEntityConfirmFormBase {
       ->condition('entity_type', $this->entity->getEntityTypeId())
       ->condition('entity_id', $this->entity->id())
       ->condition('field_request_status', RequestStatus::OPEN)
+      ->accessCheck(FALSE)
       ->execute();
 
     if (empty($entity_flags)) {

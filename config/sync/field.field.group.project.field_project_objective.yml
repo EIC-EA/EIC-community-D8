@@ -6,12 +6,9 @@ dependencies:
     - field.storage.group.field_project_objective
     - group.type.project
   module:
-    - allowed_formats
     - eic_non_required_on_draft
     - text
 third_party_settings:
-  allowed_formats:
-    allowed_formats: {  }
   eic_non_required_on_draft:
     non_required_on_draft: true
 id: group.project.field_project_objective
@@ -24,5 +21,6 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats: {  }
 field_type: text_long

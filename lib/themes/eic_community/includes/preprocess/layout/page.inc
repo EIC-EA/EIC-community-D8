@@ -186,6 +186,9 @@ function _preprocess_node_page(&$variables) {
           ->calculateReadingTime()
           ->getReadingTime();
 
+        $stats = _eic_community_get_entity_stats($node, ['views']);
+        $node_total_views = $stats['views']['value'];
+
         $variables['hero'] = [
           'image' => [
             'src' => $image_item ? $image_item->getSource() : NULL,
@@ -200,6 +203,13 @@ function _preprocess_node_page(&$variables) {
                 '#icon_file_path' => $variables['eic_icon_path'],
               ],
             ],
+            [
+              'content' => [
+                '#theme' => 'eic_community_node_total_views',
+                '#label' => $node_total_views,
+                '#icon_file_path' => $variables['eic_icon_path'],
+              ]
+            ]
           ],
         ];
 

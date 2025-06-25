@@ -14,6 +14,7 @@ dependencies:
     - comment
     - content_moderation_bypass
     - eic_stakeholder
+    - file
     - filter
     - group
     - node
@@ -30,15 +31,12 @@ permissions:
   - 'bypass group access'
   - 'bypass groups transition restrictions'
   - 'create member profile'
-  - 'restful delete eic_webservices_group_membership'
-  - 'restful get eic_webservices_organisation'
+  - 'delete own files'
   - 'restful post eic_webservices_event_update'
   - 'restful post eic_webservices_group_membership'
-  - 'restful post eic_webservices_organisation'
   - 'restful post eic_webservices_organisation_update'
   - 'restful post eic_webservices_user_update'
   - 'update any member profile'
-  - 'use groups transition force_pending_to_published'
   - 'use text format basic_text'
   - 'use text format filtered_html'
   - 'use text format full_html'

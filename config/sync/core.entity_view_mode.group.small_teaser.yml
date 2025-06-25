@@ -6,5 +6,6 @@ dependencies:
     - group
 id: group.small_teaser
 label: 'Small teaser'
+description: ''
 targetEntityType: group
 cache: true

@@ -227,7 +227,7 @@ class FeaturedMediaFormatter extends EntityReferenceFormatterBase {
     }
     else {
       // Use original file url.
-      $image_url = file_create_url($file->get('uri')->getString());
+      $image_url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->get('uri')->getString());
     }
 
     $params['alt'] = $thumbnail->get('alt')->getString();

@@ -1,5 +1,6 @@
 _core:
   default_config_hash: W42TeamUFaYIcLMbvbx1hngcurDgrV8-Rh_iNsgeFJc
+langcode: en
 login_link_enabled: true
 login_link_label: 'EU Login'
 login_success_message: 'You have been logged in.'
@@ -12,11 +13,13 @@ server:
   verify: 2
   cert: ''
 gateway:
-  check_frequency: -2
+  enabled: false
+  recheck_time: 720
   paths:
     id: request_path
     negate: false
     pages: ''
+  method: server_side
 forced_login:
   enabled: false
   paths:
@@ -26,6 +29,7 @@ forced_login:
 user_accounts:
   prevent_normal_login: false
   auto_register: true
+  auto_register_follow_registration_policy: true
   email_assignment_strategy: 1
   email_hostname: localhost
   email_attribute: email

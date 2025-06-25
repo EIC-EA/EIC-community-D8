@@ -35,6 +35,7 @@ class CordisExtractionService {
     $count_entities = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')->getQuery()
       ->condition('extraction_status', 'pending_extraction')
+      ->accessCheck(FALSE)
       ->count()
       ->execute();
     if ($count_entities === 0) {

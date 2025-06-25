@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'Contact - category'
 vid: contact_category
-description: ''
+description: null
 weight: 0
+new_revision: false

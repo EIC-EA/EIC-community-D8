@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'Services and products'
 vid: services_and_products
-description: ''
+description: null
 weight: 0
+new_revision: false

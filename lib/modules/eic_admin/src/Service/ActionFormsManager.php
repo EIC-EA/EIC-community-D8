@@ -9,9 +9,9 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**

@@ -27,7 +27,7 @@
 use Symfony\Component\HttpFoundation\Request;
 
 assert_options(ASSERT_ACTIVE, TRUE);
-\Drupal\Component\Assertion\Handle::register();
+assert_options(ASSERT_EXCEPTION, TRUE);
 
 /**
  * Enable local development services.

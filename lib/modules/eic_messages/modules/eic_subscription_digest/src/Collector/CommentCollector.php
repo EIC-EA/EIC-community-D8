@@ -38,6 +38,7 @@ class CommentCollector implements CollectorInterface {
 
     $flag_ids = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('flag_id', FlagType::FOLLOW_CONTENT)
       ->condition('uid', $user->id())
       ->execute();
@@ -54,6 +55,7 @@ class CommentCollector implements CollectorInterface {
 
     $message_ids = $this->entityTypeManager->getStorage('message')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('template', $supported_templates, 'IN')
       ->condition('field_referenced_node', $entity_ids, 'IN')
       ->condition('created', [

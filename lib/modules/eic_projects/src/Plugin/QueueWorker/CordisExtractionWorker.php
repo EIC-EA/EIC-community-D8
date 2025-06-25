@@ -72,6 +72,7 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
     if ($extraction_entity = $this->entityTypeManager->getStorage('extraction_request')->load($running_entity_id)) {
       $extraction_entity_ids = $this->entityTypeManager
         ->getStorage('extraction_request')->getQuery()
+        ->accessCheck(FALSE)
         ->condition('extraction_status', 'pending_extraction')
         ->execute();
       if (count($extraction_entity_ids) > 0) {

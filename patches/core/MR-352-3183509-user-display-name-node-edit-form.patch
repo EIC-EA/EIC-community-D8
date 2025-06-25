@@ -1,0 +1,34 @@
+diff --git a/core/modules/node/src/NodeForm.php b/core/modules/node/src/NodeForm.php
+index d5afa396568c62684ce45e4a9866df17301d4e74..72642046555ec7874515222cbbf1dd140acb2c1d 100644
+--- a/core/modules/node/src/NodeForm.php
++++ b/core/modules/node/src/NodeForm.php
+@@ -163,7 +163,7 @@ public function form(array $form, FormStateInterface $form_state) {
+     $form['meta']['author'] = [
+       '#type' => 'item',
+       '#title' => $this->t('Author'),
+-      '#markup' => $node->getOwner()->getAccountName(),
++      '#markup' => $node->getOwner()->getDisplayName(),
+       '#wrapper_attributes' => ['class' => ['entity-meta__author']],
+     ];
+
+diff --git a/core/modules/node/tests/src/Functional/NodeEditFormTest.php b/core/modules/node/tests/src/Functional/NodeEditFormTest.php
+index dc47998c9093224084167728a5bc8de55a79c0ee..f661ae18ebbb399d0f0d0eb0141fb41f78524114 100644
+--- a/core/modules/node/tests/src/Functional/NodeEditFormTest.php
++++ b/core/modules/node/tests/src/Functional/NodeEditFormTest.php
+@@ -251,10 +251,15 @@ public function testNodeMetaInformation(): void {
+     $edit['body[0][value]'] = $this->randomMachineName(16);
+     $this->submitForm($edit, 'Save');
+
++    // Enable user_hooks_test to test the users display name is visible on the
++    // edit form.
++    \Drupal::service('module_installer')->install(['user_hooks_test']);
++    \Drupal::keyValue('user_hooks_test')->set('user_format_name_alter', TRUE);
+     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+-    $this->drupalGet("node/" . $node->id() . "/edit");
++    $this->drupalGet($node->toUrl('edit-form'));
+     $this->assertSession()->pageTextContains('Published');
+     $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
++    $this->assertSession()->responseContains('<em>' . $this->adminUser->id() . '</em>');
+   }
+
+   /**
