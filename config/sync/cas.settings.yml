@@ -29,7 +29,7 @@ forced_login:
 user_accounts:
   prevent_normal_login: false
   auto_register: true
-  auto_register_follow_registration_policy: false
+  auto_register_follow_registration_policy: true
   email_assignment_strategy: 1
   email_hostname: localhost
   email_attribute: email
