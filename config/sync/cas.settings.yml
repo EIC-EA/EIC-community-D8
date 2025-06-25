@@ -16,14 +16,14 @@ gateway:
   enabled: false
   recheck_time: 720
   paths:
-    id: null
+    id: request_path
     negate: false
     pages: ''
   method: server_side
 forced_login:
   enabled: false
   paths:
-    id: null
+    id: request_path
     negate: false
     pages: /user/login
 user_accounts:
