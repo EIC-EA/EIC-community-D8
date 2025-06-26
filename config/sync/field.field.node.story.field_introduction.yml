@@ -6,12 +6,9 @@ dependencies:
     - field.storage.node.field_introduction
     - node.type.story
   module:
-    - allowed_formats
     - eic_non_required_on_draft
     - text
 third_party_settings:
-  allowed_formats:
-    allowed_formats: {  }
   eic_non_required_on_draft:
     non_required_on_draft: true
 _core:
@@ -26,5 +23,6 @@ required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats: {  }
 field_type: text_long

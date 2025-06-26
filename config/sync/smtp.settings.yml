@@ -1,5 +1,6 @@
 _core:
   default_config_hash: 2v5R3I9tNatGzKQjuZWh1y_955xK09313Vn-IIuedyI
+langcode: en
 smtp_on: true
 smtp_host: mailhog
 smtp_hostbackup: ''
@@ -13,8 +14,9 @@ smtp_from: eic@local.be
 smtp_fromname: Test
 smtp_client_hostname: ''
 smtp_client_helo: ''
-smtp_allowhtml: '1'
+smtp_allowhtml: true
 smtp_test_address: ''
 smtp_debugging: false
+smtp_debug_level: 1
 prev_mail_system: php_mail
 smtp_keepalive: false

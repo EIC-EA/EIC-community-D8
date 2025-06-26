@@ -89,6 +89,7 @@ function eic_projects_user_cancel($edit, UserInterface $account, $method) {
       // Unpublish extraction requests.
       $storage = \Drupal::entityTypeManager()->getStorage('extraction_request');
       $extraction_request_ids = $storage->getQuery()
+        ->accessCheck(TRUE)
         ->condition('uid', $account->id())
         ->condition('status', 1)
         ->execute();
@@ -102,6 +103,7 @@ function eic_projects_user_cancel($edit, UserInterface $account, $method) {
       // Anonymize extraction requests.
       $storage = \Drupal::entityTypeManager()->getStorage('extraction_request');
       $extraction_request_ids = $storage->getQuery()
+        ->accessCheck(TRUE)
         ->condition('uid', $account->id())
         ->execute();
       foreach ($storage->loadMultiple($extraction_request_ids) as $extraction_request) {
@@ -119,12 +121,14 @@ function eic_projects_user_predelete(UserInterface $account) {
   // Delete extraction requests.
   $storage = \Drupal::entityTypeManager()->getStorage('extraction_request');
   $extraction_request_ids = $storage->getQuery()
+    ->accessCheck(TRUE)
     ->condition('uid', $account->id())
     ->execute();
   $extraction_requests = $storage->loadMultiple($extraction_request_ids);
   $storage->delete($extraction_requests);
   // Delete old revisions.
   $extraction_request_ids = $storage->getQuery()
+    ->accessCheck(TRUE)
     ->allRevisions()
     ->condition('uid', $account->id())
     ->execute();

@@ -31,6 +31,7 @@ class ProcessorGroupContent extends DocumentProcessor {
 
         $group_type_conditions = StakeholderManager::defineGroupContentType('project');
         $group_content_ids = \Drupal::entityQuery('group_content')
+          ->accessCheck(FALSE)
           ->condition('entity_id', $id)
           ->range(0, 1)
           ->condition('type', $group_type_conditions, 'IN')
@@ -40,6 +41,7 @@ class ProcessorGroupContent extends DocumentProcessor {
         $nid = $fields['its_content_nid'];
 
         $group_content_ids = \Drupal::entityQuery('group_content')
+          ->accessCheck(FALSE)
           ->condition('entity_id', $nid)
           ->condition('type', '%-group_node%', 'LIKE')
           ->range(0, 1)

@@ -1,28 +1,29 @@
 diff --git a/src/Service/CasUserManager.php b/src/Service/CasUserManager.php
-index 2c2bd8a..eeabcce 100644
+index c48fc32..99abe93 100644
 --- a/src/Service/CasUserManager.php
 +++ b/src/Service/CasUserManager.php
-@@ -203,17 +203,20 @@ class CasUserManager {
+@@ -163,11 +163,6 @@ class CasUserManager {
        }
      }
- 
+
 -    // Check if the retrieved user is blocked before moving forward.
--    if (!$account->isActive()) {
--      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginException::ACCOUNT_BLOCKED);
+-    if ($account->isBlocked()) {
+-      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginExceptionType::AccountBlocked);
 -    }
 -
      // Dispatch an event that allows modules to prevent this user from logging
      // in and/or alter the user entity before we save it.
      $pre_login_event = new CasPreLoginEvent($account, $property_bag);
-     $this->casHelper->log(LogLevel::DEBUG, 'Dispatching EVENT_PRE_LOGIN.');
-     $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_LOGIN, $pre_login_event);
- 
+@@ -175,6 +170,14 @@ class CasUserManager {
+     $this->eventDispatcher->dispatch($pre_login_event);
+     $this->eventDispatcher->dispatch($pre_login_event, 'cas.pre_login');
+
 +    // Reload the user account in case it has changed meanwhile.
-+    $account = $this->externalAuth->load($property_bag->getUsername(), $this->provider);
++    $account = $this->externalAuth->load($property_bag->getUsername(), static::PROVIDER);
 +
 +    // Check if the retrieved user is blocked before moving forward.
-+    if (!$account->isActive()) {
-+      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginException::ACCOUNT_BLOCKED);
++    if ($account->isBlocked()) {
++      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginExceptionType::AccountBlocked);
 +    }
 +
      // Save user entity since event listeners may have altered it.

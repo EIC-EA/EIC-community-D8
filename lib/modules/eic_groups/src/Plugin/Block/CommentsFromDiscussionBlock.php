@@ -9,7 +9,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -31,6 +30,7 @@ use Drupal\paragraphs\ParagraphInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a CommentsFromDiscussionBlock block.
@@ -77,7 +77,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   /**
    * The current request.
    *
-   * @var \Drupal\Core\Http\RequestStack
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   private $request;
 
@@ -150,7 +150,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The database connection service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
-   * @param \Drupal\Core\Http\RequestStack $request
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request
    *   The current request.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file url generator service.

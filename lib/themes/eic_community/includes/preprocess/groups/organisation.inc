@@ -5,6 +5,7 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\views\Views;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Site\Settings;
@@ -320,7 +321,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   }
   else {
     // Get items from automatic view.
-    $view = \Drupal\views\Views::getView('eic_group_members');
+    $view = Views::getView('eic_group_members');
     $view->setDisplay('block_group_members');
     $view->setArguments([$group->id()]);
     $view->execute();
@@ -552,7 +553,7 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
   $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
-    file_create_url($file->get('uri')->value)
+    \Drupal::service('file_url_generator')->generateAbsoluteString($file->get('uri')->value)
   ) : NULL;
 
   $location = $paragraph->get('field_location')->referencedEntities();

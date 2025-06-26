@@ -13,7 +13,7 @@ log_levels:
   7: 0
   8: 0
 stack: true
-timeout: !!float 2
+timeout: 2.0
 message_limit: 2048
 trace: false
 fatal_error_handler: false
@@ -36,5 +36,5 @@ auto_session_tracking: false
 send_client_reports: false
 drush_tracing: false
 seckit_set_report_uri: false
-send_attempts: 0
 send_monitoring_sensor_status_changes: false
+send_attempts: 0

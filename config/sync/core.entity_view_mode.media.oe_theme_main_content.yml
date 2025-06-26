@@ -8,5 +8,6 @@ _core:
   default_config_hash: v1V7gYYnKoD-BkgEma_RVR5V5TN0jDNfjsrF6SUIUSQ
 id: media.oe_theme_main_content
 label: 'Main content'
+description: ''
 targetEntityType: media
 cache: true

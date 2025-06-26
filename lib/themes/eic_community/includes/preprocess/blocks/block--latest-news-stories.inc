@@ -79,7 +79,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
 
     $item = [
       'title' => $node_translation->label(),
-      'description' => Xss::filter($node_translation->get('field_introduction')->value),
+      'description' => Xss::filter($node_translation->get('field_introduction')->value, []),
       'path' => $node_translation->toUrl()->toString(),
       'type' => [
         'label' => $node_translation->type->entity->label(),

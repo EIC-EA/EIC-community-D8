@@ -33,7 +33,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Make sure our implementation runs after other modules.
     // Attention: be sure that this method runs before
     // \Drupal\eic_admin\Routing\RouteSubscriber::alterRoutes().

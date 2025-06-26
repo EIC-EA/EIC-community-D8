@@ -6,5 +6,6 @@ dependencies:
     - node
 id: node.mail_teaser
 label: 'Mail teaser'
+description: ''
 targetEntityType: node
 cache: true

@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * @file
  * Contains hook_form_FORM_ID_alter() for system_theme_settings.
@@ -10,7 +12,7 @@
  */
 function eic_community_form_system_theme_settings_alter(
   &$form,
-  \Drupal\Core\Form\FormStateInterface &$form_state,
+  FormStateInterface &$form_state,
   $form_id = NULL
 ) {
   // Work-around for a core bug affecting admin themes.

@@ -36,9 +36,3 @@ settings:
       block_image_paste_enabled: true
 image_upload:
   status: false
-  scheme: public
-  directory: inline-images
-  max_size: ''
-  max_dimensions:
-    width: null
-    height: null

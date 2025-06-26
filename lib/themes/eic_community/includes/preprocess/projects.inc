@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\views\Views;
+
 /**
  * @file
  * Contains Projects (node and group) related functions.
@@ -39,7 +41,7 @@ function _eic_community_render_project_detail_page(&$variables, $group) {
  *   Rendered view output.
  */
 function _eic_community_render_view($view_id, $display_id) {
-  $view = \Drupal\views\Views::getView($view_id);
+  $view = Views::getView($view_id);
   if (is_object($view)) {
     $view->setDisplay($display_id);
     $view->preExecute();

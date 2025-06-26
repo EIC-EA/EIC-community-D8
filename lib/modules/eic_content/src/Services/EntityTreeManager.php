@@ -93,6 +93,7 @@ class EntityTreeManager {
       $query = \Drupal::entityQuery($target_entity)
         ->condition('vid', $target_bundle)
         ->condition('name', $text, 'CONTAINS')
+        ->accessCheck(TRUE)
         ->range(0, 20);
 
       if ($disable_top_selection) {

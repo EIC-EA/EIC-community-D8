@@ -6,3 +6,4 @@ name: 'Type of Document'
 vid: document_types
 description: 'Type indication for documents'
 weight: 0
+new_revision: false

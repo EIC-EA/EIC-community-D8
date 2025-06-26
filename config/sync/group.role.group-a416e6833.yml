@@ -40,6 +40,7 @@ permissions:
   - 'highlight group content'
   - 'invite users to group'
   - 'manage group_content_menu'
+  - 'manage group_content_menu menu items'
   - 'post comments'
   - 'share content between groups'
   - 'view comments'

@@ -61,7 +61,9 @@ class SmedIdConverter extends EntityConverter {
     // Get the field name that contains the SMED ID.
     $smed_id_field = $this->configFactory->get('eic_webservices.settings')->get('smed_id_field');
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
-    $query = $this->entityTypeManager->getStorage($entity_type_id)->getQuery();
+    $query = $this->entityTypeManager->getStorage($entity_type_id)
+      ->getQuery()
+      ->accessCheck(FALSE);
     $query->condition($smed_id_field, $value);
     if ($bundle) {
       $query->condition('type', $bundle);

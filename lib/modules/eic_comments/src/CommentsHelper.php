@@ -48,7 +48,8 @@ class CommentsHelper {
     $query = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
       ->condition('entity_id', $entity->id())
-      ->condition('entity_type', $entity->getEntityTypeId());
+      ->condition('entity_type', $entity->getEntityTypeId())
+      ->accessCheck(FALSE);
 
     if ($published_only) {
       $query->condition('status', CommentInterface::PUBLISHED);

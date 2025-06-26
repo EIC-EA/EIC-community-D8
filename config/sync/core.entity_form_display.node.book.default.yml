@@ -5,12 +5,11 @@ dependencies:
   config:
     - field.field.node.book.field_body
     - node.type.book
+    - workflows.workflow.default
   module:
     - content_moderation
     - path
     - publication_date
-    - scheduler
-    - scheduler_content_moderation_integration
     - text
 _core:
   default_config_hash: vLiV0db8dn1tmCTZrfImOXWBXV9bX677QMct9iI5nn0
@@ -76,18 +75,6 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 11
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  publish_state:
-    type: scheduler_moderation
-    weight: 13
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
     weight: 7
@@ -126,18 +113,6 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 12
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  unpublish_state:
-    type: scheduler_moderation
-    weight: 14
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   url_redirects:
     weight: 50
     region: content
@@ -145,3 +120,7 @@ content:
     third_party_settings: {  }
 hidden:
   member_content_edit_access: true
+  publish_on: true
+  publish_state: true
+  unpublish_on: true
+  unpublish_state: true

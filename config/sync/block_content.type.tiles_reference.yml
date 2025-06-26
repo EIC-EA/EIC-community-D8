@@ -6,5 +6,5 @@ _core:
   default_config_hash: HC8NR3ddqsP6oH84mM2A_DkTKQEguUIFsv0SE8dk_BE
 id: tiles_reference
 label: 'Tiles reference'
-revision: 0
+revision: false
 description: 'A block that shows a list of USP Tiles.'

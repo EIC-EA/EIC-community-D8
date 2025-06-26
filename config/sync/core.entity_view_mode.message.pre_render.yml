@@ -6,5 +6,6 @@ dependencies:
     - message
 id: message.pre_render
 label: 'Pre Render'
+description: ''
 targetEntityType: message
 cache: true
