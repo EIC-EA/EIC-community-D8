@@ -1,0 +1,33 @@
+services:
+  eic_dashboards.builder:
+    class: Drupal\eic_dashboards\Services\DashboardBuilder
+  eic_dashboards.helper:
+    class: Drupal\eic_dashboards\Services\DashboardHelper
+    arguments: [ '@database', '@router.route_provider', '@url_generator' ]
+  eic_dashboards.country_service:
+    class: Drupal\eic_dashboards\Services\CountryService
+    arguments: [ '@address.country_repository' ]
+  eic_dashboards.members_statistics:
+    class: Drupal\eic_dashboards\Services\MembersStatistics
+    arguments: [ '@database', '@entity_type.manager', '@eic_dashboards.country_service', '@eic_dashboards.helper' ]
+  Drupal\eic_dashboards\Services\MembersStatisticsInterface: '@eic_dashboards.members_statistics'
+  eic_dashboards.content_statistics:
+    class: Drupal\eic_dashboards\Services\ContentStatistics
+    arguments: [ '@database', '@eic_dashboards.helper' ]
+  Drupal\eic_dashboards\Services\ContentStatisticsInterface: '@eic_dashboards.content_statistics'
+  eic_dashboards.group_statistics:
+    class: Drupal\eic_dashboards\Services\GroupStatistics
+    arguments: [ '@database', '@eic_dashboards.helper', '@eic_dashboards.country_service' ]
+  Drupal\eic_dashboards\Services\GroupStatisticsInterface: '@eic_dashboards.group_statistics'
+  eic_dashboards.cumulative:
+    class: Drupal\eic_dashboards\Services\DashboardCumulativeService
+    autowire: true
+  eic_dashboards.cache_manager:
+    class: Drupal\eic_dashboards\Services\DashboardCacheManager
+    autowire: true
+  eic_dashboards.export_log:
+    class: Drupal\eic_dashboards\Services\DashboardExportLog
+    autowire: true
+  Drupal\Core\Routing\Router: '@router.no_access_checks'
+  Drupal\Core\Cache\CacheBackendInterface: '@cache.default'
+  Drupal\eic_dashboards\Services\DashboardCumulativeService: '@eic_dashboards.cumulative'

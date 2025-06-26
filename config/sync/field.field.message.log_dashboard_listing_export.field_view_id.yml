@@ -1,0 +1,19 @@
+uuid: 1ff7655a-0232-4090-af45-7cd6d148e0f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_view_id
+    - message.template.log_dashboard_listing_export
+id: message.log_dashboard_listing_export.field_view_id
+field_name: field_view_id
+entity_type: message
+bundle: log_dashboard_listing_export
+label: 'View ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

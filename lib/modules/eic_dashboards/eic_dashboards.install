@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Dashboards module.
+ */
+
+use Drupal\eic_dashboards\Constants\DashboardsDatabase;
+
+/**
+ * Add "Dashboard" link to Group content menu.
+ */
+function eic_dashboards_update_10001(&$sandbox) {
+  // Moved to eic_dashboards_deploy_0009_add_link_to_groups hook.
+  // Left empty to maintain update numbering sequence.
+}
+
+/**
+ * Add custom table for accumulative dashboards.
+ */
+function eic_dashboards_update_10002(&$sandbox) {
+  $schema_api = \Drupal::database()->schema();
+  if (!$schema_api->tableExists(DashboardsDatabase::DASHBOARDS_DATABASE)) {
+    $schema = [
+      'description' => 'Stores counts of bundle items per month.',
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Unique log ID',
+        ],
+        'dashboard_type' => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'Name of the dashboard.',
+        ],
+        'count' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'The number of items at specific date',
+        ],
+        'date' => [
+          'type' => 'varchar',
+          'mysql_type' => 'date',
+          'not null' => TRUE,
+          'description' => 'The date that log was created in year/month/day format',
+        ],
+      ],
+      'primary key' => ['id'],
+      'indexes' => [
+        'dashboard_type' => ['dashboard_type'],
+        'date' => ['date'],
+      ],
+
+    ];
+    $schema_api->createTable('eic_dashboards', $schema);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function eic_dashboards_update_10003(&$sandbox) {
+  $schema = [
+    'cumulative_count' => [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The number of total items at specific date'
+    ],
+  ];
+  $schema_api = \Drupal::database()->schema();
+  if ($schema_api->tableExists(DashboardsDatabase::DASHBOARDS_DATABASE) && !$schema_api->fieldExists(DashboardsDatabase::DASHBOARDS_DATABASE, 'cumulative_count')) {
+    $schema_api->addField(DashboardsDatabase::DASHBOARDS_DATABASE, 'cumulative_count', $schema['cumulative_count']);
+  }
+
+}
+
+/**
+ * Implements hook_schema().
+ */
+function eic_dashboards_schema(): array {
+  $schema[DashboardsDatabase::DASHBOARDS_DATABASE] = [
+    'description' => 'Stores counts of bundle items per month.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique log ID',
+      ],
+      'dashboard_type' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the dashboard.',
+      ],
+      'count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The number of items at specific date',
+      ],
+      'cumulative_count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The number of total items at specific date'
+      ],
+      'date' => [
+        'type' => 'varchar',
+        'mysql_type' => 'date',
+        'not null' => TRUE,
+        'description' => 'The date that log was created in year/month/day format',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'dashboard_type' => ['dashboard_type'],
+      'date' => ['date'],
+    ],
+  ];
+
+  return $schema;
+}

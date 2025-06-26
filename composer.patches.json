@@ -100,7 +100,9 @@
     },
     "drupal/views_data_export": {
       "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",
-      "3241213 - Add S3 bucket support": "https://www.drupal.org/files/issues/2021-10-07/s3-bucket-support--3241213.patch"
+      "3241213 - Add S3 bucket support": "patches/views_data_export/3241213.patch",
+      "3189760 - CSV file is not downloaded automatically.": "https://www.drupal.org/files/issues/2023-06-01/views_data_export-3189760-22.patch",
+      "Log Dashboard List exports": "patches/views_data_export/log-dashboard-list-exports.patch"
     },
     "drupal/views_data_export_phpspreadsheet": {
       "3503071 - Fatal error: Declaration of XlsEncoder::encode() must be compatible with EncoderInterface::encode()": "patches/views_data_export_phpspreadsheet/3503071.patch"

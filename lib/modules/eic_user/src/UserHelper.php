@@ -323,6 +323,43 @@ class UserHelper {
   }
 
   /**
+   * Checks the completion status of member profile.
+   *
+   * @param $uid
+   *   The user ID.
+   *
+   * @return int
+   *   Number of completed profiles or 0.
+   */
+  public function getMemberProfileCompletionCount(int $uid = NULL): int {
+    $query = $this->connection->select('profile', 'p');
+
+    // Join profile fields.
+    $query->innerJoin('profile__field_vocab_topic_expertise', 'pvte', 'p.profile_id = pvte.entity_id');
+    $query->innerJoin('profile__field_vocab_topic_interest', 'pvti', 'p.profile_id = pvti.entity_id');
+    $query->innerJoin('profile__field_location_address', 'pla', 'p.profile_id = pla.entity_id');
+
+    // Join users table to ensure only active users.
+    $query->innerJoin('users_field_data', 'u', 'p.uid = u.uid');
+
+    // Conditions.
+    if (!empty($uid)) {
+      $query->condition('u.uid', $uid);
+    }
+    $query->condition('u.status', 1);
+    $query->condition('p.type', 'member');
+
+    // Select distinct profile IDs.
+    $query->distinct();
+    $query->fields('p', ['profile_id']);
+
+    // Now, count how many rows we get = how many users completed.
+    $completedProfiles = $query->countQuery()->execute()->fetchField();
+
+    return (int) $completedProfiles;
+  }
+
+  /**
    * @param \Drupal\user\UserInterface $account
    *
    * @return bool
