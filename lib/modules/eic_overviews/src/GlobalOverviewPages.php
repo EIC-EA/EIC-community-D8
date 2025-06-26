@@ -53,6 +53,11 @@ class GlobalOverviewPages {
   const PROJECTS = 7;
 
   /**
+   * ID of the Calls overview page.
+   */
+  const CALLS = 8;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface

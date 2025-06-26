@@ -11,9 +11,20 @@ use Drupal\eic_search\Service\SolrDocumentProcessor;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class NewsStorySourceType extends SourceType {
+class StoriesCallsSourceType extends SourceType {
 
   use StringTranslationTrait;
+  use OverrideSearchTextTrait;
+
+  /**
+   * Taxonomy labels to filter in this SourceType on vid 'story_type'.
+   *
+   * @var array
+   */
+  public const taxonomiesToFilter = [
+    'Open Calls',
+    'Partner Calls',
+  ];
 
   /**
    * @inheritDoc
@@ -26,7 +37,7 @@ class NewsStorySourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Stories', [], ['context' => 'eic_search']);
+    return $this->t('Calls', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -41,11 +52,9 @@ class NewsStorySourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'sm_content_field_story_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
+      'ss_content_field_story_type_string' => $this->t('Type of call', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_program_type_string' => $this->t('Program type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
-      'bs_content_is_private' => $this->t('Visibility', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -143,24 +152,23 @@ class NewsStorySourceType extends SourceType {
    * @inheritDoc
    */
   public function extraPrefilter(): array {
-    // We want to filter out Open/Partner calls as they are used only in
-    // StoriesCallsSourceType.
-    // @see \Drupal\eic_search\Search\Sources\StoriesCallsSourceType::extraPrefilter
-
+    // We want to filter only Open/Partner calls here.
+    // @see \Drupal\eic_search\Search\Sources\NewsStorySourceType::extraPrefilter
     $query = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(FALSE);
     $condition1 = $query->orConditionGroup();
-    $condition1->condition('name', StoriesCallsSourceType::taxonomiesToFilter, 'NOT IN');
+    $condition1->condition('name', StoriesCallsSourceType::taxonomiesToFilter, 'IN');
     $query->condition($condition1)
       ->condition('vid', 'story_type');
     $results = $query->execute();
+
 
     // @todo In the future we should provide a configuration in the overview
     // block so that we can enable/disable this extra filter.
     return [
       'AND' => [
         'its_global_group_parent_id' => [
-          '("-1")'
+          '("-1")',
         ],
       ],
       'OR' => [
@@ -174,6 +182,14 @@ class NewsStorySourceType extends SourceType {
    */
   public function getDefaultSort(): array {
     return ['ss_drupal_timestamp', 'DESC'];
+  }
+
+
+  /**
+   * @inheritDoc
+   */
+  public function getCustomSearchText() {
+    return (string) $this->t('Search for calls', options: ['context' => 'eic_search']);
   }
 
 }
