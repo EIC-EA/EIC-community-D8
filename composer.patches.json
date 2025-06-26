@@ -8,7 +8,7 @@
       "2582295 - Confirmation cancel links are incorrect if installed in a subdirectory": "https://www.drupal.org/files/issues/2024-09-04/2582295-10.3-100_0.patch",
       "2329253 - Allow the ChangedItem to skip updating the entity's \"changed\" timestamp when synchronizing (f.e. when migrating)": "https://www.drupal.org/files/issues/2024-07-30/2329253-10.x.patch",
       "2907760 - Notice: Undefined index: default in Drupal\\views\\Plugin\\views\\PluginBase->setOptionDefaults()": "https://www.drupal.org/files/issues/2022-05-26/2907760-11-9.3.x.patch",
-      "3183509 - Use the user display name instead of the username on the user authoring information in the node edit form": "patches/core/MR-352-3183509-user-display-name-node-edit-form.patch",
+      "3183509 - Use the user display name instead of the username on the user authoring information in the node edit form": "patches/core/3183509-MR-352.patch",
       "Content moderation does not sanity check original entity moderate state is present / exists": "https://www.drupal.org/files/issues/2022-06-09/add-sanity-checking-to-content-moderation-original-value-checks.patch",
       "EICNET-3009 - Change advanced sidebar \"Last saved\" datetime to EU format": "patches/core/EICNET-3009-change-date-format-last-saved.patch",
       "3456176 - 10.3 upgrade now missing status-message theme suggestions": "https://www.drupal.org/files/issues/2024-06-28/3456176-45-missing-status-messages-theme-suggestions.patch"
