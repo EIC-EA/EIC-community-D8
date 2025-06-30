@@ -6,6 +6,7 @@
  */
 
 use Drupal\eic_content\Constants\StoryTypes;
+use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
  * Implements hook_preprocess_overview_page().
@@ -48,7 +49,7 @@ function eic_community_preprocess_overview_page(array &$variables) {
     }
   }
 
-  if ($overview_id == 8) {
+  if ($overview_id == GlobalOverviewPages::CALLS) {
     $variables['#attached']['drupalSettings']['storyTypes'] = [
       StoryTypes::OPEN_CALLS_TAXONOMY_TERM_ID,
       StoryTypes::PARTNER_CALLS_TAXONOMY_TERM_ID,
