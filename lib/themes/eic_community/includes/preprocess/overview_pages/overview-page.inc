@@ -5,6 +5,9 @@
  * Prepares variables for overview_page templates.
  */
 
+use Drupal\eic_content\Constants\StoryTypes;
+use Drupal\eic_overviews\GlobalOverviewPages;
+
 /**
  * Implements hook_preprocess_overview_page().
  */
@@ -44,5 +47,12 @@ function eic_community_preprocess_overview_page(array &$variables) {
         'type' => 'cta',
       ];
     }
+  }
+
+  if ($overview_id == GlobalOverviewPages::CALLS) {
+    $variables['#attached']['drupalSettings']['storyTypes'] = [
+      StoryTypes::OPEN_CALLS_TAXONOMY_TERM_ID,
+      StoryTypes::PARTNER_CALLS_TAXONOMY_TERM_ID,
+    ];
   }
 }

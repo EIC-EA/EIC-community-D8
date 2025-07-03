@@ -1,0 +1,207 @@
+/* ========== DASHBOARD HOMEPAGE HEADER ========== */
+.homepage-header {
+  max-width: 700px;
+}
+
+/* ========== LISTING PAGE ========== */
+.listing-page .date-from-to-wrapper .dates-from-to {
+  display: flex;
+  gap: 5px;
+  margin-top: -6px;
+}
+
+.listing-page form {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.listing-page .datetime-wrapper {
+  position: relative;
+  top: -16px;
+  margin-bottom: -32px;
+}
+
+.listing-page .date-from-to-wrapper .ecl-form-group {
+  margin-bottom: 0 !important;
+}
+
+.listing-page .datetime-label {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.listing-page .content-wrapper {
+  overflow-x: auto;
+}
+
+.listing-page .form-actions {
+  margin-left: auto;
+  margin-top: auto !important;
+}
+
+.listing-page .ecl-text-input:not(.ecl-datepicker__field),
+.listing-page .form-item-field-appear-on-members-listing-value .ecl-form-group,
+.listing-page .form-item-status .ecl-form-group,
+.listing-page .form-item-type .ecl-form-group,
+.listing-page .form-item-field-theme-target-id .ecl-form-group,
+.listing-page .form-item-gid .ecl-form-group {
+  margin-top: 0.75rem !important;
+}
+
+.listing-page .ecl-datepicker__field {
+  margin-top: 2px;
+}
+
+.listing-page.content-list .form-item-field-proc-inter-policy-target-id .ecl-form-group {
+  margin-top: 0.75rem !important;
+}
+
+.listing-page header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.listing-page .views-data-export-feed {
+  margin-top: 0 !important;
+}
+
+.listing-page .ecl-button--small {
+  font-size: 14px !important;
+  padding: 6px 12px !important;
+}
+
+.listing-page form {
+  background-color: #f5f5f5;
+  position: relative;
+  padding: 30px 0;
+}
+
+.listing-page .form-item:not(fieldset) {
+  margin: 0 0 2rem 0 !important;
+}
+
+.listing-page fieldset.form-item {
+  margin: 0 !important;
+}
+
+.listing-page form:after {
+  content: '';
+  background-color: #f5f5f5;
+  position: absolute;
+  width: 10vw;
+  top: 0;
+  right: -10vw;
+  height: 100%;
+  z-index: -1;
+}
+
+.listing-page form:before {
+  content: '';
+  background-color: #f5f5f5;
+  position: absolute;
+  width: 10vw;
+  left: -10vw;
+  top: 0;
+  height: 100%;
+  z-index: -1;
+}
+
+.listing-page form label,
+.listing-page fieldset legend span {
+  font-weight: 700 !important;
+  color: #404040 !important;
+  text-transform: none !important;
+}
+
+.listing-page fieldset {
+  max-width: 200px !important;
+  border: 0;
+  display: flex;
+  gap: 5px;
+  padding: .35em 0 0;
+}
+
+.listing-page .fieldset-wrapper {
+  display: flex;
+  gap: 5px;
+}
+
+.listing-page .ecl-form .form-wrapper:not(details) .fieldset-legend {
+  padding-left: 0;
+}
+
+.listing-page .fieldset-legend span {
+  padding: 0;
+}
+
+.listing-page .fieldset-wrapper label {
+  display: none;
+}
+
+.listing-page .fieldset-wrapper .form-item {
+  margin: 0;
+}
+
+.listing-page .ecl-table_header th {
+  padding: .5em 1rem;
+  text-align: left;
+}
+
+/* ========== ACTIVIY REPORT ========== */
+.activity-report-form {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: unset !important;
+}
+
+.activity-report-form h2 {
+  font-size: 18px;
+  margin: 0 !important;
+}
+
+.activity-report-form .date-range-form {
+  margin-top: 12px;
+  margin-bottom: 0 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+}
+
+.activity-report-form .date-range-form .form-item {
+  margin-top: 0 !important;
+  margin-right: 1em !important;
+  margin-bottom: 0 !important;
+}
+
+.activity-report-form .preset-date-ranges-wrapper {
+  margin-bottom: 24px;
+}
+
+.activity-report-form .preset-date-ranges {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.activity-report-form .preset-date-ranges li {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.activity-report-form .preset-date-ranges li:not(:last-child):after {
+  display: block;
+  content: '|';
+  margin: 0 5px;
+}
+
+.ecl-button--small {
+  font-size: 14px !important;
+  padding: 6px 12px !important;
+}

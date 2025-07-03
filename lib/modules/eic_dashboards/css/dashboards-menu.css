@@ -1,0 +1,7 @@
+.menu-icon-dashboard::before {
+  background-image: url('../images/dashboards.svg');
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}

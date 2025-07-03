@@ -1,0 +1,51 @@
+.cta-card {
+  display: block;
+  border-bottom: 4px solid #004494;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  box-shadow: 2px 2px 2px 0px rgba(38, 50, 75, 0.15);
+  transition: background-color .5s ease-out;
+}
+
+.cta-card:hover {
+  text-decoration: none;
+}
+
+.cta-card__icon {
+  min-height: 172px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.cta-card__title {
+  padding: 20px;
+  background-color: #fff;
+  border-right: 1px solid #b0c4da;
+  border-left: 1px solid #b0c4da;
+}
+
+.cta-card--dashboard {
+  background-color: #7CB5EC;
+}
+
+.cta-card--dashboard:hover {
+  background-color: #5a92c8;
+}
+
+.cta-card--content {
+  background-color: #039F83;
+}
+
+.cta-card--content:hover {
+  background-color: #03735f;
+}
+
+.cta-card--list {
+  background-color: #F5BF00;
+}
+
+.cta-card--list:hover {
+  background-color: #d19b00;
+}

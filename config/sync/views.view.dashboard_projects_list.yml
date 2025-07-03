@@ -1,0 +1,2108 @@
+uuid: 30554b94-532f-461c-9f00-41f3155018f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_body
+    - field.storage.group.field_project_date
+    - field.storage.group.field_project_fields_of_science
+    - field.storage.group.field_project_funding_programme
+    - field.storage.group.field_project_horizon_results
+    - field.storage.group.field_project_innovations
+    - field.storage.group.field_project_status
+    - group.type.project
+    - taxonomy.vocabulary.fields_of_science
+    - taxonomy.vocabulary.funding_programme
+    - user.role.administrator
+    - user.role.content_administrator
+    - user.role.sensitive
+    - user.role.site_admin
+  module:
+    - address
+    - csv_serialization
+    - datetime
+    - datetime_range
+    - eic_dashboards
+    - eic_stakeholder
+    - group
+    - link
+    - options
+    - rest
+    - serialization
+    - taxonomy
+    - text
+    - user
+    - views_autocomplete_filters
+    - views_data_export
+    - views_fields_on_off
+id: dashboard_projects_list
+label: 'Dashboard - Projects list'
+module: views
+description: ''
+tag: ''
+base_table: groups_field_data
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: 'Projects list'
+      fields:
+        label:
+          id: label
+          table: groups_field_data
+          field: label
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: null
+          entity_field: label
+          plugin_id: field
+          label: 'Project title'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_stakeholder_address_country_code:
+          id: field_stakeholder_address_country_code
+          table: stakeholder__field_stakeholder_address
+          field: field_stakeholder_address_country_code
+          relationship: gc__stakeholder
+          group_type: group
+          admin_label: ''
+          plugin_id: country
+          label: 'Coordinating country'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_project_funding_programme:
+          id: field_project_funding_programme
+          table: group__field_project_funding_programme
+          field: field_project_funding_programme
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Funding programme'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_fields_of_science:
+          id: field_project_fields_of_science
+          table: group__field_project_fields_of_science
+          field: field_project_fields_of_science
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Fields of science'
+          exclude: false
+          alter:
+            alter_text: true
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_status:
+          id: field_project_status
+          table: group__field_project_status
+          field: field_project_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Project status'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_date:
+          id: field_project_date
+          table: group__field_project_date
+          field: field_project_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Effective dates'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "From {{ field_project_date__value|date('U')|format_date('eu_short_date')}} to {{ field_project_date__end_value|date('U')|format_date('eu_short_date') }}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: daterange_default
+          settings:
+            timezone_override: ''
+            format_type: eu_short_date
+            separator: '-'
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_horizon_results:
+          id: field_project_horizon_results
+          table: group__field_project_horizon_results
+          field: field_project_horizon_results
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Horizon results link'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: uri
+          type: link
+          settings:
+            trim_length: 80
+            url_only: false
+            url_plain: false
+            rel: '0'
+            target: '0'
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_innovations:
+          id: field_project_innovations
+          table: group__field_project_innovations
+          field: field_project_innovations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Innovation radar link'
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: uri
+          type: link
+          settings:
+            trim_length: 80
+            url_only: false
+            url_plain: false
+            rel: '0'
+            target: '0'
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_body:
+          id: field_body
+          table: group__field_body
+          field: field_body
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Description
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        flag_follow_group:
+          id: flag_follow_group
+          table: groups
+          field: flag_follow_group
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: group
+          plugin_id: flag_follow_group
+          label: 'Number of follows'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        flag_recommend_group:
+          id: flag_recommend_group
+          table: groups
+          field: flag_recommend_group
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: group
+          plugin_id: flag_recommend_group
+          label: 'Number of Recommends'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+      pager:
+        type: full
+        options:
+          offset: 0
+          pagination_heading_level: h4
+          items_per_page: 50
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Search
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: role
+        options:
+          role:
+            sensitive: sensitive
+            content_administrator: content_administrator
+            site_admin: site_admin
+            administrator: administrator
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts: {  }
+      arguments: {  }
+      filters:
+        views_fields_on_off_form:
+          id: views_fields_on_off_form
+          table: views
+          field: views_fields_on_off_form
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_fields_on_off_form
+          operator: in
+          value:
+            label: label
+            field_stakeholder_address_country_code: field_stakeholder_address_country_code
+            field_project_funding_programme: field_project_funding_programme
+            field_project_fields_of_science: field_project_fields_of_science
+            field_project_status: field_project_status
+            field_project_date: field_project_date
+            field_project_horizon_results: field_project_horizon_results
+            field_project_innovations: field_project_innovations
+            flag_follow_group: flag_follow_group
+            flag_recommend_group: flag_recommend_group
+          group: 1
+          exposed: true
+          expose:
+            operator_id: views_fields_on_off_form_op
+            label: 'Visible reporting columns'
+            description: ''
+            use_operator: false
+            operator: views_fields_on_off_form_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: views_fields_on_off_form
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          bypass_hook_views_pre_view: false
+          exposed_select_type: multi_select
+        field_stakeholder_address_country_code:
+          id: field_stakeholder_address_country_code
+          table: stakeholder__field_stakeholder_address
+          field: field_stakeholder_address_country_code
+          relationship: gc__stakeholder
+          group_type: group
+          admin_label: ''
+          plugin_id: country
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_stakeholder_address_country_code_op
+            label: 'Coordinating country'
+            description: ''
+            use_operator: false
+            operator: field_stakeholder_address_country_code_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_stakeholder_address_country_code
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        type:
+          id: type
+          table: groups_field_data
+          field: type
+          entity_type: group
+          entity_field: type
+          plugin_id: bundle
+          value:
+            project: project
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_project_funding_programme_target_id:
+          id: field_project_funding_programme_target_id
+          table: group__field_project_funding_programme
+          field: field_project_funding_programme_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_project_funding_programme_target_id_op
+            label: 'Funding programme'
+            description: ''
+            use_operator: false
+            operator: field_project_funding_programme_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_project_funding_programme_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: funding_programme
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_project_fields_of_science_target_id:
+          id: field_project_fields_of_science_target_id
+          table: group__field_project_fields_of_science
+          field: field_project_fields_of_science_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_project_fields_of_science_target_id_op
+            label: 'Fields of science'
+            description: ''
+            use_operator: false
+            operator: field_project_fields_of_science_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_project_fields_of_science_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: fields_of_science
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_project_status_value:
+          id: field_project_status_value
+          table: group__field_project_status
+          field: field_project_status_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_project_status_value_op
+            label: 'Project status'
+            description: ''
+            use_operator: false
+            operator: field_project_status_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_project_status_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+        field_project_date_value:
+          id: field_project_date_value
+          table: group__field_project_date
+          field: field_project_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_project_date_value_op
+            label: 'Start date'
+            description: ''
+            use_operator: false
+            operator: field_project_date_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_project_date_start
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_project_date_end_value:
+          id: field_project_date_end_value
+          table: group__field_project_date
+          field: field_project_date_end_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          operator: '<='
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_project_date_end_value_op
+            label: 'End date'
+            description: ''
+            use_operator: false
+            operator: field_project_date_end_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_project_date_end
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        combine:
+          id: combine
+          table: views
+          field: combine
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_autocomplete_filters_combine
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: 'Free text search'
+            description: ''
+            use_operator: false
+            operator: combine_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: combine
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              sensitive: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            placeholder: ''
+            autocomplete_filter: 0
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          fields:
+            label: label
+            field_stakeholder_address_country_code: field_stakeholder_address_country_code
+            field_project_funding_programme: field_project_funding_programme
+            field_project_status: field_project_status
+            field_body: field_body
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            label: label
+            field_project_funding_programme: field_project_funding_programme
+            field_project_fields_of_science: field_project_fields_of_science
+            field_project_status: field_project_status
+            field_project_horizon_results: field_project_horizon_results
+            field_project_innovations: field_project_innovations
+            field_project_date: field_project_date
+            count: count
+            count_1: count_1
+          default: label
+          info:
+            label:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_project_funding_programme:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_project_fields_of_science:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_project_status:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_project_horizon_results:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_project_innovations:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_project_date:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            count:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            count_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships:
+        group_content_id:
+          id: group_content_id
+          table: groups_field_data
+          field: group_content_id
+          relationship: none
+          group_type: group
+          admin_label: 'Group content'
+          entity_type: group
+          plugin_id: group_to_group_content
+          required: false
+          group_content_plugins:
+            'group_stakeholder:coordinator': 'group_stakeholder:coordinator'
+            group_request_archival: '0'
+            group_request_block: '0'
+            group_request_delete: '0'
+            group_shared_content: '0'
+            'group_stakeholder:participant': '0'
+            group_invitation: '0'
+            'group_node:book': '0'
+            'group_node:discussion': '0'
+            'group_node:document': '0'
+            'group_node:event': '0'
+            'group_node:gallery': '0'
+            'group_node:news': '0'
+            'group_node:page': '0'
+            'group_node:story': '0'
+            'group_node:video': '0'
+            'group_node:wiki_page': '0'
+            group_membership_request: '0'
+            group_membership: '0'
+            'group_content_menu:group_main_menu': '0'
+        gc__stakeholder:
+          id: gc__stakeholder
+          table: group_content_field_data
+          field: gc__stakeholder
+          relationship: group_content_id
+          group_type: group
+          admin_label: 'Group content Stakeholder'
+          entity_type: group_content
+          plugin_id: group_content_to_entity
+          required: false
+          group_content_plugins:
+            'group_stakeholder:coordinator': 'group_stakeholder:coordinator'
+            'group_stakeholder:participant': '0'
+      css_class: listing-page
+      header:
+        result:
+          id: result
+          table: views
+          field: result
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: result
+          empty: false
+          content: '<i>Showing @start - @end of @total results.</i>'
+      footer: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.roles
+      tags:
+        - 'config:field.storage.group.field_body'
+        - 'config:field.storage.group.field_project_date'
+        - 'config:field.storage.group.field_project_fields_of_science'
+        - 'config:field.storage.group.field_project_funding_programme'
+        - 'config:field.storage.group.field_project_horizon_results'
+        - 'config:field.storage.group.field_project_innovations'
+        - 'config:field.storage.group.field_project_status'
+  data_export:
+    id: data_export
+    display_title: 'Data export'
+    display_plugin: data_export
+    position: 2
+    display_options:
+      fields:
+        label:
+          id: label
+          table: groups_field_data
+          field: label
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: null
+          entity_field: label
+          plugin_id: field
+          label: 'Project title'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_stakeholder_address_country_code:
+          id: field_stakeholder_address_country_code
+          table: stakeholder__field_stakeholder_address
+          field: field_stakeholder_address_country_code
+          relationship: gc__stakeholder
+          group_type: group
+          admin_label: ''
+          plugin_id: country
+          label: 'Coordinating country'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_name: true
+        field_project_funding_programme:
+          id: field_project_funding_programme
+          table: group__field_project_funding_programme
+          field: field_project_funding_programme
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Funding programme'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_fields_of_science:
+          id: field_project_fields_of_science
+          table: group__field_project_fields_of_science
+          field: field_project_fields_of_science
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Fields of science'
+          exclude: false
+          alter:
+            alter_text: true
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_status:
+          id: field_project_status
+          table: group__field_project_status
+          field: field_project_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Project status'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_date:
+          id: field_project_date
+          table: group__field_project_date
+          field: field_project_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Effective dates'
+          exclude: false
+          alter:
+            alter_text: true
+            text: "From {{ field_project_date__value|date('U')|format_date('eu_short_date')}} to {{ field_project_date__end_value|date('U')|format_date('eu_short_date') }}"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: daterange_default
+          settings:
+            timezone_override: ''
+            format_type: eu_short_date
+            separator: '-'
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_horizon_results:
+          id: field_project_horizon_results
+          table: group__field_project_horizon_results
+          field: field_project_horizon_results
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Horizon results link'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: uri
+          type: link
+          settings:
+            trim_length: 80
+            url_only: false
+            url_plain: false
+            rel: '0'
+            target: '0'
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_project_innovations:
+          id: field_project_innovations
+          table: group__field_project_innovations
+          field: field_project_innovations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: 'Innovation radar link'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: uri
+          type: link
+          settings:
+            trim_length: 80
+            url_only: false
+            url_plain: false
+            rel: '0'
+            target: '0'
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_body:
+          id: field_body
+          table: group__field_body
+          field: field_body
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: Description
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        flag_follow_group:
+          id: flag_follow_group
+          table: groups
+          field: flag_follow_group
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: group
+          plugin_id: flag_follow_group
+          label: 'Number of follows'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+        flag_recommend_group:
+          id: flag_recommend_group
+          table: groups
+          field: flag_recommend_group
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: group
+          plugin_id: flag_recommend_group
+          label: 'Number of Recommends'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+      access:
+        type: role
+        options:
+          role:
+            site_admin: site_admin
+      style:
+        type: data_export
+        options:
+          formats:
+            csv: csv
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+            utf8_bom: '0'
+            use_serializer_encode_only: false
+      defaults:
+        access: false
+        fields: false
+      display_extenders: {  }
+      path: dashboards/listings/projects/export
+      displays:
+        page: page
+        default: '0'
+      filename: 'projects-list-export-[date:html_date]-[date:html_time].csv'
+      automatic_download: true
+      store_in_public_file_directory: false
+      custom_redirect_path: false
+      redirect_to_display: page
+      include_query_params: true
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - url
+        - user.roles
+      tags:
+        - 'config:field.storage.group.field_body'
+        - 'config:field.storage.group.field_project_date'
+        - 'config:field.storage.group.field_project_fields_of_science'
+        - 'config:field.storage.group.field_project_funding_programme'
+        - 'config:field.storage.group.field_project_horizon_results'
+        - 'config:field.storage.group.field_project_innovations'
+        - 'config:field.storage.group.field_project_status'
+  page:
+    id: page
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: dashboards/listings/projects
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.roles
+      tags:
+        - 'config:field.storage.group.field_body'
+        - 'config:field.storage.group.field_project_date'
+        - 'config:field.storage.group.field_project_fields_of_science'
+        - 'config:field.storage.group.field_project_funding_programme'
+        - 'config:field.storage.group.field_project_horizon_results'
+        - 'config:field.storage.group.field_project_innovations'
+        - 'config:field.storage.group.field_project_status'

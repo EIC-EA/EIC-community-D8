@@ -1,0 +1,17 @@
+.wtCharts {
+  border: 0 solid transparent !important;
+}
+
+.wt-charts--toolbar {
+  background: transparent !important;
+  border: 0 solid transparent !important;
+}
+
+.wt-charts--menu,
+.wt-charts--menu ul {
+  z-index: 1 !important;
+}
+
+.wt-charts--container {
+  margin-top: -64px !important;
+}

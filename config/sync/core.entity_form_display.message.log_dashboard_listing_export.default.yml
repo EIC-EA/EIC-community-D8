@@ -1,0 +1,32 @@
+uuid: 890449d3-aaa1-4a6e-8299-ce3c5c844de6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_dashboard_listing_export.field_event_executing_user
+    - field.field.message.log_dashboard_listing_export.field_view_id
+    - message.template.log_dashboard_listing_export
+id: message.log_dashboard_listing_export.default
+targetEntityType: message
+bundle: log_dashboard_listing_export
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_view_id:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

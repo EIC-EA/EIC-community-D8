@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cd67277f6eb6a055426c1fd9d2cfb9a",
+    "content-hash": "73278f7c269fc504ab5033a82e207743",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -9498,6 +9498,54 @@
             }
         },
         {
+            "name": "drupal/views_fields_on_off",
+            "version": "2.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/views_fields_on_off.git",
+                "reference": "2.0.8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_fields_on_off-2.0.8.zip",
+                "reference": "2.0.8",
+                "shasum": "dc0af7adfaec144786bb2ee20cae66ec08b88f01"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9 || ^10 || ^11"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.8",
+                    "datestamp": "1731079356",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "andileco",
+                    "homepage": "https://www.drupal.org/user/2054544"
+                },
+                {
+                    "name": "franksj",
+                    "homepage": "https://www.drupal.org/user/2743481"
+                }
+            ],
+            "description": "Exposed form to allow users to switch fields in a View on or off.",
+            "homepage": "https://www.drupal.org/project/views_fields_on_off",
+            "support": {
+                "source": "https://git.drupalcode.org/project/views_fields_on_off"
+            }
+        },
+        {
             "name": "drupal/workflow_buttons",
             "version": "1.0.0-beta6",
             "source": {
@@ -10817,104 +10865,7 @@
                 "url": "https://github.com/mck89/peast.git",
                 "reference": "645ec21b650bc2aced18285c85f220d22afc1430"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mck89/peast/zipball/645ec21b650bc2aced18285c85f220d22afc1430",
-                "reference": "645ec21b650bc2aced18285c85f220d22afc1430",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.16.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Peast\\": "lib/Peast/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Marchiò",
-                    "email": "marco.mm89@gmail.com"
-                }
-            ],
-            "description": "Peast is PHP library that generates AST for JavaScript code",
-            "support": {
-                "issues": "https://github.com/mck89/peast/issues",
-                "source": "https://github.com/mck89/peast/tree/v1.16.3"
-            },
-            "time": "2024-07-23T14:00:32+00:00"
-        },
-        {
-            "name": "mglaman/composer-drupal-lenient",
-            "version": "1.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mglaman/composer-drupal-lenient.git",
-                "reference": "bcb9be7f2d3160be43cd1d13a44580734a5afee0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/composer-drupal-lenient/zipball/bcb9be7f2d3160be43cd1d13a44580734a5afee0",
-                "reference": "bcb9be7f2d3160be43cd1d13a44580734a5afee0",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^2.0",
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "composer/composer": "^2.3",
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^1.6",
-                "phpstan/phpstan-phpunit": "^1.1",
-                "phpstan/phpstan-strict-rules": "^1.2",
-                "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.6"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "ComposerDrupalLenient\\Plugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "ComposerDrupalLenient\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Matt Glaman",
-                    "email": "nmd.matt@gmail.com"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/mglaman/composer-drupal-lenient/issues",
-                "source": "https://github.com/mglaman/composer-drupal-lenient/tree/1.0.7"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/mglaman",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-11-21T15:59:26+00:00"
+            "time": "2023-05-10T11:58:31+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",

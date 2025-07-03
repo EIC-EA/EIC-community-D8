@@ -143,6 +143,18 @@ class NewsStorySourceType extends SourceType {
    * @inheritDoc
    */
   public function extraPrefilter(): array {
+    // We want to filter out Open/Partner calls as they are used only in
+    // StoriesCallsSourceType.
+    // @see \Drupal\eic_search\Search\Sources\StoriesCallsSourceType::extraPrefilter
+
+    $query = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(FALSE);
+    $condition1 = $query->orConditionGroup();
+    $condition1->condition('name', StoriesCallsSourceType::taxonomiesToFilter, 'NOT IN');
+    $query->condition($condition1)
+      ->condition('vid', 'story_type');
+    $results = $query->execute();
+
     // @todo In the future we should provide a configuration in the overview
     // block so that we can enable/disable this extra filter.
     return [
@@ -150,6 +162,9 @@ class NewsStorySourceType extends SourceType {
         'its_global_group_parent_id' => [
           '("-1")'
         ],
+      ],
+      'OR' => [
+        'its_content_field_vocab_story_type' => $results,
       ],
     ];
   }

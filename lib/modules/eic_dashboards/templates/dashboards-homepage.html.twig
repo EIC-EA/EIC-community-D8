@@ -1,0 +1,64 @@
+<div class="ecl-overview-header{{ image is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">
+  {% if image is not empty %}
+    <figure class="ecl-overview-header__image-wrapper">
+      <img class="ecl-overview-header__image" src="{{ image }}" alt=""/>
+    </figure>
+  {% endif %}
+
+  <div class="ecl-container">
+    <div class="ecl-overview-header__content">
+      {% if title is not empty %}
+        <div class="ecl-overview-header__main homepage-header">
+          <h1 class="ecl-overview-header__title ecl-u-mb-xl">{{ title }}</h1>
+          <div class="ecl-u-mb-s">
+            <span>{{ 'Tools to help you monitor the platform’s health and indicators.'|t }}</span>
+          </div>
+          <div class="ecl-u-mb-s">
+            <div class="ecl-u-mb-s">{{ 'The dashboard data was last updated on '|t }} {{ dashboard_cache_time }}</div>
+            <a href="{{ path('eic_dashboards.homepage_cache_invalidate')  }}">
+              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                label: 'Refresh dashboard data'|t,
+                type: "button",
+                extra_classes: "dashboard-refresh",
+              } only %}
+            </a>
+          </div>
+          <div>
+             <i>{{'Triggers a full update of the dashboard data. Dashboards will update the next time they are viewed, with a brief delay during the first loading.'|t}}</i>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="ecl-section-wrapper ecl-section-wrapper--is-white {{ extra_classes }}">
+  <div class="ecl-container">
+    <h2 class="ecl-u-type-heading-2" id="dashboards">{{ 'Dashboards'|t }}</h2>
+    <div class="ecl-row">
+      {% for item in dashboards %}
+        <div class="ecl-col-12 ecl-col-lg-4">{{ item }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="ecl-section-wrapper ecl-u-mb-xl ecl-section-wrapper--is-white {{ extra_classes }}">
+  <div class="ecl-container">
+    <h2 class="ecl-u-type-heading-2" id="content">{{ 'Content'|t }}</h2>
+    <div class="ecl-row">
+      {% for item in content %}
+        <div class="ecl-col-12 ecl-col-lg-4">{{ item }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="ecl-section-wrapper ecl-u-mb-xl ecl-section-wrapper--is-white {{ extra_classes }}">
+  <div class="ecl-container">
+    <h2 class="ecl-u-type-heading-2" id="listings">{{ 'Listings'|t }}</h2>
+    <div class="ecl-row">
+      {% for item in listings %}
+        <div class="ecl-col-12 ecl-col-lg-4">{{ item }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

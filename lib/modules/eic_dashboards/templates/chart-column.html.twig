@@ -1,0 +1,53 @@
+<script type="application/json">
+  {
+    "service": "chart",
+    "version": "2.0",
+    "data": {
+      "chart": {
+        {% if vertical %}
+        "inverted": true,
+        "height": 600,
+        {% endif %}
+        "type": "column"
+      },
+      "title": {
+        {% if vertical %}
+        "align": "left",
+        {% endif %}
+        "text": "{{ title }}"
+      },
+      "legend": {
+        "enabled": false
+      },
+      "plotOptions": {
+        "series": {
+          "dataLabels": {
+            "enabled": true,
+            "format": "{point.y}"
+          }
+        }
+      },
+      "series": [
+        {
+          {% if vertical %}
+          "name": "Count",
+          {% else %}
+          "name": "{{ title|split(' ')[0] }}",
+          {% endif %}
+          "data": {{ series|raw }}
+        }
+      ],
+      "xAxis": {
+        "categories": {{ categories|raw }},
+        "labels": {
+          {% if not vertical %}
+          "rotation": 270
+          {% endif %}
+        }
+      },
+      "yAxis": {
+        "title": false
+      }
+    }
+  }
+</script>
