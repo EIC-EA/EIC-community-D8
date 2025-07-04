@@ -137,7 +137,6 @@ third_party_settings:
     multilingual:
       limit_to_content_language: false
       include_language_independent: true
-      use_language_undefined_as_fallback_language: false
       specific_languages:
         en: '0'
       use_language_undefined_as_fallback_language: false
