@@ -7,8 +7,8 @@
 
 use Drupal\Core\Url;
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install().
@@ -405,6 +405,23 @@ function eic_deploy_update_9014(&$sandbox) {
   unset($facets['ss_content_type']);
   $facets['sm_content_field_story_type_string'] = 'sm_content_field_story_type_string';
   $facets['sm_content_field_vocab_program_type_string'] = 'sm_content_field_vocab_program_type_string';
+
+  $story_overview->set('field_overview_block', $search_block);
+  $story_overview->save();
+}
+
+/**
+ * Fix News & Articles overview page's facets
+ */
+function eic_deploy_update_9015(&$sandbox) {
+  $story_overview = \Drupal::entityTypeManager()
+    ->getStorage('overview_page')->load(GlobalOverviewPages::NEWS_STORIES);
+
+  $search_block = $story_overview->get('field_overview_block')->getValue();
+  $facets =& $search_block[0]["settings"]["facets"];
+  unset($facets['sm_content_field_story_type_string'], $facets['sm_content_field_vocab_program_type_string']);
+  $facets['ss_content_field_story_type_string'] = 'ss_content_field_story_type_string';
+  $facets['ss_content_field_vocab_program_type_string'] = 'ss_content_field_vocab_program_type_string';
 
   $story_overview->set('field_overview_block', $search_block);
   $story_overview->save();
