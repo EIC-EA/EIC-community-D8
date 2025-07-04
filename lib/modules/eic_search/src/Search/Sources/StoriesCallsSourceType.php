@@ -192,4 +192,11 @@ class StoriesCallsSourceType extends SourceType {
     return (string) $this->t('Search for calls', options: ['context' => 'eic_search']);
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'call-' . parent::getUniqueId();
+  }
+
 }
