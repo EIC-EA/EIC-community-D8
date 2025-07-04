@@ -53,7 +53,7 @@ class StoriesCallsSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_content_field_story_type_string' => $this->t('Type of call', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_program_type_string' => $this->t('Program type', [], ['context' => 'eic_search']),
+      'ss_content_field_vocab_program_type_string' => $this->t('Program type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
     ];
   }
@@ -190,6 +190,13 @@ class StoriesCallsSourceType extends SourceType {
    */
   public function getCustomSearchText() {
     return (string) $this->t('Search for calls', options: ['context' => 'eic_search']);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUniqueId(): string {
+    return 'call-' . parent::getUniqueId();
   }
 
 }
