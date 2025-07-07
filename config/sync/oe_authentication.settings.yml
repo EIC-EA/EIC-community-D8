@@ -8,6 +8,10 @@ ticket_types: 'SERVICE,PROXY'
 force_2fa: false
 restrict_user_delete_cancel_methods: true
 2fa_conditions:
+  user_group_sensitive:
+    id: user_group_sensitive
+    enable: 0
+    negate: 0
   user_role:
     id: user_role
     negate: false
