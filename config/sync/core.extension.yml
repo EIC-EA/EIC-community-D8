@@ -49,8 +49,10 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   eca: 0
+  eca_base: 0
   eca_cm: 0
   eca_ui: 0
+  eca_user: 0
   editor: 0
   eic_admin: 0
   eic_block_type_cta_tiles: 0
