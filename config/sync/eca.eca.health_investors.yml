@@ -1,0 +1,31 @@
+uuid: c9174ec5-2417-4512-bb83-ce54091ce16b
+langcode: en
+status: false
+dependencies:
+  module:
+    - eca_user
+id: health_investors
+modeller: core
+label: 'Health Investors'
+version: null
+weight: 0
+events:
+  user_login:
+    plugin: 'user:login'
+    label: 'Login of a user'
+    configuration: {  }
+    successors: {  }
+conditions:
+  eca_current_user_id:
+    plugin: eca_current_user_id
+    configuration:
+      user_id: '1'
+      negate: false
+  eca_user_permission:
+    plugin: eca_user_permission
+    configuration:
+      account: ''
+      permission: 'view stakeholder'
+      negate: false
+gateways: {  }
+actions: {  }
