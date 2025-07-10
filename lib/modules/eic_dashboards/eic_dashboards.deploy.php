@@ -3,6 +3,7 @@
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\eic_dashboards\Constants\DashboardsDatabase;
 use Drupal\eic_dashboards\Hooks\EntityOperations;
+use Drupal\group_content_menu\GroupContentMenuInterface;
 
 /**
  * Populate eic_dashboards for members dashboard.
@@ -39,8 +40,7 @@ function eic_dashboards_deploy_0002_groups_past_stats(array &$sandbox) {
     $entity_query,
     50,
     $entity_type_id,
-    DashboardsDatabase::GROUPS_DASHBOARD_TYPE)
-  ;
+    DashboardsDatabase::GROUPS_DASHBOARD_TYPE);
 
 }
 
@@ -176,6 +176,89 @@ function eic_dashboards_deploy_0009_add_link_to_groups(array &$sandbox) {
 
   foreach ($groups as $group) {
     \Drupal::classResolver(EntityOperations::class)->createGroupDashboardPageMenuLink($group);
+  }
+}
+
+/**
+ * Fix "Dashboard" link to Group content menu.
+ */
+function eic_dashboards_deploy_0010_fix_dashboard_links_groups(array &$sandbox) {
+  $total_groups = \Drupal::entityQuery('group')
+    ->condition('type', 'group')
+    ->accessCheck(FALSE)
+    ->count()->execute();
+
+  if (!isset($sandbox['total'])) {
+    $sandbox['total'] = $total_groups;
+    $sandbox['current'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return;
+    }
+  }
+
+  $ids = \Drupal::entityQuery('group')
+    ->condition('type', 'group')
+    ->accessCheck(FALSE)
+    ->range($sandbox['current'], 75)
+    ->execute();
+  if (empty($ids)) {
+    $sandbox['#finished'] = 1;
+    return;
+  }
+
+  $entityTypeManager = \Drupal::entityTypeManager();
+  foreach ($ids as $id) {
+    $group = $entityTypeManager->getStorage('group')->load($id);
+    foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
+      if (
+        $group_menu->getGroupContentType()
+          ->getContentPlugin()
+          ->getPluginId() == 'group_content_menu:group_main_menu'
+      ) {
+        $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()
+            ->id();
+        $menu_items = $entityTypeManager->getStorage('menu_link_content')
+          ->loadByProperties([
+            'menu_name' => $menu_name,
+            'link' => [
+              'uri' => 'route:eic_dashboards.group.dashboard;group=' . $group->id(),
+            ]
+          ]);
+        if (count($menu_items) > 1) {
+          while (count($menu_items) > 1) {
+            $menu_item = reset($menu_items);
+            $menu_item->delete();
+            // Remove the item from the array as well.
+            array_shift($menu_items);
+          }
+        }
+        elseif (count($menu_items) === 0) {
+          $menu_item = $entityTypeManager->getStorage('menu_link_content')
+            ->create([
+              'title' => t('Dashboard'),
+              'link' => [
+                'uri' => 'route:eic_dashboards.group.dashboard;group=' . $group->id(),
+              ],
+              'menu_name' => $menu_name,
+              'weight' => -10,
+            ]);
+          $menu_item->save();
+        }
+      }
+    }
+
+    $sandbox['current']++;
+  }
+  \Drupal::messenger()
+    ->addMessage($sandbox['current'] . ' entities processed.');
+
+  if ($sandbox['current'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
   }
 }
 
