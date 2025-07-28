@@ -426,3 +426,18 @@ function eic_deploy_update_9015(&$sandbox) {
   $story_overview->set('field_overview_block', $search_block);
   $story_overview->save();
 }
+
+/**
+ * Remove "Locations" facet from organisation overview
+ */
+function eic_deploy_update_9016(&$sandbox) {
+  $story_overview = \Drupal::entityTypeManager()
+    ->getStorage('overview_page')->load(GlobalOverviewPages::ORGANISATIONS);
+
+  $search_block = $story_overview->get('field_overview_block')->getValue();
+  $facets =& $search_block[0]["settings"]["facets"];
+  unset($facets['sm_group_field_locations_string']);
+
+  $story_overview->set('field_overview_block', $search_block);
+  $story_overview->save();
+}

@@ -10,7 +10,6 @@ dependencies:
     - field.field.group.organisation.field_email
     - field.field.group.organisation.field_funding_source
     - field.field.group.organisation.field_header_visual
-    - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_needs
     - field.field.group.organisation.field_offers
     - field.field.group.organisation.field_organisation_employees
@@ -262,18 +261,6 @@ content:
     region: content
     settings:
       media_types: {  }
-    third_party_settings: {  }
-  field_locations:
-    type: entity_reference_paragraphs
-    weight: 27
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: closed
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
     third_party_settings: {  }
   field_needs:
     type: entity_reference_paragraphs
