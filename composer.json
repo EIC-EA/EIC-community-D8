@@ -52,6 +52,7 @@
         "drupal/core-recommended": "^10.4",
         "drupal/date_popup": "^1.1",
         "drupal/default_content": "^2.0@alpha",
+        "drupal/entity_browser": "^2.13",
         "drupal/entity_usage": "^2.0@beta",
         "drupal/extra_field": "^2.0",
         "drupal/facets": "^2.0",
