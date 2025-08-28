@@ -10,7 +10,6 @@ dependencies:
     - field.field.group.organisation.field_email
     - field.field.group.organisation.field_funding_source
     - field.field.group.organisation.field_header_visual
-    - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_needs
     - field.field.group.organisation.field_offers
     - field.field.group.organisation.field_organisation_employees
@@ -62,15 +61,6 @@ content:
       link: true
     third_party_settings: {  }
     weight: 12
-    region: content
-  field_locations:
-    type: entity_reference_revisions_entity_view
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    weight: 10
     region: content
   field_needs:
     type: entity_reference_revisions_entity_view
@@ -170,3 +160,4 @@ hidden:
   langcode: true
   search_api_excerpt: true
   uid: true
+  workflow_buttons: true
