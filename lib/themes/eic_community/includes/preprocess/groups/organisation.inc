@@ -128,7 +128,10 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
   }
 
-  $locations = $group->get('field_locations')->referencedEntities();
+  $locations = [];
+  if ($group->hasField('field_locations')) {
+    $locations = $group->get('field_locations')->referencedEntities();
+  }
   $locations_data = [];
 
   if (!empty($locations)) {
@@ -661,7 +664,10 @@ function _eic_community_render_organisation_teaser(&$variables, GroupInterface $
   }
 
   // Get organisation location
-  $locations = $group->get('field_locations')->referencedEntities();
+  $locations = [];
+  if ($group->hasField('field_locations')) {
+    $locations = $group->get('field_locations')->referencedEntities();
+  }
   if (!empty($locations)) {
     $locations_data = [
       'items' => array_map(function (ParagraphInterface $location) {
