@@ -197,6 +197,18 @@ class GlobalOverviewPages {
           return Url::fromRoute('node.add', ['node_type' => $bundle['bundle']]);
         };
         break;
+      case GlobalOverviewPages::CALLS:
+        $entity_id = 'node';
+        $bundles = [
+          [
+            'bundle' => 'story',
+            'label' => $this->t('Add call'),
+          ],
+        ];
+        $add_route = function (string $entity_id, array $bundle) {
+          return Url::fromRoute('node.add', ['node_type' => $bundle['bundle']]);
+        };
+        break;
 
     }
 
