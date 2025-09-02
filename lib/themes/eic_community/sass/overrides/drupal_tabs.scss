@@ -4,4 +4,22 @@
   align-self: stretch;
   align-items: center;
   min-height: 45px;
+  width: auto !important;
+}
+
+.horizontal-tabs .horizontal-tab-button {
+  margin-bottom: -1px !important;
+}
+
+.horizontal-tabs .form-item {
+  margin: 10px 0 !important;
+}
+
+.horizontal-tabs-panes .ecl-form-label {
+  margin-bottom: 10px !important;
+  display: block;
+}
+
+.horizontal-tabs .ecl-form .field-group-tab > .ecl-form-group.form-wrapper {
+  margin-bottom: 0 !important;
 }
