@@ -17,6 +17,7 @@ module:
   block_field: 0
   book: 0
   book_link_weight: 0
+  bpmn_io: 0
   breakpoint: 0
   captcha: 0
   cas: 0
@@ -51,8 +52,13 @@ module:
   eca: 0
   eca_base: 0
   eca_cm: 0
+  eca_content: 0
+  eca_development: 0
+  eca_helper: 0
+  eca_modeller_bpmn: 0
   eca_ui: 0
   eca_user: 0
+  eca_views: 0
   editor: 0
   eic_admin: 0
   eic_block_type_cta_tiles: 0
@@ -72,6 +78,7 @@ module:
   eic_dashboards: 0
   eic_datepicker: 0
   eic_deploy: 0
+  eic_eca: 0
   eic_events: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
@@ -143,6 +150,7 @@ module:
   group_flex: 0
   group_permissions: 0
   hal: 0
+  help: 0
   image: 0
   inline_entity_form: 0
   js_cookie: 0
@@ -242,6 +250,7 @@ module:
   views_ui: 0
   workflow_buttons: 0
   workflows: 0
+  eca_form: 1
   pathauto: 1
   externalauth: 10
   views: 10
