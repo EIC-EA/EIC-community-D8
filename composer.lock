@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0dce65e8cb4b7dffdd8303bc12c57eb",
+    "content-hash": "eb8f419003e7246af6699698c90b17c0",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -1843,27 +1843,6 @@
                 "source": "https://github.com/ckeditor/ckeditor4/tree/master/plugins/font"
             },
             "time": "2023-02-08T14:53:49+00:00"
-        },
-        {
-            "name": "drupal-eca-recipe/eca_test_0005",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://gitlab.lakedrops.com/drupal/recipes/eca_test_0005",
-                "reference": "961ace5a4a0f5023f38b99cbbe8263212b6ac160"
-            },
-            "require": {
-                "drupal/core": ">=10.3",
-                "drupal/eca": "*"
-            },
-            "default-branch": true,
-            "type": "drupal-recipe",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Views",
-            "time": "2024-08-07T10:59:18+00:00"
         },
         {
             "name": "drupal/address",
@@ -24101,7 +24080,6 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal-eca-recipe/eca_test_0005": 20,
         "drupal/block_field": 5,
         "drupal/ckeditor_find": 10,
         "drupal/content_moderation_bypass": 15,

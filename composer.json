@@ -24,7 +24,6 @@
         "composer/installers": "^2.0",
         "composer/semver": "^3.3",
         "cweagans/composer-patches": "^1.7",
-        "drupal-eca-recipe/eca_test_0005": "dev-main",
         "drupal/address": "^1.9",
         "drupal/admin_toolbar": "^3.0",
         "drupal/allowed_formats": "^3.0",
