@@ -143,6 +143,10 @@ class GroupTokens implements ContainerInjectionInterface {
         'name' => $this->t('Group owner'),
         'description' => $this->t('The user entity which is the owner of the group.'),
       ],
+      'admins:emails' => [
+        'name' => $this->t('Group admins'),
+        'description' => $this->t('String of admins\' emails for the group, separated by comma.'),
+      ]
     ];
     $info['tokens']['site'] = [
       'eic-user-invitations-page-url' => [
@@ -363,9 +367,19 @@ class GroupTokens implements ContainerInjectionInterface {
     $find_tokens = [
       'group_truncated_title',
       'group_owner',
+      'admins:emails',
     ];
 
     foreach ($find_tokens as $find_token_name) {
+      if ($find_token_name === 'admins:emails') {
+        $emails = [];
+        foreach (EICGroupsHelper::getGroupAdmins($data['group']) as $group_admin) {
+          $emails[] = $group_admin->getUser()->getEmail();
+        }
+        $token_emails = implode(',', $emails);
+        $replacements['[group:admins:emails]'] = $token_emails;
+        continue;
+      }
       $found_tokens = $this->tokenService->findWithPrefix($tokens, $find_token_name);
 
       // Provide replacements for found group tokens.
