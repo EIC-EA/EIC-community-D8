@@ -1,0 +1,18 @@
+<?php
+
+
+/**
+ * Implements hook_views_data_alter().
+ */
+//function eic_eca_views_data_alter(array &$data) {
+//  $data['groups']['group_inactivity'] = [
+//    'title' => t('Group last inactivity'),
+//    'group' => t('Group'),
+//    'field' => [
+//      'title' => t('Group last inactivity'),
+//      'help' => t('help.'),
+//      'id' => 'group_inactivity',
+//    ],
+//  ];
+//}
+

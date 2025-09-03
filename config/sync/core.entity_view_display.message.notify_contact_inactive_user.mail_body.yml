@@ -1,0 +1,20 @@
+uuid: 4af39616-61a9-401b-be8b-326b8f071937
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_contact_inactive_user.field_related_user
+    - message.template.notify_contact_inactive_user
+id: message.notify_contact_inactive_user.mail_body
+targetEntityType: message
+bundle: notify_contact_inactive_user
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_related_user: true
+  partial_0: true
+  search_api_excerpt: true

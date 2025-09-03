@@ -1,0 +1,15 @@
+uuid: efbfdb73-e886-4ff5-aa07-556010b6543c
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.user_inactive_1_month
+  module:
+    - flag
+id: flag_action.user_inactive_1_month_unflag
+label: 'Unflag this item'
+type: user
+plugin: 'flag_action:user_inactive_1_month_unflag'
+configuration:
+  flag_id: user_inactive_1_month
+  flag_action: unflag

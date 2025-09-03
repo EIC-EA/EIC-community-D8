@@ -1,0 +1,15 @@
+uuid: 7c5d5a6c-1388-40cf-906c-4948f6faed72
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.user_inactive_1_month
+  module:
+    - flag
+id: flag_action.user_inactive_1_month_flag
+label: 'Flag this item'
+type: user
+plugin: 'flag_action:user_inactive_1_month_flag'
+configuration:
+  flag_id: user_inactive_1_month
+  flag_action: flag

@@ -1,0 +1,74 @@
+uuid: cfdc7e29-a8c1-418f-baaf-88065ad3904f
+langcode: en
+status: true
+dependencies:
+  module:
+    - eca_base
+    - eca_content
+    - eic_eca
+id: eca_test_0005
+modeller: bpmn_io
+label: Views
+version: v1
+weight: 0
+events:
+  Event_1up81dz:
+    plugin: 'eca_base:eca_cron'
+    label: Cron
+    configuration:
+      frequency: '* * * * *'
+    successors:
+      -
+        id: Activity_11qerie
+        condition: ''
+  Event_1asjw3k:
+    plugin: 'content_entity:custom'
+    label: X1
+    configuration:
+      event_id: x1
+    successors:
+      -
+        id: Activity_1cg92z5
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  Activity_105ssdc:
+    plugin: eca_trigger_content_entity_custom_event
+    label: 'Trigger X1'
+    configuration:
+      event_id: x1
+      tokens: ''
+      object: userlist
+    successors: {  }
+  Activity_1cg92z5:
+    plugin: action_send_email_action
+    label: email
+    configuration:
+      replace_tokens: false
+      recipient: '[user:mail]'
+      subject: 'User inactivity'
+      message: 'user is inactive for more than 1 month'
+    successors:
+      -
+        id: Activity_1hntxhk
+        condition: ''
+  Activity_11qerie:
+    plugin: eic_eca_user_inactivity_action
+    label: 'query users'
+    configuration:
+      inactivity_duration: '1'
+      items: '10'
+      object: userlist
+    successors:
+      -
+        id: Activity_105ssdc
+        condition: ''
+  Activity_1hntxhk:
+    plugin: eic_eca_flag_dispatch_usre
+    label: dispatch
+    configuration:
+      inactivity_duration: '1'
+      items: '50'
+      object: ''
+    successors: {  }

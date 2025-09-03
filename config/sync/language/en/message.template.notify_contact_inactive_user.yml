@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>Subject email</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear user,</p>\r\n\r\n<p>You have not logged in EIC Community site since your account creation the last month.</p>\r\n\r\n<p>Do you need help logging in?</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Best regards,</p>\r\n\r\n<p>EIC Community team</p>\r\n"
+    format: full_html
