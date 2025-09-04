@@ -1,4 +1,4 @@
-uuid: cfdc7e29-a8c1-418f-baaf-88065ad3904f
+uuid: 3484ebdb-1196-4dab-91c4-8d62e22ac3a4
 langcode: en
 status: true
 dependencies:
@@ -6,11 +6,11 @@ dependencies:
     - eca_base
     - eca_content
     - eic_eca
-id: eca_test_0005
+id: eca_inactive_users
 modeller: bpmn_io
-label: Views
+label: 'Inactive users'
 version: v1
-weight: 0
+weight: null
 events:
   Event_1up81dz:
     plugin: 'eca_base:eca_cron'

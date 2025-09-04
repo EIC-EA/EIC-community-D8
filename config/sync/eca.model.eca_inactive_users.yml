@@ -1,11 +1,11 @@
-uuid: 8da0860c-41ba-4dcc-a800-69dfe3886d61
+uuid: 8b6c7593-b3cb-4136-9078-bdb555533c6f
 langcode: en
 status: true
 dependencies:
   config:
-    - eca.eca.eca_test_0005
-id: eca_test_0005
-label: Views
+    - eca.eca.eca_inactive_users
+id: eca_inactive_users
+label: 'Inactive users'
 tags:
   - 'test models'
   - views
@@ -18,7 +18,7 @@ filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-    <bpmn2:process id="eca_test_0005" name="Views" isExecutable="true" camunda:versionTag="v1">
+    <bpmn2:process id="eca_inactive_users" name="Inactive users" isExecutable="true" camunda:versionTag="v1">
       <bpmn2:documentation>During cron, this model switches the user context, queries a view to receive all user accounts and loops over all those users triggering a custom event for each of them to print their names in messages.</bpmn2:documentation>
       <bpmn2:extensionElements>
         <camunda:properties>
@@ -127,7 +127,7 @@ modeldata: |
       <bpmn2:sequenceFlow id="Flow_0c4l2ni" sourceRef="Activity_1cg92z5" targetRef="Activity_1hntxhk" />
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="BPMNDiagram_eca_test_0005">
-      <bpmndi:BPMNPlane id="BPMNPlane_eca_test_0005" bpmnElement="eca_test_0005">
+      <bpmndi:BPMNPlane id="BPMNPlane_eca_test_0005" bpmnElement="eca_inactive_users">
         <bpmndi:BPMNShape id="Event_1up81dz_di" bpmnElement="Event_1up81dz">
           <dc:Bounds x="57" y="52" width="36" height="36" />
         </bpmndi:BPMNShape>
@@ -137,12 +137,12 @@ modeldata: |
         <bpmndi:BPMNShape id="Event_1asjw3k_di" bpmnElement="Event_1asjw3k">
           <dc:Bounds x="57" y="192" width="36" height="36" />
         </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1cg92z5_di" bpmnElement="Activity_1cg92z5">
+          <dc:Bounds x="210" y="170" width="100" height="80" />
+        </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_11qerie_di" bpmnElement="Activity_11qerie">
           <dc:Bounds x="200" y="30" width="100" height="80" />
           <bpmndi:BPMNLabel />
-        </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Activity_1cg92z5_di" bpmnElement="Activity_1cg92z5">
-          <dc:Bounds x="210" y="170" width="100" height="80" />
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_1hntxhk_di" bpmnElement="Activity_1hntxhk">
           <dc:Bounds x="450" y="170" width="100" height="80" />
