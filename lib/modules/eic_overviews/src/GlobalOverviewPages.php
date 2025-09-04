@@ -220,7 +220,7 @@ class GlobalOverviewPages {
     foreach ($bundles as $bundle) {
       if ($access_handler->createAccess($bundle['bundle'])) {
         $url = is_callable($add_route)
-          ? call_user_func($add_route, $entity_id, $bundle['bundle'])
+          ? call_user_func($add_route, $entity_id, $bundle)
           : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle['bundle']]);
 
         $operations[] = [
