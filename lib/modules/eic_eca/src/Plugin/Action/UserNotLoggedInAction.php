@@ -36,13 +36,23 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
     $duration = (int) $this->configuration['inactivity_duration'];
     $items = (int) $this->configuration['items'];
     $timestamp_inactivity = strtotime("-$duration months");
+    $flag_id = 'user_inactive_1_month';
 
-    $uids = $this->entityTypeManager->getStorage('user')->getQuery()
-      ->condition('created', $timestamp_inactivity, '<=')
-      ->condition('access', 0)
-      ->range(length: $items)
-      ->accessCheck(FALSE)
-      ->execute();
+    // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect()
+    $query = \Drupal::database()->select('users_field_data', 'ufd');
+    $query->addField('ufd', 'uid');
+    $query->condition('ufd.created', $timestamp_inactivity, '<=')
+      ->condition('ufd.access', 0)
+      ->condition('ufd.uid', 0, '<>');
+    $subquery = \Drupal::database()->select('flagging', 'f')
+      ->condition('f.flag_id', $flag_id);
+    $subquery->addField('f', 'entity_id');
+    $subquery->where('[f].[entity_id] = [ufd].[uid]');
+    $query->notExists($subquery);
+
+    $uids = $query->execute()->fetchAllAssoc('uid');
+    $uids = array_slice($uids, 0, $items);
+    $uids = array_column($uids, 'uid');
 
     $this->tokenService->addTokenData(
       $this->configuration['object'], $this->entityTypeManager
