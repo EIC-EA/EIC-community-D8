@@ -54,8 +54,6 @@
         "drupal/date_popup": "^1.1",
         "drupal/default_content": "^2.0@alpha",
         "drupal/eca": "^2.1",
-        "drupal/eca_cm": "^1.0",
-        "drupal/eca_helper": "^2.0",
         "drupal/entity_browser": "^2.13",
         "drupal/entity_usage": "^2.0@beta",
         "drupal/extra_field": "^2.0",
