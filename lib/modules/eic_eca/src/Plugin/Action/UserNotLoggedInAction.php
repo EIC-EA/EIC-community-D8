@@ -4,9 +4,11 @@ namespace Drupal\eic_eca\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eca\Plugin\Action\ConfigurableActionBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Describes the eic_eca group_inactivity_action action.
@@ -20,6 +22,22 @@ use Drupal\eca\Plugin\Action\ConfigurableActionBase;
  *   )
  */
 class UserNotLoggedInAction extends ConfigurableActionBase {
+
+  /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected Connection $connection;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->setConnection($container->get('database'));
+    return $instance;
+  }
 
   /**
    * {@inheritdoc}
@@ -38,16 +56,17 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
     $timestamp_inactivity = strtotime("-$duration months");
     $flag_id = 'user_inactive_1_month';
 
-    // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect()
-    $query = \Drupal::database()->select('users_field_data', 'ufd');
+    $query = $this->connection->select('users_field_data', 'ufd');
     $query->addField('ufd', 'uid');
     $query->condition('ufd.created', $timestamp_inactivity, '<=')
       ->condition('ufd.access', 0)
       ->condition('ufd.uid', 0, '<>');
-    $subquery = \Drupal::database()->select('flagging', 'f')
+    $subquery = $this->connection->select('flagging', 'f')
       ->condition('f.flag_id', $flag_id);
     $subquery->addField('f', 'entity_id');
     $subquery->where('[f].[entity_id] = [ufd].[uid]');
+
+   // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
     $query->notExists($subquery);
 
     $uids = $query->execute()->fetchAllAssoc('uid');
@@ -100,5 +119,16 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
     $this->configuration['items'] = $form_state->getValue('items');
     parent::submitConfigurationForm($form, $form_state);
   }
+
+  /**
+   * Set the database service.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database service.
+   */
+  public function setConnection(Connection $connection): void {
+    $this->connection = $connection;
+  }
+
 
 }
