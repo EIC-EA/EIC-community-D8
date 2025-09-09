@@ -40,11 +40,11 @@ function eic_projects_entity_presave(\Drupal\Core\Entity\EntityInterface $entity
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  *
  * @see https://www.drupal.org/project/drupal/issues/2230909
  */
-function eic_projects_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function eic_projects_field_widget_single_element_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
   $field = $context['items']->getFieldDefinition();
   if ($field->getName() == 'field_project_total_cost' || $field->getName() == 'field_project_ecmax_contributio') {
     $element['value']['#step'] = (string) $element['value']['#step'];
