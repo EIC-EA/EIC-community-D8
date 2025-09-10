@@ -52,7 +52,7 @@ class StoriesCallsSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_content_field_story_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
+      'ss_content_field_story_type_string' => $this->t('Type of content', [], ['context' => 'eic_search']),
       'ss_content_field_vocab_program_type_string' => $this->t('Program type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
     ];
