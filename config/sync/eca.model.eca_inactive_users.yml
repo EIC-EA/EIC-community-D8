@@ -18,18 +18,18 @@ filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-    <bpmn2:process id="eca_inactive_users" name="Inactive users" isExecutable="true" camunda:versionTag="v1">
+    <bpmn2:process id="eca_inactive_users" name="Inactive users" isExecutable="false" camunda:versionTag="v1">
       <bpmn2:documentation>During cron, this model switches the user context, queries a view to receive all user accounts and loops over all those users triggering a custom event for each of them to print their names in messages.</bpmn2:documentation>
       <bpmn2:extensionElements>
         <camunda:properties>
-          <camunda:property name="Tags" value="test models,views,loop,custom event,cron,switch user" />
-          <camunda:property name="Changelog v1" value="Initial version" />
+          <camunda:property name="Tags" value="test models,views,loop,custom event,cron,switch user"/>
+          <camunda:property name="Changelog v1" value="Initial version"/>
         </camunda:properties>
       </bpmn2:extensionElements>
       <bpmn2:startEvent id="Event_1up81dz" name="Cron" camunda:modelerTemplate="org.drupal.event.eca_base:eca_cron">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eca_base:eca_cron" />
+            <camunda:property name="pluginid" value="eca_base:eca_cron"/>
           </camunda:properties>
           <camunda:field name="frequency">
             <camunda:string>* * * * *</camunda:string>
@@ -40,7 +40,7 @@ modeldata: |
       <bpmn2:task id="Activity_105ssdc" name="Trigger X1" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event" />
+            <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event"/>
           </camunda:properties>
           <camunda:field name="event_id">
             <camunda:string>x1</camunda:string>
@@ -49,7 +49,7 @@ modeldata: |
             <camunda:string>userlist</camunda:string>
           </camunda:field>
           <camunda:field name="tokens">
-            <camunda:string></camunda:string>
+            <camunda:string/>
           </camunda:field>
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_076biiu</bpmn2:incoming>
@@ -57,7 +57,7 @@ modeldata: |
       <bpmn2:startEvent id="Event_1asjw3k" name="X1" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="content_entity:custom" />
+            <camunda:property name="pluginid" value="content_entity:custom"/>
           </camunda:properties>
           <camunda:field name="event_id">
             <camunda:string>x1</camunda:string>
@@ -65,31 +65,10 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_1907kdx</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:task id="Activity_1cg92z5" name="email" camunda:modelerTemplate="org.drupal.action.action_send_email_action">
-        <bpmn2:extensionElements>
-          <camunda:properties>
-            <camunda:property name="pluginid" value="action_send_email_action" />
-          </camunda:properties>
-          <camunda:field name="recipient">
-            <camunda:string>[user:mail]</camunda:string>
-          </camunda:field>
-          <camunda:field name="subject">
-            <camunda:string>User inactivity</camunda:string>
-          </camunda:field>
-          <camunda:field name="message">
-            <camunda:string>user is inactive for more than 1 month</camunda:string>
-          </camunda:field>
-          <camunda:field name="replace_tokens">
-            <camunda:string>no</camunda:string>
-          </camunda:field>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>Flow_1907kdx</bpmn2:incoming>
-        <bpmn2:outgoing>Flow_0c4l2ni</bpmn2:outgoing>
-      </bpmn2:task>
       <bpmn2:task id="Activity_11qerie" name="query users" camunda:modelerTemplate="org.drupal.action.eic_eca_user_inactivity_action">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eic_eca_user_inactivity_action" />
+            <camunda:property name="pluginid" value="eic_eca_user_inactivity_action"/>
           </camunda:properties>
           <camunda:field name="inactivity_duration">
             <camunda:string>1</camunda:string>
@@ -104,10 +83,10 @@ modeldata: |
         <bpmn2:incoming>Flow_1dvn4mi</bpmn2:incoming>
         <bpmn2:outgoing>Flow_076biiu</bpmn2:outgoing>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_1dvn4mi" sourceRef="Event_1up81dz" targetRef="Activity_11qerie" />
-      <bpmn2:sequenceFlow id="Flow_076biiu" sourceRef="Activity_11qerie" targetRef="Activity_105ssdc" />
-      <bpmn2:sequenceFlow id="Flow_1907kdx" sourceRef="Event_1asjw3k" targetRef="Activity_1cg92z5" />
-      <bpmn2:task id="Activity_1hntxhk" name="dispatch" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_usre">
+      <bpmn2:sequenceFlow id="Flow_1dvn4mi" sourceRef="Event_1up81dz" targetRef="Activity_11qerie"/>
+      <bpmn2:sequenceFlow id="Flow_076biiu" sourceRef="Activity_11qerie" targetRef="Activity_105ssdc"/>
+      <bpmn2:sequenceFlow id="Flow_1907kdx" sourceRef="Event_1asjw3k" targetRef="Activity_1hntxhk"/>
+      <bpmn2:task id="Activity_1hntxhk" name="dispatch" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_user">
         <bpmn2:extensionElements>
           <camunda:field name="inactivity_duration">
             <camunda:string>1</camunda:string>
@@ -116,53 +95,43 @@ modeldata: |
             <camunda:string>50</camunda:string>
           </camunda:field>
           <camunda:field name="object">
-            <camunda:string></camunda:string>
+            <camunda:string/>
           </camunda:field>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_usre" />
+            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_user"/>
           </camunda:properties>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>Flow_0c4l2ni</bpmn2:incoming>
+        <bpmn2:incoming>Flow_1907kdx</bpmn2:incoming>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_0c4l2ni" sourceRef="Activity_1cg92z5" targetRef="Activity_1hntxhk" />
     </bpmn2:process>
-    <bpmndi:BPMNDiagram id="BPMNDiagram_eca_test_0005">
-      <bpmndi:BPMNPlane id="BPMNPlane_eca_test_0005" bpmnElement="eca_inactive_users">
+    <bpmndi:BPMNDiagram id="BPMNDiagram_eca_inactive_users">
+      <bpmndi:BPMNPlane id="BPMNPlane_eca_inactive_users" bpmnElement="eca_inactive_users">
         <bpmndi:BPMNShape id="Event_1up81dz_di" bpmnElement="Event_1up81dz">
-          <dc:Bounds x="57" y="52" width="36" height="36" />
+          <dc:Bounds x="57" y="52" width="36" height="36"/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_105ssdc_di" bpmnElement="Activity_105ssdc">
-          <dc:Bounds x="475" y="30" width="100" height="80" />
+          <dc:Bounds x="325" y="30" width="100" height="80"/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Event_1asjw3k_di" bpmnElement="Event_1asjw3k">
-          <dc:Bounds x="57" y="192" width="36" height="36" />
-        </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Activity_1cg92z5_di" bpmnElement="Activity_1cg92z5">
-          <dc:Bounds x="210" y="170" width="100" height="80" />
+          <dc:Bounds x="57" y="192" width="36" height="36"/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_11qerie_di" bpmnElement="Activity_11qerie">
-          <dc:Bounds x="200" y="30" width="100" height="80" />
-          <bpmndi:BPMNLabel />
+          <dc:Bounds x="175" y="30" width="100" height="80"/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_1hntxhk_di" bpmnElement="Activity_1hntxhk">
-          <dc:Bounds x="450" y="170" width="100" height="80" />
-          <bpmndi:BPMNLabel />
+          <dc:Bounds x="175" y="170" width="100" height="80"/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_1dvn4mi_di" bpmnElement="Flow_1dvn4mi">
-          <di:waypoint x="93" y="70" />
-          <di:waypoint x="200" y="70" />
+          <di:waypoint x="93" y="70"/>
+          <di:waypoint x="175" y="70"/>
         </bpmndi:BPMNEdge>
         <bpmndi:BPMNEdge id="Flow_076biiu_di" bpmnElement="Flow_076biiu">
-          <di:waypoint x="300" y="70" />
-          <di:waypoint x="475" y="70" />
+          <di:waypoint x="275" y="70"/>
+          <di:waypoint x="325" y="70"/>
         </bpmndi:BPMNEdge>
         <bpmndi:BPMNEdge id="Flow_1907kdx_di" bpmnElement="Flow_1907kdx">
-          <di:waypoint x="93" y="210" />
-          <di:waypoint x="210" y="210" />
-        </bpmndi:BPMNEdge>
-        <bpmndi:BPMNEdge id="Flow_0c4l2ni_di" bpmnElement="Flow_0c4l2ni">
-          <di:waypoint x="310" y="210" />
-          <di:waypoint x="450" y="210" />
+          <di:waypoint x="93" y="210"/>
+          <di:waypoint x="175" y="210"/>
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

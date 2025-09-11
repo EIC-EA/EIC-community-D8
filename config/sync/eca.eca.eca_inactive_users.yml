@@ -1,6 +1,6 @@
 uuid: 3484ebdb-1196-4dab-91c4-8d62e22ac3a4
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - eca_base
@@ -10,7 +10,7 @@ id: eca_inactive_users
 modeller: bpmn_io
 label: 'Inactive users'
 version: v1
-weight: null
+weight: 0
 events:
   Event_1up81dz:
     plugin: 'eca_base:eca_cron'
@@ -28,7 +28,7 @@ events:
       event_id: x1
     successors:
       -
-        id: Activity_1cg92z5
+        id: Activity_1hntxhk
         condition: ''
 conditions: {  }
 gateways: {  }
@@ -41,18 +41,6 @@ actions:
       tokens: ''
       object: userlist
     successors: {  }
-  Activity_1cg92z5:
-    plugin: action_send_email_action
-    label: email
-    configuration:
-      replace_tokens: false
-      recipient: '[user:mail]'
-      subject: 'User inactivity'
-      message: 'user is inactive for more than 1 month'
-    successors:
-      -
-        id: Activity_1hntxhk
-        condition: ''
   Activity_11qerie:
     plugin: eic_eca_user_inactivity_action
     label: 'query users'
@@ -65,7 +53,7 @@ actions:
         id: Activity_105ssdc
         condition: ''
   Activity_1hntxhk:
-    plugin: eic_eca_flag_dispatch_usre
+    plugin: eic_eca_flag_dispatch_user
     label: dispatch
     configuration:
       inactivity_duration: '1'
