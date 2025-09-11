@@ -1,0 +1,15 @@
+uuid: 2f85f61c-b8f5-496b-9815-dccae2d7b7d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.group_inactive
+  module:
+    - flag
+id: flag_action.group_inactive_flag
+label: 'Flag this item'
+type: group
+plugin: 'flag_action:group_inactive_flag'
+configuration:
+  flag_id: group_inactive
+  flag_action: flag

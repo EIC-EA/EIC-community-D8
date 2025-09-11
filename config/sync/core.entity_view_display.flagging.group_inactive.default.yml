@@ -1,0 +1,23 @@
+uuid: 8bd956c5-6ed2-421b-a090-5aa89d228947
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.group_inactive.field_inactivity_duration
+    - flag.flag.group_inactive
+id: flagging.group_inactive.default
+targetEntityType: flagging
+bundle: group_inactive
+mode: default
+content:
+  field_inactivity_duration:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true
