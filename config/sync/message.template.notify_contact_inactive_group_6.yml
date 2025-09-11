@@ -1,0 +1,27 @@
+uuid: 7177c341-f423-4fe3-afcd-d8db87ab1785
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_contact_inactive_group_6
+label: 'NOTIFY :: MT :: Contact inactive group user admins'
+description: ''
+text:
+  -
+    value: "<p>Group inactive 6 months</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear user,</p>\r\n\r\n<p>Your group has no activity for 6 months.</p>\r\n\r\n<p>&nbsp;\r\n<p>EIC Community team</p>\r\n</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }
