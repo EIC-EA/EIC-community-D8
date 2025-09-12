@@ -71,10 +71,19 @@ modeldata: |
             <camunda:string>x1</camunda:string>
           </camunda:field>
         </bpmn2:extensionElements>
-        <bpmn2:outgoing>Flow_00jlhlz</bpmn2:outgoing>
+        <bpmn2:outgoing>Flow_0fr7q2t</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:task id="Activity_1sb67t3" name="email to admins" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_group_admins">
+      <bpmn2:task id="Activity_05louvl" name="group admins dispatch email" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_group_admins">
         <bpmn2:extensionElements>
+          <camunda:field name="flag_id">
+            <camunda:string>group_inactive</camunda:string>
+          </camunda:field>
+          <camunda:field name="message_template">
+            <camunda:string>notify_contact_inactive_group_6</camunda:string>
+          </camunda:field>
+          <camunda:field name="inactivity_duration">
+            <camunda:string>6</camunda:string>
+          </camunda:field>
           <camunda:field name="object">
             <camunda:string></camunda:string>
           </camunda:field>
@@ -82,9 +91,9 @@ modeldata: |
             <camunda:property name="pluginid" value="eic_eca_flag_dispatch_group_admins" />
           </camunda:properties>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>Flow_00jlhlz</bpmn2:incoming>
+        <bpmn2:incoming>Flow_0fr7q2t</bpmn2:incoming>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_00jlhlz" sourceRef="Event_0aoyrp5" targetRef="Activity_1sb67t3" />
+      <bpmn2:sequenceFlow id="Flow_0fr7q2t" sourceRef="Event_0aoyrp5" targetRef="Activity_05louvl" />
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="sid-a678dbf7-6705-4690-9533-86ee32510260">
       <bpmndi:BPMNPlane id="sid-334a5260-cfb1-4c45-960a-6ac98ecd50e0" bpmnElement="group_inactive_6_months">
@@ -108,8 +117,8 @@ modeldata: |
             <dc:Bounds x="334" y="265" width="12" height="14" />
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Activity_1sb67t3_di" bpmnElement="Activity_1sb67t3">
-          <dc:Bounds x="520" y="200" width="100" height="80" />
+        <bpmndi:BPMNShape id="Activity_05louvl_di" bpmnElement="Activity_05louvl">
+          <dc:Bounds x="540" y="200" width="100" height="80" />
           <bpmndi:BPMNLabel />
         </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_0lvry9y_di" bpmnElement="Flow_0lvry9y">
@@ -120,9 +129,9 @@ modeldata: |
           <di:waypoint x="620" y="100" />
           <di:waypoint x="740" y="100" />
         </bpmndi:BPMNEdge>
-        <bpmndi:BPMNEdge id="Flow_00jlhlz_di" bpmnElement="Flow_00jlhlz">
+        <bpmndi:BPMNEdge id="Flow_0fr7q2t_di" bpmnElement="Flow_0fr7q2t">
           <di:waypoint x="358" y="240" />
-          <di:waypoint x="520" y="240" />
+          <di:waypoint x="540" y="240" />
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

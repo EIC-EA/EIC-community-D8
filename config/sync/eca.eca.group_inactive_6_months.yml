@@ -28,7 +28,7 @@ events:
       event_id: x1
     successors:
       -
-        id: Activity_1sb67t3
+        id: Activity_05louvl
         condition: ''
 conditions: {  }
 gateways: {  }
@@ -52,9 +52,12 @@ actions:
       tokens: ''
       object: grouplist
     successors: {  }
-  Activity_1sb67t3:
+  Activity_05louvl:
     plugin: eic_eca_flag_dispatch_group_admins
-    label: 'email to admins'
+    label: 'group admins dispatch email'
     configuration:
+      message_template: notify_contact_inactive_group_6
+      flag_id: group_inactive
+      inactivity_duration: '6'
       object: ''
     successors: {  }
