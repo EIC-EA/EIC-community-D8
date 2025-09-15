@@ -28,7 +28,7 @@ events:
       event_id: x1
     successors:
       -
-        id: Activity_1hntxhk
+        id: Activity_0808l2p
         condition: ''
 conditions: {  }
 gateways: {  }
@@ -52,11 +52,11 @@ actions:
       -
         id: Activity_105ssdc
         condition: ''
-  Activity_1hntxhk:
+  Activity_0808l2p:
     plugin: eic_eca_flag_dispatch_user
-    label: dispatch
+    label: 'notify user'
     configuration:
-      inactivity_duration: '1'
-      items: '50'
+      message_template: notify_contact_inactive_user
+      flag_id: user_inactive_1_month
       object: ''
     successors: {  }
