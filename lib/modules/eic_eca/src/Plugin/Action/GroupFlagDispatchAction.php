@@ -34,13 +34,27 @@ class GroupFlagDispatchAction extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL): void {
-    $flagging = $this->entityTypeManager->getStorage('flagging')->create([
-      'flag_id' => $this->configuration['flag_id'],
-      'entity_type' => 'group',
-      'entity_id' => $entity->id(),
-      'field_inactivity_duration' => $this->configuration['inactivity_duration'],
-      'uid' => 1,
-    ]);
+    // Check if there's a flag entity already.
+    $existing = $this->entityTypeManager->getStorage('flagging')
+      ->loadByProperties([
+        'entity_type' => 'group',
+        'flag_id' => $this->configuration['flag_id'],
+        'entity_id' => $entity->id(),
+      ]);
+    if (!empty($existing)) {
+      /** @var \Drupal\flag\Entity\Flagging $flagging */
+      $flagging = reset($existing);
+      $flagging->set('field_inactivity_duration', $this->configuration['inactivity_duration']);
+    }
+    else {
+      $flagging = $this->entityTypeManager->getStorage('flagging')->create([
+        'flag_id' => $this->configuration['flag_id'],
+        'entity_type' => 'group',
+        'entity_id' => $entity->id(),
+        'field_inactivity_duration' => $this->configuration['inactivity_duration'],
+        'uid' => 1,
+      ]);
+    }
     $flagging->save();
     /** @var \Drupal\eic_messages\Service\MessageBusInterface $bus */
     $bus = \Drupal::service('eic_messages.message_bus');
