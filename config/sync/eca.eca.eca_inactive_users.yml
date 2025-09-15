@@ -9,7 +9,7 @@ dependencies:
 id: eca_inactive_users
 modeller: bpmn_io
 label: 'Inactive users'
-version: v1
+version: 1.0.0
 weight: 0
 events:
   Event_1up81dz:
