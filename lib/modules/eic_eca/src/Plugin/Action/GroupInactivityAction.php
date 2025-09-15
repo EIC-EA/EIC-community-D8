@@ -41,48 +41,63 @@ class GroupInactivityAction extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute($group = NULL): void {
-    $duration = (int) $this->configuration['inactivity_duration'];
-    $items = (int) $this->configuration['items'];
-    $timestamp_inactivity = strtotime("-$duration months");
     $flag_id = 'group_inactive';
+    $duration = (int) $this->configuration['inactivity_duration'];
+    $previous_duration = (int) $this->configuration['previous_duration'];
+    if (!$this->configuration['check_previous_scenario']) {
+      $items = (int) $this->configuration['items'];
+      $timestamp_inactivity = strtotime("-$duration months");
 
-    $index = \Drupal\search_api\Entity\Index::load('global');
-    $query = $index->query();
+      $query = $this->entityTypeManager->getStorage('search_api_index')
+        ->load('global')->query();
 
-    // Change the parse mode for the search.
-    $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
-      ->createInstance('direct');
-    $parse_mode->setConjunction('OR');
-    $query->setParseMode($parse_mode);
-    $query->addCondition('search_api_datasource', 'entity:group')
-      ->addCondition('group_type', 'group')
-      ->addCondition('group_changed', $timestamp_inactivity, '<');
-    $query->range(0, $items);
-    $query->sort('group_changed', QueryInterface::SORT_DESC);
+      // Change the parse mode for the search.
+      $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
+        ->createInstance('direct');
+      $parse_mode->setConjunction('OR');
+      $query->setParseMode($parse_mode);
+      $query->addCondition('search_api_datasource', 'entity:group')
+        ->addCondition('group_type', 'group')
+        ->addCondition('group_changed', $timestamp_inactivity, '<');
+      $query->range(0, $items);
+      $query->sort('group_changed', QueryInterface::SORT_DESC);
 
-    // Execute the search.
-    $results = $query->execute();
-    $solr_gids = [];
-    foreach ($results as $result) {
-      $solr_gids[] = $result->getField('group_id_integer')->getValues()[0];
+      // Execute the search.
+      $results = $query->execute();
+      $solr_gids = [];
+      foreach ($results as $result) {
+        $solr_gids[] = $result->getField('group_id_integer')->getValues()[0];
+      }
+
+      $query = $this->connection->select('groups_field_data', 'gfd');
+      $query->addField('gfd', 'id');
+      $query->condition('gfd.id', $solr_gids, 'IN');
+      $subquery = $this->connection->select('flagging', 'f')
+        ->condition('f.flag_id', $flag_id);
+      $subquery->join('flagging__field_inactivity_duration', 'inactive');
+      $subquery->addField('inactive', 'field_inactivity_duration_value');
+      $subquery->condition('inactive.field_inactivity_duration_value', $duration);
+      $subquery->addField('f', 'entity_id');
+      $subquery->where('[f].[entity_id] = [gfd].[id]');
+
+      // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
+      $query->notExists($subquery);
+
+      $dbKey = 'id';
+    }
+    else {
+      $query = $this->connection->select('flagging', 'f')
+        ->condition('f.flag_id', $flag_id);
+      $query->join('flagging__field_inactivity_duration', 'inactive');
+      $query->addField('inactive', 'field_inactivity_duration_value');
+      $query->condition('inactive.field_inactivity_duration_value', $previous_duration);
+      $query->addField('f', 'entity_id');
+
+      $dbKey = 'entity_id';
     }
 
-    $query = $this->connection->select('groups_field_data', 'gfd');
-    $query->addField('gfd', 'id');
-    $query->condition('gfd.id', $solr_gids, 'IN');
-    $subquery = $this->connection->select('flagging', 'f')
-      ->condition('f.flag_id', $flag_id);
-    $subquery->join('flagging__field_inactivity_duration', 'inactive');
-    $subquery->addField('inactive', 'field_inactivity_duration_value');
-    $subquery->condition('inactive.field_inactivity_duration_value', $duration);
-    $subquery->addField('f', 'entity_id');
-    $subquery->where('[f].[entity_id] = [gfd].[id]');
-
-    // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
-    $query->notExists($subquery);
-
-    $gids = $query->execute()->fetchAllAssoc('id');
-    $gids = array_column($gids, 'id');
+    $gids = $query->execute()->fetchAllAssoc($dbKey);
+    $gids = array_column($gids, $dbKey);
 
     $this->tokenService->addTokenData(
       $this->configuration['object'], $this->entityTypeManager
@@ -97,6 +112,8 @@ class GroupInactivityAction extends ConfigurableActionBase {
     return [
         'inactivity_duration' => 1,
         'items' => 50,
+        'check_previous_scenario' => FALSE,
+        'previous_duration' => '',
       ] + parent::defaultConfiguration();
   }
 
@@ -119,6 +136,21 @@ class GroupInactivityAction extends ConfigurableActionBase {
       '#default_value' => $this->configuration['items'],
       '#max' => 50,
     ];
+
+    $form['check_previous_scenario'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Check previous scenario.'),
+      '#description' => $this->t('Check if entity has been processed in a previous scenario.'),
+      '#default_value' => $this->configuration['check_previous_scenario'],
+    ];
+
+    $form['previous_duration'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Previous inactivity duration'),
+      '#description' => $this->t('Enter the months of the previous scenario.'),
+      '#default_value' => $this->configuration['inactivity_duration'],
+      '#field_suffix' => $this->t('month(s)'),
+    ];
     return parent::buildConfigurationForm($form, $form_state);
   }
 
@@ -128,6 +160,8 @@ class GroupInactivityAction extends ConfigurableActionBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['inactivity_duration'] = $form_state->getValue('inactivity_duration');
     $this->configuration['items'] = $form_state->getValue('items');
+    $this->configuration['check_previous_scenario'] = $form_state->getValue('check_previous_scenario');
+    $this->configuration['previous_duration'] = $form_state->getValue('previous_duration');
     parent::submitConfigurationForm($form, $form_state);
   }
 
