@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_contact_inactive_group_9.field_group_ref
+    - field.field.message.notify_contact_inactive_group_9.field_related_user
     - message.template.notify_contact_inactive_group_9
 id: message.notify_contact_inactive_group_9.mail_subject
 targetEntityType: message
@@ -14,4 +16,7 @@ content:
     weight: 0
     region: content
 hidden:
+  field_group_ref: true
+  field_related_user: true
   partial_1: true
+  search_api_excerpt: true

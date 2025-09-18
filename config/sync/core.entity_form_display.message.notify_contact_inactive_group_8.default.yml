@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.message.notify_contact_inactive_group_8.field_group_ref
     - field.field.message.notify_contact_inactive_group_8.field_related_user
     - message.template.notify_contact_inactive_group_8
 id: message.notify_contact_inactive_group_8.default
@@ -10,6 +11,16 @@ targetEntityType: message
 bundle: notify_contact_inactive_group_8
 mode: default
 content:
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_related_user:
     type: entity_reference_autocomplete
     weight: 0
