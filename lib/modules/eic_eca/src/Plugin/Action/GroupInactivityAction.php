@@ -47,11 +47,9 @@ class GroupInactivityAction extends ConfigurableActionBase {
     $items = (int) $this->configuration['items'];
     $timestamp_inactivity = strtotime("-$duration months");
 
-    $dbq = $this->connection->select('flagging', 'f')
-      ->condition('f.flag_id', $flag_id);
-    $dbq->join('flagging__field_inactivity_duration', 'inactive');
-    $dbq->addField('inactive', 'field_inactivity_duration_value');
-    $dbq->condition('inactive.field_inactivity_duration_value', $duration);
+    $dbq = $this->connection->select('flagging', 'f');
+    $dbq->join('flagging__field_inactivity_duration', 'inactive', 'inactive.entity_id = f.id AND inactive.field_inactivity_duration_value = :duration', [':duration' => $duration] );
+    $dbq->condition('f.flag_id', $flag_id);
     $dbq->addField('f', 'entity_id');
 
     $flag_gids = $dbq->execute()->fetchAllAssoc('entity_id');
@@ -75,12 +73,12 @@ class GroupInactivityAction extends ConfigurableActionBase {
     if ($this->configuration['check_previous_scenario']) {
       // If this is checked, tell SOLR to search only in groups that were
       // processed in the previous scenario.
-      $query = $this->connection->select('flagging', 'f')
-        ->condition('f.flag_id', $flag_id);
-      $query->join('flagging__field_inactivity_duration', 'inactive');
+      $query = $this->connection->select('flagging', 'f');
+      $query->join('flagging__field_inactivity_duration', 'inactive', 'inactive.entity_id = f.id AND inactive.field_inactivity_duration_value = :duration',  [':duration' => $previous_duration]);
+      $query->condition('f.flag_id', $flag_id);
       $query->addField('inactive', 'field_inactivity_duration_value');
-      $query->condition('inactive.field_inactivity_duration_value', $previous_duration);
       $query->addField('f', 'entity_id');
+
       $gids = $query->execute()->fetchAllAssoc('entity_id');
       $gids = array_column($gids, 'entity_id');
 
