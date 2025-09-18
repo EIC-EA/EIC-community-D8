@@ -66,7 +66,7 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
     $subquery->addField('f', 'entity_id');
     $subquery->where('[f].[entity_id] = [ufd].[uid]');
 
-   // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
+    // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
     $query->notExists($subquery);
 
     $uids = $query->execute()->fetchAllAssoc('uid');
@@ -75,7 +75,7 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
 
     $this->tokenService->addTokenData(
       $this->configuration['object'], $this->entityTypeManager
-        ->getStorage('user')->loadMultiple($uids)
+      ->getStorage('user')->loadMultiple($uids)
     );
   }
 
@@ -84,9 +84,9 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
    */
   public function defaultConfiguration(): array {
     return [
-      'inactivity_duration' => 1,
-      'items' => 50,
-    ] + parent::defaultConfiguration();
+        'inactivity_duration' => 1,
+        'items' => 50,
+      ] + parent::defaultConfiguration();
   }
 
   /**
