@@ -1,6 +1,6 @@
 uuid: 49000a2a-a4c9-43d8-af02-00f5f1eb18b1
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - eca_base
