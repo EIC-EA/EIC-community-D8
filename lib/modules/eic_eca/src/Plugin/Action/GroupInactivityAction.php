@@ -44,60 +44,55 @@ class GroupInactivityAction extends ConfigurableActionBase {
     $flag_id = 'group_inactive';
     $duration = (int) $this->configuration['inactivity_duration'];
     $previous_duration = (int) $this->configuration['previous_duration'];
-    if (!$this->configuration['check_previous_scenario']) {
-      $items = (int) $this->configuration['items'];
-      $timestamp_inactivity = strtotime("-$duration months");
+    $items = (int) $this->configuration['items'];
+    $timestamp_inactivity = strtotime("-$duration months");
 
-      $query = $this->entityTypeManager->getStorage('search_api_index')
-        ->load('global')->query();
+    $dbq = $this->connection->select('flagging', 'f')
+      ->condition('f.flag_id', $flag_id);
+    $dbq->join('flagging__field_inactivity_duration', 'inactive');
+    $dbq->addField('inactive', 'field_inactivity_duration_value');
+    $dbq->condition('inactive.field_inactivity_duration_value', $duration);
+    $dbq->addField('f', 'entity_id');
 
-      // Change the parse mode for the search.
-      $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
-        ->createInstance('direct');
-      $parse_mode->setConjunction('OR');
-      $query->setParseMode($parse_mode);
-      $query->addCondition('search_api_datasource', 'entity:group')
-        ->addCondition('group_type', 'group')
-        ->addCondition('group_changed', $timestamp_inactivity, '<');
-      $query->range(0, $items);
-      $query->sort('group_changed', QueryInterface::SORT_DESC);
+    $flag_gids = $dbq->execute()->fetchAllAssoc('entity_id');
+    $flag_gids = array_column($flag_gids, 'entity_id');
 
-      // Execute the search.
-      $results = $query->execute();
-      $solr_gids = [];
-      foreach ($results as $result) {
-        $solr_gids[] = $result->getField('group_id_integer')->getValues()[0];
-      }
+    $solr_query = $this->entityTypeManager->getStorage('search_api_index')
+      ->load('global')->query();
 
-      $query = $this->connection->select('groups_field_data', 'gfd');
-      $query->addField('gfd', 'id');
-      $query->condition('gfd.id', $solr_gids, 'IN');
-      $subquery = $this->connection->select('flagging', 'f')
-        ->condition('f.flag_id', $flag_id);
-      $subquery->join('flagging__field_inactivity_duration', 'inactive');
-      $subquery->addField('inactive', 'field_inactivity_duration_value');
-      $subquery->condition('inactive.field_inactivity_duration_value', $duration);
-      $subquery->addField('f', 'entity_id');
-      $subquery->where('[f].[entity_id] = [gfd].[id]');
+    // Change the parse mode for the search.
+    $parse_mode = \Drupal::service('plugin.manager.search_api.parse_mode')
+      ->createInstance('direct');
+    $parse_mode->setConjunction('OR');
+    $solr_query->setParseMode($parse_mode);
+    $solr_query->addCondition('search_api_datasource', 'entity:group')
+      ->addCondition('group_type', 'group')
+      ->addCondition('group_id_integer', $flag_gids, 'NOT IN')
+      ->addCondition('group_changed', $timestamp_inactivity, '<');
+    $solr_query->range(0, $items);
+    $solr_query->sort('group_changed', QueryInterface::SORT_DESC);
 
-      // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
-      $query->notExists($subquery);
-
-      $dbKey = 'id';
-    }
-    else {
+    if ($this->configuration['check_previous_scenario']) {
+      // If this is checked, tell SOLR to search only in groups that were
+      // processed in the previous scenario.
       $query = $this->connection->select('flagging', 'f')
         ->condition('f.flag_id', $flag_id);
       $query->join('flagging__field_inactivity_duration', 'inactive');
       $query->addField('inactive', 'field_inactivity_duration_value');
       $query->condition('inactive.field_inactivity_duration_value', $previous_duration);
       $query->addField('f', 'entity_id');
+      $gids = $query->execute()->fetchAllAssoc('entity_id');
+      $gids = array_column($gids, 'entity_id');
 
-      $dbKey = 'entity_id';
+      $solr_query->addCondition('group_id_integer', $gids, 'IN');
     }
 
-    $gids = $query->execute()->fetchAllAssoc($dbKey);
-    $gids = array_column($gids, $dbKey);
+    // Execute the search.
+    $results = $solr_query->execute();
+    $gids = [];
+    foreach ($results as $result) {
+      $gids[] = $result->getField('group_id_integer')->getValues()[0];
+    }
 
     $this->tokenService->addTokenData(
       $this->configuration['object'], $this->entityTypeManager
