@@ -76,7 +76,6 @@ class GroupInactivityAction extends ConfigurableActionBase {
       $query = $this->connection->select('flagging', 'f');
       $query->join('flagging__field_inactivity_duration', 'inactive', 'inactive.entity_id = f.id AND inactive.field_inactivity_duration_value = :duration',  [':duration' => $previous_duration]);
       $query->condition('f.flag_id', $flag_id);
-      $query->addField('inactive', 'field_inactivity_duration_value');
       $query->addField('f', 'entity_id');
 
       $gids = $query->execute()->fetchAllAssoc('entity_id');
