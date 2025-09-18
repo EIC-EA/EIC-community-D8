@@ -25,13 +25,13 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_0uwfkm4</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:task id="Activity_0f8h3hz" name="trigger X1" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
+      <bpmn2:task id="Activity_0f8h3hz" name="trigger x1_8" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
         <bpmn2:extensionElements>
           <camunda:properties>
             <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event" />
           </camunda:properties>
           <camunda:field name="event_id">
-            <camunda:string>x1</camunda:string>
+            <camunda:string>x1_8</camunda:string>
           </camunda:field>
           <camunda:field name="tokens">
             <camunda:string></camunda:string>
@@ -42,13 +42,13 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_0ii5u44</bpmn2:incoming>
       </bpmn2:task>
-      <bpmn2:startEvent id="Event_0aoyrp5" name="x1" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
+      <bpmn2:startEvent id="Event_0aoyrp5" name="x1_8" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
         <bpmn2:extensionElements>
           <camunda:properties>
             <camunda:property name="pluginid" value="content_entity:custom" />
           </camunda:properties>
           <camunda:field name="event_id">
-            <camunda:string>x1</camunda:string>
+            <camunda:string>x1_8</camunda:string>
           </camunda:field>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_0fr7q2t</bpmn2:outgoing>
@@ -62,7 +62,7 @@ modeldata: |
             <camunda:string>group_inactive</camunda:string>
           </camunda:field>
           <camunda:field name="message_template">
-            <camunda:string>notify_contact_inactive_group_6</camunda:string>
+            <camunda:string>notify_contact_inactive_group_8</camunda:string>
           </camunda:field>
           <camunda:field name="inactivity_duration">
             <camunda:string>8</camunda:string>
@@ -116,7 +116,7 @@ modeldata: |
         <bpmndi:BPMNShape id="Event_0aoyrp5_di" bpmnElement="Event_0aoyrp5">
           <dc:Bounds x="322" y="222" width="36" height="36" />
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="334" y="265" width="12" height="14" />
+            <dc:Bounds x="328" y="265" width="24" height="14" />
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_05louvl_di" bpmnElement="Activity_05louvl">

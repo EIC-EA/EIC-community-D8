@@ -1,0 +1,17 @@
+uuid: a763746d-871d-4148-adee-752fc8d37c50
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - message.template.notify_contact_inactive_group_8
+id: message.notify_contact_inactive_group_8.mail_subject
+targetEntityType: message
+bundle: notify_contact_inactive_group_8
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  partial_1: true

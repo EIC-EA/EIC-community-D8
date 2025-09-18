@@ -97,6 +97,7 @@ class GroupFlagDispatchAction extends ConfigurableActionBase {
       '#default_value' => $this->configuration['message_template'],
       '#options' => [
         'notify_contact_inactive_group_6' => $this->t('Notify contact inactive 6 months.'),
+        'notify_contact_inactive_group_8' => $this->t('Notify contact inactive 8 months.'),
       ]
     ];
 
