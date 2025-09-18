@@ -1,6 +1,6 @@
 uuid: 658dfa30-a5c1-4fc3-94d6-de9c153f93e0
 langcode: en
-status: false
+status: true
 dependencies:
   module:
     - eca_base
@@ -10,7 +10,7 @@ id: group_inactive_6_months
 modeller: bpmn_io
 label: 'group inactive 6 months'
 version: 1.0.0
-weight: 0
+weight: -10
 events:
   Event_0rb6814:
     plugin: 'eca_base:eca_cron'
@@ -23,9 +23,9 @@ events:
         condition: ''
   Event_0aoyrp5:
     plugin: 'content_entity:custom'
-    label: x1
+    label: x1_6
     configuration:
-      event_id: x1
+      event_id: x1_6
     successors:
       -
         id: Activity_05louvl
@@ -35,9 +35,9 @@ gateways: {  }
 actions:
   Activity_0f8h3hz:
     plugin: eca_trigger_content_entity_custom_event
-    label: 'trigger X1'
+    label: 'trigger x1_6'
     configuration:
-      event_id: x1
+      event_id: x1_6
       tokens: ''
       object: grouplist
     successors: {  }

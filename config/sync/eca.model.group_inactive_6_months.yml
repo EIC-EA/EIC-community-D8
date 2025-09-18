@@ -13,7 +13,7 @@ filename: ''
 modeldata: |
   <?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-    <bpmn2:process id="group_inactive_6_months" name="group inactive 6 months" isExecutable="false" camunda:versionTag="1.0.0">
+    <bpmn2:process id="group_inactive_6_months" name="group inactive 6 months" isExecutable="true" camunda:versionTag="1.0.0">
       <bpmn2:startEvent id="Event_0rb6814" name="cron" camunda:modelerTemplate="org.drupal.event.eca_base:eca_cron">
         <bpmn2:extensionElements>
           <camunda:field name="frequency">
@@ -25,13 +25,13 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_0kasn8z</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:task id="Activity_0f8h3hz" name="trigger X1" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
+      <bpmn2:task id="Activity_0f8h3hz" name="trigger x1_6" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
         <bpmn2:extensionElements>
           <camunda:properties>
             <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event" />
           </camunda:properties>
           <camunda:field name="event_id">
-            <camunda:string>x1</camunda:string>
+            <camunda:string>x1_6</camunda:string>
           </camunda:field>
           <camunda:field name="tokens">
             <camunda:string></camunda:string>
@@ -42,13 +42,13 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_1jxssle</bpmn2:incoming>
       </bpmn2:task>
-      <bpmn2:startEvent id="Event_0aoyrp5" name="x1" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
+      <bpmn2:startEvent id="Event_0aoyrp5" name="x1_6" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
         <bpmn2:extensionElements>
           <camunda:properties>
             <camunda:property name="pluginid" value="content_entity:custom" />
           </camunda:properties>
           <camunda:field name="event_id">
-            <camunda:string>x1</camunda:string>
+            <camunda:string>x1_6</camunda:string>
           </camunda:field>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_0fr7q2t</bpmn2:outgoing>
@@ -116,7 +116,7 @@ modeldata: |
         <bpmndi:BPMNShape id="Event_0aoyrp5_di" bpmnElement="Event_0aoyrp5">
           <dc:Bounds x="322" y="222" width="36" height="36" />
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="334" y="265" width="12" height="14" />
+            <dc:Bounds x="328" y="265" width="24" height="14" />
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_05louvl_di" bpmnElement="Activity_05louvl">
