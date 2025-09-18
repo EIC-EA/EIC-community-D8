@@ -23,9 +23,9 @@ events:
         condition: ''
   Event_0aoyrp5:
     plugin: 'content_entity:custom'
-    label: x1
+    label: x1_9
     configuration:
-      event_id: x1
+      event_id: x1_9
     successors:
       -
         id: Activity_05louvl
@@ -35,9 +35,9 @@ gateways: {  }
 actions:
   Activity_0f8h3hz:
     plugin: eca_trigger_content_entity_custom_event
-    label: 'trigger X1'
+    label: 'trigger x1_9'
     configuration:
-      event_id: x1
+      event_id: x1_9
       tokens: ''
       object: grouplist
     successors: {  }
@@ -45,7 +45,7 @@ actions:
     plugin: eic_eca_flag_dispatch_group_admins
     label: 'group admins dispatch email'
     configuration:
-      message_template: notify_contact_inactive_group_6
+      message_template: notify_contact_inactive_group_9
       flag_id: group_inactive
       inactivity_duration: '9'
       object: ''
