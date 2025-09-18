@@ -10,14 +10,14 @@ third_party_settings:
   eic_messages:
     message_template_type: notification
 template: notify_contact_inactive_group_6
-label: 'NOTIFY :: MT :: Contact inactive group user admins'
+label: 'NOTIFY :: MT :: Contact inactive group user admins 6 months'
 description: ''
 text:
   -
     value: "<p>Group inactive 6 months</p>\r\n"
     format: full_html
   -
-    value: "<p>Dear user,</p>\r\n\r\n<p>Your group has no activity for 6 months.</p>\r\n\r\n<p>&nbsp;\r\n<p>EIC Community team</p>\r\n</p>\r\n"
+    value: "<p>Dear user,</p>\r\n\r\n<p>Your group has no activity for 6 months.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

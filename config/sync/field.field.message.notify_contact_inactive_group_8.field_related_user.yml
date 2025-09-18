@@ -1,0 +1,26 @@
+uuid: e3b046a8-cf3c-4a2f-a2c1-f5724ba9dd09
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_related_user
+    - message.template.notify_contact_inactive_group_8
+id: message.notify_contact_inactive_group_8.field_related_user
+field_name: field_related_user
+entity_type: message
+bundle: notify_contact_inactive_group_8
+label: 'Referenced user'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: eca
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: 0
+field_type: entity_reference

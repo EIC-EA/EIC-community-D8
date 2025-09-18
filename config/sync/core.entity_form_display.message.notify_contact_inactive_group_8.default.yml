@@ -1,0 +1,23 @@
+uuid: 2f77ac28-8423-426f-9401-00792a673706
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_inactive_group_8.field_related_user
+    - message.template.notify_contact_inactive_group_8
+id: message.notify_contact_inactive_group_8.default
+targetEntityType: message
+bundle: notify_contact_inactive_group_8
+mode: default
+content:
+  field_related_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
