@@ -42,14 +42,6 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): bool|AccessResultInterface {
-    $access_result = AccessResult::allowed();
-    return $return_as_object ? $access_result : $access_result->isAllowed();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function execute($group = NULL): void {
     $duration = (int) $this->configuration['inactivity_duration'];
     $items = (int) $this->configuration['items'];
