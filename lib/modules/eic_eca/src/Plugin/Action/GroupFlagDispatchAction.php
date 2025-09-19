@@ -63,6 +63,7 @@ class GroupFlagDispatchAction extends ConfigurableActionBase {
       $bus->dispatch([
         'template' => $this->configuration['message_template'],
         'uid' => $admin->id(),
+        'field_group_ref' => $entity->id(),
       ]);
     }
   }
