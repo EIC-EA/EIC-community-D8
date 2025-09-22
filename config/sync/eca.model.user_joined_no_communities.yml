@@ -1,0 +1,132 @@
+uuid: 1574dbbf-b39a-4bea-986c-00df71a7533a
+langcode: en
+status: true
+dependencies:
+  config:
+    - eca.eca.user_joined_no_communities
+id: user_joined_no_communities
+label: 'User joined no communities'
+tags:
+  - untagged
+documentation: ''
+filename: ''
+modeldata: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+    <bpmn2:process id="user_joined_no_communities" name="User joined no communities" isExecutable="false">
+      <bpmn2:startEvent id="Event_1j521qz" name="cron" camunda:modelerTemplate="org.drupal.event.eca_base:eca_cron">
+        <bpmn2:extensionElements>
+          <camunda:field name="frequency">
+            <camunda:string>* * * * *</camunda:string>
+          </camunda:field>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eca_base:eca_cron" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_0wqm7tj</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_1mdekzk" name="load users no community" camunda:modelerTemplate="org.drupal.action.eic_eca_user_no_communities">
+        <bpmn2:extensionElements>
+          <camunda:field name="items">
+            <camunda:string>30</camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string></camunda:string>
+          </camunda:field>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eic_eca_user_no_communities" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_0wqm7tj</bpmn2:incoming>
+        <bpmn2:outgoing>Flow_1qrme7m</bpmn2:outgoing>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_0wqm7tj" sourceRef="Event_1j521qz" targetRef="Activity_1mdekzk" />
+      <bpmn2:task id="Activity_1nl2kw2" name="trigger custom event" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event" />
+          </camunda:properties>
+          <camunda:field name="event_id">
+            <camunda:string>x1_user_no_community</camunda:string>
+          </camunda:field>
+          <camunda:field name="tokens">
+            <camunda:string></camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string></camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_1qrme7m</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_1qrme7m" sourceRef="Activity_1mdekzk" targetRef="Activity_1nl2kw2" />
+      <bpmn2:startEvent id="Event_0klnbbc" name="x1_user_no_community" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="content_entity:custom" />
+          </camunda:properties>
+          <camunda:field name="event_id">
+            <camunda:string>x1_user_no_community</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_1didpsw</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_1u6u2hp" name="trigger user notification" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_user">
+        <bpmn2:extensionElements>
+          <camunda:field name="flag_id">
+            <camunda:string>user_inactive_1_month</camunda:string>
+          </camunda:field>
+          <camunda:field name="message_template">
+            <camunda:string>notify_contact_inactive_user</camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string></camunda:string>
+          </camunda:field>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_user" />
+          </camunda:properties>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_1didpsw</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_1didpsw" sourceRef="Event_0klnbbc" targetRef="Activity_1u6u2hp" />
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="sid-b4612e8c-baeb-48f2-b9dd-6e7fbcc65da4">
+      <bpmndi:BPMNPlane id="sid-52ab66a1-d30b-4f94-8a9a-c916dcb4a6f4" bpmnElement="user_joined_no_communities">
+        <bpmndi:BPMNShape id="Event_1j521qz_di" bpmnElement="Event_1j521qz">
+          <dc:Bounds x="302" y="132" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="309" y="175" width="22" height="14" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1mdekzk_di" bpmnElement="Activity_1mdekzk">
+          <dc:Bounds x="480" y="110" width="100" height="80" />
+          <bpmndi:BPMNLabel />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1nl2kw2_di" bpmnElement="Activity_1nl2kw2">
+          <dc:Bounds x="730" y="110" width="100" height="80" />
+          <bpmndi:BPMNLabel />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Event_0klnbbc_di" bpmnElement="Event_0klnbbc">
+          <dc:Bounds x="302" y="292" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="278" y="335" width="85" height="27" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1u6u2hp_di" bpmnElement="Activity_1u6u2hp">
+          <dc:Bounds x="480" y="270" width="100" height="80" />
+          <bpmndi:BPMNLabel />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNEdge id="Flow_0wqm7tj_di" bpmnElement="Flow_0wqm7tj">
+          <di:waypoint x="338" y="150" />
+          <di:waypoint x="480" y="150" />
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_1qrme7m_di" bpmnElement="Flow_1qrme7m">
+          <di:waypoint x="580" y="150" />
+          <di:waypoint x="730" y="150" />
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_1didpsw_di" bpmnElement="Flow_1didpsw">
+          <di:waypoint x="338" y="310" />
+          <di:waypoint x="480" y="310" />
+        </bpmndi:BPMNEdge>
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn2:definitions>
