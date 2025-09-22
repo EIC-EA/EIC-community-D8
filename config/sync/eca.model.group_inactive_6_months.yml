@@ -20,7 +20,7 @@ modeldata: |
             <camunda:string>* * * * *</camunda:string>
           </camunda:field>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eca_base:eca_cron" />
+            <camunda:property name="pluginid" value="eca_base:eca_cron"/>
           </camunda:properties>
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_0kasn8z</bpmn2:outgoing>
@@ -28,13 +28,13 @@ modeldata: |
       <bpmn2:task id="Activity_0f8h3hz" name="trigger x1_6" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event" />
+            <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event"/>
           </camunda:properties>
           <camunda:field name="event_id">
             <camunda:string>x1_6</camunda:string>
           </camunda:field>
           <camunda:field name="tokens">
-            <camunda:string></camunda:string>
+            <camunda:string/>
           </camunda:field>
           <camunda:field name="object">
             <camunda:string>grouplist</camunda:string>
@@ -45,7 +45,7 @@ modeldata: |
       <bpmn2:startEvent id="Event_0aoyrp5" name="x1_6" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="content_entity:custom" />
+            <camunda:property name="pluginid" value="content_entity:custom"/>
           </camunda:properties>
           <camunda:field name="event_id">
             <camunda:string>x1_6</camunda:string>
@@ -56,7 +56,7 @@ modeldata: |
       <bpmn2:task id="Activity_1xifi6c" name="load inactive groups" camunda:modelerTemplate="org.drupal.action.eic_eca_group_inactivity_action">
         <bpmn2:extensionElements>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eic_eca_group_inactivity_action" />
+            <camunda:property name="pluginid" value="eic_eca_group_inactivity_action"/>
           </camunda:properties>
           <camunda:field name="inactivity_duration">
             <camunda:string>6</camunda:string>
@@ -77,8 +77,8 @@ modeldata: |
         <bpmn2:incoming>Flow_0kasn8z</bpmn2:incoming>
         <bpmn2:outgoing>Flow_1jxssle</bpmn2:outgoing>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_0kasn8z" sourceRef="Event_0rb6814" targetRef="Activity_1xifi6c" />
-      <bpmn2:sequenceFlow id="Flow_1jxssle" sourceRef="Activity_1xifi6c" targetRef="Activity_0f8h3hz" />
+      <bpmn2:sequenceFlow id="Flow_0kasn8z" sourceRef="Event_0rb6814" targetRef="Activity_1xifi6c"/>
+      <bpmn2:sequenceFlow id="Flow_1jxssle" sourceRef="Activity_1xifi6c" targetRef="Activity_0f8h3hz"/>
       <bpmn2:task id="Activity_06f6ioo" name="group inactive 6 months" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_group_admins">
         <bpmn2:extensionElements>
           <camunda:field name="flag_id">
@@ -91,53 +91,53 @@ modeldata: |
             <camunda:string>6</camunda:string>
           </camunda:field>
           <camunda:field name="object">
-            <camunda:string></camunda:string>
+            <camunda:string/>
           </camunda:field>
           <camunda:properties>
-            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_group_admins" />
+            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_group_admins"/>
           </camunda:properties>
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_1gsdf56</bpmn2:incoming>
       </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_1gsdf56" sourceRef="Event_0aoyrp5" targetRef="Activity_06f6ioo" />
+      <bpmn2:sequenceFlow id="Flow_1gsdf56" sourceRef="Event_0aoyrp5" targetRef="Activity_06f6ioo"/>
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="sid-a678dbf7-6705-4690-9533-86ee32510260">
       <bpmndi:BPMNPlane id="sid-334a5260-cfb1-4c45-960a-6ac98ecd50e0" bpmnElement="group_inactive_6_months">
         <bpmndi:BPMNShape id="Event_0rb6814_di" bpmnElement="Event_0rb6814">
-          <dc:Bounds x="322" y="82" width="36" height="36" />
+          <dc:Bounds x="322" y="82" width="36" height="36"/>
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="329" y="125" width="22" height="14" />
+            <dc:Bounds x="329" y="125" width="22" height="14"/>
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_0f8h3hz_di" bpmnElement="Activity_0f8h3hz">
-          <dc:Bounds x="740" y="60" width="100" height="80" />
-          <bpmndi:BPMNLabel />
+          <dc:Bounds x="740" y="60" width="100" height="80"/>
+          <bpmndi:BPMNLabel/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Event_0aoyrp5_di" bpmnElement="Event_0aoyrp5">
-          <dc:Bounds x="322" y="222" width="36" height="36" />
+          <dc:Bounds x="322" y="222" width="36" height="36"/>
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="328" y="265" width="24" height="14" />
+            <dc:Bounds x="328" y="265" width="24" height="14"/>
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_1xifi6c_di" bpmnElement="Activity_1xifi6c">
-          <dc:Bounds x="520" y="60" width="100" height="80" />
-          <bpmndi:BPMNLabel />
+          <dc:Bounds x="520" y="60" width="100" height="80"/>
+          <bpmndi:BPMNLabel/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_06f6ioo_di" bpmnElement="Activity_06f6ioo">
-          <dc:Bounds x="520" y="200" width="100" height="80" />
-          <bpmndi:BPMNLabel />
+          <dc:Bounds x="520" y="200" width="100" height="80"/>
+          <bpmndi:BPMNLabel/>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_0kasn8z_di" bpmnElement="Flow_0kasn8z">
-          <di:waypoint x="358" y="100" />
-          <di:waypoint x="520" y="100" />
+          <di:waypoint x="358" y="100"/>
+          <di:waypoint x="520" y="100"/>
         </bpmndi:BPMNEdge>
         <bpmndi:BPMNEdge id="Flow_1jxssle_di" bpmnElement="Flow_1jxssle">
-          <di:waypoint x="620" y="100" />
-          <di:waypoint x="740" y="100" />
+          <di:waypoint x="620" y="100"/>
+          <di:waypoint x="740" y="100"/>
         </bpmndi:BPMNEdge>
         <bpmndi:BPMNEdge id="Flow_1gsdf56_di" bpmnElement="Flow_1gsdf56">
-          <di:waypoint x="358" y="240" />
-          <di:waypoint x="520" y="240" />
+          <di:waypoint x="358" y="240"/>
+          <di:waypoint x="520" y="240"/>
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

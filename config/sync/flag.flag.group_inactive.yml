@@ -5,7 +5,7 @@ dependencies:
   module:
     - group
 id: group_inactive
-label: 'Group Inactive'
+label: 'ECA - Group Inactive'
 bundles: {  }
 entity_type: group
 global: true

@@ -5,7 +5,7 @@ dependencies:
   module:
     - user
 id: user_inactive_1_month
-label: 'User Inactive 1 month'
+label: 'ECA - User Inactive 1 month'
 bundles: {  }
 entity_type: user
 global: true

@@ -5,7 +5,7 @@ dependencies:
   module:
     - user
 id: user_joined_communities
-label: 'User joined communities'
+label: 'ECA - User joined communities'
 bundles: {  }
 entity_type: user
 global: true
