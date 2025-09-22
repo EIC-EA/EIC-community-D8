@@ -79,7 +79,7 @@ modeldata: |
             <camunda:string>user_joined_communities</camunda:string>
           </camunda:field>
           <camunda:field name="message_template">
-            <camunda:string>notify_contact_inactive_user</camunda:string>
+            <camunda:string>notify_contact_user_no_communiti</camunda:string>
           </camunda:field>
           <camunda:field name="object">
             <camunda:string></camunda:string>

@@ -1,0 +1,27 @@
+uuid: eecd546f-b347-4acd-ae07-4b98e24236d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_contact_user_no_communiti
+label: 'NOTIFY :: MT :: Contact user no communities'
+description: ''
+text:
+  -
+    value: "<p>You have not joined a community yet!</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear user,</p>\r\n\r\n<p>Our site offers so many communities to join! Please go to URL and find out more</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Regards,</p>\r\n\r\n<p>EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

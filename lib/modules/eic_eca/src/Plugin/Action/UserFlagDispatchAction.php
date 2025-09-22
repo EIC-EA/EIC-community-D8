@@ -70,6 +70,7 @@ class UserFlagDispatchAction extends ConfigurableActionBase {
       '#default_value' => $this->configuration['flag_id'],
       '#options' => [
         'user_inactive_1_month' => $this->t('User inactive 1 month'),
+        'user_joined_communities' => $this->t('User joined no communities'),
       ]
     ];
 
@@ -79,6 +80,7 @@ class UserFlagDispatchAction extends ConfigurableActionBase {
       '#default_value' => $this->configuration['message_template'],
       '#options' => [
         'notify_contact_inactive_user' => $this->t('Notify user inactive 1 month.'),
+        'notify_contact_user_no_communiti' => $this->t('Notify user joined no communities.'),
       ]
     ];
 

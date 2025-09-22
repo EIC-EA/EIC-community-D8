@@ -1,0 +1,17 @@
+uuid: d7a16d4e-f97a-44a0-9e8c-82154af2a1f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - message.template.notify_contact_user_no_communiti
+id: message.notify_contact_user_no_communiti.mail_subject
+targetEntityType: message
+bundle: notify_contact_user_no_communiti
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  partial_1: true

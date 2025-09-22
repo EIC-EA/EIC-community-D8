@@ -55,7 +55,7 @@ actions:
     plugin: eic_eca_flag_dispatch_user
     label: 'trigger user notification'
     configuration:
-      message_template: notify_contact_inactive_user
+      message_template: notify_contact_user_no_communiti
       flag_id: user_joined_communities
       object: ''
     successors: {  }

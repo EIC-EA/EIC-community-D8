@@ -11,7 +11,7 @@ third_party_settings:
     message_template_type: notification
 template: notify_contact_inactive_group_6
 label: 'NOTIFY :: MT :: Contact inactive group user admins 6 months'
-description: ''
+description: 'Used by ECA model'
 text:
   -
     value: "<p>Group inactive 6 months</p>\r\n"
