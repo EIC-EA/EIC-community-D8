@@ -28,7 +28,7 @@ events:
       event_id: x1_6
     successors:
       -
-        id: Activity_05louvl
+        id: Activity_06f6ioo
         condition: ''
 conditions: {  }
 gateways: {  }
@@ -40,15 +40,6 @@ actions:
       event_id: x1_6
       tokens: ''
       object: grouplist
-    successors: {  }
-  Activity_05louvl:
-    plugin: eic_eca_flag_dispatch_group_admins
-    label: 'group admins dispatch email'
-    configuration:
-      message_template: notify_contact_inactive_group_6
-      flag_id: group_inactive
-      inactivity_duration: '6'
-      object: ''
     successors: {  }
   Activity_1xifi6c:
     plugin: eic_eca_group_inactivity_action
@@ -63,3 +54,12 @@ actions:
       -
         id: Activity_0f8h3hz
         condition: ''
+  Activity_06f6ioo:
+    plugin: eic_eca_flag_dispatch_group_admins
+    label: 'group inactive 6 months'
+    configuration:
+      message_template: notify_contact_inactive_group_6
+      flag_id: group_inactive
+      inactivity_duration: '6'
+      object: ''
+    successors: {  }

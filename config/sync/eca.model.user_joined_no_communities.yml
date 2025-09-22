@@ -72,8 +72,11 @@ modeldata: |
       </bpmn2:startEvent>
       <bpmn2:task id="Activity_1u6u2hp" name="trigger user notification" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_user">
         <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_user" />
+          </camunda:properties>
           <camunda:field name="flag_id">
-            <camunda:string>user_inactive_1_month</camunda:string>
+            <camunda:string>user_joined_communities</camunda:string>
           </camunda:field>
           <camunda:field name="message_template">
             <camunda:string>notify_contact_inactive_user</camunda:string>
@@ -81,9 +84,6 @@ modeldata: |
           <camunda:field name="object">
             <camunda:string></camunda:string>
           </camunda:field>
-          <camunda:properties>
-            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_user" />
-          </camunda:properties>
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_1didpsw</bpmn2:incoming>
       </bpmn2:task>

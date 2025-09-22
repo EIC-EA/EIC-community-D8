@@ -56,6 +56,6 @@ actions:
     label: 'trigger user notification'
     configuration:
       message_template: notify_contact_inactive_user
-      flag_id: user_inactive_1_month
+      flag_id: user_joined_communities
       object: ''
     successors: {  }

@@ -25,7 +25,7 @@ events:
     plugin: 'content_entity:custom'
     label: X1
     configuration:
-      event_id: x1
+      event_id: x1_inactive_users
     successors:
       -
         id: Activity_0808l2p
@@ -37,7 +37,7 @@ actions:
     plugin: eca_trigger_content_entity_custom_event
     label: 'Trigger X1'
     configuration:
-      event_id: x1
+      event_id: x1_inactive_users
       tokens: ''
       object: userlist
     successors: {  }
