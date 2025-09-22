@@ -1,0 +1,15 @@
+uuid: 3f9f2078-2d64-4978-bba3-e3df4a083dc4
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.user_joined_communities
+  module:
+    - flag
+id: flag_action.user_joined_communities_unflag
+label: 'Unflag this item'
+type: user
+plugin: 'flag_action:user_joined_communities_unflag'
+configuration:
+  flag_id: user_joined_communities
+  flag_action: unflag
