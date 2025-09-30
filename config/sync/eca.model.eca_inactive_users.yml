@@ -35,7 +35,7 @@ modeldata: |
             <camunda:string>* * * * *</camunda:string>
           </camunda:field>
         </bpmn2:extensionElements>
-        <bpmn2:outgoing>Flow_1dvn4mi</bpmn2:outgoing>
+        <bpmn2:outgoing>Flow_1r9s6sd</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:task id="Activity_105ssdc" name="Trigger X1" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
         <bpmn2:extensionElements>
@@ -52,7 +52,7 @@ modeldata: |
             <camunda:string/>
           </camunda:field>
         </bpmn2:extensionElements>
-        <bpmn2:incoming>Flow_076biiu</bpmn2:incoming>
+        <bpmn2:incoming>Flow_11jscel</bpmn2:incoming>
       </bpmn2:task>
       <bpmn2:startEvent id="Event_1asjw3k" name="X1" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
         <bpmn2:extensionElements>
@@ -65,26 +65,6 @@ modeldata: |
         </bpmn2:extensionElements>
         <bpmn2:outgoing>Flow_0vl5glx</bpmn2:outgoing>
       </bpmn2:startEvent>
-      <bpmn2:task id="Activity_11qerie" name="query users" camunda:modelerTemplate="org.drupal.action.eic_eca_user_inactivity_action">
-        <bpmn2:extensionElements>
-          <camunda:properties>
-            <camunda:property name="pluginid" value="eic_eca_user_inactivity_action"/>
-          </camunda:properties>
-          <camunda:field name="inactivity_duration">
-            <camunda:string>1</camunda:string>
-          </camunda:field>
-          <camunda:field name="items">
-            <camunda:string>10</camunda:string>
-          </camunda:field>
-          <camunda:field name="object">
-            <camunda:string>userlist</camunda:string>
-          </camunda:field>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>Flow_1dvn4mi</bpmn2:incoming>
-        <bpmn2:outgoing>Flow_076biiu</bpmn2:outgoing>
-      </bpmn2:task>
-      <bpmn2:sequenceFlow id="Flow_1dvn4mi" sourceRef="Event_1up81dz" targetRef="Activity_11qerie"/>
-      <bpmn2:sequenceFlow id="Flow_076biiu" sourceRef="Activity_11qerie" targetRef="Activity_105ssdc"/>
       <bpmn2:task id="Activity_0808l2p" name="notify user" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_user">
         <bpmn2:extensionElements>
           <camunda:field name="flag_id">
@@ -103,6 +83,29 @@ modeldata: |
         <bpmn2:incoming>Flow_0vl5glx</bpmn2:incoming>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="Flow_0vl5glx" sourceRef="Event_1asjw3k" targetRef="Activity_0808l2p"/>
+      <bpmn2:task id="Activity_0lzm5a7" name="query users" camunda:modelerTemplate="org.drupal.action.eic_eca_user_inactivity_action">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eic_eca_user_inactivity_action"/>
+          </camunda:properties>
+          <camunda:field name="inactivity_duration">
+            <camunda:string>1</camunda:string>
+          </camunda:field>
+          <camunda:field name="items">
+            <camunda:string>20</camunda:string>
+          </camunda:field>
+          <camunda:field name="flag_id">
+            <camunda:string>user_inactive_1_month</camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string>userlist</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_1r9s6sd</bpmn2:incoming>
+        <bpmn2:outgoing>Flow_11jscel</bpmn2:outgoing>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_1r9s6sd" sourceRef="Event_1up81dz" targetRef="Activity_0lzm5a7"/>
+      <bpmn2:sequenceFlow id="Flow_11jscel" sourceRef="Activity_0lzm5a7" targetRef="Activity_105ssdc"/>
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="BPMNDiagram_eca_inactive_users">
       <bpmndi:BPMNPlane id="BPMNPlane_eca_inactive_users" bpmnElement="eca_inactive_users">
@@ -115,24 +118,25 @@ modeldata: |
         <bpmndi:BPMNShape id="Event_1asjw3k_di" bpmnElement="Event_1asjw3k">
           <dc:Bounds x="57" y="192" width="36" height="36"/>
         </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Activity_11qerie_di" bpmnElement="Activity_11qerie">
-          <dc:Bounds x="175" y="30" width="100" height="80"/>
-        </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_0808l2p_di" bpmnElement="Activity_0808l2p">
           <dc:Bounds x="175" y="170" width="100" height="80"/>
           <bpmndi:BPMNLabel/>
         </bpmndi:BPMNShape>
-        <bpmndi:BPMNEdge id="Flow_1dvn4mi_di" bpmnElement="Flow_1dvn4mi">
-          <di:waypoint x="93" y="70"/>
-          <di:waypoint x="175" y="70"/>
-        </bpmndi:BPMNEdge>
-        <bpmndi:BPMNEdge id="Flow_076biiu_di" bpmnElement="Flow_076biiu">
-          <di:waypoint x="275" y="70"/>
-          <di:waypoint x="325" y="70"/>
-        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNShape id="Activity_0lzm5a7_di" bpmnElement="Activity_0lzm5a7">
+          <dc:Bounds x="175" y="30" width="100" height="80"/>
+          <bpmndi:BPMNLabel/>
+        </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_0vl5glx_di" bpmnElement="Flow_0vl5glx">
           <di:waypoint x="93" y="210"/>
           <di:waypoint x="175" y="210"/>
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_1r9s6sd_di" bpmnElement="Flow_1r9s6sd">
+          <di:waypoint x="93" y="70"/>
+          <di:waypoint x="175" y="70"/>
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_11jscel_di" bpmnElement="Flow_11jscel">
+          <di:waypoint x="275" y="70"/>
+          <di:waypoint x="325" y="70"/>
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

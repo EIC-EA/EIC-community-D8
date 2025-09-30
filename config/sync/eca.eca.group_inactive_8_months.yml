@@ -19,7 +19,7 @@ events:
       frequency: '* * * * *'
     successors:
       -
-        id: Activity_0s3nn0m
+        id: Activity_0bsg09f
         condition: ''
   Event_0aoyrp5:
     plugin: 'content_entity:custom'
@@ -50,12 +50,13 @@ actions:
       inactivity_duration: '8'
       object: ''
     successors: {  }
-  Activity_0s3nn0m:
+  Activity_0bsg09f:
     plugin: eic_eca_group_inactivity_action
-    label: 'group inactive 8 months'
+    label: 'load inactive groups'
     configuration:
       inactivity_duration: '8'
       items: '10'
+      flag_id: group_inactive
       check_previous_scenario: 1
       previous_duration: '6'
       object: grouplist

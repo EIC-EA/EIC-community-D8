@@ -19,7 +19,7 @@ events:
       frequency: '* * * * *'
     successors:
       -
-        id: Activity_1xifi6c
+        id: Activity_193wru3
         condition: ''
   Event_0aoyrp5:
     plugin: 'content_entity:custom'
@@ -41,19 +41,6 @@ actions:
       tokens: ''
       object: grouplist
     successors: {  }
-  Activity_1xifi6c:
-    plugin: eic_eca_group_inactivity_action
-    label: 'load inactive groups'
-    configuration:
-      inactivity_duration: '6'
-      items: '10'
-      check_previous_scenario: false
-      previous_duration: '1'
-      object: grouplist
-    successors:
-      -
-        id: Activity_0f8h3hz
-        condition: ''
   Activity_06f6ioo:
     plugin: eic_eca_flag_dispatch_group_admins
     label: 'group inactive 6 months'
@@ -63,3 +50,17 @@ actions:
       inactivity_duration: '6'
       object: ''
     successors: {  }
+  Activity_193wru3:
+    plugin: eic_eca_group_inactivity_action
+    label: 'load inactive groups'
+    configuration:
+      inactivity_duration: '6'
+      items: '10'
+      flag_id: group_inactive
+      check_previous_scenario: false
+      previous_duration: '1'
+      object: grouplist
+    successors:
+      -
+        id: Activity_0f8h3hz
+        condition: ''

@@ -41,7 +41,6 @@ class GroupInactivityAction extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute($group = NULL): void {
-    $flag_id = 'group_inactive';
     $duration = (int) $this->configuration['inactivity_duration'];
     $previous_duration = (int) $this->configuration['previous_duration'];
     $items = (int) $this->configuration['items'];
@@ -49,7 +48,7 @@ class GroupInactivityAction extends ConfigurableActionBase {
 
     $dbq = $this->connection->select('flagging', 'f');
     $dbq->join('flagging__field_inactivity_duration', 'inactive', 'inactive.entity_id = f.id AND inactive.field_inactivity_duration_value = :duration', [':duration' => $duration] );
-    $dbq->condition('f.flag_id', $flag_id);
+    $dbq->condition('f.flag_id', $this->configuration['flag_id']);
     $dbq->addField('f', 'entity_id');
 
     $flag_gids = $dbq->execute()->fetchAllAssoc('entity_id');
@@ -77,7 +76,7 @@ class GroupInactivityAction extends ConfigurableActionBase {
       // processed in the previous scenario.
       $query = $this->connection->select('flagging', 'f');
       $query->join('flagging__field_inactivity_duration', 'inactive', 'inactive.entity_id = f.id AND inactive.field_inactivity_duration_value = :duration',  [':duration' => $previous_duration]);
-      $query->condition('f.flag_id', $flag_id);
+      $query->condition('f.flag_id', $this->configuration['flag_id']);
       $query->addField('f', 'entity_id');
 
       $gids = $query->execute()->fetchAllAssoc('entity_id');
@@ -108,6 +107,7 @@ class GroupInactivityAction extends ConfigurableActionBase {
     return [
         'inactivity_duration' => 1,
         'items' => 50,
+        'flag_id' => 'group_inactive',
         'check_previous_scenario' => FALSE,
         'previous_duration' => '',
       ] + parent::defaultConfiguration();
@@ -133,6 +133,15 @@ class GroupInactivityAction extends ConfigurableActionBase {
       '#max' => 50,
     ];
 
+    $form['flag_id'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Flag ID to record the transaction.'),
+      '#default_value' => $this->configuration['flag_id'],
+      '#options' => [
+        'group_inactive' => $this->t('Group inactive'),
+      ]
+    ];
+
     $form['check_previous_scenario'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Check previous scenario.'),
@@ -156,6 +165,7 @@ class GroupInactivityAction extends ConfigurableActionBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['inactivity_duration'] = $form_state->getValue('inactivity_duration');
     $this->configuration['items'] = $form_state->getValue('items');
+    $this->configuration['flag_id'] = $form_state->getValue('flag_id');
     $this->configuration['check_previous_scenario'] = $form_state->getValue('check_previous_scenario');
     $this->configuration['previous_duration'] = $form_state->getValue('previous_duration');
     parent::submitConfigurationForm($form, $form_state);

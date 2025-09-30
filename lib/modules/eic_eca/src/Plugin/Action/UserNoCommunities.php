@@ -41,7 +41,6 @@ class UserNoCommunities extends ConfigurableActionBase {
    */
   public function execute($group = NULL): void {
     $items = (int) $this->configuration['items'];
-    $flag_id = 'user_joined_communities';
 
     $two_weeks = strtotime('-2 weeks');
 
@@ -66,7 +65,7 @@ class UserNoCommunities extends ConfigurableActionBase {
 
     // Check for not received the email already.
     $subquery = $this->connection->select('flagging', 'f')
-      ->condition('f.flag_id', $flag_id);
+      ->condition('f.flag_id', $this->configuration['flag_id']);
     $subquery->addField('f', 'entity_id');
     $subquery->where('[f].[entity_id] = [ufd].[uid]');
 
@@ -97,6 +96,7 @@ class UserNoCommunities extends ConfigurableActionBase {
   public function defaultConfiguration(): array {
     return [
         'items' => 30,
+        'flag_id' => 'user_joined_communities',
       ] + parent::defaultConfiguration();
   }
 
@@ -104,13 +104,21 @@ class UserNoCommunities extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
-
     $form['items'] = [
       '#type' => 'number',
       '#title' => $this->t('Items to load'),
       '#description' => $this->t('Enter how many items it should load. Max # is 50'),
       '#default_value' => $this->configuration['items'],
       '#max' => 50,
+    ];
+
+    $form['flag_id'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Flag ID to record the transaction.'),
+      '#default_value' => $this->configuration['flag_id'],
+      '#options' => [
+        'user_joined_communities' => $this->t('User joined communities'),
+      ]
     ];
     return parent::buildConfigurationForm($form, $form_state);
   }
@@ -120,6 +128,7 @@ class UserNoCommunities extends ConfigurableActionBase {
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['items'] = $form_state->getValue('items');
+    $this->configuration['flag_id'] = $form_state->getValue('flag_id');
     parent::submitConfigurationForm($form, $form_state);
   }
 

@@ -46,7 +46,6 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
     $duration = (int) $this->configuration['inactivity_duration'];
     $items = (int) $this->configuration['items'];
     $timestamp_inactivity = strtotime("-$duration months");
-    $flag_id = 'user_inactive_1_month';
 
     $query = $this->connection->select('users_field_data', 'ufd');
     $query->addField('ufd', 'uid');
@@ -54,7 +53,7 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
       ->condition('ufd.access', 0)
       ->condition('ufd.uid', 0, '<>');
     $subquery = $this->connection->select('flagging', 'f')
-      ->condition('f.flag_id', $flag_id);
+      ->condition('f.flag_id', $this->configuration['flag_id']);
     $subquery->addField('f', 'entity_id');
     $subquery->where('[f].[entity_id] = [ufd].[uid]');
 
@@ -78,6 +77,7 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
     return [
         'inactivity_duration' => 1,
         'items' => 50,
+        'flag_id' => 'user_inactive_1_month',
       ] + parent::defaultConfiguration();
   }
 
@@ -100,6 +100,15 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
       '#default_value' => $this->configuration['items'],
       '#max' => 50,
     ];
+
+    $form['flag_id'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Flag ID to record the transaction.'),
+      '#default_value' => $this->configuration['flag_id'],
+      '#options' => [
+        'user_inactive_1_month' => $this->t('User inactive 1 month.'),
+      ]
+    ];
     return parent::buildConfigurationForm($form, $form_state);
   }
 
@@ -109,6 +118,7 @@ class UserNotLoggedInAction extends ConfigurableActionBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['inactivity_duration'] = $form_state->getValue('inactivity_duration');
     $this->configuration['items'] = $form_state->getValue('items');
+    $this->configuration['flag_id'] = $form_state->getValue('flag_id');
     parent::submitConfigurationForm($form, $form_state);
   }
 

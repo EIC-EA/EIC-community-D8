@@ -19,7 +19,7 @@ events:
       frequency: '* * * * *'
     successors:
       -
-        id: Activity_11qerie
+        id: Activity_0lzm5a7
         condition: ''
   Event_1asjw3k:
     plugin: 'content_entity:custom'
@@ -41,17 +41,6 @@ actions:
       tokens: ''
       object: userlist
     successors: {  }
-  Activity_11qerie:
-    plugin: eic_eca_user_inactivity_action
-    label: 'query users'
-    configuration:
-      inactivity_duration: '1'
-      items: '10'
-      object: userlist
-    successors:
-      -
-        id: Activity_105ssdc
-        condition: ''
   Activity_0808l2p:
     plugin: eic_eca_flag_dispatch_user
     label: 'notify user'
@@ -60,3 +49,15 @@ actions:
       flag_id: user_inactive_1_month
       object: ''
     successors: {  }
+  Activity_0lzm5a7:
+    plugin: eic_eca_user_inactivity_action
+    label: 'query users'
+    configuration:
+      inactivity_duration: '1'
+      items: '20'
+      flag_id: user_inactive_1_month
+      object: userlist
+    successors:
+      -
+        id: Activity_105ssdc
+        condition: ''
