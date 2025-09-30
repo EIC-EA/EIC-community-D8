@@ -32,15 +32,6 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 3
-    region: content
-  field_tiles_ref:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: teaser
-      link: false
-    third_party_settings: {  }
     weight: 2
     region: content
   field_title:
@@ -52,5 +43,6 @@ content:
     weight: 0
     region: content
 hidden:
+  field_tiles_ref: true
   langcode: true
   search_api_excerpt: true
