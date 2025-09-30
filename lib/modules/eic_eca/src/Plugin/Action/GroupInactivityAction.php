@@ -65,10 +65,12 @@ class GroupInactivityAction extends ConfigurableActionBase {
     $solr_query->setParseMode($parse_mode);
     $solr_query->addCondition('search_api_datasource', 'entity:group')
       ->addCondition('group_type', 'group')
-      ->addCondition('group_id_integer', $flag_gids, 'NOT IN')
       ->addCondition('group_changed', $timestamp_inactivity, '<');
     $solr_query->range(0, $items);
     $solr_query->sort('group_changed', QueryInterface::SORT_DESC);
+    if (!empty($flag_gids)) {
+      $solr_query->addCondition('group_id_integer', $flag_gids, 'NOT IN');
+    }
 
     if ($this->configuration['check_previous_scenario']) {
       // If this is checked, tell SOLR to search only in groups that were
@@ -81,7 +83,9 @@ class GroupInactivityAction extends ConfigurableActionBase {
       $gids = $query->execute()->fetchAllAssoc('entity_id');
       $gids = array_column($gids, 'entity_id');
 
-      $solr_query->addCondition('group_id_integer', $gids, 'IN');
+      if (!empty($gids)) {
+        $solr_query->addCondition('group_id_integer', $gids, 'IN');
+      }
     }
 
     // Execute the search.
