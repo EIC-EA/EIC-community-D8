@@ -44,7 +44,9 @@ class GroupFlagDispatchAction extends ConfigurableActionBase {
     if (!empty($existing)) {
       /** @var \Drupal\flag\Entity\Flagging $flagging */
       $flagging = reset($existing);
-      $flagging->set('field_inactivity_duration', $this->configuration['inactivity_duration']);
+      $value = array_column($flagging->get('field_inactivity_duration')->getValue(), 'value');
+      $value[] = $this->configuration['inactivity_duration'];
+      $flagging->set('field_inactivity_duration', $value);
     }
     else {
       $flagging = $this->entityTypeManager->getStorage('flagging')->create([
@@ -53,6 +55,7 @@ class GroupFlagDispatchAction extends ConfigurableActionBase {
         'entity_id' => $entity->id(),
         'field_inactivity_duration' => $this->configuration['inactivity_duration'],
         'uid' => 1,
+        'global' => TRUE
       ]);
     }
     $flagging->save();
