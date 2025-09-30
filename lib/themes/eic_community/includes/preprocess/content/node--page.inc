@@ -23,7 +23,6 @@ function eic_community_preprocess_node__page(array &$variables) {
 
   // Adds call to action link.
   if (!$node->get('field_page_cta')->isEmpty()) {
-    $variables['url'] = $node->get('field_page_cta')->first()->getUrl()->toUriString();
     $variables['introduction_header']['call_to_action'] = [
       'link' => [
         'label' => $node->get('field_page_cta')->first()->get('title')->getValue() ?? '',
