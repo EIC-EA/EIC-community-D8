@@ -25,14 +25,14 @@
  * @see template_preprocess_block()
  */
 #}
-{% set _tiles_length = content['#block_content'].field_tiles_ref|length %}
+{% set _tiles_length = content['#block_content'].field_cta_tiles|length %}
 {% set _items = [] %}
 
 {% if _tiles_length > 0 %}
   {% for key in 0.._tiles_length-1 %}
       {%
         set _items = _items|merge([{
-          content: content.field_tiles_ref[key],
+          content: content.field_cta_tiles,
         }])
       %}
   {% endfor %}

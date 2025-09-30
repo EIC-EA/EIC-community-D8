@@ -1,0 +1,43 @@
+uuid: f564bb6d-8d0c-4928-9d41-12df479aa88d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.cta_tile_with_image.field_cta_tile_link
+    - field.field.paragraph.cta_tile_with_image.field_media
+    - field.field.paragraph.cta_tile_with_image.field_title
+    - paragraphs.paragraphs_type.cta_tile_with_image
+  module:
+    - link
+    - media_library
+id: paragraph.cta_tile_with_image.default
+targetEntityType: paragraph
+bundle: cta_tile_with_image
+mode: default
+content:
+  field_cta_tile_link:
+    type: link_default
+    weight: 8
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_media:
+    type: media_library_widget
+    weight: 7
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

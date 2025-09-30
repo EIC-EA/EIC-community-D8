@@ -1,0 +1,23 @@
+uuid: 6338fdc1-3294-4edc-a4ca-418047912971
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cta_tile_link
+    - paragraphs.paragraphs_type.cta_tile_with_image
+  module:
+    - link
+id: paragraph.cta_tile_with_image.field_cta_tile_link
+field_name: field_cta_tile_link
+entity_type: paragraph
+bundle: cta_tile_with_image
+label: Link
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 17
+field_type: link

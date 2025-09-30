@@ -5,9 +5,11 @@ dependencies:
   config:
     - block_content.type.tiles_reference
     - field.field.block_content.tiles_reference.field_body
+    - field.field.block_content.tiles_reference.field_cta_tiles
     - field.field.block_content.tiles_reference.field_tiles_ref
     - field.field.block_content.tiles_reference.field_title
   module:
+    - paragraphs
     - text
 _core:
   default_config_hash: gf3lGjvTzQ13dj7K_jKmXV9ZnfuPn058Hgy-FymhKGg
@@ -23,6 +25,18 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_cta_tiles:
+    type: entity_reference_paragraphs
+    weight: 29
+    region: content
+    settings:
+      title: 'CTA Tile'
+      title_plural: 'CTA Tiles'
+      edit_mode: closed
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
     third_party_settings: {  }
   field_tiles_ref:
     type: entity_reference_autocomplete

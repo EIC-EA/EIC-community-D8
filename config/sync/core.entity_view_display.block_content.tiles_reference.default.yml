@@ -5,9 +5,11 @@ dependencies:
   config:
     - block_content.type.tiles_reference
     - field.field.block_content.tiles_reference.field_body
+    - field.field.block_content.tiles_reference.field_cta_tiles
     - field.field.block_content.tiles_reference.field_tiles_ref
     - field.field.block_content.tiles_reference.field_title
   module:
+    - entity_reference_revisions
     - text
 _core:
   default_config_hash: GKv9zNYfUVAEOvd0poR0o0OAImSRyfj1QUVTDatFMs4
@@ -22,6 +24,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_cta_tiles:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_tiles_ref:
     type: entity_reference_entity_view
