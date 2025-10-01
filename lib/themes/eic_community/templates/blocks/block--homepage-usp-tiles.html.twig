@@ -32,7 +32,7 @@
   {% for key in 0.._tiles_length-1 %}
       {%
         set _items = _items|merge([{
-          content: content.field_cta_tiles,
+          content: content.field_cta_tiles[loop.index0],
         }])
       %}
   {% endfor %}
