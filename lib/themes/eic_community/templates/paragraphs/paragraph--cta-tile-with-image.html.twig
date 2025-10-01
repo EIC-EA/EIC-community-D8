@@ -1,0 +1,18 @@
+{% extends "@paragraphs/paragraph.html.twig" %}
+
+{% block paragraph %}
+  {% block content %}
+    {% include "@theme/patterns/compositions/card-wrapper.html.twig" with {
+      card: {
+        title: {
+          label: paragraph_content.title,
+        },
+        image: {
+          src: paragraph_content.image.src,
+          alt: paragraph_content.image.alt,
+        },
+        path: paragraph_content.path,
+      }
+    } only %}
+  {% endblock %}
+{% endblock paragraph %}
