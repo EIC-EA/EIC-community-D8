@@ -6,5 +6,6 @@ dependencies:
     - comment
 id: comment.notification_teaser
 label: 'Notification teaser'
+description: ''
 targetEntityType: comment
 cache: true

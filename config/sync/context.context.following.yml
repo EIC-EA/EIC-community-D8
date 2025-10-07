@@ -44,6 +44,9 @@ reactions:
           ss_activity_type: ss_activity_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           ss_content_language_label: ss_content_language_label
+          sm_author_topic_expertise_name: sm_author_topic_expertise_name
+          sm_author_topic_interest_name: sm_author_topic_interest_name
+          sm_author_vocab_geo_name: sm_author_vocab_geo_name
         sort_options: {  }
         enable_search: 1
         prefilter_group: 0

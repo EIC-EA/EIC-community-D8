@@ -1,0 +1,5 @@
+entity.stakeholder_type.collection:
+  title: 'Stakeholder types'
+  description: 'Manage and CRUD actions on Stakeholder type.'
+  parent: system.admin_structure
+  route_name: entity.stakeholder_type.collection

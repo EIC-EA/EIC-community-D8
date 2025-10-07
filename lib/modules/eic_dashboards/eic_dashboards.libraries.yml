@@ -1,0 +1,74 @@
+general:
+  css:
+    theme:
+      css/general.css: {}
+
+scripts:
+  css:
+    theme:
+      css/highcharts.css: { }
+  js:
+    js/ecl-fix.js: {}
+    js/dates.js: {}
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - oe_webtools/drupal.webtools-smartloader
+
+cta_card:
+  css:
+    theme:
+      css/cta-card.css: {}
+
+dashboards_menu:
+  css:
+    theme:
+      css/dashboards-menu.css: {}
+
+number-and-link:
+  css:
+    theme:
+      css/number-and-link.css: {}
+
+jump-menu:
+  css:
+    theme:
+      css/jump-menu.css: { }
+  js:
+    js/jump-menu.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
+report-list:
+  css:
+    theme:
+      css/report-list.css: {}
+
+title-link-list:
+  css:
+    theme:
+      css/title-link-list.css: {}
+
+tablesorter:
+  css:
+    theme:
+      css/tablesorter.css: { }
+  js:
+    /libraries/tablesorter/dist/js/jquery.tablesorter.min.js: { }
+    js/tablesorter.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+tabs:
+  css:
+    theme:
+      css/tabs.css: {}
+
+dashboard-section:
+  css:
+    theme:
+      css/dashboard-section.css: {}

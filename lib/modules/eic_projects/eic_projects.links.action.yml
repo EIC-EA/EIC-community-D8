@@ -1,0 +1,5 @@
+extraction_request.add_form:
+  title: 'Add extraction request'
+  route_name: entity.extraction_request.add_form
+  appears_on:
+    - entity.extraction_request.collection

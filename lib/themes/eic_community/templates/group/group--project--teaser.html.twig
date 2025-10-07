@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Theme override to display a project.
+ *
+ * @see ./modules/contrib/group/templates/group.html.twig
+ */
+#}
+
+<div{{ attributes }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% include "@theme/patterns/compositions/project/project.teaser.html.twig" with project_item|default({})|merge({
+    title: label|default(''),
+    path: url,
+    extra_classes: extra_classes,
+  }) %}
+</div>

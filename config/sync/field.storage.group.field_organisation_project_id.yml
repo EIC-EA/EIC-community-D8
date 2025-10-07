@@ -1,0 +1,20 @@
+uuid: a6db714b-0160-4d54-9769-d6967548dcd3
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_organisation_project_id
+field_name: field_organisation_project_id
+entity_type: group
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1004,6 +1004,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     $query->condition('field_vocab_topics', [$term->id()], 'IN');
+    $query->accessCheck(FALSE);
     return $query->execute();
   }
 
@@ -1229,6 +1230,25 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $label;
+  }
+
+  /**
+   * Gets the enabled joining method for a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return string
+   *   The joining method plugin id.
+   */
+  public function getGroupJoiningMethod(GroupInterface $group) {
+    $joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group);
+    $joining_method = reset($joining_methods);
+    // Check if the method is a valid array.
+    if (is_array($joining_method) && isset($joining_method['plugin_id'])) {
+      return $joining_method['plugin_id'];
+    }
+    return NULL;
   }
 
 }

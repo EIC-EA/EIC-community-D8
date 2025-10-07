@@ -1,0 +1,73 @@
+uuid: bcde3fe6-d752-4d9d-9204-40868d096d17
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tiles_reference
+    - field.storage.block_content.field_cta_tiles
+    - paragraphs.paragraphs_type.cta_tile_with_image
+  module:
+    - entity_reference_revisions
+id: block_content.tiles_reference.field_cta_tiles
+field_name: field_cta_tiles
+entity_type: block_content
+bundle: tiles_reference
+label: 'CTA Tiles'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      cta_tile_with_image: cta_tile_with_image
+    negate: 0
+    target_bundles_drag_drop:
+      announcement:
+        weight: 15
+        enabled: false
+      banner:
+        weight: 8
+        enabled: false
+      card:
+        weight: 17
+        enabled: false
+      cards:
+        weight: 18
+        enabled: false
+      contributor:
+        weight: 19
+        enabled: false
+      cta_tile:
+        weight: 9
+        enabled: false
+      cta_tile_with_image:
+        weight: 22
+        enabled: true
+      full_media_content:
+        weight: 10
+        enabled: false
+      full_text_content:
+        weight: 11
+        enabled: false
+      gallery_slide:
+        weight: 23
+        enabled: false
+      organisation_member:
+        weight: 24
+        enabled: false
+      organisation_member_external:
+        weight: 25
+        enabled: false
+      quote:
+        weight: 12
+        enabled: false
+      text_and_media_content:
+        weight: 13
+        enabled: false
+      tiles_content:
+        weight: 14
+        enabled: false
+field_type: entity_reference_revisions

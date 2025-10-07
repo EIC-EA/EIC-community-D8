@@ -2,8 +2,7 @@ name: EIC Search
 type: module
 description: Provides funcitonnality around search.
 package: European Innovation Council
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 php: 7.3
 dependencies:
   - eic_statistics:eic_statistics
@@ -13,3 +12,4 @@ dependencies:
   - oec_group_flex:oec_group_flex
   - eic_groups:eic_groups
   - eic_group_statistics
+  - eic_projects:eic_projects

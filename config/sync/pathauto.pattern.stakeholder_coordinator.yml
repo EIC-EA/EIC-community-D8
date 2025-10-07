@@ -1,0 +1,22 @@
+uuid: 80e1cc02-2a03-4ffa-a60e-8c6ee48e51ce
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_stakeholder
+id: stakeholder_coordinator
+label: 'Stakeholder - Coordinator'
+type: 'canonical_entities:stakeholder'
+pattern: '[stakeholder:stakeholder_group_url]/coordinator/[stakeholder:title]'
+selection_criteria:
+  1708ab21-1555-4cfe-b785-22a63c796a46:
+    id: 'entity_bundle:stakeholder'
+    negate: false
+    uuid: 1708ab21-1555-4cfe-b785-22a63c796a46
+    context_mapping:
+      stakeholder: stakeholder
+    bundles:
+      coordinator: coordinator
+selection_logic: and
+weight: 3
+relationships: {  }

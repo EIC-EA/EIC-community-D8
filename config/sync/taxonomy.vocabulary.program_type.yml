@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'Program type'
 vid: program_type
-description: ''
+description: null
 weight: 0
+new_revision: false

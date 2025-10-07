@@ -99,6 +99,10 @@ class ProcessorGlobal extends DocumentProcessor {
     $is_group_parent_published = 1;
 
     switch ($datasource) {
+      case 'entity:stakeholder':
+        $title = $fullname = $fields['ss_stakeholder_label'];
+        $type = $fields['ss_stakeholder_bundle'] ?? '';
+        break;
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
@@ -151,12 +155,19 @@ class ProcessorGlobal extends DocumentProcessor {
 
           // For News and Stories, the published date should be saved.
           if (in_array($node->bundle(), ['news', 'story'])) {
-            $date = \Drupal::service('date.formatter')
-              ->format(
-                $node->get('published_at')->published_at_or_created,
-                'custom',
-                DateTimeItemInterface::DATETIME_STORAGE_FORMAT
-              );
+            // Ensure that the value is set as it might not be when in
+            // Draft state.
+            if (
+              $node->hasField('published_at') &&
+              !$node->get('published_at')->isEmpty()
+            ) {
+              $date = \Drupal::service('date.formatter')
+                ->format(
+                  $node->get('published_at')->published_at_or_created,
+                  'custom',
+                  DateTimeItemInterface::DATETIME_STORAGE_FORMAT
+                );
+            }
           }
         }
 
@@ -244,10 +255,10 @@ class ProcessorGlobal extends DocumentProcessor {
           $fullname = 'undefined';
         }
         $status = TRUE;
-        $type = $fields['ss_type'];
+        $type = $fields['ss_type'] ?? '';
         $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];
         $date = $fields['ds_created'];
-        $title = $fields['ss_title'];
+        $title = $fields['ss_title'] ?? '';
         break;
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
@@ -259,7 +270,7 @@ class ProcessorGlobal extends DocumentProcessor {
           $document,
           'tm_user_mail',
           $fields,
-          $fields['ss_user_mail']
+          $fields['ss_user_mail'] ?? ''
         );
 
         $status = TRUE;
@@ -267,7 +278,7 @@ class ProcessorGlobal extends DocumentProcessor {
     }
 
     if ('gallery' === $type) {
-      $slides_id = $fields['sm_content_gallery_slide_id_array'] ?: [];
+      $slides_id = $fields['sm_content_gallery_slide_id_array'] ?? [];
       $slides_id = is_array($slides_id) ? $slides_id : [$slides_id];
       $image_style = ImageStyle::load('crop_50x50');
       $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');
@@ -293,10 +304,10 @@ class ProcessorGlobal extends DocumentProcessor {
             'id' => $slide->id(),
             'size' => $file->getSize(),
             'uri' => $this->urlGenerator->transformRelative(
-              file_create_url($destination_uri)
+              \Drupal::service('file_url_generator')->generateAbsoluteString($destination_uri)
             ),
             'uri_160' => $this->urlGenerator->transformRelative(
-              file_create_url($destination_uri_160)
+              \Drupal::service('file_url_generator')->generateAbsoluteString($destination_uri_160)
             ),
             'legend' => $slide->get('field_gallery_slide_legend')->value,
           ]);

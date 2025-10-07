@@ -81,16 +81,15 @@ function _eic_community_can_use_social_share(EntityInterface $entity) {
 function _eic_community_get_social_share_block() {
   $social_share_json = [
     'service' => 'share',
-    'popup' => TRUE,
+    'version' => '2.0',
+    'stats' => TRUE,
     'selection' => TRUE,
-    'to' => [
-      'more',
-      'twitter',
+    'more' => [
+      'x',
       'facebook',
       'linkedin',
-      'e-mail',
-    ],
-    'stats' => TRUE,
+      'email',
+    ]
   ];
 
   return [
@@ -313,6 +312,7 @@ function _eic_community_get_entity_last_comment(
   $published_only = TRUE
 ) {
   $query = \Drupal::entityQuery('comment')
+    ->accessCheck(TRUE)
     ->condition('entity_id', $entity->id())
     ->condition('entity_type', $entity->getEntityTypeId());
 

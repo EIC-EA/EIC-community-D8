@@ -6,5 +6,5 @@ _core:
   default_config_hash: pd0Rr-3zwtKXq_VspSjyB4clU7w9lNlCEiGReZD2W6A
 id: cta_tiles
 label: 'CTA Tiles'
-revision: 0
+revision: false
 description: 'A block that shows a list of CTA Tiles.'

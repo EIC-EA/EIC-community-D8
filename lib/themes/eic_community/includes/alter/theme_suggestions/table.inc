@@ -16,10 +16,12 @@ function eic_community_theme_suggestions_table_alter(array &$suggestions, array 
     $suggestions[] = 'table__with_fields';
   }
 
-  switch ($variables['attributes']['id']) {
-    // This is the table provided by book_link_weight module.
-    case 'book-order':
-      $suggestions[] = 'table__with_fields';
-      break;
+  if (isset($variables['attributes']['id'])) {
+    switch ($variables['attributes']['id']) {
+      // This is the table provided by book_link_weight module.
+      case 'book-order':
+        $suggestions[] = 'table__with_fields';
+        break;
+    }
   }
 }

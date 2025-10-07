@@ -5,7 +5,7 @@ dependencies:
   config:
     - group.type.event
 id: event-member
-label: Member
+label: Participant
 weight: -100
 internal: true
 audience: member

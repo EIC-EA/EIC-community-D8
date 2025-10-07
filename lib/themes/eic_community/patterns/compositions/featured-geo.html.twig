@@ -1,0 +1,32 @@
+<div class="ecl-featured-list">
+  {% if (title is not empty) and items.0 %}
+    <h3 class="ecl-u-type-heading-3 {{ title_extra_classes }}">{{ title }}</h3>
+  {% endif %}
+
+  <ul class="ecl-unordered-list ecl-unordered-list--no-bullet">
+    {% for region in items %}
+      <li class="ecl-unordered-list__item">
+        {% if region.path is not empty %}
+          <a class="ecl-link ecl-link--standalone" href="{{ region.path }}">{{ region.label }}</a>
+        {% else %}
+          {{ region.label }}
+        {% endif %}
+        {% if region.countries.0 %}
+          <ul class="ecl-unordered-list">
+        {% endif %}
+        {% for country in region.countries %}
+          <li class="ecl-unordered-list__item">
+            {% if country.path is not empty %}
+              <a class="ecl-link ecl-link--standalone" href="{{ country.path }}">{{ country.label }}</a>
+            {% else %}
+              {{ country.label }}
+            {% endif %}
+          </li>
+        {% endfor %}
+        {% if region.countries.0 %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>

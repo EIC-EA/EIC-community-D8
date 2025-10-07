@@ -129,3 +129,15 @@ eic_groups.user.my_invitations:
     _controller: '\Drupal\eic_groups\Controller\UserMyInvitationsController::build'
   requirements:
     _user_is_logged_in: 'TRUE'
+
+eic_groups.organisation_edit_description:
+  path: '/group/{group}/edit-description'
+  defaults:
+    _title_callback: '\Drupal\eic_groups\Form\OrganisationEditDescriptionForm::getFormTitle'
+    _form: '\Drupal\eic_groups\Form\OrganisationEditDescriptionForm'
+  options:
+    parameters:
+      group:
+        type: entity:group
+  requirements:
+    _custom_access: '\Drupal\eic_groups\Form\OrganisationEditDescriptionForm::access'

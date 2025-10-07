@@ -1,0 +1,6 @@
+services:
+  eic_user.commands:
+    class: Drupal\eic_user\Commands\SmedUserUpdateCommand
+    arguments: ['@entity_type.manager', '@config.factory', '@eic_user_login.smed_user_manager']
+    tags:
+      - { name: drush.command }

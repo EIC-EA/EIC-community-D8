@@ -8,12 +8,14 @@ dependencies:
     - field.field.group.organisation.field_contact_label
     - field.field.group.organisation.field_date_establishement
     - field.field.group.organisation.field_email
+    - field.field.group.organisation.field_funding_source
     - field.field.group.organisation.field_header_visual
-    - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_needs
     - field.field.group.organisation.field_offers
     - field.field.group.organisation.field_organisation_employees
     - field.field.group.organisation.field_organisation_link
+    - field.field.group.organisation.field_organisation_pic
+    - field.field.group.organisation.field_organisation_project_id
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_smed_id
@@ -52,14 +54,13 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
-  field_locations:
-    type: entity_reference_revisions_entity_view
+  field_funding_source:
+    type: entity_reference_label
     label: above
     settings:
-      view_mode: default
-      link: ''
+      link: true
     third_party_settings: {  }
-    weight: 10
+    weight: 12
     region: content
   field_needs:
     type: entity_reference_revisions_entity_view
@@ -78,6 +79,24 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_organisation_pic:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 13
+    region: content
+  field_organisation_project_id:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 14
     region: content
   field_smed_id:
     type: string
@@ -141,3 +160,4 @@ hidden:
   langcode: true
   search_api_excerpt: true
   uid: true
+  workflow_buttons: true

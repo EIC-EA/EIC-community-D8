@@ -55,8 +55,8 @@ class SolrSearchController extends ControllerBase {
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $user_id_from_route = (int) $request->query->get('userIdFromRoute');
-    $facets_options = $request->query->get('facets_options') ?? [];
-    $facets_value = json_decode($facets_value, TRUE) ?: [];
+    $facets_options = $request->query->all('facets_options') ?? NULL;
+    $facets_value = $facets_value ? json_decode($facets_value, TRUE) : [];
     // timestamp value, if nothing set "*" (the default value on solr).
     $from_date = $request->query->get('from_date', '*');
     $end_date = $request->query->get('end_date', '*');

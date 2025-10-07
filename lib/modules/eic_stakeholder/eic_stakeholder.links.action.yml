@@ -1,0 +1,11 @@
+eic_stakeholder.type_add:
+  title: 'Add stakeholder type'
+  route_name: entity.stakeholder_type.add_form
+  appears_on:
+    - entity.stakeholder_type.collection
+
+eic_stakeholder.add_page:
+  title: 'Add stakeholder'
+  route_name: entity.stakeholder.add_page
+  appears_on:
+    - entity.stakeholder.collection

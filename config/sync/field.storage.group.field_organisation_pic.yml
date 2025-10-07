@@ -1,0 +1,20 @@
+uuid: 7a45a0d0-6d2d-4ed0-97a8-0b097911bbee
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_organisation_pic
+field_name: field_organisation_pic
+entity_type: group
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

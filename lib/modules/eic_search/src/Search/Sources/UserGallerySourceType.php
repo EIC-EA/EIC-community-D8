@@ -41,7 +41,6 @@ class UserGallerySourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'sm_user_profile_topic_expertise_string' => $this->t('Topic expertise', [], ['context' => 'eic_search']),
-      'sm_user_profile_job_string' => $this->t('Job title', [], ['context' => 'eic_search']),
       'sm_user_profile_field_vocab_topic_interest_array' => $this->t('Topic interest', [], ['context' => 'eic_search']),
       'sm_user_profile_geo_string' => $this->t('Geo interest', [], ['context' => 'eic_search']),
       'ss_user_profile_field_location_address_country_code' => $this->t('Country', [], ['context' => 'eic_search']),

@@ -1,0 +1,10 @@
+config-form:
+  js:
+    js/config-form.js: {}
+
+non_required_on_draft:
+  css:
+    theme:
+      css/non_required_on_draft.css: {}
+  js:
+    js/tabs.js: {}

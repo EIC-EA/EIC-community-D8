@@ -6,13 +6,18 @@ dependencies:
     - field.storage.node.field_header_visual
     - media.type.image
     - node.type.news
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 id: node.news.field_header_visual
 field_name: field_header_visual
 entity_type: node
 bundle: news
 label: 'Header visual'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -23,6 +28,7 @@ settings:
       image: image
     sort:
       field: _none
+      direction: ASC
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

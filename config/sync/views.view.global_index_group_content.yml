@@ -232,7 +232,6 @@ display:
           title: ''
           default_argument_type: current_user
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options: {  }
           summary:
             sort_order: asc
@@ -512,7 +511,6 @@ display:
           default_argument_type: user
           default_argument_options:
             user: false
-          default_argument_skip_url: false
           summary_options: {  }
           summary:
             sort_order: asc
@@ -669,7 +667,6 @@ display:
           title: ''
           default_argument_type: profile_owner
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options: {  }
           summary:
             sort_order: asc
@@ -918,7 +915,6 @@ display:
           title: ''
           default_argument_type: current_user
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options: {  }
           summary:
             sort_order: asc
@@ -1085,7 +1081,6 @@ display:
           title: ''
           default_argument_type: current_user
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options: {  }
           summary:
             sort_order: asc

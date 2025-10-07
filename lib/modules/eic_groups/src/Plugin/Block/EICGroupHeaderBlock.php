@@ -11,6 +11,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\FlagType;
@@ -18,6 +19,7 @@ use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_projects\Constants\Projects;
 use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\Service\SolrSearchManager;
 use Drupal\flag\FlagServiceInterface;
@@ -211,7 +213,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ->getOperations($group);
 
     // Get group content operation links.
-    $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
+    $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node', 'stakeholder'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
     $operation_links = [];
@@ -236,6 +238,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    $has_sent_membership_request = TRUE;
     // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
       if (in_array($action['url']->getRouteName(),
@@ -247,6 +250,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         unset($user_operation_links[$key]);
         // We discard the operation link if user doesn't have access to it.
         if ($action['url']->access($this->currentUser)) {
+          if ($action['url']->getRouteName() === 'entity.group.group_request_membership') {
+            $has_sent_membership_request = FALSE;
+          }
           // We add the current page URL as destination so that the user will
           // be redirected back to the current page after joining the group.
           $action['url']->setOption('query',
@@ -257,6 +263,28 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           );
           $operation_links[$key] = $action;
         }
+      }
+    }
+
+    $joining_method = $this->eicGroupsHelper->getGroupJoiningMethod($group);
+    if ($joining_method === 'tu_group_membership_request') {
+      $cacheable_metadata->addCacheTags(["membership_request:{$this->currentUser->id()}:{$group->id()}"]);
+
+      // Shows the "Pending approval" button if the user is authenticated,
+      // not a group member and already has requested group membership.
+      if ($this->currentUser->isAuthenticated() && !$membership && $has_sent_membership_request) {
+        $operation_links[] = [
+          'title' => $this->t('Pending approval', [], ['context' => 'eic_groups']),
+          'url' => Url::fromRoute('<nolink>'),
+          'weight' => 0,
+          'variant' => 'ghost',
+          'extra_attributes' => [
+            [
+            'name' => 'disabled',
+            'value' => 'disabled',
+            ],
+          ],
+        ];
       }
     }
 
@@ -277,6 +305,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    if (Settings::get('cordis_project_status', FALSE)) {
+      // Adds stakeholder URL to the project group operation links.
+      $group_operation_links['stakeholder-collection'] = [
+        'title' => $this->t('Manage stakeholders'),
+        'url' => Url::fromRoute('view.project_stakeholders.page_1', ['group' => $group->id()]),
+      ];
+    }
+
     // Adds pending membership requests URL to the group operation links.
     $group_operation_links['edit-membership-requests'] = [
       'title' => $this->t('Membership requests'),
@@ -287,6 +323,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $group_operation_links['edit-invitations'] = [
       'title' => $this->t('Manage invitations'),
       'url' => Url::fromRoute('view.eic_group_invitations.page_1', ['group' => $group->id()]),
+    ];
+
+    $group_operation_links['edit-organisation-description'] = [
+      'title' => $this->t('Edit description'),
+      'url' => Url::fromRoute('eic_groups.organisation_edit_description', ['group' => $group->id()])
     ];
 
     // We extract only the group edit/delete/publish operation links into a new
@@ -302,6 +343,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           'edit-members',
           'edit-membership-requests',
           'edit-invitations',
+          'stakeholder-collection',
+          'edit-organisation-description',
         ]
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
@@ -416,7 +459,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getGroupFlagLinks(GroupInterface $group) {
     $group_flags = [];
 
-    $group_flag_ids = self::getGroupHeaderFlagsIds();
+    $group_flag_ids = self::getGroupHeaderFlagsIds($group);
 
     // Loops through each group flag ID and add only the ones the user has
     // access to.
@@ -495,12 +538,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Gets list of flags IDs used in the group header.
+   * Gets list of flags IDs used in the group header by type.
    *
    * @return array
    *   Array of Flag machine names.
    */
-  public static function getGroupHeaderFlagsIds() {
+  public static function getGroupHeaderFlagsIds(GroupInterface $group) {
+    if ($group->bundle() == Projects::GROUP_PROJECT_BUNDLE) {
+      return [
+        FlagType::LIKE_GROUP,
+      ];
+    }
     return [
       FlagType::FOLLOW_GROUP,
       FlagType::LIKE_GROUP,
@@ -544,25 +592,20 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $has_read_more = TRUE;
     }
 
-    // Truncates the output.
-    $output = Unicode::truncate($output, $limit, TRUE, TRUE);
+    // Truncate the text to the desired limit.
+    $preview_text = Unicode::truncate($output, $limit, TRUE);
 
-    // Adds link to the group about page.
+    // Get the part of the text that has been truncated.
+    $truncated_text = mb_substr($output, mb_strlen($preview_text));
+
+    // Return HTML with the truncated part stored as data for later use.
     if ($has_read_more) {
-      $link = Link::createFromRoute(
-        $this->t('Read more'),
-        'eic_groups.about_page',
-        [
-          'group' => $group->id(),
-        ],
-        [
-          'fragment' => 'group-description-full',
-        ],
-      );
-      $output .= ' ' . $link->toString();
+      return Markup::create("<p class='preview-text state-preview'>$preview_text <span class='ellipsis'>...</span><span class='truncated-text ecl-u-d-none'>" . htmlspecialchars($truncated_text, ENT_QUOTES) . "</span> <a class='js-readmore' style='cursor: pointer'>" . t('Read more') . "</a></p>");
     }
-
-    return Markup::create("<p>$output</p>");
+    else {
+      return Markup::create("<p>$preview_text</p>");
+    }
   }
 
 }
+

@@ -25,3 +25,14 @@ services:
   oec_group_flex.helper:
     class: Drupal\oec_group_flex\OECGroupFlexHelper
     arguments: [ '@group_flex.group', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@plugin.manager.custom_restricted_visibility', '@oec_group_flex.group_visibility.storage' ]
+
+  access_check.oec_group_flex.group_membership_request_access_check:
+    class: Drupal\oec_group_flex\Access\GroupMembershipRequestAccessChecker
+    arguments: [ '@oec_group_flex.helper' ]
+    tags:
+      - { name: access_check, applies_to: _group_membership_request_access_check }
+
+  oec_group_flex.route_subscriber:
+    class: Drupal\oec_group_flex\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

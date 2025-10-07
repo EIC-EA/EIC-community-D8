@@ -25,7 +25,7 @@ services:
   php:
     build:
       context: ./docker/php
-    image: eic-php-fpm:7.4
+    image: eic-php-fpm:8.1
     container_name: ${APP_NAME}_php
     working_dir: /app
     volumes:
@@ -37,15 +37,18 @@ services:
         condition: service_healthy
     env_file:
       - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mysql:
-    image: percona/percona-server:5.7
+    image: mariadb:10.6
     container_name: ${APP_NAME}_mysql
     ports:
       - ${DATABASE_PORT}:3306
-    command: --innodb-log-file-size=1G --max_allowed_packet=1G --innodb-buffer-pool-size=512M --wait_timeout=3000 --net_write_timeout=3000 --log_error_verbosity=3
+    command: --transaction-isolation=READ-COMMITTED --innodb-log-file-size=1G --max_allowed_packet=1G --innodb-buffer-pool-size=512M --wait_timeout=3000 --net_write_timeout=3000
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${DRUPAL_DATABASE_NAME}
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:

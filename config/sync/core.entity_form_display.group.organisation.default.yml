@@ -8,12 +8,14 @@ dependencies:
     - field.field.group.organisation.field_contact_label
     - field.field.group.organisation.field_date_establishement
     - field.field.group.organisation.field_email
+    - field.field.group.organisation.field_funding_source
     - field.field.group.organisation.field_header_visual
-    - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_needs
     - field.field.group.organisation.field_offers
     - field.field.group.organisation.field_organisation_employees
     - field.field.group.organisation.field_organisation_link
+    - field.field.group.organisation.field_organisation_pic
+    - field.field.group.organisation.field_organisation_project_id
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_smed_id
@@ -99,6 +101,7 @@ third_party_settings:
       children:
         - field_vocab_services_products
         - field_vocab_target_markets
+        - field_funding_source
       label: Taxonomies
       region: content
       parent_name: group_organisation
@@ -164,6 +167,8 @@ third_party_settings:
     group_settings:
       children:
         - field_smed_id
+        - field_organisation_pic
+        - field_organisation_project_id
       label: Settings
       region: content
       parent_name: group_organisation
@@ -240,24 +245,22 @@ content:
       placeholder: ''
       size: 60
     third_party_settings: {  }
+  field_funding_source:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_header_visual:
     type: media_library_widget
     weight: 3
     region: content
     settings:
       media_types: {  }
-    third_party_settings: {  }
-  field_locations:
-    type: entity_reference_paragraphs
-    weight: 27
-    region: content
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: closed
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
     third_party_settings: {  }
   field_needs:
     type: entity_reference_paragraphs
@@ -297,6 +300,20 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
+    third_party_settings: {  }
+  field_organisation_pic:
+    type: number
+    weight: 9
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_organisation_project_id:
+    type: number
+    weight: 10
+    region: content
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   field_organisation_turnover:
     type: string_textfield
@@ -364,6 +381,7 @@ content:
       ignore_current_user: 0
       target_bundles: {  }
       is_required: false
+      has_error: 0
     third_party_settings: {  }
   field_vocab_services_products:
     type: entity_tree
@@ -382,6 +400,7 @@ content:
       search_label: 'Select a value'
       search_placeholder: Search
       selected_terms_label: 'Your selected values'
+      has_error: 0
     third_party_settings: {  }
   field_vocab_target_markets:
     type: entity_tree
@@ -400,6 +419,7 @@ content:
       search_label: 'Select a value'
       search_placeholder: Search
       selected_terms_label: 'Your selected values'
+      has_error: 0
     third_party_settings: {  }
   field_vocab_topics:
     type: entity_tree
@@ -418,6 +438,7 @@ content:
       search_label: 'Select a value'
       search_placeholder: Search
       selected_terms_label: 'Your selected values'
+      has_error: 0
     third_party_settings: {  }
   label:
     type: string_textfield

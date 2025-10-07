@@ -92,7 +92,8 @@
                               path: icon_file_path,
                               size: 's',
                             }) : {},
-                            extra_classes: (action.type == 'cta' ? 'ecl-link ecl-link--cta' : 'ecl-link--button ecl-link--' ~ (action.variant == 'secondary' ? 'button-secondary' : 'button-primary')) ~ (action.is_compact ? ' ecl-link--button-has-icon-layout ecl-link--action'),
+                            extra_attributes: extra_attributes|default(action.link.extra_attributes),
+                            extra_classes: (action.type == 'cta' ? 'ecl-link ecl-link--cta' : 'ecl-link--button ecl-link--' ~ (action.variant|default(action.link.variant) ? 'button-' ~ action.variant|default(action.link.variant) : 'button-primary')) ~ (action.is_compact ? ' ecl-link--button-has-icon-layout ecl-link--action' : ''),
                           }) only %}
 												{% elseif action is not empty %}
 													{% if action.link %}

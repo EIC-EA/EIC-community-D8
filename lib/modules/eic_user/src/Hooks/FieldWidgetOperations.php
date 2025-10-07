@@ -42,7 +42,7 @@ class FieldWidgetOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Implements hook_field_widget_social_links_form_alter().
+   * Implements hook_field_widget_single_element_social_links_form_alter().
    */
   public function fieldWidgetSocialLinksFormAlter(&$element, FormStateInterface $form_state, $context) {
     $form_build_info = $form_state->getBuildInfo();
@@ -82,7 +82,7 @@ class FieldWidgetOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Implements hook_field_widget_entity_tree_form_alter().
+   * Implements hook_field_widget_single_element_entity_tree_form_alter().
    */
   public function fieldWidgetEntityTreeFormAlter(&$element, FormStateInterface $form_state, $context) {
     $form_build_info = $form_state->getBuildInfo();

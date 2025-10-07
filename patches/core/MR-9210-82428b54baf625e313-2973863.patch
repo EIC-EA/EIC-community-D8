@@ -1,0 +1,142 @@
+diff --git a/core/lib/Drupal/Core/Entity/Plugin/Validation/Constraint/ValidReferenceConstraintValidator.php b/core/lib/Drupal/Core/Entity/Plugin/Validation/Constraint/ValidReferenceConstraintValidator.php
+index eab3f4e72b4b0c1a9758f1d1832a9c5ba892bdcc..e6c12cdb5473fbcc9db70402c6647bf14efd26ef 100644
+--- a/core/lib/Drupal/Core/Entity/Plugin/Validation/Constraint/ValidReferenceConstraintValidator.php
++++ b/core/lib/Drupal/Core/Entity/Plugin/Validation/Constraint/ValidReferenceConstraintValidator.php
+@@ -119,31 +119,43 @@ public function validate($value, Constraint $constraint): void {
+       }
+     }
+
+-    // Add violations on deltas with a target_id that is not valid.
++    // Don't try to validate pre-existing items.
+     if ($target_ids) {
+-      // Get a list of pre-existing references.
+-      $previously_referenced_ids = [];
+       if ($entity && !$entity->isNew()) {
+         $existing_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
+-        foreach ($existing_entity->{$value->getFieldDefinition()->getName()}->getValue() as $item) {
+-          $previously_referenced_ids[$item['target_id']] = $item['target_id'];
++        $existing_target_ids = [];
++        if ($existing_entity->isTranslatable()) {
++          foreach ($existing_entity->getTranslationLanguages() as $language) {
++            $existing_entity = $existing_entity->getTranslation($language->getId());
++            foreach ($existing_entity->{$value->getFieldDefinition()->getName()}->getValue() as $item) {
++              $existing_target_ids[$item['target_id']] = $item['target_id'];
++            }
++          }
+         }
++        else {
++          foreach ($existing_entity->{$value->getFieldDefinition()
++            ->getName()}->getValue() as $item) {
++            $existing_target_ids[$item['target_id']] = $item['target_id'];
++          }
++        }
++
++        $target_ids = array_diff($target_ids, $existing_target_ids);
+       }
++    }
+
++    // Add violations on deltas with a target_id that is not valid.
++    if ($target_ids) {
+       $valid_target_ids = $handler->validateReferenceableEntities($target_ids);
+       if ($invalid_target_ids = array_diff($target_ids, $valid_target_ids)) {
+         // For accuracy of the error message, differentiate non-referenceable
+         // and non-existent entities.
+-        $existing_entities = $this->entityTypeManager->getStorage($target_type_id)->loadMultiple($invalid_target_ids);
++        $target_type = $this->entityTypeManager->getDefinition($target_type_id);
++        $existing_ids = $this->entityTypeManager->getStorage($target_type_id)->getQuery()
++          ->accessCheck(FALSE)
++          ->condition($target_type->getKey('id'), $invalid_target_ids, 'IN')
++          ->execute();
+         foreach ($invalid_target_ids as $delta => $target_id) {
+-          // Check if any of the invalid existing references are simply not
+-          // accessible by the user, in which case they need to be excluded from
+-          // validation
+-          if (isset($previously_referenced_ids[$target_id]) && isset($existing_entities[$target_id]) && !$existing_entities[$target_id]->access('view')) {
+-            continue;
+-          }
+-
+-          $message = isset($existing_entities[$target_id]) ? $constraint->message : $constraint->nonExistingMessage;
++          $message = in_array($target_id, $existing_ids) ? $constraint->message : $constraint->nonExistingMessage;
+           $this->context->buildViolation($message)
+             ->setParameter('%type', $target_type_id)
+             ->setParameter('%id', $target_id)
+diff --git a/core/tests/Drupal/KernelTests/Core/Entity/ValidReferenceConstraintValidatorTest.php b/core/tests/Drupal/KernelTests/Core/Entity/ValidReferenceConstraintValidatorTest.php
+index f815bf33f4d57ca68ca07d0be16f074af8fc2f1c..4038a9b5ab560c48d638cb5017c45726d3b4564c 100644
+--- a/core/tests/Drupal/KernelTests/Core/Entity/ValidReferenceConstraintValidatorTest.php
++++ b/core/tests/Drupal/KernelTests/Core/Entity/ValidReferenceConstraintValidatorTest.php
+@@ -7,7 +7,6 @@
+ use Drupal\Core\Field\BaseFieldDefinition;
+ use Drupal\Core\Field\FieldStorageDefinitionInterface;
+ use Drupal\entity_test\Entity\EntityTest;
+-use Drupal\field\Entity\FieldConfig;
+ use Drupal\node\Entity\Node;
+ use Drupal\node\NodeInterface;
+ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+@@ -114,7 +113,7 @@ public function testPreExistingItemsValidation(): void {
+       FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+     );
+
+-    // Create four test nodes.
++    // Create two test nodes.
+     $published_node = Node::create([
+       'title' => 'Test published node',
+       'type' => 'article',
+@@ -129,26 +128,10 @@ public function testPreExistingItemsValidation(): void {
+     ]);
+     $unpublished_node->save();
+
+-    $different_bundle_node = Node::create([
+-      'title' => 'Test page node',
+-      'type' => 'page',
+-      'status' => NodeInterface::PUBLISHED,
+-    ]);
+-    $different_bundle_node->save();
+-
+-    $deleted_node = Node::create([
+-      'title' => 'Test deleted node',
+-      'type' => 'article',
+-      'status' => NodeInterface::PUBLISHED,
+-    ]);
+-    $deleted_node->save();
+-
+     $referencing_entity = EntityTest::create([
+       'field_test' => [
+         ['entity' => $published_node],
+         ['entity' => $unpublished_node],
+-        ['entity' => $different_bundle_node],
+-        ['entity' => $deleted_node],
+       ],
+     ]);
+
+@@ -191,31 +174,10 @@ public function testPreExistingItemsValidation(): void {
+     $referencing_entity->save();
+     $this->assertEquals($published_node->id(), $referencing_entity->field_test[0]->target_id);
+     $this->assertEquals($unpublished_node->id(), $referencing_entity->field_test[1]->target_id);
+-    $this->assertEquals($different_bundle_node->id(), $referencing_entity->field_test[2]->target_id);
+-    $this->assertEquals($deleted_node->id(), $referencing_entity->field_test[3]->target_id);
+
+     $violations = $referencing_entity->field_test->validate();
+     $this->assertCount(0, $violations);
+
+-    // Remove one of the referenceable bundles and check that a pre-existing node
+-    // of that bundle can not be referenced anymore.
+-    $field = FieldConfig::loadByName('entity_test', 'entity_test', 'field_test');
+-    $field->setSetting('handler_settings', ['target_bundles' => ['article']]);
+-    $field->save();
+-    $referencing_entity = $this->reloadEntity($referencing_entity);
+-
+-    $violations = $referencing_entity->field_test->validate();
+-    $this->assertCount(1, $violations);
+-    $this->assertEquals(sprintf('This entity (node: %s) cannot be referenced.', $different_bundle_node->id()), $violations[0]->getMessage());
+-
+-    // Delete the last node and check that the pre-existing reference is not
+-    // valid anymore.
+-    $deleted_node->delete();
+-
+-    $violations = $referencing_entity->field_test->validate();
+-    $this->assertCount(2, $violations);
+-    $this->assertEquals(sprintf('This entity (node: %s) cannot be referenced.', $different_bundle_node->id()), $violations[0]->getMessage());
+-    $this->assertEquals(sprintf('The referenced entity (node: %s) does not exist.', $deleted_node->id()), $violations[1]->getMessage());
+   }
+
+ }

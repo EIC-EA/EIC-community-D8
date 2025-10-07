@@ -1,0 +1,22 @@
+uuid: 336cf268-f6b9-49d4-bf9d-2f695cc8068f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.log_dashboard_listing_export.field_event_executing_user
+    - field.field.message.log_dashboard_listing_export.field_view_id
+    - message.template.log_dashboard_listing_export
+id: message.log_dashboard_listing_export.mail_subject
+targetEntityType: message
+bundle: log_dashboard_listing_export
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_view_id: true
+  partial_1: true
+  search_api_excerpt: true

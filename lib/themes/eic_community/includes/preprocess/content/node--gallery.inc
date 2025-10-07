@@ -152,6 +152,11 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $teaser['flags'] = [];
       }
 
+      // Privacy information, if current user is anonymous remove the author.
+      if (\Drupal::currentUser()->isAnonymous()) {
+        $teaser['author'] =  NULL;
+      }
+
       $teaser['images'] = $images;
       $teaser['type'] = [
         'label' => $node->type->entity->label(),

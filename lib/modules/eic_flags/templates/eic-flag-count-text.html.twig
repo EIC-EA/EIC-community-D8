@@ -11,17 +11,38 @@
  * - flaggable: The flaggable entity.
  */
 #}
-{% spaceless %}
+{% apply spaceless %}
 {# Attach the flag CSS library.#}
 {{ attach_library('flag/flag.link') }}
 
 {# Set the remaining Flag CSS classes. #}
 {%
   set classes = [
-    'flag',
-    'flag-' ~ flag_id|clean_class,
-  ]
+  'flag',
+  'flag-' ~ flag_id|clean_class,
+  'ecl-u-d-inline-flex',
+  'ecl-u-align-items-center',
+  'ecl-u-type-color-grey-75',
+]
 %}
 
-<div class="{{classes|join(' ')}}">{{ title }}: <span>{{ flag_count }}</span></div>
-{% endspaceless %}
+<div class="{{classes|join(' ')}}">
+  <span class="ecl-u-mr-xs">
+    {% if eic_icon_path %}
+      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        icon: {
+          size: "s",
+          path: eic_icon_path,
+          type: "custom",
+          name: "like",
+        }
+      } only %}
+    {% endif %}
+  </span>
+  {% if flag_anonymous_href_link %}
+    <a href="{{ flag_anonymous_href_link }}" class="use-ajax" data-dialog-options="{&quot;width&quot;:800}" data-dialog-type="modal"> {{ 'Like'|t }} ({{ flag_count }})</a>
+  {% else %}
+    <span> {{ 'Like'|t }} ({{ flag_count }})</span>
+  {% endif %}
+</div>
+{% endapply %}

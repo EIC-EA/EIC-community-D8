@@ -27,7 +27,9 @@ dependencies:
     - eic_flags
     - eic_private_content
     - eic_private_message
+    - eic_stakeholder
     - eic_topics
+    - file
     - filter
     - flag
     - group
@@ -55,6 +57,7 @@ permissions:
   - 'create story content'
   - 'create terms in tags'
   - 'create video media'
+  - 'delete own files'
   - 'delete own news content'
   - 'delete own page content'
   - 'delete own story content'
@@ -80,7 +83,6 @@ permissions:
   - 'use default transition publish'
   - 'use eic_moderated_workflow transition create_new_draft'
   - 'use eic_moderated_workflow transition submit_for_approval'
-  - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
   - 'use groups transition keep_blocked'
   - 'use groups transition keep_in_draft'
@@ -97,3 +99,4 @@ permissions:
   - 'view own unpublished media'
   - 'view private content'
   - 'view recommend_group'
+  - 'view stakeholder'

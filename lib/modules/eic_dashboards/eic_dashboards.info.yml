@@ -1,0 +1,9 @@
+name: 'EIC Dashboards'
+type: module
+description: 'Provides general & group statistics.'
+package: EIC
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - oe_webtools:oe_webtools
+  - address:address
+  - group:group

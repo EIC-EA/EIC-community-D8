@@ -1,0 +1,24 @@
+uuid: f1439432-88cb-4479-87cc-77e24f9a4f00
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_teaser
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_teaser
+field_name: field_project_teaser
+entity_type: group
+bundle: project
+label: Teaser
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

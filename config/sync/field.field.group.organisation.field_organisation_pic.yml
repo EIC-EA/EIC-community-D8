@@ -1,0 +1,23 @@
+uuid: 0dddb6ec-18d3-4c02-a9f6-8c1859c1fc43
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_organisation_pic
+    - group.type.organisation
+id: group.organisation.field_organisation_pic
+field_name: field_organisation_pic
+entity_type: group
+bundle: organisation
+label: 'Organisation Pic'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

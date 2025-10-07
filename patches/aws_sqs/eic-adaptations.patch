@@ -1,0 +1,75 @@
+diff --git a/src/AwsSqsQueue.php b/src/AwsSqsQueue.php
+index 2cf788a..4ca6335 100644
+--- a/src/AwsSqsQueue.php
++++ b/src/AwsSqsQueue.php
+@@ -187,6 +187,7 @@ class AwsSqsQueue implements ReliableQueueInterface {
+     // If the response does not contain 'Messages', return false.
+     $messages = $response->get('Messages');
+     if (!$messages) {
++      $this->logger->error("No messages in queue ".$this->queueUrl." Response ".print_r($response, true));
+       return FALSE;
+     }
+ 
+@@ -194,6 +195,7 @@ class AwsSqsQueue implements ReliableQueueInterface {
+ 
+     // If the item id is not set, return false.
+     if (empty($message['MessageId'])) {
++      $this->logger->error("Message ID not set in ".$this->queueUrl);
+       return FALSE;
+     }
+ 
+@@ -205,6 +207,7 @@ class AwsSqsQueue implements ReliableQueueInterface {
+     if (!empty($item->reciept_handle)) {
+       return $item;
+     }
++    $this->logger->error("Message receipt handle set in ".$this->queueUrl);
+     return FALSE;
+   }
+ 
+@@ -272,7 +275,12 @@ class AwsSqsQueue implements ReliableQueueInterface {
+    *  http://docs.aws.amazon.com/aws-sdk-php-2/latest/class-Aws.Sqs.SqsClient.html#_createQueue
+    */
+   public function createQueue() {
+-    $result = $this->client->createQueue(['QueueName' => $this->name]);
++    try {
++      $result = $this->client->getQueueUrl(['QueueName' => $this->name]);
++    } catch (SqsException $e) {
++      if ($e->getAwsErrorCode() == 'AWS.SimpleQueueService.NonExistentQueue')
++        $result = $this->client->createQueue(['QueueName' => $this->name]);
++    }        
+     $queueUrl = $result->get('QueueUrl');
+     $this->setQueueUrl($queueUrl);
+   }
+diff --git a/src/AwsSqsQueueFactory.php b/src/AwsSqsQueueFactory.php
+index 36ad523..e32380e 100644
+--- a/src/AwsSqsQueueFactory.php
++++ b/src/AwsSqsQueueFactory.php
+@@ -60,14 +60,22 @@ class AwsSqsQueueFactory {
+    *   Return AwsSqsQueue service.
+    */
+   public function get($name) {
+-    $client = new SqsClient([
+-      'credentials' => [
++
++    $parameters = [
++      'region' => $this->config->get('aws_sqs_region'),
++      'version' => $this->config->get('aws_sqs_version')
++    ];
++
++    // If there are no credentials, use the default credential chain
++    // https://github.com/aws/aws-sdk-php/blob/master/src/Credentials/CredentialProvider.php#L77
++    // IRSA is included in the default credential chain https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-minimum-sdk.html
++    if ($this->config->get('aws_sqs_aws_key') != '' && $this->config->get('aws_sqs_aws_secret') != '')
++      $parameters['credentials' ] = [
+         'key'    => $this->config->get('aws_sqs_aws_key'),
+         'secret' => $this->config->get('aws_sqs_aws_secret'),
+-      ],
+-      'region' => $this->config->get('aws_sqs_region'),
+-      'version' => $this->config->get('aws_sqs_version'),
+-    ]);
++      ];
++
++    $client = new SqsClient($parameters);
+ 
+     try {
+       $queue = new AwsSqsQueue($name, $client, $this->logger);

@@ -1,0 +1,335 @@
+uuid: 92c4631f-971e-41bd-ba4c-adc0b2e06af1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.project.field_body
+    - field.field.group.project.field_project_acronym
+    - field.field.group.project.field_project_call_for_proposal
+    - field.field.group.project.field_project_date
+    - field.field.group.project.field_project_duration
+    - field.field.group.project.field_project_ecmax_contributio
+    - field.field.group.project.field_project_fields_of_science
+    - field.field.group.project.field_project_funding_programme
+    - field.field.group.project.field_project_grant_agreement_id
+    - field.field.group.project.field_project_horizon_results
+    - field.field.group.project.field_project_innovations
+    - field.field.group.project.field_project_keywords
+    - field.field.group.project.field_project_objective
+    - field.field.group.project.field_project_related_topic
+    - field.field.group.project.field_project_status
+    - field.field.group.project.field_project_sub_call
+    - field.field.group.project.field_project_teaser
+    - field.field.group.project.field_project_total_cost
+    - field.field.group.project.field_project_website
+    - group.type.project
+    - workflows.workflow.groups
+  module:
+    - content_moderation
+    - datetime_range
+    - field_group
+    - link
+    - path
+    - text
+third_party_settings:
+  field_group:
+    group_project:
+      children:
+        - group_project_information
+        - group_features
+        - group_project_funding
+        - group_reference_links
+        - group_fields_of_science
+        - group_innovations_and_horizon_pl
+      label: Project
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: tabs
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        direction: horizontal
+        width_breakpoint: 640
+    group_project_information:
+      children:
+        - group_project_
+      label: Information
+      region: content
+      parent_name: group_project
+      weight: 27
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_project_:
+      children:
+        - field_project_acronym
+        - field_project_grant_agreement_id
+        - field_project_date
+        - field_project_status
+      label: Details
+      region: content
+      parent_name: group_project_information
+      weight: 25
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+    group_project_funding:
+      children:
+        - field_project_funding_programme
+        - field_project_total_cost
+        - field_project_ecmax_contributio
+      label: Funding
+      region: content
+      parent_name: group_project
+      weight: 29
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+        open: false
+    group_fields_of_science:
+      children:
+        - field_project_fields_of_science
+      label: 'Fields of science'
+      region: content
+      parent_name: group_project
+      weight: 31
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+        open: false
+    group_reference_links:
+      children:
+        - field_project_website
+      label: 'Reference links'
+      region: content
+      parent_name: group_project
+      weight: 30
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_innovations_and_horizon_pl:
+      children:
+        - field_project_innovations
+        - field_project_horizon_results
+      label: 'Innovations and Horizon platform results'
+      region: content
+      parent_name: group_project
+      weight: 32
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_features:
+      children:
+        - features
+      label: Features
+      region: content
+      parent_name: group_project
+      weight: 28
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_description_and_teaser:
+      children:
+        - field_body
+        - field_project_teaser
+      label: 'Description and teaser'
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
+id: group.project.default
+targetEntityType: group
+bundle: project
+mode: default
+content:
+  features:
+    type: options_buttons
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_acronym:
+    type: string_textfield
+    weight: 21
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_date:
+    type: daterange_default
+    weight: 23
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_project_ecmax_contributio:
+    type: number
+    weight: 24
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_fields_of_science:
+    type: entity_reference_autocomplete
+    weight: 25
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_funding_programme:
+    type: entity_reference_autocomplete
+    weight: 22
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_grant_agreement_id:
+    type: number
+    weight: 22
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_horizon_results:
+    type: link_default
+    weight: 7
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_project_innovations:
+    type: link_default
+    weight: 6
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_project_status:
+    type: options_select
+    weight: 25
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_project_teaser:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_total_cost:
+    type: number
+    weight: 23
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_project_website:
+    type: link_default
+    weight: 27
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 4
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 6
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  field_project_call_for_proposal: true
+  field_project_duration: true
+  field_project_keywords: true
+  field_project_objective: true
+  field_project_related_topic: true
+  field_project_sub_call: true
+  uid: true

@@ -130,5 +130,10 @@ function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
     ];
   }
 
+  // Privacy information, if current user is anonymous remove the author.
+  if (\Drupal::currentUser()->isAnonymous()) {
+    $teaser['author'] =  NULL;
+  }
+
   $variables['discussion_item'] = $teaser;
 }

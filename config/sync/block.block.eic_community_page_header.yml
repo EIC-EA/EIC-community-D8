@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - context
     - eic_theme_helper
     - system
   theme:
@@ -24,16 +23,6 @@ settings:
   context_mapping:
     page_header: '@eic_theme_helper.page_header_context:page_header'
 visibility:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    context_mapping: {  }
-    view_inclusion: {  }
-  request_path_exclusion:
-    id: request_path_exclusion
-    negate: null
-    context_mapping: {  }
-    pages: ''
   request_path:
     id: request_path
     negate: true

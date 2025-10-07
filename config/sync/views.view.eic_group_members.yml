@@ -266,6 +266,15 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -333,6 +342,15 @@ display:
             date_format: short
             custom_date_format: ''
             timezone: ''
+            tooltip:
+              date_format: ''
+              custom_date_format: ''
+            time_diff:
+              enabled: false
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 60
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -415,6 +433,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+          pagination_heading_level: h4
       exposed_form:
         type: basic
         options:
@@ -473,7 +492,6 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -775,7 +793,7 @@ display:
           plugin_id: standard
           required: false
       group_by: true
-      display_description: 'Shows group members ordered by job title''s weight'
+      display_description: "Shows group members ordered by job title's weight"
       header: {  }
       display_extenders: {  }
     cache_metadata:
@@ -785,7 +803,6 @@ display:
         - 'languages:language_interface'
         - route.group
         - url
-        - user
         - user.group_permissions
       tags:
         - 'config:field.storage.group_content.group_roles'

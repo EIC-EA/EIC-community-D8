@@ -1,0 +1,33 @@
+uuid: febda81e-b66c-40b6-ade2-da8307a42793
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.fields_of_science.field_euroscivoc_code
+    - taxonomy.vocabulary.fields_of_science
+  module:
+    - text
+id: taxonomy_term.fields_of_science.default
+targetEntityType: taxonomy_term
+bundle: fields_of_science
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_euroscivoc_code:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

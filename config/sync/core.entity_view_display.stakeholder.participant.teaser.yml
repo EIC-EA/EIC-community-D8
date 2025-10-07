@@ -1,0 +1,54 @@
+uuid: 6e34bff6-47f3-4752-984f-7568a5ab0384
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.stakeholder.teaser
+    - eic_stakeholder.stakeholder_type.participant
+    - field.field.stakeholder.participant.field_stakeholder_address
+    - field.field.stakeholder.participant.field_stakeholder_organisation
+    - field.field.stakeholder.participant.field_stakeholder_related_people
+  module:
+    - address
+id: stakeholder.participant.teaser
+targetEntityType: stakeholder
+bundle: participant
+mode: teaser
+content:
+  field_stakeholder_address:
+    type: address_plain
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_stakeholder_organisation:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_stakeholder_related_people:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  langcode: true
+  search_api_excerpt: true
+  status: true
+  uid: true

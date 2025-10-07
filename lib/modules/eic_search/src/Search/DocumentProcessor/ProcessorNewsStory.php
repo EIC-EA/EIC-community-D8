@@ -79,7 +79,8 @@ class ProcessorNewsStory extends DocumentProcessor {
 
     $this->addOrUpdateDocumentField($document, 'ss_content_author_formatted_image', $fields, $user_picture_relative);
     $this->addOrUpdateDocumentField($document, 'ss_content_teaser_image_url', $fields, $teaser_relative);
-    $this->addOrUpdateDocumentField($document, 'bs_is_restricted', $fields, $is_restricted);
+    // Public/Private label on News overview page: Uncomment to enable along with corresponding code on themes/eic_community/react/components/Block/Overview/Search/ResultItem/StoryResultItem.js
+    //    $this->addOrUpdateDocumentField($document, 'bs_is_restricted', $fields, $is_restricted);
   }
 
   /**

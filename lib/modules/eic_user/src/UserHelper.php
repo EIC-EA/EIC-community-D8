@@ -166,6 +166,7 @@ class UserHelper {
    */
   public function getSitePowerUsers(bool $active_only = TRUE) {
     $query = $this->userStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('status', (int) $active_only)
       ->condition('roles', [
         static::ROLE_SITE_ADMINISTRATOR,
@@ -192,6 +193,11 @@ class UserHelper {
    *   TRUE if user is a power user.
    */
   public static function isPowerUser(AccountInterface $account, GroupInterface $group_related = null) {
+    // User 1 is always considered power user.
+    if ((int) $account->id() === 1) {
+      return TRUE;
+    }
+
     if ($group_related) {
       $group_flex_group = \Drupal::service('group_flex.group');
       $group_visibility = $group_flex_group->getGroupVisibility($group_related);
@@ -199,11 +205,6 @@ class UserHelper {
       if ($group_visibility === GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE) {
         return FALSE;
       }
-    }
-
-    // User 1 is always considered power user.
-    if ((int) $account->id() === 1) {
-      return TRUE;
     }
 
     foreach ($account->getRoles(TRUE) as $role) {
@@ -231,7 +232,7 @@ class UserHelper {
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
 
     return $file ? \Drupal::service('file_url_generator')
-      ->transformRelative(file_create_url($file->get('uri')->value)) : '';
+      ->transformRelative(\Drupal::service('file_url_generator')->generateAbsoluteString($file->get('uri')->value)) : '';
   }
 
   /**
@@ -322,6 +323,43 @@ class UserHelper {
   }
 
   /**
+   * Checks the completion status of member profile.
+   *
+   * @param $uid
+   *   The user ID.
+   *
+   * @return int
+   *   Number of completed profiles or 0.
+   */
+  public function getMemberProfileCompletionCount(int $uid = NULL): int {
+    $query = $this->connection->select('profile', 'p');
+
+    // Join profile fields.
+    $query->innerJoin('profile__field_vocab_topic_expertise', 'pvte', 'p.profile_id = pvte.entity_id');
+    $query->innerJoin('profile__field_vocab_topic_interest', 'pvti', 'p.profile_id = pvti.entity_id');
+    $query->innerJoin('profile__field_location_address', 'pla', 'p.profile_id = pla.entity_id');
+
+    // Join users table to ensure only active users.
+    $query->innerJoin('users_field_data', 'u', 'p.uid = u.uid');
+
+    // Conditions.
+    if (!empty($uid)) {
+      $query->condition('u.uid', $uid);
+    }
+    $query->condition('u.status', 1);
+    $query->condition('p.type', 'member');
+
+    // Select distinct profile IDs.
+    $query->distinct();
+    $query->fields('p', ['profile_id']);
+
+    // Now, count how many rows we get = how many users completed.
+    $completedProfiles = $query->countQuery()->execute()->fetchField();
+
+    return (int) $completedProfiles;
+  }
+
+  /**
    * @param \Drupal\user\UserInterface $account
    *
    * @return bool
@@ -358,6 +396,7 @@ class UserHelper {
     // @see https://www.drupal.org/project/drupal/issues/2975750
     /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = $this->entityTypeManager->getStorage('profile')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', ProfileConst::MEMBER_PROFILE_TYPE_NAME)
       ->condition('status', 1)
       ->condition('field_vocab_topic_expertise', [$term->id()], 'IN');

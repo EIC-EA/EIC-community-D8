@@ -2,8 +2,7 @@ name: EIC Subscription Digest
 type: module
 description: Provides the subscription digest feature.
 package: European Innovation Council
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 dependencies:
   - message
   - eic_message_subscriptions

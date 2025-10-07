@@ -1,0 +1,14 @@
+uuid: fb04ca3e-1d10-4243-9775-e78c0baa6cd5
+langcode: en
+status: true
+dependencies:
+  config:
+    - eic_stakeholder.stakeholder_type.participant
+id: stakeholder_type_participant
+entity_type_id: stakeholder_type
+entity_id: participant
+action: access_denied
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

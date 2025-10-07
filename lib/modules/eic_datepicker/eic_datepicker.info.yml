@@ -1,0 +1,5 @@
+name: EIC Datepicker
+type: module
+description: Provides functionality for a custom datepicker both for admin and eic_community themes.
+package: European Innovation Council
+core_version_requirement: ^8 || ^9 || ^10

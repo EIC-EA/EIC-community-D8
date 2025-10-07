@@ -176,6 +176,17 @@ function oec_group_flex_views_data() {
 }
 
 /**
+ * Implements hook_group_content_info_alter().
+ */
+function oec_group_flex_group_content_info_alter(array &$definitions) {
+  // Overrides the standard group invitation plugin class provided by
+  // ginvite module.
+  if (isset($definitions['group_membership_request'])) {
+    $definitions['group_membership_request']['class'] = '\Drupal\oec_group_flex\Plugin\GroupContentEnabler\GroupMembershipRequest';
+  }
+}
+
+/**
  * Implements hook_group_flex_visibility_save().
  */
 function oec_group_flex_group_flex_visibility_save(

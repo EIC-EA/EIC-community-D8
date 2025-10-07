@@ -5,6 +5,8 @@
  * Prepares variables for node News and Story templates.
  */
 
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_media\MediaHelper;
@@ -71,6 +73,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 
   if ('mail_teaser' === $view_mode) {
     $item = _eic_community_prepare_node_teaser_array($node);
+    $item['description'] = $node->hasField('field_introduction') ? Markup::create(Xss::filter($node->get('field_introduction')->value)) : $item['description'];
     /** @var \Drupal\media\MediaInterface $media */
     $media = \Drupal::service('entity.repository')
       ->getTranslationFromContext(
@@ -112,6 +115,11 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     }
 
     $variables['stats'] = $stats;
+
+    // Privacy information, if current user is anonymous remove the author.
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $item['author'] = NULL;
+    }
   }
 
   $variables['story_item'] = $item;
@@ -130,6 +138,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 
     _eic_community_display_contributors($variables);
     _eic_community_display_topics($variables);
+    _eic_community_display_geo($variables);
     _eic_community_story_related_stories($variables);
   }
 }
@@ -336,8 +345,70 @@ function _eic_community_display_topics(&$variables) {
   }
 
   $variables['topics'] = [
-    'title' => $variables['elements']['field_vocab_topics']['#title'],
+    'title' => $variables['elements']['field_vocab_topics']['#title'] ?? t('Topics', [], ['context' => 'eic_community']),
     'items' => $topics,
+  ];
+}
+
+/**
+ * Preproccess Countries and Regions for full news/story.
+ */
+function _eic_community_display_geo(&$variables) {
+  $geo = [];
+
+  foreach ($variables['elements']['field_vocab_geo'] as $key => $value) {
+    if (is_int($key)) {
+      /** @var \Drupal\taxonomy\Entity\Term $term */
+      $term = $value['#options']['entity'];
+      $is_parent = $term->get('parent')->target_id == 0 ?? FALSE;
+
+      if ($is_parent) {
+        /** @var int $term_id */
+        $term_id = $term->id();
+        if (!isset($geo[$term_id])) {
+          $geo[$term_id] = [
+            'label' => $term->label(),
+            'path' => $term->toUrl()->toString(),
+            'countries' => []
+          ];
+        }
+      }
+      else {
+        /** @var int $parent_id */
+        $parent_id = $term->get('parent')->target_id;
+        if (isset($geo[$parent_id])) {
+          $geo[$parent_id]['countries'][] = [
+            'label' => $term->label(),
+            'path' => $term->toUrl()->toString(),
+          ];
+        }
+        else {
+          $geo[$parent_id] = [
+            'label' => $term->get('parent')->entity->label(),
+            'path' => $term->get('parent')->entity->toUrl()->toString(),
+            'countries' => [
+              0 => [
+                'label' => $term->label(),
+                'path' => $term->toUrl()->toString(),
+              ]
+            ]
+          ];
+        }
+      }
+    }
+  }
+
+  //Sort regions alphabetically
+  usort($geo, function($a, $b){ return strcmp($a['label'], $b['label']); });
+
+  //Sort countries alphabetically
+  foreach ($geo as &$region) {
+    usort($region['countries'], function($a, $b){ return strcmp($a['label'], $b['label']); });
+  }
+
+  $variables['geo'] = [
+    'title' => $variables['elements']['field_vocab_geo']['#title'] ?? t('Regions & Countries', [], ['context' => 'eic_community']),
+    'items' => array_values($geo),
   ];
 }
 

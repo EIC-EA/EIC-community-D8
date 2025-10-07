@@ -6,6 +6,11 @@ dependencies:
     - field.storage.node.field_vocab_topics
     - node.type.story
     - taxonomy.vocabulary.topics
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 _core:
   default_config_hash: 0MkDtDrSCp77f_9A8dOsl2FMJkpFQ-JOMy4jDSPlVG0
 id: node.story.field_vocab_topics
@@ -14,7 +19,7 @@ entity_type: node
 bundle: story
 label: Topics
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

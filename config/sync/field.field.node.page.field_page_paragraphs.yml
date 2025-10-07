@@ -6,6 +6,7 @@ dependencies:
     - field.storage.node.field_page_paragraphs
     - node.type.page
     - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.cards
     - paragraphs.paragraphs_type.full_media_content
     - paragraphs.paragraphs_type.full_text_content
     - paragraphs.paragraphs_type.quote
@@ -33,10 +34,20 @@ settings:
       full_text_content: full_text_content
       text_and_media_content: text_and_media_content
       tiles_content: tiles_content
+      cards: cards
     negate: 0
     target_bundles_drag_drop:
+      announcement:
+        weight: 16
+        enabled: false
       banner:
         weight: -13
+        enabled: true
+      card:
+        weight: 18
+        enabled: false
+      cards:
+        weight: 19
         enabled: true
       contributor:
         weight: -12
@@ -50,9 +61,18 @@ settings:
       full_text_content:
         weight: -9
         enabled: true
-      latest_news_and_stories:
-        weight: 15
-        enabled: true
+      gallery_slide:
+        weight: 24
+        enabled: false
+      organisation_location:
+        weight: 25
+        enabled: false
+      organisation_member:
+        weight: 26
+        enabled: false
+      organisation_member_external:
+        weight: 27
+        enabled: false
       quote:
         weight: -10
         enabled: true

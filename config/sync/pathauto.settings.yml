@@ -53,3 +53,4 @@ safe_tokens:
   - url-brief
   - node_group_url
   - node_book_parent_url
+  - stakeholder_group_url

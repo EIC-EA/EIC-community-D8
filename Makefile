@@ -111,9 +111,6 @@ endef
 define do_start
 	echo -e 'Starting ${APP_NAME}...'
 	docker-compose up -d
-
-	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cim -y'
-	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} started\e[0m'
 	$(call do_display_app_info)

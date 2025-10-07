@@ -4,5 +4,6 @@ status: true
 dependencies: {  }
 name: 'Organisation sizes'
 vid: organisation_sizes
-description: ''
+description: null
 weight: 0
+new_revision: false

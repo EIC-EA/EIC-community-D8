@@ -1,0 +1,19 @@
+uuid: 23c06f12-5409-4e8f-8eb5-be7adb525a80
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_project_keywords
+field_name: field_project_keywords
+entity_type: group
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

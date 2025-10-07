@@ -9,6 +9,7 @@ module:
   allowed_formats: 0
   anchor_link: 0
   antibot: 0
+  aws_sqs: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -17,6 +18,7 @@ module:
   book: 0
   book_link_weight: 0
   breakpoint: 0
+  captcha: 0
   cas: 0
   ckeditor: 0
   ckeditor_blockimagepaste: 0
@@ -62,6 +64,8 @@ module:
   eic_content_gallery: 0
   eic_content_story: 0
   eic_content_wiki_page: 0
+  eic_dashboards: 0
+  eic_datepicker: 0
   eic_deploy: 0
   eic_events: 0
   eic_flags: 0
@@ -80,6 +84,7 @@ module:
   eic_messages: 0
   eic_migrate: 0
   eic_moderation: 0
+  eic_non_required_on_draft: 0
   eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0
@@ -89,10 +94,13 @@ module:
   eic_paragraphs: 0
   eic_private_content: 0
   eic_private_message: 0
+  eic_projects: 0
+  eic_queue: 0
   eic_recommend_content: 0
   eic_search: 0
   eic_seo: 0
   eic_share_content: 0
+  eic_stakeholder: 0
   eic_statistics: 0
   eic_subscription_digest: 0
   eic_taxonomy: 0
@@ -132,9 +140,11 @@ module:
   hal: 0
   image: 0
   inline_entity_form: 0
+  js_cookie: 0
   language: 0
   link: 0
   locale: 0
+  log_stdout: 0
   mailsystem: 0
   masquerade: 0
   matomo: 0
@@ -178,7 +188,9 @@ module:
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
+  phpass: 0
   profile: 0
+  rabbit_hole: 0
   raven: 0
   realname: 0
   redirect: 0
@@ -186,6 +198,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  rh_taxonomy: 0
   role_delegation: 0
   route_condition: 0
   scheduler: 0
@@ -220,6 +233,7 @@ module:
   views_bulk_operations: 0
   views_data_export: 0
   views_data_export_phpspreadsheet: 0
+  views_fields_on_off: 0
   views_ui: 0
   workflow_buttons: 0
   workflows: 0
@@ -230,8 +244,7 @@ module:
   publication_date: 99
   minimal: 1000
 theme:
-  stable: 0
-  classy: 0
-  seven: 0
   eic_community: 0
+  stable9: 0
+  claro: 0
 profile: minimal

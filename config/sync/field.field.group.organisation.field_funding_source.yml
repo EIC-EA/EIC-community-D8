@@ -1,0 +1,29 @@
+uuid: fafe0c8b-6ee0-4960-8fe2-d1adf3eb203a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_funding_source
+    - group.type.organisation
+    - taxonomy.vocabulary.funding_source
+id: group.organisation.field_funding_source
+field_name: field_funding_source
+entity_type: group
+bundle: organisation
+label: 'Funding source'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      funding_source: funding_source
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

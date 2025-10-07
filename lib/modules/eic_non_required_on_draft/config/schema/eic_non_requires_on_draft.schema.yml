@@ -1,0 +1,6 @@
+field.field.*.*.*.third_party.eic_non_required_on_draft:
+  type: mapping
+  label: 'non_required_on_draft settings'
+  mapping:
+    non_required_on_draft:
+      type: boolean

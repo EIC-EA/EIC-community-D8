@@ -102,27 +102,6 @@ class GroupMessageCreator implements ContainerInjectionInterface {
       'field_group_ref' => ['target_id' => $entity->id()],
     ]);
 
-    // We get visibility from request since new group doesnt have yet a visibility record.
-    $is_group_sensitive =
-      \Drupal::request()->request->get('group_visibility') ===
-      GroupVisibilityType::GROUP_VISIBILITY_SENSITIVE;
-    $uids = $this->userHelper->getSitePowerUsers();
-
-    $uids = array_filter($uids, function ($uid) use ($is_group_sensitive) {
-      $user = User::load($uid);
-
-      return !$is_group_sensitive || $user->hasRole('sensitive');
-    });
-
-    // Prepare messages to SA/CA.
-    foreach ($uids as $uid) {
-      $this->messageBus->dispatch([
-        'template' => 'notify_group_request_submitted',
-        'uid' => $uid,
-        'field_group_ref' => ['target_id' => $entity->id()],
-        'field_event_executing_user' => ['target_id' => $author_id],
-      ]);
-    }
   }
 
   /**

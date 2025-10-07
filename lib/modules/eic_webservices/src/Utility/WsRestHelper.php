@@ -125,7 +125,7 @@ class WsRestHelper {
       ];
       $is_valid_protocol = FALSE;
       foreach ($protocols as $protocol) {
-        if (strpos($value, $protocol) === 0) {
+        if (strpos($value['uri'], $protocol) === 0) {
           $is_valid_protocol = TRUE;
           break;
         }

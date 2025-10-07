@@ -157,6 +157,7 @@ class UserGenerator extends CoreGenerator {
 
     $user_ids = $query
       ->condition('uid', 1, '>')
+      ->accessCheck(FALSE)
       ->execute();
 
     if (empty($user_ids)) {

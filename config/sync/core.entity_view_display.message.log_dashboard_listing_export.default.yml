@@ -1,0 +1,36 @@
+uuid: 434ba2c3-8a4e-4dce-b209-c0b6b59e6e85
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_dashboard_listing_export.field_event_executing_user
+    - field.field.message.log_dashboard_listing_export.field_view_id
+    - message.template.log_dashboard_listing_export
+id: message.log_dashboard_listing_export.default
+targetEntityType: message
+bundle: log_dashboard_listing_export
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_view_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -48,6 +48,16 @@ class GlobalOverviewPages {
   const ORGANISATIONS = 6;
 
   /**
+   * ID of the Projects overview page.
+   */
+  const PROJECTS = 7;
+
+  /**
+   * ID of the Calls overview page.
+   */
+  const CALLS = 8;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -79,6 +89,7 @@ class GlobalOverviewPages {
    */
   public static function getGlobalOverviewPageLink(int $page, array $params = []): Link {
     $overview_entities = \Drupal::entityQuery('overview_page')
+      ->accessCheck(FALSE)
       ->condition('field_overview_id', $page)
       ->execute();
 
@@ -123,6 +134,10 @@ class GlobalOverviewPages {
         $overview_id = GlobalOverviewPages::ORGANISATIONS;
         break;
 
+      case 'project':
+        $overview_id = GlobalOverviewPages::PROJECTS;
+        break;
+
       default:
         $overview_id = GlobalOverviewPages::GROUPS;
         break;
@@ -152,21 +167,46 @@ class GlobalOverviewPages {
     switch ($page) {
       case GlobalOverviewPages::GROUPS:
         $entity_id = 'group';
-        $bundles = ['group'];
+        $bundles = [
+          [
+            'bundle' => 'group',
+          ],
+        ];
         $add_route = "entity.$entity_id.add_form";
         break;
 
       case GlobalOverviewPages::EVENTS:
         $entity_id = 'group';
-        $bundles = ['event'];
+        $bundles = [
+          [
+            'bundle' => 'event',
+          ],
+        ];
         $add_route = "entity.$entity_id.add_form";
         break;
 
       case GlobalOverviewPages::NEWS_STORIES:
         $entity_id = 'node';
-        $bundles = ['story', 'news'];
-        $add_route = function (string $entity_id, string $bundle) {
-          return Url::fromRoute('node.add', ['node_type' => $bundle]);
+        $bundles = [
+          [
+            'bundle' => 'story',
+            'label' => $this->t('Add news'),
+          ],
+        ];
+        $add_route = function (string $entity_id, array $bundle) {
+          return Url::fromRoute('node.add', ['node_type' => $bundle['bundle']]);
+        };
+        break;
+      case GlobalOverviewPages::CALLS:
+        $entity_id = 'node';
+        $bundles = [
+          [
+            'bundle' => 'story',
+            'label' => $this->t('Add call'),
+          ],
+        ];
+        $add_route = function (string $entity_id, array $bundle) {
+          return Url::fromRoute('node.add', ['node_type' => $bundle['bundle']]);
         };
         break;
 
@@ -178,13 +218,13 @@ class GlobalOverviewPages {
 
     $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_id);
     foreach ($bundles as $bundle) {
-      if ($access_handler->createAccess($bundle)) {
+      if ($access_handler->createAccess($bundle['bundle'])) {
         $url = is_callable($add_route)
           ? call_user_func($add_route, $entity_id, $bundle)
-          : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle]);
+          : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle['bundle']]);
 
         $operations[] = [
-          'label' => $this->t("Add $bundle"),
+          'label' => $bundle['label'] ?? $this->t("Add {$bundle['bundle']}"),
           'path' => $url->toString(),
         ];
       }

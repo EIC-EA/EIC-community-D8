@@ -6,5 +6,6 @@ dependencies:
     - group
 id: group.mail_teaser
 label: 'Mail teaser'
+description: ''
 targetEntityType: group
 cache: true

@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a dashboard jump menu.
+ *
+ * Available variables:
+ * - wrapper_attributes: HTML attributes to be applied to the wrapper element.
+ * - items: A list of items. Each item contains:
+ *   - attributes: HTML attributes to be applied to each option item.
+ *   - value: The value of the option element.
+ *   - label: The content of the option element.
+ * - title: The title of the select element.
+ * - attributes: HTML attributes to be applied to the select element.
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('eic_dashboards/jump-menu') }}
+
+<div{{ wrapper_attributes }}>
+{% if items or empty %}
+  {%- if title is not empty -%}
+    <h4{{ title_attributes }}>{{ title }}</h4>
+  {%- endif -%}
+
+  <div class="ecl-form-group ecl-u-mt-none">
+    <div class="ecl-select__container ecl-select__container--m">
+      {%- if items -%}
+        <select{{ attributes }}>
+          <option value="" disabled selected>{{ placeholder }}</option>
+          {%- for item in items -%}
+            <option value="{{ item.value }}" {{ item.attributes }}>{{ item.label }}</option>
+          {%- endfor -%}
+        </select>
+      {%- endif %}
+      <div class="ecl-select__icon">
+        <svg class="ecl-icon ecl-icon--s ecl-icon--rotate-180 ecl-select__icon-shape" focusable="false" aria-hidden="true">
+          <use xlink:href="{{ base_url }}/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg#custom--arrow-down"></use>
+        </svg>
+      </div>
+    </div>
+  </div>
+{%- endif %}
+</div>

@@ -1,0 +1,19 @@
+uuid: c9c0101a-c9cf-4e51-ae26-6878d9d95c4f
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - link
+id: group.field_project_sub_call
+field_name: field_project_sub_call
+entity_type: group
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

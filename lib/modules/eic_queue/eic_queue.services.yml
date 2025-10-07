@@ -1,0 +1,4 @@
+services:
+  logger.channel.queue_log:
+    parent: logger.channel_base
+    arguments: [ 'queue_log' ]

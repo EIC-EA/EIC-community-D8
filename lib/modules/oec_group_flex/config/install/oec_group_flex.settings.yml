@@ -20,3 +20,4 @@ oec_group_visibility_setings:
 oec_group_flex_admin_roles:
   - content_administrator
   - site_admin
+enable_restricted_community_members_plugin: false

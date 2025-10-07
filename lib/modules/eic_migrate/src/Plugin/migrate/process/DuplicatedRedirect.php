@@ -74,6 +74,7 @@ class DuplicatedRedirect extends ProcessPluginBase implements ContainerFactoryPl
     }
 
     $ids = $this->entityTypeManager->getStorage('redirect')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('redirect_source.path', $value)
       ->execute();
 

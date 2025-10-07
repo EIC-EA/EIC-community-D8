@@ -52,6 +52,7 @@ dependencies:
     - eic_overviews
     - eic_private_content
     - eic_private_message
+    - eic_stakeholder
     - eic_topics
     - entity_browser
     - file
@@ -99,8 +100,6 @@ permissions:
   - 'administer nodes'
   - 'administer users'
   - 'bypass groups transition restrictions'
-  - 'close archive request'
-  - 'close delete request'
   - 'create book content'
   - 'create eic_document media'
   - 'create event group'
@@ -141,6 +140,7 @@ permissions:
   - 'delete gallery revisions'
   - 'delete news revisions'
   - 'delete own book content'
+  - 'delete own files'
   - 'delete own news content'
   - 'delete own page content'
   - 'delete own story content'
@@ -208,12 +208,10 @@ permissions:
   - 'make delete request'
   - 'manage archival deletion requests'
   - 'manage blocked entities'
-  - 'manage contact form emails'
   - 'mark private content'
   - 'masquerade as trusted_user'
   - 'overview messages'
   - 'post comments'
-  - 'publish archived content'
   - 'revert all revisions'
   - 'revert book revisions'
   - 'revert discussion revisions'
@@ -249,7 +247,6 @@ permissions:
   - 'use groups transition archive'
   - 'use groups transition block'
   - 'use groups transition create_new_group'
-  - 'use groups transition force_pending_to_published'
   - 'use groups transition keep_blocked'
   - 'use groups transition keep_in_draft'
   - 'use groups transition publish'
@@ -280,6 +277,7 @@ permissions:
   - 'view own unpublished media'
   - 'view page revisions'
   - 'view private content'
+  - 'view stakeholder'
   - 'view story revisions'
   - 'view the administration theme'
   - 'view user email addresses'

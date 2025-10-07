@@ -1,0 +1,11 @@
+uuid: 4f95f33c-020b-4fb8-b293-baf42023317b
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.fields_of_science
+id: taxonomy_term.fields_of_science
+target_entity_type_id: taxonomy_term
+target_bundle: fields_of_science
+default_langcode: site_default
+language_alterable: false

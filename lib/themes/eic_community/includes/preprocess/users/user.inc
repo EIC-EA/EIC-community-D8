@@ -7,6 +7,7 @@
 
 use CommerceGuys\Addressing\Country\CountryRepository;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_flags\FlagType;
@@ -20,6 +21,7 @@ use Drupal\user\UserInterface;
 use Drupal\eic_search\Search\Sources\UserProfile\MyGroupsSourceType;
 use Drupal\eic_search\Search\Sources\UserProfile\MyEventsSourceType;
 use Drupal\eic_search\Search\Sources\UserProfile\MyOrganisationsSourceType;
+use Drupal\eic_search\Search\Sources\UserProfile\MyProjectsSourceType;
 
 /**
  * Implements hook_preprocess_user().
@@ -54,6 +56,10 @@ function eic_community_preprocess_user(array &$variables) {
         [_eic_community_get_user_contact_link($user)],
         _eic_community_get_user_social_links($user)
       );
+      if (!empty($variables['elements']['#is_card'])) {
+        $teaser['extra_classes'] = 'ecl-teaser--project-member ecl-teaser--as-card ecl-teaser--as-card-grey';
+      }
+
       $variables['user_item'] = $teaser;
       break;
 
@@ -199,10 +205,17 @@ function eic_community_preprocess_user(array &$variables) {
         'content' => _get_render_block_search_overview(MyEventsSourceType::class),
       ];
 
-      $user_item['flagged_projects'] = [
+      $user_item['flagged_organisations'] = [
         'title' => $current_user->id() === $user->id() ? t('My organisations') : t('Organisations'),
         'content' => _get_render_block_search_overview(MyOrganisationsSourceType::class),
       ];
+
+      if (Settings::get('cordis_project_status', FALSE)) {
+        $user_item['flagged_projects'] = [
+          'title' => $current_user->id() === $user->id() ? t('My projects') : t('Projects'),
+          'content' => _get_render_block_search_overview(MyProjectsSourceType::class),
+        ];
+      }
 
       $variables['user_item'] = $user_item;
       break;
@@ -287,8 +300,11 @@ function _get_profile_image_array(EntityInterface $user, $relative_url = TRUE): 
  * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
 function eic_community_get_teaser_user_display(UserInterface $user, $picture_image_style = 'crop_36x36') {
+  $current_user = \Drupal::currentUser();
+
+  // Privacy information. If current user is anonymous set user to 'Someone'.
   $author = [
-    'name' => $user->getDisplayName(),
+    'name' => $current_user->isAnonymous() ? t('Someone') : $user->getDisplayName(),
   ];
 
   // We add the user profile page URL if the current user has access to it.
@@ -296,7 +312,6 @@ function eic_community_get_teaser_user_display(UserInterface $user, $picture_ima
     $author['path'] = $user->toUrl()->toString();
   }
 
-  $current_user = \Drupal::currentUser();
   if (!$user->get('field_media')->isEmpty() && !$current_user->isAnonymous()) {
     $media_entity = $user->get('field_media')->entity;
     if ($media_entity) {

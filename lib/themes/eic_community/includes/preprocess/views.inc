@@ -176,6 +176,11 @@ function eic_community_preprocess_views_view(&$variables) {
         ];
       }
       break;
+    case 'organisation_projects-projects_content':
+      $variables['title'] = t('Projects', [], ['context' => 'eic_community']);
+      $variables['extra_id'] = 'projects';
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      break;
 
     case 'taxonomy_related_content-files':
     case 'taxonomy_related_content-news_stories':
@@ -326,6 +331,11 @@ function _eic_community_preprocess_views__latest_news_and_stories__homepage(&$va
       'author' => $node_author,
       'stats' => $stats,
     ];
+
+    // Privacy information, if current user is anonymous remove the author.
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $item['author'] = NULL;
+    }
 
     if (!$node_translation->get('field_image')->isEmpty()) {
       /** @var \Drupal\media\Entity\Media $media */

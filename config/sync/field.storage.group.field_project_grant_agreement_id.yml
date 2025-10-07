@@ -1,0 +1,20 @@
+uuid: ca3dfd7a-7fb5-49a9-a8f5-5bf66647a2f8
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_project_grant_agreement_id
+field_name: field_project_grant_agreement_id
+entity_type: group
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

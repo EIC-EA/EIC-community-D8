@@ -1,0 +1,28 @@
+uuid: 3bdde79d-6997-476e-88db-2dca114e5c0c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_ecmax_contributio
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_ecmax_contributio
+field_name: field_project_ecmax_contributio
+entity_type: group
+bundle: project
+label: 'EU contribution'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

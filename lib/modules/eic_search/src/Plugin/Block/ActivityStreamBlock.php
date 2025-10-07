@@ -274,6 +274,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   protected function getMembersData(GroupInterface $group = NULL, $limit = 5) {
     $query = \Drupal::entityQuery('group_content')
+      ->accessCheck(FALSE)
       ->condition('type', "{$group->bundle()}-group_membership")
       ->sort('created', 'DESC')
       ->range(0, $limit);

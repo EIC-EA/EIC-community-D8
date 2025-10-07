@@ -11,6 +11,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_content\Constants\StoryTypes;
 
 /**
  * Implements hook_preprocess_page().
@@ -150,19 +151,43 @@ function _preprocess_node_page(&$variables) {
 
         $publish_date_format = 'd F Y';
         $is_private = $node->private->value === '1';
+
         $tag = [
           'type' => 'display',
           'label' => $is_private ? t('Private') : t('Public'),
         ];
+
+        // Define allowed story type term IDs for "Call".
+        $allowed_story_call_type_ids = [
+          StoryTypes::OPEN_CALLS_TAXONOMY_TERM_ID,
+          StoryTypes::PARTNER_CALLS_TAXONOMY_TERM_ID,
+        ];
+        $is_call = FALSE;
+        $story_type_label = NULL;
+
+        if ($node->hasField('field_vocab_story_type') && !$node->get('field_vocab_story_type')->isEmpty()) {
+          $story_type_term = $node->get('field_vocab_story_type')->entity;
+          if ($story_type_term instanceof \Drupal\taxonomy\TermInterface) {
+            $is_call = in_array($story_type_term->id(), $allowed_story_call_type_ids);
+            $story_type_label = $story_type_term->label();
+          }
+        }
+
         $variables['editorial_header'] = [
-          'tags' => [
+          'tags' => array_filter([
             [
               'extra_classes' => 'ecl-tag--is-' . ($is_private ? 'private' : 'public'),
               'tag' => $tag,
             ],
-          ],
+            $is_call ? [
+              'tag' => [
+                'type' => 'display',
+                'label' => $story_type_label,
+              ],
+            ] : NULL,
+          ]),
           'meta' => [
-            ['label' => $node->type->entity->label()],
+            ['label' => $is_call ? t('Call') : $node->type->entity->label()],
             [
               'label' => $node->get('published_at')->isEmpty() ?
                 \Drupal::service('date.formatter')
@@ -172,6 +197,7 @@ function _preprocess_node_page(&$variables) {
             ],
           ],
           'title' => $node->label(),
+          'moderation_state' => str_replace("_", "-",$node->get('moderation_state')->value),
         ];
 
         $words_per_minute = \Drupal::config('node_read_time.settings')
@@ -182,6 +208,9 @@ function _preprocess_node_page(&$variables) {
           ->collectWords($node)
           ->calculateReadingTime()
           ->getReadingTime();
+
+        $stats = _eic_community_get_entity_stats($node, ['views']);
+        $node_total_views = $stats['views']['value'];
 
         $variables['hero'] = [
           'image' => [
@@ -197,6 +226,13 @@ function _preprocess_node_page(&$variables) {
                 '#icon_file_path' => $variables['eic_icon_path'],
               ],
             ],
+            [
+              'content' => [
+                '#theme' => 'eic_community_node_total_views',
+                '#label' => $node_total_views,
+                '#icon_file_path' => $variables['eic_icon_path'],
+              ]
+            ]
           ],
         ];
 
@@ -224,6 +260,7 @@ function _preprocess_front_page(&$variables) {
     if (isset($section['#id'])) {
       switch ($section['#id']) {
         case 'homepage_stay_up_to_date':
+        case 'homepage_video':
           $front['middle_left'][] = $section;
           break;
 

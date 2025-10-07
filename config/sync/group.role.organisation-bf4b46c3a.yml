@@ -38,7 +38,6 @@ permissions:
   - 'edit own comments'
   - 'highlight group content'
   - 'invite users to group'
-  - 'join group'
   - 'post comments'
   - 'use default transition archive'
   - 'use default transition create_new_draft'

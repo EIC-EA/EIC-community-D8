@@ -13,6 +13,13 @@ class EICMenuTrailByPathActiveTrail extends MenuTrailByPathActiveTrail {
   /**
    * {@inheritdoc}
    */
+  public function getTrailUrls() {
+    return parent::getTrailUrls();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function doGetActiveTrailIds($menu_name) {
     // Parent ids; used both as key and value to ensure uniqueness.
     // We always want all the top-level links with parent == ''.

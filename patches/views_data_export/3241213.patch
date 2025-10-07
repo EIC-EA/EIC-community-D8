@@ -1,0 +1,129 @@
+From 33151fc8f0db6f3e23a33e6520d83662038d114c Mon Sep 17 00:00:00 2001
+From: George Kaffezas <georgek@pointblank.gr>
+Date: Tue, 13 May 2025 17:29:34 +0300
+Subject: [PATCH 1/2] Issue #3241213: Enhance previous S3 bucket support patch
+ with file database URI update.
+
+---
+ src/Plugin/views/display/DataExport.php | 64 ++++++++++++++++++-------
+ 1 file changed, 48 insertions(+), 16 deletions(-)
+
+diff --git a/src/Plugin/views/display/DataExport.php b/src/Plugin/views/display/DataExport.php
+index 17e0629..0b72438 100644
+--- a/src/Plugin/views/display/DataExport.php
++++ b/src/Plugin/views/display/DataExport.php
+@@ -10,6 +10,7 @@ use Drupal\Core\File\FileSystemInterface;
+ use Drupal\Core\Form\FormStateInterface;
+ use Drupal\Core\Render\BubbleableMetadata;
+ use Drupal\Core\Url;
++use Drupal\file\Entity\File;
+ use Drupal\rest\Plugin\views\display\RestExport;
+ use Drupal\search_api\Plugin\views\query\SearchApiQuery;
+ use Drupal\views\ViewExecutable;
+@@ -725,22 +726,7 @@ class DataExport extends RestExport {
+ 
+       $user_dir = $user_ID ? "$user_ID-$timestamp" : $timestamp;
+       $view_dir = $view_id . '_' . $display_id;
+-
+-      // Determine if the export file should be stored in the public or private
+-      // file system.
+-      $store_in_public_file_directory = TRUE;
+-      $streamWrapperManager = \Drupal::service('stream_wrapper_manager');
+-      // Check if the private file system is ready to use.
+-      if ($streamWrapperManager->isValidScheme('private')) {
+-        $store_in_public_file_directory = $view->getDisplay()->getOption('store_in_public_file_directory');
+-      }
+-
+-      if ($store_in_public_file_directory === TRUE) {
+-        $directory = "public://views_data_export/$view_dir/$user_dir/";
+-      }
+-      else {
+-        $directory = "private://views_data_export/$view_dir/$user_dir/";
+-      }
++      $directory = "temporary://views_data_export/$view_dir/$user_dir/";
+ 
+       try {
+         $fileSystem = \Drupal::service('file_system');
+@@ -883,6 +869,52 @@ class DataExport extends RestExport {
+       $context['finished'] = $context['sandbox']['progress'] / $total_rows;
+     }
+     else {
++      $temp_file_uri = $context['results']['vde_file'];
++      // Determine if the export file should be stored in the public or private
++      // file system.
++      $store_in_public_file_directory = TRUE;
++      $streamWrapperManager = \Drupal::service('stream_wrapper_manager');
++      // Check if the private file system is ready to use.
++      if ($streamWrapperManager->isValidScheme('private')) {
++        $store_in_public_file_directory = $view->getDisplay()->getOption('store_in_public_file_directory');
++      }
++      if ($store_in_public_file_directory === TRUE) {
++        $destination_file_uri = str_replace('temporary://', 'public://', $temp_file_uri);
++      }
++      else {
++        $destination_file_uri = str_replace('temporary://', 'private://', $temp_file_uri);
++      }
++      $dirname = \Drupal::service('file_system')->dirname($destination_file_uri);
++      \Drupal::service('file_system')->prepareDirectory($dirname, FileSystemInterface::CREATE_DIRECTORY);
++      \Drupal::service('file_system')->copy($temp_file_uri, $destination_file_uri, FileSystemInterface::CREATE_DIRECTORY);
++
++      // Find the file entity with the temporary URI.
++      $database = \Drupal::database();
++      $query = $database->select('file_managed', 'f')
++        ->fields('f', ['fid'])
++        ->condition('uri', $temp_file_uri, '=')
++        ->execute();
++      $fid = $query->fetchField();
++
++      // If file is found, update its URI to the private destination.
++      if ($fid) {
++        $file = File::load($fid);
++        if ($file) {
++          $file->setFileUri($destination_file_uri);
++          $file->save();
++          \Drupal::logger('views_data_export')->info('Updated file URI from @old to @new', [
++            '@old' => $temp_file_uri,
++            '@new' => $destination_file_uri,
++          ]);
++        }
++      } else {
++        \Drupal::logger('views_data_export')->warning('Could not find file with URI @uri to update', [
++          '@uri' => $temp_file_uri,
++        ]);
++      }
++
++      \Drupal::service('file_system')->delete($temp_file_uri);
++      $context['results']['vde_file'] = $destination_file_uri;
+       // We're finished processing, set progress bar to 100%.
+       $context['finished'] = 1;
+     }
+-- 
+GitLab
+
+
+From 83525572d663b58f4422b9676b4edae1b2909131 Mon Sep 17 00:00:00 2001
+From: George Kaffezas <georgek@pointblank.gr>
+Date: Tue, 13 May 2025 18:10:55 +0300
+Subject: [PATCH 2/2] Issue #3241213: Fix warning from phpcs.
+
+---
+ src/Plugin/views/display/DataExport.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Plugin/views/display/DataExport.php b/src/Plugin/views/display/DataExport.php
+index 0b72438..1e13b4a 100644
+--- a/src/Plugin/views/display/DataExport.php
++++ b/src/Plugin/views/display/DataExport.php
+@@ -907,7 +907,8 @@ class DataExport extends RestExport {
+             '@new' => $destination_file_uri,
+           ]);
+         }
+-      } else {
++      }
++      else {
+         \Drupal::logger('views_data_export')->warning('Could not find file with URI @uri to update', [
+           '@uri' => $temp_file_uri,
+         ]);
+-- 
+GitLab
+

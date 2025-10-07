@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_webservices\Hooks;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
@@ -22,19 +23,25 @@ class FormOperations implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The list of fields to disable if event has been created through SMED.
+   * The list of fields per bundle to disable if entity has been created through SMED.
    *
    * @var string[]
    */
-  protected const EVENT_SMED_FIELDS = [
-    'label',
-    'field_body',
-    'field_tag_line',
-    'field_location',
-    'field_link',
-    'field_social_links',
-    'field_vocab_event_type',
-    'field_date_range',
+  protected array $smedFields = [
+    'event' => [
+      'label',
+      'field_body',
+      'field_tag_line',
+      'field_location',
+      'field_link',
+      'field_social_links',
+      'field_vocab_event_type',
+      'field_date_range',
+    ],
+    'organisation' => [
+      'label',
+      'field_social_links',
+    ],
   ];
 
   /**
@@ -58,10 +65,15 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current user.
    * @param \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper
    *   The EIC Webservices helper class.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
-  public function __construct(AccountProxyInterface $current_user, EicWsHelper $eic_ws_helper) {
+  public function __construct(AccountProxyInterface $current_user, EicWsHelper $eic_ws_helper, ConfigFactoryInterface $config_factory) {
     $this->currentUser = $current_user;
     $this->wsHelper = $eic_ws_helper;
+    foreach ($this->smedFields as $bundle => &$fields) {
+      $fields[] = $config_factory->get('eic_webservices.settings')->get('smed_id_field');
+    }
   }
 
   /**
@@ -70,7 +82,8 @@ class FormOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('current_user'),
-      $container->get('eic_webservices.ws_helper')
+      $container->get('eic_webservices.ws_helper'),
+      $container->get('config.factory')
     );
   }
 
@@ -115,14 +128,16 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public function disableSmedFedFields(array &$form, FormStateInterface $form_state, string $form_id) {
     // Get the entity.
-    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    /** @var \Drupal\group\Entity\GroupInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
 
     $is_disabled = FALSE;
-    foreach ($this::EVENT_SMED_FIELDS as $field_name) {
-      if (isset($form[$field_name])) {
-        $form[$field_name]['#disabled'] = TRUE;
-        $is_disabled = TRUE;
+    if (isset($this->smedFields[$entity->bundle()])) {
+      foreach ($this->smedFields[$entity->bundle()] as $field_name) {
+        if (isset($form[$field_name])) {
+          $form[$field_name]['#disabled'] = TRUE;
+          $is_disabled = TRUE;
+        }
       }
     }
 

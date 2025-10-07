@@ -212,3 +212,25 @@ $databases['migrate']['default'] = [
 if (PHP_SAPI === 'cli') {
   ini_set('memory_limit', '4G');
 }
+
+if (getenv('ORG_QUEUE_NAME') != '')
+{
+  // The name of the SQS queue that contains organisation related events
+  $config['eic_queue.settings']['org_queue_name'] = getenv('ORG_QUEUE_NAME');
+
+  // Attach the organisation queue to AWS SQS service
+  // These settings will be used by Drupal\Core\Queue\QueueFactory::get()
+  $settings['queue_reliable_service_'.getenv('ORG_QUEUE_NAME')] = 'aws_sqs.queue_factory';
+  $settings['queue_service_'.getenv('ORG_QUEUE_NAME')] = 'aws_sqs.queue_factory';
+}
+
+// Some settings for AWS SQS module
+$config['aws_sqs.settings']['aws_sqs_region'] = getenv('AWS_REGION');
+$config['aws_sqs.settings']['aws_sqs_waittimeseconds'] = 1; // long polling
+
+// The API key used for the CORDIS data extraction service
+$config['eic_projects.settings']['api_key'] = getenv('CORDIS_API_KEY');
+
+// Enable config-split for DEV only
+if (getenv("SENTRY_ENVIRONMENT") == "dev")
+  $config['config_split.config_split.development']['status'] = TRUE;

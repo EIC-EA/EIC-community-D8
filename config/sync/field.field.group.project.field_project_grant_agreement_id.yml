@@ -1,0 +1,28 @@
+uuid: 44f16805-58e1-4972-910e-a8da43239d63
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_project_grant_agreement_id
+    - group.type.project
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: group.project.field_project_grant_agreement_id
+field_name: field_project_grant_agreement_id
+entity_type: group
+bundle: project
+label: ID
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

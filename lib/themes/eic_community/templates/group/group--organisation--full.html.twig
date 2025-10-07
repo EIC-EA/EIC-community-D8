@@ -74,6 +74,10 @@
 			{% if block_enabled.events %}
 				{{ events }}
 			{% endif %}
+
+      {% if projects is not empty %}
+        {{ projects }}
+      {% endif %}
 		{% endblock %}
 
 		{% block sidebar %}

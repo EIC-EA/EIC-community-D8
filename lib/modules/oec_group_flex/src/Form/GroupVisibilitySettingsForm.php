@@ -76,6 +76,12 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
       }
     }
 
+    $form['enable_restricted_community_members_plugin'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable visibility setting "Community members only" for groups'),
+      '#default_value' => $config->get('enable_restricted_community_members_plugin')
+    ];
+
     $defaultRoles = $config->get('oec_group_visibility_setings.restricted_community_members.internal_roles');
     $form['restricted_community_members_roles'] = [
       '#type' => 'select',
@@ -84,6 +90,11 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
       '#options' => $userRoleOptions,
       '#default_value' => $defaultRoles ?: [],
       '#multiple' => TRUE,
+      '#states' => [
+        'invisible' => [
+          ':input[name="enable_restricted_community_members_plugin"]' => ['checked' => FALSE]
+        ]
+      ]
     ];
 
     $defaultRoles = $config->get('oec_group_visibility_setings.custom_restricted.internal_roles');
@@ -127,6 +138,7 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
       ->set('oec_group_visibility_setings.restricted_community_members.internal_roles', $form_state->getValue('restricted_community_members_roles'))
       ->set('oec_group_visibility_setings.sensitive.internal_roles', $form_state->getValue('sensitive_roles'))
       ->set('oec_group_visibility_setings.custom_restricted.internal_roles', $form_state->getValue('custom_restricted_roles'))
+      ->set('enable_restricted_community_members_plugin', $form_state->getValue('enable_restricted_community_members_plugin'))
       ->set('oec_group_flex_admin_roles', $form_state->getValue('admin_roles'))
       ->save();
 

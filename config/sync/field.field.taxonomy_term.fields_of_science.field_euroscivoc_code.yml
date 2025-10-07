@@ -1,0 +1,23 @@
+uuid: 0b79ea90-465c-4051-9799-d73776ccd3d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_euroscivoc_code
+    - taxonomy.vocabulary.fields_of_science
+id: taxonomy_term.fields_of_science.field_euroscivoc_code
+field_name: field_euroscivoc_code
+entity_type: taxonomy_term
+bundle: fields_of_science
+label: 'EuroSciVoc code'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

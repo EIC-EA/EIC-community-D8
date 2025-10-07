@@ -1,0 +1,18 @@
+{{ attach_library('eic_dashboards/dashboard-section') }}
+
+<div class="dashboard-section ecl-container ecl-u-pt-xl {% if has_border %}dashboard-section--has-border{% endif %}">
+  <div class="dashboard-section__header ecl-u-d-flex ecl-u-mb-xl">
+    {% if icon %}
+      <img class="ecl-u-mr-s" src="{{ path ~ 'icon-' ~ icon }}.svg" alt="{{ icon }}">
+    {% endif %}
+    <div class="ecl-u-type-heading-2 ecl-u-mr-m">{{ title }}</div>
+    {% if link %}
+      <div class="dashboard-section__link">
+        <a href="{{ link.url }}" class="ecl-button ecl-button--primary ecl-button--small">{{ link.text }}</a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="dashboard-section__content">
+    {{ content }}
+  </div>
+</div>

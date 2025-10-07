@@ -27,7 +27,7 @@
 use Symfony\Component\HttpFoundation\Request;
 
 assert_options(ASSERT_ACTIVE, TRUE);
-\Drupal\Component\Assertion\Handle::register();
+assert_options(ASSERT_EXCEPTION, TRUE);
 
 /**
  * Enable local development services.
@@ -268,3 +268,25 @@ $settings['cron_interval_group_invite_time'] = 86400;
 $settings['cron_interval_late_reindex_entities'] = 3600;
 
 $settings['cron_interval_late_reindex_entities'] = getenv('CRON_INTERVAL_LATE_REINDEX_ENTITIES_QUEUE');
+
+if (getenv('ORG_QUEUE_NAME') != '')
+{
+  // The name of the SQS queue that contains organisation related events
+  $config['eic_queue.settings']['org_queue_name'] = getenv('ORG_QUEUE_NAME');
+
+  // Attach the organisation queue to AWS SQS service
+  // These settings will be used by Drupal\Core\Queue\QueueFactory::get()
+  $settings['queue_reliable_service_'.getenv('ORG_QUEUE_NAME')] = 'aws_sqs.queue_factory';
+  $settings['queue_service_'.getenv('ORG_QUEUE_NAME')] = 'aws_sqs.queue_factory';
+}
+
+// Some settings for AWS SQS module
+$config['aws_sqs.settings']['aws_sqs_region'] = getenv('AWS_REGION');
+$config['aws_sqs.settings']['aws_sqs_waittimeseconds'] = 1; // long polling
+
+// The API key used for the CORDIS data extraction service
+$config['eic_projects.settings']['api_key'] = getenv('CORDIS_API_KEY');
+
+// Enable config-split for DEV only
+if (getenv("SENTRY_ENVIRONMENT") == "dev")
+  $config['config_split.config_split.development']['status'] = TRUE;

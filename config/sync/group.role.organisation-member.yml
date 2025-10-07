@@ -13,6 +13,7 @@ group_type: organisation
 permissions_ui: true
 permissions:
   - 'access group search overview'
+  - 'edit organisation description'
   - 'edit own comments'
   - 'post comments'
   - 'share content between groups'

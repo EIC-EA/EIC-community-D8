@@ -6,6 +6,11 @@ dependencies:
     - field.storage.node.field_header_visual
     - media.type.image
     - node.type.story
+  module:
+    - eic_non_required_on_draft
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
 _core:
   default_config_hash: vn0zeZnscpLrki03K5BkHaza9hpMYqIs0pWw6sCC4U0
 id: node.story.field_header_visual
@@ -14,7 +19,7 @@ entity_type: node
 bundle: story
 label: 'Header visual'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -25,6 +30,7 @@ settings:
       image: image
     sort:
       field: _none
+      direction: ASC
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

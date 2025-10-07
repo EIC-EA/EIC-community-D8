@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Utility\Token;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_seo\AliasCleaner;
+use Drupal\eic_stakeholder\StakeholderInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
@@ -123,6 +124,15 @@ class GroupTokens implements ContainerInjectionInterface {
         'description' => $this->t('The url of the group this node belongs to'),
       ],
     ];
+    $info['tokens']['stakeholder'] = [
+      'stakeholder_group_url' => [
+        'name' => $this->t('Stakeholder group url'),
+        'description' => $this->t('The url of the group this stakeholder belongs to'),
+      ],
+      'title' => [
+        'name' => $this->t('Title'),
+      ],
+    ];
     $info['tokens']['group'] = [
       'group_truncated_title' => [
         'name' => $this->t('Truncated group title'),
@@ -190,8 +200,79 @@ class GroupTokens implements ContainerInjectionInterface {
         // Site tokens.
         $replacements = $this->siteTokens($tokens, $data, $options, $bubbleable_metadata);
         break;
+      case 'stakeholder':
+        // Stakeholder tokens.
+        if (!empty($data['stakeholder'])) {
+          $replacements = $this->stakeholderTokens($tokens, $data, $options, $bubbleable_metadata);
+        }
+        break;
 
     }
+
+    return $replacements;
+  }
+
+  /**
+   * Replace stakeholder tokens.
+   *
+   * @param mixed $tokens
+   *   An array of tokens to be replaced.
+   * @param array $data
+   *   An associative array of data objects to be used when generating
+   *   replacement values.
+   * @param array $options
+   *   An associative array of options for token replacement.
+   * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
+   *   The bubbleable metadata.
+   *
+   * @return array
+   *   An associative array of replacement values.
+   */
+  private function stakeholderTokens(
+    $tokens,
+    array $data,
+    array $options,
+    BubbleableMetadata $bubbleable_metadata
+  ) {
+    $replacements = [];
+    $base_url = $this->requestStack->getCurrentRequest()->getBaseUrl();
+
+    if (($stakeholder = $data['stakeholder']) && !$stakeholder instanceof StakeholderInterface) {
+      return $replacements;
+    }
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'title':
+          $replacements[$original] = $stakeholder->label();
+          break;
+        case 'stakeholder_group_url':
+          // If stakeholder belongs to a group.
+          if ($group_contents = $this->entityTypeManager->getStorage('group_content')
+            ->loadByEntity($stakeholder)) {
+            /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+            $group_content = reset($group_contents);
+
+            $has_translation = $group_content->hasTranslation($stakeholder->language()
+              ->getId());
+            $group = $has_translation
+              ? $group_content->getGroup()
+                ->getTranslation($stakeholder->language()->getId())
+              : $group_content->getGroup();
+
+            $group_url = $group->toUrl()->toString();
+
+            // If base path is presented in group URL, we need to remove
+            // it in order to avoid duplicated base paths.
+            $has_base_path = substr($group_url, 0, strlen($base_url)) === $base_url;
+            $replacements[$original] = $has_base_path
+              ? substr_replace($group_url, '', 0, strlen($base_url))
+              : $group_url;
+          }
+          break;
+      }
+    }
+
 
     return $replacements;
   }

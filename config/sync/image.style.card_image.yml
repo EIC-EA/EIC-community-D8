@@ -1,0 +1,15 @@
+uuid: 4af8b7f2-438f-43e6-9f9e-3d007a3f6b07
+langcode: en
+status: true
+dependencies: {  }
+name: card_image
+label: 'Card image (276x256)'
+effects:
+  4f5e77b8-464d-409d-b628-fcf5ad40fadf:
+    uuid: 4f5e77b8-464d-409d-b628-fcf5ad40fadf
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 276
+      height: 256
+      anchor: center-center

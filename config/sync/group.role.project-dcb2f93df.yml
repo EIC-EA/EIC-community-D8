@@ -1,0 +1,26 @@
+uuid: 69e5e506-9681-4175-bbed-ac7bda9df482
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.project
+  enforced:
+    config:
+      - user.role.trusted_user
+id: project-dcb2f93df
+label: 'Trusted user'
+weight: -8
+internal: true
+audience: outsider
+group_type: project
+permissions_ui: false
+permissions:
+  - 'access group content menu overview'
+  - 'request group membership'
+  - 'view group'
+  - 'view group_membership content'
+  - 'view group_stakeholder:coordinator content'
+  - 'view group_stakeholder:coordinator entity'
+  - 'view group_stakeholder:participant content'
+  - 'view group_stakeholder:participant entity'
+  - 'view latest group version'

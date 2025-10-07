@@ -27,6 +27,7 @@ permissions:
   - 'add memberships'
   - 'administer members'
   - 'delete any invitation'
+  - 'delete group'
   - 'delete memberships'
   - 'delete own invitations'
   - 'edit all comments'

@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_moderation\Hooks;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -10,6 +11,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\eic_moderation\Service\ContentModerationManager;
@@ -57,6 +60,19 @@ class FormOperations implements ContainerInjectionInterface {
   protected $currentUser;
 
   /**
+   * The theme manager service.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
+   * The configuration object for system.theme config.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $themeConfig;
+  /**
    * Constructs a new FormOperations object.
    *
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
@@ -66,18 +82,27 @@ class FormOperations implements ContainerInjectionInterface {
    * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
    *   The EIC Groups helper service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current suer account.
+   *   The current user account.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *
    */
   public function __construct(
     ModerationInformationInterface $moderation_information,
     ContentModerationManager $content_moderation_manager,
     EICGroupsHelper $groups_helper,
-    AccountProxyInterface $current_user
+    AccountProxyInterface $current_user,
+    ThemeManagerInterface $theme_manager,
+    ConfigFactory $config_factory
     ) {
     $this->moderationInformation = $moderation_information;
     $this->contentModerationManager = $content_moderation_manager;
     $this->groupsHelper = $groups_helper;
     $this->currentUser = $current_user;
+    $this->themeManager = $theme_manager;
+    $this->themeConfig = $config_factory->get('system.theme');
+
   }
 
   /**
@@ -88,7 +113,9 @@ class FormOperations implements ContainerInjectionInterface {
       $container->get('content_moderation.moderation_information'),
       $container->get('eic_moderation.content_moderation_manager'),
       $container->get('eic_groups.helper'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('theme.manager'),
+      $container->get('config.factory'),
     );
   }
 
@@ -97,6 +124,33 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public function formNodeFormAlter(&$form, FormStateInterface $form_state, $form_id) {
     $entity = $form_state->getFormObject()->getEntity();
+
+    if (isset($form['revision_log'])) {
+      // Override title for all nodes in all themes.
+      $form['revision_log']['widget'][0]['value']['#title'] = $this->t('Explain your submission');
+
+      $currentTheme = $this->themeManager->getActiveTheme();
+      $adminThemeName = $this->themeConfig->get('admin');
+      if ($entity->getEntityTypeId() == 'node' && $currentTheme->getName() == $adminThemeName) {
+        // Move the position of the revision log textarea when on admin theme.
+        $form['changes'] = [
+          '#type' => 'details',
+          '#group' => 'advanced',
+          '#title' => $this->t('Explain your submission'),
+          '#attached' => [
+            'library' => [
+              'node/drupal.node',
+            ],
+          ],
+          '#weight' => 100,
+          '#open' => TRUE,
+        ];
+        $form['revision_log']['#group'] = 'changes';
+      }
+      $form['revision_log']['widget'][0]['value']['#title'] = $this->t('Revision message');
+      $form['revision_log']['widget'][0]['value']['#description'] = $this->t('Briefly describe the changes you made to the content. This message will be stored in the content\'s history, allowing for a better review of its changes.');
+    }
+
     if (!$this->moderationInformation->isModeratedEntity($entity)) {
       return;
     }
@@ -119,7 +173,10 @@ class FormOperations implements ContainerInjectionInterface {
     }
     else {
       // In case of a global content, add our custom validation handler.
-      $form['#validate'][] = [$this, 'eicModerationFormNodeFormValidate'];
+
+      // Comment the custom validation handler due to EICNET-2990.
+      // The revision log message will be automatically populated.
+      //$form['#validate'][] = [$this, 'eicModerationFormNodeFormValidate'];
     }
 
     if (isset($form['moderation_state']['widget'][0]['#access'])) {

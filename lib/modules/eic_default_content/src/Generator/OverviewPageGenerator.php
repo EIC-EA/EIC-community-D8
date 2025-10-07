@@ -138,7 +138,6 @@ class OverviewPageGenerator extends CoreGenerator {
       'facets' => [
         'sm_group_organisation_type_string' => 'sm_group_organisation_type_string',
         'sm_group_topic_name' => 'sm_group_topic_name',
-        'sm_group_field_locations_string' => 'sm_group_field_locations_string',
       ],
       'sort_options' => [
         DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID => DocumentProcessorInterface::SOLR_MOST_ACTIVE_ID,

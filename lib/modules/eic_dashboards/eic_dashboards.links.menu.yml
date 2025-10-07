@@ -1,0 +1,121 @@
+system.eic_dashboards:
+  title: 'Dashboards'
+  description: 'EIC Community Management statistics'
+  parent: system.admin
+  route_name: eic_dashboards.homepage
+  weight: -16
+  options:
+      attributes:
+        class: ['menu-icon-dashboard']
+
+eic_dashboards.dashboards:
+  title: 'Dashboards'
+  description: 'Available member & group dashboards'
+  parent: system.eic_dashboards
+  url: "internal:/dashboards#dashboards"
+  weight: 0
+
+eic_dashboards.content:
+  title: 'Content'
+  description: 'Available content dashboards'
+  parent: system.eic_dashboards
+  url: "internal:/dashboards#content"
+  weight: 1
+
+eic_dashboards.listings:
+  title: 'Listings'
+  description: 'Available listings'
+  parent: system.eic_dashboards
+  url: "internal:/dashboards#listings"
+  weight: 2
+
+eic_dashboards.members:
+  title: 'Members'
+  description: 'Members statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.members
+  weight: 1
+
+eic_dashboards.group.organisations:
+  title: 'Organisations'
+  description: 'Organisations statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.group.organisations
+  weight: 2
+
+eic_dashboards.group.projects:
+  title: 'Projects'
+  description: 'Projects statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.group.projects
+  weight: 3
+
+eic_dashboards.group.events:
+  title: 'Events'
+  description: 'Events statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.group.events
+  weight: 4
+
+eic_dashboards.group.groups:
+  title: 'Groups'
+  description: 'Groups statistics'
+  parent: eic_dashboards.dashboards
+  route_name: eic_dashboards.group.groups
+  weight: 5
+
+eic_dashboards.content.documents:
+  title: 'Documents'
+  description: 'Documents content statistics'
+  parent: eic_dashboards.content
+  route_name: eic_dashboards.content.documents
+  weight: 6
+
+eic_dashboards.content.discussions:
+  title: 'Discussions'
+  description: 'Discussions content statistics'
+  parent: eic_dashboards.content
+  route_name: eic_dashboards.content.discussions
+  weight: 7
+
+eic_dashboards.content.stories:
+  title: 'Stories'
+  description: 'Stories content statistics'
+  parent: eic_dashboards.content
+  route_name: eic_dashboards.content.stories
+  weight: 8
+
+eic_dashboards.listings.members:
+  title: 'Members'
+  description: 'List of members'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_members_list.page
+  weight: 9
+
+eic_dashboards.listings.organisations:
+  title: 'Organisations'
+  description: 'List of organisations'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_organisations_list.page
+  weight: 10
+
+eic_dashboards.listings.projects:
+  title: 'Projects'
+  description: 'List of projects'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_projects_list.page
+  weight: 11
+
+eic_dashboards.listings.content:
+  title: 'Content'
+  description: 'List of content'
+  parent: eic_dashboards.listings
+  route_name: view.dashboard_content_list.page
+  weight: 12
+
+eic_dashboards.listings.activity_report:
+  title: 'Activity report'
+  description: 'Platform activity report'
+  parent: eic_dashboards.listings
+  route_name: eic_dashboards.listings.activity_report
+  weight: 13

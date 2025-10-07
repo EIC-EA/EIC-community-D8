@@ -131,9 +131,10 @@ class GroupVisibility extends InOperator {
     // Instantiates the join plugin.
     $join = Views::pluginManager('join')->createInstance('standard', $definition);
     // Adds the join relationship to the query.
-    $query->addRelationship('oec_group_visibility', $join, 'oec_group_visibility');
+    $query->addRelationship('oec_group_visibility', $join, 'oec_group_visibility', $this->relationship);
     // Filters out the query by the selected group visibilities.
-    $query->addWhere($this->options['group'], 'oec_group_visibility.type', array_values($this->value), 'IN');
+    $selected_group_visibilities = is_array($this->value) ? $this->value : [$this->value];
+    $query->addWhere($this->options['group'], 'oec_group_visibility.type', array_values($selected_group_visibilities), 'IN');
   }
 
 }

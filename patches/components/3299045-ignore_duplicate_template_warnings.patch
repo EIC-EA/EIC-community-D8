@@ -1,0 +1,202 @@
+diff --git a/components.info.yml b/components.info.yml
+index b85be4da947d5521eadcb11f94756ae7e6d5cd12..4538b32c3a34585f2474942e631ae3f8db30df5c 100644
+--- a/components.info.yml
++++ b/components.info.yml
+@@ -6,6 +6,8 @@
+ components:
+   # Allow themes to reuse this module's default namespace, "components".
+   allow_default_namespace_reuse: true
++  # Whether to ignore duplicate templates in this module.
++  ignore_duplicate_templates: false
+
+ # Information added by Drupal.org packaging script on 2024-09-09
+ version: '3.1.0'
+diff --git a/src/Template/ComponentsRegistry.php b/src/Template/ComponentsRegistry.php
+index a2fc65ea25222925def967ff0e00437a6041ff6c..e5a3ed548c7fa7157d4aba5be85875640ceaf88d 100644
+--- a/src/Template/ComponentsRegistry.php
++++ b/src/Template/ComponentsRegistry.php
+@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ThemeExtensionList;
+ use Drupal\Core\File\Exception\NotRegularDirectoryException;
+ use Drupal\Core\File\FileSystemInterface;
+ use Drupal\Core\Logger\LoggerChannelTrait;
++use Drupal\Core\Site\Settings;
+ use Drupal\Core\Theme\ThemeManagerInterface;
+
+ /**
+@@ -138,6 +139,8 @@ class ComponentsRegistry {
+       // Get the full list of namespaces and their paths.
+       $nameSpaces = $this->getNamespaces($themeName);
+
++      $shouldTrackDuplicates = $this->shouldTrackDuplicateTemplates($themeName);
++
+       $regex = '/\.(twig|html|svg)$/';
+
+       foreach ($nameSpaces as $nameSpace => $nameSpacePaths) {
+@@ -167,8 +170,10 @@ class ComponentsRegistry {
+               }
+             }
+
+-            // Keep track of duplicates filenames inside this $nameSpacePath.
+-            $possible_duplicates[$file->filename][] = $filePath;
++            if ($shouldTrackDuplicates) {
++              // Keep track of duplicates filenames inside this $nameSpacePath.
++              $possible_duplicates[$file->filename][] = $filePath;
++            }
+           }
+
+           // Duplicate template names are expected across separate configured
+@@ -410,6 +415,7 @@ class ComponentsRegistry {
+
+       // Find default namespace flag.
+       $data[$name]['allow_default_namespace_reuse'] = isset($info['allow_default_namespace_reuse']);
++      $data[$name]['ignore_duplicate_templates'] = !empty($info['ignore_duplicate_templates']);
+     }
+
+     return $data;
+@@ -455,6 +461,22 @@ class ComponentsRegistry {
+     return $protectedNamespaces;
+   }
+
++  /**
++   * Determines whether duplicate templates should be tracked and logged.
++   */
++  protected function shouldTrackDuplicateTemplates($extensionName) {
++    if (Settings::get('components_ignore_duplicate_templates', FALSE)) {
++      // Ignore duplicate templates. If the site opts out of it.
++      return FALSE;
++    }
++    // Check if the extension specifically opts out of it.
++    $extensionInfo = $this->normalizeExtensionListInfo($this->themeExtensionList)[$extensionName] ?? NULL;
++    if (!$extensionInfo) {
++      $extensionInfo = $this->normalizeExtensionListInfo($this->moduleExtensionList)[$extensionName] ?? NULL;
++    }
++    return empty($extensionInfo['ignore_duplicate_templates']);
++  }
++
+   /**
+    * Logs exceptional occurrences that are not errors.
+    *
+diff --git a/tests/src/Unit/ComponentsRegistryTest.php b/tests/src/Unit/ComponentsRegistryTest.php
+index 9b83d4e488a1c969ec673fd099329db990ca9601..60832c99bafea38847b0fa46707406ce8395434e 100644
+--- a/tests/src/Unit/ComponentsRegistryTest.php
++++ b/tests/src/Unit/ComponentsRegistryTest.php
+@@ -1018,6 +1018,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             'type' => 'module',
+             'components' => [
+               'allow_default_namespace_reuse' => TRUE,
++              'ignore_duplicate_templates' => FALSE,
+             ],
+           ],
+         ],
+@@ -1156,6 +1157,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             ],
+             'namespaces' => [],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1177,6 +1179,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             ],
+             'namespaces' => [],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1203,6 +1206,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             ],
+             'namespaces' => [],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1246,6 +1250,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               ],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1256,6 +1261,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             'type' => 'module',
+             'components' => [
+               'allow_default_namespace_reuse' => TRUE,
++              'ignore_duplicate_templates' => FALSE,
+             ],
+           ],
+         ],
+@@ -1270,6 +1276,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             ],
+             'namespaces' => [],
+             'allow_default_namespace_reuse' => TRUE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1334,6 +1341,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               'components' => ['themes/contrib/activeTheme/components'],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+           'baseTheme' => [
+             'extensionInfo' => [
+@@ -1346,6 +1354,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               'components' => ['themes/contrib/baseTheme/components'],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+           'basestTheme' => [
+             'extensionInfo' => [
+@@ -1358,6 +1367,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               'components' => ['themes/contrib/basestTheme/components'],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1411,6 +1421,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               'components' => ['themes/contrib/activeTheme/components'],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+           'baseTheme' => [
+             'extensionInfo' => [
+@@ -1423,6 +1434,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               'components' => ['themes/contrib/baseTheme/components'],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+       ],
+@@ -1495,6 +1507,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             ],
+             'namespaces' => [],
+             'allow_default_namespace_reuse' => TRUE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+         'expected' => [],
+@@ -1513,6 +1526,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+               ],
+             ],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+         'expected' => [],
+@@ -1527,6 +1541,7 @@ class ComponentsRegistryTest extends UnitTestCase {
+             ],
+             'namespaces' => [],
+             'allow_default_namespace_reuse' => FALSE,
++            'ignore_duplicate_templates' => FALSE,
+           ],
+         ],
+         'expected' => [

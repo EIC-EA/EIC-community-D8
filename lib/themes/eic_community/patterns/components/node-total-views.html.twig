@@ -1,0 +1,16 @@
+<div class="ecl-node-total-views {{ extra_classes }}">
+  {% if icon_file_path is not empty %}
+    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+      extra_classes: 'ecl-node-total-views__icon',
+      icon: {
+        path: icon_file_path,
+        type: 'custom',
+        name: 'views',
+        size: 'xs',
+      },
+    } only %}
+  {% endif %}
+  {% if label is not empty %}
+    <time class="ecl-node-total-views__label">{{ label }}</time>
+  {% endif %}
+</div>

@@ -1,0 +1,77 @@
+uuid: 9fbe6b88-e010-485c-b14c-274b306bc82c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_card
+    - paragraphs.paragraphs_type.card
+    - paragraphs.paragraphs_type.cards
+  module:
+    - eic_non_required_on_draft
+    - entity_reference_revisions
+third_party_settings:
+  eic_non_required_on_draft:
+    non_required_on_draft: true
+id: paragraph.cards.field_card
+field_name: field_card
+entity_type: paragraph
+bundle: cards
+label: Card
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      card: card
+    negate: 0
+    target_bundles_drag_drop:
+      announcement:
+        weight: 16
+        enabled: false
+      banner:
+        weight: 17
+        enabled: false
+      card:
+        weight: 18
+        enabled: true
+      cards:
+        weight: 19
+        enabled: false
+      contributor:
+        weight: 20
+        enabled: false
+      cta_tile:
+        weight: 21
+        enabled: false
+      full_media_content:
+        weight: 22
+        enabled: false
+      full_text_content:
+        weight: 23
+        enabled: false
+      gallery_slide:
+        weight: 24
+        enabled: false
+      organisation_location:
+        weight: 25
+        enabled: false
+      organisation_member:
+        weight: 26
+        enabled: false
+      organisation_member_external:
+        weight: 27
+        enabled: false
+      quote:
+        weight: 28
+        enabled: false
+      text_and_media_content:
+        weight: 29
+        enabled: false
+      tiles_content:
+        weight: 30
+        enabled: false
+field_type: entity_reference_revisions

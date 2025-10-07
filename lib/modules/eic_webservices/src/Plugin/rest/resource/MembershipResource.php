@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_webservices\Utility\EicWsHelper;
 use Drupal\eic_webservices\Utility\SmedTaxonomyHelper;
@@ -68,6 +70,13 @@ class MembershipResource extends ResourceBase {
   protected $smedTaxonomyHelper;
 
   /**
+   * The config settings of eic_webservices.settings
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configEicwebservices;
+
+  /**
    * Constructs a Drupal\rest\Plugin\ResourceBase object.
    *
    * @param array $configuration
@@ -92,12 +101,14 @@ class MembershipResource extends ResourceBase {
     array $serializer_formats,
     LoggerChannelInterface $logger,
     EicWsHelper $eic_ws_helper,
-    SmedTaxonomyHelper $smed_taxonomy_helper
+    SmedTaxonomyHelper $smed_taxonomy_helper,
+    ConfigFactoryInterface $config_factory,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats,
       $logger);
     $this->wsHelper = $eic_ws_helper;
     $this->smedTaxonomyHelper = $smed_taxonomy_helper;
+    $this->configEicwebservices = $config_factory->get('eic_webservices.settings');
   }
 
   /**
@@ -116,7 +127,8 @@ class MembershipResource extends ResourceBase {
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
       $container->get('eic_webservices.ws_helper'),
-      $container->get('eic_webservices.taxonomy_helper')
+      $container->get('eic_webservices.taxonomy_helper'),
+      $container->get('config.factory'),
     );
   }
 
@@ -217,6 +229,15 @@ class MembershipResource extends ResourceBase {
             }
           }
           else {
+            if ($role === Event::GROUP_OWNER_ROLE) {
+              foreach ($group->getMembers($role) as $membership) {
+                $webservice_user_account_id = $this->configEicwebservices->get('webservice_user_account');
+                $uid = $membership->getUser()->id();
+                if ($uid === $webservice_user_account_id && $user->id() !== $webservice_user_account_id) {
+                  $membership->removeRole($role);
+                }
+              }
+            }
             $group->addMember($user, ['group_roles' => [$role]]);
             $group->save();
 

@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\Form\GroupForm as GroupFormBase;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
@@ -91,6 +92,10 @@ class GroupForm extends GroupFormBase {
         '#type' => 'item',
         '#weight' => isset($form['actions']['#weight']) ? ($form['actions']['#weight'] - 1) : -1,
       ];
+
+      if (!$this->configFactory()->get('oec_group_flex.settings')->get('enable_restricted_community_members_plugin')) {
+        unset($visibilityPlugins[GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY]);
+      }
 
       // The group visibility is flexible on a group level.
       if ($this->groupTypeFlex->hasFlexibleGroupTypeVisibility($groupType)) {

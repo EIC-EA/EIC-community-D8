@@ -22,6 +22,7 @@ use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\LibrarySourceType;
 use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
+use Drupal\eic_search\Search\Sources\ProjectSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
@@ -288,6 +289,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         LibrarySourceType::class,
         DiscussionSourceType::class,
         GroupEventSourceType::class,
+        ProjectSourceType::class,
       ];
       foreach ($enabled_post_action_sources as $source_type_class) {
         if ($source instanceof $source_type_class) {
@@ -434,11 +436,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           ),
           'date_filter_label' => $this->t('Dates', [], ['context' => 'eic_group']),
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
-          'custom_search_text' => [
-            'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
-            'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
-            'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
-          ],
+          'custom_search_text' => $this->getCustomSearchText($source, $current_group_route),
           'no_results_title' => $this->t(
             'We haven’t found any search results',
             [],
@@ -493,11 +491,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
           'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
           'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
-          'invite_member' => $this->t(
-            'Invite a member',
-            [],
-            ['context' => 'eic_group']
-          ),
+          'invite_member' => $this->getActionLinkTextLabel($current_group_route),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
           'collapse' => $this->t('Show less', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
@@ -588,6 +582,27 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     ]);
   }
 
+  /**
+   * Check if $source has overriden the search text.
+   *
+   * @param $source
+   * @param $current_group_route
+   *
+   * @return array
+   */
+  private function getCustomSearchText($source, $current_group_route) {
+    $custom_search_text_array = [
+      'user_gallery' => $this->getUserGallerySearchBoxLabel($current_group_route),
+      'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
+      'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
+      'project' => $this->t('Search for a project', [], ['context' => 'eic_group']),
+    ];
+    if (method_exists($source, 'getCustomSearchText')) {
+      $custom_search_text_array[$source->getEntityBundle()] = $this->t($source->getCustomSearchText(), [], ['context' => 'eic_group']);
+    }
+    return $custom_search_text_array;
+  }
+
 
   /**
    * Extracting filters values from the URL.
@@ -598,10 +613,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * @return array|NULL
    */
   private function extractFilterFromUrl(): ?array {
-    $filters = $this->requestStack
-      ->getCurrentRequest()
+    $filters = $this->requestStack->getCurrentRequest()
       ->query
-      ->get('filter', []);
+      ->all('filter');
 
     if (!is_array($filters)) {
       return NULL;
@@ -818,6 +832,46 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     return $available_sorts;
+  }
+
+  /**
+   * Get the user gallery search box label per group type.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *    The translated string search box label.
+   */
+  private function getUserGallerySearchBoxLabel($group) {
+    if (!$group instanceof GroupInterface) {
+      return $this->t('Search for a member', [], ['context' => 'eic_group']);
+    }
+
+    switch ($group->bundle()) {
+      case 'event':
+        return $this->t('Search for a participant', [], ['context' => 'eic_group']);
+      case 'organisation':
+        return $this->t('Search the team', [], ['context' => 'eic_group']);
+      default:
+        return $this->t('Search for a member', [], ['context' => 'eic_group']);
+    }
+  }
+
+  /**
+   * Get the action link text per group type.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *    The translated string search box label.
+   */
+  private function getActionLinkTextLabel($group) {
+    if (!$group instanceof GroupInterface) {
+      return $this->t('Invite a member', [], ['context' => 'eic_group']);
+    }
+
+    switch ($group->bundle()) {
+      case 'event':
+        return $this->t('Invite a participant', [], ['context' => 'eic_group']);
+      default:
+        return $this->t('Invite a member', [], ['context' => 'eic_group']);
+    }
   }
 
 }

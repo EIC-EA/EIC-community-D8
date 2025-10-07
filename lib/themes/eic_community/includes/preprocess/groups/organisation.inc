@@ -5,8 +5,10 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\views\Views;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -60,9 +62,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
 
   $topics = $group->get('field_vocab_topics')->referencedEntities();
   $markets = $group->get('field_vocab_target_markets')->referencedEntities();
-  $products = $group
-    ->get('field_vocab_services_products')
-    ->referencedEntities();
+  $products = $group->get('field_vocab_services_products')->referencedEntities();
+  $funding_source = $group->get('field_funding_source')->referencedEntities();
 
   $features = $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue();
   $features = array_map(function ($item) {
@@ -127,7 +128,10 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
   }
 
-  $locations = $group->get('field_locations')->referencedEntities();
+  $locations = [];
+  if ($group->hasField('field_locations')) {
+    $locations = $group->get('field_locations')->referencedEntities();
+  }
   $locations_data = [];
 
   if (!empty($locations)) {
@@ -320,7 +324,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   }
   else {
     // Get items from automatic view.
-    $view = \Drupal\views\Views::getView('eic_group_members');
+    $view = Views::getView('eic_group_members');
     $view->setDisplay('block_group_members');
     $view->setArguments([$group->id()]);
     $view->execute();
@@ -328,6 +332,18 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     foreach ($view->result as $id => $result) {
       $variables['teams']['items'][]['content'] = $view_builder->view($result->_entity, 'teaser');
     }
+  }
+
+  $stakeholder_manager = \Drupal::service('eic_stakeholder.stakeholder_manager');
+  $participating_project_group = $stakeholder_manager->getOrganisationParticipatedProjects($group);
+  $participating_project_group_ids = implode('+', array_keys($participating_project_group));
+
+  if (Settings::get('cordis_project_status', FALSE)) {
+    $variables['projects'] = _eic_community_get_rendered_view(
+      'organisation_projects',
+      'projects_content',
+      [$participating_project_group_ids]
+    );
   }
 
   $variables['details'] = [
@@ -408,6 +424,29 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
               ],
             ];
         }, $markets),
+      ],
+      [
+        'title' => t('Funding source', [], ['context' => 'eic_community']),
+        'type' => 'tags',
+        'title_element' => 'h4',
+        'icon_file_path' => $variables['eic_icon_path'],
+        'is_collapsible' => TRUE,
+        'grid' => TRUE,
+        'collapse_label' => 'Less',
+        'expand_label' => 'More',
+        'items' => array_map(function (TermInterface $term) {
+          return
+            [
+              'tag' => [
+                'type' => 'link',
+                'path' => _generate_overview_prefilter_url(
+                  'sm_group_funding_source_string',
+                  $term->label()
+                ),
+                'label' => $term->getName(),
+              ],
+            ];
+        }, $funding_source),
       ],
       [
         'title' => t('Topics', [], ['context' => 'eic_community']),
@@ -517,7 +556,7 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
     $media_picture[0]->get('oe_media_image')->target_id
   ) : NULL;
   $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(
-    file_create_url($file->get('uri')->value)
+    \Drupal::service('file_url_generator')->generateAbsoluteString($file->get('uri')->value)
   ) : NULL;
 
   $location = $paragraph->get('field_location')->referencedEntities();
@@ -625,7 +664,10 @@ function _eic_community_render_organisation_teaser(&$variables, GroupInterface $
   }
 
   // Get organisation location
-  $locations = $group->get('field_locations')->referencedEntities();
+  $locations = [];
+  if ($group->hasField('field_locations')) {
+    $locations = $group->get('field_locations')->referencedEntities();
+  }
   if (!empty($locations)) {
     $locations_data = [
       'items' => array_map(function (ParagraphInterface $location) {

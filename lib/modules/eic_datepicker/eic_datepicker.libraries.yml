@@ -1,0 +1,21 @@
+pickadate:
+  version: 3.6.4
+  js:
+    /libraries/pickadate_js/lib/picker.js: {}
+    /libraries/pickadate_js/lib/picker.date.js: {}
+  css:
+    theme:
+      /libraries/pickadate_js/lib/themes/classic.css: {}
+      /libraries/pickadate_js/lib/themes/classic.date.css: {}
+
+datepicker:
+  css:
+    theme:
+      css/datepicker.css: {}
+  js:
+    js/datepicker.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once
+    - eic_datepicker/pickadate

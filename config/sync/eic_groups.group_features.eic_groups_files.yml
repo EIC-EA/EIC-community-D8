@@ -15,3 +15,6 @@ roles:
   - organisation-member
   - organisation-admin
   - organisation-owner
+  - project-member
+  - project-admin
+  - project-owner

@@ -1,0 +1,9 @@
+name: EIC Queue
+type: module
+description: Interact with SQS queues with the rest of the EIC ecosystem
+package: European Innovation Council
+core_version_requirement: ^8 || ^9 || ^10
+php: 8
+dependencies:
+  - awqs_sqs:aws_sqs
+  - eic_webservices:eic_webservices

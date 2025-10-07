@@ -6,5 +6,6 @@ dependencies:
     - paragraphs
 id: paragraph.platform_member
 label: 'Platform member'
+description: ''
 targetEntityType: paragraph
 cache: true

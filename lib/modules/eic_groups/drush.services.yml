@@ -1,0 +1,6 @@
+services:
+  eic_groups.commands:
+    class: Drupal\eic_groups\Commands\OrphanedNodesCommands
+    arguments: ['@entity_type.manager', '@database']
+    tags:
+      - { name: drush.command }

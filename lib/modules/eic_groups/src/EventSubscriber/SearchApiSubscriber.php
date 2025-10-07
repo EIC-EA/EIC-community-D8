@@ -64,7 +64,7 @@ class SearchApiSubscriber implements EventSubscriberInterface {
    *   The request event object.
    */
   public function addXRequestWithApi(RequestEvent $event) {
-    if (!$event->isMasterRequest()) {
+    if (!$event->isMainRequest()) {
       return;
     }
 
