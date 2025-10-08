@@ -49,5 +49,5 @@ function eic_community_get_teaser_time_display(int $timestamp) {
  *   The date.
  */
 function eic_community_get_teaser_formatted_date_display(int $timestamp) {
-  return strtoupper(date('d F Y'));
+  return strtoupper(date('d F Y', $timestamp));
 }
