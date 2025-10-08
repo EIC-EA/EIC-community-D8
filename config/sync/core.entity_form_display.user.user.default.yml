@@ -13,6 +13,7 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
     - field.field.user.user.field_smed_id
+    - field.field.user.user.field_top_contributor
   module:
     - eic_content
     - field_group
@@ -203,6 +204,13 @@ content:
     region: content
     settings:
       placeholder: ''
+    third_party_settings: {  }
+  field_top_contributor:
+    type: boolean_checkbox
+    weight: 23
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_updated_profile_by_service:
     type: datetime_timestamp

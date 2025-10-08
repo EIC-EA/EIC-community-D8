@@ -1,0 +1,22 @@
+uuid: 535261d3-50cb-4c83-b2ae-9811b43a9eea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_top_contributor
+  module:
+    - user
+id: user.user.field_top_contributor
+field_name: field_top_contributor
+entity_type: user
+bundle: user
+label: 'Top contributor'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
