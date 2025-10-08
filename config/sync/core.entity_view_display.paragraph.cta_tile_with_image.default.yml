@@ -1,0 +1,47 @@
+uuid: b041da1a-56d9-4131-87cc-772bae7d11ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.cta_tile_with_image.field_cta_tile_link
+    - field.field.paragraph.cta_tile_with_image.field_media
+    - field.field.paragraph.cta_tile_with_image.field_title
+    - paragraphs.paragraphs_type.cta_tile_with_image
+  module:
+    - link
+id: paragraph.cta_tile_with_image.default
+targetEntityType: paragraph
+bundle: cta_tile_with_image
+mode: default
+content:
+  field_cta_tile_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_media:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

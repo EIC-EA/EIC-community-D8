@@ -5,9 +5,11 @@ dependencies:
   config:
     - block_content.type.tiles_reference
     - field.field.block_content.tiles_reference.field_body
+    - field.field.block_content.tiles_reference.field_cta_tiles
     - field.field.block_content.tiles_reference.field_tiles_ref
     - field.field.block_content.tiles_reference.field_title
   module:
+    - paragraphs
     - text
 _core:
   default_config_hash: gf3lGjvTzQ13dj7K_jKmXV9ZnfuPn058Hgy-FymhKGg
@@ -18,25 +20,27 @@ mode: default
 content:
   field_body:
     type: text_textarea
-    weight: 27
+    weight: 3
     region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_tiles_ref:
-    type: entity_reference_autocomplete
-    weight: 28
+  field_cta_tiles:
+    type: entity_reference_paragraphs
+    weight: 4
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      title: 'CTA Tile'
+      title_plural: 'CTA Tiles'
+      edit_mode: closed
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
     third_party_settings: {  }
   field_title:
     type: string_textfield
-    weight: 26
+    weight: 2
     region: content
     settings:
       size: 60
@@ -44,7 +48,7 @@ content:
     third_party_settings: {  }
   info:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
@@ -52,9 +56,10 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 2
+    weight: 1
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_tiles_ref: true

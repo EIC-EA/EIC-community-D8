@@ -441,3 +441,18 @@ function eic_deploy_update_9016(&$sandbox) {
   $story_overview->set('field_overview_block', $search_block);
   $story_overview->save();
 }
+
+/**
+ * Remove "Job title" facet from people overview
+ */
+function eic_deploy_update_9017(&$sandbox) {
+  $story_overview = \Drupal::entityTypeManager()
+    ->getStorage('overview_page')->load(GlobalOverviewPages::MEMBERS);
+
+  $search_block = $story_overview->get('field_overview_block')->getValue();
+  $facets =& $search_block[0]["settings"]["facets"];
+  unset($facets['sm_user_profile_job_string']);
+
+  $story_overview->set('field_overview_block', $search_block);
+  $story_overview->save();
+}

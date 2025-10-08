@@ -1,0 +1,10 @@
+uuid: 24d7a1e6-b81d-4730-bc59-f1a586806bd9
+langcode: en
+status: true
+dependencies: {  }
+id: cta_tile_with_image
+label: 'CTA tile with image'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }
