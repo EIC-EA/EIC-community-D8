@@ -31,7 +31,7 @@ third_party_settings:
       label: 'User details'
       region: content
       parent_name: ''
-      weight: 3
+      weight: 1
       format_type: tabs
       format_settings:
         classes: ''
@@ -205,13 +205,6 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_top_contributor:
-    type: boolean_checkbox
-    weight: 23
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   field_updated_profile_by_service:
     type: datetime_timestamp
     weight: 13
@@ -231,7 +224,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   matomo:
-    weight: 3
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -244,6 +237,7 @@ content:
     third_party_settings: {  }
 hidden:
   field_full_name: true
+  field_top_contributor: true
   langcode: true
   language: true
   path: true
