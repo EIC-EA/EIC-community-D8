@@ -139,7 +139,7 @@ class SmedUserUpdateCommand extends DrushCommands {
             '@operation' => $error_operation[0],
             '@args' => print_r($error_operation[0], TRUE),
           ]));
-      \Drupal::logger('whotelier')
+      \Drupal::logger('eic_user')
         ->error(t('An error occurred while processing @operation with arguments : @args',
             [
               '@operation' => $error_operation[0],
