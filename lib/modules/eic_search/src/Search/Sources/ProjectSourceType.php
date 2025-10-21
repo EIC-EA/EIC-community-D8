@@ -29,6 +29,8 @@ class ProjectSourceType extends SourceType {
 
   const PROJECT_SEARCH_FIELD_ID = 'tm_projects_search_field';
 
+  const PROJECT_PROGRAMME_TOPIC_TITLE_SOLR_FIELD_ID = 'ss_programme_topic_title';
+
   /**
    * @inheritDoc
    */
@@ -57,6 +59,7 @@ class ProjectSourceType extends SourceType {
     return [
       'sm_group_project_fields_of_science_string' => $this->t('Fields of science', [], ['context' => 'eic_search']),
       self::PROJECT_FUNDING_PROGRAMME_SOLR_FIELD_ID => $this->t('Funding programme', options: ['context' => 'eic_search']),
+      self::PROJECT_PROGRAMME_TOPIC_TITLE_SOLR_FIELD_ID => $this->t('EIC Programme', options: ['context' => 'eic_search']),
       self::PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID => $this->t('Coordinating country', options: ['context' => 'eic_search']),
       'ss_group_project_status' => $this->t('Project status', [], ['context' => 'eic_search']),
       'ss_group_project_field_total_cost' => $this->t('Budget Range', [], ['context' => 'eic_search']),
