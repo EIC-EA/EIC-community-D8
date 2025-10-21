@@ -71,6 +71,10 @@ class ProjectsCordisSource extends SourcePluginBase {
             'stakeholder_coordinators' => $this->getOrganisation($xpath, 'coordinator'),
             'stakeholder_participants' => $this->getOrganisation($xpath, 'participant'),
             'website' => $this->getXmlValue($xpath, "/project/relations/associations/result/relations/associations/webLink[@type='relatedWebsite']/physUrl"),
+            'relatedTopic' => [
+              'id' => $this->getXmlValue($xpath, "/project/relations/associations/programme[@type='relatedTopic']/id"),
+              'title' => $this->getXmlValue($xpath, "/project/relations/associations/programme[@type='relatedTopic']/title"),
+            ],
           ];
         }
         $runningExtractions[] = $request->id();
@@ -174,7 +178,8 @@ class ProjectsCordisSource extends SourcePluginBase {
       'fundingProgramme' => $this->t('Project funding programme'),
       'stakeholder_coordinators' => $this->t('Project Organisation coordinators'),
       'stakeholder_participants' => $this->t('Project Organisation participants'),
-      'website' => $this->t('Project website')
+      'website' => $this->t('Project website'),
+      'relatedTopic' => $this->t('Project related topic'),
     ];
   }
 
