@@ -1,0 +1,14 @@
+uuid: 33e62afc-dd72-4696-b90e-55cfd4e6e097
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.cordis_programme_topic
+id: taxonomy_vocabulary_cordis_programme_topic
+entity_type_id: taxonomy_vocabulary
+entity_id: cordis_programme_topic
+action: display_page
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied
