@@ -60,8 +60,8 @@ content:
     settings:
       timezone_override: ''
       format_type: day_month_full_and_year
-      separator: '-'
       from_to: both
+      separator: '-'
     third_party_settings: {  }
     weight: 13
     region: content
@@ -149,14 +149,6 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
-  field_project_related_topic:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 15
-    region: content
   field_project_status:
     type: list_default
     label: above
@@ -229,6 +221,7 @@ hidden:
   content_moderation_control: true
   created: true
   field_body: true
+  field_project_related_topic: true
   langcode: true
   search_api_excerpt: true
   uid: true

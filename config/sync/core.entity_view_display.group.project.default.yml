@@ -71,8 +71,8 @@ content:
     settings:
       timezone_override: ''
       format_type: day_month_full_and_year
-      separator: '-'
       from_to: both
+      separator: '-'
     third_party_settings: {  }
     weight: 15
     region: content
@@ -161,12 +161,12 @@ content:
     weight: 8
     region: content
   field_project_related_topic:
-    type: string
+    type: entity_reference_label
     label: above
     settings:
-      link_to_entity: false
+      link: true
     third_party_settings: {  }
-    weight: 17
+    weight: 23
     region: content
   field_project_status:
     type: list_default
