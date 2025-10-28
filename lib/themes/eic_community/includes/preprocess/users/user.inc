@@ -60,6 +60,17 @@ function eic_community_preprocess_user(array &$variables) {
         $teaser['extra_classes'] = 'ecl-teaser--project-member ecl-teaser--as-card ecl-teaser--as-card-grey';
       }
 
+      // Get user top_contributor.
+      if ($user->get('field_top_contributor')->value) {
+        $user_item['top_contributor'] = [
+          'label' => t('Top contributor'),
+          'icon' => [
+            'name' => 'trophy_circle',
+            'type' => 'custom',
+          ]
+        ];
+      }
+
       $variables['user_item'] = $teaser;
       break;
 
@@ -214,6 +225,17 @@ function eic_community_preprocess_user(array &$variables) {
         $user_item['flagged_projects'] = [
           'title' => $current_user->id() === $user->id() ? t('My projects') : t('Projects'),
           'content' => _get_render_block_search_overview(MyProjectsSourceType::class),
+        ];
+      }
+
+      // Get user top_contributor.
+      if ($user->get('field_top_contributor')->value) {
+        $user_item['top_contributor'] = [
+          'label' => t('Top contributor'),
+          'icon' => [
+            'name' => 'trophy_circle',
+            'type' => 'custom',
+          ]
         ];
       }
 

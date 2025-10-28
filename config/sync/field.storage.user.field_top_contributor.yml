@@ -1,0 +1,18 @@
+uuid: 7e2b4220-960e-4a46-9f02-2848749bc7a5
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_top_contributor
+field_name: field_top_contributor
+entity_type: user
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

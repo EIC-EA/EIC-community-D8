@@ -89,6 +89,17 @@ function eic_community_preprocess_group_content__group_membership__teaser(array 
     ],
   ];
 
+  // Get user top_contributor.
+  if ($user->get('field_top_contributor')->value) {
+    $variables['member_data']['top_contributor'] = [
+      'label' => t('Top contributor'),
+      'icon' => [
+        'name' => 'trophy_circle',
+        'type' => 'custom',
+      ]
+    ];
+  }
+
   // If we have a specific role, show it here.
   if (!empty($user_role)) {
     $variables['member_data']['status'] = [

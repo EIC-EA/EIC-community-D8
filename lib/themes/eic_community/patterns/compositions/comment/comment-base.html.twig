@@ -41,7 +41,7 @@
           {% endif %}
 
           {% if comment_origin.author is not empty %}
-            <span class="ecl-comment__origin">{{ comment_origin.label|default('in reply to') }}</span>
+            <span class="ecl-comment__origin ecl-u-ml-2xs">{{ comment_origin.label|default('in reply to') }}</span>
             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: {
                 type: 'standalone',
