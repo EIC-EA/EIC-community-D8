@@ -27,6 +27,8 @@ class ProjectSourceType extends SourceType {
 
   const PROJECT_COORDINATING_COUNTRY_SOLR_FIELD_ID = 'ss_group_project_coordinating_country_code';
 
+  const PROJECT_SEARCH_FIELD_ID = 'tm_projects_search_field';
+
   /**
    * @inheritDoc
    */
@@ -112,9 +114,7 @@ class ProjectSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'tm_global_title',
-      'tm_X3b_en_group_project_teaser',
-      'its_field_project_grant_agreement_id',
+      self::PROJECT_SEARCH_FIELD_ID,
     ];
   }
 

@@ -8,7 +8,12 @@
 #}
 {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
   {% block content %}
+    {% include "@theme/patterns/components/timestamp.html.twig" with {
+      label: formatted_date.label,
+      icon_file_path: eic_icon_path
+    }|default({}) %}
     <h1>{{ label }}</h1>
+
     {{ elements.field_body }}
     {{ attach_library('eic_community/react-block-gallery') }}
     <div id="ecl-gallery-react" class="ecl-gallery" data-files="{{ slides|json_encode }}"></div>
