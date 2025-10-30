@@ -26,7 +26,6 @@ module:
   ckeditor_find: 0
   ckeditor_font: 0
   ckeditor_iframe: 0
-  ckeditor_oembed: 0
   ckeditor_selectall: 0
   colorbutton: 0
   comment: 0
