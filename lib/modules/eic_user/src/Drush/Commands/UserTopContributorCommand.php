@@ -56,7 +56,7 @@ final class UserTopContributorCommand extends DrushCommands {
     $query->addField('combined', 'uid');
     $query->addExpression('COUNT(*)', 'occurence_count');
     $query->groupBy('combined.uid');
-    $query->havingCondition('occurence_count', 10, '>');
+    $query->havingCondition('occurence_count', \Drupal::service('settings')->get('top_contributor_limit') ?? 10, '>');
 
     $result = $query->execute()->fetchAllKeyed();
     $user_ids = array_keys($result);
