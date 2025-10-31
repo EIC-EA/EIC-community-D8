@@ -69,6 +69,14 @@ class GroupFlagDispatchAction extends ConfigurableActionBase {
         'field_group_ref' => $entity->id(),
       ]);
     }
+    foreach (EICGroupsHelper::getGroupOwner($entity, TRUE) as $group_owner) {
+      $owner = $group_owner->getUser();
+      $bus->dispatch([
+        'template' => $this->configuration['message_template'],
+        'uid' => $owner->id(),
+        'field_group_ref' => $entity->id(),
+      ]);
+    }
   }
 
   /**
