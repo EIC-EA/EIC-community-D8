@@ -8,7 +8,7 @@ use Drupal\eca\Plugin\Action\ConfigurableActionBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Describes the eic_eca group_inactivity_action action.
+ * Describes the eic_eca user_no_communities action.
  *
  * @Action(
  *   id = "eic_eca_user_no_communities",
@@ -42,11 +42,11 @@ class UserNoCommunities extends ConfigurableActionBase {
   public function execute($group = NULL): void {
     $items = (int) $this->configuration['items'];
 
-    $two_weeks = strtotime('-2 weeks');
+    $duration = strtotime($this->configuration['duration']);
 
     $query = $this->connection->select('users_field_data', 'ufd');
     $query->addField('ufd', 'uid');
-    $query->condition('ufd.created', $two_weeks, '<=')
+    $query->condition('ufd.created', $duration, '<=')
       ->condition('ufd.uid', 0, '<>')
       ->range(0, $items);
 
@@ -118,7 +118,15 @@ class UserNoCommunities extends ConfigurableActionBase {
       '#default_value' => $this->configuration['flag_id'],
       '#options' => [
         'user_joined_communities' => $this->t('User joined communities'),
-      ]
+      ],
+    ];
+
+    $form['duration'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Duration'),
+      '#description' => $this->t('Enter the duration.'),
+      '#default_value' => $this->configuration['duration'],
+      '#required' => TRUE,
     ];
     return parent::buildConfigurationForm($form, $form_state);
   }
@@ -129,7 +137,17 @@ class UserNoCommunities extends ConfigurableActionBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['items'] = $form_state->getValue('items');
     $this->configuration['flag_id'] = $form_state->getValue('flag_id');
+    $this->configuration['duration'] = $form_state->getValue('duration');
     parent::submitConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    if (strtotime($form_state->getValue('duration')) === FALSE) {
+      $form_state->setErrorByName('duration', $this->t('Not a valid duration string!'));
+    }
   }
 
   /**
