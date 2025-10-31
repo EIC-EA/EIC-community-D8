@@ -1,0 +1,143 @@
+uuid: 8b6c7593-b3cb-4136-9078-bdb555533c6f
+langcode: en
+status: true
+dependencies:
+  config:
+    - eca.eca.eca_inactive_users
+id: eca_inactive_users
+label: 'Inactive users'
+tags:
+  - 'test models'
+  - views
+  - loop
+  - 'custom event'
+  - cron
+  - 'switch user'
+documentation: 'During cron, this model switches the user context, queries a view to receive all user accounts and loops over all those users triggering a custom event for each of them to print their names in messages.'
+filename: ''
+modeldata: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+    <bpmn2:process id="eca_inactive_users" name="Inactive users" isExecutable="true" camunda:versionTag="1.0.0">
+      <bpmn2:documentation>During cron, this model switches the user context, queries a view to receive all user accounts and loops over all those users triggering a custom event for each of them to print their names in messages.</bpmn2:documentation>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="Tags" value="test models,views,loop,custom event,cron,switch user"/>
+          <camunda:property name="Changelog v1" value="Initial version"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+      <bpmn2:startEvent id="Event_1up81dz" name="Cron" camunda:modelerTemplate="org.drupal.event.eca_base:eca_cron">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eca_base:eca_cron"/>
+          </camunda:properties>
+          <camunda:field name="frequency">
+            <camunda:string>* * * * *</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_1r9s6sd</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_105ssdc" name="Trigger X1" camunda:modelerTemplate="org.drupal.action.eca_trigger_content_entity_custom_event">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eca_trigger_content_entity_custom_event"/>
+          </camunda:properties>
+          <camunda:field name="event_id">
+            <camunda:string>x1_inactive_users</camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string>userlist</camunda:string>
+          </camunda:field>
+          <camunda:field name="tokens">
+            <camunda:string/>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_11jscel</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:startEvent id="Event_1asjw3k" name="X1" camunda:modelerTemplate="org.drupal.event.content_entity:custom">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="content_entity:custom"/>
+          </camunda:properties>
+          <camunda:field name="event_id">
+            <camunda:string>x1_inactive_users</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_0vl5glx</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_0808l2p" name="notify user" camunda:modelerTemplate="org.drupal.action.eic_eca_flag_dispatch_user">
+        <bpmn2:extensionElements>
+          <camunda:field name="flag_id">
+            <camunda:string>user_inactive_1_month</camunda:string>
+          </camunda:field>
+          <camunda:field name="message_template">
+            <camunda:string>notify_contact_inactive_user</camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string/>
+          </camunda:field>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eic_eca_flag_dispatch_user"/>
+          </camunda:properties>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_0vl5glx</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_0vl5glx" sourceRef="Event_1asjw3k" targetRef="Activity_0808l2p"/>
+      <bpmn2:task id="Activity_0lzm5a7" name="query users" camunda:modelerTemplate="org.drupal.action.eic_eca_user_inactivity_action">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="eic_eca_user_inactivity_action"/>
+          </camunda:properties>
+          <camunda:field name="inactivity_duration">
+            <camunda:string>1</camunda:string>
+          </camunda:field>
+          <camunda:field name="items">
+            <camunda:string>20</camunda:string>
+          </camunda:field>
+          <camunda:field name="flag_id">
+            <camunda:string>user_inactive_1_month</camunda:string>
+          </camunda:field>
+          <camunda:field name="object">
+            <camunda:string>userlist</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_1r9s6sd</bpmn2:incoming>
+        <bpmn2:outgoing>Flow_11jscel</bpmn2:outgoing>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_1r9s6sd" sourceRef="Event_1up81dz" targetRef="Activity_0lzm5a7"/>
+      <bpmn2:sequenceFlow id="Flow_11jscel" sourceRef="Activity_0lzm5a7" targetRef="Activity_105ssdc"/>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_eca_inactive_users">
+      <bpmndi:BPMNPlane id="BPMNPlane_eca_inactive_users" bpmnElement="eca_inactive_users">
+        <bpmndi:BPMNShape id="Event_1up81dz_di" bpmnElement="Event_1up81dz">
+          <dc:Bounds x="57" y="52" width="36" height="36"/>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_105ssdc_di" bpmnElement="Activity_105ssdc">
+          <dc:Bounds x="325" y="30" width="100" height="80"/>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Event_1asjw3k_di" bpmnElement="Event_1asjw3k">
+          <dc:Bounds x="57" y="192" width="36" height="36"/>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_0808l2p_di" bpmnElement="Activity_0808l2p">
+          <dc:Bounds x="175" y="170" width="100" height="80"/>
+          <bpmndi:BPMNLabel/>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_0lzm5a7_di" bpmnElement="Activity_0lzm5a7">
+          <dc:Bounds x="175" y="30" width="100" height="80"/>
+          <bpmndi:BPMNLabel/>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNEdge id="Flow_0vl5glx_di" bpmnElement="Flow_0vl5glx">
+          <di:waypoint x="93" y="210"/>
+          <di:waypoint x="175" y="210"/>
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_1r9s6sd_di" bpmnElement="Flow_1r9s6sd">
+          <di:waypoint x="93" y="70"/>
+          <di:waypoint x="175" y="70"/>
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_11jscel_di" bpmnElement="Flow_11jscel">
+          <di:waypoint x="275" y="70"/>
+          <di:waypoint x="325" y="70"/>
+        </bpmndi:BPMNEdge>
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn2:definitions>

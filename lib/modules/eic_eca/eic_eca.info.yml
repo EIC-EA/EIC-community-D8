@@ -1,0 +1,6 @@
+name: 'ECA custom plugins'
+type: module
+description: 'ECA plugins'
+core_version_requirement: ^10.3 || ^11
+dependencies:
+  - eca:eca

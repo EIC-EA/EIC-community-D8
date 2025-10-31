@@ -1,0 +1,20 @@
+uuid: 105320e0-089d-42d5-bf06-eb3a48d1372d
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_inactivity_duration
+field_name: field_inactivity_duration
+entity_type: flagging
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

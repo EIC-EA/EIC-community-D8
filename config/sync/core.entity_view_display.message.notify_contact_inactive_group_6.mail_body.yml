@@ -1,0 +1,22 @@
+uuid: 6281fbbf-9b5e-4cf7-baa9-aa1b3073937c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_contact_inactive_group_6.field_group_ref
+    - field.field.message.notify_contact_inactive_group_6.field_related_user
+    - message.template.notify_contact_inactive_group_6
+id: message.notify_contact_inactive_group_6.mail_body
+targetEntityType: message
+bundle: notify_contact_inactive_group_6
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_group_ref: true
+  field_related_user: true
+  partial_0: true
+  search_api_excerpt: true

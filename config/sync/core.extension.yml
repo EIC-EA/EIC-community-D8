@@ -17,6 +17,7 @@ module:
   block_field: 0
   book: 0
   book_link_weight: 0
+  bpmn_io: 0
   breakpoint: 0
   captcha: 0
   cas: 0
@@ -48,6 +49,13 @@ module:
   datetime_range: 0
   dblog: 0
   dynamic_page_cache: 0
+  eca: 0
+  eca_base: 0
+  eca_content: 0
+  eca_modeller_bpmn: 0
+  eca_ui: 0
+  eca_user: 0
+  eca_views: 0
   editor: 0
   eic_admin: 0
   eic_block_type_cta_tiles: 0
@@ -67,6 +75,7 @@ module:
   eic_dashboards: 0
   eic_datepicker: 0
   eic_deploy: 0
+  eic_eca: 0
   eic_events: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0

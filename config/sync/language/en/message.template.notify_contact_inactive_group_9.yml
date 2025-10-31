@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>Group inactive 9 months</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear user,</p>\r\n\r\n<p>Your group has no activity for 9 months and will be archived.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>EIC Community team</p>\r\n"
+    format: full_html

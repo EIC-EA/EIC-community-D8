@@ -1,0 +1,41 @@
+uuid: 72cea7ab-46c2-4088-b637-6318d2eccdc5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_inactive_group_8.field_group_ref
+    - field.field.message.notify_contact_inactive_group_8.field_related_user
+    - message.template.notify_contact_inactive_group_8
+id: message.notify_contact_inactive_group_8.default
+targetEntityType: message
+bundle: notify_contact_inactive_group_8
+mode: default
+content:
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_related_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

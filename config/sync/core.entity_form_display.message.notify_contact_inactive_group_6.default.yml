@@ -1,0 +1,34 @@
+uuid: 9f2b602e-b257-4bd7-9b7d-27e45dc04df0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_inactive_group_6.field_group_ref
+    - field.field.message.notify_contact_inactive_group_6.field_related_user
+    - message.template.notify_contact_inactive_group_6
+id: message.notify_contact_inactive_group_6.default
+targetEntityType: message
+bundle: notify_contact_inactive_group_6
+mode: default
+content:
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_related_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

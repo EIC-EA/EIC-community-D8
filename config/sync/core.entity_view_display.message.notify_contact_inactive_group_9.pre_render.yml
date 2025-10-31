@@ -1,0 +1,35 @@
+uuid: 90e73dbc-a2c1-45eb-a189-9df9a7a393f3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.pre_render
+    - field.field.message.notify_contact_inactive_group_9.field_group_ref
+    - field.field.message.notify_contact_inactive_group_9.field_related_user
+    - message.template.notify_contact_inactive_group_9
+id: message.notify_contact_inactive_group_9.pre_render
+targetEntityType: message
+bundle: notify_contact_inactive_group_9
+mode: pre_render
+content:
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_related_user: true
+  search_api_excerpt: true

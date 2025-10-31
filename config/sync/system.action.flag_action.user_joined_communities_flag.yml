@@ -1,0 +1,15 @@
+uuid: 6582d3e8-14e1-4188-848d-7703fcdfd5a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.user_joined_communities
+  module:
+    - flag
+id: flag_action.user_joined_communities_flag
+label: 'Flag this item'
+type: user
+plugin: 'flag_action:user_joined_communities_flag'
+configuration:
+  flag_id: user_joined_communities
+  flag_action: flag

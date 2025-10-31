@@ -1,0 +1,23 @@
+uuid: 3beb81cb-a60c-431f-8b9b-28511036434d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_inactivity_duration
+    - flag.flag.group_inactive
+id: flagging.group_inactive.field_inactivity_duration
+field_name: field_inactivity_duration
+entity_type: flagging
+bundle: group_inactive
+label: 'Inactivity duration'
+description: 'Inactivity duration in months'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: 'months ago'
+field_type: integer

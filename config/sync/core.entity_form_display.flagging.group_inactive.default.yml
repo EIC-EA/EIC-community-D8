@@ -1,0 +1,20 @@
+uuid: 53b6587a-52af-4ff0-8b8e-55557ba16e72
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.group_inactive.field_inactivity_duration
+    - flag.flag.group_inactive
+id: flagging.group_inactive.default
+targetEntityType: flagging
+bundle: group_inactive
+mode: default
+content:
+  field_inactivity_duration:
+    type: number
+    weight: 0
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

@@ -1,0 +1,29 @@
+uuid: 33cb8ecf-2d71-4553-b5fe-d5e19ef05f7c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_related_user
+    - message.template.notify_contact_inactive_user
+id: message.notify_contact_inactive_user.field_related_user
+field_name: field_related_user
+entity_type: message
+bundle: notify_contact_inactive_user
+label: 'Inactive user'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    include_anonymous: 0
+    filter:
+      type: _none
+field_type: entity_reference

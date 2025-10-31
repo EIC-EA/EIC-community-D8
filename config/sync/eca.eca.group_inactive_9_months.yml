@@ -1,0 +1,66 @@
+uuid: 49000a2a-a4c9-43d8-af02-00f5f1eb18b1
+langcode: en
+status: true
+dependencies:
+  module:
+    - eca_base
+    - eca_content
+    - eic_eca
+id: group_inactive_9_months
+modeller: bpmn_io
+label: 'group inactive 9 months'
+version: 1.0.0
+weight: -7
+events:
+  Event_0rb6814:
+    plugin: 'eca_base:eca_cron'
+    label: cron
+    configuration:
+      frequency: '* * * * *'
+    successors:
+      -
+        id: Activity_1j5bbcx
+        condition: ''
+  Event_0aoyrp5:
+    plugin: 'content_entity:custom'
+    label: x1_9
+    configuration:
+      event_id: x1_9
+    successors:
+      -
+        id: Activity_05louvl
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  Activity_0f8h3hz:
+    plugin: eca_trigger_content_entity_custom_event
+    label: 'trigger x1_9'
+    configuration:
+      event_id: x1_9
+      tokens: ''
+      object: grouplist
+    successors: {  }
+  Activity_05louvl:
+    plugin: eic_eca_flag_dispatch_group_admins
+    label: 'group admins dispatch email'
+    configuration:
+      message_template: notify_contact_inactive_group_9
+      flag_id: group_inactive
+      inactivity_duration: '9'
+      object: ''
+    successors: {  }
+  Activity_1j5bbcx:
+    plugin: eic_eca_group_inactivity_action
+    label: 'load inactive groups'
+    configuration:
+      inactivity_duration: '9'
+      items: '10'
+      flag_id: group_inactive
+      check_previous_scenario: 1
+      previous_duration: '8'
+      object: grouplist
+    successors:
+      -
+        id: Activity_0f8h3hz
+        condition: ''

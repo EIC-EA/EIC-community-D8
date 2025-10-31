@@ -1,0 +1,32 @@
+uuid: d0a99d02-06dc-4b37-b586-1a56559eb4e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_inactive_user.field_related_user
+    - message.template.notify_contact_inactive_user
+id: message.notify_contact_inactive_user.default
+targetEntityType: message
+bundle: notify_contact_inactive_user
+mode: default
+content:
+  field_related_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

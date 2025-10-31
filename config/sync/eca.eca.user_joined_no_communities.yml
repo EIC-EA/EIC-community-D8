@@ -1,0 +1,63 @@
+uuid: f9c0c912-033e-47ea-a2ab-828973e91a64
+langcode: en
+status: true
+dependencies:
+  module:
+    - eca_base
+    - eca_content
+    - eic_eca
+id: user_joined_no_communities
+modeller: bpmn_io
+label: 'User joined no communities'
+version: 1.0.0
+weight: 0
+events:
+  Event_1j521qz:
+    plugin: 'eca_base:eca_cron'
+    label: cron
+    configuration:
+      frequency: '* * * * *'
+    successors:
+      -
+        id: Activity_1ezyi2f
+        condition: ''
+  Event_0klnbbc:
+    plugin: 'content_entity:custom'
+    label: x1_user_no_community
+    configuration:
+      event_id: x1_user_no_community
+    successors:
+      -
+        id: Activity_1u6u2hp
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  Activity_1nl2kw2:
+    plugin: eca_trigger_content_entity_custom_event
+    label: 'trigger custom event'
+    configuration:
+      event_id: x1_user_no_community
+      tokens: ''
+      object: userlist
+    successors: {  }
+  Activity_1u6u2hp:
+    plugin: eic_eca_flag_dispatch_user
+    label: 'trigger user notification'
+    configuration:
+      message_template: notify_contact_user_no_communiti
+      flag_id: user_joined_communities
+      object: ''
+    successors: {  }
+  Activity_1ezyi2f:
+    plugin: eic_eca_user_no_communities
+    label: 'load users no community'
+    configuration:
+      items: '20'
+      flag_id: user_joined_communities
+      duration: '-2 weeks'
+      object: userlist
+    successors:
+      -
+        id: Activity_1nl2kw2
+        condition: ''

@@ -1,0 +1,63 @@
+uuid: 3484ebdb-1196-4dab-91c4-8d62e22ac3a4
+langcode: en
+status: true
+dependencies:
+  module:
+    - eca_base
+    - eca_content
+    - eic_eca
+id: eca_inactive_users
+modeller: bpmn_io
+label: 'Inactive users'
+version: 1.0.0
+weight: 0
+events:
+  Event_1up81dz:
+    plugin: 'eca_base:eca_cron'
+    label: Cron
+    configuration:
+      frequency: '* * * * *'
+    successors:
+      -
+        id: Activity_0lzm5a7
+        condition: ''
+  Event_1asjw3k:
+    plugin: 'content_entity:custom'
+    label: X1
+    configuration:
+      event_id: x1_inactive_users
+    successors:
+      -
+        id: Activity_0808l2p
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  Activity_105ssdc:
+    plugin: eca_trigger_content_entity_custom_event
+    label: 'Trigger X1'
+    configuration:
+      event_id: x1_inactive_users
+      tokens: ''
+      object: userlist
+    successors: {  }
+  Activity_0808l2p:
+    plugin: eic_eca_flag_dispatch_user
+    label: 'notify user'
+    configuration:
+      message_template: notify_contact_inactive_user
+      flag_id: user_inactive_1_month
+      object: ''
+    successors: {  }
+  Activity_0lzm5a7:
+    plugin: eic_eca_user_inactivity_action
+    label: 'query users'
+    configuration:
+      inactivity_duration: '1'
+      items: '20'
+      flag_id: user_inactive_1_month
+      object: userlist
+    successors:
+      -
+        id: Activity_105ssdc
+        condition: ''

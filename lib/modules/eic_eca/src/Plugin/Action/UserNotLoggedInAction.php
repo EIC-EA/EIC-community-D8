@@ -1,0 +1,136 @@
+<?php
+
+namespace Drupal\eic_eca\Plugin\Action;
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\eca\Plugin\Action\ConfigurableActionBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Describes the eic_eca group_inactivity_action action.
+ *
+ * @Action(
+ *   id = "eic_eca_user_inactivity_action",
+ *   label = @Translation("User inactivity action"),
+ *   description = @Translation("Add to token the users inactive for a given period of time."),
+ *   eca_version_introduced = "1.0.0",
+ *   type = "entity"
+ *   )
+ */
+class UserNotLoggedInAction extends ConfigurableActionBase {
+
+  /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected Connection $connection;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->setConnection($container->get('database'));
+    return $instance;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function execute($group = NULL): void {
+    $duration = (int) $this->configuration['inactivity_duration'];
+    $items = (int) $this->configuration['items'];
+    $timestamp_inactivity = strtotime("-$duration months");
+
+    $query = $this->connection->select('users_field_data', 'ufd');
+    $query->addField('ufd', 'uid');
+    $query->condition('ufd.created', $timestamp_inactivity, '<=')
+      ->condition('ufd.access', 0)
+      ->condition('ufd.uid', 0, '<>');
+    $subquery = $this->connection->select('flagging', 'f')
+      ->condition('f.flag_id', $this->configuration['flag_id']);
+    $subquery->addField('f', 'entity_id');
+    $subquery->where('[f].[entity_id] = [ufd].[uid]');
+
+    // @see \Drupal\KernelTests\Core\Database\SelectSubqueryTest::testNotExistsSubquerySelect
+    $query->notExists($subquery);
+
+    $uids = $query->execute()->fetchAllAssoc('uid');
+    $uids = array_slice($uids, 0, $items);
+    $uids = array_column($uids, 'uid');
+
+    $this->tokenService->addTokenData(
+      $this->configuration['object'], $this->entityTypeManager
+      ->getStorage('user')->loadMultiple($uids)
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration(): array {
+    return [
+        'inactivity_duration' => 1,
+        'items' => 50,
+        'flag_id' => 'user_inactive_1_month',
+      ] + parent::defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form['inactivity_duration'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Inactivity duration'),
+      '#description' => $this->t('Enter how many months a user must exist in the system for this condition to be TRUE.'),
+      '#default_value' => $this->configuration['inactivity_duration'],
+      '#field_suffix' => $this->t('month(s)'),
+    ];
+
+    $form['items'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Items to load'),
+      '#description' => $this->t('Enter how many items it should load. Max # is 50'),
+      '#default_value' => $this->configuration['items'],
+      '#max' => 50,
+    ];
+
+    $form['flag_id'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Flag ID to record the transaction.'),
+      '#default_value' => $this->configuration['flag_id'],
+      '#options' => [
+        'user_inactive_1_month' => $this->t('User inactive 1 month.'),
+      ]
+    ];
+    return parent::buildConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+    $this->configuration['inactivity_duration'] = $form_state->getValue('inactivity_duration');
+    $this->configuration['items'] = $form_state->getValue('items');
+    $this->configuration['flag_id'] = $form_state->getValue('flag_id');
+    parent::submitConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * Set the database service.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database service.
+   */
+  public function setConnection(Connection $connection): void {
+    $this->connection = $connection;
+  }
+
+
+}
