@@ -30,7 +30,6 @@ class FormOperations implements ContainerInjectionInterface {
   protected array $smedFields = [
     'event' => [
       'label',
-      'field_body',
       'field_tag_line',
       'field_location',
       'field_link',
