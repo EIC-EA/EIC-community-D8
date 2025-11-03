@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\eic_webservices\Utility\EicWsHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,6 +42,17 @@ class FormOperations implements ContainerInjectionInterface {
       'label',
       'field_social_links',
     ],
+  ];
+
+  /**
+   * List of fields only allowed editing by a Power User.
+   *
+   * @var array|array[]
+   */
+  protected array $powerUserFields = [
+    'event' => [
+      'field_body'
+    ]
   ];
 
   /**
@@ -107,6 +119,12 @@ class FormOperations implements ContainerInjectionInterface {
     // Hide the SMED field if user is not allowed.
     if (isset($form[$this->wsHelper->getSmedIdFieldName()]) && !UserHelper::isPowerUser($this->currentUser)) {
       $form[$this->wsHelper->getSmedIdFieldName()]['#access'] = FALSE;
+    }
+
+    if (!EICGroupsHelper::userIsGroupAdmin($entity, $this->currentUser)) {
+      foreach ($this->powerUserFields[$entity->bundle()] as $powerUserField) {
+        $form[$powerUserField]['#access'] = FALSE;
+      }
     }
 
     // Disable SMED fields.
