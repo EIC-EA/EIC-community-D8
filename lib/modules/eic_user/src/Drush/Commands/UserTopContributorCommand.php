@@ -5,6 +5,7 @@ namespace Drupal\eic_user\Drush\Commands;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
@@ -24,6 +25,7 @@ final class UserTopContributorCommand extends DrushCommands {
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly Connection $connection,
+    private readonly Settings $settings,
   ) {
     parent::__construct();
   }
@@ -34,7 +36,8 @@ final class UserTopContributorCommand extends DrushCommands {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('database')
+      $container->get('database'),
+      $container->get('settings'),
     );
   }
 
@@ -56,7 +59,7 @@ final class UserTopContributorCommand extends DrushCommands {
     $query->addField('combined', 'uid');
     $query->addExpression('COUNT(*)', 'occurence_count');
     $query->groupBy('combined.uid');
-    $query->havingCondition('occurence_count', 10, '>');
+    $query->havingCondition('occurence_count', $this->settings->get('top_contributor_limit') ?? 10, '>');
 
     $result = $query->execute()->fetchAllKeyed();
     $user_ids = array_keys($result);
