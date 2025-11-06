@@ -12,6 +12,22 @@
       }) only %}
     </div>
   {% endif %}
+  {% if icon_file_path and top_contributor %}
+    <div class="ecl-content-type-indicator ecl-teaser__type"
+      {% if type is empty %}
+        <span>
+          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+            icon: top_contributor.icon|merge({
+              path: icon_file_path,
+              size: 's',
+            }),
+            extra_classes: "ecl-contact-information-block__type-icon",
+          } %}
+        </span>
+      {% endif %}
+      <span class="ecl-contact-information-block__title__top-contributor">{{top_contributor.label}}</span>
+    </div>
+  {% endif %}
   <div class="ecl-teaser__main-wrapper">
     {% if image is not empty and image.src is not null %}
       <a href="{{ path }}">

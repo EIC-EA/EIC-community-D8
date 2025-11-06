@@ -14,6 +14,7 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
     - field.field.user.user.field_smed_id
+    - field.field.user.user.field_top_contributor
   module:
     - user
 id: user.user.compact
@@ -47,6 +48,7 @@ hidden:
   field_last_name: true
   field_message_from_service: true
   field_smed_id: true
+  field_top_contributor: true
   field_updated_profile_by_service: true
   field_updated_profile_by_user: true
   field_user_status: true

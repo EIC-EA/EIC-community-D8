@@ -69,6 +69,7 @@ dependencies:
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_social_links
+    - field.storage.user.field_top_contributor
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
@@ -137,9 +138,9 @@ third_party_settings:
     multilingual:
       limit_to_content_language: false
       include_language_independent: true
+      use_language_undefined_as_fallback_language: false
       specific_languages:
         en: '0'
-      use_language_undefined_as_fallback_language: false
       use_universal_collation: false
 id: global
 name: Global
@@ -792,6 +793,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.message.field_share_message
+  field_top_contributor:
+    label: 'Top contributor'
+    datasource_id: 'entity:user'
+    property_path: field_top_contributor
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.user.field_top_contributor
   field_vocab_event_type:
     label: 'Event type'
     datasource_id: 'entity:node'
