@@ -5,6 +5,7 @@ dependencies:
   config:
     - block_content.type.basic
     - field.field.block_content.basic.body
+    - field.field.block_content.basic.field_hide_block
     - field.field.block_content.basic.field_title
   module:
     - text
@@ -29,5 +30,6 @@ content:
     weight: 0
     region: content
 hidden:
+  field_hide_block: true
   langcode: true
   search_api_excerpt: true

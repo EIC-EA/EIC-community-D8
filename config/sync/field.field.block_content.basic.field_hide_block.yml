@@ -1,0 +1,21 @@
+uuid: b8af6ddb-a0f3-4d74-8c51-2580337d469d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.basic
+    - field.storage.block_content.field_hide_block
+id: block_content.basic.field_hide_block
+field_name: field_hide_block
+entity_type: block_content
+bundle: basic
+label: 'Hide block'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Hide block'
+  off_label: 'Show block'
+field_type: boolean
