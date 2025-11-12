@@ -1,0 +1,18 @@
+uuid: 6b08d8f7-24da-4bfe-a0a0-bcc25323a216
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_hide_block
+field_name: field_hide_block
+entity_type: block_content
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
