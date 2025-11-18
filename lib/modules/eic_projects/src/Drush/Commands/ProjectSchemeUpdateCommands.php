@@ -37,8 +37,8 @@ final class ProjectSchemeUpdateCommands extends DrushCommands {
    * Command description here.
    */
   #[CLI\Command(name: 'eic_projects:update-scheme', aliases: ['projects_update_scheme'])]
-  #[CLI\Usage(name: 'eic_projects:command-name', description: 'Usage description')]
-  public function commandName() {
+  #[CLI\Usage(name: 'eic_projects:update-scheme', description: 'Load the mapping CSV and update the terms')]
+  public function updateProjectScheme() {
     $module_path = DRUPAL_ROOT . '/' . $this->moduleExtensionList->getPath('eic_projects');
     $csv_path = $module_path . '/includes/projects-scheme.csv';
 
