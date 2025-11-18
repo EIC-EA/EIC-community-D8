@@ -4,8 +4,10 @@ namespace Drupal\eic_content\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -23,20 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentOperationsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The current user account.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
    * ContentOperationsBlock constructor.
    *
    * @param array $configuration
@@ -45,21 +33,25 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user account.
+   * @param \Drupal\Core\Path\CurrentPathStack $pathCurrent
+   *    The current path service.
+   * @param \Drupal\Core\Config\ImmutableConfig $siteConfig
+   *    The system.site config.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    AccountProxyInterface $current_user
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected AccountProxyInterface $currentUser,
+    protected CurrentPathStack $pathCurrent,
+    protected ImmutableConfig $siteConfig,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -76,7 +68,9 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('path.current'),
+      $container->get('config.factory')->get('system.site'),
     );
   }
 
@@ -133,8 +127,8 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
   public function build() {
     $build = [];
 
-    $current_path = \Drupal::service('path.current')->getPath();
-    $front_path = \Drupal::config('system.site')->get('page.front');
+    $current_path = $this->pathCurrent->getPath();
+    $front_path = $this->siteConfig->get('page.front');
     $is_front = $current_path === $front_path;
 
     $supported_entities = [
