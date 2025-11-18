@@ -60,6 +60,7 @@ final class ProjectSchemeUpdateCommands extends DrushCommands {
     $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $updated_count = 0;
     $not_found_count = 0;
+    $skipped_count = 0;
 
     // Write a foreach on all CSV rows
     while (($row = fgetcsv($handle)) !== FALSE) {
@@ -84,6 +85,13 @@ final class ProjectSchemeUpdateCommands extends DrushCommands {
 
         // Set value col3 to entity
         if ($term->hasField('field_programme_title')) {
+          if (
+            !($term->get('field_programme_title')->isEmpty()) &&
+            ($term->get('field_programme_title')->value === $mapped_project_label)
+          ) {
+            $skipped_count++;
+            continue;
+          }
           $term->set('field_programme_title', $mapped_project_label);
           $term->save();
           $updated_count++;
@@ -107,8 +115,9 @@ final class ProjectSchemeUpdateCommands extends DrushCommands {
     fclose($handle);
 
     $this->logger()
-      ->success(dt('Processing complete. Updated: @updated, Not found: @not_found', [
+      ->success(dt('Processing complete. Updated: @updated, Skipped: @skipped, Not found: @not_found', [
         '@updated' => $updated_count,
+        '@skipped' => $skipped_count,
         '@not_found' => $not_found_count,
       ]));
 
