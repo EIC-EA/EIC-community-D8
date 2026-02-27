@@ -99,10 +99,6 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   TRUE if the flag can trigger message subscriptions.
    */
   public function isApplicable(FlagInterface $flag) {
-    if (eic_migrate_is_migration_running()) {
-      FALSE;
-    }
-
     $allowed_flag_types = self::getAllowedMessageSubscriptionFlagTypes();
     return in_array($flag->id(), $allowed_flag_types);
   }

@@ -69,9 +69,9 @@ class CasEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
-      CasPreRegisterEvent::class => 'userPreRegister',
-      CasPreLoginEvent::class => 'userPreLogin',
-      CasPreUserLoadEvent::class => 'userPreLoad',
+      CasHelper::EVENT_PRE_REGISTER => ['userPreRegister'],
+      CasHelper::EVENT_PRE_LOGIN => ['userPreLogin'],
+      CasHelper::EVENT_PRE_USER_LOAD => ['userPreLoad'],
     ];
   }
 

@@ -1,4 +1,9 @@
 services:
+  eic_search.solr_documents_subscriber:
+    class: Drupal\eic_search\EventSubscriber\SolrDocumentsSubscriber
+    arguments: ['@eic_search.document_processor_collector']
+    tags:
+      - { name: event_subscriber }
   eic_search.sources_collector:
     class: Drupal\eic_search\Collector\SourcesCollector
     tags:
@@ -107,8 +112,8 @@ services:
     class: Drupal\eic_search\Search\Sources\Profile\DraftSourceType
     tags:
       - { name: eic_search.source }
-  eic_search.source_story_calls:
-    class: Drupal\eic_search\Search\Sources\StoriesCallsSourceType
+  eic_search.source_type.research_institution:
+    class: Drupal\eic_search\Search\Sources\ResearchInstitutionSourceType
     tags:
       - { name: eic_search.source }
   eic_search.solr_document_processor:
@@ -219,6 +224,12 @@ services:
     arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+    calls:
+      - [ setStateCache, [ '@?state' ] ]
+  eic_search.document_processor.research_institution:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorResearchInstitution
+    tags:
+      - { name: eic_search.document_processor, priority: 36 }
     calls:
       - [ setStateCache, [ '@?state' ] ]
   eic_search.solr_search_manager:

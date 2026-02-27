@@ -55,7 +55,7 @@ class BlockContentGenerator extends CoreGenerator {
       // For BC reasons we keep the same UUIDs since they are referenced in configs.
       'uuid' => '5b0c5199-f4b0-4b8a-90fa-68d424e8315b',
       'field_title' => 'Your community to find partners and share knowledge.',
-      'field_subtitle' => 'Welcome to the EIC Community',
+      'field_subtitle' => 'Welcome to the Due Diligence China',
       'info' => 'Homepage - Banner block',
       'field_body' => $this->getFormattedText('full_html'),
       'field_cta_links' => [
@@ -91,7 +91,7 @@ class BlockContentGenerator extends CoreGenerator {
       'type' => 'basic',
       'uuid' => 'a6aaef49-c248-4009-8dd5-0db08108067b',
       'info' => 'Member access page - Description',
-      'field_title' => 'Welcome to the EIC Community!',
+      'field_title' => 'Welcome to the Due Diligence China!',
       'body' => $this->getFormattedText('full_html', $text),
     ]);
     $block->save();

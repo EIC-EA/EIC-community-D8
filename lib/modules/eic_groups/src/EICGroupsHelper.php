@@ -411,6 +411,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     if ($entity instanceof NodeInterface) {
+      // Cannot load group content for an unsaved entity.
+      if ($entity->isNew()) {
+        return FALSE;
+      }
       // Load all the group content for this entity.
       $group_contents = GroupContent::loadByEntity($entity);
 

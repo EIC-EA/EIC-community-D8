@@ -15,6 +15,10 @@ use Drupal\eic_statistics\Hooks\CronOperations;
  * Implements hook_cron().
  */
 function eic_statistics_cron() {
+  if (\Drupal::hasService('eic_feature_toggle.manager') &&
+      !\Drupal::service('eic_feature_toggle.manager')->isCronEnabled('eic_statistics')) {
+    return;
+  }
   \Drupal::classResolver(CronOperations::class)
     ->cron();
 }

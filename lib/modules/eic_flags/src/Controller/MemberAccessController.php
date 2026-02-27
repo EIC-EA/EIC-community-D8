@@ -4,12 +4,12 @@ namespace Drupal\eic_flags\Controller;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides route response the member access page.
@@ -42,7 +42,7 @@ class MemberAccessController extends ControllerBase {
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Drupal\Core\Http\RequestStack $request_stack
    *   The current request.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The current request.
@@ -99,17 +99,20 @@ class MemberAccessController extends ControllerBase {
       ],
     ]);
 
-    $register_url = $this->configFactory->get('eic_user_login.settings')->get('user_registration_url');
-    $register_url = Url::fromUri($register_url, [
-      'attributes' => [
-        'class' => ['cas-register-link'],
-        'target' => '_blank',
-      ],
-    ]);
+    $register_url_config = $this->configFactory->get('eic_user_login.settings')->get('user_registration_url');
+    // Fall back to the user login page if no registration URL is configured.
+    if (empty($register_url_config)) {
+      $register_url = Url::fromRoute('user.login');
+    }
+    else {
+      $register_url = Url::fromUri($register_url_config, [
+        'attributes' => [
+          'class' => ['cas-register-link'],
+        ],
+      ]);
+    }
 
     if (!empty($destination)) {
-      // For the login link, we use the special returnto query param that is
-      // handled by cas module.
       $login_url->setRouteParameter('returnto', $destination);
       $register_url->setOption('query', ['destination' => $destination]);
     }
@@ -117,7 +120,7 @@ class MemberAccessController extends ControllerBase {
     return [
       '#theme' => 'member_access_login_page',
       '#login_link' => Link::fromTextAndUrl($this->t('Log in'), $login_url),
-      '#register_link' => Link::fromTextAndUrl($this->t('Register'), $register_url),
+      '#register_link' => Link::fromTextAndUrl($this->t('Log in'), $register_url),
     ];
   }
 

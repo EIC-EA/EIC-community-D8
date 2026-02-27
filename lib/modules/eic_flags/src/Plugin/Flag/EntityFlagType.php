@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Plugin\Flag;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -53,16 +54,15 @@ class EntityFlagType extends EntityFlagTypeBase {
     ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     TranslationInterface $string_translation,
+    EntityDisplayRepositoryInterface $entity_display_repository,
     FlagHelper $eic_flag_helper,
     EICGroupsHelper $eic_groups_helper,
     ModerationHelper $moderation_helper
   ) {
-    $this->entityType = $plugin_definition['entity_type'];
-    $this->entityTypeManager = $entity_type_manager;
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $entity_type_manager, $string_translation, $entity_display_repository);
     $this->flagHelper = $eic_flag_helper;
     $this->groupsHelper = $eic_groups_helper;
     $this->moderationHelper = $moderation_helper;
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $entity_type_manager, $string_translation);
   }
 
   /**
@@ -76,6 +76,7 @@ class EntityFlagType extends EntityFlagTypeBase {
       $container->get('module_handler'),
       $container->get('entity_type.manager'),
       $container->get('string_translation'),
+      $container->get('entity_display.repository'),
       $container->get('eic_flags.helper'),
       $container->get('eic_groups.helper'),
       $container->get('eic_moderation.helper')

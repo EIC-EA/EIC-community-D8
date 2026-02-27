@@ -53,7 +53,7 @@ stages:
 
 build_backend:
   stage: build
-  image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
+  image: public.ecr.aws/h5g0v9w1/php-fpm:8.3
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -68,14 +68,14 @@ build_backend:
 
 build_front:
   stage: build
-  image: node:14
+  image: node:22
   artifacts:
     untracked: true
     expire_in: '2 hour'
   script:
-    - cd lib/themes/eic_community
-    - npm install && npm run build && npm run react-production
-    - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
+    - npm install -g pnpm
+    - cd lib/themes/ddc_theme
+    - pnpm install && pnpm run build && pnpm run react-production
     - cd node_modules && find . -mindepth 1 -maxdepth 1 -type d ! -name "@ecl*" -exec rm -rf {} +
   only:
     - /^release/.*$/
@@ -83,7 +83,7 @@ build_front:
 
 security_check:
   stage: test
-  image: jakzal/phpqa:php7.4
+  image: jakzal/phpqa:php8.3
   script:
     - local-php-security-checker
   only:

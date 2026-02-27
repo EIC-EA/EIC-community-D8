@@ -68,6 +68,11 @@ class CordisExtractionWorker extends QueueWorkerBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function processItem($data) {
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isQueueEnabled('eic_projects_cordis_extraction_worker')) {
+      return;
+    }
+
     $running_entity_id = $data;
     if ($extraction_entity = $this->entityTypeManager->getStorage('extraction_request')->load($running_entity_id)) {
       $extraction_entity_ids = $this->entityTypeManager

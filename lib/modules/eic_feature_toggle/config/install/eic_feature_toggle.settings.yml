@@ -1,0 +1,24 @@
+cron:
+  eic_statistics: true
+  eic_groups_url_alias: true
+  eic_groups_approval_reminder: true
+  eic_groups_invitation_reminder: true
+  eic_groups_solr_reindex: true
+  eic_flags: true
+  eic_projects_cordis: true
+  eic_events: true
+  eic_subscription_digest: true
+  eic_media_statistics: true
+queue:
+  eic_message_notify_queue: true
+  eic_flags_notify_queue: true
+  eic_groups_group_content_url_alias_update: true
+  eic_groups_group_content_search_api: true
+  eic_projects_cordis_extraction_worker: true
+  subscription_digest: true
+external:
+  cordis_api: true
+  vod_cloudfront: true
+  smed_user_sync: false
+  rest_webservices: true
+  profile_enforcement: false

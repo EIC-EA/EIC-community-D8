@@ -82,8 +82,8 @@ endef
 
 define do_setup
 	echo -e 'Setting up ${APP_NAME}...'
-	docker-compose build --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
-	docker-compose up -d
+	docker compose build --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
+	docker compose up -d
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
 
 	$(call do_create_symlinks)
@@ -110,7 +110,7 @@ endef
 
 define do_start
 	echo -e 'Starting ${APP_NAME}...'
-	docker-compose up -d
+	docker compose up -d
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} started\e[0m'
 	$(call do_display_app_info)
@@ -119,8 +119,8 @@ endef
 
 define do_restart
 	echo -e 'Restarting ${APP_NAME}...'
-	docker-compose down
-	docker-compose up -d
+	docker compose down
+	docker compose up -d
 
 	docker exec -it ${APP_NAME}_php bash -c  './vendor/bin/drush cr'
 	echo -e '\n'
@@ -160,7 +160,7 @@ endef
 
 define do_stop
 	echo -e 'Stopping ${APP_NAME}...'
-	docker-compose down
+	docker compose down
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} stopped\e[0m'
 endef
@@ -172,7 +172,7 @@ endef
 
 define do_destroy
 	echo -e 'Destroying ${APP_NAME}...'
-	docker-compose down --volumes
+	docker compose down --volumes
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} stopped and data deleted\e[0m'
 endef

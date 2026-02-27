@@ -1,14 +1,12 @@
 {#
 /**
  * @file
- * Theme override to display a single page.
+ * Theme override to display a single page for dashboards.
  *
- * @see ./themes/custom/eic_community/patterns/layout/base.html.twig
+ * Extends oe_theme page layout.
  */
 #}
-{% set _wrap_content = true %}
-
-{% extends "@theme/patterns/layout/base.html.twig" %}
+{% extends "@oe_theme/layout/page.html.twig" %}
 
 {#{% block page_header %}#}
 {#  <div class="ecl-overview-header{{ image is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">#}

@@ -1,0 +1,9 @@
+eic_content.add_research_institution:
+  title: 'Add Research Institution'
+  description: 'Create a new research institution'
+  menu_name: admin
+  parent: system.admin_content
+  route_name: entity.group.add_form
+  route_parameters:
+    group_type: research_institution
+  weight: 0

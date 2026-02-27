@@ -108,13 +108,13 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
         }
       }
 
-      $url = Url::fromRoute('eic_user_login.member_access');
+      $url = Url::fromRoute('user.login');
       if ($destination) {
         $url->setOption('query', ['destination' => $destination]);
       }
 
       $build['#login']['link'] = [
-        'label' => t('Member access'),
+        'label' => t('Log in'),
         'path' => $url,
       ];
     }
@@ -128,18 +128,6 @@ class AccountHeaderBlock extends BlockBase implements ContainerFactoryPluginInte
           'link' => [
             'label' => t('My profile'),
             'path' => $account->toUrl()->toString(),
-          ],
-        ],
-        [
-          'link' => [
-            'label' => t('My settings'),
-            'path' => Url::fromRoute('eic_user.my_settings', ['user' => $account->id()])->toString(),
-          ],
-        ],
-        [
-          'link' => [
-            'label' => t('My activity'),
-            'path' => Url::fromRoute('eic_user.user.activity', ['user' => $account->id()])->toString(),
           ],
         ],
       ];

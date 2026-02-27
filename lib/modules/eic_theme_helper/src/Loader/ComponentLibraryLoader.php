@@ -44,7 +44,10 @@ class ComponentLibraryLoader extends EuropaComponentLibraryLoader {
     }
 
     $this->logger = $logger_factory->get('ecl');
-    parent::__construct($namespaces, $path, $root, 'ec-component-', 'ecl-');
+    // ECL v4 components don't use 'twig-component-' prefix in directory names.
+    // Templates are at 'skip-link/skip-link.html.twig' not
+    // 'twig-component-skip-link/skip-link.html.twig'.
+    parent::__construct($namespaces, $path, $root, '');
   }
 
 }

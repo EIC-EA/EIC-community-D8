@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\Service\SolrSearchManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -56,14 +57,32 @@ class SolrSearchController extends ControllerBase {
     $sort_value = $request->query->get('sort_value');
     $user_id_from_route = (int) $request->query->get('userIdFromRoute');
     $facets_options = $request->query->all('facets_options') ?? NULL;
-    $facets_value = $facets_value ? json_decode($facets_value, TRUE) : [];
+    $facets_value = json_decode($facets_value, TRUE) ?: [];
     // timestamp value, if nothing set "*" (the default value on solr).
     $from_date = $request->query->get('from_date', '*');
     $end_date = $request->query->get('end_date', '*');
-    $page = $request->query->get('page');
-    $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
+    $page = (int) $request->query->get('page', 1);
+    $offset = (int) $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
 
     $search = $this->searchManager->init($source_class);
+
+    // Check if source exists.
+    $source = $this->searchManager->getSource();
+    if (!$source) {
+      return new JsonResponse([
+        'error' => 'invalid_source',
+        'message' => 'Invalid or unknown source class.',
+      ], Response::HTTP_BAD_REQUEST);
+    }
+
+    // Check if source requires authentication.
+    if ($source->requiresAuthentication() && $this->currentUser()->isAnonymous()) {
+      return new JsonResponse([
+        'error' => 'authentication_required',
+        'message' => 'You must be logged in to access this content.',
+      ], Response::HTTP_FORBIDDEN);
+    }
+
     $search->buildUserIdFromUrl($user_id_from_route);
     $search->buildGroupQuery($current_group);
     $search->buildFacets($facets_options);

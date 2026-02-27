@@ -436,7 +436,12 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           ),
           'date_filter_label' => $this->t('Dates', [], ['context' => 'eic_group']),
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
-          'custom_search_text' => $this->getCustomSearchText($source, $current_group_route),
+          'custom_search_text' => [
+            'user_gallery' => $this->getUserGallerySearchBoxLabel($current_group_route),
+            'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
+            'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
+            'project' => $this->t('Search for a project', [], ['context' => 'eic_group']),
+          ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
             [],
@@ -580,27 +585,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
-  }
-
-  /**
-   * Check if $source has overriden the search text.
-   *
-   * @param $source
-   * @param $current_group_route
-   *
-   * @return array
-   */
-  private function getCustomSearchText($source, $current_group_route) {
-    $custom_search_text_array = [
-      'user_gallery' => $this->getUserGallerySearchBoxLabel($current_group_route),
-      'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
-      'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
-      'project' => $this->t('Search for a project', [], ['context' => 'eic_group']),
-    ];
-    if (method_exists($source, 'getCustomSearchText')) {
-      $custom_search_text_array[$source->getEntityBundle()] = $this->t($source->getCustomSearchText(), [], ['context' => 'eic_group']);
-    }
-    return $custom_search_text_array;
   }
 
 

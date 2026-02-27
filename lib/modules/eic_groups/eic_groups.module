@@ -499,6 +499,7 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
  * Implements hook_cron().
  */
 function eic_groups_cron() {
+  // Feature toggle checks are handled per-operation in CronOperations::cron().
   \Drupal::classResolver(CronOperations::class)
     ->cron();
 }

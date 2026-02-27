@@ -727,8 +727,8 @@ class DiscussionController extends ControllerBase {
     $archived = $comment->get('field_comment_is_archived')->value;
 
     $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
+
     return [
-      'user_top_contributor' => (bool) $user->get('field_top_contributor')->value,
       'user_image' => $file_url,
       'user_id' => $user->id(),
       'user_fullname' => $user->getDisplayName(),

@@ -543,7 +543,7 @@ function eic_group_membership_group_content_access(EntityInterface $entity, $ope
       $group_owner = EICGroupsHelper::getGroupOwner($group);
 
       // Group owners cannot be deleted.
-      if ($group_content_member->id() === $group_owner->id()) {
+      if ($group_owner && $group_content_member->id() === $group_owner->id()) {
         $access = GroupAccessResult::forbidden()
           ->addCacheableDependency($account)
           ->addCacheableDependency($entity)

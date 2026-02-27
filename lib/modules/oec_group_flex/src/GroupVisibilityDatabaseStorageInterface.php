@@ -3,7 +3,7 @@
 namespace Drupal\oec_group_flex;
 
 /**
- * Provides an interface defining Group Visibility Database Storage.
+ * Provides an interface defining Group Visibility Databse Storage.
  *
  * Stores the group visibility in the database.
  */
@@ -49,15 +49,5 @@ interface GroupVisibilityDatabaseStorageInterface {
    *   An array of entity objects to delete.
    */
   public function delete(array $entities);
-
-  /**
-   * Loads all group IDs of a certain visibility type.
-   *
-   * @param string $visibility_type
-   *
-   * @return array|false
-   *   Array of group IDs or FALSE if there are none found.
-   */
-  public function loadByType(string $visibility_type);
 
 }

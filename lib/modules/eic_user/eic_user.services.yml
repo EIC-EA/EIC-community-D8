@@ -31,14 +31,3 @@ services:
     class: Drupal\eic_user\Routing\UserRouteSubscriber
     tags:
       - { name: event_subscriber }
-
-  eic_user.subscriber.two_factor_authentication_redirect:
-    class: Drupal\eic_user\EventSubscriber\AlterEcasTfaAuthenticationEventSubscriber
-    arguments:
-      - '@config.factory'
-      - '@plugin.manager.condition'
-      - '@context.handler'
-      - '@string_translation'
-      - '@entity_type.manager'
-    tags:
-      - { name: event_subscriber }

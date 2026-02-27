@@ -1,3 +1,34 @@
-{% include '@theme/patterns/compositions/subnavigation.html.twig' with menu_items|default({})|merge({
-    icon_file_path: eic_icon_path
-}) %}
+{#
+/**
+ * @file
+ * User activity subnavigation block template.
+ *
+ * Displays horizontal tabs for user activity pages.
+ * Note: inpage-navigation is for anchor links within a page.
+ * tabs is for navigation between different pages.
+ *
+ * Variables:
+ * - menu_items: Navigation items
+ *   - items: Array of menu items
+ *     - link: Link object with 'label' and 'path'
+ *     - is_active: Boolean indicating current page
+ * - ecl_icon_path: Path to ECL icon sprite
+ */
+#}
+{% if menu_items.items is not empty %}
+  {% set _items = [] %}
+  {% for item in menu_items.items %}
+    {% if item.link %}
+      {% set _items = _items|merge([{
+        'label': item.link.label,
+        'path': item.link.path,
+        'is_current': item.is_active|default(false),
+      }]) %}
+    {% endif %}
+  {% endfor %}
+
+  {% include '@ecl-twig/tabs' with {
+    'items': _items,
+    'icon_path': ecl_icon_path,
+  } only %}
+{% endif %}

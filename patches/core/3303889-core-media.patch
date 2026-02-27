@@ -1,0 +1,27 @@
+diff --git a/core/modules/media_library/src/Plugin/views/field/MediaLibrarySelectForm.php b/core/modules/media_library/src/Plugin/views/field/MediaLibrarySelectForm.php
+index 3d8d79648..7bac9e346 100644
+--- a/core/modules/media_library/src/Plugin/views/field/MediaLibrarySelectForm.php
++++ b/core/modules/media_library/src/Plugin/views/field/MediaLibrarySelectForm.php
+@@ -5,6 +5,8 @@
+ use Drupal\Core\Ajax\AjaxResponse;
+ use Drupal\Core\Ajax\CloseDialogCommand;
+ use Drupal\Core\Ajax\MessageCommand;
++use Drupal\Core\Ajax\PrependCommand;
++use Drupal\Core\Ajax\RemoveCommand;
+ use Drupal\Core\Form\FormBuilderInterface;
+ use Drupal\Core\Form\FormStateInterface;
+ use Drupal\Core\Url;
+@@ -131,6 +133,13 @@ public static function updateWidget(array &$form, FormStateInterface $form_state
+     $field_id = $form_state->getTriggeringElement()['#field_id'];
+     $selected_ids = $form_state->getValue($field_id);
+     $selected_ids = $selected_ids ? array_filter(explode(',', $selected_ids)) : [];
++    if (empty($selected_ids) || $form_state->hasAnyErrors()) {
++      $response = new AjaxResponse();
++      $messages = ['#type' => 'status_messages'];
++      $response->addCommand(new RemoveCommand('#media-library-content [data-drupal-messages]'));
++      $response->addCommand(new PrependCommand('#media-library-content', \Drupal::service('renderer')->renderRoot($messages)));
++      return $response;
++    }
+
+     // Allow the opener service to handle the selection.
+     $state = MediaLibraryState::fromRequest($request);

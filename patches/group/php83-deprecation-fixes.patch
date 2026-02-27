@@ -1,0 +1,45 @@
+--- a/src/Access/GroupPermissionHandler.php
++++ b/src/Access/GroupPermissionHandler.php
+@@ -257,14 +257,14 @@
+           // the titles are \Drupal\Core\StringTranslation\TranslatableMarkup.
+           $title_a = $permission_a['title']->__toString();
+           $title_b = $permission_b['title']->__toString();
+-          return strip_tags($title_a) > strip_tags($title_b);
++          return strip_tags($title_a) <=> strip_tags($title_b);
+         }
+         else {
+-          return $permission_a['section'] > $permission_b['section'];
++          return $permission_a['section'] <=> $permission_b['section'];
+         }
+       }
+       else {
+-        return $modules[$permission_a['provider']] > $modules[$permission_b['provider']];
++        return $modules[$permission_a['provider']] <=> $modules[$permission_b['provider']];
+       }
+     });
+
+--- a/src/Entity/GroupRole.php
++++ b/src/Entity/GroupRole.php
+@@ -312,7 +312,7 @@
+     parent::postLoad($storage, $entities);
+     // Sort the queried roles by their weight.
+     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
+-    uasort($entities, 'static::sort');
++    uasort($entities, [static::class, 'sort']);
+   }
+
+   /**
+
+--- a/src/Entity/Storage/GroupRoleStorage.php
++++ b/src/Entity/Storage/GroupRoleStorage.php
+@@ -108,7 +108,9 @@
+
+       // Get the IDs from the 'group_roles' field, without loading the roles.
+       if ($membership = $this->groupMembershipLoader->load($group, $account)) {
+-        foreach ($membership->getGroupContent()->group_roles as $group_role_ref) {
++        $group_content = $membership->getGroupContent();
++        $group_roles = $group_content->hasField('group_roles') ? $group_content->get('group_roles') : [];
++        foreach ($group_roles as $group_role_ref) {
+           $ids[] = $group_role_ref->target_id;
+         }
+       }

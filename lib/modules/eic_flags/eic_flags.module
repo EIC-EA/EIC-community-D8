@@ -76,6 +76,11 @@ function eic_flags_form_list_builder_filters_alter(
  * Implements hook_cron().
  */
 function eic_flags_cron() {
+  if (\Drupal::hasService('eic_feature_toggle.manager') &&
+      !\Drupal::service('eic_feature_toggle.manager')->isCronEnabled('eic_flags')) {
+    return;
+  }
+
   $queue = \Drupal::service('queue')->get('eic_flags_notify_queue');
   $five_minutes_ago = strtotime('-5 minutes');
   $ten_minutes_ago = strtotime('-10 minutes');

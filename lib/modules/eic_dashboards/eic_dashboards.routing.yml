@@ -4,7 +4,7 @@ eic_dashboards.homepage:
     _title: 'EIC Community Management Dashboards'
     _controller: '\Drupal\eic_dashboards\Controller\HomepageDashboardsController::dashboardsHomepage'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.homepage_cache_invalidate:
   path: '/dashboards/cache/invalidate'
@@ -21,7 +21,7 @@ eic_dashboards.members:
     _controller: '\Drupal\eic_dashboards\Controller\MembersDashboardController::membersOverview'
     _title: 'Members dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.group.groups:
   path: '/dashboards/groups'
@@ -29,7 +29,7 @@ eic_dashboards.group.groups:
     _controller: '\Drupal\eic_dashboards\Controller\GroupGroupsDashboardController::page'
     _title: 'Groups dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.group.events:
   path: '/dashboards/events'
@@ -37,7 +37,7 @@ eic_dashboards.group.events:
     _controller: '\Drupal\eic_dashboards\Controller\GroupEventsDashboardController::page'
     _title: 'Events dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.group.organisations:
   path: '/dashboards/organisations'
@@ -45,7 +45,7 @@ eic_dashboards.group.organisations:
     _controller: '\Drupal\eic_dashboards\Controller\GroupOrganisationsDashboardController::page'
     _title: 'Organisations dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.group.projects:
   path: '/dashboards/projects'
@@ -53,7 +53,7 @@ eic_dashboards.group.projects:
     _controller: '\Drupal\eic_dashboards\Controller\GroupProjectsDashboardController::page'
     _title: 'Projects dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.content.documents:
   path: '/dashboards/content/documents'
@@ -61,7 +61,7 @@ eic_dashboards.content.documents:
     _controller: '\Drupal\eic_dashboards\Controller\ContentDocumentsDashboardController::page'
     _title: 'Documents content dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.content.stories:
   path: '/dashboards/content/stories'
@@ -69,7 +69,7 @@ eic_dashboards.content.stories:
     _controller: '\Drupal\eic_dashboards\Controller\ContentStoriesDashboardController::page'
     _title: 'Stories content dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.content.discussions:
   path: '/dashboards/content/discussions'
@@ -77,7 +77,7 @@ eic_dashboards.content.discussions:
     _controller: '\Drupal\eic_dashboards\Controller\ContentDiscussionsDashboardController::page'
     _title: 'Discussions content dashboard'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.listings.activity_report:
   path: '/dashboards/listings/activity-report'
@@ -85,7 +85,7 @@ eic_dashboards.listings.activity_report:
     _form: '\Drupal\eic_dashboards\Form\ActivityReportForm'
     _title: 'Activity report'
   requirements:
-    _custom_access: '\Drupal\eic_dashboards\Access\OverviewAccess::access'
+    _role: 'sensitive'
 
 eic_dashboards.group.dashboard:
   path: '/group/{group}/dashboard'

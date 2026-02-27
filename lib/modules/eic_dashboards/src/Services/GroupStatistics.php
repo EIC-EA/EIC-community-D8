@@ -133,17 +133,6 @@ class GroupStatistics implements GroupStatisticsInterface {
     $data = [];
 
     foreach ($results as $result) {
-      // Fix results of public fallback behavior for $groupType.
-      if($result->visibility == 'public') {
-        $fix_query = $this->connection->select('groups', 'g');
-        $fix_query->leftJoin('oec_group_visibility', 'ogv', 'g.id = ogv.gid');
-        $fix_query->condition('g.type', $groupType);
-        $fix_query->condition('ogv.type', NULL, 'IS NULL');
-        $extraPublicResults = $fix_query->countQuery()->execute()->fetchField();
-
-        $result->groups_count = (int) $result->groups_count + $extraPublicResults;
-      }
-
       $data[] = [
         'name' => ucfirst(explode("_", $result->visibility)[0]),
         'y' => (int) $result->groups_count,

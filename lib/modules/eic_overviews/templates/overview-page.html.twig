@@ -9,20 +9,59 @@
  * - content: A list of content items. Use 'content' to print all content, or
  *   print a subset such as 'content.title'.
  * - attributes: HTML attributes for the container element.
+ * - breadcrumb: Breadcrumb items array.
+ * - banner_image_url: URL for the banner background image.
  *
  * @see template_preprocess_overview_page()
  */
 #}
 {% block page_header %}
-  {% include "@theme/patterns/compositions/overview-header.html.twig" with {
-    title_element: 'h1',
-    title: content.title,
-    image: {
-      src: banner_image_url
-    },
-  } only %}
+  {# Build breadcrumb links for ECL component (kept for potential future use) #}
+  {% set _breadcrumb_links = [] %}
+  {% if breadcrumb is iterable %}
+    {% for breadcrumb_item in breadcrumb %}
+      {% set _breadcrumb_links = _breadcrumb_links|merge([{
+        'label': breadcrumb_item.text|default(breadcrumb_item.label|default('')),
+        'path': breadcrumb_item.url|default(breadcrumb_item.href|default('')),
+      }]) %}
+    {% endfor %}
+  {% endif %}
 
-  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+  {# Build breadcrumb object if we have links #}
+  {% if _breadcrumb_links %}
+    {% set _breadcrumb = {
+      'links': _breadcrumb_links,
+      'navigation_text': 'You are here:'|t,
+      'ellipsis_label': 'Click to expand'|t,
+    } %}
+  {% endif %}
+
+  {# Build picture object for banner if image URL provided #}
+  {% set _picture = {} %}
+  {% if banner_image_url is not empty %}
+    {% set _picture = {
+      'img': {
+        'src': banner_image_url,
+        'alt': '',
+      }
+    } %}
+  {% endif %}
+
+  {# Use ECL banner component #}
+  <div class="ecl-container">
+    {% include '@ecl-twig/banner' with {
+      'title': content.title|render|striptags|trim,
+      'picture': _picture,
+      'size': 'xs',
+      'font_size': 'm',
+      'box_background': 'light',
+      'font_color': 'dark',
+      'horizontal': 'left',
+      'vertical': 'center',
+      'full_width': true,
+      'icon_path': ecl_icon_path,
+    } only %}
+  </div>
 {% endblock %}
 
 {{ content }}

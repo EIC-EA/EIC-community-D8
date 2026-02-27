@@ -89,6 +89,13 @@ class OrganisationGenerator extends CoreGenerator {
             'link' => 'example',
           ],
         ],
+        'field_locations' => [
+          $this->createParagraph([
+            'type' => 'organisation_location',
+            'field_city' => 'Brussels',
+            'field_country' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1)[0],
+          ]),
+        ],
         'field_offers' => [
           $this->createParagraph([
             'type' => 'announcement',

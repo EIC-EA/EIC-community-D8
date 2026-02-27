@@ -48,4 +48,13 @@ class SearchController extends ControllerBase {
     return [];
   }
 
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *
+   * @return array
+   */
+  public function researchInstitutions(Request $request) {
+    return [];
+  }
+
 }

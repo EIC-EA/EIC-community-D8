@@ -1,50 +1,83 @@
+{#
+/**
+ * @file
+ * Account header block template.
+ *
+ * Displays user account dropdown or login link in the site header.
+ * Uses ECL site-header login pattern for consistency.
+ *
+ * Variables:
+ * - user: Current user data (if logged in)
+ *   - name: User display name
+ *   - image: User avatar image object with 'src' and 'alt' keys
+ *   - path: Link to user profile
+ *   - actions: Array of action links (My profile, My settings, Log out, etc.)
+ * - login: Login link data (if anonymous)
+ *   - link: Object with 'path' and 'label' keys
+ * - ecl_icon_path: Path to ECL icon sprite (provided by ddc_theme_preprocess)
+ */
+#}
 {% if user or login %}
-  <div class="ecl-global-header__auth-wrapper">
+  <div class="ecl-site-header__login-container">
     {% if user %}
-      {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
-        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--has-compact-layout',
-        items: user.actions,
-      } %}
-        {% block trigger %}
-          <div class="ecl-global-header__author">
-            {% include "@theme/patterns/components/author.html.twig" with {
-              name: user.name,
-              image: user.image,
-              path: user.path,
-              extra_classes: 'ecl-author--has-compact-layout ecl-author--as-block',
-              updates: user.updates,
-              eic_icon_path: eic_icon_path
-            } %}
-            {% if eic_icon_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                icon: eic_icon_path ? {
-                  path: eic_icon_path,
-                  type: 'ui',
-                  name: 'corner-arrow',
-                  size: '2xs',
-                  transform: "rotate-180",
-                }
-              } %}
-            {% endif %}
-          </div>
-        {% endblock %}
-      {% endembed %}
-    {% elseif login and login.link %}
-      <a href="{{ login.link.path }}" class="ecl-link ecl-link--standalone ecl-global-header__login-link">
-        {% if eic_icon_path %}
-          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-            icon: eic_icon_path ? {
-              path: eic_icon_path,
-              name: 'user_circle',
-              type: 'custom',
-              size: 'l',
-            },
-            extra_classes: 'ecl-global-header__login-link-icon'
-          } %}
-        {% endif %}
-        {{ login.link.label }}
+      {# Logged-in user: toggle button with dropdown #}
+      <a
+        class="ecl-button ecl-button--tertiary ecl-button--neutral ecl-site-header__login-toggle"
+        href="{{ user.path }}"
+        aria-controls="account-login-box"
+        data-ecl-login-toggle
+        aria-expanded="false"
+      >
+        <svg
+          focusable="false"
+          aria-hidden="true"
+          class="ecl-icon ecl-icon--m ecl-site-header__icon"
+        >
+          <use xlink:href="{{ ecl_icon_path }}#logged-in"></use>
+        </svg>
+        {{- user.name -}}
       </a>
+      <div
+        id="account-login-box"
+        class="ecl-site-header__login-box"
+        data-ecl-login-box
+      >
+        <p class="ecl-site-header__login-description">
+          {{ 'Logged in as @name'|t({'@name': user.name}) }}
+        </p>
+        <hr class="ecl-site-header__login-separator">
+        {# Render all user action links #}
+        {% for action in user.actions %}
+          {% if action.link %}
+            <div class="ecl-site-header__login-link">
+              {% include '@ecl/link/link.html.twig' with {
+                link: {
+                  label: action.link.label,
+                  path: action.link.path,
+                  type: 'standalone',
+                }
+              } only %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
 
+    {% elseif login and login.link %}
+      {# Anonymous user: simple login link #}
+      <a
+        class="ecl-button ecl-button--tertiary ecl-button--neutral ecl-site-header__login-toggle"
+        href="{{ login.link.path }}"
+        data-ecl-login-toggle
+      >
+        <svg
+          focusable="false"
+          aria-hidden="true"
+          class="ecl-icon ecl-icon--m ecl-site-header__icon"
+        >
+          <use xlink:href="{{ ecl_icon_path }}#log-in"></use>
+        </svg>
+        {{- login.link.label -}}
+      </a>
     {% endif %}
   </div>
 {% endif %}

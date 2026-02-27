@@ -8,6 +8,10 @@ use Drupal\eic_subscription_digest\Hooks\DigestNotificationCron;
  * Implements hook_cron().
  */
 function eic_subscription_digest_cron() {
+  if (\Drupal::hasService('eic_feature_toggle.manager') &&
+      !\Drupal::service('eic_feature_toggle.manager')->isCronEnabled('eic_subscription_digest')) {
+    return;
+  }
   \Drupal::classResolver(DigestNotificationCron::class)->sendNotifications();
 }
 
