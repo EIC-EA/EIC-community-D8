@@ -71,6 +71,9 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 
 RUN apt-get update && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
 
+# Add web user (=php-fpm user) to the www-data group
+RUN usermod -a -G www-data web
+
 USER web
 
 CMD ["php-fpm"]
