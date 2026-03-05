@@ -19,9 +19,6 @@
     "drupal/block_content_permissions": {
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
-    "drupal/cas": {
-      "Dispatch EVENT_PRE_LOGIN before active check": "patches/cas/cas-dispatch_EVENT_PRE_LOGIN_before_active_check.patch"
-    },
     "drupal/ckeditor_find": {
       "D10 compatibility": "https://www.drupal.org/files/issues/2025-02-25/3397636-d10-ckeditor_find-10.patch"
     },

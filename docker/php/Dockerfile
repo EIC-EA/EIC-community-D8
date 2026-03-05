@@ -1,8 +1,6 @@
 ARG PHP_VERSION=8.3
 ARG COMPOSER_VERSION=2
-ARG NODE_VERSION=22
 
-FROM node:${NODE_VERSION} AS node
 FROM composer:${COMPOSER_VERSION} AS composer
 FROM php:${PHP_VERSION}-fpm
 
@@ -58,8 +56,8 @@ RUN latest_drush_version=${DRUSH_VERSION} \
   # smoke test
   && drush version
 
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:22 /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node:22 /usr/local/bin/node /usr/local/bin/node
 
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
@@ -70,9 +68,6 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && pnpm --version;
 
 RUN apt-get update && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
-
-# Add web user (=php-fpm user) to the www-data group
-RUN usermod -a -G www-data web
 
 USER web
 
