@@ -188,11 +188,26 @@ class CronOperations implements ContainerInjectionInterface {
    * Implements hook_cron().
    */
   public function cron() {
-    $this->processGroupUrlAliasUpdateQueue();
-    $this->processGroupContentUrlAliasUpdateQueue();
-    $this->processGroupWaitingApprovalReminder();
-    $this->processGroupInvitationsReminder();
-    $this->processContentSolrReindex();
+    $toggle = \Drupal::hasService('eic_feature_toggle.manager')
+      ? \Drupal::service('eic_feature_toggle.manager')
+      : NULL;
+
+    if (!$toggle || $toggle->isCronEnabled('eic_groups_url_alias')) {
+      $this->processGroupUrlAliasUpdateQueue();
+      $this->processGroupContentUrlAliasUpdateQueue();
+    }
+
+    if (!$toggle || $toggle->isCronEnabled('eic_groups_approval_reminder')) {
+      $this->processGroupWaitingApprovalReminder();
+    }
+
+    if (!$toggle || $toggle->isCronEnabled('eic_groups_invitation_reminder')) {
+      $this->processGroupInvitationsReminder();
+    }
+
+    if (!$toggle || $toggle->isCronEnabled('eic_groups_solr_reindex')) {
+      $this->processContentSolrReindex();
+    }
   }
 
   /**

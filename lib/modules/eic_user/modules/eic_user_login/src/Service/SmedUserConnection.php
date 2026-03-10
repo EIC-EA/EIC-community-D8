@@ -115,6 +115,12 @@ class SmedUserConnection {
    *   The processed result array.
    */
   public function queryEndpoint(array $data = []) {
+    // Check if SMED user sync is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('smed_user_sync')) {
+      return NULL;
+    }
+
     try {
       $response = $this->callEndpoint($data);
       if (!$response) {

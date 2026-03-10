@@ -1,0 +1,4 @@
+services:
+  eic_feature_toggle.manager:
+    class: Drupal\eic_feature_toggle\Service\FeatureToggleManager
+    arguments: ['@config.factory']

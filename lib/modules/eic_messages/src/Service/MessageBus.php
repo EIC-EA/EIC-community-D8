@@ -48,11 +48,6 @@ class MessageBus implements MessageBusInterface {
     $message,
     array $message_options = []
   ): void {
-    // If we are running migrations, stop saving messages and sending notifications.
-    if (eic_migrate_is_migration_running()) {
-      return;
-    }
-
     if (!$message instanceof MessageInterface) {
       $message = Message::create($message);
     }

@@ -99,17 +99,20 @@ class MemberAccessController extends ControllerBase {
       ],
     ]);
 
-    $register_url = $this->configFactory->get('eic_user_login.settings')->get('user_registration_url');
-    $register_url = Url::fromUri($register_url, [
-      'attributes' => [
-        'class' => ['cas-register-link'],
-        'target' => '_blank',
-      ],
-    ]);
+    $register_url_config = $this->configFactory->get('eic_user_login.settings')->get('user_registration_url');
+    // Fall back to the user login page if no registration URL is configured.
+    if (empty($register_url_config)) {
+      $register_url = Url::fromRoute('user.login');
+    }
+    else {
+      $register_url = Url::fromUri($register_url_config, [
+        'attributes' => [
+          'class' => ['cas-register-link'],
+        ],
+      ]);
+    }
 
     if (!empty($destination)) {
-      // For the login link, we use the special returnto query param that is
-      // handled by cas module.
       $login_url->setRouteParameter('returnto', $destination);
       $register_url->setOption('query', ['destination' => $destination]);
     }
@@ -117,7 +120,7 @@ class MemberAccessController extends ControllerBase {
     return [
       '#theme' => 'member_access_page',
       '#login_link' => Link::fromTextAndUrl($this->t('Log in'), $login_url),
-      '#register_link' => Link::fromTextAndUrl($this->t('Register'), $register_url),
+      '#register_link' => Link::fromTextAndUrl($this->t('Log in'), $register_url),
     ];
   }
 

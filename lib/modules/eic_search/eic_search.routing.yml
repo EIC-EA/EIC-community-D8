@@ -33,3 +33,10 @@ eic_search.people:
     _controller: '\Drupal\eic_search\Controller\SearchController::people'
   requirements:
     _permission: 'access content'
+eic_search.research_institutions:
+  path: '/data-explorer/institutions-explorer'
+  defaults:
+    _title: 'Institutions explorer'
+    _controller: '\Drupal\eic_search\Controller\SearchController::researchInstitutions'
+  requirements:
+    _role: 'authenticated'

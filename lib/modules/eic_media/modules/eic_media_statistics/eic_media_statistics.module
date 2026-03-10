@@ -13,6 +13,10 @@ use Drupal\eic_media_statistics\Hooks\EntityOperations;
  * Implements hook_cron().
  */
 function eic_media_statistics_cron() {
+  if (\Drupal::hasService('eic_feature_toggle.manager') &&
+      !\Drupal::service('eic_feature_toggle.manager')->isCronEnabled('eic_media_statistics')) {
+    return;
+  }
   $storage = \Drupal::service('eic_media_statistics.storage.file');
   $storage->resetDayCount();
 }

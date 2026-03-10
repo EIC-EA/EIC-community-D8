@@ -35,7 +35,7 @@
 <div {{ attributes.addClass(['ecl-row', 'ecl-u-mt-l']) }}>
   {% block navigation %}
   <div class="ecl-col-12 ecl-col-lg-3">
-    {% include '@ecl-twig/inpage-navigation' with {
+    {% include '@ecl/inpage-navigation' with {
       'title': title,
       'links': _items,
       'icon_path': ecl_icon_path

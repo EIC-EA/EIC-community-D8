@@ -85,13 +85,57 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
   }
 
   /**
+   * {@inheritdoc}
+   *
+   * Override to add accessCheck(FALSE) for Drupal 10 compatibility.
+   */
+  protected function getRandomEntities($entity_type_id, array $conditions = [], $limit = 5) {
+    static $entities;
+
+    // Generate a hash for static storage of query results per condition set.
+    asort($conditions);
+    $hash = md5($entity_type_id . ':' . json_encode($conditions));
+
+    if (!isset($entities[$hash])) {
+      $query = \Drupal::entityQuery($entity_type_id)
+        ->accessCheck(FALSE);
+
+      if ($conditions) {
+        foreach ($conditions as $key => $value) {
+          $query->condition($key, $value);
+        }
+      }
+
+      $ids = $query->execute();
+      if ($ids) {
+        $entities[$hash] = \Drupal::entityTypeManager()
+          ->getStorage($entity_type_id)
+          ->loadMultiple($ids);
+      }
+      else {
+        $entities[$hash] = [];
+      }
+    }
+
+    if (empty($entities[$hash])) {
+      return [];
+    }
+
+    $shuffled = $entities[$hash];
+    shuffle($shuffled);
+    return array_slice($shuffled, 0, $limit);
+  }
+
+  /**
    * Create a file with a random image.
    *
    * @param string $wrapper
+   *   The stream wrapper to use.
    *
-   * @return \Drupal\file\FileInterface
+   * @return \Drupal\file\FileInterface|null
+   *   The created file entity or NULL on failure.
    */
-  protected function getRandomImage(string $wrapper = 'private://') {
+  protected function getRandomImage(string $wrapper = 'public://') {
     static $images;
     // To avoid downloading a lot of images, we only allow 3 random images
     // Passed this, we reuse those saved previously.

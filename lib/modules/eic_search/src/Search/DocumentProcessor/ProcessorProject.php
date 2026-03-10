@@ -122,7 +122,7 @@ class ProcessorProject extends DocumentProcessor {
       ],
       '3.000.000+' => [
         'min' => 3000000.00,
-        'max' => PHP_FLOAT_MAX,
+        'max' => PHP_INT_MAX,
       ]
     ];
 
@@ -187,17 +187,6 @@ class ProcessorProject extends DocumentProcessor {
       ProjectSourceType::PROJECT_FIELDS_OF_SCIENCE_SOLR_FIELD_ID,
       $fields,
       json_encode($fields_of_science_terms)
-    );
-
-    $this->addOrUpdateDocumentField(
-      $document,
-      ProjectSourceType::PROJECT_SEARCH_FIELD_ID,
-      $fields,
-      [
-        $fields['tm_X3b_en_group_label_fulltext'],
-        $fields['tm_X3b_en_group_project_teaser'],
-        $fields['its_field_project_grant_agreement_id']
-      ],
     );
 
   }

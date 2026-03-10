@@ -245,4 +245,18 @@ abstract class SourceType implements SourceTypeInterface {
     return [];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getExcludeFacets(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresAuthentication(): bool {
+    return FALSE;
+  }
+
 }

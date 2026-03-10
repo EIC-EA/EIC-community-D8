@@ -61,6 +61,11 @@ class GroupContentSearchApi extends QueueWorkerBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function processItem($data) {
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isQueueEnabled('eic_groups_group_content_search_api')) {
+      return;
+    }
+
     $this->solrDocumentProcessor->reIndexEntities([$data->getEntity()]);
   }
 

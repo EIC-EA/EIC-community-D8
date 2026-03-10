@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * EIC Feature Toggle module.
+ *
+ * Provides centralized configuration for enabling/disabling EIC features.
+ */

@@ -22,8 +22,8 @@ class EICFlagCountLinkButton extends EICFlagCountLink {
   /**
    * {@inheritdoc}
    */
-  public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity) {
-    $build = parent::getAsFlagLink($flag, $entity);
+  public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity, ?string $view_mode = NULL): array {
+    $build = parent::getAsFlagLink($flag, $entity, $view_mode);
     $build['#showAsButton'] = TRUE;
     // Return the modified render array.
     return $build;

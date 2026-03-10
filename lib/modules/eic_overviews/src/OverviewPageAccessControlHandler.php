@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
  * Defines the access control handler for the overview page entity type.
@@ -21,6 +22,13 @@ class OverviewPageAccessControlHandler extends EntityAccessControlHandler {
         // Deny access if page is disabled.
         if (!$entity->isEnabled()) {
           return AccessResult::forbidden();
+        }
+
+        // Deny anonymous access to Research Institutions overview.
+        if ($entity->uuid() === GlobalOverviewPages::RESEARCH_INSTITUTIONS_UUID && $account->isAnonymous()) {
+          return AccessResult::forbidden()
+            ->addCacheContexts(['user.roles:anonymous'])
+            ->addCacheTags($entity->getCacheTags());
         }
 
         return AccessResult::allowedIfHasPermission($account, 'view overview pages');

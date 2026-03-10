@@ -17,6 +17,11 @@ use Drupal\eic_events\Hooks\FormOperations;
  * Implements hook_cron().
  */
 function eic_events_cron() {
+  if (\Drupal::hasService('eic_feature_toggle.manager') &&
+      !\Drupal::service('eic_feature_toggle.manager')->isCronEnabled('eic_events')) {
+    return;
+  }
+
   // Value returned is timestamp.
   $last_request_time = \Drupal::state()
     ->get(Event::CRON_STATE_ID_LAST_REQUEST_TIME);

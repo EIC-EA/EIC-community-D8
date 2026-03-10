@@ -1,0 +1,13 @@
+--- a/src/Context/GroupRouteContextTrait.php
++++ b/src/Context/GroupRouteContextTrait.php
+@@ -107,6 +107,10 @@
+       return NULL;
+     }
+     foreach ($entities as $entity) {
++      // Skip unsaved entities - loadByEntity() requires a saved entity with an ID.
++      if ($entity->isNew()) {
++        continue;
++      }
+       foreach ($this->getEntityTypeManager()->getStorage('group_content')->loadByEntity($entity) as $group_content) {
+         return $group_content->getGroup();
+       }

@@ -1,0 +1,98 @@
+--- a/src/GroupMembership.php
++++ b/src/GroupMembership.php
+@@ -7,7 +7,7 @@
+ 
+ /**
+  * Wrapper class for a GroupContent entity representing a membership.
+- * 
++ *
+  * Should be loaded through the 'group.membership_loader' service.
+  */
+ class GroupMembership implements CacheableDependencyInterface {
+@@ -121,4 +121,86 @@
+     return \Drupal::service('group_permission.checker');
+   }
+ 
++  /**
++   * Gets group roles available for the current group type.
++   *
++   * @return \Drupal\group\Entity\GroupRoleInterface[]
++   *   An array of group roles.
++   */
++  protected function getGroupTypeRoles() {
++    $properties = [
++      'group_type' => $this->groupContent->getGroup()->bundle(),
++      'internal' => FALSE,
++    ];
++
++    return \Drupal::entityTypeManager()
++      ->getStorage('group_role')
++      ->loadByProperties($properties);
++  }
++
++  /**
++   * Adds a group role to the membership.
++   *
++   * @param string $role
++   *   The group role ID to add.
++   */
++  public function addRole($role) {
++    // Check that the role exists for a given group type.
++    $group_type_roles = $this->getGroupTypeRoles();
++    $role_exists = FALSE;
++
++    foreach (array_keys($group_type_roles) as $group_type_role) {
++      if ($group_type_role === $role) {
++        $role_exists = TRUE;
++        break;
++      }
++    }
++
++    if ($role_exists) {
++      // Check if a member already has the role.
++      foreach ($this->groupContent->group_roles as $key => $role_item) {
++        if ($role_item->target_id === $role) {
++          return;
++        }
++      }
++
++      $this->groupContent->group_roles[] = $role;
++      $this->groupContent->save();
++    }
++  }
++
++  /**
++   * Removes a group role from the membership.
++   *
++   * @param string $role
++   *   The group role ID to remove.
++   */
++  public function removeRole($role) {
++    $roles = $this->groupContent->group_roles;
++    foreach ($roles as $key => $role_item) {
++      if ($role_item->target_id == $role) {
++        $roles->removeItem($key);
++      }
++    }
++
++    $this->groupContent->group_roles = $roles;
++    $this->groupContent->save();
++  }
++
++  /**
++   * Checks if a membership has a specific role.
++   *
++   * @param string $role
++   *   The group role ID to check.
++   *
++   * @return bool
++   *   TRUE if the membership has the role, FALSE otherwise.
++   */
++  public function hasRole($role) {
++    $roles_values = $this->groupContent->group_roles->getValue();
++    $roles = array_column($roles_values, 'target_id');
++
++    return in_array($role, $roles);
++  }
++
+ }

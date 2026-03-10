@@ -1,0 +1,32 @@
+--- a/src/Plugin/GroupJoiningMethodManager.php
++++ b/src/Plugin/GroupJoiningMethodManager.php
+@@ -13,6 +13,13 @@
+ class GroupJoiningMethodManager extends DefaultPluginManager {
+
+   /**
++   * All instantiated plugins.
++   *
++   * @var \Drupal\group_flex\Plugin\GroupFlexPluginCollection|null
++   */
++  protected ?GroupFlexPluginCollection $allPlugins = NULL;
++
++  /**
+    * Constructs a new GroupJoiningMethodManager object.
+    *
+    * @param \Traversable $namespaces
+--- a/src/Plugin/GroupVisibilityManager.php
++++ b/src/Plugin/GroupVisibilityManager.php
+@@ -13,6 +13,13 @@
+ class GroupVisibilityManager extends DefaultPluginManager {
+
+   /**
++   * All instantiated plugins.
++   *
++   * @var \Drupal\group_flex\Plugin\GroupFlexPluginCollection|null
++   */
++  protected ?GroupFlexPluginCollection $allPlugins = NULL;
++
++  /**
+    * Constructs a new GroupVisibilityManager object.
+    *
+    * @param \Traversable $namespaces

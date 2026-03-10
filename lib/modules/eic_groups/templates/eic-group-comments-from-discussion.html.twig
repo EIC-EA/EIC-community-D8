@@ -1,23 +1,53 @@
+{#
+/**
+ * @file
+ * Comments from discussion template.
+ *
+ * Variables:
+ * - is_anonymous: Boolean if user is anonymous
+ * - can_view_comments: Boolean if user can view comments
+ * - discussion_id: The discussion entity ID
+ * - highlighted_comment: ID of highlighted comment
+ * - contributors: Array of contributor data
+ * - no_container: Boolean to skip container wrapper
+ * - ckeditor_js_settings: CKEditor settings for the comment form
+ */
+#}
 {{ attach_library('eic_community/react-comments-discussion') }}
 
 {% if not is_anonymous and can_view_comments %}
   <div class="ecl-section-wrapper ecl-comment-overview">
-    <div class="{{ no_container ? "" : "ecl-container" }}">
+    <div class="{{ no_container ? '' : 'ecl-container' }}">
       <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
-        <div class="class="{{ no_container ? "" : "ecl-container" }}"">
+        <div class="{{ no_container ? '' : 'ecl-container' }}">
           <div class="ecl-editorial-article__wrapper">
             <div class="ecl-editorial-article__content">
-              <div id="comments-discussion" data-ckeditor-settings="{{ ckeditor_js_settings | json_encode }}" data-highlighted-comment="{{ highlighted_comment}}" data-discussion-id="{{ discussion_id }}">{{ 'Comments' | t }}</div>
+              <div id="comments-discussion" data-ckeditor-settings="{{ ckeditor_js_settings|json_encode }}" data-highlighted-comment="{{ highlighted_comment }}" data-discussion-id="{{ discussion_id }}">{{ 'Comments'|t }}</div>
             </div>
             {% if contributors %}
               <aside class="ecl-editorial-article__aside">
                 <div class="ecl-editorial-article__aside-wrapper">
-                  {% block sidebar %}
-                    {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-                      grid: true,
-                      title: "Contributors"|t
-                    }) only %}
-                  {% endblock %}
+                  {# Simplified contributors display - original used @theme/featured-contributors #}
+                  <h4 class="ecl-u-type-heading-4">{{ 'Contributors'|t }}</h4>
+                  {% if contributors.items is defined %}
+                    <ul class="ecl-unordered-list ecl-unordered-list--no-marker">
+                      {% for contributor in contributors.items %}
+                        <li class="ecl-unordered-list__item">
+                          {% if contributor.link is defined %}
+                            {% include '@ecl-twig/link' with {
+                              link: {
+                                label: contributor.name|default(contributor.link.label),
+                                path: contributor.link.path,
+                                type: 'standalone',
+                              },
+                            } only %}
+                          {% elseif contributor.name is defined %}
+                            {{ contributor.name }}
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
                 </div>
               </aside>
             {% endif %}

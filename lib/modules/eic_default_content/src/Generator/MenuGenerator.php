@@ -84,7 +84,8 @@ class MenuGenerator extends CoreGenerator {
       foreach ($items as $item) {
         $conditions = [
           'menu_name' => $menu_name,
-          'link' => $item['link'],
+          // Use link.uri for querying link fields properly.
+          'link.uri' => $item['link']['uri'],
         ];
         $this->unloadEntities('menu_link_content', $conditions);
       }

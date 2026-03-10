@@ -52,6 +52,11 @@ class DigestWorker extends QueueWorkerBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function processItem($data) {
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isQueueEnabled('subscription_digest')) {
+      return;
+    }
+
     $this->manager->sendUserDigest($data);
   }
 

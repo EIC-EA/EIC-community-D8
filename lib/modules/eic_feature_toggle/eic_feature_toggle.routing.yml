@@ -1,0 +1,7 @@
+eic_feature_toggle.settings:
+  path: '/admin/config/eic/feature-toggles'
+  defaults:
+    _form: '\Drupal\eic_feature_toggle\Form\FeatureToggleSettingsForm'
+    _title: 'EIC Feature Toggles'
+  requirements:
+    _permission: 'administer site configuration'

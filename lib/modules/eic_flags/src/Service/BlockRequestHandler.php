@@ -158,7 +158,7 @@ class BlockRequestHandler extends AbstractRequestHandler {
 
     $access->addCacheableDependency($workflow);
 
-    if (!$workflow->getTypePlugin()->getState(self::ENTITY_BLOCKED_STATE)) {
+    if (!$workflow->getTypePlugin()->hasState(self::ENTITY_BLOCKED_STATE)) {
       return $access;
     }
 

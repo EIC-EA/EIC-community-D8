@@ -89,6 +89,11 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function processItem($data) {
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isQueueEnabled('eic_message_notify_queue')) {
+      return;
+    }
+
     if (!isset($data['entity']) || !$data['entity'] instanceof MessageInterface) {
       return;
     }

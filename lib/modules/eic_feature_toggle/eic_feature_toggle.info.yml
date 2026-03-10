@@ -1,0 +1,6 @@
+name: 'EIC Feature Toggle'
+type: module
+description: 'Centralized configuration for enabling/disabling EIC features (cron jobs, queue workers, external services).'
+package: EIC
+core_version_requirement: ^10 || ^11
+configure: eic_feature_toggle.settings

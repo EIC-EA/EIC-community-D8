@@ -6,17 +6,18 @@
  */
 
 use Drupal\Core\Render\Element;
-use Drupal\eic_projects\Constants\Projects;
 use Drupal\eic_projects\Entity\ExtractionRequest;
 use Drupal\eic_projects\Hooks\CronOperations;
-use Drupal\eic_projects\Hooks\EntityOperations;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\user\UserInterface;
 
 /**
  * Implements hook_cron().
  */
 function eic_projects_cron() {
+  if (\Drupal::hasService('eic_feature_toggle.manager') &&
+      !\Drupal::service('eic_feature_toggle.manager')->isCronEnabled('eic_projects_cordis')) {
+    return;
+  }
   \Drupal::classResolver(CronOperations::class)->cron();
 }
 
@@ -31,20 +32,11 @@ function eic_projects_entity_insert(\Drupal\Core\Entity\EntityInterface $entity)
 }
 
 /**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function eic_projects_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof GroupInterface && $entity->bundle() === Projects::GROUP_PROJECT_BUNDLE) {
-    \Drupal::classResolver(EntityOperations::class)->projectGroupPreSave($entity);
-  }
-}
-
-/**
- * Implements hook_field_widget_single_element_form_alter().
+ * Implements hook_field_widget_form_alter().
  *
  * @see https://www.drupal.org/project/drupal/issues/2230909
  */
-function eic_projects_field_widget_single_element_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function eic_projects_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
   $field = $context['items']->getFieldDefinition();
   if ($field->getName() == 'field_project_total_cost' || $field->getName() == 'field_project_ecmax_contributio') {
     $element['value']['#step'] = (string) $element['value']['#step'];

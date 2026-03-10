@@ -89,4 +89,4 @@ services:
     decorates: ginvite_event_subscriber
     decoration_priority: 1
     public: true
-    arguments: ['@eic_groups.ginvite_event_subscriber.decorator.inner', '@ginvite.invitation_loader', '@current_user', '@messenger', '@logger.factory']
+    arguments: ['@eic_groups.ginvite_event_subscriber.decorator.inner', '@ginvite.invitation_loader', '@current_user', '@messenger', '@logger.factory', '@config.factory', '@ginvite.group_invitation_manager']

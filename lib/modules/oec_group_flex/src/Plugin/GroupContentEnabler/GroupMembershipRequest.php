@@ -2,8 +2,12 @@
 
 namespace Drupal\oec_group_flex\Plugin\GroupContentEnabler;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\ProxyClass\Config\ConfigInstaller;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest as GroupMembershipRequestBase;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,9 +31,13 @@ class GroupMembershipRequest extends GroupMembershipRequestBase implements Conta
     array $configuration,
     $plugin_id,
     $plugin_definition,
+    AccountInterface $current_user,
+    GroupContentEnablerManagerInterface $group_content_enabler_manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    ConfigInstaller $config_installer,
     OECGroupFlexHelper $oec_group_flex_helper
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $current_user, $group_content_enabler_manager, $entity_type_manager, $config_installer);
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
   }
 
@@ -41,6 +49,10 @@ class GroupMembershipRequest extends GroupMembershipRequestBase implements Conta
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('current_user'),
+      $container->get('plugin.manager.group_content_enabler'),
+      $container->get('entity_type.manager'),
+      $container->get('config.installer'),
       $container->get('oec_group_flex.helper')
     );
   }
