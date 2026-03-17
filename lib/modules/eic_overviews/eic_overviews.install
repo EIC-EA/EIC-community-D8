@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the eic_overviews module.
+ */
+
+use Drupal\eic_overviews\Entity\OverviewPage;
+use Drupal\eic_overviews\GlobalOverviewPages;
+
+/**
+ * Implements hook_install().
+ */
+function eic_overviews_install() {
+  _eic_overviews_create_research_institutions_page();
+}
+
+/**
+ * Creates or updates the Research Institutions overview page.
+ *
+ * @return string
+ *   Status message.
+ */
+function _eic_overviews_create_research_institutions_page() {
+  // Check if entity already exists with correct UUID.
+  $existing_by_uuid = \Drupal::entityQuery('overview_page')
+    ->accessCheck(FALSE)
+    ->condition('uuid', GlobalOverviewPages::RESEARCH_INSTITUTIONS_UUID)
+    ->execute();
+
+  if (!empty($existing_by_uuid)) {
+    return t('Institutions Explorer overview page already exists with correct UUID.');
+  }
+
+  // Check if entity exists by field_overview_id (needs UUID update).
+  $existing_by_field = \Drupal::entityQuery('overview_page')
+    ->accessCheck(FALSE)
+    ->condition('field_overview_id', GlobalOverviewPages::RESEARCH_INSTITUTIONS)
+    ->execute();
+
+  if (!empty($existing_by_field)) {
+    // Update existing entity's UUID.
+    $entity_id = reset($existing_by_field);
+    $connection = \Drupal::database();
+    $connection->update('overview_page')
+      ->fields(['uuid' => GlobalOverviewPages::RESEARCH_INSTITUTIONS_UUID])
+      ->condition('id', $entity_id)
+      ->execute();
+
+    \Drupal::entityTypeManager()->getStorage('overview_page')->resetCache([$entity_id]);
+
+    return t('Updated Research Institutions overview page UUID to @uuid.', [
+      '@uuid' => GlobalOverviewPages::RESEARCH_INSTITUTIONS_UUID,
+    ]);
+  }
+
+  // Create new entity.
+  $overview_page = OverviewPage::create([
+    'uuid' => GlobalOverviewPages::RESEARCH_INSTITUTIONS_UUID,
+    'title' => 'Institutions Explorer',
+    'field_overview_id' => GlobalOverviewPages::RESEARCH_INSTITUTIONS,
+    'field_overview_block' => [
+      'plugin_id' => 'rins_search_overview',
+      'settings' => [],
+    ],
+    'status' => TRUE,
+    'description' => 'Browse and search Chinese research institutions.',
+  ]);
+  $overview_page->save();
+
+  // Create URL alias.
+  $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  $path_alias_storage->create([
+    'path' => '/overview_page/' . $overview_page->id(),
+    'alias' => '/data-explorer/institutions-explorer',
+    'langcode' => 'en',
+  ])->save();
+
+  return t('Created Institutions Explorer overview page with ID @id.', [
+    '@id' => $overview_page->id(),
+  ]);
+}
+
+/**
+ * Create Institutions Explorer overview page or update existing UUID.
+ */
+function eic_overviews_update_9001(&$sandbox) {
+  return _eic_overviews_create_research_institutions_page();
+}
+
+/**
+ * Move RI paths under /data-explorer/institutions-explorer.
+ */
+function eic_overviews_update_9002(&$sandbox) {
+  $messages = [];
+
+  // 1. Update the overview page path alias.
+  $alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  $aliases = $alias_storage->loadByProperties([
+    'alias' => '/institutions-explorer',
+  ]);
+
+  if (!empty($aliases)) {
+    $alias = reset($aliases);
+    $alias->set('alias', '/data-explorer/institutions-explorer');
+    $alias->save();
+    $messages[] = 'Updated overview page alias to /data-explorer/institutions-explorer.';
+  }
+  else {
+    $messages[] = 'No overview page alias found at /institutions-explorer.';
+  }
+
+  // 2. Regenerate pathauto aliases for all research_institution groups.
+  $group_ids = \Drupal::entityQuery('group')
+    ->accessCheck(FALSE)
+    ->condition('type', 'research_institution')
+    ->execute();
+
+  if (!empty($group_ids)) {
+    $groups = \Drupal::entityTypeManager()->getStorage('group')->loadMultiple($group_ids);
+    foreach ($groups as $group) {
+      \Drupal::service('pathauto.generator')->updateEntityAlias($group, 'bulkupdate');
+    }
+    $messages[] = t('Regenerated pathauto aliases for @count research institution groups.', [
+      '@count' => count($group_ids),
+    ]);
+  }
+  else {
+    $messages[] = 'No research institution groups found to update.';
+  }
+
+  return implode(' ', $messages);
+}

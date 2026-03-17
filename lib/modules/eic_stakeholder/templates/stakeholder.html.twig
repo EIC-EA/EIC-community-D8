@@ -41,7 +41,7 @@
 
     {% if content.field_stakeholder_related_people.0 %}
       <div>{{ "Related people in the EIC Community:"|t }}</div>
-      {% include "@eic_community/patterns/compositions/teaser-overview.html.twig" with {
+      {% include "@eic_community/patterns/compositions/teaser-overview" with {
         amount_options: amount_options,
         active_filters: active_filters,
         sort_options: sort_options,

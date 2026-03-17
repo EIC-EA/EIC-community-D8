@@ -1,0 +1,16 @@
+# Main navigation menu links for search/overview pages.
+eic_search.data_explorer:
+  title: 'Data explorer'
+  description: 'Explore data and research institutions'
+  menu_name: main
+  route_name: <nolink>
+  expanded: true
+  weight: 10
+
+eic_search.institutions_explorer:
+  title: 'Institutions explorer'
+  description: 'Browse and search research institutions'
+  menu_name: main
+  parent: eic_search.data_explorer
+  route_name: eic_search.research_institutions
+  weight: 0

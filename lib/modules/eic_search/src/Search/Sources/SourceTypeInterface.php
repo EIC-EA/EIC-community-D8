@@ -279,4 +279,24 @@ interface SourceTypeInterface {
    * @return array
    */
   public function getFacetsUsingOrCondition(): array;
+
+  /**
+   * Return exclude facets mapping virtual keys to real Solr fields.
+   *
+   * Virtual exclude keys are sent by the frontend as normal facets but
+   * produce NOT queries instead of positive matches. The array maps
+   * virtual key => real Solr field name.
+   *
+   * @return array
+   *   Associative array of virtual_key => real_solr_field.
+   */
+  public function getExcludeFacets(): array;
+
+  /**
+   * Determines if the source requires user authentication.
+   *
+   * @return bool
+   *   TRUE if authentication is required, FALSE otherwise.
+   */
+  public function requiresAuthentication(): bool;
 }

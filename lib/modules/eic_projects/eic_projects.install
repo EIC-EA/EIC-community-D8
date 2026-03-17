@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\oec_group_features\GroupFeatureHelper;
 
 
 /**
@@ -13,20 +12,19 @@ function eic_projects_install($is_syncing) {
 }
 
 /**
- * Update field_project_total_cost and field_project_ecmax_contributio to match
- * config field storage settings
+ * Update field_project_total_cost and field_project_ecmax_contributio to match config field storage settings
  */
 function eic_projects_update_9000(&$sandbox) {
   $db = \Drupal::database();
   $numeric_fields = [
     [
       'table' => 'group__field_project_total_cost',
-      'field' => 'field_project_total_cost_value',
+      'field' => 'field_project_total_cost_value'
     ],
     [
       'table' => 'group__field_project_ecmax_contributio',
-      'field' => 'field_project_ecmax_contributio_value',
-    ],
+      'field' => 'field_project_ecmax_contributio_value'
+    ]
   ];
   foreach ($numeric_fields as $num_field) {
     $transaction = $db->startTransaction();
@@ -59,88 +57,9 @@ function eic_projects_update_9000(&$sandbox) {
 }
 
 /**
- * Rebuild the container to get the new service and class name for
- * eic_projects.project_migration
+ * Rebuild the container to get the new service and class name for eic_projects.project_migration
  */
 function eic_projects_update_9001(&$sandbox) {
   // Rebuild the Drupal container during the update.
   \Drupal::service('kernel')->rebuildContainer();
-}
-
-/**
- * Update group project entities to add HRP links where possible.
- */
-function eic_projects_update_9002(&$sandbox) {
-  if (!isset($sandbox['total'])) {
-    $gids = \Drupal::entityQuery('group')
-      ->condition('type', 'project')
-      ->accessCheck(FALSE)
-      ->execute();
-    $sandbox['total'] = count($gids);
-    $sandbox['current'] = 0;
-
-    if (empty($sandbox['total'])) {
-      $sandbox['#finished'] = 1;
-      return;
-    }
-  }
-
-  $groups_per_batch = 25;
-  $gids = \Drupal::entityQuery('group')
-    ->condition('type', 'project')
-    ->accessCheck(FALSE)
-    ->range($sandbox['current'], $groups_per_batch)
-    ->execute();
-  if (empty($gids)) {
-    $sandbox['#finished'] = 1;
-    return;
-  }
-
-  $horizon_plugin_definition_id = 'eic_groups_anchor_horizon_platform_result';
-
-  /** @var \Drupal\eic_groups\Plugin\GroupFeature\GroupAnchorFeature\GroupAnchorHorizonResult $horizon_feature */
-  $horizon_feature = \Drupal::service('plugin.manager.group_feature')
-    ->createInstance($horizon_plugin_definition_id);
-
-  foreach ($gids as $gid) {
-    $url = \Drupal::service('eic_projects.ftp_search')->getPortalUrl($gid);
-    if ($url) {
-      // Just save the group.
-      // \Drupal\eic_projects\Hooks\EntityOperations::projectGroupPreSave will
-      // add the HRP link to the field.
-
-      // Also enable the HRP feature on group.
-      $group = \Drupal::entityTypeManager()->getStorage('group')
-        ->load($gid);
-      $horizon_feature->enable($group);
-
-      // @see \Drupal\eic_groups\Hooks\FormOperations::enableDefaultFeatures
-      // Make sure the feature is enabled on field level.
-      $feature_found = FALSE;
-      foreach ($group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue() as $item) {
-        if ($item['value'] == $horizon_plugin_definition_id) {
-          $feature_found = TRUE;
-          break;
-        }
-      }
-      if (!$feature_found) {
-        $value = $group->get('features')->getValue();
-        $value[]['value'] = $horizon_plugin_definition_id;
-        $group->get('features')->setValue($value);
-      }
-      $group->save();
-    }
-
-    $sandbox['current']++;
-  }
-
-  \Drupal::messenger()
-    ->addMessage($sandbox['current'] . ' groups processed.');
-
-  if ($sandbox['current'] >= $sandbox['total']) {
-    $sandbox['#finished'] = 1;
-  }
-  else {
-    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
-  }
 }

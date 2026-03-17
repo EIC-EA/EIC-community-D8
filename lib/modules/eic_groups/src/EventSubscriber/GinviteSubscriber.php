@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\EventSubscriber;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -9,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\ginvite\GroupInvitation;
 use Drupal\ginvite\GroupInvitationLoader;
+use Drupal\ginvite\GroupInvitationManager;
 use Drupal\ginvite\EventSubscriber\GinviteSubscriber as GinviteSubscriberBase;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -34,9 +36,11 @@ class GinviteSubscriber extends GinviteSubscriberBase {
     GroupInvitationLoader $invitation_loader,
     AccountInterface $current_user,
     MessengerInterface $messenger,
-    LoggerChannelFactoryInterface $logger_factory
+    LoggerChannelFactoryInterface $logger_factory,
+    ConfigFactoryInterface $config_factory,
+    GroupInvitationManager $group_invitation_manager
   ) {
-    parent::__construct($invitation_loader, $current_user, $messenger, $logger_factory);
+    parent::__construct($invitation_loader, $current_user, $messenger, $logger_factory, $config_factory, $group_invitation_manager);
     $this->ginviteSubscriber = $ginvite_subscriber_inner_service;
   }
 

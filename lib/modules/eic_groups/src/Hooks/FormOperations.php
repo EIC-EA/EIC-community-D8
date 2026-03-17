@@ -326,7 +326,7 @@ class FormOperations implements ContainerInjectionInterface {
    * @param \Drupal\group\Entity\Group $group
    *   The group entity.
    */
-  public function enableDefaultFeatures(Group $group) {
+  protected function enableDefaultFeatures(Group $group) {
     $group_type_id = $group->getGroupType()->id();
     $config = $this->configFactory->get("eic_groups.group_features.default_features.$group_type_id");
     $default_features = $config->get('default_features') ?? [];

@@ -12,6 +12,6 @@ services:
       - { name: event_subscriber }
   eic_user_login.request_event_subscriber:
     class: Drupal\eic_user_login\EventSubscriber\RequestEventSubscriber
-    arguments: ['@tempstore.private', '@current_user']
+    arguments: ['@tempstore.private', '@current_user', '@?eic_feature_toggle.manager']
     tags:
       - { name: event_subscriber }

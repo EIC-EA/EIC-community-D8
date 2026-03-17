@@ -51,8 +51,10 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
       '#weight' => -50,
     ];
 
-    // Adds the entity counter to the build array.
-    $build['fact_figure_counter'] = $counter;
+    // Adds the entity counter to the build array as render array.
+    $build['fact_figure_counter'] = [
+      '#plain_text' => (string) $counter,
+    ];
     // Adds statistic counter cache tag.
     $build['#cache']['tags'][] = $cache_tag;
   }

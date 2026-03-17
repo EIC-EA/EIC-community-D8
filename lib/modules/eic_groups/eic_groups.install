@@ -15,7 +15,6 @@ use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
-use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group_content_menu\GroupContentMenuInterface;
@@ -810,55 +809,6 @@ function eic_groups_update_9017() {
 }
 
 /**
- * Implements hook_update_N().
- */
-function eic_groups_update_9018(&$sandbox) {
-  if (!isset($sandbox['total'])) {
-    $gids = \Drupal::entityQuery('group')
-      ->condition('type', 'organisation')
-      ->accessCheck(FALSE)
-      ->execute();
-    $sandbox['total'] = count($gids);
-    $sandbox['current'] = 0;
-
-    if (empty($sandbox['total'])) {
-      $sandbox['#finished'] = 1;
-      return;
-    }
-  }
-
-  $groups_per_batch = 20;
-  $gids = \Drupal::entityQuery('group')
-    ->condition('type', 'organisation')
-    ->accessCheck(FALSE)
-    ->range($sandbox['current'], $groups_per_batch)
-    ->execute();
-  if (empty($gids)) {
-    $sandbox['#finished'] = 1;
-    return;
-  }
-
-  foreach ($gids as $gid) {
-    $group = \Drupal::entityTypeManager()->getStorage('group')
-      ->load($gid);
-    \Drupal::classResolver(FormOperations::class)
-      ->enableDefaultFeatures($group);
-
-    $sandbox['current']++;
-  }
-
-  \Drupal::messenger()
-    ->addMessage($sandbox['current'] . ' groups processed.');
-
-  if ($sandbox['current'] >= $sandbox['total']) {
-    $sandbox['#finished'] = 1;
-  }
-  else {
-    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
-  }
-}
-
-/**
  * Operation batch for publishing group wiki section.
  */
 function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $total, &$context) {
@@ -885,7 +835,7 @@ function _eic_groups_batch_publish_group_wiki(int $progress, int $max, int $tota
     }
 
     if ($book = $eic_groups_helper->getGroupBookPage($loaded_group)) {
-      /** @var \Drupal\node\NodeInterface|null $book_node */
+      /** @var \Drupal\node\NodeInterface|null $book_node*/
       $book_node = $em->getStorage('node')->load($book);
       if (
         $book_node &&

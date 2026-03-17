@@ -20,11 +20,7 @@ class ProcessorOrganisation extends DocumentProcessor {
   public function process(Document &$document, array $fields, array $items = []): void {
     $group = Group::load($fields['its_group_id_integer']);
 
-    if (!$group instanceof GroupInterface ) {
-      return;
-    }
-
-    if (!$group->hasField('field_locations')) {
+    if (!$group instanceof GroupInterface) {
       return;
     }
 

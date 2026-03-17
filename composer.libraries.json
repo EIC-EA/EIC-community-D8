@@ -168,6 +168,18 @@
         },
         "type": "drupal-library"
       }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "select2/select2",
+        "version": "4.0.13",
+        "type": "drupal-library",
+        "dist": {
+          "url": "https://github.com/select2/select2/archive/refs/tags/4.0.13.zip",
+          "type": "zip"
+        }
+      }
     }
   ],
   "extra": {

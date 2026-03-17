@@ -62,9 +62,9 @@ class SolrSearchManager {
   private GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage;
 
   /**
-   * @var \Drupal\eic_search\Search\Sources\SourceTypeInterface
+   * @var \Drupal\eic_search\Search\Sources\SourceTypeInterface|null
    */
-  private SourceTypeInterface $source;
+  private ?SourceTypeInterface $source;
 
   /**
    * @var array
@@ -163,6 +163,13 @@ class SolrSearchManager {
 
     $sources = $this->sourcesCollector->getSources();
     $this->source = array_key_exists($source_class, $sources) ? $sources[$source_class] : NULL;
+
+    // Return early if source is not found - caller should check getSource().
+    if (!$this->source) {
+      $this->rawFieldQuery = '';
+      return $this;
+    }
+
     $datasources = $this->source->getSourcesId();
     $datasources_query = [];
 
@@ -173,6 +180,16 @@ class SolrSearchManager {
     $this->rawFieldQuery = '(' . implode(' OR ', $datasources_query) . ')';
 
     return $this;
+  }
+
+  /**
+   * Gets the current source type.
+   *
+   * @return \Drupal\eic_search\Search\Sources\SourceTypeInterface|null
+   *   The current source type or NULL if not initialized.
+   */
+  public function getSource(): ?SourceTypeInterface {
+    return $this->source ?? NULL;
   }
 
   /**
@@ -295,7 +312,20 @@ class SolrSearchManager {
 
     // Cleaning non solr fields from facets before putting it to the query.
     $this->cleanFacets();
+    $exclude_facets = $this->source->getExcludeFacets();
     foreach ($this->facets as $key => $facet_value) {
+      // Handle exclude facets with NOT logic.
+      if (array_key_exists($key, $exclude_facets)) {
+        $filtered = array_filter($facet_value, fn($v) => $v);
+        if ($filtered) {
+          $real_field = $exclude_facets[$key];
+          foreach (array_keys($filtered) as $val) {
+            $facets_query .= ' AND -' . $real_field . ':"' . $val . '"';
+          }
+        }
+        continue;
+      }
+
       $filtered_value = array_filter($facet_value, function ($value) {
         return $value;
       });
@@ -387,6 +417,11 @@ class SolrSearchManager {
    */
   public function buildFacets(?array $facets_fields) {
     $facets_fields = $facets_fields ?? [];
+
+    // Remove virtual exclude keys - Solr should not be asked for counts on them.
+    $exclude_keys = $this->source ? array_keys($this->source->getExcludeFacets()) : [];
+    $facets_fields = array_filter($facets_fields, fn($f) => !in_array($f, $exclude_keys));
+
     $facets_fields = array_map(function ($facet) {
       if (!in_array($facet, DocumentProcessorInterface::SOLR_FIELD_NEED_GROUP_INJECT)) {
         return $facet;
@@ -642,8 +677,9 @@ class SolrSearchManager {
     $user_id = $this->currentUser->id();
     $is_power_user = UserHelper::isPowerUser($this->currentUser);
 
-    // We need to ignore the publish state for power users.
-    if ($is_power_user) {
+    // We need to ignore the publish state for power users or users with
+    // permission to view any unpublished content.
+    if ($is_power_user || $this->currentUser->hasPermission('view any unpublished content')) {
       return;
     }
 
@@ -680,6 +716,7 @@ class SolrSearchManager {
       case 'discussion':
       case 'node_event':
       case 'news':
+      case 'research_institution':
         // Show own content even if it's in draft, archived, ...
         $query_bundle[] = "its_content_uid:$user_id";
         break;

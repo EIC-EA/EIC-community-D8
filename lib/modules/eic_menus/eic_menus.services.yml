@@ -1,15 +1,20 @@
 services:
-  eic_menus.menu_trail_by_path.active_trail:
-    class: Drupal\eic_menus\EICMenuTrailByPathActiveTrail
-    decorates: menu_trail_by_path.active_trail
-    public: false
-    arguments:
-      - '@eic_menus.menu_trail_by_path.active_trail.inner'
-      - '@plugin.manager.menu.link'
-      - '@current_route_match'
-      - '@cache.menu'
-      - '@lock'
-      - '@path.validator'
-      - '@router.request_context'
-      - '@language_manager'
-      - '@config.factory'
+  # Disabled due to incompatibility with menu_trail_by_path 2.x
+  # The module changed its architecture and no longer provides
+  # menu_trail_by_path.active_trail service.
+  # TODO: Review if this decorator is still needed.
+  # eic_menus.menu_trail_by_path.active_trail:
+  #   class: Drupal\eic_menus\EICMenuTrailByPathActiveTrail
+  #   decorates: menu.active_trail
+  #   decoration_priority: -10
+  #   public: false
+  #   arguments:
+  #     - '@eic_menus.menu_trail_by_path.active_trail.inner'
+  #     - '@plugin.manager.menu.link'
+  #     - '@current_route_match'
+  #     - '@cache.menu'
+  #     - '@lock'
+  #     - '@path.validator'
+  #     - '@router.request_context'
+  #     - '@language_manager'
+  #     - '@config.factory'

@@ -4,5 +4,4 @@ description: Provides functionality around projects.
 package: European Innovation Council
 core_version_requirement: ^8 || ^9 || ^10
 php: 7.3
-dependencies:
-  - drupal:migrate_plus
+dependencies: []

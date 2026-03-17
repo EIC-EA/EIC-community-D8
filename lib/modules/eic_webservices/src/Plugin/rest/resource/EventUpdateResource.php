@@ -48,16 +48,6 @@ class EventUpdateResource extends ResourceBase {
   protected $resourcePluginManager;
 
   /**
-   * Array of fields to disable updating from SMED
-   *
-   * @var array
-   */
-  private array $fieldsToDisableUpdate = [
-    'field_body'
-  ];
-
-
-  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -99,26 +89,11 @@ class EventUpdateResource extends ResourceBase {
       $current_request->cookies->all(),
       $current_request->files->all(),
       $current_request->server->all(),
-      $this->filterEventContent($current_request->getContent()),
+      $current_request->getContent(),
       $current_request->headers->all()
     );
 
     return new ResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
-  }
-
-  /**
-   * @param string $contentJson
-   *
-   * @return false|string
-   */
-  private function filterEventContent(string $contentJson) {
-    $content = Json::decode($contentJson);
-    foreach ($this->fieldsToDisableUpdate as $field) {
-      if (isset($content[$field])) {
-        unset($content[$field]);
-      }
-    }
-    return Json::encode($content);
   }
 
 }

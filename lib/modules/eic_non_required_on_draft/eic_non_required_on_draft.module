@@ -155,6 +155,13 @@ function eic_non_required_on_draft_preprocess_form_element(&$variables) {
 }
 
 /**
+ * Implements hook_field_widget_entity_reference_paragraphs_form_alter().
+ */
+function eic_non_required_on_draft_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  _eic_non_required_on_draft_add_indicator_to_paragraph($element, $form_state, $context);
+}
+
+/**
  * Implements hook_field_widget_single_element_WIDGET_TYPE_form_alter().
  */
 function eic_non_required_on_draft_field_widget_single_element_paragraphs_form_alter(array &$element, FormStateInterface $form_state, array $context) {

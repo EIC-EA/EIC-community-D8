@@ -81,9 +81,9 @@ function _eic_contact_category_allowed_values() {
 }
 
 /**
- * Implements hook_field_widget_single_element_form_alter().
+ * Implements hook_field_widget_form_alter().
  */
-function eic_contact_field_widget_single_element_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function eic_contact_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
   $field = $context['items']->getFieldDefinition();
   if ($field->getName() !== 'field_contact_message') {
     return;

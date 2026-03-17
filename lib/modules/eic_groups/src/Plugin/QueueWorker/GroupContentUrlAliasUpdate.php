@@ -66,6 +66,11 @@ class GroupContentUrlAliasUpdate extends QueueWorkerBase implements ContainerFac
    * {@inheritdoc}
    */
   public function processItem($data) {
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isQueueEnabled('eic_groups_group_content_url_alias_update')) {
+      return;
+    }
+
     /** @var \Drupal\group\Entity\GroupContent $group_content */
     $group_content = GroupContent::load($data);
 

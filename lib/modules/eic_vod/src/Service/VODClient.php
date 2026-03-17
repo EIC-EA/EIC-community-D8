@@ -49,6 +49,12 @@ class VODClient {
    * @return string|null
    */
   public function getPresignedUrl(string $action, string $file): ?string {
+    // Check if VOD CloudFront is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('vod_cloudfront')) {
+      return NULL;
+    }
+
     $url = $this->config['cloudfront_url'];
     if (empty($url)) {
       return NULL;
@@ -121,6 +127,12 @@ class VODClient {
    * @return array|null
    */
   public function getCookies(string $file): ?array {
+    // Check if VOD CloudFront is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('vod_cloudfront')) {
+      return NULL;
+    }
+
     try {
       $url = $this->config['cloudfront_url'];
       if (empty($url)) {
@@ -153,6 +165,12 @@ class VODClient {
    * @return string|null
    */
   public function getStreamUrl(string $file): ?string {
+    // Check if VOD CloudFront is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('vod_cloudfront')) {
+      return NULL;
+    }
+
     $url = $this->config['cloudfront_url'];
     if (empty($url)) {
       return NULL;

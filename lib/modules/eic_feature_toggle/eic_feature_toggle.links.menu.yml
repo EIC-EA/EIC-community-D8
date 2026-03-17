@@ -1,0 +1,6 @@
+eic_feature_toggle.settings:
+  title: 'Feature Toggles'
+  description: 'Enable or disable EIC features (cron jobs, queue workers, external services).'
+  route_name: eic_feature_toggle.settings
+  parent: eic_admin.settings
+  weight: 50

@@ -82,11 +82,11 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
 
     // We don't always have a third element in the array, so test if first.
     if (isset($final_values[3])) {
-      [$id, $gid, $type, $options] = $final_values;
+      list($id, $gid, $type, $options) = $final_values;
     }
     else {
       $options = [];
-      [$id, $gid, $type] = $final_values;
+      list($id, $gid, $type) = $final_values;
     }
 
     if (!is_array($options)) {
@@ -125,23 +125,6 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
       ->delete('oec_group_visibility')
       ->condition('id', $entity_ids, 'IN')
       ->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function loadByType(string $visibility_type) {
-
-    $result = $this->connection->select('oec_group_visibility')
-      ->fields('oec_group_visibility', ['gid'])
-      ->condition('type', $visibility_type)
-      ->execute()->fetchAll();
-
-    if (empty($result)) {
-      return FALSE;
-    }
-
-    return array_column($result, 'gid');
   }
 
   /**

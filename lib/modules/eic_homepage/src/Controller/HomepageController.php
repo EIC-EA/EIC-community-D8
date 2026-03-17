@@ -13,7 +13,7 @@ class HomepageController extends ControllerBase {
    * Builds the homepage title.
    */
   public function title() {
-    return $this->t('Welcome to the EIC Community');
+    return $this->t('Welcome to the Due Diligence China');
   }
 
   /**

@@ -48,6 +48,11 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function processItem($data) {
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isQueueEnabled('eic_flags_notify_queue')) {
+      return;
+    }
+
     $message = NULL;
 
     switch ($data['flag_id']) {

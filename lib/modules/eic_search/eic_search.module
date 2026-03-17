@@ -5,6 +5,10 @@
  * Primary module hooks for EIC Search module.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 use Drupal\search_api\IndexInterface;
 use \Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use \Solarium\Core\Query\QueryInterface as SolrQueryInterface;
@@ -48,6 +52,19 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'enable_registration_filter' => FALSE,
         'manager_roles' => [],
         'post_content_actions' => [],
+      ],
+    ],
+    'rins_search_overview_block' => [
+      'variables' => [
+        'url' => '',
+        'facets' => [],
+        'sorts' => [],
+        'translations' => [],
+        'settings' => [],
+        'search_string' => '',
+        'prefilters' => [],
+        'isAnonymous' => TRUE,
+        'source_class' => '',
       ],
     ],
   ];
@@ -137,4 +154,20 @@ function eic_search_search_api_solr_query_alter(SolrQueryInterface $solarium_que
     $index->getProcessor('group_content_access')
       ->preprocessSolrSearchQuery($solarium_query);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for group entities.
+ *
+ * Blocks anonymous access to research institution groups.
+ */
+function eic_search_group_access(GroupInterface $group, $op, AccountInterface $account) {
+  if ($group->bundle() === 'research_institution' && $op === 'view') {
+    if ($account->isAnonymous()) {
+      return AccessResult::forbidden('Authentication required.')
+        ->addCacheableDependency($group)
+        ->cachePerUser();
+    }
+  }
+  return AccessResult::neutral();
 }

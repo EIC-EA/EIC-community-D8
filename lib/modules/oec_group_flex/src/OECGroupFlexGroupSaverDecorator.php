@@ -268,7 +268,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   protected function removeRolePermissionsFromGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
     $permissions = $groupPermission->getPermissions();
     foreach ($rolePermissions as $permission) {
-      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
+      if (array_key_exists($role, $permissions)) {
         $permissions[$role] = array_diff($permissions[$role], [$permission]);
       }
     }

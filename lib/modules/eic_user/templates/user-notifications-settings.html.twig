@@ -1,6 +1,68 @@
-{% include '@theme/patterns/compositions/subnavigation.html.twig' with menu_items|default({}) %}
+{#
+/**
+ * @file
+ * User notifications settings page template.
+ *
+ * Variables:
+ * - menu_items: Subnavigation items
+ * - items: Content sections/tabs
+ * - ecl_icon_path: Path to ECL icon sprite
+ */
+#}
 
-{% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
-  as_tabs: true,
-  items: items
-} %}
+{# Subnavigation using ECL tabs #}
+{% if menu_items.items is defined and menu_items.items is not empty %}
+  {% set _nav_items = [] %}
+  {% for item in menu_items.items %}
+    {% if item.link %}
+      {% set _nav_items = _nav_items|merge([{
+        'label': item.link.label,
+        'path': item.link.path,
+        'is_current': item.is_active|default(false),
+      }]) %}
+    {% endif %}
+  {% endfor %}
+
+  {% include '@ecl-twig/tabs' with {
+    'items': _nav_items,
+    'icon_path': ecl_icon_path,
+  } only %}
+{% endif %}
+
+{# Content sections as tabs #}
+{% if items is not empty %}
+  <div class="ecl-tabs" data-ecl-tabs="true" data-ecl-auto-init="Tabs">
+    <div class="ecl-tabs__container">
+      <div class="ecl-tabs__list" role="tablist">
+        {% for key, item in items %}
+          <div class="ecl-tabs__item">
+            <a
+              href="#tab-panel-{{ key }}"
+              class="ecl-link ecl-link--standalone ecl-tabs__link{{ loop.first ? ' ecl-tabs__link--active' : '' }}"
+              role="tab"
+              aria-selected="{{ loop.first ? 'true' : 'false' }}"
+              aria-controls="tab-panel-{{ key }}"
+              id="tab-{{ key }}"
+              {% if not loop.first %}tabindex="-1"{% endif %}
+            >
+              {{ item.title|default('Tab ' ~ loop.index) }}
+            </a>
+          </div>
+        {% endfor %}
+        {# Required for responsive overflow menu #}
+        <div class="ecl-tabs__item ecl-tabs__item--more"></div>
+      </div>
+    </div>
+  </div>
+  {% for key, item in items %}
+    <div
+      class="ecl-u-mt-l"
+      id="tab-panel-{{ key }}"
+      role="tabpanel"
+      aria-labelledby="tab-{{ key }}"
+      {% if not loop.first %}hidden{% endif %}
+    >
+      {{ item.content|raw }}
+    </div>
+  {% endfor %}
+{% endif %}

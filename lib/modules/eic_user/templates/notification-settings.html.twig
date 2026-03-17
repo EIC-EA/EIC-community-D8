@@ -1,4 +1,35 @@
+{#
+/**
+ * @file
+ * Email notification settings template.
+ *
+ * Variables:
+ * - data: Notification settings data
+ */
+#}
 {{ attach_library('eic_community/react-toggle') }}
 {{ attach_library('eic_community/react-notif-management') }}
 {{ attach_library('eic_community/react-digest-management') }}
-{% include "@theme/patterns/compositions/member/email-notification.html.twig" with data %}
+
+{# Simplified email notification display - original used @theme/email-notification pattern #}
+{% if data is not empty %}
+  <div class="ecl-u-mt-l ecl-u-mb-l">
+    {% if data.title is defined %}
+      <h3 class="ecl-u-type-heading-3 ecl-u-mb-m">{{ data.title }}</h3>
+    {% endif %}
+    {% if data.description is defined %}
+      <p class="ecl-u-type-paragraph ecl-u-type-color-grey">{{ data.description }}</p>
+    {% endif %}
+    {# Render any additional content/form elements #}
+    {% if data.content is defined %}
+      {{ data.content }}
+    {% endif %}
+    {# React mount points for notification management #}
+    {% if data.notification_management_id is defined %}
+      <div id="{{ data.notification_management_id }}" class="ecl-u-mt-m"></div>
+    {% endif %}
+    {% if data.digest_management_id is defined %}
+      <div id="{{ data.digest_management_id }}" class="ecl-u-mt-m"></div>
+    {% endif %}
+  </div>
+{% endif %}

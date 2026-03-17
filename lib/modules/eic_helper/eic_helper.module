@@ -8,3 +8,65 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\user\UserInterface;
+
+/**
+ * Returns user display data for teaser/header displays.
+ *
+ * @param \Drupal\user\UserInterface $user
+ *   The user entity.
+ * @param string $image_style
+ *   The image style to use for the user picture. Defaults to 'crop_36x36'.
+ *
+ * @return array
+ *   An array with user display data containing:
+ *   - name: The user's full name or username.
+ *   - image: The URL to the user's profile picture (or NULL).
+ *   - path: The URL to the user's profile page.
+ */
+function eic_community_get_teaser_user_display(UserInterface $user, string $image_style = 'crop_36x36'): array {
+  $first_name = '';
+  $last_name = '';
+
+  if ($user->hasField('field_first_name') && !$user->get('field_first_name')->isEmpty()) {
+    $first_name = $user->get('field_first_name')->value;
+  }
+
+  if ($user->hasField('field_last_name') && !$user->get('field_last_name')->isEmpty()) {
+    $last_name = $user->get('field_last_name')->value;
+  }
+
+  // Build the display name from first and last name, or fall back to username.
+  $name = trim($first_name . ' ' . $last_name);
+  if (empty($name)) {
+    $name = $user->getDisplayName();
+  }
+
+  // Get the user's profile picture.
+  $image = NULL;
+  if ($user->hasField('field_media') && !$user->get('field_media')->isEmpty()) {
+    $media = $user->get('field_media')->entity;
+    if ($media && $media->hasField('oe_media_image') && !$media->get('oe_media_image')->isEmpty()) {
+      $file = $media->get('oe_media_image')->entity;
+      if ($file instanceof File) {
+        $style = ImageStyle::load($image_style);
+        if ($style) {
+          $image = $style->buildUrl($file->getFileUri());
+        }
+        else {
+          $image = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+        }
+      }
+    }
+  }
+
+  return [
+    'name' => $name,
+    'image' => $image,
+    'path' => $user->toUrl()->toString(),
+  ];
+}

@@ -1,0 +1,473 @@
+{
+    "_hash": "8d967fe327136d1b569577a1810c6813c8ee48378a635c5e624023af0e3bbd55",
+    "patches": {
+        "drupal/core": [
+            {
+                "package": "drupal/core",
+                "description": "2973863 - ValidReferenceConstraintValidator should not try to enforce data integrity on pre-existing references",
+                "url": "patches/core/MR-9210-82428b54baf625e313-2973863.patch",
+                "sha256": "de95863699ae4699bbd693b679aebbb8b59a848d90bb138e8c60048c4c3e2e7f",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "2918537 - Cannot save unpublished versions of published content for users without manage book privileges",
+                "url": "https://www.drupal.org/files/issues/2021-11-16/2918537-68.patch",
+                "sha256": "6c682f96961c2781e06bff519d81dd2c7e3fe237c10a5ceeec46a39b837c37eb",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "2760983 - array_flip(): Can only flip STRING and INTEGER values! EntityStorageBase.php:227",
+                "url": "https://www.drupal.org/files/issues/2020-02-06/2760983-8.patch",
+                "sha256": "b0be9d7901f62d9cf77d4aada33a26d374bd686cdbee1e151323eeb847141fca",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "2329253 - Allow the ChangedItem to skip updating the entity's \"changed\" timestamp when synchronizing (f.e. when migrating)",
+                "url": "https://www.drupal.org/files/issues/2024-07-30/2329253-10.x.patch",
+                "sha256": "316697156913cbfe5fd8017432f4f225c7516bd56da11b200c0b24a86e6a6594",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "2907760 - Notice: Undefined index: default in Drupal\\views\\Plugin\\views\\PluginBase->setOptionDefaults()",
+                "url": "https://www.drupal.org/files/issues/2022-05-26/2907760-11-9.3.x.patch",
+                "sha256": "c7bc1e9aafdc72159d3fb310cfbd8bd2a0438bdd85f79928938510e9d4d84a93",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "3183509 - Use the user display name instead of the username on the user authoring information in the node edit form",
+                "url": "patches/core/MR-352-3183509-user-display-name-node-edit-form.patch",
+                "sha256": "3ac9684e54198d2bc7f64cd5bb2aa916b60e1d9d41e336bc1a57367518396f7a",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "Content moderation does not sanity check original entity moderate state is present / exists",
+                "url": "https://www.drupal.org/files/issues/2022-06-09/add-sanity-checking-to-content-moderation-original-value-checks.patch",
+                "sha256": "8996f90c48eb8280e7ab15742fe0a547135e74f94c7b0428bf8bb014d7d35ec3",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "EICNET-3009 - Change advanced sidebar \"Last saved\" datetime to EU format",
+                "url": "patches/core/EICNET-3009-change-date-format-last-saved.patch",
+                "sha256": "bdcba2a60a6f8f91572ac153b1c2531301c4406211cf5149801f214f7a2a8a8a",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "3456176 - 10.3 upgrade now missing status-message theme suggestions",
+                "url": "https://www.drupal.org/files/issues/2024-06-28/3456176-45-missing-status-messages-theme-suggestions.patch",
+                "sha256": "85eebf92df3832e004f1fa5781019cf694bf9b5a9646f3e37faa0b1baaa52a6f",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "3303889 - Error: Call to a member function uuid() on null in MediaLibraryEditorOpener->getSelectionResponse() (line 72 of /app/docroot/core/modules/media_library/src/MediaLibraryEditorOpener.php)",
+                "url": "https://www.drupal.org/files/issues/2023-12-01/3340973-33.patch",
+                "sha256": "82553caae7b1abd248c9a5c12f3e3159626053062e6fb774a68bb2d07c9f6c27",
+                "depth": 2,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/core",
+                "description": "https://www.drupal.org/project/drupal/issues/3151609",
+                "url": "https://www.drupal.org/files/issues/2024-06-11/link_internal_as_text_v11-3151609.patch",
+                "sha256": "68e3b1d810e8a70280505b38716273e246abd381d8d346b8fb6202c9008b6d54",
+                "depth": 2,
+                "extra": {
+                    "provenance": "dependency:drupal/core"
+                }
+            }
+        ],
+        "drupal/address": [
+            {
+                "package": "drupal/address",
+                "description": "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)",
+                "url": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch",
+                "sha256": "5d8bb805b83575ec0b407d1991e7d79db8c79ee44ac450c72b5c2c2c6c95d45a",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/address",
+                "description": "2995992 - Country field should display the \"- Select -\" option to match core behavior",
+                "url": "https://www.drupal.org/files/issues/2022-03-14/2995992-56.patch",
+                "sha256": "41674fa33162f0b98813d759e6e7793cd9a6d4157a6bc89a6e8c67c0231b82ad",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/block_content_permissions": [
+            {
+                "package": "drupal/block_content_permissions",
+                "description": "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission",
+                "url": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch",
+                "sha256": "d1c64f36eaa22b00eccda997698bfc9815ce331cd0f47835494a075115b70f6a",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/ckeditor_find": [
+            {
+                "package": "drupal/ckeditor_find",
+                "description": "D10 compatibility",
+                "url": "https://www.drupal.org/files/issues/2025-02-25/3397636-d10-ckeditor_find-10.patch",
+                "sha256": "81493a1dec0ad6b1ce74024bcbb25bf855ea23fcf121b476d510ef8aa241c30f",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/ckeditor_selectall": [
+            {
+                "package": "drupal/ckeditor_selectall",
+                "description": "3226489 - Make this module compatible with Drupal 10",
+                "url": "https://www.drupal.org/files/issues/2023-10-25/3226489-4.patch",
+                "sha256": "f4a4008ab11f5f189e8ad8033d06e27402e80478fc691fd517c39cb2dc23e8ad",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/ckeditor_oembed": [
+            {
+                "package": "drupal/ckeditor_oembed",
+                "description": "3296767 - Drupal 10 compatibility",
+                "url": "https://www.drupal.org/files/issues/2022-07-18/ckeditor_oembed.1.x-dev.rector.patch",
+                "sha256": "f076463a81e9c47f391d1a8454be18ae38f832c3f71d6e4ea1d440a4d3425bd1",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/group": [
+            {
+                "package": "drupal/group",
+                "description": "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add",
+                "url": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
+                "sha256": "b14ef445cad071892515b4fec53fc1bf4c8046dc739b6e172196d703734db740",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "2815971 - More contexts needed",
+                "url": "https://www.drupal.org/files/issues/2021-02-19/2815971-28.patch",
+                "sha256": "29025aa0c053519452c20c34efbbab2c76bd67edef9b1bac07399859d8e714b1",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "3071489 - Incorrect Access Check on Media Library",
+                "url": "https://www.drupal.org/files/issues/2022-05-17/incorrect-access-check-on-media-library-3071489-27.patch",
+                "sha256": "76e094ea9f02efec1cc7baa64e56f60d7c2896cc4ba82ecd8109a293c8780405",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "2876696 - Add support for 'view own unpublished entity' permission",
+                "url": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch",
+                "sha256": "cbf3b6fe8a1f8355af2e0868bbf9573e20eb2bdb5af3a7b7906f64e54604d555",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "2916907 - Group content tokens for label and referenced entity",
+                "url": "https://www.drupal.org/files/issues/2021-09-29/group-content-entity-tokens-2916907-23.patch",
+                "sha256": "3102b0272fb894ba35d32dff8b607ca30067b470ac2d739477dc83117b192c65",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "3302469 - Allow other modules to alter the calculated permissions",
+                "url": "https://www.drupal.org/files/issues/2022-08-09/group-calculated_permissions_alter-3302469-4.patch",
+                "sha256": "4dab3cf8088de7b667b0aad3a4a8c07d137a8b19db2efa310f317ba1537771f1",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "3294949 - Group Permission Callbacks Create White Screen Error on Group Type Permissions Page",
+                "url": "https://www.drupal.org/files/issues/2022-07-27/group-3294949-2.patch",
+                "sha256": "3aa9bd0399049e234d42e163f7c981cf0bc6a4b19e48f559e631d6531e64e0cd",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "3132084 - Add addRole(), removeRole(), and hasRole() methods to GroupMembership",
+                "url": "patches/group/3132084-add-remove-role-1.6.0.patch",
+                "sha256": "70106e5e6e4467332fa8267596e90c15d59d97c4eeb6aa463de5122f122bd5f8",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "Fix EntityStorageException in getBestCandidate() when route has unsaved entities",
+                "url": "patches/group/group-route-context-skip-unsaved-entities.patch",
+                "sha256": "86684f6376e552affd1b71bb6b92b0f817bca49afbc3da81aa5dd51cd080d739",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group",
+                "description": "PHP 8.3: Fix static callable deprecation and uasort bool return deprecation",
+                "url": "patches/group/php83-deprecation-fixes.patch",
+                "sha256": "4cb0d6b27860c89abb4d576c0efe30822184dab3013de17d46ff93fe09f94f1f",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/group_permissions": [
+            {
+                "package": "drupal/group_permissions",
+                "description": "3301865 - Allow other modules to alter the calculated permissions(3302469)",
+                "url": "https://www.drupal.org/files/issues/2025-02-20/3301865-8.patch",
+                "sha256": "2bd6253d2e25d5fd2be71c3c10640f3248fcaaa5461a7638441331972fd1cf9e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/group_content_menu": [
+            {
+                "package": "drupal/group_content_menu",
+                "description": "3209011 - Active trail is cached incorrectly",
+                "url": "https://www.drupal.org/files/issues/2021-04-21/group_content_menu-active_trail_cache_problem-3209011-10.patch",
+                "sha256": "980d7308cbde48baabc6527d0a52662c4245efce3369b29de95e57d57781d65c",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/flag": [
+            {
+                "package": "drupal/flag",
+                "description": "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface",
+                "url": "https://www.drupal.org/files/issues/2025-02-21/flag-count-interface-3168014-41.patch",
+                "sha256": "6a32909b843ab3df45c2ba919d1108bd54b1115dac7b4c986095967146594bf7",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/flag",
+                "description": "2723703 - Add relationship to flagged entities when Flagging is base table",
+                "url": "https://www.drupal.org/files/issues/2021-02-22/2723703-73.patch",
+                "sha256": "f7a94cee875a38d32e7bdae90f3425ce606dd18f87e37c25611df48bb09fe8d5",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/group_flex": [
+            {
+                "package": "drupal/group_flex",
+                "description": "3207164 - fatal error when saving after adding an image to an image field in a flex group",
+                "url": "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch",
+                "sha256": "c378b37421f30f44bb29c76119e13b7f8538803795acd8dc1b0e5ce4ae458591",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/group_flex",
+                "description": "PHP 8.3: Fix dynamic property deprecation for allPlugins in manager classes",
+                "url": "patches/group_flex/php83-dynamic-property-fix.patch",
+                "sha256": "df8558ade5a02297095fd8a787fcef9023705cfdf1bce633564a0ebf7c1bd519",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/masquerade": [
+            {
+                "package": "drupal/masquerade",
+                "description": "3181882 - \"Masquerade as ROLE\" permission not granting access",
+                "url": "https://www.drupal.org/files/issues/2020-11-11/masquerade_permission_per_role-3181882-2.patch",
+                "sha256": "00d3e5c04ff45ed65432a9ef1fded355f089cabb377562d9876778adc631750e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/message": [
+            {
+                "package": "drupal/message",
+                "description": "3183734 - Unable to use inline styles when tokens are used in a message (patch provided)",
+                "url": "https://www.drupal.org/files/issues/2020-11-20/update-process-token-function-to-avoid-issue-with-html-filtering-3183734-2.patch",
+                "sha256": "22a2b615151f3afbeab846441cf541dcb885277fe0da0cdd9f67d34ca2f5c85d",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/menu_trail_by_path": [
+            {
+                "package": "drupal/menu_trail_by_path",
+                "description": "2914746 - Fatal error after installing the module",
+                "url": "https://www.drupal.org/files/issues/2025-10-15/2914746-35.patch",
+                "sha256": "88964a8ad517a46cddc5f82cce28e8e9a1bef5782396bd9ffc98ad3cb657c5ef",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/select2": [
+            {
+                "package": "drupal/select2",
+                "description": "3551995 - Claro theme styling issues in 2.0.0",
+                "url": "https://www.drupal.org/files/issues/2026-01-21/select2-3551995-claro_styling-5.patch",
+                "sha256": "3b608f4e1c7a68d54dee289fb942be4fb2522bd1c2048cf0f424590e4cf28eae",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/subpathauto": [
+            {
+                "package": "drupal/subpathauto",
+                "description": "3130139 - Group Content Add/Create Paths do not work",
+                "url": "https://www.drupal.org/files/issues/2023-02-15/subpathauto-group_content_add_create-3130139-14.patch",
+                "sha256": "f659cd12354dd906601e94963201a817d3c45770b2717f95fccdeae07e70ed4f",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/views_data_export": [
+            {
+                "package": "drupal/views_data_export",
+                "description": "3173296 - Batch mode does not allow other modules to alter query",
+                "url": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",
+                "sha256": "4a0d5cc4e59ea384532532e51d82c9af26230f0c0abf267be878c5f8ec65bba7",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/views_data_export",
+                "description": "3241213 - Add S3 bucket support",
+                "url": "patches/views_data_export/3241213.patch",
+                "sha256": "04a47a233ac1b9b2d387fe9693a1c8534d83d27a0d9d281404cc9adfb422447a",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            },
+            {
+                "package": "drupal/views_data_export",
+                "description": "3189760 - CSV file is not downloaded automatically.",
+                "url": "https://www.drupal.org/files/issues/2023-06-01/views_data_export-3189760-22.patch",
+                "sha256": "48a9b01a83129fce08f13e405c711be3c6784eeb5a0ec809074e97947088bfd4",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/views_data_export_phpspreadsheet": [
+            {
+                "package": "drupal/views_data_export_phpspreadsheet",
+                "description": "3503071 - Fatal error: Declaration of XlsEncoder::encode() must be compatible with EncoderInterface::encode()",
+                "url": "patches/views_data_export_phpspreadsheet/3503071.patch",
+                "sha256": "93ba53997f7322b64131ae137d3ca797b6f905339dae08403da97ba9b7fb5a15",
+                "depth": 1,
+                "extra": {
+                    "provenance": "patches-file:composer.patches.json"
+                }
+            }
+        ],
+        "drupal/drupal-driver": [
+            {
+                "package": "drupal/drupal-driver",
+                "description": "allow-date-only-date-fields",
+                "url": "https://github.com/jhedstrom/DrupalDriver/commit/eaa9238c8c8e34372dc82ebe5367e6d24b5854e7.patch",
+                "sha256": "3c28ce0c9156a3f0d1e0d2d53933a2716d1c07c4ed4e285521569acb8b8ff65e",
+                "depth": 1,
+                "extra": {
+                    "provenance": "dependency:drupal/drupal-driver"
+                }
+            }
+        ]
+    }
+}

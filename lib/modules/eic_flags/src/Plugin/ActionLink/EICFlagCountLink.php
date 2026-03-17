@@ -7,7 +7,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\Plugin\ActionLink\AJAXactionLink;
-use Drupal\flag\Service\FlagFloodControlServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,8 +42,6 @@ class EICFlagCountLink extends AJAXactionLink {
    *   The plugin definition array.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\flag\Service\FlagFloodControlServiceInterface $flood_control
-   *   The flood control service.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request from the request stack.
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count
@@ -55,7 +52,6 @@ class EICFlagCountLink extends AJAXactionLink {
     $plugin_id,
     array $plugin_definition,
     AccountInterface $current_user,
-    FlagFloodControlServiceInterface $flood_control,
     Request $request,
     FlagCountManagerInterface $flag_count
   ) {
@@ -64,7 +60,6 @@ class EICFlagCountLink extends AJAXactionLink {
       $plugin_id,
       $plugin_definition,
       $current_user,
-      $flood_control,
       $request
     );
     $this->flagCountManager = $flag_count;
@@ -86,7 +81,6 @@ class EICFlagCountLink extends AJAXactionLink {
       $plugin_id,
       $plugin_definition,
       $container->get('current_user'),
-      $container->get('flag.flood_control'),
       $container->get('request_stack')->getCurrentRequest(),
       $container->get('flag.count')
     );
@@ -95,7 +89,7 @@ class EICFlagCountLink extends AJAXactionLink {
   /**
    * {@inheritdoc}
    */
-  public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity) {
+  public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity, ?string $view_mode = NULL): array {
     $build = [];
 
     try {
@@ -103,7 +97,7 @@ class EICFlagCountLink extends AJAXactionLink {
       $access = $flag->actionAccess($action, $this->currentUser, $entity);
       if ($access->isAllowed()) {
         // Get the render array.
-        $build = parent::getAsFlagLink($flag, $entity);
+        $build = parent::getAsFlagLink($flag, $entity, $view_mode);
 
         // Normally, you'd just override flag.html.twig in your site's theme.
         // For this example module, we do something more advanced:

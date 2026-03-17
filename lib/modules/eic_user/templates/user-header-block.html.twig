@@ -1,6 +1,42 @@
-{% include "@theme/patterns/compositions/overview-header.html.twig" with {
-    title_element: 'h1',
-    title: title,
-    actions: actions,
-    icon_file_path: eic_icon_path
+{#
+/**
+ * @file
+ * User header block using ECL page-header component.
+ *
+ * Available variables:
+ * - title: The page title.
+ * - actions: Array of action buttons/links.
+ * - ecl_icon_path: Path to icon sprite.
+ */
+#}
+{% include '@ecl-twig/page-header' with {
+  'title': title,
 } only %}
+
+{# Render actions separately if provided #}
+{% if actions is not empty %}
+  <div class="ecl-container ecl-u-mt-m">
+    <div class="ecl-u-d-flex ecl-u-gap-m">
+      {% for action in actions %}
+        {% if action.link is defined %}
+          {% include '@ecl-twig/link' with {
+            link: action.link|merge({
+              type: 'cta',
+            }),
+            icon: ecl_icon_path and action.icon is defined ? action.icon|merge({
+              path: ecl_icon_path,
+            }) : {},
+          } only %}
+        {% elseif action.label is defined %}
+          {% include '@ecl-twig/button' with {
+            label: action.label,
+            variant: loop.first ? 'primary' : 'secondary',
+            icon: ecl_icon_path and action.icon is defined ? action.icon|merge({
+              path: ecl_icon_path,
+            }) : {},
+          } only %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

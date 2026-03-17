@@ -5,7 +5,7 @@ namespace Drupal\eic_paragraphs\Hooks;
 /**
  * Class FieldWidgetFormAlter.
  *
- * Description: Implementations for hook_field_widget_single_element_WIDGET_TYPE_form_alter().
+ * Description: Implementations for hook_field_widget_WIDGET_TYPE_form_alter().
  */
 class FieldWidgetFormAlter {
 
@@ -31,7 +31,7 @@ class FieldWidgetFormAlter {
   private $subform;
 
   /**
-   * Implements hook_field_widget_single_element_WIDGET_TYPE_form_alter().
+   * Implements hook_field_widget_WIDGET_TYPE_form_alter().
    */
   public function paragraphsFormAlter(&$element, &$form_state, $context) {
     switch ($element['#paragraph_type']) {

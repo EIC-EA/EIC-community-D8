@@ -32,6 +32,12 @@ class CordisExtractionService {
   }
 
   public function requestExtraction($request_entity_id) {
+    // Check if CORDIS API is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('cordis_api')) {
+      return;
+    }
+
     $count_entities = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')->getQuery()
       ->condition('extraction_status', 'pending_extraction')
@@ -74,6 +80,12 @@ class CordisExtractionService {
   }
 
   public function getStatus($request_entity_id) {
+    // Check if CORDIS API is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('cordis_api')) {
+      return FALSE;
+    }
+
     $entity = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')->load($request_entity_id);
     if ($entity) {
@@ -100,6 +112,12 @@ class CordisExtractionService {
   }
 
   public function deleteExtraction($request_entity_id) {
+    // Check if CORDIS API is enabled via feature toggle.
+    if (\Drupal::hasService('eic_feature_toggle.manager') &&
+        !\Drupal::service('eic_feature_toggle.manager')->isExternalServiceEnabled('cordis_api')) {
+      return FALSE;
+    }
+
     $task_id = \Drupal::entityTypeManager()
       ->getStorage('extraction_request')->load($request_entity_id)
       ->get('task_id')->value;

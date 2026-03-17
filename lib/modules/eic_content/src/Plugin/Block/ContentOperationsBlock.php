@@ -132,11 +132,6 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    */
   public function build() {
     $build = [];
-
-    $current_path = \Drupal::service('path.current')->getPath();
-    $front_path = \Drupal::config('system.site')->get('page.front');
-    $is_front = $current_path === $front_path;
-
     $supported_entities = [
       'group' => [
         'add_route' => function ($entity, $bundle) {
@@ -219,16 +214,13 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
 
     $build = [
       '#theme' => 'eic_content_actions',
-    ];
-
-    if (!$is_front) {
-      $build['#actions'] = [
+      '#actions' => [
         [
           'label' => $this->t('Add content'),
           'links' => $items,
         ],
-      ];
-    }
+      ],
+    ];
 
     // Add title field to the renderable array.
     if (!empty($this->configuration['title'])) {

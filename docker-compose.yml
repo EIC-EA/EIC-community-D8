@@ -25,7 +25,7 @@ services:
   php:
     build:
       context: ./docker/php
-    image: eic-php-fpm:8.1
+    image: eic-php-fpm:8.3
     container_name: ${APP_NAME}_php
     working_dir: /app
     volumes:
@@ -116,6 +116,13 @@ services:
     image: redis:alpine
     container_name: ${APP_NAME}_redis
 
+  triple-store:
+    image: registry.fpfis.eu/openeuropa/triple-store-dev:latest
+    environment:
+      - SPARQL_UPDATE=true
+      - DBA_PASSWORD=dba
+    ports:
+      - "8890:8890"
 volumes:
   mysql_data:
   solr_data:

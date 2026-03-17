@@ -7,6 +7,7 @@ use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
+use Drupal\eic_feature_toggle\Service\FeatureToggleManager;
 use Drupal\eic_user\ProfileConst;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,19 +49,30 @@ class RequestEventSubscriber implements EventSubscriberInterface {
   protected $currentUser;
 
   /**
+   * The feature toggle manager.
+   *
+   * @var \Drupal\eic_feature_toggle\Service\FeatureToggleManager|null
+   */
+  protected $featureToggleManager;
+
+  /**
    * Constructs a new RequestEventSubscriber instance.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The Private temp store factory.
    * @param \Drupal\Core\Session\AccountProxy $account
    *   The current user.
+   * @param \Drupal\eic_feature_toggle\Service\FeatureToggleManager|null $feature_toggle_manager
+   *   The feature toggle manager.
    */
   public function __construct(
     PrivateTempStoreFactory $temp_store_factory,
-    AccountProxy $account
+    AccountProxy $account,
+    ?FeatureToggleManager $feature_toggle_manager = NULL
   ) {
     $this->tempStore = $temp_store_factory->get('eic_user_login');
     $this->currentUser = $account;
+    $this->featureToggleManager = $feature_toggle_manager;
   }
 
   /**
@@ -79,6 +91,11 @@ class RequestEventSubscriber implements EventSubscriberInterface {
    *   The request event.
    */
   public function checkUserProfile(RequestEvent $event): void {
+    // Check if profile enforcement is enabled via feature toggle.
+    if (!$this->featureToggleManager || !$this->featureToggleManager->isExternalServiceEnabled('profile_enforcement')) {
+      return;
+    }
+
     // We skip AJAX requests.
     if ($event->getRequest()->isXmlHttpRequest()) {
       return;
