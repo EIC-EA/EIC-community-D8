@@ -69,7 +69,13 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && npm --version \
   && yarn --version;
 
-RUN apt-get update && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
+RUN apt update && apt install -y unattended-upgrades;
+RUN dpkg-reconfigure unattended-upgrades;
+RUN unattended-upgrade -d;
+RUN apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
+RUN apt-get autoremove unattended-upgrades -y --purge; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*;
 
 USER web
 
