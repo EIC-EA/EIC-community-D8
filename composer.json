@@ -133,7 +133,7 @@
     },
     "require-dev": {
         "drevops/behat-screenshot": "^1.2",
-        "drupal/core-dev": "10.4.*",
+        "drupal/core-dev": "10.5.9",
         "drupal/data_fixtures": "^1.8",
         "drupal/devel": "^5.1",
         "drupal/drupal-extension": "^5.1",
