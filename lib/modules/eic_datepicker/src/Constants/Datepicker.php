@@ -13,5 +13,9 @@ final class Datepicker {
     'unpublish_on[0][value][date]',
     'publish_on[0][value][date]',
     'created[0][value][date]',
+    'field_date_range[0][value][date]',
+    'field_date_range[0][end_value][date]',
+    'field_event_registration_date[0][value][date]',
+    'field_event_registration_date[0][end_value][date]',
   ];
 }
