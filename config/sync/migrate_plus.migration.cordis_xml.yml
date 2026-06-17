@@ -49,6 +49,12 @@ process:
     source: fundingProgramme
     values:
       label: fundingProgramme
+  field_project_related_topic:
+    plugin: entity_generate
+    source: relatedTopic/id
+    values:
+      field_programme_title: relatedTopic/title
+      label: relatedTopic/id
   status: published
   moderation_state:
     plugin: default_value

@@ -110,10 +110,10 @@
           </div>
         {% endif %}
 
-        {% if content.field_project_funding_programme.0 %}
+        {% if group.field_project_related_topic.entity.field_programme_title.value %}
           <div class="ecl-u-mb-l">
             <strong>{{ "Funded under"|t({}, {'context': 'eic_community'}) }}:</strong>
-            {{ content.field_project_funding_programme.0 }}
+            {{ group.field_project_related_topic.entity.field_programme_title.value }}
           </div>
         {% endif %}
 

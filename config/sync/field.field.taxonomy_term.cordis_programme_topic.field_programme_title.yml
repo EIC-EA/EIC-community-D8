@@ -1,0 +1,19 @@
+uuid: e7318b45-98d6-4f1d-a779-94944fac8ebf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_programme_title
+    - taxonomy.vocabulary.cordis_programme_topic
+id: taxonomy_term.cordis_programme_topic.field_programme_title
+field_name: field_programme_title
+entity_type: taxonomy_term
+bundle: cordis_programme_topic
+label: 'Programme title'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

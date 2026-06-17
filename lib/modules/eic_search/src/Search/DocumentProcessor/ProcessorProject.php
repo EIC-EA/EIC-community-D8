@@ -161,6 +161,15 @@ class ProcessorProject extends DocumentProcessor {
 
     $document->addField('ss_project_cordis_url', Projects::EIC_TAXONOMY_CORDIS_BASE_URL . $fields['its_project_grant_agreement_id']);
 
+    $programme_topic = $group->get('field_project_related_topic')->entity?->get('field_programme_title')->value;
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      ProjectSourceType::PROJECT_PROGRAMME_TOPIC_TITLE_SOLR_FIELD_ID,
+      $fields,
+      $programme_topic ?: ''
+    );
+
     $this->addOrUpdateDocumentField(
       $document,
       ProjectSourceType::PROJECT_START_DATE_SOLR_FIELD_ID,

@@ -40,40 +40,45 @@ class ProjectsCordisSource extends SourcePluginBase {
       $zip_file = $request->get('extraction_file')->entity;
       $filepath = \Drupal::service('file_system')->realpath($zip_file->getFileUri());
       $filename = pathinfo($filepath, PATHINFO_FILENAME);
+      $dir_path = "$private_dir_path/cordis-xml/export/$filename";
+      if (is_dir($dir_path)) {
+        $directory_iterator = new \RecursiveDirectoryIterator($dir_path, \FilesystemIterator::KEY_AS_PATHNAME);
+        $files = new \RecursiveIteratorIterator($directory_iterator);
+        // -1 max_depth is for no-limit
+        $files->setMaxDepth(-1);
+        $file_mask = '/(.*\.(xml)$)/i';
 
-      $directory_iterator = new \RecursiveDirectoryIterator("$private_dir_path/cordis-xml/export/$filename", \FilesystemIterator::KEY_AS_PATHNAME);
-      $files = new \RecursiveIteratorIterator($directory_iterator);
-      // -1 max_depth is for no-limit
-      $files->setMaxDepth(-1);
+        $files = new \RegexIterator($files, $file_mask, \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
-      $file_mask = '/(.*\.(xml)$)/i';
-
-      $files = new \RegexIterator($files, $file_mask, \RegexIterator::MATCH, \RegexIterator::USE_KEY);
-
-      foreach ($files as $file) {
-        $doc = new \DOMDocument();
-        $doc->load($file->getPathname());
-        $xpath = new \DOMXPath($doc);
-        $records[] = [
-          'id' => $this->getXmlValue($xpath, '/project/id') ?? 0,
-          'title' => $this->getXmlValue($xpath, '/project/title'),
-          'acronym' => $this->getXmlValue($xpath, '/project/acronym'),
-          'startDate' => $this->getXmlValue($xpath, '/project/startDate') . 'T00:00:00',
-          'endDate' => $this->getXmlValue($xpath, '/project/endDate') . 'T00:00:00',
-          'totalCost' => $this->getXmlValue($xpath, '/project/totalCost'),
-          'ecMaxContribution' => $this->getXmlValue($xpath, '/project/ecMaxContribution'),
-          'objective' => $this->getXmlValue($xpath, '/project/objective'),
-          'status' => $this->getXmlValue($xpath, '/project/status') ?? 'CLOSED',
-          'teaser' => $this->getXmlValue($xpath, '/project/teaser'),
-          'duration' => $this->getXmlValue($xpath, 'project/duration'),
-          'euroscivocCode' => $this->getEuroSciVocCode($xpath),
-          'fundingProgramme' => $this->getFundingProgramme($xpath),
-          'stakeholder_coordinators' => $this->getOrganisation($xpath, 'coordinator'),
-          'stakeholder_participants' => $this->getOrganisation($xpath, 'participant'),
-          'website' => $this->getXmlValue($xpath, "/project/relations/associations/result/relations/associations/webLink[@type='relatedWebsite']/physUrl")
-        ];
+        foreach ($files as $file) {
+          $doc = new \DOMDocument();
+          $doc->load($file->getPathname());
+          $xpath = new \DOMXPath($doc);
+          $records[] = [
+            'id' => $this->getXmlValue($xpath, '/project/id') ?? 0,
+            'title' => $this->getXmlValue($xpath, '/project/title'),
+            'acronym' => $this->getXmlValue($xpath, '/project/acronym'),
+            'startDate' => $this->getXmlValue($xpath, '/project/startDate') . 'T00:00:00',
+            'endDate' => $this->getXmlValue($xpath, '/project/endDate') . 'T00:00:00',
+            'totalCost' => $this->getXmlValue($xpath, '/project/totalCost'),
+            'ecMaxContribution' => $this->getXmlValue($xpath, '/project/ecMaxContribution'),
+            'objective' => $this->getXmlValue($xpath, '/project/objective'),
+            'status' => $this->getXmlValue($xpath, '/project/status') ?? 'CLOSED',
+            'teaser' => $this->getXmlValue($xpath, '/project/teaser'),
+            'duration' => $this->getXmlValue($xpath, '/project/duration'),
+            'euroscivocCode' => $this->getEuroSciVocCode($xpath),
+            'fundingProgramme' => $this->getFundingProgramme($xpath),
+            'stakeholder_coordinators' => $this->getOrganisation($xpath, 'coordinator'),
+            'stakeholder_participants' => $this->getOrganisation($xpath, 'participant'),
+            'website' => $this->getXmlValue($xpath, "/project/relations/associations/result/relations/associations/webLink[@type='relatedWebsite']/physUrl"),
+            'relatedTopic' => [
+              'id' => $this->getXmlValue($xpath, "/project/relations/associations/programme[@type='relatedTopic']/id"),
+              'title' => $this->getXmlValue($xpath, "/project/relations/associations/programme[@type='relatedTopic']/title"),
+            ],
+          ];
+        }
+        $runningExtractions[] = $request->id();
       }
-      $runningExtractions[] = $request->id();
     }
     \Drupal::state()->set('eic_projects.cordis_running_extractions', $runningExtractions);
     return new \ArrayIterator($records);
@@ -173,7 +178,8 @@ class ProjectsCordisSource extends SourcePluginBase {
       'fundingProgramme' => $this->t('Project funding programme'),
       'stakeholder_coordinators' => $this->t('Project Organisation coordinators'),
       'stakeholder_participants' => $this->t('Project Organisation participants'),
-      'website' => $this->t('Project website')
+      'website' => $this->t('Project website'),
+      'relatedTopic' => $this->t('Project related topic'),
     ];
   }
 
