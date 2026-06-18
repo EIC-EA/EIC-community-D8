@@ -69,7 +69,19 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && npm --version \
   && yarn --version;
 
-RUN apt-get update && apt-get upgrade -yq && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
+#libssh2 latest version with CVE-2026-55200 fix
+RUN echo "deb http://debian.org testing main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -yq -t testing libssh2-1 \
+    # Clean up repository.
+    && sed -i '/testing main/d' /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get upgrade -yq \
+    && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# RUN apt-get update && apt-get upgrade -yq && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
 
 USER web
 
