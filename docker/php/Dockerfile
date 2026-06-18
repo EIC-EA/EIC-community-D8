@@ -77,7 +77,7 @@ RUN echo "deb http://debian.org testing main" >> /etc/apt/sources.list \
     && sed -i '/testing main/d' /etc/apt/sources.list \
     && apt-get update \
     && apt-get upgrade -yq \
-    && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates
+    && apt-get install -yq --no-install-recommends gnupg2 curl ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
