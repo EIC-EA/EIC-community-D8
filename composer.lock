@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a99c066bf4b74c0e2b4add6bc98e2da8",
+    "content-hash": "5905de619386b24f4b65f512e8ae8792",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -11483,22 +11483,22 @@
         },
         {
             "name": "openeuropa/oe_webtools",
-            "version": "1.26.0",
+            "version": "1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openeuropa/oe_webtools.git",
-                "reference": "faa4ae65a2f28ab00914765fbb518b7fe7d7530b"
+                "reference": "4f129db75ad87fed1bdc5b48b59de84b8af9d504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/oe_webtools/zipball/faa4ae65a2f28ab00914765fbb518b7fe7d7530b",
-                "reference": "faa4ae65a2f28ab00914765fbb518b7fe7d7530b",
+                "url": "https://api.github.com/repos/openeuropa/oe_webtools/zipball/4f129db75ad87fed1bdc5b48b59de84b8af9d504",
+                "reference": "4f129db75ad87fed1bdc5b48b59de84b8af9d504",
                 "shasum": ""
             },
             "require": {
-                "drupal/core": "^9.5 || ^10",
+                "drupal/core": "^10 || ^11",
                 "ext-json": "*",
-                "php": ">=8.0"
+                "php": ">=8.1"
             },
             "conflict": {
                 "openeuropa/oe_webtools_location": "*"
@@ -11506,29 +11506,23 @@
             "require-dev": {
                 "composer/installers": "~1.5",
                 "drupal/captcha": "^1.10 || ^2.0",
-                "drupal/core-composer-scaffold": "^9.5 || ^10",
+                "drupal/core-composer-scaffold": "^10 || ^11",
+                "drupal/core-dev": "^10 || ^11",
                 "drupal/drupal-extension": "^5.0",
                 "drupal/geocoder": "^4.0",
                 "drupal/geofield": "^1.0",
                 "drupal/json_field": "~1.1",
-                "drush/drush": "^11.1",
-                "mikey179/vfsstream": "^1.6",
+                "drush/drush": "^12 || ^13",
                 "openeuropa/behat-transformation-context": "^0.2",
-                "openeuropa/code-review": "^2.0.0-alpha6",
-                "openeuropa/oe_media": "^1.23",
-                "openeuropa/oe_multilingual": "^1.13",
-                "openeuropa/rdf_skos": "^1.0.0-alpha10",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta6",
-                "openeuropa/webtools-geocoding-provider": "^0.3",
-                "phpspec/prophecy-phpunit": "^2",
-                "symfony/phpunit-bridge": "^6.2"
+                "openeuropa/code-review-drupal": "^1.0.0-alpha",
+                "openeuropa/oe_media": "dev-master",
+                "openeuropa/oe_multilingual": "^1.20",
+                "openeuropa/rdf_skos": "^1.2",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0",
+                "openeuropa/webtools-geocoding-provider": "^0.3"
             },
             "type": "drupal-module",
             "extra": {
-                "_readme": [
-                    "Explicit requirement of symfony/phpunit-bridge to replace drupal/core-dev testing classes and traits.",
-                    "Explicit requirement of mikey179/vfsstream to remove when drupal/core-dev is reinstated."
-                ],
                 "drupal-scaffold": {
                     "locations": {
                         "web-root": "./build"
@@ -11563,9 +11557,9 @@
             "description": "OpenEuropa Webtools integration.",
             "support": {
                 "issues": "https://github.com/openeuropa/oe_webtools/issues",
-                "source": "https://github.com/openeuropa/oe_webtools/tree/1.26.0"
+                "source": "https://github.com/openeuropa/oe_webtools/tree/1.41.0"
             },
-            "time": "2023-11-21T14:19:53+00:00"
+            "time": "2025-09-09T12:28:41+00:00"
         },
         {
             "name": "pear/archive_tar",
