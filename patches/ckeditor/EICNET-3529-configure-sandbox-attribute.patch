@@ -1,0 +1,12 @@
+--- a/web/libraries/iframe/plugin.js
++++ b/web/libraries/iframe/plugin.js
+@@ -139,4 +139,7 @@
+  * @cfg {Function/Object} [iframe_attributes = { sandbox: '' }]
+  * @member CKEDITOR.config
+  */
+-CKEDITOR.config.iframe_attributes = { sandbox: '' };
++CKEDITOR.config.iframe_attributes = {
++  sandbox: 'allow-scripts allow-same-origin allow-popups allow-forms allow-presentation',
++  allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
++};
+
