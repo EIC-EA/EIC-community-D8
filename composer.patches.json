@@ -93,7 +93,7 @@
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin (up to date with version ^6.0.x)" : "https://www.drupal.org/files/issues/2022-10-28/migrate_plus-json-xpath-filtering-3007709-40.patch"
     },
     "drupal/publication_date": {
-      "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2019-07-07/3066317-3.patch",
+      "#3066317 - Provide computed properties that return the publication date or the created/updated date": "https://www.drupal.org/files/issues/2026-07-08/3066317-8.patch",
       "EICNET-3009: Change date format on \"Published on\" description": "patches/publication_date/EICNET-3009-change-date-format-published-on-description.patch"
     },
     "drupal/subpathauto": {

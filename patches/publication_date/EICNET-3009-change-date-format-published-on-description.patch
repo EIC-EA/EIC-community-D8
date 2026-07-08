@@ -1,22 +1,29 @@
 diff --git a/src/Plugin/Field/FieldWidget/TimestampDatetimeWidget.php b/src/Plugin/Field/FieldWidget/TimestampDatetimeWidget.php
-index a56cce2..ee23eb7 100644
+index f7c7ffe..54924b7 100644
 --- a/src/Plugin/Field/FieldWidget/TimestampDatetimeWidget.php
 +++ b/src/Plugin/Field/FieldWidget/TimestampDatetimeWidget.php
-@@ -26,8 +26,7 @@ class TimestampDatetimeWidget extends WidgetBase {
+@@ -3,6 +3,8 @@
+ namespace Drupal\publication_date\Plugin\Field\FieldWidget;
+
+ use Drupal\Core\Datetime\DrupalDateTime;
++use Drupal\Core\Datetime\Entity\DateFormat;
++use Drupal\Core\Datetime\Element\Datetime;
+ use Drupal\Core\Field\FieldItemListInterface;
+ use Drupal\Core\Field\WidgetBase;
+ use Drupal\Core\Form\FormStateInterface;
+@@ -24,6 +26,7 @@ class TimestampDatetimeWidget extends WidgetBase {
     * {@inheritdoc}
     */
    public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
--    $date_format = DateFormat::load('html_date')->getPattern();
--    $time_format = DateFormat::load('html_time')->getPattern();
 +    $eu_short_date_hour_format = DateFormat::load('eu_short_date_hour')->getPattern();
      if (isset($items[$delta]->value)) {
        $default_value = DrupalDateTime::createFromTimestamp($items[$delta]->value);
      }
-@@ -39,7 +38,7 @@ class TimestampDatetimeWidget extends WidgetBase {
+@@ -35,7 +38,7 @@ class TimestampDatetimeWidget extends WidgetBase {
        '#default_value' => $default_value,
        '#date_year_range' => '1902:2037',
      ];
--    $element['value']['#description'] = $this->t('Format: %format. Leave blank to use the time of form submission.', ['%format' => Datetime::formatExample($date_format . ' ' . $time_format)]);
+-    $element['value']['#description'] = $this->t('Leave blank to use the time of form submission.');
 +    $element['value']['#description'] = $this->t('Format: %format. Leave blank to use the time of form submission.', ['%format' => Datetime::formatExample($eu_short_date_hour_format)]);
 
      return $element;

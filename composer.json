@@ -89,7 +89,7 @@
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.8",
         "drupal/profile": "^1.2",
-        "drupal/publication_date": "^2.0@beta",
+        "drupal/publication_date": "2.0.0-beta8",
         "drupal/rabbit_hole": "^1.0",
         "drupal/raven": "^3.2",
         "drupal/realname": "^2.0-@beta",
