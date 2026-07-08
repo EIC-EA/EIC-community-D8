@@ -126,7 +126,7 @@
         "openeuropa/oe_authentication": "^1.13",
         "openeuropa/oe_media": "^1.13",
         "openeuropa/oe_time_caching": "^1.1",
-        "openeuropa/oe_webtools": "^1.26.0",
+        "openeuropa/oe_webtools": "1.41.0",
         "softcreatr/jsonpath": "0.8",
         "webmozart/path-util": "^2.3",
         "wikimedia/composer-merge-plugin": "^2.0"
