@@ -1,0 +1,11 @@
+uuid: 4bd1ab78-2656-49b5-9874-bb44da280278
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.cordis_programme_topic
+id: taxonomy_term.cordis_programme_topic
+target_entity_type_id: taxonomy_term
+target_bundle: cordis_programme_topic
+default_langcode: site_default
+language_alterable: false

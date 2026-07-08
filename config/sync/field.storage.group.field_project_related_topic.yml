@@ -1,17 +1,16 @@
-uuid: a10e5fbf-fed8-4e5c-9234-ffdf6ebccdc7
+uuid: b2318bf5-4897-4542-9f1e-b8a2f2c33523
 langcode: en
 status: true
 dependencies:
   module:
     - group
+    - taxonomy
 id: group.field_project_related_topic
 field_name: field_project_related_topic
 entity_type: group
-type: string
+type: entity_reference
 settings:
-  max_length: 255
-  case_sensitive: false
-  is_ascii: false
+  target_type: taxonomy_term
 module: core
 locked: false
 cardinality: 1

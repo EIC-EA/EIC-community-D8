@@ -262,6 +262,16 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+  field_project_related_topic:
+    type: entity_reference_autocomplete
+    weight: 33
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_project_status:
     type: options_select
     weight: 25
@@ -330,6 +340,5 @@ hidden:
   field_project_duration: true
   field_project_keywords: true
   field_project_objective: true
-  field_project_related_topic: true
   field_project_sub_call: true
   uid: true

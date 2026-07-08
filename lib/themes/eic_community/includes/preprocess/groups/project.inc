@@ -55,7 +55,15 @@ function _eic_community_render_project_teaser(&$variables, GroupInterface $group
   $teaser['description'] = $group->hasField('field_project_teaser') ? Markup::create(Xss::filter($group->get('field_project_teaser')->value)) : '';
   $teaser['project_grant_agreement'] = $group->hasField('field_project_grant_agreement_id') ? $group->get('field_project_grant_agreement_id')->value : '';
   $teaser['project_teaser'] = $group->hasField('field_project_teaser') ? Markup::create(Xss::filter($group->get('field_project_teaser')->value)) : '';
-  $teaser['project_funding_programme'] = $group->hasField('field_project_funding_programme') ? $group->get('field_project_funding_programme')->referencedEntities()[0]->getName() : '';
+  if (
+      ($group->hasField('field_project_related_topic')) &&
+      (!$group->get('field_project_related_topic')->isEmpty())
+    ) {
+    $teaser['project_related_topic'] = $group->get('field_project_related_topic')->referencedEntities()[0]->get('field_programme_title')->value;
+  }
+  else {
+    $teaser['project_related_topic'] = '';
+  }
   // TODO: Get project fields of science from group object.
   $teaser['project_fields_of_science'] = array_filter($variables['content']['field_project_fields_of_science'], function ($key) {
     return strpos($key, '#') === FALSE;

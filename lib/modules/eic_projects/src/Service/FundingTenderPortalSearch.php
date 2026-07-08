@@ -3,7 +3,7 @@
 namespace Drupal\eic_projects\Service;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\group\Entity\GroupInterface;
 use GuzzleHttp\Client;
 
 class FundingTenderPortalSearch {
@@ -12,23 +12,23 @@ class FundingTenderPortalSearch {
 
   private string $search_result_url = 'https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/horizon-results-platform/search?order=DESC&pageNumber=1&projectId=';
 
-  public function __construct(private readonly Client $http_client, private readonly EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(private readonly Client $http_client) {
 
   }
 
   /**
    * Get the URL of the project in FTP by the group project entity ID.
    *
-   * @param int|string $gid
+   * @param \Drupal\group\Entity\GroupInterface $group
    *
    * @return false|string
    */
-  public function getPortalUrl(int|string $gid): bool|string {
-    $portal_results = $this->searchPortalByGid($gid);
+  public function getPortalUrl(GroupInterface $group): bool|string {
+    $portal_results = $this->searchPortalByGroup($group);
     if ($portal_results) {
       return match ($portal_results['totalResults']) {
         0 => FALSE,
-        default => $this->getProjectIdByGroupId($gid) ? $this->search_result_url . $this->getProjectIdByGroupId($gid) : FALSE,
+        default => $this->getProjectId($group) ? $this->search_result_url . $this->getProjectId($group) : FALSE,
       };
     }
     return FALSE;
@@ -37,12 +37,12 @@ class FundingTenderPortalSearch {
   /**
    * Search Portal by group project entity ID.
    *
-   * @param int|string $gid
+   * @param \Drupal\group\Entity\GroupInterface $group
    *
    * @return mixed
    */
-  public function searchPortalByGid(int|string $gid) {
-    $project_id = $this->getProjectIdByGroupId($gid);
+  public function searchPortalByGroup(GroupInterface $group) {
+    $project_id = $this->getProjectId($group);
     return $project_id ? $this->searchPortal($project_id) : [];
   }
 
@@ -89,16 +89,12 @@ class FundingTenderPortalSearch {
   /**
    * Gets the project ID of the group given.
    *
-   * @param int|string $gid
+   * @param \Drupal\group\Entity\GroupInterface $group
    *
    * @return int|null
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  private function getProjectIdByGroupId(int|string $gid): int|null {
-    $group_project = $this->entityTypeManager->getStorage('group')
-      ->load($gid);
-    return (int) $group_project->get('field_project_grant_agreement_id')->value;
+  private function getProjectId(GroupInterface $group): int|null {
+    return (int) $group->get('field_project_grant_agreement_id')->value;
   }
 
 

@@ -11,7 +11,7 @@ field_name: field_header_visual
 entity_type: group
 bundle: event
 label: 'Banner Image'
-description: 'Banner to be used on the event site landing page. Minimum image resolution: 940x300 px, Maximum upload size: 2MB.'
+description: 'Banner to be used on the event site landing page. Aspect ratio to respect is 16:9 . The minimum image resolution: 940x528 px and Maximum upload size: 2MB.'
 required: false
 translatable: false
 default_value: {  }
