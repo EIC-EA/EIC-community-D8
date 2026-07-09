@@ -111,6 +111,10 @@
     "drupal/aws_sqs" : {
       "EIC - Adaptations": "patches/aws_sqs/eic-adaptations.patch",
       "3367429 - Drupal 10 compatibility": "https://www.drupal.org/files/issues/2025-02-21/3367429-11-drupal-10-compatibility.patch"
+    },
+    "ckeditor/iframe": {
+      "Allow scripts in iframe sandbox": "patches/ckeditor/EICNET-3529-configure-sandbox-attribute.patch"
+
     }
   }
 }
