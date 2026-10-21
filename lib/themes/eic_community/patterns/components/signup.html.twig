@@ -4,10 +4,14 @@
   {% else %}
     <h3 class="ecl-signup_title">Sign up to this event</h3>
   {% endif %}
-  {% if text %}
-    <p class="ecl-signup_text">{{ text }}</p>
+  {% if registration_closed %}
+    <p class="ecl-signup_text ecl-signup_text--closed">{{ 'The registrations are closed'|t }}</p>
+  {% else %}
+    {% if text %}
+      <p class="ecl-signup_text">{{ text }}</p>
+    {% endif %}
+    <a href="{{ action.url }}" class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--button--big">
+      <span class="ecl-link__label">{{ action.label }}</span>
+    </a>
   {% endif %}
-  <a href="{{ action.url }}" class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--button--big">
-    <span class="ecl-link__label">{{ action.label }}</span>
-  </a>
 </div>

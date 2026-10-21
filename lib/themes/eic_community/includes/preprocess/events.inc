@@ -108,13 +108,33 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
     !$entity->get('field_link')->isEmpty() &&
     $signup_link = $entity->get('field_link')->uri
   ) {
-    $action = [
-      'title' => t('Register to this event', [], ['context' => 'eic_community']),
-      'action' => [
-        'label' => t('Register now', [], ['context' => 'eic_community']),
-        'url' => $signup_link,
-      ],
-    ];
+    // Check if the registration period has ended.
+    $registration_closed = FALSE;
+    if ($entity->hasField('field_event_registration_date') && !$entity->get('field_event_registration_date')->isEmpty()) {
+      $registration_dates = $entity->get('field_event_registration_date')->getValue();
+      $registration_end_value = $registration_dates[0]['end_value'] ?? $registration_dates[0]['value'];
+      $registration_end_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $registration_end_value);
+      $now = new DrupalDateTime('now', 'UTC');
+      if ($now > $registration_end_date) {
+        $registration_closed = TRUE;
+      }
+    }
+
+    if ($registration_closed) {
+      $action = [
+        'title' => t('Register to this event', [], ['context' => 'eic_community']),
+        'registration_closed' => TRUE,
+      ];
+    }
+    else {
+      $action = [
+        'title' => t('Register to this event', [], ['context' => 'eic_community']),
+        'action' => [
+          'label' => t('Register now', [], ['context' => 'eic_community']),
+          'url' => $signup_link,
+        ],
+      ];
+    }
   }
 
   // Event detail items.
