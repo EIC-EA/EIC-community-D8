@@ -25,7 +25,7 @@ services:
   php:
     build:
       context: ./docker/php
-    image: eic-php-fpm:8.1
+    image: eic-php-fpm:8.3
     container_name: ${APP_NAME}_php
     working_dir: /app
     volumes:
