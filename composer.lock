@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6ba51542c6d48d491bb9fb408e06bc8",
+    "content-hash": "105566a2d64b5a02851c452e45e583e4",
     "packages": [
         {
             "name": "amsul/pickadate_js",
@@ -814,7 +814,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-20T19:15:30+00:00"
+            "time": "2025-08-20T19:15:30+00:00",
+            "published-time": "2025-08-20T19:16:27+00:00"
         },
         {
             "name": "consolidation/annotated-command",
@@ -2863,7 +2864,8 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/classy",
                 "issues": "https://drupal.org/project/issues/classy"
-            }
+            },
+            "published-time": "2022-09-23T16:16:09+00:00"
         },
         {
             "name": "drupal/colorbutton",
@@ -3342,16 +3344,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "10.6.21",
+            "version": "10.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "7953509367583b3df58cd6ac559a187bc284f115"
+                "reference": "e775021854e2878f00dafe47f3090b3a1fdbf0ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/7953509367583b3df58cd6ac559a187bc284f115",
-                "reference": "7953509367583b3df58cd6ac559a187bc284f115",
+                "url": "https://api.github.com/repos/drupal/core/zipball/e775021854e2878f00dafe47f3090b3a1fdbf0ab",
+                "reference": "e775021854e2878f00dafe47f3090b3a1fdbf0ab",
                 "shasum": ""
             },
             "require": {
@@ -3512,14 +3514,14 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/10.6.21"
+                "source": "https://github.com/drupal/core/tree/10.6.22"
             },
-            "time": "2026-11-06T22:13:09+00:00",
-            "published-time": "2026-11-06T23:02:43+00:00"
+            "time": "2026-11-18T14:44:58+00:00",
+            "published-time": "2026-11-18T17:17:31+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "10.6.21",
+            "version": "10.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -3563,22 +3565,23 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/10.6.21"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/10.6.22"
             },
-            "time": "2024-08-22T14:31:30+00:00"
+            "time": "2024-08-22T14:31:30+00:00",
+            "published-time": "2026-11-18T17:18:36+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "10.6.21",
+            "version": "10.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "a04b201a7dfb24f14c267439425e8f7419b939c7"
+                "reference": "95a684ce2e8a0320f9295744b692c456b665c90b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/a04b201a7dfb24f14c267439425e8f7419b939c7",
-                "reference": "a04b201a7dfb24f14c267439425e8f7419b939c7",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/95a684ce2e8a0320f9295744b692c456b665c90b",
+                "reference": "95a684ce2e8a0320f9295744b692c456b665c90b",
                 "shasum": ""
             },
             "require": {
@@ -3586,7 +3589,7 @@
                 "composer/semver": "~3.4.4",
                 "doctrine/deprecations": "~1.1.5",
                 "doctrine/lexer": "~2.1.1",
-                "drupal/core": "10.6.21",
+                "drupal/core": "10.6.22",
                 "egulias/email-validator": "~4.0.4",
                 "masterminds/html5": "~2.10.0",
                 "mck89/peast": "~v1.17.4",
@@ -3635,9 +3638,10 @@
             ],
             "description": "Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/10.6.21"
+                "source": "https://github.com/drupal/core-recommended/tree/10.6.22"
             },
-            "time": "2026-11-06T22:13:09+00:00"
+            "time": "2026-11-18T14:44:58+00:00",
+            "published-time": "2026-11-18T17:18:18+00:00"
         },
         {
             "name": "drupal/csv_serialization",
@@ -5311,7 +5315,8 @@
             "homepage": "https://www.drupal.org/project/hal",
             "support": {
                 "source": "https://git.drupalcode.org/project/hal"
-            }
+            },
+            "published-time": "2026-06-29T00:45:45+00:00"
         },
         {
             "name": "drupal/inline_entity_form",
@@ -8405,7 +8410,8 @@
             "homepage": "https://www.drupal.org/project/seven",
             "support": {
                 "source": "https://git.drupalcode.org/project/seven"
-            }
+            },
+            "published-time": "2023-05-09T17:08:13+00:00"
         },
         {
             "name": "drupal/smart_trim",
@@ -8649,7 +8655,8 @@
             "homepage": "https://www.drupal.org/project/stable",
             "support": {
                 "source": "https://git.drupalcode.org/project/stable"
-            }
+            },
+            "published-time": "2024-07-17T07:55:49+00:00"
         },
         {
             "name": "drupal/state_machine",
@@ -10324,7 +10331,8 @@
                 "issues": "https://github.com/Jean85/pretty-package-versions/issues",
                 "source": "https://github.com/Jean85/pretty-package-versions/tree/2.1.1"
             },
-            "time": "2025-03-19T14:43:43+00:00"
+            "time": "2025-03-19T14:43:43+00:00",
+            "published-time": "2025-03-19T14:50:06+00:00"
         },
         {
             "name": "laminas/laminas-stdlib",
@@ -11985,7 +11993,8 @@
                 "issues": "https://github.com/php-http/discovery/issues",
                 "source": "https://github.com/php-http/discovery/tree/1.20.0"
             },
-            "time": "2024-10-02T11:20:13+00:00"
+            "time": "2024-10-02T11:20:13+00:00",
+            "published-time": "2024-10-02T11:21:00+00:00"
         },
         {
             "name": "php-http/httplug",
@@ -12042,7 +12051,8 @@
                 "issues": "https://github.com/php-http/httplug/issues",
                 "source": "https://github.com/php-http/httplug/tree/2.4.1"
             },
-            "time": "2024-09-23T11:39:58+00:00"
+            "time": "2024-09-23T11:39:58+00:00",
+            "published-time": "2024-09-23T11:40:47+00:00"
         },
         {
             "name": "php-http/message",
@@ -12218,7 +12228,8 @@
                 "issues": "https://github.com/php-http/promise/issues",
                 "source": "https://github.com/php-http/promise/tree/1.3.1"
             },
-            "time": "2024-03-15T13:55:21+00:00"
+            "time": "2024-03-15T13:55:21+00:00",
+            "published-time": "2024-03-15T13:55:45+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -16611,7 +16622,8 @@
                 "issues": "https://github.com/webflo/drupal-finder/issues",
                 "source": "https://github.com/webflo/drupal-finder/tree/1.3.1"
             },
-            "time": "2024-06-28T13:45:36+00:00"
+            "time": "2024-06-28T13:45:36+00:00",
+            "published-time": "2024-06-28T13:49:32+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -17186,7 +17198,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-12T10:28:18+00:00"
+            "time": "2026-09-12T10:28:18+00:00",
+            "published-time": "2026-09-12T12:23:30+00:00"
         },
         {
             "name": "colinodell/psr-testlogger",
@@ -17265,7 +17278,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-04T22:36:58+00:00"
+            "time": "2025-11-04T22:36:58+00:00",
+            "published-time": "2025-11-04T22:37:14+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -17337,7 +17351,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-29T14:10:42+00:00"
+            "time": "2026-10-29T14:10:42+00:00",
+            "published-time": "2026-10-29T14:45:12+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -17406,7 +17421,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-03T10:10:19+00:00"
+            "time": "2026-11-03T10:10:19+00:00",
+            "published-time": "2026-11-03T10:12:49+00:00"
         },
         {
             "name": "composer/composer",
@@ -17521,7 +17537,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-10T09:09:37+00:00"
+            "time": "2026-11-10T09:09:37+00:00",
+            "published-time": "2026-11-10T09:12:59+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -17586,7 +17603,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-30T11:34:59+00:00"
+            "time": "2026-06-30T11:34:59+00:00",
+            "published-time": "2026-06-30T11:37:18+00:00"
         },
         {
             "name": "composer/spdx-licenses",
@@ -17662,7 +17680,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-08T20:18:39+00:00"
+            "time": "2026-04-08T20:18:39+00:00",
+            "published-time": "2026-04-08T20:19:56+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -17825,7 +17844,8 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-05-06T08:26:05+00:00"
+            "time": "2026-05-06T08:26:05+00:00",
+            "published-time": "2026-05-06T12:56:03+00:00"
         },
         {
             "name": "dekor/php-array-table",
@@ -18333,11 +18353,12 @@
                 "issues": "https://www.drupal.org/project/issues/coder",
                 "source": "https://www.drupal.org/project/coder"
             },
-            "time": "2025-10-16T12:23:49+00:00"
+            "time": "2025-10-16T12:23:49+00:00",
+            "published-time": "2025-10-19T18:39:31+00:00"
         },
         {
             "name": "drupal/core-dev",
-            "version": "10.6.21",
+            "version": "10.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-dev.git",
@@ -18387,9 +18408,10 @@
             ],
             "description": "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-dev/tree/10.6.21"
+                "source": "https://github.com/drupal/core-dev/tree/10.6.22"
             },
-            "time": "2026-05-20T15:35:08+00:00"
+            "time": "2026-05-20T15:35:08+00:00",
+            "published-time": "2026-11-18T17:18:39+00:00"
         },
         {
             "name": "drupal/data_fixtures",
@@ -19035,7 +19057,8 @@
             "support": {
                 "source": "https://github.com/protocolbuffers/protobuf-php/tree/v5.36.2"
             },
-            "time": "2026-09-17T15:56:42+00:00"
+            "time": "2026-09-17T15:56:42+00:00",
+            "published-time": "2026-09-17T15:56:48+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -19173,7 +19196,8 @@
             "support": {
                 "source": "https://github.com/Lullabot/MinkSelenium2Driver/tree/v1.7.4"
             },
-            "time": "2024-08-08T07:40:04+00:00"
+            "time": "2024-08-08T07:40:04+00:00",
+            "published-time": "2024-08-08T07:40:37+00:00"
         },
         {
             "name": "lullabot/php-webdriver",
@@ -19221,7 +19245,8 @@
                 "issues": "https://github.com/Lullabot/php-webdriver/issues",
                 "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.7"
             },
-            "time": "2025-08-13T15:27:58+00:00"
+            "time": "2025-08-13T15:27:58+00:00",
+            "published-time": "2025-08-13T15:28:33+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -19399,7 +19424,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-05-22T16:48:16+00:00"
+            "time": "2025-05-22T16:48:16+00:00",
+            "published-time": "2025-05-22T16:49:29+00:00"
         },
         {
             "name": "micheh/phpcs-gitlab",
@@ -19451,7 +19477,8 @@
                 "issues": "https://github.com/micheh/phpcs-gitlab/issues",
                 "source": "https://github.com/micheh/phpcs-gitlab/tree/1.1.0"
             },
-            "time": "2020-12-20T09:39:07+00:00"
+            "time": "2020-12-20T09:39:07+00:00",
+            "published-time": "2020-12-20T09:45:06+00:00"
         },
         {
             "name": "mikey179/vfsstream",
@@ -19631,20 +19658,21 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-08T09:30:43+00:00"
+            "time": "2023-11-08T09:30:43+00:00",
+            "published-time": "2023-11-08T09:33:01+00:00"
         },
         {
             "name": "open-telemetry/api",
-            "version": "1.11.0",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentelemetry-php/api.git",
-                "reference": "bc169d9ecd11858e941657770dc708c6a15fc5f4"
+                "reference": "b0884741f3f9d5dc60477784c8671bd2acef4ceb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentelemetry-php/api/zipball/bc169d9ecd11858e941657770dc708c6a15fc5f4",
-                "reference": "bc169d9ecd11858e941657770dc708c6a15fc5f4",
+                "url": "https://api.github.com/repos/opentelemetry-php/api/zipball/b0884741f3f9d5dc60477784c8671bd2acef4ceb",
+                "reference": "b0884741f3f9d5dc60477784c8671bd2acef4ceb",
                 "shasum": ""
             },
             "require": {
@@ -19671,7 +19699,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "1.11.x-dev"
+                    "dev-main": "1.12.x-dev"
                 }
             },
             "autoload": {
@@ -19708,7 +19736,8 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-11-05T11:54:49+00:00"
+            "time": "2026-11-19T08:10:15+00:00",
+            "published-time": "2026-11-19T08:15:35+00:00"
         },
         {
             "name": "open-telemetry/context",
@@ -19766,33 +19795,40 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-11-05T11:54:49+00:00"
+            "time": "2026-11-05T11:54:49+00:00",
+            "published-time": "2026-11-05T12:00:45+00:00"
         },
         {
             "name": "open-telemetry/exporter-otlp",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentelemetry-php/exporter-otlp.git",
-                "reference": "fe947a27d477a8dc01e31d4f6187e2897ffc71f3"
+                "reference": "78c5ce7646b34b3af449808769eb24430a848049"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentelemetry-php/exporter-otlp/zipball/fe947a27d477a8dc01e31d4f6187e2897ffc71f3",
-                "reference": "fe947a27d477a8dc01e31d4f6187e2897ffc71f3",
+                "url": "https://api.github.com/repos/opentelemetry-php/exporter-otlp/zipball/78c5ce7646b34b3af449808769eb24430a848049",
+                "reference": "78c5ce7646b34b3af449808769eb24430a848049",
                 "shasum": ""
             },
             "require": {
                 "open-telemetry/api": "^1.0",
                 "open-telemetry/gen-otlp-protobuf": "^1.11.1",
-                "open-telemetry/sdk": "^1.16",
+                "open-telemetry/sdk": "^1.17",
                 "php": "^8.2",
-                "php-http/discovery": "^1.14"
+                "php-http/discovery": "^1.14",
+                "tbachert/spi": "^1.0.5"
             },
             "type": "library",
             "extra": {
+                "spi-config": {
+                    "autoload-files": [
+                        "_register.php"
+                    ]
+                },
                 "branch-alias": {
-                    "dev-main": "1.5.x-dev"
+                    "dev-main": "1.6.x-dev"
                 }
             },
             "autoload": {
@@ -19830,7 +19866,8 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-11-05T11:54:49+00:00"
+            "time": "2026-11-19T08:10:15+00:00",
+            "published-time": "2026-11-19T08:15:24+00:00"
         },
         {
             "name": "open-telemetry/gen-otlp-protobuf",
@@ -19896,20 +19933,21 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-11-05T11:54:49+00:00"
+            "time": "2026-11-05T11:54:49+00:00",
+            "published-time": "2026-11-05T12:00:37+00:00"
         },
         {
             "name": "open-telemetry/sdk",
-            "version": "1.16.1",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentelemetry-php/sdk.git",
-                "reference": "51ebca2563dd580d682d4f32b1611c1779424dac"
+                "reference": "5b823e465b0fabdf5019aef6aa2e430285949e7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentelemetry-php/sdk/zipball/51ebca2563dd580d682d4f32b1611c1779424dac",
-                "reference": "51ebca2563dd580d682d4f32b1611c1779424dac",
+                "url": "https://api.github.com/repos/opentelemetry-php/sdk/zipball/5b823e465b0fabdf5019aef6aa2e430285949e7b",
+                "reference": "5b823e465b0fabdf5019aef6aa2e430285949e7b",
                 "shasum": ""
             },
             "require": {
@@ -19951,17 +19989,19 @@
                         "OpenTelemetry\\API\\Instrumentation\\AutoInstrumentation\\ExtensionHookManager"
                     ]
                 },
+                "spi-config": {
+                    "autoload-files": [
+                        "_register.php"
+                    ]
+                },
                 "branch-alias": {
-                    "dev-main": "1.16.x-dev"
+                    "dev-main": "1.17.x-dev"
                 }
             },
             "autoload": {
                 "files": [
                     "Common/Util/functions.php",
-                    "Logs/Exporter/_register.php",
-                    "Metrics/MetricExporter/_register.php",
-                    "Propagation/_register.php",
-                    "Trace/SpanExporter/_register.php",
+                    "_register.php",
                     "Common/Dev/Compatibility/_load.php",
                     "_autoload.php"
                 ],
@@ -19995,7 +20035,8 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-11-06T02:25:35+00:00"
+            "time": "2026-11-19T08:10:15+00:00",
+            "published-time": "2026-11-19T08:15:20+00:00"
         },
         {
             "name": "open-telemetry/sem-conv",
@@ -20052,7 +20093,8 @@
                 "issues": "https://github.com/open-telemetry/opentelemetry-php/issues",
                 "source": "https://github.com/open-telemetry/opentelemetry-php"
             },
-            "time": "2026-11-03T22:37:22+00:00"
+            "time": "2026-11-03T22:37:22+00:00",
+            "published-time": "2026-11-03T22:42:45+00:00"
         },
         {
             "name": "palantirnet/drupal-rector",
@@ -20316,7 +20358,8 @@
                 "issues": "https://github.com/php-http/guzzle7-adapter/issues",
                 "source": "https://github.com/php-http/guzzle7-adapter/tree/1.1.0"
             },
-            "time": "2024-11-26T11:14:36+00:00"
+            "time": "2024-11-26T11:14:36+00:00",
+            "published-time": "2024-11-26T11:14:56+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -20627,7 +20670,8 @@
                 "issues": "https://github.com/phpspec/prophecy-phpunit/issues",
                 "source": "https://github.com/phpspec/prophecy-phpunit/tree/v2.5.0"
             },
-            "time": "2026-02-09T15:40:55+00:00"
+            "time": "2026-02-09T15:40:55+00:00",
+            "published-time": "2026-02-09T15:43:08+00:00"
         },
         {
             "name": "phpstan/extension-installer",
@@ -20675,7 +20719,8 @@
                 "issues": "https://github.com/phpstan/extension-installer/issues",
                 "source": "https://github.com/phpstan/extension-installer/tree/1.4.3"
             },
-            "time": "2024-09-04T20:21:43+00:00"
+            "time": "2024-09-04T20:21:43+00:00",
+            "published-time": "2024-09-04T20:22:27+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -20776,7 +20821,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-28T10:04:39+00:00"
+            "time": "2026-07-28T10:04:39+00:00",
+            "published-time": "2026-07-28T10:04:54+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -20823,7 +20869,8 @@
                 "issues": "https://github.com/phpstan/phpstan-deprecation-rules/issues",
                 "source": "https://github.com/phpstan/phpstan-deprecation-rules/tree/1.2.1"
             },
-            "time": "2024-09-11T15:52:35+00:00"
+            "time": "2024-09-11T15:52:35+00:00",
+            "published-time": "2024-09-11T15:53:17+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -20875,7 +20922,8 @@
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
                 "source": "https://github.com/phpstan/phpstan-phpunit/tree/1.4.2"
             },
-            "time": "2024-12-17T17:20:49+00:00"
+            "time": "2024-12-17T17:20:49+00:00",
+            "published-time": "2024-12-17T17:23:46+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -21421,7 +21469,8 @@
                 "issues": "https://github.com/ramsey/collection/issues",
                 "source": "https://github.com/ramsey/collection/tree/2.1.1"
             },
-            "time": "2025-03-22T05:38:12+00:00"
+            "time": "2025-03-22T05:38:12+00:00",
+            "published-time": "2025-03-22T05:39:22+00:00"
         },
         {
             "name": "ramsey/uuid",
@@ -21498,7 +21547,8 @@
                 "issues": "https://github.com/ramsey/uuid/issues",
                 "source": "https://github.com/ramsey/uuid/tree/4.10.0"
             },
-            "time": "2026-11-14T23:23:20+00:00"
+            "time": "2026-11-14T23:23:20+00:00",
+            "published-time": "2026-11-14T23:35:39+00:00"
         },
         {
             "name": "rdx/behat-variables",
@@ -22698,7 +22748,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-03T10:16:18+00:00"
+            "time": "2026-11-03T10:16:18+00:00",
+            "published-time": "2026-11-03T10:20:37+00:00"
         },
         {
             "name": "seld/phar-utils",
@@ -22746,7 +22797,8 @@
                 "issues": "https://github.com/Seldaek/phar-utils/issues",
                 "source": "https://github.com/Seldaek/phar-utils/tree/1.2.3"
             },
-            "time": "2026-10-01T08:16:23+00:00"
+            "time": "2026-10-01T08:16:23+00:00",
+            "published-time": "2026-10-01T08:17:41+00:00"
         },
         {
             "name": "seld/signal-handler",
@@ -22807,7 +22859,8 @@
                 "issues": "https://github.com/Seldaek/signal-handler/issues",
                 "source": "https://github.com/Seldaek/signal-handler/tree/2.0.2"
             },
-            "time": "2023-09-03T09:24:00+00:00"
+            "time": "2023-09-03T09:24:00+00:00",
+            "published-time": "2023-09-03T09:24:36+00:00"
         },
         {
             "name": "sirbrillig/phpcs-variable-analysis",
@@ -22863,7 +22916,8 @@
                 "source": "https://github.com/sirbrillig/phpcs-variable-analysis",
                 "wiki": "https://github.com/sirbrillig/phpcs-variable-analysis/wiki"
             },
-            "time": "2025-09-30T22:22:48+00:00"
+            "time": "2025-09-30T22:22:48+00:00",
+            "published-time": "2025-09-30T22:24:41+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -22928,7 +22982,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-13T08:53:30+00:00"
+            "time": "2025-09-13T08:53:30+00:00",
+            "published-time": "2025-09-13T08:55:12+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -23007,7 +23062,8 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-08-06T00:17:32+00:00"
+            "time": "2026-08-06T00:17:32+00:00",
+            "published-time": "2026-08-06T01:05:02+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -23381,7 +23437,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-01T19:42:57+00:00"
+            "time": "2026-11-01T19:42:57+00:00",
+            "published-time": "2026-11-04T11:25:16+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",
@@ -23470,7 +23527,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-18T07:40:41+00:00"
+            "time": "2026-10-18T07:40:41+00:00",
+            "published-time": "2026-10-28T18:17:30+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -23603,7 +23661,8 @@
                 "issues": "https://github.com/Nevay/spi/issues",
                 "source": "https://github.com/Nevay/spi/tree/v1.0.5"
             },
-            "time": "2025-06-29T15:42:06+00:00"
+            "time": "2025-06-29T15:42:06+00:00",
+            "published-time": "2025-06-30T18:37:38+00:00"
         },
         {
             "name": "theseer/tokenizer",
