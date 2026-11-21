@@ -63,13 +63,15 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
 
   // Append paragraphs to the body. These paragraphs are legacy content coming
   // from the migration.
-  $full_body = $entity->field_body->value;
-  if ($entity->getEntityTypeId() == 'group' && $entity->hasField('field_additional_content')) {
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-    $additional_content = $view_builder->viewField($entity->field_additional_content);
-    $full_body .= \Drupal::service('renderer')->render($additional_content);
+  if ($entity->hasField('field_body')) {
+    $full_body = $entity->field_body->value;
+    if ($entity->getEntityTypeId() == 'group' && $entity->hasField('field_additional_content')) {
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
+      $additional_content = $view_builder->viewField($entity->field_additional_content);
+      $full_body .= \Drupal::service('renderer')->render($additional_content);
+    }
+    $variables['full_body'] = $full_body;
   }
-  $variables['full_body'] = $full_body;
 
   if ($entity->bundle() !== 'event') {
     return;
