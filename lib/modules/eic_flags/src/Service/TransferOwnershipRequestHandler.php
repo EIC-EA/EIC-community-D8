@@ -517,7 +517,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
    *   The group content entity related to the new owner.
    */
-  private function transferGroupOwnership(GroupInterface $group, GroupContentInterface $group_content) {
+  public function transferGroupOwnership(GroupInterface $group, GroupContentInterface $group_content) {
     /** @var \Drupal\group\GroupMembership $old_owner_membership */
     $old_owner_membership = EICGroupsHelper::getGroupOwner($group, TRUE);
 
