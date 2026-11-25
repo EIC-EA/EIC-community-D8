@@ -96,7 +96,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       empty: {  }
       sorts:
@@ -396,6 +396,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   block_events_homepage:
     id: block_events_homepage
     display_title: 'Block - Events homepage'
@@ -404,7 +405,7 @@ display:
     display_options:
       title: 'Upcoming events'
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       empty:
         area_text_custom:
@@ -674,6 +675,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   block_groups_homepage:
     id: block_groups_homepage
     display_title: 'Block - Groups homepage'
@@ -681,7 +683,7 @@ display:
     position: 1
     display_options:
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       defaults:
         cache: false
@@ -694,3 +696,4 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'

@@ -96,7 +96,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       empty: {  }
       sorts: {  }
@@ -361,6 +361,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   organisation_events:
     id: organisation_events
     display_title: Events
@@ -536,6 +537,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   organisation_news:
     id: organisation_news
     display_title: News
@@ -569,3 +571,4 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'

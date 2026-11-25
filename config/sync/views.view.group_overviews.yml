@@ -100,6 +100,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 10
           total_pages: null
           id: 0
@@ -117,7 +118,6 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
-          pagination_heading_level: h4
       exposed_form:
         type: basic
         options:
@@ -132,7 +132,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       empty: {  }
       sorts: {  }
@@ -329,6 +329,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   members:
     id: members
     display_title: Members
@@ -342,7 +343,7 @@ display:
         options:
           group_permission: 'access members overview'
       cache:
-        type: none
+        type: search_api_none
       sorts: {  }
       arguments: {  }
       filters:
@@ -480,6 +481,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   page_1:
     id: page_1
     display_title: Discussions
@@ -492,7 +494,7 @@ display:
         options:
           group_permission: 'access discussions overview'
       cache:
-        type: none
+        type: search_api_none
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -653,6 +655,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   search_group:
     id: search_group
     display_title: 'Search group'
@@ -665,7 +668,7 @@ display:
         options:
           group_permission: 'access group search overview'
       cache:
-        type: none
+        type: search_api_none
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -885,3 +888,4 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'

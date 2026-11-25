@@ -97,7 +97,7 @@ display:
         type: none
         options: {  }
       cache:
-        type: none
+        type: search_api_none
         options: {  }
       empty: {  }
       sorts:
@@ -369,6 +369,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   discussions:
     id: discussions
     display_title: Discussions
@@ -520,6 +521,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   events:
     id: events
     display_title: Events
@@ -707,6 +709,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   experts:
     id: experts
     display_title: Experts
@@ -879,6 +882,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   files:
     id: files
     display_title: Files
@@ -1032,6 +1036,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   groups:
     id: groups
     display_title: Groups
@@ -1234,6 +1239,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   news_stories:
     id: news_stories
     display_title: 'News & Stories'
@@ -1251,6 +1257,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
   wiki_pages:
     id: wiki_pages
     display_title: 'Wiki pages'
@@ -1402,3 +1409,4 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+        - 'search_api_list:global'
