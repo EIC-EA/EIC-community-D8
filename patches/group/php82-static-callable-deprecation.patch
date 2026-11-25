@@ -1,0 +1,12 @@
+diff --git a/src/Entity/GroupRole.php b/src/Entity/GroupRole.php
+--- a/src/Entity/GroupRole.php
++++ b/src/Entity/GroupRole.php
+@@ -312,7 +312,7 @@
+     parent::postLoad($storage, $entities);
+     // Sort the queried roles by their weight.
+     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
+-    uasort($entities, 'static::sort');
++    uasort($entities, [static::class, 'sort']);
+   }
+ 
+   /**
