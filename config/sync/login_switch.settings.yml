@@ -1,0 +1,11 @@
+_core:
+  default_config_hash: Z2eXdyC8NqlKI3PwMgUCaatO81vkeVHK6N6k9lQrUY8
+login_disabled: true
+login_route: ''
+login_noindex: false
+register_disabled: false
+register_route: ''
+register_noindex: false
+password_disabled: false
+password_route: ''
+password_noindex: false
